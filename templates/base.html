@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% comment %}
+ vim:ft=htmldjango:
+ 
+ This file is extended by all other files which are not
+ included here
+{% endcomment %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+   <title>{% block title %}Widelands.org{% endblock %}</title> 
+<link href="/wlmedia/wl/favicon.ico" rel="SHORTCUT ICON" />
+
+<!--  CSS --> 
+<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/wl/css/style.css" />
+</head>
+
+<body>
+<table align="center" border="0" cellpadding="0" cellspacing="0" id="main">
+ <tr>
+ <td>
+<table width="100%" cellspacing="0">
+  <tr> 
+    <td id="headerbanner">
+       <a href="{% url mainpage %}"><img src="/wlmedia/wl/img/Logo.png" align="center" /></a>
+    </td>
+  </tr>
+  <tr>
+    <td id="headerbottombar">
+    </td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td id="table_topleft"></td>
+    <td id="table_topright"></td>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+     {% include "left_boxes.html" %}
+
+    <td id="centercolumn">
+       <div id="content"> 
+       {% block content %}
+        No Content here!
+       {% endblock %}
+       </div>
+      <br /> <br />
+	  </td>
+
+     {% include "right_boxes.html" %}
+
+     <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" id="table_bottom">
+        <tr>
+           <td id="table_bottomleft"></td>
+           <td id="table_bottomright"></td>
+        </tr>
+     </table>
+  </td>
+  </tr>
+
+  <table width="750"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+     <td>
+      <div class="footer">
+        <br/>
+        {% include "footer.html" %}
+        <br/>
+     </div>
+     </td>
+  </tr>
+  </table>
+  <br/>
+
+</body>
+</html>
+

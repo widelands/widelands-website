@@ -78,7 +78,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    
+
+    # TODO: only temporary for webdesign stuff
+    'django.contrib.webdesign',
+
     # Our own apps
     'widelands.mainpage',
 

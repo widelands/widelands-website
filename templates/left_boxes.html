@@ -1,0 +1,72 @@
+{% comment %}
+ vim:ft=htmldjango:
+
+ This file is included by mainpage and contains all the left menu boxes
+ on the site
+
+{% endcomment %}
+{% load wlblock %}
+    
+    <td id="leftcolumn">
+      {% wlblock "Donations" %}
+      <div align="center">
+         Help us to pay our Server!<br/>(: Consider a donation :) <br/>
+            <img src="http://images.sourceforge.net/images/project-support.jpg"
+            align="center" alt="Donation pic" border="0" vspace=5 />
+         </a>
+         <br/>
+         <a href="http://sourceforge.net/project/project_donations.php?group_id=40163">Donators</a>
+      </div>
+      {% endwlblock %}
+
+      {% wlblock "Main Menu" %}
+      <table cellspacing="0">
+         <tr>
+            <td id="mainmenu">
+               <a class="menuTop" href="http://xoops.widelands.org/">Home</a>
+               {% comment %}
+               <a class="menuMain" href="http://xoops.widelands.org/modules/news/">News</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/wfdownloads/">Downloads</a>
+               <a class="menuSub" href="http://xoops.widelands.org/modules/wfdownloads/topten.php?list=hit">Popular</a>
+               <a class="menuSub" href="http://xoops.widelands.org/modules/wfdownloads/topten.php?list=rate">Top Rated</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/smartfaq/">FAQ</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/xcgal/">Screenshots</a>
+               {% endcomment %}
+               <a class="menuMain" href="{% url wiki_index %}">Wiki (Help & Docu.)</a>
+               {% comment %}
+               <a class="menuMain" href="http://xoops.widelands.org/modules/newbb/">Forum</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/xpjirc/">IRC Chat</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/Contentview/">SVN-View</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/Tracker/">Bug-Tracker & Feature Requests</a>
+               <a class="menuMain" href="http://xoops.widelands.org/modules/poll/">Polls</a>
+               {% endcomment %}
+            </td>
+         </tr>
+      </table>
+      {% endwlblock %}
+   </td>
+
+{% comment %}
+<div class="blockTitle">Main Menu</div>
+      <div class="blockContent"><table cellspacing="0">
+  <tr>
+    <td id="mainmenu">
+      <a class="menuTop" href="http://xoops.widelands.org/">Home</a>
+      <!-- start module menu loop -->
+            <a class="menuMain" href="http://xoops.widelands.org/modules/news/">News</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/wfdownloads/">Downloads</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/smartfaq/">FAQ</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/xcgal/">Screenshots</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/mediawiki/">Wiki (Help & Docu.)</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/newbb/">Forum</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/xpjirc/">IRC Chat</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/Contentview/">SVN-View</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/Tracker/">Bug-Tracker & Feature Requests</a>
+                    <a class="menuMain" href="http://xoops.widelands.org/modules/poll/">Polls</a>
+                    <!-- end module menu loop -->
+    </td>
+  </tr>
+</table></div>
+	  <img src="/wlmedia/wl/img/spacer.gif" width="170" height="1" alt="" />
+    </td>
+   {% endcomment %}

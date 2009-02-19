@@ -1,0 +1,18 @@
+{% comment %}
+ vim:ft=htmldjango:
+
+ This file is included by mainpage and contains all the left menu boxes
+ on the site
+
+{% endcomment %}
+    
+      <td id="rightcolumn">
+         <!-- Start right blocks loop -->
+         <{foreach item=block from=$xoops_rblocks}>
+         <table><tr><td height="0"></td></tr></table>
+         <div class="blockTitle"><{$block.title}></div>
+         <div class="blockContent"><{$block.content}></div>
+         <img src="/wlmedia/wl/img/spacer.gif" width="160" height="1" alt="" />
+         <{/foreach}>
+         <!-- End right blocks loop -->
+      </td>

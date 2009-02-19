@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<{$xoops_langcode}>" lang="<{$xoops_langcode}>">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<{$xoops_charset}>" />
+<meta http-equiv="content-language" content="<{$xoops_langcode}>" />
+<meta name="robots" content="<{$xoops_meta_robots}>" />
+<meta name="keywords" content="<{$xoops_meta_keywords}>" />
+<meta name="description" content="<{$xoops_meta_description}>" />
+<meta name="rating" content="<{$xoops_meta_rating}>" />
+<meta name="author" content="<{$xoops_meta_author}>" />
+<meta name="copyright" content="<{$xoops_meta_copyright}>" />
+<meta name="generator" content="Widelands.org + X oops" />
+<title><{$xoops_sitename}> - <{$xoops_pagetitle}></title>
+<link href="<{$xoops_url}>/favicon.ico" rel="SHORTCUT ICON" />
+<!-- RMV: added module header -->
+<{$xoops_module_header}>
+<script type="text/javascript">
+<!--
+<{$xoops_js}>
+//-->
+</script>
+<!-- CSS are put here, so they aren't overwritten by a module css -->
+<link rel="stylesheet" type="text/css" media="all" href="<{$xoops_url}>/xoops.css" />
+<link rel="stylesheet" type="text/css" media="all" href="<{$xoops_themecss}>" />
+</head>
+
+<body>
+<table align="center" border="0" cellpadding="0" cellspacing="0" id="main">
+ <tr>
+ <td>
+<table width="100%" cellspacing="0">
+  <tr>
+    <td id="headerbanner">
+	<a href="<{$xoops_url}>/"><img src="<{$xoops_imageurl}>/images/Logo.png" align="center" /></a>
+    </td>
+  </tr>
+  <tr>
+    <td id="headerbottombar">
+    </td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td id="table_topleft"></td>
+    <td id="table_topright"></td>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+    <td id="leftcolumn">
+      <!-- Start left blocks loop -->
+      <{foreach item=block from=$xoops_lblocks}>
+	  <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td id="menu_topleft">
+		  <img src="<{$xoops_imageurl}>images/spacer.gif" width="1" height="4" alt="" /></td>
+          <td id="menu_topmiddle" width="100%">
+		  <img src="<{$xoops_imageurl}>images/spacer.gif" width="162" height="4" alt="" /></td>
+          <td id="menu_topright">
+		  <img src="<{$xoops_imageurl}>images/spacer.gif" width="1" height="4" alt="" /></td>
+        </tr>
+      <tr>
+	  <td colspan="3">
+      <div class="blockTitle"><{$block.title}></div>
+      <div class="blockContent"><{$block.content}></div>
+      </td>
+      </tr>
+       <tr>
+          <td id="menu_bottomleft">
+		  <img src="<{$xoops_imageurl}>images/spacer.gif" width="4" height="4" alt="" /></td>
+          <td id="menu_bottommiddle" width="100%">
+		  <img src="<{$xoops_imageurl}>images/spacer.gif" width="162" height="4" alt="" /></td>
+          <td id="menu_bottomright">
+		  <img src="<{$xoops_imageurl}>images/spacer.gif" width="4" height="4" alt="" /></td>
+        </tr>
+      </table>
+      <div class="space"></div>
+      <{/foreach}>
+      <!-- End left blocks loop -->
+      <br />
+	  <img src="<{$xoops_imageurl}>images/spacer.gif" width="170" height="1" alt="" />
+    </td>
+    <td id="centercolumn">
+      <!-- Display center blocks if any -->
+      <{if $xoops_showcblock == 1}>
+	  <table cellspacing="0">
+        <tr>
+          <td id="centerCcolumn" colspan="2">
+            <!-- Start center-center blocks loop -->
+            <{foreach item=block from=$xoops_ccblocks}>
+			<table align="center" cellpadding="0" cellspacing="2">
+              <tr>
+                <td><div class="blockTitle"><{$block.title}></div>
+                  <div class="blockContent"><{$block.content}></div>
+				  </td>
+              </tr>
+            </table>
+            <{/foreach}>
+            <!-- End center-center blocks loop -->
+          </td>
+        </tr>
+        <tr>
+          <td id="centerLcolumn">
+            <!-- Start center-left blocks loop -->
+            <{foreach item=block from=$xoops_clblocks}>
+			<table align="center" cellpadding="3" cellspacing="2">
+              <tr>
+                <td> <div class="blockTitle"><{$block.title}></div>
+                  <div class="blockContent"><{$block.content}></div>
+				  </td>
+              </tr>
+            </table>
+            <{/foreach}>
+            <!-- End center-left blocks loop -->
+          </td>
+          <td id="centerRcolumn">
+            <!-- Start center-right blocks loop -->
+            <{foreach item=block from=$xoops_crblocks}>
+			<table align="center" cellpadding="3" cellspacing="2">
+              <tr>
+                <td> <div class="blockTitle"><{$block.title}></div>
+                  <div class="blockContent"><{$block.content}></div></td>
+              </tr>
+            </table>
+            <{/foreach}>
+            <!-- End center-right blocks loop -->
+          </td>
+        </tr>
+      </table>
+      <{/if}>
+      <!-- End display center blocks -->
+      <div id="content"> <{$xoops_contents}> </div>
+      <br /> <br />
+	  </td>
+    <{if $xoops_showrblock == 1}>
+    <td id="rightcolumn">
+      <!-- Start right blocks loop -->
+      <{foreach item=block from=$xoops_rblocks}>
+        <table><tr><td height="0"></td></tr></table>
+	  <div class="blockTitle"><{$block.title}></div>
+      <div class="blockContent"><{$block.content}></div>
+      <img src="<{$xoops_imageurl}>images/spacer.gif" width="160" height="1" alt="" />
+      <{/foreach}>
+      <!-- End right blocks loop -->
+      <{/if}> </td>
+    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" id="table_bottom">
+      <tr>
+        <td id="table_bottomleft"></td>
+        <td id="table_bottomright"></td>
+      </tr>
+    </table>
+	</td>
+  </tr>
+</table>
+	</td>
+  </tr>
+</table>
+
+<table width="750"  border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td><div class="footer">
+<br/>
+<{$xoops_footer}>
+<br/>
+</div>
+</td>
+</tr>
+</table>
+<br/>
+</body>
+</html>
