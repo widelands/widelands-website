@@ -239,8 +239,6 @@ def edit_article(request, title,
                  is_private=None,
                  *args, **kw):
 
-    print "is_member:", is_member(2,1)
-
     group = None
     article_args = {'title': title}
     if group_slug is not None:
