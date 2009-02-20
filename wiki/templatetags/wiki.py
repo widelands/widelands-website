@@ -33,6 +33,16 @@ def wikiwords(s):
     return force_unicode(s)
 wikiwords.is_safe = True
 
+@register.filter
+def restore_commandsymbols(s):
+    """
+    We need to restore " " for textile to work properly
+    """
+    s = s.replace("&quot;",'"')
+    s = s.replace("&quot;",'"')
+    return force_unicode(s)
+restore_commandsymbols.is_safe = True
+
 
 @register.inclusion_tag('wiki/article_content.html')
 def render_content(article, content_attr='content', markup_attr='markup'):
