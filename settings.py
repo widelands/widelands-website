@@ -81,9 +81,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
 )
 
+############################
+# Activation configuration #
+############################
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
-
 ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
+
+######################
+# Wiki configuration #
+######################
+WIKI_LOCK_DURATION = 30
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -98,12 +106,12 @@ INSTALLED_APPS = (
 
     # Our own apps
     'widelands.mainpage',
+    'widelands.wiki', # This is based on wikiapp, but has some local modifications
 
     # Thirdparty apps
     'registration', # User registration (per Email validation)
     'pagination',
     'tagging',
-    'wiki',
 )
 
 try:

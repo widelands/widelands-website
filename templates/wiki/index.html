@@ -1,13 +1,11 @@
-{% extends 'wiki/base.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 
 
-{% block title %}
-    Index
-{% endblock %}
+{% block title %}Wiki Index - {{ block.super }}{% endblock %}
 
 {% block content %}
-	<h1>Index</h1>
+	<h1>Wiki Index</h1>
 
 	{% if articles %}
 		<ul>
