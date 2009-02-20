@@ -12,6 +12,14 @@
 		<a href="{% url wiki_edit article.title %}">{% trans "Edit this article" %}</a>
         |
         <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
+        {% if can_observe %}
+           | 
+           {% if is_observing %} 
+              <a href="{% url wiki_stop_observing article.title %}">{% trans "Stop observing" %}</a>
+           {% else %}
+              <a href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
+           {% endif %}
+        {% endif %}
 	{% else %}
 		<a href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
 	{% endif %}

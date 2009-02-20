@@ -136,7 +136,6 @@ def article_list(request,
                  is_private=None,
                  *args, **kw):
     if request.method == 'GET':
-
         articles, group = get_articles_by_group(
             article_qs, group_slug,
             group_slug_field, group_qs)
@@ -555,32 +554,31 @@ def observe_article(request, title,
                     is_member=None,
                     is_private=None,
                     *args, **kw):
-    if request.method == 'POST':
+    article_args = {'title': title}
+    group = None
+    if group_slug is not None:
+        group = get_object_or_404(group_qs,**{group_slug_field: group_slug})
+        article_args.update({'content_type': get_ct(group),
+                             'object_id': group.id})
+        allow_read = has_read_perm(request.user, group, is_member,
+                                   is_private)
+    else:
+        allow_read = True
 
-        article_args = {'title': title}
-        group = None
-        if group_slug is not None:
-            group = get_object_or_404(group_qs,**{group_slug_field: group_slug})
-            article_args.update({'content_type': get_ct(group),
-                                 'object_id': group.id})
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
-        else:
-            allow_read = True
+    if not allow_read:
+        return HttpResponseForbidden()
 
-        if not allow_read:
-            return HttpResponseForbidden()
-
-        article = get_object_or_404(article_qs, **article_args)
-
+    article = get_object_or_404(article_qs, **article_args)
+    
+    if not notification.is_observing(article, request.user):
         notification.observe(article, request.user,
-                             'wiki_observed_article_changed')
+           'wiki_observed_article_changed')
 
-        url = get_url('wiki_article', group,
-                      [article.title], {'title': article.title,
-                                        'group_slug': group_slug})
+    url = get_url('wiki_article', group,
+                  [article.title], {'title': article.title,
+                                    'group_slug': group_slug})
 
-        return redirect_to(request, url)
+    return redirect_to(request, url)
 
     return HttpResponseNotAllowed(['POST'])
 
@@ -595,32 +593,30 @@ def stop_observing_article(request, title,
                            is_member=None,
                            is_private=None,
                            *args, **kw):
-    if request.method == 'POST':
+    article_args = {'title': title}
+    group = None
+    if group_slug is not None:
+        group = get_object_or_404(group_qs,**{group_slug_field: group_slug})
+        article_args.update({'content_type': get_ct(group),
+                             'object_id': group.id})
+        allow_read = has_read_perm(request.user, group, is_member,
+                                   is_private)
+    else:
+        allow_read = True
 
-        article_args = {'title': title}
-        group = None
-        if group_slug is not None:
-            group = get_object_or_404(group_qs,**{group_slug_field: group_slug})
-            article_args.update({'content_type': get_ct(group),
-                                 'object_id': group.id})
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
-        else:
-            allow_read = True
+    if not allow_read:
+        return HttpResponseForbidden()
 
-        if not allow_read:
-            return HttpResponseForbidden()
+    article = get_object_or_404(article_qs, **article_args)
 
-        article = get_object_or_404(article_qs, **article_args)
-
+    if notification.is_observing(article, request.user):
         notification.stop_observing(article, request.user)
 
-        url = get_url('wiki_article', group,
-                      [article.title], {'title': article.title,
-                                        'group_slug': group_slug})
+    url = get_url('wiki_article', group,
+                  [article.title], {'title': article.title,
+                                    'group_slug': group_slug})
 
-        return redirect_to(request, url)
-    return HttpResponseNotAllowed(['POST'])
+    return redirect_to(request, url)
 
 
 def article_history_feed(request, feedtype, title,

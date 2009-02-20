@@ -15,7 +15,8 @@ urlpatterns = patterns('',
     (r'^accounts/', include('registration.urls')),
                        
     # 3rd party
-    (r'^wiki/', include('wiki.urls'), {'is_member': lambda u,g: False}),
+    (r'^wiki/', include('wiki.urls')),
+    (r'^notification/', include('notification.urls')),
     
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),

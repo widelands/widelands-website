@@ -92,7 +92,6 @@ ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
 ######################
 WIKI_LOCK_DURATION = 30
 
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,6 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.markup',
+    'django.contrib.humanize',
 
     # TODO: only temporary for webdesign stuff
     'django.contrib.webdesign',
@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'widelands.wiki', # This is based on wikiapp, but has some local modifications
 
     # Thirdparty apps
+    'notification',
     'registration', # User registration (per Email validation)
     'pagination',
     'tagging',
