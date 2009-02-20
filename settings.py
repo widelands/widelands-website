@@ -81,6 +81,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
 )
 
+DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
+
 ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
 
 INSTALLED_APPS = (
