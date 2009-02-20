@@ -4,6 +4,8 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 admin.autodiscover()
 
+from widelands.mainpage.views import mainpage
+
 urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
@@ -16,7 +18,7 @@ urlpatterns = patterns('',
     (r'^wiki/', include('wiki.urls'), {'is_member': lambda u,g: False}),
     
     # WL specific:
-    (r'main/', include('widelands.mainpage.urls')),
+    url(r'^$', mainpage, name="mainpage"),
 )
 
 try:
