@@ -38,6 +38,7 @@
                   <a href="/accounts/register">Register now!</a><br/>
                </center>
             {% endwlblock %}
+         {% endif %}
 
             {# Hosting by SF.net block #}
             {% wlblock "Hosted by" %}
@@ -48,5 +49,10 @@
                </a>
             </div>
             {% endwlblock %}
-         {% endif %}
+
+            {# Logged in users #}
+            {%load online_users %}
+            {% wlblock "Currently online" %}
+                {% online_users 10 %}
+            {% endwlblock %}
       </td>
