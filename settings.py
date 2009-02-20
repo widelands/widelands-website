@@ -61,6 +61,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'widelands.urls'
@@ -72,12 +73,23 @@ TEMPLATE_DIRS = (
     '/var/www/django_projects/widelands/templates',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    'django.core.context_processors.request',
+)
+
+ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
+    'django.contrib.markup',
 
     # TODO: only temporary for webdesign stuff
     'django.contrib.webdesign',
@@ -86,6 +98,8 @@ INSTALLED_APPS = (
     'widelands.mainpage',
 
     # Thirdparty apps
+    'registration', # User registration (per Email validation)
+    'pagination',
     'tagging',
     'wiki',
 )

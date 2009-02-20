@@ -1,0 +1,13 @@
+Hi,
+
+You (or someone else) requested an account on widelands.org. If this weren't you, 
+please ignore this email. It this were you, please click on the link provided below
+
+{{ site }}{% url registration_activate activation_key %}
+
+
+This link will be valid for {{ expiration_days }} days...
+
+Greetings,
+The Widelands development team
+

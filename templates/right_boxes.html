@@ -5,14 +5,37 @@
  on the site
 
 {% endcomment %}
-    
+{% load wlblock %}
+
       <td id="rightcolumn">
-         <!-- Start right blocks loop -->
-         <{foreach item=block from=$xoops_rblocks}>
-         <table><tr><td height="0"></td></tr></table>
-         <div class="blockTitle"><{$block.title}></div>
-         <div class="blockContent"><{$block.content}></div>
-         <img src="/wlmedia/wl/img/spacer.gif" width="160" height="1" alt="" />
-         <{/foreach}>
-         <!-- End right blocks loop -->
+         {% if user.is_authenticated %}
+            {% wlblock "Account" %}
+            Your are logged in as<br/>
+            <center>
+               <b>{{ user.username }}</b><br/>
+               <a href="/accounts/logout/next={{request.path}}">Logout</a>
+            </center>
+            {% endwlblock %}
+         {% else %}
+            {% wlblock "Login" %}
+               {% if form.errors %}
+               <p>Your username and password didn't match. Please try again.</p>
+               {% endif %}
+
+               <form method="post" action="/accounts/login/">
+               <table cellspacing="0">
+                  <tr><td>Username:</td></tr>
+                  <tr><td><input type="text" name="username" value="" maxlength="25" /></td></tr>
+               </tr>
+               <tr>
+                  <tr><td>Password:</td></tr>
+                  <tr><td><input type="password" name="password" value="" maxlength="32" /></td></tr>
+               </tr>
+               </table>
+               
+               <center><input type="submit" value="login" /></center>
+               <input type="hidden" name="next" value="{{ request.path }}" />
+               </form>
+            {% endwlblock %}
+         {% endif %}
       </td>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% comment %}
+vim:ft=htmldjango: 
+{% endcomment %}
+
+{% block title %}
+{{ block.super }} - Register
+{% endblock %}
+
+{% block content %}
+<form action="{% url registration_register %}" method="POST">
+<table>
+<tr>
+    <td align="right" valign="top">Username:</td>
+    <td>
+        {{ registration_form.username }} <br/>
+        {% for error in registration_form.username.errors %}
+        <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <td align="right" valign="top">Email:</td>
+    <td>
+        {{ registration_form.email }} <br/>
+        {% for error in registration_form.email.errors %}
+        <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <td align="right" valign="top">Password:</td>
+    <td>
+        {{ registration_form.password1 }} <br/>
+        {% for error in registration_form.password1.errors %}
+        <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <td align="right" valign="top">Password (again):</td>
+    <td>
+        {{ registration_form.password2 }} <br/>
+        {% for error in registration_form.password2.errors %}
+        <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <td>&nbsp;</td>
+    <td><input type="submit" value="Register" /></td>
+</tr>
+</table>
+</form>
+{% endblock %}

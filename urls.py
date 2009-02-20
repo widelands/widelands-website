@@ -8,16 +8,20 @@ admin.autodiscover()
 import wiki.urls
 
 urlpatterns = patterns('',
-    # Example:
-    (r'main/', include('widelands.mainpage.urls')),
-
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-    # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
+
+
+    # Django builtin
+    # (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    (r'^accounts/logout/(next=(?P<next_page>.*))?$', 'django.contrib.auth.views.logout'),
+    (r'^accounts/', include('registration.urls')),
+                       
+    # 3rd party
     (r'^wiki/', include(wiki.urls)),
+    
+    # WL specific:
+    (r'main/', include('widelands.mainpage.urls')),
 )
 
 try:
