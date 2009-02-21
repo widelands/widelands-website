@@ -14,9 +14,12 @@ urlpatterns = patterns('',
     (r'^accounts/logout/(next=(?P<next_page>.*))?$', 'django.contrib.auth.views.logout'),
     (r'^accounts/', include('registration.urls')),
                        
-    # 3rd party
-    (r'^wiki/', include('wiki.urls')),
+    # 3rd party, unmodified
     (r'^notification/', include('notification.urls')),
+
+    # 3rd party, modified for widelands
+    (r'^wiki/', include('wiki.urls')),
+    (r'^news/', include('news.urls')),
     
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),

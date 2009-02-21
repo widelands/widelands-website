@@ -106,7 +106,10 @@ INSTALLED_APPS = (
 
     # Our own apps
     'widelands.mainpage',
+
+    # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications
+    'widelands.news', # This is based on simple-blog, but has some local modifications
 
     # Thirdparty apps
     'notification',

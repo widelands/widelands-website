@@ -1,0 +1,44 @@
+{% comment %}
+ vim:ft=htmldjango:
+
+ This file contains the simple way to render a news item
+
+{% endcomment %}
+{% load news markup tagging_tags %}
+
+   <div class="outer">
+      <table cellpadding="0" cellspacing="0" width="98%">
+         <tr>
+            <td class="specialhead"><span class="itemTitle">{# TODO: categories! #} {{ object.title }}</span></td>
+         </tr>
+         <tr>
+            <td class="itemInfo"> 
+               <span class="itemPoster">Posted by {{object.author}}</span>
+               <span class="itemPostDate">on {{ object.publish|date:"j F Y" }}</span> 
+            </td>
+         </tr>
+         <tr>
+            <td>
+               <div class="itemBody">
+                  {% comment %} TODO: post picture 
+                  <a href='http://xoops.widelands.org/modules/news/index.php?storytopic=4'><img src='http://xoops.widelands.org/modules/news/images/topics/59330258038d8f6b.png' alt='Developers' hspace='10' vspace='10' align='left' /></a>
+                  {% endcomment %}
+                  <div class="itemText">
+                  {{ object.body|markdown:"safe" }}
+                  </div>
+               </div>
+            </td> 
+         </tr>
+         {% tags_for_object object as tag_list %}
+         {% if tag_list %}
+         <tr>
+            <td class="itemFoot">
+               <strong>Tags:</strong>
+               {% for tag in tag_list %}
+               {{ tag }}{% if not forloop.last %}, {% endif %}
+               {% endfor %}
+            </td>
+         </tr>
+         {% endif %}
+      </table>
+   </div>

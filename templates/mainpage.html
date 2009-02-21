@@ -1,1 +1,80 @@
 {% extends "base.html" %}
+
+{% comment %}
+ vim:ft=htmldjango:
+
+ This site is the main page, the first users will see when
+ they reach our homepage
+
+{% endcomment %}
+
+{% load news %}
+
+{% block content %}
+
+<table align="center" cellpadding="0" cellspacing="2">
+   <tr>
+      <td><div class="blockTitle"></div>
+         <div class="blockContent">
+            <P ALIGN=CENTER>
+            <FONT SIZE=6 face='Times New Roman, Georgia, Times, serif'>
+               <B>Welcome to Widelands.org</B>
+               <br />
+            </FONT>
+            <FONT STYLE='font-size: 12pt'>
+               <B>Website from a free realtime strategy game<br/>
+                  And its community
+            </B></FONT>
+            </P>
+            
+            <P ALIGN=CENTER>
+               <br/>
+               <img src='/wlmedia/img/HomepageSplash.jpg' title='Widelands' alt='Widelands-Screenshot' />
+               <br/><br/>
+            </p>
+         </div>
+      </td>
+   </tr>
+</table>
+
+<!-- Begin of text -->
+<table align="center" cellpadding="0" cellspacing="2">
+   <tr>
+      <td>
+         <div class="blockContent">
+            <br />
+            <P ALIGN=Left>
+            Widelands is an open source (GPLed) real-time strategy
+            game. It is built upon the <a
+               href='http://www.libsdl.org'>SDL</a> and other open
+            source libraries and still under heavy development. If
+            you knew Settlers I & II&#8482; (© Bluebyte), then you
+            already have a rough idea what Widelands is all about.
+            Yes, it is where the inspiration for Widelands came
+            from<br /><br />You can find more information on the
+            game in our wiki.<br />For playing rules, scenarios and
+            extensions see the  <a title="About Widelands"
+               href="/wiki/AboutWidelands">About page</a>.<br />For
+            installation directions and various troubleshooting see
+            the <a href="/wiki/MainPage">Help page</a>.<br />
+
+            Visit also the <a
+               href="http://xoops.widelands.org/modules/newbb">Forums</a>
+            for chat with the community about the game, playing,
+            translation, graphics, music and much more.<br /></p>
+            </P>
+         </div>
+      </td>
+   </tr>
+</table>
+
+{% get_latest_posts 3 as latest_posts_list %}
+{% if latest_posts_list %}
+   <h2><a href="/news">Latest news:</a></h2>
+   {% for post in latest_posts_list %}
+      {% post_detail post %}
+   <br />
+   {% endfor %}
+{% endif %}
+
+{% endblock %}
