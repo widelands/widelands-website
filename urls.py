@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     # 3rd party, modified for widelands
     (r'^wiki/', include('wiki.urls')),
     (r'^news/', include('news.urls')),
+    (r'^forum/', include('pybb.urls')),
     
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),

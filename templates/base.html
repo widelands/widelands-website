@@ -9,70 +9,56 @@
 
 <head>
    <title>{% block title %}Widelands.org{% endblock %}</title> 
-<link href="/wlmedia/favicon.ico" rel="SHORTCUT ICON" />
+   {% block extra_head %}{% endblock %}
+<link href="{{ MEDIA_URL }}/favicon.ico" rel="SHORTCUT ICON" />
 
-<!--  CSS --> 
-<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/style.css" />
+<!-- Javascript, normalizes div heights -->
+<script src="{{ MEDIA_URL }}/js/x.js" type="text/javascript"></script>
+<script src="{{ MEDIA_URL }}/js/normalize_div_heights.js" type="text/javascript"></script>
+
+<!-- CSS --> 
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/base.css" />
 </head>
 
 <body>
-<table align="center" border="0" cellpadding="0" cellspacing="0" id="main">
- <tr>
- <td>
-<table width="100%" cellspacing="0">
-  <tr> 
-    <td id="headerbanner">
-       <a href="{% url mainpage %}"><img src="/wlmedia/img/Logo.png" align="center" /></a>
-    </td>
-  </tr>
-  <tr>
-    <td id="headerbottombar">
-    </td>
-  </tr>
-</table>
 
-<table border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td id="table_topleft"></td>
-    <td id="table_topright"></td>
-  </tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" >
-  <tr>
-     {% include "left_boxes.html" %}
+<!-- Header Bar -->
+<div id="headerbanner">
+   <a href="{% url mainpage %}"><img src="{{ MEDIA_URL }}/img/Logo.png" align="center" /></a>
+</div>
+<div id="headerbottombar">
+</div>
 
-    <td id="centercolumn">
-       <div id="content"> 
-       {% block content %}
-        No Content here!
-       {% endblock %}
-       </div>
-      <br /> <br />
-	  </td>
 
-     {% include "right_boxes.html" %}
+<div id="container">
+   <!-- Left Boxes Column -->
+   <div id="leftcolumn">
+      <div id=leftcontent>
+      {% include "left_boxes.html" %}
+      </div>
+   </div>
 
-     <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" id="table_bottom">
-        <tr>
-           <td id="table_bottomleft"></td>
-           <td id="table_bottomright"></td>
-        </tr>
-     </table>
-  </td>
-  </tr>
+   <!-- Right Boxes Column -->
+   <div id="rightcolumn">
+      <div id="rightcontent">
+      {% include "right_boxes.html" %}
+      </div>
+   </div>
 
-  <table width="750"  border="0" cellpadding="0" cellspacing="0">
-  <tr>
-     <td>
-      <div class="footer">
-        <br/>
-        {% include "footer.html" %}
-        <br/>
-     </div>
-     </td>
-  </tr>
-  </table>
-  <br/>
+   <!-- Main Content -->
+   <div id="content">
+      <div id="contentcontent">
+      {% block content %}Nothing here!{% endblock %}
+      </div>
+   </div>
+</div>
+
+<!-- Footer -->
+<div id="footer">
+  {% include "footer.html" %}
+  <div class="br"><div class="bl"></div></div>
+</div>
+
 
 </body>
 </html>
