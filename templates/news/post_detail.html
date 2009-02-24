@@ -7,6 +7,8 @@
 {% block body_class %}{{ block.super }} post_detail{% endblock %}
 {% block body_id %}post_{{ object.id }}{% endblock %}
 
+{% block extra_head %}<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/news.css" />{{ block.super }}{% endblock %}
+
 
 {% block content %}
   <h2>{{ object.title }}</h2>
@@ -19,8 +21,7 @@
     {% endif %}
   </p>
    
-  {% post_detail object %}
-
+  {% include "news/inlines/post_detail.html" %}
   
 
 {% comment %}

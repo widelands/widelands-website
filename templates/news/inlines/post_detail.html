@@ -1,0 +1,42 @@
+{% comment %}
+ vim:ft=htmldjango:
+
+ This file contains the simple way to render a news item
+
+{% endcomment %}
+{% load news markup tagging_tags %}
+
+   <div class="news_item">
+         <h3 class="title">{# TODO: categories! #} {{ object.title }}</h3>
+         <div class="info_line"> 
+            <span class="news_poster">Posted by {{object.author}}</span>
+            <span class="news_post_date">on {{ object.publish|date:"j F Y" }}</span> 
+         </div>
+         <div class="content">
+               {% comment %} TODO: post picture 
+               <a href='http://xoops.widelands.org/modules/news/index.php?storytopic=4'><img src='http://xoops.widelands.org/modules/news/images/topics/59330258038d8f6b.png' alt='Developers' hspace='10' vspace='10' align='left' /></a>
+               {% endcomment %}
+               <div class="text">
+               {{ object.body|markdown:"safe" }}
+               </div>
+         </div>
+         {% tags_for_object object as tag_list %}
+         {% if tag_list %}
+         <div class="tags">
+            <strong>Tags:</strong>
+            {% for tag in tag_list %}
+            {{ tag }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+         </div>
+         {% endif %}
+         {% comment %}
+            I want to see how the page looks without any admin stuff
+         {% if perms.news %}
+         <div class="admin">
+            {% if perms.news.post_can_add %}<a href="/admin/news/post/add/">Add New Post</a>{% endif %}
+            {% if perms.news.post_can_edit %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
+            {% if perms.news.post_can_delete %}| <a href="/admin/news/post/{{object.id}}/delete/">Delete</a>{% endif %}
+         </div>
+         {% endif %}
+         {% endcomment %}
+   </div>

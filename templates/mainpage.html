@@ -9,7 +9,7 @@
 {% endcomment %}
 
 {% load news %}
-
+{% block extra_head %}<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/news.css" />{{ block.super}}{% endblock %}
 {% block content %}
 
 
@@ -32,20 +32,8 @@
    </p>
 </div>
 
-<table align="center" cellpadding="0" cellspacing="2">
-   <tr>
-      <td><div class="blockTitle"></div>
-      </td>
-   </tr>
-</table>
-
 <!-- Begin of text -->
-<table align="center" cellpadding="0" cellspacing="2">
-   <tr>
-      <td>
-         <div class="blockContent">
-            <br />
-            <P ALIGN=Left>
+<div class="itemText">
             Widelands is an open source (GPLed) real-time strategy
             game. It is built upon the <a
                href='http://www.libsdl.org'>SDL</a> and other open
@@ -64,17 +52,13 @@
                href="http://xoops.widelands.org/modules/newbb">Forums</a>
             for chat with the community about the game, playing,
             translation, graphics, music and much more.<br /></p>
-            </P>
-         </div>
-      </td>
-   </tr>
-</table>
+</div>
 
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
    <h2><a href="/news">Latest news:</a></h2>
-   {% for post in latest_posts_list %}
-      {% post_detail post %}
+   {% for object in latest_posts_list %}
+   {% include "news/inlines/post_detail.html" %} 
    <br />
    {% endfor %}
 {% endif %}

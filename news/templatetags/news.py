@@ -103,7 +103,3 @@ def get_links(value):
             raise template.TemplateSyntaxError, "Error in 'get_links' filter: BeautifulSoup isn't installed."
     return value
 
-@register.simple_tag
-def post_detail(post):
-    return render_to_string('news/item_post_detail.html', {'object': post } )
-

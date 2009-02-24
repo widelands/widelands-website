@@ -9,19 +9,15 @@
 
 <head>
    <title>{% block title %}Widelands.org{% endblock %}</title> 
-   {% block extra_head %}{% endblock %}
-<link href="{{ MEDIA_URL }}/favicon.ico" rel="SHORTCUT ICON" />
+<link href="/wlmedia/favicon.ico" rel="SHORTCUT ICON" />
 
-<!-- Javascript, normalizes div heights -->
-<script src="{{ MEDIA_URL }}/js/x.js" type="text/javascript"></script>
-<script src="{{ MEDIA_URL }}/js/normalize_div_heights.js" type="text/javascript"></script>
-
-<!-- CSS --> 
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/base.css" />
+<!--  CSS --> 
+<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/base.css" />
+{% block extra_head %}{% endblock %}
 </head>
 
 <body>
-
+   
 <!-- Header Bar -->
 <div id="headerbanner">
    <a href="{% url mainpage %}"><img src="{{ MEDIA_URL }}/img/Logo.png" align="center" /></a>
@@ -29,36 +25,64 @@
 <div id="headerbottombar">
 </div>
 
+<!-- Main Page starts here -->
+<!-- 
+   The decision here was between this table madness or a CSS + JS hack (resize
+   divisions after page load). Both solutions are ugly, but I prefer tables to JS hacks.
+   Can't wait for CSS3.
+-->
 
-<div id="container">
-   <!-- Left Boxes Column -->
-   <div id="leftcolumn">
-      <div id=leftcontent>
-      {% include "left_boxes.html" %}
-      </div>
-   </div>
+<!-- 
+   Top Tables are not used by current theme, they
+   might be in a future one though 
+-->
+<table border="0" cellpadding="0" cellspacing="0">
+   <tr>
+      <td id="table_topleft"></td>
+      <td id="table_topright"></td>
+   </tr>
+</table>
 
-   <!-- Right Boxes Column -->
-   <div id="rightcolumn">
-      <div id="rightcontent">
-      {% include "right_boxes.html" %}
-      </div>
-   </div>
 
-   <!-- Main Content -->
-   <div id="content">
-      <div id="contentcontent">
-      {% block content %}Nothing here!{% endblock %}
-      </div>
-   </div>
-</div>
+<!-- Table with Menus and Content -->
+<table border="0" cellpadding="0" cellspacing="0" >
+  <tr>
+     <!-- Left Column -->
+     <td id="leftcolumn">
+        {% include "left_boxes.html" %}
+     </td>
+
+     <!-- Center Column/Content -->
+     <td id="content">
+<!-- ################### CONTENT STARTS HERE ################### -->       
+       {% block content %}
+        No Content here!
+       {% endblock %}
+<!-- ###################  CONTENT ENDS HERE  ################### -->       
+     </td>
+
+     <!-- Right Column -->
+     <td id="rightcolumn">
+        {% include "right_boxes.html" %}
+     </td>
+  </tr>
+</table>
+
+<!-- Bottom Table -->
+<table border="0" cellpadding="0" cellspacing="0" id="table_bottom">
+   <tr>
+      <td id="table_bottomleft">
+      </td>
+      <td id="table_bottomright">
+      </td>
+   </tr>
+</table>
 
 <!-- Footer -->
 <div id="footer">
   {% include "footer.html" %}
   <div class="br"><div class="bl"></div></div>
 </div>
-
 
 </body>
 </html>

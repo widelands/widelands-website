@@ -5,6 +5,7 @@
 {% block title %}Post archive{% endblock %}
 {% block body_class %}{{ block.super }} post_list{% endblock %}
 
+{% block extra_head %}<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/news.css" />{{ block.super }}{% endblock %}
 
 {% block content_title %}
   <h2>Post archive</h2>
@@ -14,9 +15,9 @@
 {% block content %}
   <div class="post_list">
       <br />
-    {% for post in object_list %}
-        {% post_detail post %}
-        <br/>
+    {% for object in object_list %}
+    {% include "news/inlines/post_detail.html" %}
+       <br/>
         {% comment %}
         <div>
       <h3 class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
