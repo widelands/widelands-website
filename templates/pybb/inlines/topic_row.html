@@ -5,8 +5,7 @@
 {% load humanize %}
 {% load pybb_extras %}
 
-   <tr class={% cycle "odd" "even" %}>
-      <div id="topic_description">
+   <tr class="topic_description {% cycle "odd" "even" %}">
          <td align="center" valign="middle">
             {% if topic|pybb_has_unreads:user %}
             <img src="{{ MEDIA_URL }}/forum/img/folder_new.png" style="margin: 0px;" alt="" align="middle" />
@@ -28,6 +27,5 @@
             by {{ forum.last_post.user.username }}
             {% endif %}
          </td>
-      </div>
    </tr>
 
