@@ -1,0 +1,55 @@
+{% extends 'pybb/base.html' %}
+{% load pybb_extras %}
+{% load i18n %}
+
+{% block content %}
+<div class="crumbs">
+    <a href="{% url pybb_index %}">{% trans "Root" %}</a> / {% pybb_link topic.forum.category %} / {% pybb_link topic.forum %} / <strong>{% pybb_link topic %}</strong>
+</div>
+
+{% pybb_pagination _('Posts') %}
+
+<ul class="posts">
+    {% if first_post %}{% ifnotequal first_post posts.0 %}
+        {% with first_post as post %}
+        <li class="first_post">{% include "pybb/post_template.html" %}</li>
+        {% endwith %}
+    {% endifnotequal %}{% endif %}
+    {% for post in posts %}
+        <li>{% include "pybb/post_template.html" %}</li>
+    {% endfor %}
+</ul>
+
+{% pybb_pagination _('Posts') %}
+
+<div class="controls">
+    {% if moderator %}
+    {% if topic.sticky %}
+    <a href="{% url pybb_unstick_topic topic.id %}">{% trans "Unstick topic" %}</a>
+    {% else %}
+    <a href="{% url pybb_stick_topic topic.id %}">{% trans "Stick topic" %}</a>
+    {% endif %}
+    /
+    {% if topic.closed %}
+    <a href="{% url pybb_open_topic topic.id %}">{% trans "Open topic" %}</a>
+    {% else %}
+    <a href="{% url pybb_close_topic topic.id %}">{% trans "Close topic" %}</a>
+    {% endif %}
+    /
+    {% endif %}
+    {% if user.is_authenticated %}
+    {% if subscribed %}
+    <a href="{% url pybb_delete_subscription topic.id %}?from_topic">{% trans "Unsubscribe" %}</a>
+    {% else %}
+    <a href="{% url pybb_add_subscription topic.id %}">{% trans "Subscribe" %}</a>
+    {% endif %}
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+{% if not topic.closed %}
+{% include "pybb/add_post_form.html" %}
+{% endif %}
+{% endif %}
+
+{% endblock %}
