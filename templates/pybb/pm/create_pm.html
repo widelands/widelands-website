@@ -1,0 +1,19 @@
+{% extends 'pybb/base.html' %}
+{% load pybb_extras %}
+{% load i18n %}
+
+{% block content %}
+<div class="crumbs">
+    <a href="{% url pybb_index %}">{% trans "Root" %}</a> / {% trans "New private message" %}
+</div>
+{% include "pybb/pm/common.html" %}
+
+<form method="post">
+    <fieldset>
+        <legend>{% trans "New private message" %}</legend>
+        {{ form.as_p }}
+        <p><input type="submit" value="{% trans "Submit" %}" /></p>
+    </fieldset>
+</form>
+
+{% endblock %}

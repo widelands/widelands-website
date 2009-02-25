@@ -1,0 +1,68 @@
+{% extends 'pybb/base.html' %}
+{% load pybb_extras %}
+{% load i18n %}
+
+{% block content %}
+
+{% pybb_pagination _('Posts') %}
+
+<div class="posts">
+
+   <table cellspacing="1" width="100%">
+     <tr align="center">
+        <th         >Author</td>
+        <th width="85%" nowrap="nowrap">Message</td>
+     </tr>
+   </table>
+
+   {% if first_post %}
+      {% ifnotequal first_post posts.0 %}
+         {% with first_post as post %}
+         <div class="first_post">
+            {% include "pybb/inlines/post.html" %}
+         </div>
+         {% endwith %}
+      {% endifnotequal %}
+   {% endif %}
+   {% for post in posts %}
+   <div class="post">
+      {% include "pybb/inlines/post.html" %}
+   </div>
+   {% endfor %}
+</div>
+
+{% pybb_pagination _('Posts') %}
+<div class="controls">
+    {% if moderator %}
+    {% if topic.sticky %}
+    <a href="{% url pybb_unstick_topic topic.id %}">{% trans "Unstick topic" %}</a>
+    {% else %}
+    <a href="{% url pybb_stick_topic topic.id %}">{% trans "Stick topic" %}</a>
+    {% endif %}
+    |
+    {% if topic.closed %}
+    <a href="{% url pybb_open_topic topic.id %}">{% trans "Open topic" %}</a>
+    {% else %}
+    <a href="{% url pybb_close_topic topic.id %}">{% trans "Close topic" %}</a>
+    {% endif %}
+    |
+    {% endif %}
+    {% comment %}
+    TODO: subscribe
+    {% if user.is_authenticated %}
+    {% if subscribed %}
+    <a href="{% url pybb_delete_subscription topic.id %}?from_topic">{% trans "Unsubscribe" %}</a>
+    {% else %}
+    <a href="{% url pybb_add_subscription topic.id %}">{% trans "Subscribe" %}</a>
+    {% endif %}
+    {% endif %}
+    {% endcomment %}
+</div>
+
+{% if user.is_authenticated %}
+{% if not topic.closed %}
+{% include "pybb/add_post_form.html" %}
+{% endif %}
+{% endif %}
+
+{% endblock %}

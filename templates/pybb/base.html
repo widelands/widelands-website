@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/forum.css" />
+<script type="text/javascript" src="{{ MEDIA_URL }}/forum/js/jquery.js"></script>
+
+{{ block.super}}{% endblock %}
+

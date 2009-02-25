@@ -9,7 +9,7 @@
 {% endcomment %}
 
 {% load news %}
-{% block extra_head %}<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/news.css" />{{ block.super}}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/news.css" />{{ block.super}}{% endblock %}
 {% block content %}
 
 
@@ -51,7 +51,7 @@
             Visit also the <a
                href="http://xoops.widelands.org/modules/newbb">Forums</a>
             for chat with the community about the game, playing,
-            translation, graphics, music and much more.<br /></p>
+            translation, graphics, music and much more.<br />
 </div>
 
 {% get_latest_posts 3 as latest_posts_list %}

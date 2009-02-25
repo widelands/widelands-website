@@ -28,11 +28,15 @@ background-repeat: repeat-x;
  vertical-align: top;
 
 }
-#leftcolumn {
+/* The content is capsuled in divs, because
+ * Firefox is ignoring min-width arguments
+ * for tables
+ */
+#leftcontent {
    min-width: 175px;
 }
-#rightcolumn {
- min-width: 160px;
+#rightcontent {
+   min-width: 170px;
 }
 
 
@@ -51,8 +55,8 @@ padding: 0px;
 } 
 #mainmenu .sub {
 padding-left: 20px;
-color: red important !;
-font-weight: normal important !;
+color: red;
+font-weight: normal;
 }
 
 
@@ -61,22 +65,47 @@ font-weight: normal important !;
 /******************/
 #content {
  text-align: left;
+ vertical-align: top;
  padding: 8px;
  padding-top: 0px;
  background-color: #333333;
  background: url(../img/background.png);
 
- font: Verdana, Arial, Helvetica, sans-serif
  font-size: 12px;
  color: #D0DFFF;
  width: 100%;
+}
+
+/****************/
+/* BOTTOM TABLE */
+/****************/
+table#table_bottom {
+ background-color: #333333;
+ background: url(../img/background.png);
+
+ width: 100%;
+}
+td#table_bottomleft {
+ background: url(../img/table_bottomleft.png);
+ background-repeat: no-repeat;
+ background-position: left;
+ height:8px;
+ width:8px;
+}
+
+td#table_bottomright {
+ background: url(../img/table_bottomright.png);
+ background-repeat: no-repeat;
+ background-position: right;
+ height:8px;
+ width:8px;
 }
 
 /**********/
 /* FOOTER */
 /**********/
 #footer {
- width 100%
+ width: 100%;
  height: 8px;
  background: url(../img/background.png); 
 }
@@ -115,9 +144,12 @@ body {
  font-size: 12px;
  background-color: #000000;
  margin: 0;
- padding 0;
+ padding: 0;
 }
 
+img {
+   border: 0px;
+}
 
 a {
  color: #D0DFFF;
@@ -132,31 +164,35 @@ a:hover {
  text-decoration: underline;
 }
 
-
-/****************/
-/* BOTTOM TABLE */
-/****************/
-table#table_bottom {
- background-color: #333333;
- background: url(../img/background.png);
-
- width: 100%;
-}
-td#table_bottomleft {
- background: url(../img/table_bottomleft.png);
- background-repeat: no-repeat;
- background-position: left;
- height:8px;
- width:8px;
+/*
+ * Default table layout
+ */
+th {
+   font-weight: bold;
+   background-position: left;
+   text-align: left;
+   padding-left: 4px;
+   background-image: url('../img/Navbar.png');
+   background-repeat: repeat-x;
+   height: 20px;
 }
 
-td#table_bottomright {
- background: url(../img/table_bottomright.png);
- background-repeat: no-repeat;
- background-position: right;
- height:8px;
- width:8px;
+/*
+ * Odd Even Tags (mainly for tables)
+ */
+.even {
+ background-color: #444444;
+ background: url(../img/background-444.png);
+ padding: 5px;
 }
 
+.odd {
+ background-color: #4f4f4f;
+ background: url(../img/background-4F4F4F.png);
+ padding: 5px;
+}
+
+.legend {
+}
 
 

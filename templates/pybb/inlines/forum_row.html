@@ -1,0 +1,40 @@
+{% comment %}
+  vim:ft=htmldjango:
+{% endcomment %}
+
+{% load humanize %}
+{% load pybb_extras %}
+
+	<tr>
+      <td class="even" align="center" valign="middle">
+         {% if forum|pybb_has_unreads:user %}
+         <img src="{{ MEDIA_URL }}/forum/img/folder_new_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
+         {% else %}
+         <img src="{{ MEDIA_URL }}/forum/img/folder_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
+         {% endif %}
+      </td>
+      <td class="odd">
+         <div id="index_forum">
+            <span class="item">
+               <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+               {# TODO: RSS feeds #}
+               {# (<a href="http://xoops.widelands.org/modules/newbb/rss.php?f=2" target="_blank" title="RSS feed">RSS</a>) #}
+               <br />
+               {{ forum.description }} 
+            </span>
+         </div>
+      </td>
+      <td class="even" align="center" valign="middle">{{ forum.topics.count }} </td>
+      <td class="odd" align="center" valign="middle">{{ forum.posts.count }}</td>
+      <td class="even" align="right" valign="middle">
+         {%if forum.last_post %}
+         {{ forum.last_post.created|naturalday|title }} {{forum.last_post.created|time:"H:i"}}
+         <br />
+         by {{ forum.last_post.user.username }}
+         in <br/>
+         <a href="{{forum.last_post.get_absolute_url}}">{{ forum.last_post.topic.name }}</a>
+         <br />
+         {% endif %}
+      </td>
+   </tr>
+

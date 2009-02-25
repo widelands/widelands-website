@@ -1,0 +1,121 @@
+{% comment %}
+   vim:ft=htmldjango:
+{% endcomment %}
+
+{% load i18n %}
+{% load humanize %}
+{% load pybb_extras %}
+
+   <table class="{% cycle "odd" "even" %}" width="100%">
+      <tr>
+         <td class="author">{{ post.user.username }}</td>
+         <td width="85%" class="at"><strong>Posted:</strong> {{ post.created|naturalday|title }} {{ post.created|time:"H:i" }}</td>
+      </tr>
+      <tr>
+         <td class="userinfo">
+            <div class="userinfo">
+               <strong>Joined:</strong> {{ post.user.date_joined|naturalday|title }}<br/>
+               <strong>Posts:</strong> {{ post.user.get_profile.post_count }}<br/>
+               {% if post.user.get_profile.location %}
+               <strong>Location:</strong> {{ post.user.get_profile.location }}<br/>
+               {% endif %}
+            </div>
+         </td>
+         <td width="85%" class="content">
+            {{ post.body_html|safe }}
+            {% if not user.is_authenticated or user.pybb_profile.show_signatures %}
+            {% if post.user.pybb_profile.signature %}
+            <div class="signature">
+                {{ post.user.pybb_profile.signature|urlize|linebreaks }}
+            </div>
+            {% endif %}
+            {% endif %}
+            {% if post.updated %}
+            <div class="updated-message">{% trans "Edited" %} {% pybb_time post.updated %}</div>
+            {% endif %}
+
+            {% if post.attachment_cache %}
+            {% for attach in post.attachment_cache %}
+            {% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
+            {% endfor %}
+            {% endif %}
+         </td>
+      </tr>
+      <tr>
+         <td class="toplink">
+            <a href="#top">Top</a>
+         </td>
+
+         <td>
+            <div class="tools" style="float: left;">
+                  {% if moderator or post|pybb_posted_by:user %}
+                  <a href="{% url pybb_edit_post post.id %}">
+                     <img src="{{MEDIA_URL}}/forum/img/en/p_edit.png" height="26" alt ="{% trans "Edit" %}">
+                  </a>
+                  {% endif %}
+                  {% if moderator or post|pybb_equal_to:last_post %}
+                  {% if moderator or post.user|pybb_equal_to:user %}
+                  <a href="{% url pybb_delete_post post.id %}">
+                     <img src="{{MEDIA_URL}}/forum/img/en/p_delete.png" height="26" alt ="{% trans "Delete" %}">
+                  </a>
+                  {% endif %}
+                  {% endif %}
+            </div>
+            <div class="tools" style="float: right;">
+                <a href="{% url pybb_add_post topic.id %}?quote_id={{ post.id }}">
+                     <img src="{{MEDIA_URL}}/forum/img/en/p_quote.png" height="26" alt ="{% trans "Quote" %}">
+                  </a>
+            </div>
+         </td>
+      </tr>
+   </table>
+
+{% comment %}
+                    {% if post.user.pybb_profile.avatar %}
+                    <div class="avatar">
+                        <a href="{% url pybb_profile post.user %}">
+                        <img src="{{ post.user.pybb_profile.avatar.url }}" />
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div class="bottom">
+                        <a class="permalink" href="{{ post.get_absolute_url }}">#</a>
+                        <span class="updated">{% pybb_time post.created %}</span>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <div class="pm-link">
+                        <a href="{% url pybb_create_pm %}?recipient={{ post.user.username }}">{% trans "Send PM" %}</a>
+                    </div>
+                    {% endif %}
+                    </div>
+                </td>
+                <td class="content" width="85%">
+                    {{ post.body_html|safe }}
+                    {% if not user.is_authenticated or user.pybb_profile.show_signatures %}
+                    {% if post.user.pybb_profile.signature %}
+                    <div class="signature">
+                        {{ post.user.pybb_profile.signature|urlize|linebreaks }}
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if post.updated %}
+                    <div class="updated-message">{% trans "Edited" %} {% pybb_time post.updated %}</div>
+                    {% endif %}
+
+                    {% if post.attachment_cache %}
+                    {% for attach in post.attachment_cache %}
+                    {% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
+                    {% endfor %}
+                    {% endif %}
+
+                    <div class="post-related">
+                        <a href="{% url pybb_add_post topic.id %}?quote_id={{ post.id }}">{% trans "quote" %}</a>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+                    <!--<div style="clear: both"></div>-->
+    </div>
+</div>
+{% endcomment%}

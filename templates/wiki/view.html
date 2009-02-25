@@ -7,29 +7,30 @@
 {% endblock %}
 
 {% block content %}
-   <div align="right">
-	{% if article.id %}
-		<a href="{% url wiki_edit article.title %}">{% trans "Edit this article" %}</a>
-        |
-        <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
-        {% if can_observe %}
-           | 
-           {% if is_observing %} 
-              <a href="{% url wiki_stop_observing article.title %}">{% trans "Stop observing" %}</a>
-           {% else %}
-              <a href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
-           {% endif %}
+   <div class="wiki_article">
+       <div align="right">
+        {% if article.id %}
+            <a href="{% url wiki_edit article.title %}">{% trans "Edit this article" %}</a>
+            |
+            <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
+            {% if can_observe %}
+               | 
+               {% if is_observing %} 
+                  <a href="{% url wiki_stop_observing article.title %}">{% trans "Stop observing" %}</a>
+               {% else %}
+                  <a href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
+               {% endif %}
+            {% endif %}
+        {% else %}
+            <a href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
         {% endif %}
-	{% else %}
-		<a href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
-	{% endif %}
-   </div>
-	{% if not article.id %}
-		<p>{% trans "This article does not exist." %}
-          <a href="{% url wiki_edit article.title %}" {% trans ">Create it now</a>?" %}</p>
-	{% endif %}
-
-    {% render_content article %}
-
+       </div>
+        {% if not article.id %}
+            <p>{% trans "This article does not exist." %}
+            <a href="{% url wiki_edit article.title %}" {% trans ">Create it now</a>?" %}</p></a>
+        {% endif %}
+        
+        {% render_content article %}
+    </div>
 {% endblock %}
 

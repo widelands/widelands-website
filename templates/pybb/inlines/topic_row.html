@@ -1,0 +1,33 @@
+{% comment %}
+  vim:ft=htmldjango:
+{% endcomment %}
+
+{% load humanize %}
+{% load pybb_extras %}
+
+   <tr class={% cycle "odd" "even" %}>
+      <div id="topic_description">
+         <td align="center" valign="middle">
+            {% if topic|pybb_has_unreads:user %}
+            <img src="{{ MEDIA_URL }}/forum/img/folder_new.png" style="margin: 0px;" alt="" align="middle" />
+            {% else %}
+            <img src="{{ MEDIA_URL }}/forum/img/folder.png" style="margin: 0px;" alt="" align="middle" />
+            {% endif %}
+         </td>
+         <td id="name">
+            <span class="name"><a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></span>
+         </td>
+         <td><span class="creator">{{ topic.user.username }}</span></td>
+         <td><span class="at">{{ topic.created|naturalday|title }} {{ topic.created|time:"H:i" }}</span></td>
+         <td><span class="count">{{ topic.post_count }}</span></td>
+         <td><span class="views">{{ topic.views }}</span></td>
+         <td>
+            {%if topic.last_post %}
+            {{ forum.last_post.created|naturalday|title }} {{forum.last_post.created|time:"H:i"}}
+            <br />
+            by {{ forum.last_post.user.username }}
+            {% endif %}
+         </td>
+      </div>
+   </tr>
+

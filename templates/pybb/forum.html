@@ -1,0 +1,58 @@
+{% extends 'pybb/base.html' %}
+{% load pybb_extras %}
+{% load i18n %}
+
+{% block content %}
+    <div class="forum-list">
+        <span class="title">{{ forum }}</span>
+         
+        <div class="index_forum">
+           {% pybb_pagination _('Topics') %}
+           <div class="controls">
+               <a href="{% url pybb_add_topic forum.id %}">{% trans "New topic" %}</a>
+           </div>
+
+           <table cellspacing="1" width="100%">
+              <tr align="center">
+                 <th width="5%">&nbsp;</td>
+                 <th width="40%" nowrap="nowrap" align="left">Topic</td>
+                 <th             nowrap="nowrap">Creator</td>
+                 <th             nowrap="nowrap">At</td>
+                 <th             nowrap="nowrap">Posts</td>
+                 <th             nowrap="nowrap">Views</td>
+                 <th width="20%" nowrap="nowrap">Last Post</td>
+              </tr>
+
+              {# List all forums #}
+              {% for topic in forum.topics.all %}
+              {% include "pybb/inlines/topic_row.html" %}
+              {% endfor %}
+            </table>
+           
+           {% pybb_pagination _('Topics') %}
+           <div class="controls">
+               <a href="{% url pybb_add_topic forum.id %}">{% trans "New topic" %}</a>
+           </div>
+        
+        </div>        
+        
+        <table class="legend">
+           <tr>
+              <td
+                 <img src="{{MEDIA_URL}}/forum/img/folder_new.png" style=":" alt="" align="middle" />
+              </td><td>= Unread posts</td>
+              <td>
+                  <img src="{{MEDIA_URL}}/forum/img/folder.png" style="" alt="" align="middle" /> 
+              </td><td>= No unread posts</td>
+              <td>
+           </tr>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% comment %}
+<div class="crumbs">
+    <a href="{% url pybb_index %}">{% trans "Root" %}</a> / {% pybb_link forum.category %} / {% pybb_link forum %}
+</div>
+{% endcomment %}

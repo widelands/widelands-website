@@ -14,15 +14,15 @@
 <h2> {% trans "Article History" %} </h2>
 
 <form action="{% url wiki_revert_to_revision article.title %}" method="post">
-  <table>
-    <tr class="tbheader">
+  <table class="history_list">
+    <tr>
 	  <th>{% trans "At" %}</th>
 	  <th>{% trans "User" %}</th>
 	  <th>{% trans "Comment" %}</th>
 	  <th>{% trans "Revert" %}</th>
     </tr>
     {% for change in changes %}
-    <tr class="{% cycle 'tbodd' 'tbeven' %}">
+    <tr class="{% cycle 'odd' 'even' %}">
     	<td><a href="{{ change.get_absolute_url }}">
     		{{ change.modified|date:"M d, Y" }}</a>
         </td>

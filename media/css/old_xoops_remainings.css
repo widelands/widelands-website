@@ -80,18 +80,6 @@ input.formButton {}
 	 height: 20px;
 	}
 
-	.even {
-	 background-color: #444444;
-	 background: url(../img/background-444.png);
-	 padding: 5px;
-	}
-
-	.odd {
-	 background-color: #4f4f4f;
-	 background: url(../img/background-4F4F4F.png);
-	 padding: 5px;
-	}
-
 	.foot {
 	 padding: 5px;
 	 font-weight: bold;

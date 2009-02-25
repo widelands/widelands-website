@@ -1,0 +1,28 @@
+{% comment %}
+   vim:ft=htmldjango:
+
+   How to display a Forum list in the index page
+{% endcomment %}
+
+<div class="index_category">
+
+    <span class="title"> {{category.cat}} </span>
+    
+    <table cellspacing="1" width="100%">
+        <tr align="center">
+            <th width="5%">&nbsp;</td>
+            <th width="57%" nowrap="nowrap" align="left">Forum</td>
+            <th width="9%" nowrap="nowrap">Topics</td>
+            <th width="9%" nowrap="nowrap">Posts</td>
+            <th width="20%" nowrap="nowrap">Last Post</td>
+        </tr>
+
+        {# List all forums #}
+        {% for forum in category.forums %}
+        {% include 'pybb/inlines/forum_row.html' %}
+        {% endfor %}
+
+    </table>
+
+</div>
+

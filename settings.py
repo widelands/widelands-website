@@ -92,6 +92,16 @@ ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
 ######################
 WIKI_LOCK_DURATION = 30
 
+######################
+# User configuration #
+######################
+AUTH_PROFILE_MODULE = 'pybb.Profile'
+
+######################
+# Pybb Configuration #
+######################
+PYBB_ATTACHMENT_ENABLE = False
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -110,13 +120,13 @@ INSTALLED_APPS = (
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications
     'widelands.news', # This is based on simple-blog, but has some local modifications
+    'pybb', # Feature enriched version of pybb
 
     # Thirdparty apps
     'notification',
     'registration', # User registration (per Email validation)
     'pagination',
     'tagging',
-    'pybb', # Feature enriched version of pybb
 )
 
 try:
