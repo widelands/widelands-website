@@ -16,6 +16,8 @@ urlpatterns = patterns('',
                        
     # 3rd party, unmodified
     (r'^notification/', include('notification.urls')),
+    # (r'^stats/', include('simplestats.urls')),
+    (r'^messages/', include('messages.urls')),
 
     # 3rd party, modified for widelands
     (r'^wiki/', include('wiki.urls')),
@@ -25,6 +27,10 @@ urlpatterns = patterns('',
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
 )
+
+from simplestats.registration import registrar
+
+registrar.register(r'^/media/img/counter.png')
 
 try:
     from local_urls import *

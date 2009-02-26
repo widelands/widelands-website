@@ -48,6 +48,13 @@
 
          <td>
             <div class="tools" style="float: left;">
+                  {% if user.is_authenticated %}
+                  {% ifnotequal user post.user %}
+                  <a href="{% url messages_compose_to post.user %}">
+                     Send PM
+                  </a>
+                  {% endifnotequal %}
+                  {% endif %}
                   {% if moderator or post|pybb_posted_by:user %}
                   <a href="{% url pybb_edit_post post.id %}">
                      <img src="{{MEDIA_URL}}/forum/img/en/p_edit.png" height="26" alt ="{% trans "Edit" %}">

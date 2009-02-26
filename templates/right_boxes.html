@@ -6,13 +6,26 @@
 
 {% endcomment %}
 
+{% load inbox %}
+{% load i18n %}
+
          <!-- Login Block / User informations -->
          {% if user.is_authenticated %}
          <h3 class="box_title">Account</h3>
          <div class="box_content" align="center"> 
+            <p>
             Your are logged in as<br/>
-            <b>{{ user.username }}</b><br/>
+            <b>{{ user.username }}</b>
+            </p>
+      
+            <p>
+            <a href="{% url messages_inbox %}">{% inbox_count %} {% trans "new messages" %}</a>
+            </p>
+
+            <p>
             <a href="/accounts/logout/next={{request.path}}">Logout</a>
+            </p>
+
          </div>
          {% else %}
          <h3 class="box_title">Login</h3>

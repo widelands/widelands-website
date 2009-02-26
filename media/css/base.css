@@ -133,6 +133,11 @@ div.box_content {
  padding-top: 0px;
  padding-bottom: 20px;
 }
+.box_content p {
+   margin: 0px;
+   padding: 0px;
+   padding-bottom: 4px;
+}
 
 
 /***************************************************************/

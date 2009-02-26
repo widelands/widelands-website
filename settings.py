@@ -58,6 +58,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    # 'simplestats.middleware.RegexLoggingMiddleware',
     'django.middleware.gzip.GZipMiddleware', # Remove this, when load gets to high
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -124,6 +125,8 @@ INSTALLED_APPS = (
     'pybb', # Feature enriched version of pybb
 
     # Thirdparty apps
+    # 'simplestats',
+    'messages',
     'notification',
     'registration', # User registration (per Email validation)
     'pagination',

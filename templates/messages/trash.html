@@ -1,0 +1,18 @@
+{% extends "messages/base.html" %} 
+{% load i18n %} 
+{% block content %} 
+{% include "messages/inlines/navigation.html" %} 
+<h1>{% trans "Deleted Messages" %}</h1>
+<table class="messages" cellspacing="1">
+    <thead>
+        <tr><th>{% trans "Sender" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Date" %}</th><th>{% trans "Action" %}</th></tr>
+    </thead>
+    <tbody>
+{% for message in message_list %} 
+   {% include "messages/inlines/message_row.html" %}
+{% endfor %}
+    </tbody>
+</table>
+<br />
+<p>{% trans "Deleted Messages are removed from the trash at unregular intervals, don't rely on this feature for long-time storage." %}</p>
+{% endblock %}

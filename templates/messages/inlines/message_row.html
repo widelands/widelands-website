@@ -1,0 +1,16 @@
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+{% load i18n %}  
+
+   <tr class="message {% cycle "odd" "even" %}">
+      <td>{{ message.sender }}</td>
+      <td>
+          {% if message.new %}<u>{% endif %}
+          {% if message.replied %}<em>{% endif %}
+          <a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
+          {% if message.replied %}</em>{% endif %}
+          {% if message.new %}</u>{% endif %}</td>
+      <td>{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
+      <td><a href="{% url messages.views.delete message.id %}">{% trans "delete" %}</a></td>
+   </tr>
