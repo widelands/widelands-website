@@ -1,0 +1,38 @@
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+<table class="building" width="100%" cellspacing="1">
+   <tr>
+      <th>{{b.displayname|title }}</th>
+      <th>Description</th>
+      {% if b.has_build_cost %}
+      <th>Build cost</th>
+      {% endif %}
+      {% if b.produces %}
+      <th>Produces</th>
+      {% endif %}
+   </tr>
+   <tr class="odd">
+      <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}"></td>
+      <td>{{ b.help }}</td>
+      {% if b.has_build_cost %}
+      <td>
+         {% for costs in b.get_build_cost %}
+            {% for w in costs %}
+               <img src="{{ MEDIA_URL }}/{{ w.image_url }}">
+            {% endfor %}
+            <br/>
+         {%endfor%}
+      </td> 
+      {% endif %}
+      {% if b.produces %}
+      <td>
+         {% for w in b.get_outputs %}
+            <img src="{{ MEDIA_URL }}/{{ w.image_url }}">
+         {%endfor%}
+      </td>
+      {% endif %}
+   </tr>
+</table>
+
