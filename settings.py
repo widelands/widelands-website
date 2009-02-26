@@ -127,7 +127,6 @@ INSTALLED_APPS = (
 
     # Thirdparty apps
     # 'simplestats',
-    'comment_utils',
     'threadedcomments',
     'messages',
     'registration', # User registration (per Email validation)
