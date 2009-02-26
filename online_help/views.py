@@ -2,9 +2,10 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from .models import Ware, Building, Tribe
 
-def wares(request):
+def wares(request, tribe="barbarians"):
+    t = Tribe.objects.get(name=tribe)
     return render_to_response('wares.html', context_instance=RequestContext(request, 
-        { "wares": Ware.objects.all() }))
+        { "wares": Ware.objects.filter(tribe=t) }))
 
 def buildings(request, tribe="barbarians"):
     t = Tribe.objects.get(name=tribe)

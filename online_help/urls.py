@@ -13,6 +13,6 @@ from django.conf.urls.defaults import *
 from views import * 
 
 urlpatterns= patterns('',
-    url(r'^wares/$', wares, name="help_wares"),
+    url(r'^(?P<tribe>\w+)/wares/$', wares, name="help_wares"),
     url(r'^(?P<tribe>\w+)/buildings/$', buildings, name="help_buildings"),
 )
