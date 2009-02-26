@@ -8,8 +8,8 @@ from widelands.news.models import Post, Category
 
 class NewsPostsFeed(Feed):
     _site = Site.objects.get_current()
-    title = '%s feed' % _site.name
-    description = '%s posts feed.' % _site.name
+    title = 'Widelands news posts feed'
+    description = 'The news section from the widelands.org homepage'
 
     def link(self):
         return reverse('news_index')

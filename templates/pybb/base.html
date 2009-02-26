@@ -5,5 +5,8 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/forum.css" />
 <script type="text/javascript" src="{{ MEDIA_URL }}/forum/js/jquery.js"></script>
 
+<link rel="alternate" type="application/atom+xml" title="Latest Posts" href="{% url pybb_feed "posts" %}" />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics" href="{% url pybb_feed "topics" %}" />
+
 {{ block.super}}{% endblock %}
 

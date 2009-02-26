@@ -6,6 +6,13 @@
 {{ article.title }} - Wiki - {{block.super}}
 {% endblock %}
 
+
+{% block extra_head %}
+<link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }}" href="{% url wiki_article_history_feed article.title "rss" %}" />
+<link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }}" href="{% url wiki_article_history_feed article.title "atom" %}" />
+{{ block.super}}
+{% endblock %}
+
 {% block content %}
    <div class="wiki_article">
        <div align="right">

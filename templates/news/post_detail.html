@@ -3,7 +3,7 @@
 
 {% load news %}
 
-{% block title %}{{ object.title }} - News - {{ block.super }} {% endblock %}
+{% block title %}{{ object.title }} - {{ block.super }} {% endblock %}
 {% block body_class %}{{ block.super }} post_detail{% endblock %}
 {% block body_id %}post_{{ object.id }}{% endblock %}
 
