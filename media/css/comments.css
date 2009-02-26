@@ -1,0 +1,26 @@
+
+
+/* 
+ * Comment
+ */
+.comment {
+   margin: 0px;
+   padding-bottom: 2px;
+   border: 1px solid rgb(20%,20%,20%); 
+   border-top: 0px;
+   width="100%";
+}
+.comment p {
+    margin: 0px;
+    margin-bottom: 4px;
+}
+.comment .at {
+   text-align: right;
+   font-size: 90%;
+}
+.comment .author {
+   font-size: 110%;
+   font-style: italic;
+   vertical-align: top;
+   margin-bottom: 5px;
+}

@@ -57,11 +57,17 @@
 	 font-family: Cretino, "Bitstream Vera Serif", serif;
 	 font-weight: bold;
 	}
-	
-.news_item .tags {
-	 text-align: right;
+
+.news_item .bottom_line {
 	 padding: 3px;
 	 background-color: #222222;
 	 background: url(../img/background-222.png);
 }
+.news_item .tags {
+	 float: right;
+}
+.news_item .comments {
+	 float: left;
+}
+	
 	

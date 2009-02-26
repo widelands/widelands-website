@@ -126,11 +126,13 @@ INSTALLED_APPS = (
 
     # Thirdparty apps
     # 'simplestats',
+    'comment_utils',
+    'threadedcomments',
     'messages',
-    'notification',
     'registration', # User registration (per Email validation)
     'pagination',
     'tagging',
+    'notification',
 )
 
 try:
