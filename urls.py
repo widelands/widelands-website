@@ -28,10 +28,6 @@ urlpatterns = patterns('',
     url(r'^$', mainpage, name="mainpage"),
 )
 
-from simplestats.registration import registrar
-
-registrar.register(r'^/media/img/counter.png')
-
 try:
     from local_urls import *
     urlpatterns += local_urlpatterns
