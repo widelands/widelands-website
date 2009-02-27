@@ -4,7 +4,7 @@
  This file contains the simple way to render a news item
 
 {% endcomment %}
-{% load news markup tagging_tags threadedcommentstags %}
+{% load news wl_markdown tagging_tags threadedcommentstags %}
 
    <div class="news_item">
          <h3 class="title">{# TODO: categories! #} {{ object.title }}</h3>
@@ -41,6 +41,7 @@
         </div>
          {% comment %}
             I want to see how the page looks without any admin stuff
+         {% endcomment %}
          {% if perms.news %}
          <div class="admin">
             {% if perms.news.post_can_add %}<a href="/admin/news/post/add/">Add New Post</a>{% endif %}
@@ -48,5 +49,4 @@
             {% if perms.news.post_can_delete %}| <a href="/admin/news/post/{{object.id}}/delete/">Delete</a>{% endif %}
          </div>
          {% endif %}
-         {% endcomment %}
    </div>
