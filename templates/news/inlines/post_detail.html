@@ -13,12 +13,12 @@
             <span class="news_post_date">on {{ object.publish|date:"j F Y" }}</span> 
          </div>
          <div class="content">
-               {% comment %} TODO: post picture 
-               <a href='http://xoops.widelands.org/modules/news/index.php?storytopic=4'><img src='http://xoops.widelands.org/modules/news/images/topics/59330258038d8f6b.png' alt='Developers' hspace='10' vspace='10' align='left' /></a>
-               {% endcomment %}
-               <div class="text">
-               {{ object.body|markdown:"safe" }}
-               </div>
+            {% if object.has_image %}
+            <span class="news_image"><img src='{{MEDIA_URL}}{{ object.image }}' alt='{{ object.image_alt }}' /></span>
+            {% endif %}
+            <div class="text">
+            {{ object.body|markdown:"safe" }}
+            </div>
          </div>
          
         <div class="bottom_line">

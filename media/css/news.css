@@ -2,6 +2,13 @@
 .news_poster { font-size: 90%;}
 .news_post_date { font-size: 90%;}
 
+
+.news_item .news_image img {
+   float: right;   
+   padding: 0px;
+   margin-left: 20px;
+}
+
 .news_item {
     border: 1px solid rgb(9, 9, 9);
     width: 100%;

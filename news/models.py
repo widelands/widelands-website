@@ -8,10 +8,18 @@ from widelands.news.managers import PublicManager
 import tagging
 
 
+def get_upload_name( inst, fn ):
+    try:
+        extension = fn.split('.')[-1].lower()
+    except:
+        extension = 'png'
+    return 'news/img/%s.%s' % (inst.title,extension)
+
 class Category(models.Model):
     """Category model."""
     title       = models.CharField(_('title'), max_length=100)
     slug        = models.SlugField(_('slug'), unique=True)
+    image       = models.ImageField( upload_to=get_upload_name, max_length=100 )
 
     class Meta:
         verbose_name = _('category')
@@ -64,6 +72,28 @@ class Post(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.title
+   
+    #########
+    # IMAGE #
+    #########
+    # Currently this is only inherited from the category, but one
+    # day we might want to override the post image here
+    @property
+    def has_image(self):
+        if self.categories.count() == 0:
+            return False
+        return self.categories.all()[0].image != ''
+    @property
+    def image(self):
+        if self.categories.count() == 0:
+            return None 
+        return self.categories.all()[0].image
+    @property
+    def image_alt(self):
+        "alt='' tag for <img>"
+        if self.categories.count() == 0:
+            return '' 
+        return self.categories.all()[0].title
 
     @permalink
     def get_absolute_url(self):
