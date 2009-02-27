@@ -23,32 +23,31 @@
             </div>
          </div>
          
-        <div class="bottom_line">
-        &nbsp;
-
+        <table class="bottom_line" width="100%">
+         <tr>
          {% get_comment_count for object as ccount %}
-         <div class="comments">
+         <td class="comments">
              <a href="{{ object.get_absolute_url }}">{{ ccount }} comments</a>
-         </div>
-
+         </td>
+         
+         <td class="admin">
+         {% if perms.news %}
+         {% if perms.news.post_can_add %}<a href="/admin/news/post/add/">Add New Post</a>{% endif %}
+         {% if perms.news.post_can_edit %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
+         {% if perms.news.post_can_delete %}| <a href="/admin/news/post/{{object.id}}/delete/">Delete</a>{% endif %}
+         {% endif %}
+         </td>
+         
          {% tags_for_object object as tag_list %}
+         <td class="tags">
          {% if tag_list %}
-         <div class="tags">
             <strong>Tags:</strong>
             {% for tag in tag_list %}
             {{ tag }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
-         </div>
          {% endif %}
-        </div>
-         {% comment %}
-            I want to see how the page looks without any admin stuff
-         {% endcomment %}
-         {% if perms.news %}
-         <div class="admin">
-            {% if perms.news.post_can_add %}<a href="/admin/news/post/add/">Add New Post</a>{% endif %}
-            {% if perms.news.post_can_edit %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
-            {% if perms.news.post_can_delete %}| <a href="/admin/news/post/{{object.id}}/delete/">Delete</a>{% endif %}
-         </div>
-         {% endif %}
+         </td>
+         </tr>
+
+      </table>
    </div>
