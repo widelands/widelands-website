@@ -15,8 +15,10 @@
          <div class="content">
             {% if object.has_image %}
             <span class="news_image"><img src='{{MEDIA_URL}}{{ object.image }}' alt='{{ object.image_alt }}' /></span>
-            {% endif %}
+            <div class="text" style='min-height: {{ object.image.height }}px;'>
+            {% else %}
             <div class="text">
+            {% endif %}
             {{ object.body|markdown:"safe" }}
             </div>
          </div>
