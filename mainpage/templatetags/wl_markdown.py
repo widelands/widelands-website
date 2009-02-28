@@ -16,15 +16,41 @@ from django.utils.safestring import mark_safe
 import markdown2
 import re
 
+from BeautifulSoup import BeautifulSoup
+
 register = template.Library()
 
-link_patterns = [
-    # Match a wiki page link LikeThis.
-    (re.compile(r"(\b[A-Z][a-z]+[A-Z]\w+\b)"), r"/wiki/\1")
+custom_filters = [
+    # Match a wiki page link LikeThis. All !WikiWords (with a ! in front) are ignored
+    (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m: m.group(2) if m.group(1) == '!' \
+        else u"""<a href="/wiki/%(match)s">%(match)s</a>""" % {"match": m.group(2) }),
+    
 ]
 
 def do_wl_markdown( value, *args, **keyw ):
-    return markdown2.markdown(value, extras = [ "footnotes", "link-patterns"], link_patterns=link_patterns, *args, **keyw)
+    nvalue = markdown2.markdown(value, extras = [ "footnotes"], *args, **keyw)
+    
+    # Since we only want to do replacements outside of tags (in general) and not between
+    # <a> and </a> we partition our site accordingly
+    # BeautifoulSoup does all the heavy lifting
+    soup = BeautifulSoup(nvalue)
+    ctag = soup.contents[0]
+
+    for text in soup.findAll(text=True):
+        # Do not replace inside a link
+        if text.parent.name == "a":
+            continue
+
+        # We do our own small preprocessing of the stuff we got, after markdown went over it
+        # General consensus is to avoid replacing anything in links [blah](blkf)
+        for pattern,replacement in custom_filters:
+            rv = pattern.sub( replacement, text )
+            if rv:
+                text.replaceWith(rv)
+                # Only one replacement allowed!
+                break
+    return unicode(soup)
+
 
 @register.filter
 def wl_markdown(value, arg=''):

@@ -1,23 +1,57 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
+#!/usr/bin/python -tt
 
-Replace these with more appropriate tests for your application.
-"""
+# Load and runs the test from the utest subdirectory
+# your unittests should append ".." to their path to 
+# find the files relative to this directory
 
-from django.test import TestCase
+import unittest
+from glob import glob
+import os
+import sys
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+prefix = ""
+append_path = False
+if __name__ != "__main__":
+    prefix = __name__[:-5]
+    append_path = True
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+def suite( ):
+    # If we are not called directly, we have
+    # to append this path to sys.path so our
+    # subtests will find their files
+    this_dir = os.path.dirname(__file__)
+    if append_path:
+        sys.path.append( this_dir )
 
->>> 1 + 1 == 2
-True
-"""}
+    suite = unittest.TestSuite()
+    l = unittest.TestLoader()
+    
+    dname = os.path.dirname(__file__)
+
+    for f in glob("%s/utest/*.py" % dname):
+        if os.path.basename(f) == '__init__.py':
+            continue
+       
+        modname = "%sutest.%s" % (prefix,os.path.basename(f)[:-3])
+
+        # Load tests
+        tests = l.loadTestsFromName( modname )
+        suite.addTests(tests)
+    
+    if append_path:
+        sys.path.remove( this_dir )
+
+    return suite
+  
+def main( ):
+    tsuite = suite()
+    runner = unittest.TextTestRunner()
+    runner.run(tsuite)
+    return unittest.TestResult()
+
+
+
+if __name__ == '__main__':
+    main()
+
 
