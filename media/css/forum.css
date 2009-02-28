@@ -69,4 +69,9 @@
 .post .tools {
    vertical-align: bottom;
 }
+.first_post {
+   padding-bottom 20px;
+   border: 1px solid rgb(100,100,100);
+   margin-bottom: 20px;
+}
 

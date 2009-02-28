@@ -18,7 +18,7 @@
    {% if first_post %}
       {% ifnotequal first_post posts.0 %}
          {% with first_post as post %}
-         <div class="first_post">
+         <div class="post first_post">
             {% include "pybb/inlines/post.html" %}
          </div>
          {% endwith %}
