@@ -41,14 +41,14 @@
                 {% trans "Current revision" %}
             {% else %}
                  <input id="id_revision" name="revision"
-                        type="radio" value="{{ change.revision }}">
+                        type="radio" value="{{ change.revision }}" />
             {% endif %}
         </td>
     </tr>
     {% endfor %}
   </table>
 
-  <input type="submit" value="{% trans "Revert" %}">
+  <input type="submit" value="{% trans "Revert" %}" />
 
 </form>
 

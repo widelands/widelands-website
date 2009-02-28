@@ -11,7 +11,7 @@
         <h2> {{ changeset.old_title }} </h2>
     {% endif %}
     {{ changeset.display_diff|safe }}
-    <br><b>{% trans "Markup:" %}</b>
+    <br /><b>{% trans "Markup:" %}</b>
     {% if changeset.old_markup %} {{ changeset.old_markup }}
     {% else %} {% trans "Plain Text." %}
     {% endif %}

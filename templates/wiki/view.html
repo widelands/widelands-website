@@ -34,7 +34,7 @@
        </div>
         {% if not article.id %}
             <p>{% trans "This article does not exist." %}
-            <a href="{% url wiki_edit article.title %}" {% trans ">Create it now</a>?" %}</p></a>
+            <a href="{% url wiki_edit article.title %}">{% trans "Create it now?" %}</a></p>
         {% endif %}
         
         {% render_content article %}
