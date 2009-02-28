@@ -103,6 +103,7 @@ AUTH_PROFILE_MODULE = 'pybb.Profile'
 # Pybb Configuration #
 ######################
 PYBB_ATTACHMENT_ENABLE = False
+PYBB_DEFAULT_MARKUP = 'markdown'
 
 INSTALLED_APPS = (
     'django.contrib.auth',

@@ -29,7 +29,7 @@ def wikiwords(s):
         '(?:[A-Z]+[a-z]+){2,}'
     """
     # @@@ TODO: absolute links
-    s = wikiwordfier.sub(r'<a href="../\1/">\1</a>', s)
+    s = wikiwordfier.sub(r'<a href="/wiki/\1/">\1</a>', s)
     return force_unicode(s)
 wikiwords.is_safe = True
 

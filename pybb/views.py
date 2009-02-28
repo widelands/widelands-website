@@ -1,5 +1,5 @@
 import math
-from markdown import Markdown
+from mainpage.templatetags.wl_markdown import do_wl_markdown as Markdown
 from pybb.markups import mypostmarkup 
 
 from django.shortcuts import get_object_or_404

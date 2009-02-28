@@ -1,5 +1,5 @@
 from datetime import datetime
-from markdown import Markdown
+from mainpage.templatetags.wl_markdown import do_wl_markdown as Markdown
 import os.path
 import sha
 
@@ -27,8 +27,8 @@ TZ_CHOICES = [(float(x[0]), x[1]) for x in (
 )]
 
 MARKUP_CHOICES = (
-    ('bbcode', 'bbcode'),
     ('markdown', 'markdown'),
+    #    ('bbcode', 'bbcode'),
 )
 
 
