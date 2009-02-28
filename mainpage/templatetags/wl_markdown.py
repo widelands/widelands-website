@@ -18,10 +18,10 @@ import markdown2
 register = template.Library()
 
 @register.filter
-def markdown(value, arg=''):
+def wl_markdown(value, arg=''):
     """
     My own markup filter, wrapping the markup2 library, which is less bugged.
     """
     return mark_safe(force_unicode(markdown2.markdown(smart_str(value))))
-markdown.is_safe = True
+wl_markdown.is_safe = True
 

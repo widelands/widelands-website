@@ -19,7 +19,7 @@
             {% else %}
             <div class="text">
             {% endif %}
-            {{ object.body|markdown:"safe" }}
+            {{ object.body|wl_markdown:"safe" }}
             </div>
          </div>
          
