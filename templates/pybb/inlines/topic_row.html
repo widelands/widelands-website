@@ -22,9 +22,9 @@
          <td><span class="views">{{ topic.views }}</span></td>
          <td>
             {%if topic.last_post %}
-            {{ forum.last_post.created|naturalday|title }} {{forum.last_post.created|time:"H:i"}}
+            {{ topic.last_post.created|naturalday|title }} {{topic.last_post.created|time:"H:i"}}
             <br />
-            by {{ forum.last_post.user.username }}
+            by {{ topic.last_post.user.username }}
             {% endif %}
          </td>
    </tr>
