@@ -15,7 +15,7 @@ from django.contrib.contenttypes import generic
 from tagging.fields import TagField
 from tagging.models import Tag
 
-from images.models import Image
+# from wlimages.models import Image
 
 try:
     from notification import models as notification
@@ -63,7 +63,7 @@ class Article(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     group = generic.GenericForeignKey('content_type', 'object_id')
 
-    images = generic.GenericRelation(Image)
+    # images = generic.GenericRelation(Image)
 
     tags = TagField()
 

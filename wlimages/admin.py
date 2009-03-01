@@ -11,7 +11,7 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from images.models import Image
+from models import Image
 
 class ImageAdmin(admin.ModelAdmin):
     fieldsets = (

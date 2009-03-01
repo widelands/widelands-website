@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block content %}
+<form  enctype="multipart/form-data" action="/images/upload/" method="POST">
+{{ upload_form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}

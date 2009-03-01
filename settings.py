@@ -120,7 +120,7 @@ INSTALLED_APPS = (
     # Our own apps
     'widelands.mainpage',
     'widelands.online_help',
-    'widelands.images',
+    'widelands.wlimages',
 
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications
