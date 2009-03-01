@@ -14,22 +14,22 @@
       {% endif %}
    </tr>
    <tr class="odd">
-      <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}"></td>
+      <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
       <td>{{ b.help }}</td>
       {% if b.has_build_cost %}
       <td>
          {% for costs in b.get_build_cost %}
             {% for w in costs %}
-               <img src="{{ MEDIA_URL }}/{{ w.image_url }}">
+               <img src="{{ MEDIA_URL }}/{{ w.image_url }}" />
             {% endfor %}
-            <br/>
+            <br />
          {%endfor%}
       </td> 
       {% endif %}
       {% if b.produces %}
       <td>
          {% for w in b.get_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ w.image_url }}">
+            <img src="{{ MEDIA_URL }}/{{ w.image_url }}" />
          {%endfor%}
       </td>
       {% endif %}

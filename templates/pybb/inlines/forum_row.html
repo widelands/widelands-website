@@ -5,7 +5,7 @@
 {% load humanize %}
 {% load pybb_extras %}
 
-	<tr>
+    <tr>
       <td class="even" align="center" valign="middle">
          {% if forum|pybb_has_unreads:user %}
          <img src="{{ MEDIA_URL }}/forum/img/folder_new_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
@@ -31,7 +31,7 @@
          {{ forum.last_post.created|naturalday|title }} {{forum.last_post.created|time:"H:i"}}
          <br />
          by {{ forum.last_post.user.username }}
-         in <br/>
+         in <br />
          <a href="{{forum.last_post.get_absolute_url}}">{{ forum.last_post.topic.name }}</a>
          <br />
          {% endif %}

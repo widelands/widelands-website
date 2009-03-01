@@ -15,10 +15,10 @@
       <tr>
          <td class="userinfo">
             <div class="userinfo">
-               <strong>Joined:</strong> {{ post.user.date_joined|naturalday|title }}<br/>
-               <strong>Posts:</strong> {{ post.user.get_profile.post_count }}<br/>
+               <strong>Joined:</strong> {{ post.user.date_joined|naturalday|title }}<br />
+               <strong>Posts:</strong> {{ post.user.get_profile.post_count }}<br />
                {% if post.user.get_profile.location %}
-               <strong>Location:</strong> {{ post.user.get_profile.location }}<br/>
+               <strong>Location:</strong> {{ post.user.get_profile.location }}<br />
                {% endif %}
             </div>
          </td>
@@ -58,20 +58,20 @@
                   {% endif %}
                   {% if moderator or post|pybb_posted_by:user %}
                   <a href="{% url pybb_edit_post post.id %}">
-                     <img src="{{MEDIA_URL}}/forum/img/en/p_edit.png" height="26" alt ="{% trans "Edit" %}">
+                     <img src="{{MEDIA_URL}}/forum/img/en/p_edit.png" height="26" alt ="{% trans "Edit" %}" />
                   </a>
                   {% endif %}
                   {% if moderator or post|pybb_equal_to:last_post %}
                   {% if moderator or post.user|pybb_equal_to:user %}
                   <a href="{% url pybb_delete_post post.id %}">
-                     <img src="{{MEDIA_URL}}/forum/img/en/p_delete.png" height="26" alt ="{% trans "Delete" %}">
+                     <img src="{{MEDIA_URL}}/forum/img/en/p_delete.png" height="26" alt ="{% trans "Delete" %}" />
                   </a>
                   {% endif %}
                   {% endif %}
             </div>
             <div class="tools" style="float: right;">
                 <a href="{% url pybb_add_post topic.id %}?quote_id={{ post.id }}">
-                     <img src="{{MEDIA_URL}}/forum/img/en/p_quote.png" height="26" alt ="{% trans "Quote" %}">
+                     <img src="{{MEDIA_URL}}/forum/img/en/p_quote.png" height="26" alt ="{% trans "Quote" %}" />
                   </a>
             </div>
          </td>

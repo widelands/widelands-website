@@ -16,10 +16,10 @@ urlpatterns = patterns('',
     url('^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
         {'feed_dict': feeds}, name='pybb_feed'),
 
-    # User
-    url('^user/(?P<username>.*)/$', views.user, name='pybb_profile'),
-    url('^profile/edit/$', views.edit_profile, name='pybb_edit_profile'),
-    url('^users/$', views.users, name='pybb_users'),
+    # User not done by pybb
+    # url('^user/(?P<username>.*)/$', views.user, name='pybb_profile'),
+    # url('^profile/edit/$', views.edit_profile, name='pybb_edit_profile'),
+    # url('^users/$', views.users, name='pybb_users'),
 
     # Topic
     url('^topic/(?P<topic_id>\d+)/$', views.show_topic, name='pybb_topic'),
@@ -44,11 +44,11 @@ urlpatterns = patterns('',
     url('^subscription/topic/(?P<topic_id>\d+)/delete/$', views.delete_subscription, name='pybb_delete_subscription'),
     url('^subscription/topic/(?P<topic_id>\d+)/add/$', views.add_subscription, name='pybb_add_subscription'),
 
-    # Private messages
-    url('^pm/new/$', views.create_pm, name='pybb_create_pm'),
-    url('^pm/outbox/$', views.pm_outbox, name='pybb_pm_outbox'),
-    url('^pm/inbox/$', views.pm_inbox, name='pybb_pm_inbox'),
-    url('^pm/show/(?P<pm_id>\d+)/$', views.show_pm, name='pybb_show_pm'),
+    # Private messages <done by django-messages>
+    # url('^pm/new/$', views.create_pm, name='pybb_create_pm'),
+    # url('^pm/outbox/$', views.pm_outbox, name='pybb_pm_outbox'),
+    # url('^pm/inbox/$', views.pm_inbox, name='pybb_pm_inbox'),
+    # url('^pm/show/(?P<pm_id>\d+)/$', views.show_pm, name='pybb_show_pm'),
 
     # API 
     url('^api/post_ajax_preview/$', views.post_ajax_preview, name='pybb_post_ajax_preview'),

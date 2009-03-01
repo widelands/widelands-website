@@ -5,7 +5,12 @@
 <h1>{% trans "Deleted Messages" %}</h1>
 <table class="messages" cellspacing="1">
     <thead>
-        <tr><th>{% trans "Sender" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Date" %}</th><th>{% trans "Action" %}</th></tr>
+        <tr>
+            <th>{% trans "Sender" %}</th>
+            <th>{% trans "Subject" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Action" %}</th>
+        </tr>
     </thead>
     <tbody>
 {% for message in message_list %} 

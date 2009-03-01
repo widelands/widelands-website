@@ -4,9 +4,9 @@
 
 {% block content %}
 <div>
-    <a href="{% url pybb_pm_inbox %}">{% trans "Inbox" %}</a></p>
-    <a href="{% url pybb_pm_outbox %}">{% trans "outbox" %}</a></p>
-    <a href="{% pybb_inbox"
+    <p><a href="{% url pybb_pm_inbox %}">{% trans "Inbox" %}</a></p>
+    <p><a href="{% url pybb_pm_outbox %}">{% trans "outbox" %}</a></p>
+    <a href="{% pybb_inbox %}">{# what goes here? probably tb fixed (whole line) #}</a>
 </div>
 {% block pm_content %}
 {% endblock %}
