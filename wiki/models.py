@@ -15,6 +15,8 @@ from django.contrib.contenttypes import generic
 from tagging.fields import TagField
 from tagging.models import Tag
 
+from images.models import Image
+
 try:
     from notification import models as notification
     from django.db.models import signals
@@ -60,6 +62,8 @@ class Article(models.Model):
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
     group = generic.GenericForeignKey('content_type', 'object_id')
+
+    images = generic.GenericRelation(Image)
 
     tags = TagField()
 

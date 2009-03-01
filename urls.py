@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
     url(r'^help/', include("online_help.urls")),
+    url(r'^images/', include("images.urls")),
 )
 
 try:
