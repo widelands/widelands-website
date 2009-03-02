@@ -115,6 +115,26 @@ class TestWlMarkdown(DBTestCase):
         wanted = u"""<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>\n"""
         self._check(input,wanted)
 
+    # Occured errors
+    def test_wiki_rootlink(self):
+        input = u"""<a href="/wiki">this page</a>"""
+        wanted = u"""<p><a href="/wiki">this page</a></p>\n"""
+        self._check(input,wanted)
+    def test_wiki_rootlink_with_slash(self):
+        input = u"""<a href="/wiki/">this page</a>"""
+        wanted = u"""<p><a href="/wiki/">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    # Special pages
+    def test_wiki_specialpage(self):
+        input = u"""<a href="/wiki/list">this page</a>"""
+        wanted = u"""<p><a href="/wiki/list">this page</a></p>\n"""
+        self._check(input,wanted)
+    def test_wiki_specialpage_markdown(self):
+        input = u"""[list](/wiki/list)"""
+        wanted = u"""<p><a href="/wiki/list">list</a></p>\n"""
+        self._check(input,wanted)
+
 if __name__ == '__main__':
     unittest.main()
     # k = TestWlMarkdown_WikiWordsInLink_ExceptCorrectResult()

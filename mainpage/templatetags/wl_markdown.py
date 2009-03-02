@@ -70,6 +70,13 @@ def _classify_link( tag ):
         # Using href because we need cAsEs here
         pn = tag["href"][6:].split('/',1)[0]
         
+        if not len(pn): # Wiki root link is not a page
+            return None
+
+        # Wiki special pages are also not counted
+        if pn in ["list","search","history","feeds","observe","edit" ]:
+            return None
+
         if Article.objects.filter(title=pn).count() == 0:
             return "missing"
 
@@ -123,12 +130,7 @@ def do_wl_markdown( value, *args, **keyw ):
 
     # We have to go over this to classify links
     for tag in soup.findAll("a"):
-        print "tag:", tag
-        print "check_for_missing_wikipages:", check_for_missing_wikipages
-
         rv = _classify_link(tag)
-        print "rv:", rv
-
         if rv:
             tag["class"] = rv
 
