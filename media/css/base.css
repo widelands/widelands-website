@@ -164,7 +164,8 @@ a {
 }
 a.external:before {
 	padding-right: 2px;
-	content: url(../img/external_link.gif);
+   /* Must be an absolute reference, otherwise some browsers give errors */
+   content: url(/wlmedia/img/external_link.gif);
 }
 a.missing {
    color: rgb(255, 85, 0);
