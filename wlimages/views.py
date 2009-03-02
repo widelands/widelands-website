@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
 
 from models import Image
 from settings import MEDIA_ROOT
@@ -29,11 +30,12 @@ def display( request, image, revision ):
     return r
 
 @login_required
-def upload(request):
+def upload(request,content_type,object_id):
     if request.method == 'POST':
         form = UploadImageForm(request.POST, request.FILES) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            Image.objects.create_and_save_image(user=request.user,image=request.FILES["image"])
+            Image.objects.create_and_save_image(user=request.user,image=request.FILES["image"], 
+                        content_type=ContentType.objects.get(pk=content_type),object_id=object_id)
             
             return HttpResponseRedirect('/') # Redirect after POST
     else:

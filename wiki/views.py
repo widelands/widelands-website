@@ -309,7 +309,8 @@ def edit_article(request, title,
             form = ArticleFormClass(instance=article,
                                     initial=initial)
 
-    template_params = {'form': form}
+    template_params = {'form': form, "content_type": ContentType.objects.get_for_model(Article).pk, "object_id": article.pk,
+            "images": article.all_images()}
 
     if group_slug is not None:
         template_params['group'] = group

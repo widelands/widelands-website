@@ -8,9 +8,6 @@ from datetime import datetime
 
 from settings import MEDIA_ROOT
 
-# TEMP
-from widelands.wiki.models import Article
-
 class ImageManager(models.Manager):
     """
     We overwrite the defaults manager to make sure 
@@ -33,15 +30,13 @@ class ImageManager(models.Manager):
         
         return super(ImageManager,self).create(**keyw)
 
-    def create_and_save_image(self,user,image):
+    def create_and_save_image(self,user,image, content_type, object_id):
         # if self.has_image(name):
         #     raise RuntimeError,"Image with name %s already exists. This is likely an Error" % name
         name = image.name.lower()
-        im = self.create(content_type=ContentType.objects.get_for_model(Article), object_id=1, 
+        im = self.create(content_type=content_type, object_id=object_id, 
                     user=user,revision=1,name=name)
 
-        # Image.objects.create(name=name,content_type=ContentType.objects.get_for_model(Article),
-        #                      image="/images/%s" % name)
         path = "%s/images/%s" % (MEDIA_ROOT,image.name)
         print "path:", path
 

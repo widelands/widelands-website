@@ -1,5 +1,6 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
+{% load wlimages %}
 
 {% block title %}
     {% trans "Editing article" %}
@@ -17,5 +18,21 @@
 		</div>
 
 	</form>
+   
+   <h2>Images</h2>
+   Jetzt kommen Bilder
+   {% for img in images %}
+   {{img}}
+   {{ img.image.url }}
+   {% endfor %}
+
+   {% get_upload_form as iform %}
+   <form  enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/" method="POST">
+        {{ iform.as_p }}
+		<div class="submit">
+			<input type="submit" value="{% trans "Upload Image" %}" />
+		</div>
+	</form>
+
 {% endblock %}
 

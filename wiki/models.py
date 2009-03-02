@@ -15,7 +15,7 @@ from django.contrib.contenttypes import generic
 from tagging.fields import TagField
 from tagging.models import Tag
 
-# from wlimages.models import Image
+from wlimages.models import Image
 
 try:
     from notification import models as notification
@@ -63,7 +63,7 @@ class Article(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     group = generic.GenericForeignKey('content_type', 'object_id')
 
-    # images = generic.GenericRelation(Image)
+    images = generic.GenericRelation(Image)
 
     tags = TagField()
 
@@ -86,6 +86,9 @@ class Article(models.Model):
                 reverted=False).order_by('-revision')[0]
         except IndexError:
             return ChangeSet.objects.none()
+    
+    def all_images(self):
+        return self.images.all()
 
     def new_revision(self, old_content, old_title, old_markup,
                      comment, editor_ip, editor):
