@@ -173,7 +173,13 @@ class AtomArticleHistoryFeed(atom.Feed):
         super(AtomArticleHistoryFeed, self).__init__('', request)
 
     def get_object(self, bits):
+        # We work around a bug here which is likely in atomformat.py; 
+        # when the Article doesn't exist this throws an Exception. We
+        # will care for this by first checking for the Article
+        get_object_or_404(Article,title=bits[0])
+        
         return self.article_qs.get(title = bits[0])
+
 
     def feed_title(self, obj):
         return "History for: %s " % obj.title

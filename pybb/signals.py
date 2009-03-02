@@ -6,16 +6,17 @@ from pybb.subscription import notify_topic_subscribers, notify_pm_recipients
 from pybb.models import Post, PrivateMessage
 
 def user_saved(instance, **kwargs):
-    check_gravatar(instance)
+    # check_gravatar(instance)
+    pass
 
 def post_saved(instance, **kwargs):
     notify_topic_subscribers(instance)
 
 def pm_saved(instance, **kwargs):
-    notify_pm_recipients(instance)
-
+    # notify_pm_recipients(instance)
+    pass
 
 def setup_signals():
-    post_save.connect(user_saved, sender=User)
+    # post_save.connect(user_saved, sender=User)
     post_save.connect(post_saved, sender=Post)
-    post_save.connect(pm_saved, sender=PrivateMessage)
+    # post_save.connect(pm_saved, sender=PrivateMessage)

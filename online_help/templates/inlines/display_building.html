@@ -20,7 +20,7 @@
       <td>
          {% for costs in b.get_build_cost %}
             {% for w in costs %}
-               <img src="{{ MEDIA_URL }}/{{ w.image_url }}" />
+               <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
             {% endfor %}
             <br />
          {%endfor%}
@@ -29,7 +29,7 @@
       {% if b.produces %}
       <td>
          {% for w in b.get_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ w.image_url }}" />
+            <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
          {%endfor%}
       </td>
       {% endif %}
