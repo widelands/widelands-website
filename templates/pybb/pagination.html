@@ -2,15 +2,20 @@
 <div class="pagination">
 
     {% if page.has_previous %}
-    <a href="{{ page.previous_link }}">&lt;{% trans "Back" %}</a>
+        {% if page.not_first %}
+        <a href="?page={{ first }}">&lt;&lt;{% trans "First" %}&nbsp;&nbsp;</a>
+        {% endif %}
+    <a href="?page={{ previous_page_number }}">&lt;{% trans "Back" %}</a>
     {% endif %}
 
-    <span class="summary">{{ label }} <strong>{{ page.start_index }}</strong>&mdash;<strong>{{ page.end_index }}</strong> {% trans "of" %} <strong>{{ paginator.count }}</strong>
+    <span class="summary">{{ label }} <strong>{{ page.start_index }}</strong>&mdash;<strong>{{ page.end_index }}</strong> {% trans "of" %} <strong>{{ paginator.count }}</strong> {% trans "posts" %} {% if page.has_other_pages %} {% trans "in" %} <strong>{{ paginator.num_pages }}</strong> {% trans "pages" %}
     </span>
 
     {% if page.has_next %}
-    <a href="{{ page.next_link }}">{% trans "Forward" %}&gt;</a>
+    <a href="?page={{ next_page_number }}">{% trans "Forward" %}&gt;</a>
+        {% if page.not_last %}
+        <a href="?page={{ last }}">&nbsp;&nbsp;{% trans "Last" %}&gt;&gt;</a>
+        {% endif %}
     {% endif %}
-
 
 </div>
