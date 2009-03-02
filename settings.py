@@ -105,6 +105,13 @@ AUTH_PROFILE_MODULE = 'pybb.Profile'
 PYBB_ATTACHMENT_ENABLE = False
 PYBB_DEFAULT_MARKUP = 'markdown'
 
+#######################
+# Link classification #
+#######################
+LOCAL_DOMAINS = [
+    "xoops.widelands.org"
+]
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

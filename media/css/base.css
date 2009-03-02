@@ -162,6 +162,13 @@ a {
  font-weight: bold;
  background-color: transparent;
 }
+a.external:before {
+	padding-right: 2px;
+	content: url(../img/external_link.gif);
+}
+a.missing {
+   color: rgb(255, 85, 0);
+} 
 
 
 a:hover {
@@ -169,6 +176,7 @@ a:hover {
  text-decoration: underline;
 }
 
+   
 /*
  * Default table layout
  */
