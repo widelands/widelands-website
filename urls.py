@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
     url(r'^help/', include("online_help.urls")),
+    url(r'^webchat/', include("wlwebchat.urls")),
 )
 
 try:
