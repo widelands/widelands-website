@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'widelands.mainpage',
     'widelands.online_help',
     'widelands.wlwebchat',
+    'widelands.wlrecaptcha',
 
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications

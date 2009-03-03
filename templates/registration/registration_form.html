@@ -46,6 +46,15 @@ vim:ft=htmldjango:
         {% endfor %}
     </td>
 </tr>
+<tr align="right">
+    <td align="right" valign="top">Prove that you're no spambot:</td>
+    <td>
+        {{ registration_form.captcha|safe }} <br/>
+        {% for error in registration_form.captcha.errors %}
+        <span class="errormessage">{{ error }}</span>
+        {% endfor %}
+    </td>
+</tr>
 <tr>
     <td>&nbsp;</td>
     <td><input type="submit" value="Register" /></td>
