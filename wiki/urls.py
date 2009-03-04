@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls.defaults import *
-
+from django.http import HttpResponseRedirect
 from wiki import views, models
 from wiki.templatetags.wiki import WIKI_URL_RE
-
+from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('',
-    url(r'^$', views.article_list, name='wiki_index'),
+    # I wanted a true reverse, but it didn't work out 
+    url(r'^$', redirect_to, { "url": "/wiki/MainPage" }, name="wiki_index" ),
 
     url(r'^list/$', views.article_list, name='wiki_list'),
 

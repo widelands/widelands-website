@@ -15,7 +15,7 @@ vim:ft=htmldjango:
     <td>
         {{ registration_form.username }} <br/>
         {% for error in registration_form.username.errors %}
-        <span style="color:red">{{ error }}</span>
+        <span class="errormessage">{{ error }}</span>
         {% endfor %}
     </td>
 </tr>
@@ -24,7 +24,7 @@ vim:ft=htmldjango:
     <td>
         {{ registration_form.email }} <br/>
         {% for error in registration_form.email.errors %}
-        <span style="color:red">{{ error }}</span>
+        <span class="errormessage">{{ error }}</span>
         {% endfor %}
     </td>
 </tr>
@@ -33,7 +33,7 @@ vim:ft=htmldjango:
     <td>
         {{ registration_form.password1 }} <br/>
         {% for error in registration_form.password1.errors %}
-        <span style="color:red">{{ error }}</span>
+        <span class="errormessage">{{ error }}</span>
         {% endfor %}
     </td>
 </tr>
@@ -42,7 +42,16 @@ vim:ft=htmldjango:
     <td>
         {{ registration_form.password2 }} <br/>
         {% for error in registration_form.password2.errors %}
-        <span style="color:red">{{ error }}</span>
+        <span class="errormessage">{{ error }}</span>
+        {% endfor %}
+    </td>
+</tr>
+<tr align="right">
+    <td align="right" valign="top">Prove that you're no spambot:</td>
+    <td>
+        {{ registration_form.captcha|safe }} <br/>
+        {% for error in registration_form.captcha.errors %}
+        <span class="errormessage">{{ error }}</span>
         {% endfor %}
     </td>
 </tr>

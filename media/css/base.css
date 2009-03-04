@@ -162,6 +162,14 @@ a {
  font-weight: bold;
  background-color: transparent;
 }
+a.external:before {
+	padding-right: 2px;
+   /* Must be an absolute reference, otherwise some browsers give errors */
+   content: url(/wlmedia/img/external_link.gif);
+}
+a.missing {
+   color: rgb(255, 85, 0);
+} 
 
 
 a:hover {
@@ -169,6 +177,7 @@ a:hover {
  text-decoration: underline;
 }
 
+   
 /*
  * Default table layout
  */
@@ -200,4 +209,7 @@ th {
 .legend {
 }
 
-
+.errormessage {
+ color: #ff0000;
+ font-size: 13px;
+}

@@ -14,6 +14,11 @@
 import sys; sys.path.append("..")
 
 import unittest
+from wiki.models import Article
+from django.contrib.sites.models import Site
+from settings import SITE_ID
+from django.test import TestCase as DBTestCase
+_domain = Site.objects.get(pk=SITE_ID).domain
 
 from templatetags.wl_markdown import do_wl_markdown
 
@@ -21,33 +26,114 @@ class _TestWlMarkdown_Base(unittest.TestCase):
     def setUp(self):
         self.res = do_wl_markdown(self.input)
 
-class TestWlMarkdown_SimpleCase_ExceptCorrectResult(_TestWlMarkdown_Base):
-    input = u"Hallo Welt"
-    wanted = u"<p>Hallo Welt</p>\n"
-    def runTest(self):
-        self.assertEqual(self.wanted,self.res)
-# WlMarkup doesn't do urlization
-# class TestWlMarkdown_AutoLinkHTTP_ExceptCorrectResult(_TestWlMarkdown_Base):
-#     input = u"Sun: http://www.sun.com"
-#     wanted = u"""<p>Sun: <a href="http://www.sun.com">http://www.sun.com</a></p>\n"""
-#     def runTest(self):
-#         self.assertEqual(self.wanted,self.res)
-class TestWlMarkdown_WikiWordsSimple_ExceptCorrectResult(_TestWlMarkdown_Base):
-    input = u"Na Du HalloWelt, Du?"
-    wanted = u"""<p>Na Du <a href="/wiki/HalloWelt">HalloWelt</a>, Du?</p>\n"""
-    def runTest(self):
-        self.assertEqual(self.wanted,self.res)
-class TestWlMarkdown_WikiWordsAvoid_ExceptCorrectResult(_TestWlMarkdown_Base):
-    input = u"Hi !NotAWikiWord Moretext"
-    wanted = u"""<p>Hi NotAWikiWord Moretext</p>\n"""
-    def runTest(self):
-        self.assertEqual(self.wanted,self.res)
-class TestWlMarkdown_WikiWordsInLink_ExceptCorrectResult(_TestWlMarkdown_Base):
-    input = u"""WikiWord [NoWikiWord](http://www.sun.com)"""
-    wanted = u"""<p><a href="/wiki/WikiWord">WikiWord</a> <a href="http://www.sun.com">NoWikiWord</a></p>\n"""
-    def runTest(self):
-        self.assertEqual(self.wanted,self.res)
+class TestWlMarkdown(DBTestCase):
+    def setUp(self):
+        a = Article.objects.create(title="MainPage")
+        a = Article.objects.create(title="HalloWelt")
+        a = Article.objects.create(title="NoWikiWord")
+        a = Article.objects.create(title="WikiWord")
 
+    def _check(self, input, wanted):
+        res = do_wl_markdown(input)
+        self.assertEqual(wanted,res)
+
+    def test_simple_case__correct_result(self):
+        input = u"Hallo Welt"
+        wanted = u"<p>Hallo Welt</p>\n"
+        self._check(input,wanted)
+
+    def test_wikiwords_simple__except_correct_result(self):
+        input = u"Na Du HalloWelt, Du?"
+        wanted = u"""<p>Na Du <a href="/wiki/HalloWelt">HalloWelt</a>, Du?</p>\n"""
+        self._check(input,wanted)
+    
+    def test_wikiwords_avoid__except_correct_result(self):
+        input = u"Hi !NotAWikiWord Moretext"
+        wanted = u"""<p>Hi NotAWikiWord Moretext</p>\n"""
+        self._check(input,wanted)
+
+    def test_wikiwords_in_link__except_correct_result(self):
+        input = u"""WikiWord [NoWikiWord](/forum/)"""
+        wanted = u"""<p><a href="/wiki/WikiWord">WikiWord</a> <a href="/forum/">NoWikiWord</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_wikiwords_external_links__except_correct_result(self):
+        input = u"""[NoWikiWord](http://www.sun.com)"""
+        wanted = u"""<p><a href="http://www.sun.com" class="external">NoWikiWord</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_wikiwords_noexternal_links__except_correct_result(self):
+        input = u"""[NoWikiWord](http://%s/blahfasel/wiki)""" % _domain
+        wanted = u"""<p><a href="http://%s/blahfasel/wiki">NoWikiWord</a></p>\n""" %_domain
+        self._check(input,wanted)
+
+    def test_wikiwords_noclasschangeforimage_links__except_correct_result(self):
+        input =  u"""<a href="http://www.ccc.de"><img src="/blub" /></a>"""
+        wanted = u"""<p><a href="http://www.ccc.de"><img src="/blub" /></a></p>\n"""
+        self._check(input,wanted)
+    
+    # Existing links
+    def test_existing_link_html(self):
+        input = u"""<a href="/wiki/MainPage">this page</a>"""
+        wanted = u"""<p><a href="/wiki/MainPage">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_existing_link_markdown(self):
+        input = u"""[this page](/wiki/MainPage)"""
+        wanted = u"""<p><a href="/wiki/MainPage">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_existing_link_wikiword(self):
+        input = u"""MainPage"""
+        wanted = u"""<p><a href="/wiki/MainPage">MainPage</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_existing_editlink_wikiword(self):
+        input = u"""<a href="/wiki/MainPage/edit/">this page</a>"""
+        wanted = u"""<p><a href="/wiki/MainPage/edit/">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    # Missing links
+    def test_missing_link_html(self):
+        input = u"""<a href="/wiki/MissingPage">this page</a>"""
+        wanted = u"""<p><a href="/wiki/MissingPage" class="missing">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_missing_link_markdown(self):
+        input = u"""[this page](/wiki/MissingPage)"""
+        wanted = u"""<p><a href="/wiki/MissingPage" class="missing">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    def test_missing_link_wikiword(self):
+        input = u"""BlubMissingPage"""
+        wanted = u"""<p><a href="/wiki/BlubMissingPage" class="missing">BlubMissingPage</a></p>\n"""
+        res = do_wl_markdown(input)
+        # self._check(input,wanted)
+
+    def test_missing_editlink_wikiword(self):
+        input = u"""<a href="/wiki/MissingPage/edit/">this page</a>"""
+        wanted = u"""<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    # Occured errors
+    def test_wiki_rootlink(self):
+        input = u"""<a href="/wiki">this page</a>"""
+        wanted = u"""<p><a href="/wiki">this page</a></p>\n"""
+        self._check(input,wanted)
+    def test_wiki_rootlink_with_slash(self):
+        input = u"""<a href="/wiki/">this page</a>"""
+        wanted = u"""<p><a href="/wiki/">this page</a></p>\n"""
+        self._check(input,wanted)
+
+    # Special pages
+    def test_wiki_specialpage(self):
+        input = u"""<a href="/wiki/list">this page</a>"""
+        wanted = u"""<p><a href="/wiki/list">this page</a></p>\n"""
+        self._check(input,wanted)
+    def test_wiki_specialpage_markdown(self):
+        input = u"""[list](/wiki/list)"""
+        wanted = u"""<p><a href="/wiki/list">list</a></p>\n"""
+        self._check(input,wanted)
 
 if __name__ == '__main__':
     unittest.main()

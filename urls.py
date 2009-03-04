@@ -21,6 +21,7 @@ urlpatterns = patterns('',
 
     # Django builtin / Registration
     (r'^accounts/logout/(next=(?P<next_page>.*))?$', 'django.contrib.auth.views.logout'),
+url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
     (r'^accounts/', include('registration.urls')),
     (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
@@ -38,6 +39,7 @@ urlpatterns = patterns('',
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
     url(r'^help/', include("online_help.urls")),
+    url(r'^webchat/', include("wlwebchat.urls")),
     url(r'^images/', include("wlimages.urls")),
 )
 
