@@ -7,7 +7,12 @@ This directory contains the widelands homepage django project. It needs a bunch 
 * django-pagination
 * django-registration
 * django-tagging
+* django-simplestats
+* django-comment_utils
+* django-forumbr
+* django-inline
 * django-threadedcomments
+* sphenecoll
 
 # Installation
 
