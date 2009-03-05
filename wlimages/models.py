@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
 
-from settings import MEDIA_ROOT
+from settings import MEDIA_ROOT, MEDIA_URL
 
 class ImageManager(models.Manager):
     """
@@ -30,21 +30,22 @@ class ImageManager(models.Manager):
         
         return super(ImageManager,self).create(**keyw)
 
-    def create_and_save_image(self,user,image, content_type, object_id):
+    def create_and_save_image(self,user,image, content_type, object_id, ip):
         # if self.has_image(name):
         #     raise RuntimeError,"Image with name %s already exists. This is likely an Error" % name
         name = image.name.lower()
         im = self.create(content_type=content_type, object_id=object_id, 
-                    user=user,revision=1,name=name)
+                    user=user,revision=1,name=name, editor_ip = ip)
 
-        path = "%s/images/%s" % (MEDIA_ROOT,image.name)
-        print "path:", path
+        path = "%s/wlimages/%s" % (MEDIA_ROOT,image.name)
+        url = "%s/wlimages/%s" % (MEDIA_URL,image.name)
 
         destination = open(path,"wb")
         for chunk in image.chunks():
             destination.write(chunk)
 
         im.image = path
+        im.url = url
 
         im.save()
 
@@ -62,21 +63,23 @@ class Image(models.Model):
     object_id = models.PositiveIntegerField(_('object ID'))
     content_object = generic.GenericForeignKey()
     
-    name = models.CharField(max_length="100")
+    name = models.CharField(max_length=100)
     revision = models.PositiveIntegerField()
 
     # User Field
     user = models.ForeignKey(User)
-    ip_address = models.IPAddressField(_('IP address'), null=True, blank=True)
+    editor_ip = models.IPAddressField(_('IP address'), null=True, blank=True)
     
     # Date Fields
     date_submitted = models.DateTimeField(_('date/time submitted'), default = datetime.now)
     image = models.ImageField(upload_to="images/")
+    url = models.CharField(max_length=250)
+
 
     objects = ImageManager()
    
     def __unicode__(self):
-        return "Bildchen"
+        return "Image:%s" % self.name
 
     def get_content_object(self):
         """

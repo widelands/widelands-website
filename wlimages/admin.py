@@ -17,7 +17,7 @@ class ImageAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('content_type', 'object_id')}),
         (_('Content'), {'fields': ('user', 'image', 'revision', 'name')}),
-        (_('Meta'), {'fields': ('date_submitted', 'ip_address')}),
+        (_('Meta'), {'fields': ('date_submitted', 'editor_ip')}),
     )
     list_display = ('user', 'date_submitted', 'content_type', 'get_content_object', '__unicode__')
     list_filter = ('date_submitted',)

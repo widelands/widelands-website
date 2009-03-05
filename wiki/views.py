@@ -21,7 +21,6 @@ from wiki.feeds import (RssArticleHistoryFeed, AtomArticleHistoryFeed,
 from wiki.utils import get_ct 
 from django.contrib.auth.decorators import login_required 
 
-
 # Settings
 
 #  lock duration in minutes
@@ -309,7 +308,11 @@ def edit_article(request, title,
             form = ArticleFormClass(instance=article,
                                     initial=initial)
 
-    template_params = {'form': form, "content_type": ContentType.objects.get_for_model(Article).pk, "object_id": article.pk,
+    if not article:
+        template_params = {'form': form, "new_article": True }
+    else:
+        template_params = {'form': form, "new_article": False, 
+            "content_type": ContentType.objects.get_for_model(Article).pk, "object_id": article.pk,
             "images": article.all_images()}
 
     if group_slug is not None:

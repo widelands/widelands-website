@@ -7,8 +7,19 @@ from django.contrib.contenttypes.models import ContentType
 from models import Image
 from settings import MEDIA_ROOT
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
 
 from forms import UploadImageForm
+
+
+def get_real_ip(request):
+    """ Returns the real user IP, even if behind a proxy.
+    Set BEHIND_PROXY to True in your settings if Django is
+    running behind a proxy.
+    """
+    if getattr(settings, 'BEHIND_PROXY', False):
+        return request.META['HTTP_X_FORWARDED_FOR']
+    return request.META['REMOTE_ADDR']
 
 def display( request, image, revision ):
     print "revision:", revision
@@ -30,14 +41,14 @@ def display( request, image, revision ):
     return r
 
 @login_required
-def upload(request,content_type,object_id):
+def upload(request,content_type,object_id, next="/"):
     if request.method == 'POST':
         form = UploadImageForm(request.POST, request.FILES) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            Image.objects.create_and_save_image(user=request.user,image=request.FILES["image"], 
-                        content_type=ContentType.objects.get(pk=content_type),object_id=object_id)
+            Image.objects.create_and_save_image(user=request.user,image=request.FILES["imagename"], 
+                        content_type=ContentType.objects.get(pk=content_type),object_id=object_id, ip=get_real_ip(request))
             
-            return HttpResponseRedirect('/') # Redirect after POST
+            return HttpResponseRedirect(next) # Redirect after POST
     else:
         form = UploadImageForm() # An unbound form
 

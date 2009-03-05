@@ -19,20 +19,39 @@
 
 	</form>
    
-   <h2>Images</h2>
-   Jetzt kommen Bilder
-   {% for img in images %}
-   {{img}}
-   {{ img.image.url }}
-   {% endfor %}
+   
+   {% if new_article %}
+      <h2>Images</h2>
+      You must save the article once before you can attach images to it
+   {% else %}
+      {% if images.count %}
+         <h2>Images</h2>
+         Images attached to this article:
+         <table width="100%">
+         <tr>
+            <th>Image Title</th>
+            <th>Image</th>
+            <th>Code to include</th>
+         </tr>
+         {% for img in images %}
+         <tr>
+            <td>{{ img.name }}</td>
+            <td><img src="{{ img.url }}"></td>
+            <td>![{{img.name}}]({{ img.url }})</td>
+         </tr>
+         {% endfor %}
+         </table>
+      {%endif%}
 
-   {% get_upload_form as iform %}
-   <form  enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/" method="POST">
-        {{ iform.as_p }}
-		<div class="submit">
-			<input type="submit" value="{% trans "Upload Image" %}" />
-		</div>
-	</form>
+      {% get_upload_form as iform %}
+      <form  enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/{{request.path}}" method="POST">
+           {{ iform.as_p }}
+         <div class="submit">
+            <input type="submit" value="{% trans "Upload Image" %}" />
+         </div>
+      </form>
+   
+   {% endif%}
 
 {% endblock %}
 
