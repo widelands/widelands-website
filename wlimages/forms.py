@@ -6,7 +6,7 @@ import os
 class UploadImageForm(forms.Form):
     imagename = forms.ImageField()
      
-    def clean_up_imagename( self ):
+    def clean_imagename( self ):
         print "self:", self
 
         name = self.cleaned_data["imagename"]
