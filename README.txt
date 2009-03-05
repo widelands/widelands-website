@@ -1,18 +1,35 @@
 This directory contains the widelands homepage django project. It needs a bunch of third party applications. A (maybe not complete list) is here:
 
 * atomformat.py
+    http://code.google.com/p/django-notification/
+    in /notification/atomformat.py
 * diff_match_patch.py
+    http://code.google.com/p/google-diff-match-patch/
+    in /python/diff_match_patch.py
 * django-messages
+    http://code.google.com/p/django-messages/
 * django-notification
+    http://code.google.com/p/django-notification/
 * django-pagination
+    http://code.google.com/p/django-pagination/
 * django-registration
+    http://bitbucket.org/ubernostrum/django-registration/wiki/Home
 * django-tagging
+    http://code.google.com/p/django-tagging/
 * django-simplestats
+    http://code.google.com/p/django-simplestats/
 * django-comment_utils
-* django-forumbr
-* django-inline
+    http://code.google.com/p/django-comment-utils/
 * django-threadedcomments
-* sphenecoll
+    http://code.google.com/p/django-threadedcomments/
+
+Not required apps:
+* django-forumbr
+    http://code.google.com/p/django-forumbr/
+* django-inline
+    http://code.google.com/p/django-inline/
+* spenecoll
+    http://sct.sphene.net/wiki/show/Start/
 
 # Installation
 
