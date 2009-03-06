@@ -148,6 +148,6 @@ def wl_markdown(value, arg=''):
     """
     My own markup filter, wrapping the markup2 library, which is less bugged.
     """
-    return mark_safe(force_unicode(do_wl_markdown(value)))
+    return mark_safe(force_unicode(do_wl_markdown(value, extensions = ["extra"])))
 wl_markdown.is_safe = True
 
