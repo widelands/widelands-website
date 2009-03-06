@@ -97,7 +97,7 @@ custom_filters = [
 
 def do_wl_markdown( value, *args, **keyw ):
     # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
-    nvalue = markdown(value, *args, **keyw)
+    nvalue = smart_str(markdown(value, *args, **keyw))
     
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
@@ -148,6 +148,6 @@ def wl_markdown(value, arg=''):
     """
     My own markup filter, wrapping the markup2 library, which is less bugged.
     """
-    return mark_safe(force_unicode(do_wl_markdown(smart_str(value))))
+    return mark_safe(force_unicode(do_wl_markdown(value)))
 wl_markdown.is_safe = True
 
