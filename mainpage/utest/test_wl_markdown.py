@@ -39,100 +39,100 @@ class TestWlMarkdown(DBTestCase):
 
     def test_simple_case__correct_result(self):
         input = u"Hallo Welt"
-        wanted = u"<p>Hallo Welt</p>\n"
+        wanted = u"<p>Hallo Welt\n</p>"
         self._check(input,wanted)
 
     def test_wikiwords_simple__except_correct_result(self):
         input = u"Na Du HalloWelt, Du?"
-        wanted = u"""<p>Na Du <a href="/wiki/HalloWelt">HalloWelt</a>, Du?</p>\n"""
+        wanted = u"""<p>Na Du <a href="/wiki/HalloWelt">HalloWelt</a>, Du?\n</p>"""
         self._check(input,wanted)
     
     def test_wikiwords_avoid__except_correct_result(self):
         input = u"Hi !NotAWikiWord Moretext"
-        wanted = u"""<p>Hi NotAWikiWord Moretext</p>\n"""
+        wanted = u"""<p>Hi NotAWikiWord Moretext\n</p>"""
         self._check(input,wanted)
 
     def test_wikiwords_in_link__except_correct_result(self):
         input = u"""WikiWord [NoWikiWord](/forum/)"""
-        wanted = u"""<p><a href="/wiki/WikiWord">WikiWord</a> <a href="/forum/">NoWikiWord</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/WikiWord">WikiWord</a> <a href="/forum/">NoWikiWord</a>\n</p>"""
         self._check(input,wanted)
 
     def test_wikiwords_external_links__except_correct_result(self):
         input = u"""[NoWikiWord](http://www.sun.com)"""
-        wanted = u"""<p><a href="http://www.sun.com" class="external">NoWikiWord</a></p>\n"""
+        wanted = u"""<p><a href="http://www.sun.com" class="external">NoWikiWord</a>\n</p>"""
         self._check(input,wanted)
 
     def test_wikiwords_noexternal_links__except_correct_result(self):
         input = u"""[NoWikiWord](http://%s/blahfasel/wiki)""" % _domain
-        wanted = u"""<p><a href="http://%s/blahfasel/wiki">NoWikiWord</a></p>\n""" %_domain
+        wanted = u"""<p><a href="http://%s/blahfasel/wiki">NoWikiWord</a>\n</p>""" %_domain
         self._check(input,wanted)
 
     def test_wikiwords_noclasschangeforimage_links__except_correct_result(self):
         input =  u"""<a href="http://www.ccc.de"><img src="/blub" /></a>"""
-        wanted = u"""<p><a href="http://www.ccc.de"><img src="/blub" /></a></p>\n"""
+        wanted = u"""<p><a href="http://www.ccc.de"><img src="/blub" /></a>\n</p>"""
         self._check(input,wanted)
     
     # Existing links
     def test_existing_link_html(self):
         input = u"""<a href="/wiki/MainPage">this page</a>"""
-        wanted = u"""<p><a href="/wiki/MainPage">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MainPage">this page</a>\n</p>"""
         self._check(input,wanted)
 
     def test_existing_link_markdown(self):
         input = u"""[this page](/wiki/MainPage)"""
-        wanted = u"""<p><a href="/wiki/MainPage">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MainPage">this page</a>\n</p>"""
         self._check(input,wanted)
 
     def test_existing_link_wikiword(self):
         input = u"""MainPage"""
-        wanted = u"""<p><a href="/wiki/MainPage">MainPage</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MainPage">MainPage</a>\n</p>"""
         self._check(input,wanted)
 
     def test_existing_editlink_wikiword(self):
         input = u"""<a href="/wiki/MainPage/edit/">this page</a>"""
-        wanted = u"""<p><a href="/wiki/MainPage/edit/">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MainPage/edit/">this page</a>\n</p>"""
         self._check(input,wanted)
 
     # Missing links
     def test_missing_link_html(self):
         input = u"""<a href="/wiki/MissingPage">this page</a>"""
-        wanted = u"""<p><a href="/wiki/MissingPage" class="missing">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MissingPage" class="missing">this page</a>\n</p>"""
         self._check(input,wanted)
 
     def test_missing_link_markdown(self):
         input = u"""[this page](/wiki/MissingPage)"""
-        wanted = u"""<p><a href="/wiki/MissingPage" class="missing">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MissingPage" class="missing">this page</a>\n</p>"""
         self._check(input,wanted)
 
     def test_missing_link_wikiword(self):
         input = u"""BlubMissingPage"""
-        wanted = u"""<p><a href="/wiki/BlubMissingPage" class="missing">BlubMissingPage</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/BlubMissingPage" class="missing">BlubMissingPage</a>\n</p>"""
         res = do_wl_markdown(input)
         # self._check(input,wanted)
 
     def test_missing_editlink_wikiword(self):
         input = u"""<a href="/wiki/MissingPage/edit/">this page</a>"""
-        wanted = u"""<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a>\n</p>"""
         self._check(input,wanted)
 
     # Occured errors
     def test_wiki_rootlink(self):
         input = u"""<a href="/wiki">this page</a>"""
-        wanted = u"""<p><a href="/wiki">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki">this page</a>\n</p>"""
         self._check(input,wanted)
     def test_wiki_rootlink_with_slash(self):
         input = u"""<a href="/wiki/">this page</a>"""
-        wanted = u"""<p><a href="/wiki/">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/">this page</a>\n</p>"""
         self._check(input,wanted)
 
     # Special pages
     def test_wiki_specialpage(self):
         input = u"""<a href="/wiki/list">this page</a>"""
-        wanted = u"""<p><a href="/wiki/list">this page</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/list">this page</a>\n</p>"""
         self._check(input,wanted)
     def test_wiki_specialpage_markdown(self):
         input = u"""[list](/wiki/list)"""
-        wanted = u"""<p><a href="/wiki/list">list</a></p>\n"""
+        wanted = u"""<p><a href="/wiki/list">list</a>\n</p>"""
         self._check(input,wanted)
 
 if __name__ == '__main__':

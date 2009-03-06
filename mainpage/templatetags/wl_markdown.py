@@ -13,7 +13,17 @@ from django import template
 from django.conf import settings
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
-import markdown2
+
+# Try to get a not so fully broken markdown module
+try:
+    import markdown
+    if markdown.version_info != (1, 7, 0, 'rc-2'):
+        raise ImportError, "Markdown library to old!"
+    from markdown import markdown
+except ImportError:
+    print "Markdown2 library used!"
+    from markdown2 import markdown
+
 import re
 
 from BeautifulSoup import BeautifulSoup
@@ -91,7 +101,8 @@ custom_filters = [
 ]
 
 def do_wl_markdown( value, *args, **keyw ):
-    nvalue = markdown2.markdown(value, extras = [ "footnotes"], *args, **keyw)
+    # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
+    nvalue = markdown(value, *args, **keyw)
     
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
