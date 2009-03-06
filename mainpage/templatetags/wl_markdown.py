@@ -15,15 +15,10 @@ from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
 
 # Try to get a not so fully broken markdown module
-try:
-    import markdown
-    if markdown.version_info != (1, 7, 0, 'rc-2'):
-        raise ImportError, "Markdown library to old!"
-    from markdown import markdown
-except ImportError:
-    print "Markdown2 library used!"
-    from markdown2 import markdown
-
+import markdown
+if markdown.version_info != (1, 7, 0, 'rc-2'):
+    raise ImportError, "Markdown library to old!"
+from markdown import markdown
 import re
 
 from BeautifulSoup import BeautifulSoup
