@@ -102,6 +102,12 @@ class TribeParser(object):
             w = Ware.objects.get_or_create( tribe = self._to, name = name )[0]
             w.displayname = normalize_name(displayname)
             w.image_url = nn 
+
+            # See if there is help available
+            if cf.has_option("default","help"):
+                helpstr = normalize_name(cf.get("default","help"))
+                w.help = helpstr
+
             w.save()
     
     def _parse_buildings( self ):
