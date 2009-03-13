@@ -134,6 +134,43 @@ class TestWlMarkdown(DBTestCase):
         input = u"""[list](/wiki/list)"""
         wanted = u"""<p><a href="/wiki/list">list</a></p>"""
         self._check(input,wanted)
+    
+    # Special problem with emphasis
+    def test_markdown_problem(self):
+        input = u"""*This is bold*  _This too_\n\n"""
+        wanted = u"""<p><em>This is bold</em> <em>This too</em></p>"""
+        self._check(input,wanted)
+
+
+    # Damned problem with tables
+    def test_markdown_table_problem(self):
+        # {{{ Test strings
+        input = u"""
+Header1 | Header 2
+------- | --------
+Value 1 | Value 2
+Value 3 | Value 4
+"""     
+        wanted = u"""<table>
+<thead>
+<tr>
+<th>Header1</th>
+<th>Header 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value 1</td>
+<td>Value 2</td>
+</tr>
+<tr>
+<td>Value 3</td>
+<td>Value 4</td>
+</tr>
+</tbody>
+</table>"""
+        # }}}
+        self._check(input,wanted)
 
 if __name__ == '__main__':
     unittest.main()
