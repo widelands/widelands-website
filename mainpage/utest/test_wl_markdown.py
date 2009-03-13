@@ -136,11 +136,18 @@ class TestWlMarkdown(DBTestCase):
         self._check(input,wanted)
     
     # Special problem with emphasis
-    def test_markdown_problem(self):
+    def test_markdown_emphasis_problem(self):
         input = u"""*This is bold*  _This too_\n\n"""
         wanted = u"""<p><em>This is bold</em> <em>This too</em></p>"""
         self._check(input,wanted)
-
+    
+    # Another markdown problem with alt tag escaping
+    def test_markdown_alt_problem(self):
+        # {{{ Test strings
+        input = u"""![img_thisisNOTitalicplease_name.png](/wlmedia/blah.png)\n\n"""
+        wanted = u'<p><img alt="img_thisisNOTitalicplease_name.png" src="/wlmedia/blah.png" /></p>'
+        # }}}
+        self._check(input,wanted)
 
     # Damned problem with tables
     def test_markdown_table_problem(self):
