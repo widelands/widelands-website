@@ -104,8 +104,8 @@ class TribeParser(object):
             w.image_url = nn 
 
             # See if there is help available
-            if cf.has_option("default","help"):
-                helpstr = normalize_name(cf.get("default","help"))
+            if self._cf.has_option("default","help"):
+                helpstr = normalize_name(self._cf.get("default","help"))
                 w.help = helpstr
 
             w.save()
