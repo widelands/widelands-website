@@ -1,16 +1,19 @@
 {% load i18n %} 
 
 <div>
-   &nbsp;
-   <div align="left" style="float: left;">
-       <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
-       | <a href="{% url notification_notices %} ">{% trans "Notifications" %}</a>
-   </div>
-   <div align="right" style="float: right;">
-       <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>
-       | <a href="{% url messages_outbox %} ">{% trans "Sent Messages" %}</a>
-       | <a href="{% url messages_compose %} ">{% trans "New Message" %}</a>
-       | <a href="{% url messages_trash %} ">{% trans "Message Trash" %}</a>
-   </div>
+   <table width="100%">
+   <tr>
+      <td align="left">
+         <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
+         | <a href="{% url notification_notices %} ">{% trans "Notifications" %}</a>
+      </td>
+      <td align="right" style="table-layout: fixed;">
+         <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>
+         | <a href="{% url messages_outbox %} ">{% trans "Sent Messages" %}</a>
+         | <a href="{% url messages_compose %} ">{% trans "New Message" %}</a>
+         | <a href="{% url messages_trash %} ">{% trans "Message Trash" %}</a>
+      </td>
+   </tr>
+   </table>
 </div>
 
