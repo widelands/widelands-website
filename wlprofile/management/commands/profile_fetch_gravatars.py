@@ -11,6 +11,6 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         for user in User.objects.all():
             print user.username
-            old_avatar = user.pybb_profile.avatar
+            old_avatar = user.wlprofile.avatar
             if check_gravatar(user, ignore_date_joined=True):
                 print ' + Found gravatar'

@@ -6,15 +6,23 @@
 {% load humanize %}
 {% load pybb_extras %}
 {% load wiki %}
+{% load wlprofile %}
 
    <table class="{% cycle "odd" "even" %}" width="100%">
       <tr>
-         <td class="author">{{ post.user.username }}</td>
+         <td class="author">{{ post.user|user_link }}</td>
          <td width="85%" class="at"><strong>Posted:</strong> {{ post.created|naturalday|title }} {{ post.created|time:"H:i" }}</td>
       </tr>
       <tr>
          <td class="userinfo">
             <div class="userinfo">
+                {% if post.user.get_profile.avatar %}
+                <div class="avatar">
+                    <a href="{% url profile_view post.user %}">
+                    <img src="{{ post.user.get_profile.avatar.url }}" />
+                    </a>
+                </div>
+                {% endif %}
                <strong>Joined:</strong> {{ post.user.date_joined|naturalday|title }}<br />
                <strong>Posts:</strong> {{ post.user.get_profile.post_count }}<br />
                {% if post.user.get_profile.location %}

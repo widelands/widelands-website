@@ -6,14 +6,12 @@
 {% block content %}
 
 <!-- Wares -->
-<h1>Wares</h1>
+<h1>Wares - {{ ware.tribe.displayname }}</h1>
 <table class="ware" width="100%" cellspacing="1">
    <tr>
-      <th>Name</th>
-      <th>Displayed name</th>
-      <th>Tribe name</th>
-      <th>Displayed tribe name</th>
       <th>Image</th>
+      <th>Name</th>
+      <th>Description</th>
    </tr>
 {% for ware in wares %}
 {% include "inlines/display_ware.html" %}

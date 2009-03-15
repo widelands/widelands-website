@@ -7,8 +7,6 @@ class UploadImageForm(forms.Form):
     imagename = forms.ImageField()
      
     def clean_imagename( self ):
-        print "self:", self
-
         name = self.cleaned_data["imagename"]
 
         if Image.objects.has_image(name.name.lower()):

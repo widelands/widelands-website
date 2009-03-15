@@ -72,4 +72,8 @@
    border: 1px solid rgb(100,100,100);
    margin-bottom: 20px;
 }
+.post .avatar {
+    width: "100%";
+    padding: 2px;
+}
 

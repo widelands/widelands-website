@@ -11,6 +11,8 @@ class Ware(models.Model):
     tribe = models.ForeignKey(Tribe)
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
 
+    help = models.TextField(blank=True)
+
     def __unicode__(self):
         return u'%s' % self.name
 

@@ -4,6 +4,7 @@
 
 {% load humanize %}
 {% load pybb_extras %}
+{% load wlprofile %}
 
     <tr>
       <td class="even" align="center" valign="middle">
@@ -30,7 +31,7 @@
          {%if forum.last_post %}
          {{ forum.last_post.created|naturalday|title }} {{forum.last_post.created|time:"H:i"}}
          <br />
-         by {{ forum.last_post.user.username }}
+         by {{ forum.last_post.user|user_link }}
          in <br />
          <a href="{{forum.last_post.get_absolute_url}}">{{ forum.last_post.topic.name }}</a>
          <br />

@@ -1,5 +1,6 @@
 {% extends "news/base_news.html" %}
 
+{% load wlprofile %}
 {% load threadedcommentstags %}
 {% load news %}
 
@@ -34,7 +35,14 @@
     {% get_threaded_comment_tree for object as tree %}
     {% for comment in tree %}
         <div style="margin-left: {{ comment.depth }}em;" class="comment {% cycle "odd" "even" %}">
-            <p class="author">{{ comment.user.username }} said:</p>
+            {% if comment.user.get_profile.avatar %}
+            <span class="avatar" style="margin: 2px; margin-right: 10px; float: left;">
+                <a href="{% url profile_view comment.user %}">
+                <img src="{{ comment.user.get_profile.avatar.url }}" />
+                </a>
+            </span>
+            {% endif %}
+            <p class="author">{{ comment.user|user_link }} said:</p>
             {% auto_transform_markup comment %}
             {% if user.is_authenticated %}
             <p><a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_comment_url object comment %}','{{ comment.user.username }}')">Reply</a></p>
