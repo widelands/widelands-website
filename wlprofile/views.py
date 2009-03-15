@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 
 from forms import EditProfileForm
+import settings
 
 # Settings
 @login_required
@@ -36,9 +37,20 @@ def edit(request):
 
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=instance)
-        
+         
         if form.is_valid():
-            # We have to handle avatar
+            if "avatar" in request.FILES:
+                a = request.FILES["avatar"]
+
+                fn = "%s/wlprofile/avatars/%s.png" % (settings.MEDIA_ROOT,request.user.username)
+                destination = open(fn, "wb")
+                for chunk in a.chunks():
+                    destination.write(chunk)
+                destination.close()
+
+                fn = "%s/wlprofile/avatars/%s.png" % (settings.MEDIA_URL,request.user.username)
+                instance.avatar = fn 
+                instance.save()
 
             form.save()
             
