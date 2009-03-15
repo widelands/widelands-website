@@ -10,6 +10,8 @@
 {% endblock %}
 
 {% block content %}
+    {% include "messages/inlines/navigation.html" %}
+
     <h1>{% trans "Notices" %}</h1>
     
     {% autopaginate notices %}

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from pybb.models import Topic, Post, Profile, PrivateMessage, Attachment
+from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
 
 class AddPostForm(forms.ModelForm):
@@ -76,26 +76,6 @@ class AddPostForm(forms.ModelForm):
             obj.save()
 
 
-class EditProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['site', 'jabber', 'icq', 'msn', 'aim', 'yahoo',
-                  'location', 'signature', 'time_zone', 'language',
-                  'avatar', 'show_signatures',
-                  'markup',
-                  ]
-
-
-    #def __init__(self, *args, **kwargs):
-        #super(EditProfileForm, self).__init__(*args, **kwargs)
-
-    def clean_signature(self):
-        value = self.cleaned_data['signature'].strip()
-        if len(re.findall(r'\n', value)) > pybb_settings.SIGNATURE_MAX_LINES:
-            raise forms.ValidationError('Number of lines is limited to %d' % pybb_settings.SIGNATURE_MAX_LINES)
-        if len(value) > pybb_settings.SIGNATURE_MAX_LENGTH:
-            raise forms.ValidationError('Length of signature is limited to %d' % pybb_settings.SIGNATURE_MAX_LENGTH)
-        return value
 
 class EditPostForm(forms.ModelForm):
     class Meta:

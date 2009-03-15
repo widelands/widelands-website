@@ -1,0 +1,36 @@
+{% extends "wlprofile/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+{% ifequal user profile.user %}
+{% include "messages/inlines/navigation.html" %}
+{%endifequal%}
+
+
+<h1>{% trans "View Profile" %}</h1>
+{% if profile.avatar %}
+<img src="{{ profile.avatar.url }}" />
+{% endif %}
+
+<table width="50%">
+   <tr><td>User:</td> <td>{{ profile.user.username }}</td></tr>
+   <tr><td>Website:</td> <td><a href="{{profile.site}}">{{ profile.site }}</a></td></tr>
+
+   <tr><td>Location:</td> <td>{{ profile.location }}</td></tr>
+
+   <tr><td>Jabber:</td> <td>{{ profile.jabber }}</td></tr>
+   <tr><td>ICQ:</td> <td>{{ profile.icq }}</td></tr>
+   <tr><td>MSN:</td> <td>{{ profile.msn }}</td></tr>
+   <tr><td>AIM:</td> <td>{{ profile.aim }}</td></tr>
+   <tr><td>Yahoo:</td> <td>{{ profile.yahoo }}</td></tr>
+</table>
+
+{% ifequal user profile.user %}
+<p>
+<a href="{% url profile_edit %}">Edit Profile</a>
+</p>
+{%endifequal%}
+
+{% endblock %}

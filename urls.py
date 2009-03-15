@@ -41,6 +41,7 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     url(r'^help/', include("online_help.urls")),
     url(r'^webchat/', include("wlwebchat.urls")),
     url(r'^images/', include("wlimages.urls")),
+    url(r'^profile/', include("wlprofile.urls")),
 )
 
 try:

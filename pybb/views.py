@@ -12,9 +12,9 @@ from django.db import connection
 from django.utils import translation
 
 from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
-from pybb.models import Category, Forum, Topic, Post, Profile, PrivateMessage, Attachment,\
+from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
                         MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditProfileForm, EditPostForm, UserSearchForm, CreatePMForm
+from pybb.forms import AddPostForm, EditPostForm, UserSearchForm, CreatePMForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
@@ -112,9 +112,11 @@ def show_topic_ctx(request, topic_id):
     page, paginator = paginate(posts, request, pybb_settings.TOPIC_PAGE_SIZE,
                                total_count=topic.post_count)
 
-    profiles = Profile.objects.filter(user__pk__in=
-        set(x.user.id for x in page.object_list))
-    profiles = dict((x.user_id, x) for x in profiles)
+
+    # TODO: fetch profiles
+    # profiles = Profile.objects.filter(user__pk__in=
+    #     set(x.user.id for x in page.object_list))
+    # profiles = dict((x.user_id, x) for x in profiles)
     
     for post in page.object_list:
         post.user.pybb_profile = profiles[post.user.id]
@@ -195,19 +197,6 @@ def show_post(request, post_id):
     return HttpResponseRedirect(url)
 
 
-@login_required
-def edit_profile_ctx(request):
-    form = build_form(EditProfileForm, request, instance=request.user.pybb_profile)
-    if form.is_valid():
-        profile = form.save()
-        set_language(request, profile.language)
-        return HttpResponseRedirect(reverse('pybb_edit_profile'))
-    return {'form': form,
-            'profile': request.user.pybb_profile,
-            }
-edit_profile = render_to('pybb/edit_profile.html')(edit_profile_ctx)
-
-    
 @login_required
 def edit_post_ctx(request, post_id):
     from pybb.templatetags.pybb_extras import pybb_editable_by

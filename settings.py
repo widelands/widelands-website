@@ -97,7 +97,13 @@ WIKI_LOCK_DURATION = 30
 ######################
 # User configuration #
 ######################
-AUTH_PROFILE_MODULE = 'pybb.Profile'
+AUTH_PROFILE_MODULE = 'wlprofile.Profile'
+DEFAULT_TIME_ZONE = 3
+DEFAULT_MARKUP ="markdown"
+SIGNATURE_MAX_LENGTH = 255
+SIGNATURE_MAX_LINES = 8
+AVATARS_UPLOAD_TO = "profile/avatars"
+AVATAR_HEIGHT  = AVATAR_WIDTH = 80
 
 ######################
 # Pybb Configuration #
@@ -130,6 +136,7 @@ INSTALLED_APPS = (
     'widelands.wlimages',
     'widelands.wlwebchat',
     'widelands.wlrecaptcha',
+    'widelands.wlprofile',
 
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications

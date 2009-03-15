@@ -1,7 +1,7 @@
 # -*- coding: utf-8
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from pybb.models import Category, Forum, Topic, Post, Profile, Read
+from pybb.models import Category, Forum, Topic, Post, Read
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'position', 'forum_count']
@@ -66,28 +66,6 @@ class PostAdmin(admin.ModelAdmin):
          ),
         )
 
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'time_zone', 'location', 'language']
-    list_per_page = 20
-    ordering = ['-user']
-    search_fields = ['user__username', 'user__first_name', 'user__last_name']
-    fieldsets = (
-        (None, {
-                'fields': ('user', 'time_zone', 'markup', 'location', 'language')
-                }
-         ),
-        (_('IM'), {
-                'classes': ('collapse',),
-                'fields' : ('jabber', 'icq', 'msn', 'aim', 'yahoo')
-                }
-         ),
-        (_('Additional options'), {
-                'classes': ('collapse',),
-                'fields' : ('site', 'avatar', 'signature', 'show_signatures')
-                }
-         ),
-        )
-
 class ReadAdmin(admin.ModelAdmin):
     list_display = ['user', 'topic', 'time']
     list_per_page = 20
@@ -99,5 +77,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Forum, ForumAdmin)
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Post, PostAdmin)
-admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Read, ReadAdmin)
