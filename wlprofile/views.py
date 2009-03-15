@@ -56,8 +56,6 @@ def edit(request):
             
             return HttpResponseRedirect(reverse(view))
     form = EditProfileForm(instance=instance)
-    print "form:", form
-    print "instance:", instance
 
     template_params = {
         "profile_form": form,
