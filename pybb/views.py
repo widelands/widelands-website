@@ -100,7 +100,7 @@ def show_topic_ctx(request, topic_id):
 
     initial = {}
     if request.user.is_authenticated():
-        initial = {'markup': request.user.pybb_profile.markup}
+        initial = {'markup': "markdown" }
     form = AddPostForm(topic=topic, initial=initial)
 
     moderator = (request.user.is_superuser or
@@ -118,8 +118,8 @@ def show_topic_ctx(request, topic_id):
     #     set(x.user.id for x in page.object_list))
     # profiles = dict((x.user_id, x) for x in profiles)
     
-    for post in page.object_list:
-        post.user.pybb_profile = profiles[post.user.id]
+    # for post in page.object_list:
+    #     post.user.pybb_profile = profiles[post.user.id]
 
     load_related(page.object_list, Attachment.objects.all(), 'post')
 
@@ -156,12 +156,12 @@ def add_post_ctx(request, forum_id, topic_id):
         quote = ''
     else:
         post = get_object_or_404(Post, pk=quote_id)
-        quote = quote_text(post.body_text, post.user, request.user.pybb_profile.markup)
+        quote = quote_text(post.body_text, post.user, "markdown")
 
     ip = request.META.get('REMOTE_ADDR', '')
     form = build_form(AddPostForm, request, topic=topic, forum=forum,
                       user=request.user, ip=ip,
-                      initial={'markup': request.user.pybb_profile.markup, 'body': quote})
+                      initial={'markup': "markdown", 'body': quote})
 
     if form.is_valid():
         post = form.save();
@@ -333,7 +333,7 @@ def add_subscription(request, topic_id):
 def create_pm_ctx(request):
     recipient = request.GET.get('recipient', '')
     form = build_form(CreatePMForm, request, user=request.user,
-                      initial={'markup': request.user.pybb_profile.markup,
+                      initial={'markup': "markdown",
                                'recipient': recipient})
 
     if form.is_valid():

@@ -8,6 +8,7 @@
 
 {% load inbox %}
 {% load i18n %}
+{% load wlprofile %}
 
          <!-- Login Block / User informations -->
          {% if user.is_authenticated %}
@@ -15,7 +16,7 @@
          <div class="box_content" align="center"> 
             <p>
             Your are logged in as<br/>
-            <b>{{ user.username }}</b>
+            <b>{{ user|user_link }}</b>
             </p>
       
             <p>

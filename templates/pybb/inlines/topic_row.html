@@ -4,6 +4,7 @@
 
 {% load humanize %}
 {% load pybb_extras %}
+{% load wlprofile %}
 
    <tr class="topic_description {% cycle "odd" "even" %}">
          <td align="center" valign="middle">
@@ -16,7 +17,7 @@
          <td id="name">
             <span class="name"><a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></span>
          </td>
-         <td><span class="creator">{{ topic.user.username }}</span></td>
+         <td><span class="creator">{{ topic.user|user_link }}</span></td>
          <td><span class="at">{{ topic.created|naturalday|title }} {{ topic.created|time:"H:i" }}</span></td>
          <td><span class="count">{{ topic.post_count }}</span></td>
          <td><span class="views">{{ topic.views }}</span></td>
@@ -24,7 +25,7 @@
             {%if topic.last_post %}
             {{ topic.last_post.created|naturalday|title }} {{topic.last_post.created|time:"H:i"}}
             <br />
-            by {{ topic.last_post.user.username }}
+            by {{ topic.last_post.user|user_link }}
             {% endif %}
          </td>
    </tr>

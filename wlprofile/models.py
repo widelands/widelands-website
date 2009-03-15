@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from fields import AutoOneToOneField, ExtendedImageField
 from django.utils.translation import ugettext_lazy as _
+from pybb.models import Post
+
 import settings
 
 TZ_CHOICES = [(float(x[0]), x[1]) for x in (

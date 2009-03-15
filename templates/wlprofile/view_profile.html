@@ -16,6 +16,8 @@
 
 <table width="50%">
    <tr><td>User:</td> <td>{{ profile.user.username }}</td></tr>
+   <tr><td>Joined:</td> <td>{{ profile.user.date_joined }}</td></tr>
+   <tr><td>Nr posts:</td> <td>{{ profile.post_count }}</td></tr>
    <tr><td>Website:</td> <td><a href="{{profile.site}}">{{ profile.site }}</a></td></tr>
 
    <tr><td>Location:</td> <td>{{ profile.location }}</td></tr>
@@ -27,10 +29,12 @@
    <tr><td>Yahoo:</td> <td>{{ profile.yahoo }}</td></tr>
 </table>
 
-{% ifequal user profile.user %}
 <p>
+{% ifequal user profile.user %}
 <a href="{% url profile_edit %}">Edit Profile</a>
-</p>
+{% else %}
+<a href="{% url messages_compose_to profile.user %}">Send User a PM</a>
 {%endifequal%}
+</p>
 
 {% endblock %}

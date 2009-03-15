@@ -11,7 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from pybb.markups import mypostmarkup 
-from pybb.fields import AutoOneToOneField, ExtendedImageField
 from pybb.util import urlize, memoize_method, unescape
 from pybb import settings as pybb_settings
 

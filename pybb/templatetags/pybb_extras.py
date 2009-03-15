@@ -16,13 +16,6 @@ from pybb import settings as pybb_settings
 
 register = template.Library()
 
-@register.filter
-def pybb_profile_link(user):
-    data = u'<a href="%s">%s</a>' % (\
-        reverse('pybb_profile', args=[user.username]), user.username)
-    return mark_safe(data)
-
-
 @register.tag
 def pybb_time(parser, token):
     try:
