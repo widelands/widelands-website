@@ -5,6 +5,7 @@
 {% load humanize %}
 {% load pybb_extras %}
 {% load wlprofile %}
+{% load custom_date %}
 
     <tr>
       <td class="even" align="center" valign="middle">
@@ -29,7 +30,7 @@
       <td class="odd" align="center" valign="middle">{{ forum.posts.count }}</td>
       <td class="even" align="right" valign="middle">
          {%if forum.last_post %}
-         {{ forum.last_post.created|naturalday|title }} {{forum.last_post.created|time:"H:i"}}
+         {{ forum.last_post.created|custom_date:user}}
          <br />
          by {{ forum.last_post.user|user_link }}
          in <br />

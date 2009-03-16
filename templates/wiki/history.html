@@ -1,5 +1,6 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
+{% load custom_date %}
 
 
 {% block title %}
@@ -24,7 +25,7 @@
     {% for change in changes %}
     <tr class="{% cycle 'odd' 'even' %}">
     	<td><a href="{{ change.get_absolute_url }}">
-    		{{ change.modified|date:"M d, Y" }}</a>
+    		{{ change.modified|custom_date:user }}</a>
         </td>
     	<td>
         {% if change.is_anonymous_change %}

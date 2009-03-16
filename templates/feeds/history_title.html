@@ -1,1 +1,3 @@
-{{ obj.article.title }} - {{ obj.modified|date:"M d, Y" }}
+{%load custom_date %}
+
+{{ obj.article.title }} - {{ obj.modified|custom_date:user }}

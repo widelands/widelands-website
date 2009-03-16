@@ -1,5 +1,6 @@
 {% extends "messages/base.html" %} 
 {% load i18n %} 
+{% load custom_date %}
 {% block content %}
 {% include "messages/inlines/navigation.html" %} 
 <h1>{% trans "View Message" %}</h1>
@@ -10,7 +11,7 @@
        <dt>{% trans "Sender" %}</dt>
        <dd>{{ message.sender }}</dd>
        <dt>{% trans "Date" %} </dt>
-       <dd>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</dd>
+       <dd>{{ message.sent_at|custom_date:user}}</dd>
        <dt>{% trans "Recipient" %}</dt>
        <dd>{{ message.recipient }}</dd>
    </dl>

@@ -27,7 +27,7 @@
     {% for post in object_list %}
     <div>
       <h3 class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-      <p class="date">{{ post.publish|date:"Y F d" }}</p>
+      <p class="date">{{ post.publish|custom_date:user }}</p>
       <p class="tease">{{ post.tease }}</p>
       <p class="comments">{% if comment_count %}{{ comment_count }} comment{{ comment_count|pluralize }}{% endif %}</p>
     </div>

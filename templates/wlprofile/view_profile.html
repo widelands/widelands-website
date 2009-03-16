@@ -3,6 +3,7 @@
 {% load i18n %}
 
 {% block content %}
+{% load custom_date %}
 
 {% ifequal user profile.user %}
 {% include "messages/inlines/navigation.html" %}
@@ -16,7 +17,7 @@
 
 <table width="50%">
    <tr><td>User:</td> <td>{{ profile.user.username }}</td></tr>
-   <tr><td>Joined:</td> <td>{{ profile.user.date_joined }}</td></tr>
+   <tr><td>Joined:</td> <td>{{ profile.user.date_joined|custom_date:user|title }}</td></tr>
    <tr><td>Nr posts:</td> <td>{{ profile.post_count }}</td></tr>
    <tr><td>Website:</td> <td><a href="{{profile.site}}">{{ profile.site }}</a></td></tr>
 
