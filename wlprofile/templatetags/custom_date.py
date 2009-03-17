@@ -78,6 +78,6 @@ def custom_date( date, user ):
     otherwise, return a sane default
     """
     if user.is_anonymous():
-        return django_date("j F Y")
+        return django_date("j F Y", date)
     return do_custom_date( user.get_profile().time_display, date )
 custom_date.is_safe = False
