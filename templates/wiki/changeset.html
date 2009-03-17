@@ -10,6 +10,13 @@ Changes in {{ article_title }} - {{ block.super }}
     {% if changeset.old_title %}
         <h2> {{ changeset.old_title }} </h2>
     {% endif %}
+    {% if changeset.comment %}
+    <div class="comment">
+    <p>Editor comment:<br />
+    {{changeset.comment}}</p>
+    </div>
+    {%endif %}
+    <h3>Revision differences</h3>
     {{ changeset.display_diff|safe }}
     <br /><b>{% trans "Markup:" %}</b>
     {% if changeset.old_markup %} {{ changeset.old_markup }}
