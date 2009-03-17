@@ -8,16 +8,44 @@
 
 {% block content %}
 	<h1>{% trans "Edit" %}</h1>
-
-	<form action="" method="post">
-
-        {{ form.as_p }}
-
+   
+   <p>
+   You can edit the wiki pages contents using the Syntax described on the 
+   <a href="/wiki/WikiSyntax">WikiSyntax</a>.
+   </p>
+   
+   <form action="" method="post">
+      <table id="edit_wiki_page_form">
+         <!-- Title -->
+         <tr>
+            <th><label for="id_title">{% trans "Title" %}:</label></th>
+            <td id="id_title">{{ form.title.errors }}{{ form.title }}</td>
+         </tr>
+         
+         <!-- Content -->
+         <tr><th colspan="2"><label for="id_content">{% trans "Content" %}:</label></th></tr>
+         <tr><td colspan="2" id="id_content">{{ form.content.errors }}{{ form.content }}</td></tr>
+         
+         <!-- Summary -->
+         <tr><th colspan="2"><label for="id_summary">{% trans "Page Summary" %}:</label></th></tr>
+         <tr><td colspan="2" id="id_summary">{{ form.summary.errors }}{{ form.summary }}</td></tr>
+         
+         <!-- Comment -->
+         <tr><th colspan=2><label for="id_comment">{% trans "Comment for this revision" %}:</label></th></tr>
+         <tr><td colspan=2 id="id_comment">{{ form.comment.errors }}{{ form.comment }}</td></tr>
+         
+         <!-- Markup as hidden element -->
+         <input type="hidden" name="markup" value="mrk" />
+         {{ form.content_type }}
+         {{ form.object_id }}
+         {{ form.action }}
+         {{ form.user_ip }}
+      </table>
+      
 		<div class="submit">
 			<input type="submit" value="{% trans "Save" %}" />
 		</div>
-
-	</form>
+   </form> 
    
    
    {% if new_article %}

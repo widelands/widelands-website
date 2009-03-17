@@ -1,9 +1,31 @@
 
+
 .history_list {
     width: 100%;
 }
 
+/******************/
+/* Edit Wiki Page */
+/******************/
+#edit_wiki_page_form {
+    width: 100%;
+}
+#edit_wiki_page_form th {
+    background: None;
+    margin-top: 15px;
+    width: auto;
+}
+#edit_wiki_page_form #id_title,#id_comment {
+    width: 100%;
+}
+    
 #id_content {
    width: 100%;
    height: 400px;
 }
+#id_summary {
+   width: 100%;
+   height: 100px;
+}
+
+
