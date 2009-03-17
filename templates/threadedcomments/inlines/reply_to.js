@@ -9,9 +9,10 @@ function show_reply_form(comment_id, url, person_name) {
     var to_add = $( new Array(
     '<div class="response"><p>Reply to ' + person_name + ':</p>',
     '<form method="POST" action="' + url + '">',
-    '<ul>',  '{{ form.as_ul|oneline }}',
-    '<li><input type="submit" value="Submit Comment" /></li>',
-    '</ul>', '</form>', '</div>').join(''));
+    '<div class="comment_post">',  '<div class="comment"> <span class=errorclass">{{ form.comment.errors }}</span>{{ form.comment }}',  
+    '</div> <input type="hidden" name="markup" value="1" />',
+              '<input type="submit" value="Submit Comment" />',
+    '</div>', '</form>', '</div>').join(''));
     to_add.css("display", "none");
     comment_reply.after(to_add);
     to_add.slideDown(function() {
