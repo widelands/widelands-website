@@ -4,6 +4,11 @@
 
 {% block content %}
 <h1>{% trans "Profile editing" %}</h1>
+
+<p>
+You might want to have a look at the documentation for Time display <a href="/wiki/HomepageDocuTimeDisplay">here</a>.
+</p>
+
 {% if profile.avatar %}
 <img src="{{ profile.avatar.url }}" />
 {% endif %}
