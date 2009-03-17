@@ -161,7 +161,7 @@ class ChangeSet(models.Model):
                                   null=True, blank=True)
     content_diff = models.TextField(_(u"Content Patch"), blank=True)
 
-    comment = models.CharField(_(u"Editor comment"), max_length=50, blank=True)
+    comment = models.TextField(_(u"Editor comment"), blank=True)
     modified = models.DateTimeField(_(u"Modified at"), default=datetime.now)
     reverted = models.BooleanField(_(u"Reverted Revision"), default=False)
 
