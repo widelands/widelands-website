@@ -1,4 +1,4 @@
 {% load i18n custom_date %}
 
-{% trans "edited by user" %} {{ obj.editor.username }} {% trans "at"%} {{ obj.modified|custom_date:user }}<br>
+{% trans "edited by user" %} {{ obj.editor.username }} {% trans "at"%} {{ obj.modified|custom_date:obj.editor }}<br>
 {{ obj.comment }}
