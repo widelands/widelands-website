@@ -14,6 +14,7 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import date as django_date
+from django.core.exceptions import ObjectDoesNotExist
 
 import re
 import datetime
@@ -79,5 +80,8 @@ def custom_date( date, user ):
     """
     if user.is_anonymous():
         return django_date("j F Y", date)
-    return do_custom_date( user.get_profile().time_display, date )
+    try:
+        return do_custom_date( user.get_profile().time_display, date )
+    except ObjectDoesNotExist:
+        return django_date("j F Y", date)
 custom_date.is_safe = False

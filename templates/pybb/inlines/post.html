@@ -17,17 +17,17 @@
       <tr>
          <td class="userinfo">
             <div class="userinfo">
-                {% if post.user.get_profile.avatar %}
+                {% if post.user.wlprofile.avatar %}
                 <div class="avatar">
                     <a href="{% url profile_view post.user %}">
-                    <img src="{{ post.user.get_profile.avatar.url }}" />
+                    <img src="{{ post.user.wlprofile.avatar.url }}" />
                     </a>
                 </div>
                 {% endif %}
                <strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
-               <strong>Posts:</strong> {{ post.user.get_profile.post_count }}<br />
-               {% if post.user.get_profile.location %}
-               <strong>Location:</strong> {{ post.user.get_profile.location }}<br />
+               <strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+               {% if post.user.wlprofile.location %}
+               <strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
                {% endif %}
             </div>
          </td>

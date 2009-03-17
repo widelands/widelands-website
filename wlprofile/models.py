@@ -33,7 +33,7 @@ class Profile(models.Model):
 
     # Configuration for Forum/Site
     time_zone = models.FloatField(_('Time zone'), choices=TZ_CHOICES, default=float(settings.DEFAULT_TIME_ZONE))
-    time_display = models.CharField(_('Time display'), max_length=80, default="%c")
+    time_display = models.CharField(_('Time display'), max_length=80, default=r"%ND(m-d-y), h:m")
     signature = models.TextField(_('Signature'), blank=True, default='', max_length=settings.SIGNATURE_MAX_LENGTH)
     # language = models.CharField(_('Language'), max_length=10, blank=True, default='',
     #                             choices=settings.LANGUAGES)
