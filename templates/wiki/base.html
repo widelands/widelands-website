@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+Wiki - {{ block.super }}
+{% endblock %}
+
 {% block extra_head %}
 <link rel="alternate" type="application/rss+xml" title="Wiki History" href="{% url wiki_history_feed "rss" %}" />
 <link rel="alternate" type="application/atom+xml" title="Wiki History" href="{% url wiki_history_feed "atom" %}" />

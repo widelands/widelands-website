@@ -3,6 +3,10 @@
 {% load pagination_tags %}
 {% load custom_date %}
 
+{% block title %}
+{% trans "Recent Changes" %} - {{ block.super }}
+{% endblock %}
+
 {% block content %}
 <h2>{% trans "Recent Changes" %}</h2>
 {% autopaginate changes %}

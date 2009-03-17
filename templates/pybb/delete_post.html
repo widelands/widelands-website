@@ -1,6 +1,10 @@
 {% extends 'pybb/base.html' %}
 {% load i18n %}
 
+{% block title %}
+Delete post - {{ block.super }}
+{% endblock %}
+
 {% block content %}
 <h1>{% trans "Are you sure you want to delete this message?" %}</h1>
 <p class="post-preview">

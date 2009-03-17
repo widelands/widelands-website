@@ -4,7 +4,7 @@
 
 
 {% block title %}
-    {% trans "History for" %} {{ article.title }}
+{% trans "History for" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
 {% block content %}

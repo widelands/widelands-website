@@ -2,6 +2,10 @@
 {% load pybb_extras %}
 {% load i18n %}
 
+{% block title %}
+{{ forum.name }} - {{ block.super }}
+{% endblock %}
+
 {% block content %}
     <div class="forum-list">
         <span class="title">{{ forum }}</span>

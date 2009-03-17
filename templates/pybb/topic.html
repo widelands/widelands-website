@@ -2,6 +2,10 @@
 {% load pybb_extras %}
 {% load i18n %}
 
+{% block title %}
+{{ topic.name }} - {{ topic.forum.name }} - {{ block.super }}
+{% endblock title %}
+
 {% block content %}
 
 {% pybb_pagination _('Posts') %}
@@ -61,7 +65,7 @@
 
 {% if user.is_authenticated %}
 {% if not topic.closed %}
-{% include "pybb/add_post_form.html" %}
+{% include "pybb/inlines/add_post_form.html" %}
 {% endif %}
 {% endif %}
 

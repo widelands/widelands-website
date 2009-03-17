@@ -2,11 +2,11 @@
 {% load pybb_extras %}
 {% load i18n %}
 
-{% block content %}
-<div class="crumbs">
-<a href="{% url pybb_index %}">{% trans "Root" %}</a> / {% pybb_link post.topic.forum.category %} / {% pybb_link post.topic.forum %} / {% pybb_link post.topic %}
-</div>
+{% block title %}
+Edit post - {{ block.super }}
+{% endblock %}
 
+{% block content %}
 <h1>{% trans "Editing the post" %}</h1>
 
 <form method="post">

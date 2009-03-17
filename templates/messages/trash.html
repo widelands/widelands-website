@@ -1,5 +1,10 @@
 {% extends "messages/base.html" %} 
 {% load i18n %} 
+
+{% block title %}
+Trash - {{ block.super }}
+{% endblock %}
+
 {% block content %} 
 {% include "messages/inlines/navigation.html" %} 
 <h1>{% trans "Deleted Messages" %}</h1>
