@@ -4,12 +4,12 @@
  This file contains the simple way to render a news item
 
 {% endcomment %}
-{% load news wl_markdown tagging_tags threadedcommentstags custom_date %}
+{% load news wl_markdown tagging_tags threadedcommentstags wlprofile custom_date %}
 
    <div class="news_item">
          <h3 class="title">{# TODO: categories! #} {{ object.title }}</h3>
          <div class="info_line"> 
-            <span class="news_poster">Posted by {{object.author}}</span>
+            <span class="news_poster">Posted by {{object.author|user_link}}</span>
             <span class="news_post_date">on {{ object.publish|custom_date:user }}</span> 
          </div>
          <div class="content">
