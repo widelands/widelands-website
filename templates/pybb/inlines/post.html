@@ -8,7 +8,8 @@
 {% load wiki %}
 {% load wlprofile %}
 {% load custom_date %}
-
+   
+   <a name="post-{{ post.id }}"></a>
    <table class="{% cycle "odd" "even" %}" width="100%">
       <tr>
          <td class="author">{{ post.user|user_link }}</td>
