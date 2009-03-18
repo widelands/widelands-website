@@ -1,5 +1,55 @@
+/**************************/
+/* General Style elements */
+/**************************/
+.wiki_article h1 {
+    font-size: 2.5em;
+    margin: 10px 0px;
+}
+.wiki_article h2 {
+    font-size: 2em;
+    margin: 25px 3px 10px;
+    line-height: 70%;
+}
+.wiki_article h3 {
+    font-size: 1.4em;
+    margin: 5px 5px;
+}
+.wiki_article h4 {
+    font-size: 1.30em;
+    margin: 5px 10px;
+    text-decoration: underline;
+}
+.wiki_article h5 {
+    font-size: 1.2em;
+    margin: 5px 10px;
+    text-decoration: underline;
+    font-style: italic;
+}
+.wiki_article h6 {
+    font-size: 1.1em; 
+    margin: 5px 10px;
+    font-style: italic;
+}
+
+.wiki_article h1:first-letter,.wiki_article h2:first-letter,.wiki_article h3:first-letter {
+     vertical-align: baseline;
+	 color: #7070FF;
+	 font-size: 180%;
+	 font-family: Cretino, "Bitstream Vera Serif", serif;
+	 font-weight: bold;
+}
+.wiki_article h3:first-letter {
+    color: rgb(156,156,86);
+}
+
+.wiki_article p {
+    margin: 7px 10px; 
+}
 
 
+/***********/
+/* History */
+/***********/
 .history_list {
     width: 100%;
 }

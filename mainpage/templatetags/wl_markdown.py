@@ -97,7 +97,7 @@ custom_filters = [
 
 def do_wl_markdown( value, *args, **keyw ):
     # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
-    nvalue = smart_str(markdown(value, extensions=["extra"], *args, **keyw))
+    nvalue = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
     
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
