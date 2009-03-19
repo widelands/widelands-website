@@ -1,5 +1,5 @@
 {% extends "news/base_news.html" %}
-
+{% load custom_date %}
 
 {% block title %}Post archive for {{ day|date:"d F Y" }}{% endblock %}
 {% block body_class %}{{ block.super }} post_archive_day{% endblock %}
