@@ -5,7 +5,11 @@
  on the site
 
 {% endcomment %}
-         <!-- Donation Box -->
+{% load inbox %}
+{% load i18n %}
+{% load wlprofile %}
+
+        <!-- Donation Box -->
          <h3 class="box_title">Donation</h3>
          <div class="box_content" align="center">
             Help us to pay our Server!<br/>(: Consider a donation :) <br/>
@@ -17,28 +21,60 @@
             <a href="http://sourceforge.net/project/project_donations.php?group_id=40163">Donators</a>
          </div>
 
-         <!-- Navigation Box -->
-         <h3 class="box_title">Main Menu</h3>
-         <div class="box_content">
-            <ul id="mainmenu">
-               <li><a class="menuMain" href="/">Home</a></li>
-               <li><a class="menuMain" href="{% url news_index %}">News</a> </li>
-               <li><a class="menuMain" href="{% url wiki_article "DownloadPage" %}">Downloads</a> </li>
-                  {% comment %}
-                  <a class="menuMain" href="http://xoops.widelands.org/modules/wfdownloads/">Downloads</a>
-                     <li class="sub"><a href="t=hit">Popular</a></li>
-                     <li class="sub"><a href="rate">Top Rated</a></li>
-                  <a class="menuMain" href="http://xoops.widelands.org/modules/smartfaq/">FAQ</a>
-                  <a class="menuMain" href="http://xoops.widelands.org/modules/xcgal/">Screenshots</a>
-                  {% endcomment %}
-            <li><a class="menuMain" href="{% url wiki_index %}">Wiki (Help &amp; Docu.)</a></li>
-            <li><a class="menuMain" href="{% url wiki_article "WidelandsFaq" %}">FAQ</a></li>
-            <li><a class="menuMain" href="{% url pybb_index %}">Forum</a></li>
-            <li><a class="menuMain" href="{% url webchat_index %}">IRC Chat</a></li>
-                  {% comment %}
-                  <a class="menuMain" href="http://xoops.widelands.org/modules/Contentview/">SVN-View</a>
-                  <a class="menuMain" href="http://xoops.widelands.org/modules/Tracker/">Bug-Tracker & Feature Requests</a>
-                  <a class="menuMain" href="http://xoops.widelands.org/modules/poll/">Polls</a>
-                  {% endcomment %}
-            </ul>
+
+         <!-- Login Block / User informations -->
+         {% if user.is_authenticated %}
+         <h3 class="box_title">Account</h3>
+         <div class="box_content" align="center"> 
+            <p>
+            Your are logged in as<br/>
+            <b>{{ user|user_link }}</b>
+            </p>
+      
+            <p>
+            <a href="{% url messages_inbox %}">{% inbox_count %} {% trans "new messages" %}</a>
+            </p>
+
+            <p>
+            <a href="/accounts/logout/next={{request.path}}">Logout</a>
+            </p>
+
          </div>
+         {% else %}
+         <h3 class="box_title">Login</h3>
+         <div class="box_content"> 
+            <form method="post" action="/accounts/login/">
+               <table cellspacing="0">
+                  <tr><td>Username:</td></tr>
+                  <tr><td><input type="text" name="username" value="" maxlength="25" /></td></tr>
+                  <tr><td>Password:</td></tr>
+                  <tr><td><input type="password" name="password" value="" maxlength="32" /></td></tr>
+            </table>
+
+            <center><input type="submit" value="login" /></center>
+            <input type="hidden" name="next" value="{{ request.path }}" />
+         </form>
+         <center>
+            <a href="/accounts/password/reset/">Lost password?</a><br/><br/>
+            <a href="/accounts/register">Register now!</a><br/>
+         </center>
+         </div>
+         {% endif %}
+
+         <!-- Logged in users -->
+         {%load online_users %}
+         <h3 class="box_title">Currently online</h3>
+         <div class="box_content"> 
+             {% online_users 10 %}
+         </div>
+         
+         <!-- Hosting by SF.net block --> 
+         <h3 class="box_title">Hosted by</h3>
+         <div class="box_content" align="center"> 
+            <a href="http://sourceforge.net/projects/widelands"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=40163&type=15" 
+               width="150" height="40" border="0" alt="Get Widelands at SourceForge.net. Fast, secure and Free Open Source software downloads" align="middle"/>
+            </a>
+         </div>
+
+
+

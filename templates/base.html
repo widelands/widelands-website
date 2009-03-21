@@ -13,6 +13,25 @@
 
 <!--  CSS --> 
 <link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/base.css" />
+<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/navigation.css" />
+
+<!-- Javascripts for navigation -->
+<script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
+<script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
+<script type="text/javascript" src="/wlmedia/js/superfish.js"></script>
+<script type="text/javascript">
+   // initialise plugins
+   jQuery(function(){
+      jQuery('ul.sf-menu').superfish({
+         delay:       500,                            // one second delay on mouseout 
+         animation:   {height:'show'},  // slide-down animation 
+         speed:       'fast',                          // faster animation speed 
+         autoArrows:  true,      
+         dropShadows: false,                          // disable drop shadows 
+         });
+   });
+</script>
+
 {% block extra_head %}{% endblock %}
 </head>
 
@@ -20,10 +39,11 @@
    
 <!-- Header Bar -->
 <div id="headerbanner">
-   <a href="{% url mainpage %}"><img src="{{ MEDIA_URL }}/img/Logo.png" alt="Logo" align="middle" /></a>
+   <a href="{% url mainpage %}"><img src="/wlmedia/img/Logo.png" alt="Logo" align="middle" /></a>
 </div>
-<div id="headerbottombar">
-</div>
+<ul class="sf-menu">
+   {% include "navigation.html" %}
+</ul>
 
 <!-- Main Page starts here -->
 <!-- 
@@ -62,13 +82,6 @@
         No Content here!
        {% endblock %}
 <!-- ###################  CONTENT ENDS HERE  ################### -->       
-     </td>
-
-     <!-- Right Column -->
-     <td id="rightcolumn">
-        <div id="rightcontent">
-        {% include "right_boxes.html" %}
-        </div>
      </td>
   </tr>
 </table>

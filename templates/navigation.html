@@ -1,0 +1,30 @@
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+<li><a href="/">Home</a></li>
+<li><a href="{% url news_index %}">News</a></li>
+<li><a href="{% url wiki_article "DownloadPage" %}">Downloads</a> </li>
+<li>
+    <a href="{% url wiki_index %}">Wiki (Help &amp; Docu.)</a>
+    <ul>
+        <li><a href="{% url wiki_index %}">Main Page</a></li>
+        <li><a href="{% url wiki_list %}">All articles</a></li>
+        <li><a href="{% url wiki_history %}">Recent changes</a></li>
+    </ul>
+</li>
+<li><a href="{% url wiki_article "WidelandsFaq" %}">FAQ</a></li>
+<li><a href="{% url pybb_index %}">Forum</a></li>
+<li><a href="{% url webchat_index %}">IRC Chat</a></li>
+      {% comment %}
+      <a class="menuMain" href="http://xoops.widelands.org/modules/wfdownloads/">Downloads</a>
+         <li class="sub"><a href="t=hit">Popular</a></li>
+         <li class="sub"><a href="rate">Top Rated</a></li>
+      <a class="menuMain" href="http://xoops.widelands.org/modules/xcgal/">Screenshots</a>
+      {% endcomment %}
+      {% comment %}
+      <a class="menuMain" href="http://xoops.widelands.org/modules/Contentview/">SVN-View</a>
+      <a class="menuMain" href="http://xoops.widelands.org/modules/Tracker/">Bug-Tracker & Feature Requests</a>
+      <a class="menuMain" href="http://xoops.widelands.org/modules/poll/">Polls</a>
+      {% endcomment %}
+
