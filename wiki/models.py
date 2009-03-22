@@ -14,6 +14,7 @@ from django.contrib.contenttypes import generic
 
 from tagging.fields import TagField
 from tagging.models import Tag
+from djangosphinx import SphinxSearch
 
 from wlimages.models import Image
 
@@ -66,6 +67,15 @@ class Article(models.Model):
     images = generic.GenericRelation(Image)
 
     tags = TagField()
+
+    # Django sphinx 
+    search = SphinxSearch(
+        weights = {
+            'title': 100,
+            'summary': 80,
+            'content': 50,
+            }
+        )
 
     class Meta:
         verbose_name = _(u'Article')

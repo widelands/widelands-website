@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Your results</h1>
+
+{% if wiki_results.count %}
+   <h2>Wiki results</h2>
+   <ul>
+   {% for r in wiki_results %}
+   <li>{{r.title}},<a href="{{r.get_absolute_url}}">clicky</a></li>
+   {% endfor %}
+   </ul>
+{% endif %}
+
+{% if forum_results.count %}
+   <h2>Forum results</h2>
+   <ul>
+   {% for r in forum_results %}
+   <li>{{r.topic.forum.name}},{{r.topic.name}},{{r.user.username}},<a href="{{r.get_absolute_url}}">clicky</a></li>
+   {% endfor %}
+   </ul>
+{% endif %}
+
+{% endblock %}

@@ -118,6 +118,11 @@ LOCAL_DOMAINS = [
     "xoops.widelands.org"
 ]
 
+###############################
+# Sphinx (Search prog) Config #
+###############################
+SPHINX_API_VERSION = 0x116
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -137,6 +142,7 @@ INSTALLED_APPS = (
     'widelands.wlwebchat',
     'widelands.wlrecaptcha',
     'widelands.wlprofile',
+    'widelands.wlsearch',
 
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications
@@ -145,6 +151,7 @@ INSTALLED_APPS = (
 
     # Thirdparty apps
     # 'simplestats',
+    'djangosphinx',
     'threadedcomments',
     'messages',
     'registration', # User registration (per Email validation)
