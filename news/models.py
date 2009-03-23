@@ -6,7 +6,9 @@ from tagging.fields import TagField
 from widelands.news.managers import PublicManager
 from django.core.urlresolvers import reverse
 
-from djangosphinx import SphinxSearch
+import settings
+if settings.USE_SPHINX:
+    from djangosphinx import SphinxSearch
 
 import tagging
 
@@ -60,14 +62,15 @@ class Post(models.Model):
     categories      = models.ManyToManyField(Category, blank=True)
     tags            = TagField()
     objects         = PublicManager()
-    
-    search          = SphinxSearch(
-        weights = {
-            'title': 100,
-            'body': 80,
-            'tease': 80,
-            }
-    )
+   
+    if settings.USE_SPHINX:
+        search          = SphinxSearch(
+            weights = {
+                'title': 100,
+                'body': 80,
+                'tease': 80,
+                }
+        )
 
     class Meta:
         verbose_name = _('post')

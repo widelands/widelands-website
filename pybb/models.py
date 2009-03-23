@@ -13,7 +13,10 @@ from django.conf import settings
 from pybb.markups import mypostmarkup 
 from pybb.util import urlize, memoize_method, unescape
 from pybb import settings as pybb_settings
-from djangosphinx import SphinxSearch
+
+from django.conf import settings
+if settings.USE_SPHINX:
+    from djangosphinx import SphinxSearch
 
 MARKUP_CHOICES = (
     ('markdown', 'markdown'),
@@ -97,11 +100,12 @@ class Topic(models.Model):
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
     
     # Django sphinx 
-    search = SphinxSearch(
-        weights = {
-            'name': 100,
-            }
-        )
+    if settings.USE_SPHINX:
+        search = SphinxSearch(
+            weights = {
+                'name': 100,
+                }
+            )
 
     class Meta:
         ordering = ['-created']
@@ -179,12 +183,13 @@ class Post(RenderableItem):
     user_ip = models.IPAddressField(_('User IP'), blank=True, default='')
     
     # Django sphinx 
-    search = SphinxSearch(
-        weights = {
-            'body_text': 100,
-            'body_html': 0,
-            }
-        )
+    if settings.USE_SPHINX:
+        search = SphinxSearch(
+            weights = {
+                'body_text': 100,
+                'body_html': 0,
+                }
+            )
 
 
     class Meta:

@@ -22,14 +22,8 @@ This directory contains the widelands homepage django project. It needs a bunch 
     http://code.google.com/p/django-comment-utils/
 * django-threadedcomments
     http://code.google.com/p/django-threadedcomments/
-
-Not required apps:
-* django-forumbr
-    http://code.google.com/p/django-forumbr/
-* django-inline
-    http://code.google.com/p/django-inline/
-* spenecoll
-    http://sct.sphene.net/wiki/show/Start/
+* djangosphinx (for search)
+    http://django-sphinx.googlecode.com/p/django-sphinx/
 
 # Installation
 

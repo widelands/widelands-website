@@ -14,7 +14,10 @@ from django.contrib.contenttypes import generic
 
 from tagging.fields import TagField
 from tagging.models import Tag
-from djangosphinx import SphinxSearch
+
+import settings
+if settings.USE_SPHINX:
+    from djangosphinx import SphinxSearch
 
 from wlimages.models import Image
 
@@ -69,13 +72,14 @@ class Article(models.Model):
     tags = TagField()
 
     # Django sphinx 
-    search = SphinxSearch(
-        weights = {
-            'title': 100,
-            'summary': 80,
-            'content': 50,
-            }
-        )
+    if settings.USE_SPHINX:
+        search = SphinxSearch(
+            weights = {
+                'title': 100,
+                'summary': 80,
+                'content': 50,
+                }
+            )
 
     class Meta:
         verbose_name = _(u'Article')
