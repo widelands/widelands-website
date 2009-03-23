@@ -7,7 +7,6 @@ Forum - {{ block.super }}
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/forum.css" />
-<script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.js"></script>
 
 <link rel="alternate" type="application/atom+xml" title="Latest Posts" href="{% url pybb_feed "posts" %}" />
 <link rel="alternate" type="application/atom+xml" title="Latest Topics" href="{% url pybb_feed "topics" %}" />
