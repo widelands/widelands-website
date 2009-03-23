@@ -17,19 +17,19 @@
 
 <!-- Javascripts for navigation -->
 <script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
-<script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
 <script type="text/javascript" src="/wlmedia/js/superfish.js"></script>
+<script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
 <script type="text/javascript">
    // initialise plugins
-   jQuery(function(){
-      jQuery('ul.sf-menu').superfish({
+   $(document).ready(function() { 
+      $('ul.sf-menu').superfish({
          delay:       500,                            // one second delay on mouseout 
          animation:   {height:'show'},  // slide-down animation 
          speed:       'fast',                          // faster animation speed 
          autoArrows:  true,      
          dropShadows: false,                          // disable drop shadows 
          });
-   });
+    }); 
 </script>
 
 {% block extra_head %}{% endblock %}
