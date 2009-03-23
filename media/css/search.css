@@ -1,0 +1,22 @@
+
+
+.search h1 {
+    display: block;
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 1px;
+    background: url('../img/background-444.png');
+}
+
+.search ul {
+   list-style: none; 
+}
+
+.search .results .wiki {
+   margin-bottom: 2px;
+}
+
+.posted {
+   font-size: 80%;
+}

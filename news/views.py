@@ -64,6 +64,7 @@ def post_detail(request, slug, year, month, day, **kwargs):
         request,
         year = year,
         month = month,
+        month_format = "%m",
         day = day,
         date_field = 'publish',
         slug = slug,

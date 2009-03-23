@@ -1,10 +1,82 @@
 {% extends "base.html" %}
+{% load custom_date %}
+
+{% block title %}Search - {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/search.css" />
+{{ block.super}}{% endblock %}
 
 {% block content %}
-<form method="post" action="">
-   {{ search_form.as_ul }}
-   <input type="submit" value="login" />
-</form>
+<div class="search">
+   <h1>Search</h1>
+
+   <p>
+   The search only matches complete words. Case is ignored. 
+   </p>
+
+   <div class="form">
+   <form method="post" action="">
+      <p>{{ search_form.search.errors }}<label for="id_search">Search:</label>
+      {{ search_form.search }}</p>
+      <label for="id_incl_wiki">Wiki</label> {{ search_form.incl_wiki }} 
+      <label for="id_incl_forum">Forum</label> {{ search_form.incl_forum }} 
+      <label for="id_incl_news">News</label> {{ search_form.incl_news }} 
+   </div>
+      
+      <input type="submit" value="Search" />
+   </form>
+   </div>
+
+   <div class="results">
+{% if post %}
+
+<h1>Your results</h1>
+
+{% if wiki_results.count %}
+   <h2>Wiki results</h2>
+   <ul>
+   {% for r in wiki_results %}
+   <li class="wiki"><a href="{{r.get_absolute_url}}">{{r.title}}</a></li>
+   {% endfor %}
+   </ul>
+{% endif %}
+
+{% if forum_hits %}
+   <h2>Forum results</h2>
+   {% if forum_results_topic.count %}
+   <h3>Topics</h3>
+   <ul>
+   {% for r in forum_results_topic %}
+   <li class="topic"><a href="{{r.forum.get_absolute_url}}">{{r.forum.name}}</a>
+   &raquo; <a href="{{r.get_absolute_url}}">{{r.name}}</a></li>
+   {% endfor %}
+   </ul>
+   {%endif %}
+
+   {% if forum_results_post.count %}
+   <h3>Posts</h3>
+   <ul>
+   {% for r in forum_results_post %}
+   <li class="post"><a href="{{r.topic.forum.get_absolute_url}}">{{r.topic.forum.name}}</a>
+   &raquo; <a href="{{r.topic.get_absolute_url}}">{{r.topic.name}}</a> &raquo; <a href="{{r.get_absolute_url}}">Post by {{r.user.username}}</a>, <span class="posted">{{ r.created|custom_date:user }}</span></li>
+   {% endfor %}
+   </ul>
+   {% endif %}
+{% endif %}
+
+{% if news_results.count %}
+   <h2>News results</h2>
+   <ul>
+   {% for r in news_results %}
+   <li class="news"><a href="{{r.get_absolute_url}}">{{ r.title }}</a>, 
+   <span class="posted">{{ r.publish|custom_date:user }}</span></li>
+   {% endfor %}
+   </ul>
+{% endif %}
+
+{% endif %}
+   </div>
 
 {% endblock %}
 

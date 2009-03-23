@@ -4,6 +4,9 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 from tagging.fields import TagField
 from widelands.news.managers import PublicManager
+from django.core.urlresolvers import reverse
+
+from djangosphinx import SphinxSearch
 
 import tagging
 
@@ -57,6 +60,14 @@ class Post(models.Model):
     categories      = models.ManyToManyField(Category, blank=True)
     tags            = TagField()
     objects         = PublicManager()
+    
+    search          = SphinxSearch(
+        weights = {
+            'title': 100,
+            'body': 80,
+            'tease': 80,
+            }
+    )
 
     class Meta:
         verbose_name = _('post')
@@ -98,10 +109,10 @@ class Post(models.Model):
     @permalink
     def get_absolute_url(self):
         return ('news_detail', None, {
+            'slug': self.slug,
             'year': self.publish.year,
             'month': self.publish.strftime('%m'),
             'day': self.publish.day,
-            'slug': self.slug
         })
     
     def get_previous_post(self):

@@ -3,9 +3,9 @@ from widelands.news import views as news_views
 
 
 urlpatterns = patterns('',
-    # url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<slug>[-\w]+)/$',
-    #     view=news_views.post_detail,
-    #     name='news_detail'),
+    url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<slug>[-\w]+)/$',
+        view=news_views.post_detail,
+        name='news_detail'),
     #
     # url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$',
     #     view=news_views.post_archive_day,
