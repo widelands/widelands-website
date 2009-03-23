@@ -68,12 +68,14 @@
 <table border="0" cellpadding="0" cellspacing="0" >
   <tr>
      <!-- Left Column -->
+     {% comment %}
      <td id="leftcolumn">
         <div id="leftcontent">
         {% include "left_boxes.html" %}
         </div>
 
      </td>
+     {% endcomment %}
 
      <!-- Center Column/Content -->
      <td id="content">
@@ -84,15 +86,12 @@
 <!-- ###################  CONTENT ENDS HERE  ################### -->       
      </td>
    
-     {% comment %}
-     This column will be back, i'm sure
      <!-- Right Column -->
      <td id="rightcolumn">
         <div id="rightcontent">
         {% include "right_boxes.html" %}
         </div>
      </td>
-     {% endcomment %}
   </tr>
 </table>
 

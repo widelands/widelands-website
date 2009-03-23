@@ -99,7 +99,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return ('news_detail', None, {
             'year': self.publish.year,
-            'month': self.publish.strftime('%b').lower(),
+            'month': self.publish.strftime('%m'),
             'day': self.publish.day,
             'slug': self.slug
         })

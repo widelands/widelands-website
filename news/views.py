@@ -37,6 +37,7 @@ def post_archive_month(request, year, month, **kwargs):
         request,
         year = year,
         month = month,
+        month_format = "%m",
         date_field = 'publish',
         queryset = Post.objects.published(),
         **kwargs
@@ -49,6 +50,7 @@ def post_archive_day(request, year, month, day, **kwargs):
         request,
         year = year,
         month = month,
+        month_format = "%m",
         day = day,
         date_field = 'publish',
         queryset = Post.objects.published(),

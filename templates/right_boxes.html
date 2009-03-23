@@ -61,13 +61,6 @@
          </div>
          {% endif %}
 
-         <!-- Logged in users -->
-         {%load online_users %}
-         <h3 class="box_title">Currently online</h3>
-         <div class="box_content"> 
-             {% online_users 10 %}
-         </div>
-         
          <!-- Hosting by SF.net block --> 
          <h3 class="box_title">Hosted by</h3>
          <div class="box_content" align="center"> 
@@ -76,5 +69,12 @@
             </a>
          </div>
 
+         <!-- Logged in users -->
+         {%load online_users %}
+         <h3 class="box_title">Currently online</h3>
+         <div class="box_content"> 
+             {% online_users 10 %}
+         </div>
+         
 
 

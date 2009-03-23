@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.syndication.feeds import FeedDoesNotExist
 
-from wiki.forms import ArticleForm, SearchForm
+from wiki.forms import ArticleForm 
 from wiki.models import Article, ChangeSet
 from wiki.feeds import (RssArticleHistoryFeed, AtomArticleHistoryFeed,
                         RssHistoryFeed, AtomHistoryFeed)
@@ -127,7 +127,6 @@ def article_list(request,
                  group_slug=None, group_slug_field=None, group_qs=None,
                  article_qs=ALL_ARTICLES,
                  ArticleClass=Article,
-                 SearchFormClass=SearchForm,
                  template_name='index.html',
                  template_dir='wiki',
                  extra_context=None,
@@ -147,10 +146,7 @@ def article_list(request,
 
         articles = articles.order_by('-created_at')
 
-        search_form = SearchFormClass()
-
         template_params = {'articles': articles,
-                           'search_form': search_form,
                            'allow_write': allow_write}
 
         if group_slug is not None:
@@ -470,41 +466,6 @@ def revert_to_revision(request, title,
                                 'group_slug': group_slug})
 
         return redirect_to(request, url)
-
-    return HttpResponseNotAllowed(['POST'])
-
-
-def search_article(request,
-                   group_slug=None, group_slug_field=None, group_qs=None,
-                   article_qs=ALL_ARTICLES,
-                   SearchFormClass=SearchForm,
-                   extra_context=None,
-                   is_member=None,
-                   is_private=None,
-                   *args, **kw):
-    if request.method == 'POST':
-        search_form = SearchFormClass(request.POST)
-        if search_form.is_valid():
-            search_term = search_form.cleaned_data['search_term']
-
-            group = None
-            if group_slug is not None:
-                group = get_object_or_404(group_qs,
-                                          **{group_slug_field: group_slug})
-                allow_read = has_read_perm(request.user, group, is_member,
-                                           is_private)
-            else:
-                allow_read = True
-
-            if not allow_read:
-                return Http404()
-
-            # go to article by title
-            url = get_url('wiki_article', group,
-                          [search_term], {'title': search_term,
-                                          'group_slug': group_slug})
-
-            return redirect_to(request, url)
 
     return HttpResponseNotAllowed(['POST'])
 

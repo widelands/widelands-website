@@ -95,7 +95,3 @@ class ArticleForm(forms.ModelForm):
 
         return article, changeset
 
-
-
-class SearchForm(forms.Form):
-    search_term = forms.CharField(required=True)
