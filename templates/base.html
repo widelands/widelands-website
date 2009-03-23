@@ -17,19 +17,19 @@
 
 <!-- Javascripts for navigation -->
 <script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
-<script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
 <script type="text/javascript" src="/wlmedia/js/superfish.js"></script>
+<script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
 <script type="text/javascript">
    // initialise plugins
-   jQuery(function(){
-      jQuery('ul.sf-menu').superfish({
+   $(document).ready(function() { 
+      $('ul.sf-menu').superfish({
          delay:       500,                            // one second delay on mouseout 
          animation:   {height:'show'},  // slide-down animation 
          speed:       'fast',                          // faster animation speed 
          autoArrows:  true,      
          dropShadows: false,                          // disable drop shadows 
          });
-   });
+    }); 
 </script>
 
 {% block extra_head %}{% endblock %}
@@ -68,12 +68,14 @@
 <table border="0" cellpadding="0" cellspacing="0" >
   <tr>
      <!-- Left Column -->
+     {% comment %}
      <td id="leftcolumn">
         <div id="leftcontent">
         {% include "left_boxes.html" %}
         </div>
 
      </td>
+     {% endcomment %}
 
      <!-- Center Column/Content -->
      <td id="content">
@@ -82,6 +84,13 @@
         No Content here!
        {% endblock %}
 <!-- ###################  CONTENT ENDS HERE  ################### -->       
+     </td>
+   
+     <!-- Right Column -->
+     <td id="rightcolumn">
+        <div id="rightcontent">
+        {% include "right_boxes.html" %}
+        </div>
      </td>
   </tr>
 </table>

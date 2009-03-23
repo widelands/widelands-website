@@ -12,8 +12,6 @@ urlpatterns = patterns('',
 
     url(r'^list/$', views.article_list, name='wiki_list'),
 
-    url(r'^search/$', views.search_article, name="wiki_search"),
-
     url(r'^history/$', views.history, name='wiki_history'),
 
     url(r'^feeds/(?P<feedtype>\w+)/$', views.history_feed, name='wiki_history_feed'),

@@ -14,7 +14,23 @@
     </ul>
 </li>
 <li><a href="{% url wiki_article "WidelandsFaq" %}">FAQ</a></li>
-<li><a href="{% url pybb_index %}">Forum</a></li>
+<li>
+<a href="{% url pybb_index %}">Forum</a>
+<ul>
+   <li><a href="{% url pybb_forum 1 %}">Technical Help</a></li>
+   <li><a href="{% url pybb_forum 2 %}">Game suggestions</a></li>
+   <li><a href="{% url pybb_forum 3 %}">Playing widelands</a></li>
+   <li><a href="{% url pybb_forum 4 %}">Editor Forum</a></li>
+   <li><a href="{% url pybb_forum 5 %}">[Deutsch] - Spielerforum</a></li>
+   <li><a href="{% url pybb_forum 6 %}">[Español] - Foro de jugadors</a></li>
+   <li><a href="{% url pybb_forum 7 %}">[Française] - Forum de joueurs</a></li>
+   <li><a href="{% url pybb_forum 13 %}">[English] - Player Forum</a></li>
+   <li><a href="{% url pybb_forum 9 %}">Graphic Development</a></li>
+   <li><a href="{% url pybb_forum 10 %}">Sound &amp; Music Development</a></li>
+   <li><a href="{% url pybb_forum 11 %}">Homepage</a></li>
+   <li><a href="{% url pybb_forum 12 %}">Translations &amp; Internationalization</a></li>
+</ul>
+</li>
 <li><a href="{% url webchat_index %}">IRC Chat</a></li>
       {% comment %}
       <a class="menuMain" href="http://xoops.widelands.org/modules/wfdownloads/">Downloads</a>
