@@ -10,6 +10,9 @@ urlpatterns = patterns('',
     # I wanted a true reverse, but it didn't work out 
     url(r'^$', redirect_to, { "url": "/wiki/MainPage" }, name="wiki_index" ),
 
+    url(r'^preview/$', views.article_preview, name='wiki_preview'),
+    url(r'^diff/$', views.article_diff, name='wiki_preview_diff'),
+
     url(r'^list/$', views.article_list, name='wiki_list'),
 
     url(r'^history/$', views.history, name='wiki_history'),

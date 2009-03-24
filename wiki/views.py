@@ -15,14 +15,15 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.syndication.feeds import FeedDoesNotExist
 
 from wiki.forms import ArticleForm 
-from wiki.models import Article, ChangeSet
+from wiki.models import Article, ChangeSet, dmp
 from wiki.feeds import (RssArticleHistoryFeed, AtomArticleHistoryFeed,
                         RssHistoryFeed, AtomHistoryFeed)
 from wiki.utils import get_ct 
 from django.contrib.auth.decorators import login_required 
 
-# Settings
+from mainpage.templatetags.wl_markdown import do_wl_markdown
 
+# Settings
 #  lock duration in minutes
 try:
     WIKI_LOCK_DURATION = settings.WIKI_LOCK_DURATION
@@ -244,7 +245,6 @@ def edit_article(request, title,
         allow_read = has_read_perm(request.user, group, is_member,
                                    is_private)
         allow_write = has_write_perm(request.user, group, is_member)
-        print "allow_write:", allow_write
     else:
         allow_read = allow_write = True
 
@@ -581,6 +581,37 @@ def stop_observing_article(request, title,
 
     return redirect_to(request, url)
 
+def article_preview( request ):
+    """
+    This is a AJAX function that previews the body of the 
+    article as it is currently displayed. 
+
+    This function is actually pretty simple, it just
+    runs the function through the view template and returns
+    it to the caller
+    """
+    rv = do_wl_markdown( request.POST["body"] )
+    return HttpResponse(rv, mimetype="text/html")
+
+def article_diff( request ):
+    """
+    This is a AJAX function that diffs the body of the 
+    article as it is currently displayed with the current version 
+    of the article
+    """
+    print "request.POST['article']:", request.POST["article"]
+
+    current_article = get_object_or_404(Article, pk=int(request.POST["article"]))
+    content = request.POST["body"]
+    
+    print "current_article.content:", current_article.content
+    print "########"
+    print "content:", content
+
+    diffs = dmp.diff_main(current_article.content, content)
+    print "dmp.diff_prettyHtml(diffs):", dmp.diff_prettyHtml(diffs)
+
+    return HttpResponse(dmp.diff_prettyHtml(diffs), mimetype="text/html")
 
 def article_history_feed(request, feedtype, title,
                          group_slug=None, group_slug_field=None, group_qs=None,
