@@ -64,6 +64,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
+    'tracking.middleware.VisitorCleanUpMiddleware',
 )
 
 ROOT_URLCONF = 'widelands.urls'
@@ -124,6 +126,11 @@ LOCAL_DOMAINS = [
 USE_SPHINX=False
 SPHINX_API_VERSION = 0x116
 
+############
+# Tracking #
+############
+TRACKING_CLEANUP_TIMEOUT=1
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -158,6 +165,7 @@ INSTALLED_APPS = (
     'pagination',
     'tagging',
     'notification',
+    'tracking',
 ) 
 
 try:

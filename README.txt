@@ -24,6 +24,8 @@ This directory contains the widelands homepage django project. It needs a bunch 
     http://code.google.com/p/django-threadedcomments/
 * djangosphinx (for search)
     http://django-sphinx.googlecode.com/p/django-sphinx/
+* django-tracking
+    http://code.google.com/p/django-tracking/
 
 # Installation
 

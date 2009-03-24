@@ -12,6 +12,7 @@
 from django import template
 from django.contrib.auth.models import User
 import datetime
+from tracking.models import Visitor
 
 register = template.Library()
 
@@ -20,10 +21,8 @@ def online_users(num):
     """
     Show user that has been login an hour ago.
     """
-    one_hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
-    sql_datetime = datetime.datetime.strftime(one_hour_ago, '%Y-%m-%d %H:%M:%S')
-    users = User.objects.filter(last_login__gt=sql_datetime,
-                                is_active__exact=1).order_by('-last_login')[:num]
+    users = [ l.user for l in Visitor.objects.active().exclude(user=None) ]
+
     return {
             'users': users,
     }
