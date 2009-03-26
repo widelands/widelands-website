@@ -10,15 +10,22 @@
 {% block content %}
 <h2>{% trans "Recent Changes" %}</h2>
 {% autopaginate changes %}
-<table>
+<table class="history_list" >
+    <tr>
+	  <th>{% trans "Action" %}</th>
+	  <th>{% trans "Article" %}</th>
+	  <th>{% trans "At" %}</th>
+	  <th>{% trans "User" %}</th>
+	  <th width="50%">{% trans "Comment" %}</th>
+    </tr>
 {% for change in changes %}
     {% ifchanged change.modified.date %}
         <tr>
             <td colspan="5">{{change.modified|custom_date:user|title }}</td>
         </tr>
     {% endifchanged %}
-    <tr>
-        <td>
+    <tr class="{% cycle 'odd' 'even' %}">
+        <td >
             {% if change.old_title %} 
                 <a href="{% url wiki_changeset change.article.title,change.revision %}"> M </a>
             {% else %} 

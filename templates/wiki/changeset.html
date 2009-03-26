@@ -18,8 +18,4 @@ Changes in {{ article_title }} - {{ block.super }}
     {%endif %}
     <h3>Revision differences</h3>
     {{ changeset.display_diff|safe }}
-    <br /><b>{% trans "Markup:" %}</b>
-    {% if changeset.old_markup %} {{ changeset.old_markup }}
-    {% else %} {% trans "Plain Text." %}
-    {% endif %}
 {% endblock %}
