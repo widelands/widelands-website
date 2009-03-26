@@ -207,3 +207,11 @@ th {
  color: #ff0000;
  font-size: 13px;
 }
+
+/* 
+ * Search Box
+ */
+#id_search {
+    width: 150px; 
+}
+
