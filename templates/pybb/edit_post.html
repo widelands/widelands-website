@@ -7,15 +7,7 @@ Edit post - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-<h1>{% trans "Editing the post" %}</h1>
 
-<form method="post">
-    <fieldset>
-        <legend>{% trans "Editing the post" %}</legend>
-            {{ form.as_p }}
-            <p><input type="submit" value="{% trans "Save" %}" /></p>
-        </legend>
-    </fieldset>
-</form>
+{% include "pybb/inlines/add_post_form.html" %}
 
 {% endblock %}
