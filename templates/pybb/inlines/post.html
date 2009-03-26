@@ -13,7 +13,17 @@
    <table class="{% cycle "odd" "even" %}" width="100%">
       <tr>
          <td class="author">{{ post.user|user_link }}</td>
-         <td width="85%" class="at"><strong>Posted at:</strong> {{ post.created|custom_date:user}}</td>
+         <td width="85%" class="at">
+            <table width="100%" cellpadding="0" cellspacing="0" style="table-layout: fixed; border: 0px;">
+               <tr>
+                  <td style="text-align: left; border: 0px;">
+                     <a href="{{post.get_absolute_url}}">Permalink</a>
+                  </td>
+                  <td style="text-align: right; border: 0px;">
+                     <strong>Posted at:</strong> {{ post.created|custom_date:user}}
+                  </td>
+               </tr>
+            </table>
       </tr>
       <tr>
          <td class="userinfo">
