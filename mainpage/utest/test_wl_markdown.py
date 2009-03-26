@@ -114,6 +114,77 @@ class TestWlMarkdown(DBTestCase):
         input = u"""<a href="/wiki/MissingPage/edit/">this page</a>"""
         wanted = u"""<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>"""
         self._check(input,wanted)
+    
+    # Check smileys
+    def test_smiley_angel(self):
+        input = """O:-)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-angel.png" alt="face-angel.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_crying(self):
+        input = """:'-("""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-crying.png" alt="face-crying.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_devilish(self):
+        input = """>:-)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-devilish.png" alt="face-devilish.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_glasses(self):
+        input = """8-)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-glasses.png" alt="face-glasses.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_kiss(self):
+        input = """:-x"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-kiss.png" alt="face-kiss.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_plain(self):
+        input = """:-|"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-plain.png" alt="face-plain.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_sad(self):
+        input = """:-("""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-sad.png" alt="face-sad.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_smilebig(self):
+        input = """:))"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-smile-big.png" alt="face-smile-big.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_smile(self):
+        input = """:-)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_surprise(self):
+        input = """:-O"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-surprise.png" alt="face-surprise.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_wink(self):
+        input = """;-)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-wink.png" alt="face-wink.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_grin(self):
+        input = """:D"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-grin.png" alt="face-grin.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_sad(self):
+        input = """:("""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-sad.png" alt="face-sad.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_smile(self):
+        input = """:)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_surprise(self):
+        input = """:O"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-surprise.png" alt="face-surprise.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_wink(self):
+        input = """;)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-wink.png" alt="face-wink.png" /></p>"""
+        self._check(input,wanted)
+    def test_smiley_monkey(self):
+        input = """:(|)"""
+        wanted = u"""<p><img src="/wlmedia/img/smileys/face-monkey.png" alt="face-monkey.png" /></p>"""
+        self._check(input,wanted)
+
 
     # Occured errors
     def test_wiki_rootlink(self):

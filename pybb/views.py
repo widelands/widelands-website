@@ -408,6 +408,8 @@ def post_ajax_preview(request):
         html = mypostmarkup.markup(content, auto_urls=False)
     elif markup == 'markdown':
         html = unicode(Markdown(content, safe_mode='escape'))
+        print "html:", html
+
 
     html = urlize(html)
     return {'content': html}

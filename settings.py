@@ -113,11 +113,37 @@ AVATAR_HEIGHT  = AVATAR_WIDTH = 80
 PYBB_ATTACHMENT_ENABLE = False
 PYBB_DEFAULT_MARKUP = 'markdown'
 
-#######################
-# Link classification #
-#######################
+##############################################
+# Link classification and other Markup stuff #
+##############################################
 LOCAL_DOMAINS = [
     "xoops.widelands.org"
+]
+SMILEY_DIR = MEDIA_URL + "img/smileys/"
+# Keep this list ordered by length of smileys
+SMILEYS = [
+    ("O:-)", "face-angel.png"),
+    (":'-(", "face-crying.png"),
+    ("&gt;:-)", "face-devilish.png"), # Hack around markdown replacement. see also SMILEY_PREESCAPING
+    (":(|)", "face-monkey.png"),
+    (":-D", "face-grin.png"),
+    ("8-)", "face-glasses.png"),
+    (":-x", "face-kiss.png"),
+    (":-|", "face-plain.png"),
+    (":-(", "face-sad.png"),
+    (":))", "face-smile-big.png"),
+    (":-)", "face-smile.png"),
+    (":-O", "face-surprise.png"),
+    (";-)", "face-wink.png"),
+    (":D", "face-grin.png"),
+    (":(", "face-sad.png"),
+    (":)", "face-smile.png"),
+    (":O", "face-surprise.png"),
+    (";)", "face-wink.png"),
+]
+# This needs to be done to keep some stuff hidden from markdown
+SMILEY_PREESCAPING = [
+    (">:-)", "\>:-)"),
 ]
 
 ###############################

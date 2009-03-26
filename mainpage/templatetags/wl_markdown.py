@@ -34,7 +34,7 @@ except ImportError:
 
 # We will also need the site domain
 from django.contrib.sites.models import Site
-from settings import SITE_ID
+from settings import SITE_ID, SMILEYS, SMILEY_DIR, SMILEY_PREESCAPING
 _domain = Site.objects.get(pk=SITE_ID).domain
 
 # Getting local domain lists
@@ -46,6 +46,25 @@ except ImportError:
 
 
 register = template.Library()
+
+def _insert_smileys( text ):
+    """
+    This searches for smiley symbols in the current text
+    and replaces them with the correct images
+    """
+    for sc,img in SMILEYS:
+        text = text.replace(sc,"<img src='%s%s' alt='%s' />" % ( SMILEY_DIR, img, img ))
+    
+    return text
+def _insert_smiley_preescaping( text ):
+    """
+    This searches for smiley symbols in the current text
+    and replaces them with the correct images
+    """
+    for before,after in SMILEY_PREESCAPING:
+        text = text.replace(before,after)
+    
+    return text
 
 def _classify_link( tag ):
     """
@@ -96,6 +115,9 @@ custom_filters = [
 ]
 
 def do_wl_markdown( value, *args, **keyw ):
+    # Do Preescaping for markdown, so that some things stay intact
+    value = _insert_smiley_preescaping( value )
+
     # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
     nvalue = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
     
@@ -115,8 +137,12 @@ def do_wl_markdown( value, *args, **keyw ):
         for pattern,replacement in custom_filters:
             if not len(text.strip()):
                 continue
-
-            rv = pattern.sub( replacement, text )
+    
+    
+            # First, replace smileys
+            rv = _insert_smileys( text )
+            
+            rv = pattern.sub( replacement, rv )
             if rv:
                 # We can't do a simple text substitution, because we 
                 # need this parsed for further processing
