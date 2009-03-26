@@ -52,7 +52,7 @@
             {% endif %}
             {% endif %}
             {% if post.updated %}
-            <div class="updated-message">{% trans "Edited" %}{{ post.updated|custom_date:user|title}}</div>
+            <div class="updated-message"><strong>{% trans "Edited" %}:</strong> {{ post.updated|custom_date:user|title}}</div>
             {% endif %}
 
             {% if post.attachment_cache %}
