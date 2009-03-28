@@ -43,6 +43,7 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     url(r'^images/', include("wlimages.urls")),
     url(r'^profile/', include("wlprofile.urls")),
     url(r'^search/', include("wlsearch.urls")),
+    url(r'^poll/', include("wlpoll.urls")),
 )
 
 try:

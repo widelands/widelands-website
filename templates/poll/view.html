@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% load wlpoll %}
+
+{% block content %}
+<h1>Hallo</h1>
+
+{% for c in poll.choices.all %}
+{{ c }}<br/>
+{% endfor %}
+
+{{poll.total_votes}}
+
+{% display_poll poll %}
+
+{% endblock %}
