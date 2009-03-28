@@ -28,9 +28,10 @@ class DisplayPollNode(template.Node):
         countstr = '|'.join([ ("t  %.1f %% (%i),000000,0,%i,11" % (c.votes*100/allvotes,c.votes,idx)) 
                             for idx,c in enumerate(choices) ])
         height = 28*len(choices) + 10
+        width = min(700, 300000/height)
         args = (
          ("cht","bhs"),                             # Chart type
-         ("chs", "700x%i" % height),                # Chart size
+         ("chs", "%ix%i" % (width,height)),                # Chart size
          ("chd", 't:' + ','.join(map(str,counts))), # Chart data
          ("chds", '0,%i' % max(counts)),            # Data scaling
          ("chxt", "y"),

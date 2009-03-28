@@ -8,7 +8,8 @@ class PollManager(models.Manager):
 class Poll(models.Model):
     name = models.CharField(max_length=256)
     pub_date = models.DateTimeField("date published", default = datetime.datetime.now)
-    closed_date = models.DateTimeField("date closed", blank=True, null=True)
+    closed_date = models.DateTimeField("date closed", default= lambda: datetime.datetime.now() + datetime.timedelta(days=90), 
+                            blank=True, null=True)
     
     objects = PollManager()
 
