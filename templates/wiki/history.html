@@ -9,8 +9,7 @@
 
 {% block content %}
 <div align="right">
-   {% if article.id %}
-      <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
+   <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
 </div>
 
 <h1>
