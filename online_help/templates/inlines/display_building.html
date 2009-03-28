@@ -2,37 +2,72 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-<table class="building" width="100%" cellspacing="1">
-   <tr>
-      <th>{{b.displayname|title }}</th>
-      <th>Description</th>
+      <!--- Header --->
+    <tr>
+            <!--- With build cost and production --->
+      {% if b.has_build_cost and b.produces %}
+        <th>{{b.displayname|title }}</th>
+        <th>Description</th>
+        <th>Build cost</th>
+        <th>Produces</th>
+      {% endif %}
+            <!--- With build cost --->
       {% if b.has_build_cost %}
-      <th>Build cost</th>
+        <th>{{b.displayname|title }}</th>
+        <th colspan="2">Description</th>
+        <th>Build cost</th>
       {% endif %}
+            <!--- With production --->
       {% if b.produces %}
-      <th>Produces</th>
+        <th>{{b.displayname|title }}</th>
+        <th colspan="2">Description</th>
+        <th>Produces</th>
       {% endif %}
-   </tr>
-   <tr class="odd">
-      <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
-      <td>{{ b.help }}</td>
+    </tr>
+
+      <!--- Content --->
+    <tr class="odd">
+            <!--- With build cost and production --->
+      {% if b.has_build_cost and b.produces %}
+        <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
+        <td>{{ b.help }}</td>
+          <td>
+            {% for costs in b.get_build_cost %}
+                {% for w in costs %}
+                  <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
+                {% endfor %}
+              <br />
+            {%endfor%}
+          </td> 
+          <td>
+            {% for w in b.get_outputs %}
+              <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
+            {%endfor%}
+          </td>
+      {% endif %}
+            <!--- With build cost --->
       {% if b.has_build_cost %}
-      <td>
-         {% for costs in b.get_build_cost %}
-            {% for w in costs %}
-               <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
-            {% endfor %}
-            <br />
-         {%endfor%}
-      </td> 
+        <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
+        <td>{{ b.help }}</td>
+          <td>
+            {% for costs in b.get_build_cost %}
+                {% for w in costs %}
+                  <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
+                {% endfor %}
+              <br />
+            {%endfor%}
+          </td> 
       {% endif %}
+            <!--- With production --->
       {% if b.produces %}
-      <td>
-         {% for w in b.get_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
-         {%endfor%}
-      </td>
+        <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
+        <td>{{ b.help }}</td>
+          <td>
+            {% for w in b.get_outputs %}
+              <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
+            {%endfor%}
+          </td>
       {% endif %}
-   </tr>
+    </tr>
 </table>
 
