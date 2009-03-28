@@ -12,13 +12,13 @@
         <th>Produces</th>
       {% endif %}
             <!--- With build cost --->
-      {% if b.has_build_cost %}
+      {% if b.has_build_cost not b.produces %}
         <th>{{b.displayname|title }}</th>
         <th colspan="2">Description</th>
         <th>Build cost</th>
       {% endif %}
             <!--- With production --->
-      {% if b.produces %}
+      {% if b.produces not b.has_build_cost  %}
         <th>{{b.displayname|title }}</th>
         <th colspan="2">Description</th>
         <th>Produces</th>
@@ -46,7 +46,7 @@
           </td>
       {% endif %}
             <!--- With build cost --->
-      {% if b.has_build_cost %}
+      {% if b.has_build_cost not b.produces %}
         <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
         <td>{{ b.help }}</td>
           <td>
@@ -59,7 +59,7 @@
           </td> 
       {% endif %}
             <!--- With production --->
-      {% if b.produces %}
+      {% if b.produces not b.has_build_cost %}
         <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
         <td>{{ b.help }}</td>
           <td>
