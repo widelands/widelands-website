@@ -8,6 +8,11 @@
 {% endblock %}
 
 {% block content %}
+<div align="right">
+   {% if article.id %}
+      <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
+</div>
+
 <h1>
   <a href="{{ article.get_absolute_url }}"> {{ article.title }} </a>
 </h1>

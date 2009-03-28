@@ -6,6 +6,12 @@ Changes in {{ article_title }} - {{ block.super }}
 {% endblock %}
 
 {% block content %}
+   <div align="right">
+      {% if article.id %}
+         <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
+         |
+         <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
+   </div>
 	<h1> <a href="{% url wiki_article article_title %}"> {{ article_title }} </a> </h1>
     {% if changeset.old_title %}
         <h2> {{ changeset.old_title }} </h2>
