@@ -22,12 +22,15 @@ class DisplayPollNode(template.Node):
         label = '|'.join([ c.choice for c in choices[::-1] ])
         counts = [ c.votes for c in choices ]
         allvotes = float(sum(counts))
+        if allvotes == 0.:
+            allvotes = 1. # Avoid division by zero
+
         countstr = '|'.join([ ("t  %.1f %% (%i),000000,0,%i,11" % (c.votes*100/allvotes,c.votes,idx)) 
                             for idx,c in enumerate(choices) ])
-        
+        height = 28*len(choices) + 10
         args = (
          ("cht","bhs"),                             # Chart type
-         ("chs", "800x200"),                        # Chart size
+         ("chs", "800x%i" % height),                # Chart size
          ("chd", 't:' + ','.join(map(str,counts))), # Chart data
          ("chds", '0,%i' % max(counts)),            # Data scaling
          ("chxt", "y"),
@@ -53,5 +56,26 @@ def do_display_poll( parser, token):
 
     return DisplayPollNode(poll_var)
 
+
+class GetOpenPolls(template.Node):
+    def __init__(self, varname):
+        self._vn = varname
+
+    def render(self,context):
+        """
+        Only has side effects
+        """
+        context[self._vn] = Poll.objects.open()
+        return ""
+
+def do_get_open_polls( parser, token ):
+    try:
+        tag_name,as_name,variable = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, "required: %r as <variable name>" % token.contents.split()[0] 
+    
+    return GetOpenPolls(variable)
+
 register.tag('display_poll',do_display_poll)
+register.tag('get_open_polls',do_get_open_polls)
 

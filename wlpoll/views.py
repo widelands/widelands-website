@@ -1,19 +1,19 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-
+from django.http import HttpResponseNotAllowed, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from models import Poll, Choice
 
-def view(request, poll_id ):
-    p = get_object_or_404(Poll,pk=poll_id)
+def vote(request, object_id, next = None):
+    if request.method == "GET":
+        return HttpResponseNotAllowed(["POST"])
     
-    template_data = {
-        "poll": p,
-    }
+    p = get_object_or_404(Poll,pk=object_id)
 
-    return render_to_response('poll/view.html', 
-            template_data,
-            context_instance=RequestContext(request))
-
-def vote(request, poll_id, next = None):
-    pass
-
+    if not p.is_closed() and "choice_id" in request.POST:
+        c = get_object_or_404(Choice, pk=int(request.POST["choice_id"]),poll=p)
+        
+        c.votes += 1
+        c.save()
+        
+    return HttpResponseRedirect(reverse("wlpoll_detail", args = (p.id,)))

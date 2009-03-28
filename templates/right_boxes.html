@@ -7,18 +7,18 @@
 {% endcomment %}
 {% load inbox %}
 {% load i18n %}
-{% load wlprofile %}
+{% load wlprofile wlpoll %}
 
          <!-- Search Box -->
-         <h3 class="box_title">Search</h3>
-         <div class="box_content" align="center">
-            <form method="post" action="/search/">
-               <input id="id_search" type="search" name="search" maxlength="200" accesskey="s" results="0" placeholder="Search Page" autosave="">
-               <input id="id_incl_wiki" type="hidden" name="incl_wiki" value="1">
-               <input id="id_incl_news" type="hidden" name="incl_news" value="1">
-               <input id="id_incl_forum" type="hidden" name="incl_forum" value="1">
-            </form>
-         </div>
+      <h3 class="box_title">Search</h3>
+      <div class="box_content" align="center">
+         <form method="post" action="/search/">
+            <input id="id_search" type="search" name="search" maxlength="200" accesskey="s" results="0" placeholder="Search Page" autosave="">
+            <input id="id_incl_wiki" type="hidden" name="incl_wiki" value="1">
+            <input id="id_incl_news" type="hidden" name="incl_news" value="1">
+            <input id="id_incl_forum" type="hidden" name="incl_forum" value="1">
+         </form>
+      </div>
 
         <!-- Donation Box -->
          <h3 class="box_title">Donation</h3>
@@ -71,6 +71,31 @@
          </center>
          </div>
          {% endif %}
+         
+         <!-- Current polls if any -->
+         {% get_open_polls as polls %}
+         {% if polls.count %}
+         <h3 class="box_title">Polls</h3>
+         <div class="box_content" align="center">
+         {% for p in polls %}
+         <form method="post" action="{% url wlpoll_vote p.id %}">
+            <h4>{{p.name}}</h4>
+            <table class="poll_vote">
+               {% for c in p.choices.all %}
+               <tr>
+                  <td><input type="radio" name="choice_id" value="{{ c.id }}" /></td>
+                  <td>{{ c.choice }}</td>
+               </tr>
+               {% endfor %}
+            </table>
+               <input type="submit" value="Vote" />
+               <input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+            </form>
+         {% endfor %}
+         <br/>
+            <a href="{% url wlpoll_archive %}">Archive</a>
+         </div>
+         {%endif %}
 
          <!-- Hosting by SF.net block --> 
          <h3 class="box_title">Hosted by</h3>

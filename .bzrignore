@@ -6,3 +6,8 @@
 wiki/media
 wiki/templates
 .DS_Store
+
+/media/news
+/media/online_help
+/media/wlimages
+/media/wlprofile
