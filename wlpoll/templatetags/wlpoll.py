@@ -30,7 +30,7 @@ class DisplayPollNode(template.Node):
         height = 28*len(choices) + 10
         args = (
          ("cht","bhs"),                             # Chart type
-         ("chs", "800x%i" % height),                # Chart size
+         ("chs", "700x%i" % height),                # Chart size
          ("chd", 't:' + ','.join(map(str,counts))), # Chart data
          ("chds", '0,%i' % max(counts)),            # Data scaling
          ("chxt", "y"),

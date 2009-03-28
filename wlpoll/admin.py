@@ -7,7 +7,7 @@ from django.contrib import admin
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
-    extra = 3
+    extra = 10
 
 class PollAdmin(admin.ModelAdmin):
     inlines = [ ChoiceInline ]
