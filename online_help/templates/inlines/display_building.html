@@ -2,37 +2,39 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-<table class="building" width="100%" cellspacing="1">
-   <tr>
+      <!--- Header --->
+    <tr>
       <th>{{b.displayname|title }}</th>
       <th>Description</th>
       {% if b.has_build_cost %}
-      <th>Build cost</th>
+        <th>Build cost</th>
       {% endif %}
       {% if b.produces %}
-      <th>Produces</th>
+        <th>Produces</th>
       {% endif %}
-   </tr>
-   <tr class="odd">
+    </tr>
+
+      <!--- Content --->
+    <tr class="odd">
       <td><img alt="{{b.descname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></td>
       <td>{{ b.help }}</td>
       {% if b.has_build_cost %}
-      <td>
-         {% for costs in b.get_build_cost %}
+        <td>
+          {% for costs in b.get_build_cost %}
             {% for w in costs %}
-               <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
+              <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
             {% endfor %}
             <br />
-         {%endfor%}
-      </td> 
+          {%endfor%}
+        </td> 
       {% endif %}
       {% if b.produces %}
-      <td>
-         {% for w in b.get_outputs %}
+        <td>
+          {% for w in b.get_outputs %}
             <img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ ware.name }}" />
-         {%endfor%}
-      </td>
+          {%endfor%}
+        </td>
       {% endif %}
-   </tr>
+    </tr>
 </table>
 
