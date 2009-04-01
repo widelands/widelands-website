@@ -157,6 +157,18 @@ SPHINX_API_VERSION = 0x116
 ############
 TRACKING_CLEANUP_TIMEOUT=48
 
+###########################
+# Widelands SVN directory #
+###########################
+# This is needed for various thinks, for example
+# to access media (for minimap creation) or for online help
+# or for ChangeLog displays
+WIDELANDS_SVN_DIR=""
+
+#####################
+# ChangeLog display #
+#####################
+SVN_URL = "http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&revision=%s"
 
 INSTALLED_APPS = (
     'django.contrib.auth',

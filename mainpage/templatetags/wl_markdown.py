@@ -34,7 +34,7 @@ except ImportError:
 
 # We will also need the site domain
 from django.contrib.sites.models import Site
-from settings import SITE_ID, SMILEYS, SMILEY_DIR, SMILEY_PREESCAPING
+from settings import SITE_ID, SMILEYS, SMILEY_DIR, SMILEY_PREESCAPING, SVN_URL
 _domain = Site.objects.get(pk=SITE_ID).domain
 
 # Getting local domain lists
@@ -64,6 +64,15 @@ def _insert_smiley_preescaping( text ):
     for before,after in SMILEY_PREESCAPING:
         text = text.replace(before,after)
     
+    return text
+
+
+revisions_re = [
+    re.compile( "svn:r(\d+)" ),
+]
+def _insert_revision( text ):
+    for r in revisions_re:
+        text = r.sub( lambda m: """<a href="%s">r%s</a>""" % (settings.SVN_URL % m.group(1), m.group(1)), text)
     return text
 
 def _classify_link( tag ):
@@ -138,10 +147,11 @@ def do_wl_markdown( value, *args, **keyw ):
             if not len(text.strip()):
                 continue
     
-    
-            # First, replace smileys
-            rv = _insert_smileys( text )
-            
+            # Replace svn revisions
+            rv = _insert_revision( text )
+            # Replace smileys
+            rv = _insert_smileys( rv )
+             
             rv = pattern.sub( replacement, rv )
             if rv:
                 # We can't do a simple text substitution, because we 

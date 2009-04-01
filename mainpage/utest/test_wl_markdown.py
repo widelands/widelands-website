@@ -22,10 +22,6 @@ _domain = Site.objects.get(pk=SITE_ID).domain
 
 from templatetags.wl_markdown import do_wl_markdown
 
-class _TestWlMarkdown_Base(unittest.TestCase):
-    def setUp(self):
-        self.res = do_wl_markdown(self.input)
-
 class TestWlMarkdown(DBTestCase):
     def setUp(self):
         a = Article.objects.create(title="MainPage")
@@ -249,6 +245,15 @@ Value 3 | Value 4
 </table>"""
         # }}}
         self._check(input,wanted)
+    def test_svnrevision_replacement( self ):
+        input = u"- Fixed this bug (svn:r3222)"
+        wanted = u"""<ul>\n<li>Fixed this bug (<a href="http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&amp;revision=3222" class="external">r3222</a>)</li>\n</ul>"""
+        self._check(input,wanted)
+    def test_svnrevision_multiple_replacement( self ):
+        input = u"- Fixed this bug (svn:r3222, svn:r3424)"
+        wanted = u"""<ul>\n<li>Fixed this bug (<a href="http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&amp;revision=3222" class="external">r3222</a>, <a href="http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&amp;revision=3424" class="external">r3424</a>)</li>\n</ul>"""
+        self._check(input,wanted)
+        
 
 if __name__ == '__main__':
     unittest.main()

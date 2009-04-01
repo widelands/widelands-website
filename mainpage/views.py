@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from settings import WIDELANDS_SVN_DIR
 
 def mainpage(request):
     return render_to_response('mainpage.html', context_instance=RequestContext(request))
@@ -28,4 +29,16 @@ def register(request):
     return render_to_response("registration/registration_form.html",
                               { 'registration_form': form },
                               context_instance=context)
+
+
+def changelog(request):
+    """
+    This reads out the changelog in the SVN directory, and returns it 
+    as a wl_markdown_object. This replaces the wiki changelog
+    """
+    data = open(WIDELANDS_SVN_DIR + "ChangeLog", "r").read()
+    return render_to_response("mainpage/changelog.html", 
+                              {"changelog": data}, 
+                              context_instance=RequestContext(request) 
+    )
 

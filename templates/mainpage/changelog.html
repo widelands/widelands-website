@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load wl_markdown %}
+
+{% block title %}Change Log - {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/wiki.css" />{{ block.super}}
+{% endblock %}
+
+{% block content %}
+<div class="wiki_article">
+    {{ changelog|wl_markdown }}
+</div>
+{% endblock %}
+
