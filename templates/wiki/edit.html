@@ -7,11 +7,6 @@
 {% endblock %}
 
 {% block content %}
-   <div align="right">
-         <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
-         |
-         <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
-   </div>
    <script type="text/javascript">
       $(document).ready(
             function() {
@@ -40,6 +35,13 @@
             }
             );
    </script>
+    {% if not new_article %} 
+    <div align="right">
+         <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
+         |
+         <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
+   </div>
+    {% endif %}
 
 	<h1>{% trans "Edit" %}</h1>
    
