@@ -155,7 +155,8 @@ SPHINX_API_VERSION = 0x116
 ############
 # Tracking #
 ############
-TRACKING_CLEANUP_TIMEOUT=1
+TRACKING_CLEANUP_TIMEOUT=48
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',
