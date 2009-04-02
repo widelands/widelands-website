@@ -40,5 +40,5 @@ urlpatterns = patterns('',
         name='wiki_revert_to_revision'),
 
     # Redirects
-    url(r'^ChangeLog', redirect_to, { "url": "/changelog" }, name="wiki_changelog" ),
+    url(r'^ChangeLog', redirect_to, { "url": "/changelog", "permanent": True }, name="wiki_changelog" ),
 )
