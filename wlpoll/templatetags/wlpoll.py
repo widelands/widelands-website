@@ -4,7 +4,7 @@
 
 from widelands.wlpoll.models import Choice, Poll
 from django import template
-from urllib import urlencode
+from urllib import urlencode, quote
 
 register = template.Library()
 
@@ -44,10 +44,10 @@ class DisplayPollNode(template.Node):
          ("chma", "0,15,0,0" ),    # Chart margins 
          ("chba", "a"),            # Resize bars automatically
         )
-        url = "http://chart.apis.google.com/chart?" + urlencode(args)
+        url = "chart.apis.google.com/chart?" + urlencode(args)
         
         # chd=t:60,40,80,90&chs=620x140&chxt=y&chxl=0:|Hallo%20Du%20welt|Welt|Wie|gehts|&chm=t%20%2022.6%,000000,0,0,11
-        return """<img src="%s" alt="GoogleChart" class="googleChart"/>""" % url
+        return """<img src="http://%s" alt="GoogleChart" class="googleChart"/>""" % url.replace("&","&amp;")
 
 def do_display_poll( parser, token):
     try:

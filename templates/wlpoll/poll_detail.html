@@ -39,7 +39,8 @@
       <!-- Third column for the style -->
       <td>
       </td>
-   </table>
+  </tr>
+  </table>
 </div>
       
 
@@ -67,10 +68,10 @@
 {% endfor %}
 {% if user.is_authenticated %}
 <p>Reply to Original:</p>
-<form method="POST" action="{% get_comment_url object %}">
+<form method="post" action="{% get_comment_url object %}">
 <div class="comment_post">
     <div class="comment">
-       <span class=errorclass">{{ form.comment.errors }}</span>
+       <span class="errorclass">{{ form.comment.errors }}</span>
       {{ form.comment }}
     </div>
    <input type="hidden" name="markup" value="1" />

@@ -4,6 +4,7 @@
 {% load threadedcommentstags %}
 
 <script type="text/javascript">
+<!--
 function show_reply_form(comment_id, url, person_name) {
     var comment_reply = $('#' + comment_id);
     var to_add = $( new Array(
@@ -32,6 +33,7 @@ function hide_reply_form(comment_id, url, person_name) {
         '\')">Reply</a>').join(''));
     });
 }
+-->
 </script>
 
 
