@@ -38,4 +38,7 @@ urlpatterns = patterns('',
 
     url(r'^history/(?P<title>'+ WIKI_URL_RE +r')/revert/$', views.revert_to_revision,
         name='wiki_revert_to_revision'),
+
+    # Redirects
+    url(r'^ChangeLog', redirect_to, { "url": "/changelog" }, name="wiki_changelog" ),
 )
