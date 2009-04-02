@@ -7,6 +7,8 @@ from wiki.templatetags.wiki import WIKI_URL_RE
 from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('',
+    # Redirects
+    url(r'^ChangeLog/', redirect_to, { "url": "/changelog/", "permanent": True }, name="wiki_changelog" ),
     # I wanted a true reverse, but it didn't work out 
     url(r'^$', redirect_to, { "url": "/wiki/MainPage" }, name="wiki_index" ),
 
@@ -39,6 +41,4 @@ urlpatterns = patterns('',
     url(r'^history/(?P<title>'+ WIKI_URL_RE +r')/revert/$', views.revert_to_revision,
         name='wiki_revert_to_revision'),
 
-    # Redirects
-    url(r'^ChangeLog', redirect_to, { "url": "/changelog", "permanent": True }, name="wiki_changelog" ),
 )
