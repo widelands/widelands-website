@@ -16,14 +16,13 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['site', 'jabber', 'icq', 'msn', 'aim', 'yahoo',
-                  'location', 'signature', 'time_zone', "time_display", 'language',
+                  'location', 'signature', 'time_zone', "time_display", 
                   'avatar', 'show_signatures',
-                  'markup',
                   ]
 
 
-    #def __init__(self, *args, **kwargs):
-        #super(EditProfileForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
 
     def clean_signature(self):
         value = self.cleaned_data['signature'].strip()
