@@ -191,6 +191,7 @@ INSTALLED_APPS = (
     'widelands.wlprofile',
     'widelands.wlsearch',
     'widelands.wlpoll',
+    'widelands.wlmaps',
 
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications

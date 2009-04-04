@@ -1,0 +1,17 @@
+{% extends "wlmaps/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block content %}
+<script type="text/javascript">
+$.post("/maps/upload/", function(data){
+  alert("Data Loaded: " + data);
+});
+</script>
+
+<img src="{{ object.minimap.url }}" />
+
+<a href="#" id="#upload">Clicky for post</a>
+
+{% endblock %}
