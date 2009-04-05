@@ -26,6 +26,10 @@ This directory contains the widelands homepage django project. It needs a bunch 
     http://django-sphinx.googlecode.com/p/django-sphinx/
 * django-tracking
     http://code.google.com/p/django-tracking/
+* widelandslib
+    This is currently a scratch project on launchpad:
+    bzr get lp:~/sirver/+junk/widelandslib 
+    this depends on python-scipy and Image
 
 # Installation
 
