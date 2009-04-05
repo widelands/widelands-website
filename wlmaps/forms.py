@@ -5,4 +5,5 @@ from django import forms
 
 class UploadMapForm(forms.Form):
     mapfile = forms.FileField()
+    comment = forms.CharField(required=False)
 

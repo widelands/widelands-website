@@ -126,6 +126,8 @@ div.box_content {
  padding: 6px;
  padding-top: 0px;
  padding-bottom: 20px;
+ background-color: #555555;
+ background-image: url('../img/Menubackground.png');
 }
 .box_content p {
    margin: 0px;

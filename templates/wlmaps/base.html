@@ -4,4 +4,12 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/maps.css" />
+
+{{block.super}}
+{% endblock %}
+
+{% block title %}Maps - {{ block.super }}{% endblock %}
+
 

@@ -27,13 +27,18 @@ class Map(models.Model):
     
     descr = models.TextField( verbose_name = "Description" )
     minimap = models.ImageField( upload_to ="/wlmaps/minimaps/" )
+    file = models.FileField( upload_to ="/wlmaps/maps/" )
     
     world_name = models.CharField( max_length = 50  )
 
-    pub_date = models.DateField( default = datetime.datetime.now )
+    pub_date = models.DateTimeField( default = datetime.datetime.now )
     uploader_comment = models.TextField( )
     uploader = models.ForeignKey(User)
     nr_downloads = models.PositiveIntegerField( verbose_name ="Download count", default = 0)
+    
+    class Meta:
+        ordering  = ('-pub_date',)
+        get_latest_by = 'pub_date'
     
     objects = MapManager()
     

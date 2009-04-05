@@ -1,0 +1,44 @@
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% load wlprofile %}
+{% load threadedcommentstags %}
+
+    {% get_threaded_comment_form as form %}
+    {% include "threadedcomments/inlines/reply_to.js" %}
+  
+    {% get_threaded_comment_tree for object as tree %}
+    {% for comment in tree %}
+        <div style="margin-left: {{ comment.depth }}em;" class="comment {% cycle "odd" "even" %}">
+            {% if comment.user.wlprofile.avatar %}
+            <span class="avatar" style="margin: 2px; margin-right: 10px; float: left;">
+                <a href="{% url profile_view comment.user %}">
+                <img src="{{ comment.user.wlprofile.avatar.url }}" />
+                </a>
+            </span>
+            {% endif %}
+            <p class="author">{{ comment.user|user_link }} said:</p>
+            {% auto_transform_markup comment %}
+            {% if user.is_authenticated %}
+            <p><a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_comment_url object comment %}','{{ comment.user.username }}')">Reply</a></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% if user.is_authenticated %}
+    <p>Reply to Original:</p>
+    <form method="POST" action="{% get_comment_url object %}">
+      <div class="comment_post">
+          <div class="comment">
+             <span class=errorclass">{{ form.comment.errors }}</span>
+            {{ form.comment }}
+          </div>
+         <input type="hidden" name="markup" value="1" />
+         <input type="submit" value="Submit Comment" />
+     </div>
+    </form>
+    {% else %}
+    <p>Log in to post comments</p>
+    {% endif %}
+
+

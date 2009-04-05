@@ -15,6 +15,8 @@ import models
 from widelandslib.Map import WidelandsMap, WlMapLibraryException 
 
 import scipy
+import os
+from cStringIO import StringIO
 
 from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT, MEDIA_URL
 
@@ -23,7 +25,30 @@ from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT, MEDIA_URL
 # Views #
 #########
 def index( request ):
-    pass
+    objects = models.Map.objects.all()
+   
+    return render_to_response("wlmaps/index.html", 
+                { "object_list": objects, },
+                context_instance = RequestContext(request))
+
+def download( request, map_slug ):
+    """
+    Very simple view that just returns the binary data of this map and increases
+    the download count
+    """
+    m = get_object_or_404( models.Map, slug = map_slug )
+
+    data = open(m.file.path, "rb").read()
+    
+    m.nr_downloads += 1
+    m.save()
+
+    response =  HttpResponse( data, mimetype = "application/octet-stream")
+    response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename("%s.wmf" % m.name)
+
+    return response
+    
+
 
 def view(request, map_slug):
     m = get_object_or_404( models.Map, slug = map_slug )
@@ -56,14 +81,19 @@ def upload( request ):
         return HttpResponseNotAllowed(["post"])
     
     form = UploadMapForm( request.POST )
+    print "request.POST:", request.POST
     test = request.POST.get("test", False)
+    comment = request.POST.get("comment",u"")
+    
 
     if "mapfile" in request.FILES: 
         mf = request.FILES["mapfile"]
         
+        mfdata = mf.read()
+
         m = WidelandsMap()
         try:
-            m.load(mf)
+            m.load(StringIO(mfdata))
         except WlMapLibraryException:
             return JsonReply( 3, "Invalid Map File" )
 
@@ -71,8 +101,12 @@ def upload( request ):
         mm = m.make_minimap(WIDELANDS_SVN_DIR)
         mm_path = "%s/wlmaps/minimaps/%s.png" % (MEDIA_ROOT,m.name)
         mm_url = "/wlmaps/minimaps/%s.png" % m.name
+        file_path = "%s/wlmaps/maps/%s.wmf" % (MEDIA_ROOT,m.name)
         
         if not test:
+            f = open(file_path,"wb")
+            f.write(mfdata)
+            f.close()
             scipy.misc.pilutil.imsave(mm_path, mm)
         
 
@@ -85,10 +119,11 @@ def upload( request ):
                 h = m.h,
                 descr = m.descr,
                 minimap = mm_url,
+                file = file_path,
                 world_name = m.world_name,
 
                 uploader = request.user,
-                uploader_comment = ""
+                uploader_comment = comment,
             )
         except IntegrityError:
             return JsonReply(2, "Map with the same name already exists in database!")
