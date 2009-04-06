@@ -22,7 +22,7 @@ import shutil
 from cStringIO import StringIO
 import re
 
-from settings import MEDIA_ROOT
+from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR
 
 class SaneConfigParser(ConfigParser):
     def read(self,f):
@@ -192,10 +192,10 @@ class TribeParser(object):
 
 class Command(BaseCommand):
     help =\
-    '''Reparses the conf files in a current checkout. Takes ''' \
-    '''the directory to base dir as only argument''' 
+    '''Reparses the conf files in a current checkout. '''
 
-    def handle(self, directory, **kwargs):
+    def handle(self, directory = WIDELANDS_SVN_DIR, **kwargs):
+
         tribes = [ d for d in glob("%s/tribes/*" % directory) if os.path.isdir(d) ]
         
         for t in tribes:

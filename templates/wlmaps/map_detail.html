@@ -13,7 +13,7 @@
    <span class="author">by {{ object.author }}</span>
    <span class="uploader">uploaded by {{ object.uploader.username }} at {{ object.pub_date|custom_date:user }}</span>
    
-   <span class="dimensions">{{ object.w }}x{{ object.h }}</span>, <span class="world">{{ object.world_name|title }}</span>
+   <span class="dimensions">{{ object.w }}x{{ object.h }}</span>, <span class="world">{{ object.world_name|title }}</span>, <span class="nr_players"> maximum of {{ object.nr_players }} players.</span>
    <br/>
    <img src="{{ MEDIA_URL }}{{ object.minimap.url }}" />
 

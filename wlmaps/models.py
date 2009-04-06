@@ -24,6 +24,7 @@ class Map(models.Model):
     author = models.CharField( max_length = 255 )
     w = models.PositiveIntegerField( verbose_name = 'Width')
     h = models.PositiveIntegerField( verbose_name = 'Height')
+    nr_players = models.PositiveIntegerField( verbose_name = 'Max Players')
     
     descr = models.TextField( verbose_name = "Description" )
     minimap = models.ImageField( upload_to ="/wlmaps/minimaps/" )
