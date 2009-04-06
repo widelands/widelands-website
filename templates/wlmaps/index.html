@@ -48,6 +48,7 @@ $().ready(function() {
             <th width="">&nbsp;</th>
             <th width="" nowrap="nowrap" align="left">Name</th>
             <th width="" nowrap="nowrap">Author</th>
+            <th width="" nowrap="nowrap">Max Players</th>
             <th width="" nowrap="nowrap">Uploaded</th>
             <th width="" nowrap="nowrap">Downloaded</th>
             <th width="" nowrap="nowrap">Details</th>
@@ -58,6 +59,7 @@ $().ready(function() {
             <td><a href="{{ o.get_absolute_url }}"><img src="{{ MEDIA_URL }}{{ o.minimap.url }}" alt="{{ o.name }}"/></a></td>
             <td><a href="{{ o.get_absolute_url }}">{{ o.name }}</a></td>
             <td>{{ o.author }}</td>
+            <td>{{ o.nr_players }}</td>
             <td>At {{ o.pub_date|custom_date:user }} by {{ o.uploader.username }}</td>
             <td>{{ o.nr_downloads }} times</td>
             <td><a href="{{ o.get_absolute_url }}">Click here</a></td>

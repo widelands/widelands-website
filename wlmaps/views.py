@@ -117,6 +117,7 @@ def upload( request ):
                 author = m.author,
                 w = m.w,
                 h = m.h,
+                nr_players = m.nr_players,
                 descr = m.descr,
                 minimap = mm_url,
                 file = file_path,
