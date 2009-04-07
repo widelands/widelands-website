@@ -72,16 +72,15 @@ class TribeParser(object):
         self._parse_wares()
         self._parse_buildings()
 
-    def _copy_picture( self, file, type, name, fname ):
+    def _copy_picture( self, file, name, fname ):
         """
         Copy the given image into the media directory
         
         file            - original path of image
-        type of picture - ware, worker....
         name            - name of the item (coal, iron...)
         fname           - file name of the picture
         """
-        dn = "%s/online_help/img/%s/%s/%s/" % (MEDIA_ROOT,self._to.name,type,name)
+        dn = "%s/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
         try:
             if os.path.exists(dn):
                 shutil.rmtree(dn)
@@ -97,7 +96,7 @@ class TribeParser(object):
         items = self._cf.items("ware types")
         for name,displayname in items:
             mp = "%s/%s/menu.png" % (self._basedir,name)
-            nn = self._copy_picture(mp,"wares", name, "menu.png" )
+            nn = self._copy_picture(mp,name, "menu.png" )
             
             w = Ware.objects.get_or_create( tribe = self._to, name = name )[0]
             w.displayname = normalize_name(displayname)
@@ -139,7 +138,7 @@ class TribeParser(object):
             idle_pattern =cf.get("idle","pics").split()[0] if cf.has_option("idle","pics") else "idle*png"
             glob_files = glob( self._basedir + '/' + name + '/' + idle_pattern)
             picpath = glob_files[0]
-            nn = self._copy_picture(picpath,"buildings", name, "idle.png" )
+            nn = self._copy_picture(picpath,name, "idle.png" )
             b.image_url = nn
 
             # Try to figure out buildcost
