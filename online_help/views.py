@@ -182,7 +182,6 @@ def building_graph( request, tribe, building):
     #svg = svg.replace(MEDIA_ROOT, MEDIA_URL)
    
     #return HttpResponse( svg, mimetype="image/svg+xml")
-    d.write_dot("file.dot")
     return HttpResponse( svg, mimetype="image/png")
 
 
