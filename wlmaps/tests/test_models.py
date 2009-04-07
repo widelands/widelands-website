@@ -10,10 +10,6 @@ from wlmaps.models import *
 
 import os
 
-print "contains ipython embed code!"
-from IPython.Shell import IPShellEmbed
-ipshell = IPShellEmbed()
-
 #############
 # TestCases #
 #############

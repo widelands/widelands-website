@@ -48,10 +48,6 @@ def _add_ware_node( d, w ):
 
     return n
 
-print 'contains ipython embed code!'
-from IPython.Shell import IPShellEmbed
-ipshell = IPShellEmbed()
-
 def _make_ware_graph( w ):
     d = pydot.Dot()
     d.set_name(w.name + "_graph")
@@ -172,7 +168,6 @@ def ware_graph( request, tribe, ware):
     d = _make_ware_graph( w )
     svg = d.create_png(prog="dot")
 
-    # ipshell()
     #svg = svg.replace(MEDIA_ROOT, MEDIA_URL)
    
     #return HttpResponse( svg, mimetype="image/svg+xml")
@@ -184,7 +179,6 @@ def building_graph( request, tribe, building):
     d = _make_building_graph( b )
     svg = d.create_png(prog="dot")
 
-    # ipshell()
     #svg = svg.replace(MEDIA_ROOT, MEDIA_URL)
    
     #return HttpResponse( svg, mimetype="image/svg+xml")
