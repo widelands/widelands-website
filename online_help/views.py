@@ -20,7 +20,7 @@ def _add_building_node( d, b ):
     print "b.image_url:", b.image_url
 
     if b.type == 'M':
-        fillcolor = '#000000e2'
+        fillcolor = '#525252'
     elif b.type == 'P':
         fillcolor = 'orange' 
     elif b.type == 'T':
@@ -32,7 +32,9 @@ def _add_building_node( d, b ):
 
     url = "/help/%s/buildings/%s/" % (b.tribe.name, b.name )
     n = pydot.Node( b.name, shape = 'rect', label = table, URL = url, fillcolor=fillcolor, style="filled"   ) 
-    d.add_node( n )
+    #d.add_node( n )
+    
+    return n
 
 def _add_ware_node( d, w ):
     table = """<<table cellborder="0" border="0">
@@ -41,8 +43,10 @@ def _add_ware_node( d, w ):
 <td><font point-size="24">%s</font></td>
 </tr>
 </table>>""" % (MEDIA_ROOT, w.image_url, w.displayname)
-    n = pydot.Node( w.name, shape = 'rectangle', label = table  ) 
-    d.add_node( n )
+    url = "/help/%s/wares/%s/" % (w.tribe.name, w.name )
+    n = pydot.Node( w.name, shape = 'rectangle', label = table, URL=url, fillcolor="white", style="filled" ) 
+
+    return n
 
 print 'contains ipython embed code!'
 from IPython.Shell import IPShellEmbed
@@ -57,19 +61,28 @@ def _make_ware_graph( w ):
     #d.set_ratio("compress")
     #d.set_fontsize("48pt")
 
-    _add_ware_node( d, w )
+    wn = _add_ware_node( d, w )
+    d.add_node(wn)
 
     producers = w.produced_by_buildings.all()
+    sg = pydot.Subgraph()
     for p in producers:
-        _add_building_node( d, p )
+        b = _add_building_node( d, p )
+        sg.add_node(b)
         e = pydot.Edge( p.name, w.name, color = "green"  )
         d.add_edge( e )
+    sg.set_rank("source")
+    d.add_subgraph(sg)
     
     # Consumed by
+    sg = pydot.Subgraph()
     for p in w.stored_ware_for_buildings.all():
-        _add_building_node( d, p )
+        b = _add_building_node( d, p )
+        sg.add_node(b)
         e = pydot.Edge( w.name, p.name, color ="red" )
         d.add_edge( e )
+    sg.set_rank("sink")
+    d.add_subgraph(sg)
 
     # Needed for build off
     # for p in w.build_ware_for_buildings.all():
@@ -80,7 +93,7 @@ def _make_ware_graph( w ):
     # d.set_size( '20,15')
 
     d.set_bgcolor("transparent")
-    #d.set_rankdir("LR")
+    d.set_rankdir("LR")
     
     return d
 
@@ -95,41 +108,51 @@ def _make_building_graph( b ):
 
     
     # Produces
+    sg = pydot.Subgraph()
     for w in b.output_wares.all():
-        _add_ware_node( d, w )
-        e = pydot.Edge( b.name, w.name, color = "green", samehead="True", sametail="True",
-            constraint="False", tailport="s", headport="s")
+        wn = _add_ware_node( sg, w )
+        sg.add_node(wn)
+        e = pydot.Edge( b.name, w.name, color = "green" )
         d.add_edge( e )
-    
-    _add_building_node( d, b )
+    sg.set_rank("sink")
+    d.add_subgraph(sg)
+   
+    buildings = []
+    buildings.append( _add_building_node( d, b ) )
 
     # Consumes 
-    # for w in b.store_wares.all():
-    #     _add_ware_node( d, w )
-    #     e = pydot.Edge( w.name, b.name, color = "red", samehead="True", sametail="True",
-    #             constraint="False", headport="w")
-    #     d.add_edge( e )
+    sg = pydot.Subgraph()
+    for w in b.store_wares.all():
+        wn = _add_ware_node( sg, w )
+        sg.add_node(wn)
+        e = pydot.Edge( w.name, b.name, color = "red"  )
+        d.add_edge( e )
+    sg.set_rank("source")
+    d.add_subgraph(sg)
     
     # Enhancements 
     try:
-        _add_building_node( d, b.enhancement )
+        buildings.append(_add_building_node( d, b.enhancement ))
         e = pydot.Edge( b.name, b.enhancement.name, color = "blue", weight="20"  )
-        #d.add_edge( e )
+        d.add_edge( e )
     except:
         pass
     try:
-        _add_building_node( d, b.enhanced_from )
+        buildings.append(_add_building_node( d, b.enhanced_from ))
         e = pydot.Edge( b.enhanced_from.name, b.name, color = "blue", weight="20"  )
-        #d.add_edge( e )
+        d.add_edge( e )
     except:
         pass
-
+    
+    sg = pydot.Subgraph()
+    [ sg.add_node(bn) for bn in buildings ]
+    sg.set_rank("same")
+    d.add_subgraph(sg)
     
     d.set_root(b.name)
     d.set_margin("0.,0.")
-    d.set_nodesep("0.12")
+    d.set_nodesep("0.32")
     d.set_ranksep("0.32")
-    d.set_ordering("out") 
     # Needed for build off
     # for p in w.build_ware_for_buildings.all():
         # _add_building_node( d, p )
@@ -139,7 +162,7 @@ def _make_building_graph( b ):
     # d.set_size( '20,15')
 
     d.set_bgcolor("transparent")
-    #d.set_rankdir("LR")
+    d.set_rankdir("LR")
     
     return d
 

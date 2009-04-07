@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+
+{% block content %}
+
+
+<center>
+<img src="{% url help_ware_graph ware.tribe.name ware.name %}" USEMAP="#{{ ware.name }}_graph" />
+
+{{ map|safe }}
+</center>
+
+{% endblock %}
