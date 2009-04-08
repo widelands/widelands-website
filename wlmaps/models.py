@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 import datetime
 
+import settings
+if settings.USE_SPHINX:
+    from djangosphinx import SphinxSearch
+
 class MapManager(models.Manager):
     def create(self,**kwargs):
         if 'slug' not in kwargs:
@@ -36,6 +40,14 @@ class Map(models.Model):
     uploader_comment = models.TextField( )
     uploader = models.ForeignKey(User)
     nr_downloads = models.PositiveIntegerField( verbose_name ="Download count", default = 0)
+    
+    if settings.USE_SPHINX:
+        search          = SphinxSearch(
+            weights = {
+                'name': 100,
+                'author': 60,
+                }
+        )
     
     class Meta:
         ordering  = ('-pub_date',)

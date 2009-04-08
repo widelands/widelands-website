@@ -1,5 +1,9 @@
 from django.db import models
 
+import settings
+if settings.USE_SPHINX:
+    from djangosphinx import SphinxSearch
+
 class Tribe(models.Model):
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
@@ -12,6 +16,16 @@ class Ware(models.Model):
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
 
     help = models.TextField(blank=True)
+    
+    if settings.USE_SPHINX:
+        search          = SphinxSearch(
+            weights = {
+                'displayname': 100,
+                'help': 60,
+                'name': 20,
+                }
+        )
+
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -47,6 +61,16 @@ class Building(models.Model):
     )
     
     objects = BuildingManager()
+    
+    if settings.USE_SPHINX:
+        search          = SphinxSearch(
+            weights = {
+                'displayname': 100,
+                'help': 60,
+                'name': 20,
+                }
+        )
+
 
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
