@@ -7,7 +7,7 @@
 
       {% if b.has_build_cost and b.produces %}
             <!-- With build cost and production -->
-        <th width="144px">{{b.displayname|title }}</th>
+        <th width="152px"><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}">{{b.displayname|title }}</a></th>
         <th>Description</th>
         <th>Build cost</th>
         <th>Produces</th>
@@ -15,21 +15,21 @@
 
       {% if b.has_build_cost and not b.produces %}
             <!-- With build cost -->
-        <th width="144px">{{b.displayname|title }}</th>
+        <th width="152px"><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}">{{b.displayname|title }}</a></th>
         <th colspan="2">Description</th>
         <th>Build cost</th>
       {% endif %}
 
       {% if b.produces and not b.has_build_cost  %}
             <!-- With production -->
-        <th width="144px">{{b.displayname|title }}</th>
+        <th width="152px"><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}">{{b.displayname|title }}</a></th>
         <th colspan="2">Description</th>
         <th>Produces</th>
       {% endif %}
 
       {% if not b.produces and not b.has_build_cost %}
             <!-- For headquaters -->
-        <th width="144px">{{b.displayname|title }}</th>
+        <th width="152px"><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}">{{b.displayname|title }}</a></th>
         <th>Description</th>
       {% endif %}
     </tr>
@@ -39,7 +39,7 @@
 
       {% if b.has_build_cost and b.produces %}
             <!-- With build cost and production -->
-            <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
         <td>{{ b.help }}</td>
         <td>
           {% for costs in b.get_build_cost %}
@@ -58,7 +58,7 @@
 
       {% if b.has_build_cost and not b.produces %}
             <!-- With build cost -->
-            <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
         <td colspan="2">{{ b.help }}</td>
         <td>
           {% for costs in b.get_build_cost %}
@@ -72,7 +72,7 @@
 
       {% if b.produces and not b.has_build_cost %}
             <!-- With production -->
-            <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
         <td colspan="2">{{ b.help }}</td>
         <td>
           {% for w in b.get_outputs %}
@@ -83,7 +83,7 @@
 
       {% if not b.produces and not b.has_build_cost %}
             <!-- For headquaters -->
-            <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
         <td>{{ b.help }}</td>
       {% endif %}
     </tr>
