@@ -15,10 +15,7 @@ def _add_building_node( d, b ):
   <td>%s</td>
 </tr>
 </table>>""" % (MEDIA_ROOT, b.image_url, b.displayname)
-    table = table.replace('//','/')
     
-    print "b.image_url:", b.image_url
-
     if b.type == 'M':
         fillcolor = '#525252'
     elif b.type == 'P':
@@ -40,17 +37,17 @@ def _add_ware_node( d, w ):
     table = """<<table cellborder="0" border="0">
 <tr>
 <td><IMG SRC="%s/%s" /></td>
-<td><font point-size="24">%s</font></td>
+<td>%s</td>
 </tr>
 </table>>""" % (MEDIA_ROOT, w.image_url, w.displayname)
     url = "/help/%s/wares/%s/" % (w.tribe.name, w.name )
-    n = pydot.Node( w.name, shape = 'rectangle', label = table, URL=url, fillcolor="white", style="filled" ) 
+    n = pydot.Node( w.name, shape = 'egg', label = table, URL=url, fillcolor="white", style="filled" ) 
 
     return n
 
 def _make_ware_graph( w ):
     d = pydot.Dot()
-    d.set_name(w.name + "_graph")
+    d.set_name("ware_graph")
     
     d.set_dpi("100")
     d.set_size("6,1000")
@@ -95,7 +92,7 @@ def _make_ware_graph( w ):
 
 def _make_building_graph( b ):
     d = pydot.Dot()
-    d.set_name(b.name + "_graph")
+    d.set_name("building_graph")
     
     d.set_dpi("100")
     d.set_size("6,1000")
