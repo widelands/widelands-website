@@ -24,6 +24,7 @@
                   </td>
                </tr>
             </table>
+         </td>
       </tr>
       <tr>
          <td class="userinfo">
@@ -31,7 +32,7 @@
                 {% if post.user.wlprofile.avatar %}
                 <div class="avatar">
                     <a href="{% url profile_view post.user %}">
-                    <img src="{{ post.user.wlprofile.avatar.url }}" />
+                    <img src="{{ post.user.wlprofile.avatar.url }}" alt="{% trans "Avatar" %}" />
                     </a>
                 </div>
                 {% endif %}

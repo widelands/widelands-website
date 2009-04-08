@@ -128,14 +128,14 @@ $(function() {
                 //submit is complete here, check the result
                 o = $('#upload_map_dialog .progress_indicator')
                 if(json_data["success_code"] == 0) {
-                o.html('<h3>Success!</h3></br> Your map has been added! Will reload page now');
+                o.html('<h3>Success!</h3><br /> Your map has been added! Will reload page in 5s');
                 setTimeout(function(){
                     $('#upload_map_dialog').jqmHide();
                     window.location.reload(); 
                 },500);
                 
                 } else {
-                o.html('<h3>An error occured:</h3></br> <div class="errormessage">' + json_data["success_code"] + ': ' + json_data["error_msg"] + '</div>');
+                o.html('<h3>An error occured:</h3><br /> <div class="errormessage">' + json_data["success_code"] + ': ' + json_data["error_msg"] + '</div>');
                 }
                 
                 // make sure the iframe is removed again

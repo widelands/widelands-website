@@ -15,7 +15,7 @@
 {% for o in object_list %}
 {% get_comment_count for o as ccount %}
 <li>
-<a href="{{o.get_absolute_url}}">{{ o.name }}</a> - <span class="post_date">posted at {{ o.pub_date|custom_date:user }}, {{ ccount }} comments, {{o.total_votes}} votes</li>
+<a href="{{o.get_absolute_url}}">{{ o.name }}</a> - <span class="post_date">posted at {{ o.pub_date|custom_date:user }}, {{ ccount }} comments, {{o.total_votes}} votes</span></li>
 {% endfor %}
 </ul>
       
