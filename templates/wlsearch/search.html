@@ -52,7 +52,7 @@
     {% if help_results_buildings.count %}
     <ul>
     {% for b in help_results_buildings %}
-    <li class="building"><a href="{% url help_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }} {{b.displayname}}</a></li>
+    <li class="building"><a href="{% url help_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }}: {{b.displayname}}</a></li>
     {% endfor %}
     </ul>
     {% endif %}
@@ -60,7 +60,7 @@
     {% if help_results_wares.count %}
     <ul>
     {% for w in help_results_wares %}
-    <li class="ware"><a href="{% url help_ware_details w.tribe.name w.name %}">{{ b.tribe.displayname }} {{w.displayname}}</a></li>
+    <li class="ware"><a href="{% url help_ware_details w.tribe.name w.name %}">{{ w.tribe.displayname }}: {{w.displayname}}</a></li>
     {% endfor %}
     </ul>
     {% endif %}

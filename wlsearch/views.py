@@ -50,7 +50,7 @@ def search(request):
 
             # News
             news_results = NewsPost.search.query(query) if do_news else DummyEmptyQueryset()
-    
+            
             template_params = {
                 "wiki_results": wiki_results,
 
