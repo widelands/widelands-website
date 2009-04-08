@@ -5,9 +5,6 @@
 {% block content %}
 <h1>{% trans "Profile editing" %}</h1>
 
-<p>
-You might want to have a look at the documentation for Time display <a href="/wiki/HomepageDocuTimeDisplay">here</a>.
-</p>
 
 {% if profile.avatar %}
 <img src="{{ profile.avatar.url }}" />
@@ -16,7 +13,16 @@ You might want to have a look at the documentation for Time display <a href="/wi
 <form method="post" enctype="multipart/form-data">
     <fieldset>
         <legend>{% trans "Profile editing" %}</legend>
-        {{ profile_form.as_p }}
+        {{ profile_form.errors }}
+    {% for field in profile_form %}
+        <div class="fieldWrapper">
+           <div class="errormessage">{{ field.errors }}</div>
+           {{ field.label_tag }}: {{ field }}{% ifequal field.name "time_display" %}
+           <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
+           {% endifequal %}
+        </div>
+    {% endfor %}
+        
         <p><input type="submit" value="{% trans "Save" %}" /></p>
     </fieldset>
 </form>
