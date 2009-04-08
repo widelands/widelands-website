@@ -108,7 +108,14 @@ class Building(models.Model):
     def get_outputs(self):
         return self.output_wares.all()
     
-    
+    def has_stored_wares(self):
+        return (self.store_wares.all().count() != 0)
+    def get_stored_wares(self):
+        count = map(int,self.store_count.split( ))
+        for c,w in zip(count,self.store_wares.all()):
+            yield [w]*c
+
+
     def __unicode__(self):
         return u"%s/%s" %(self.tribe.name,self.name)
 
