@@ -6,6 +6,12 @@
 {{ forum.name }} - {{ block.super }}
 {% endblock %}
 
+{% block extra_head %}
+<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url pybb_feed "posts" %}{{forum.id}}/"  />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url pybb_feed "topics"%}{{forum.id}}/" />
+{{ block.super }}
+{% endblock %}
+
 {% block content %}
     <div class="forum-list">
         <span class="title">{{ forum }}</span>

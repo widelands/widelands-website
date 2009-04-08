@@ -123,11 +123,7 @@ def pybb_has_unreads(topic, user):
         if isinstance(topic,Forum):
             forum = topic
             for t in forum.topics.all():
-                print "type(t),type(user):", type(t),type(user)
-                print "t,user:", t,user
-
                 rv = _is_topic_read(t,user)
-                print "t,rv:", t,rv
 
                 if rv == False:
                     return True
