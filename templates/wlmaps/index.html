@@ -49,6 +49,8 @@ $().ready(function() {
             <th width="" nowrap="nowrap" align="left">Name</th>
             <th width="" nowrap="nowrap">Author</th>
             <th width="" nowrap="nowrap">Max Players</th>
+            <th width="" nowrap="nowrap">Size</th>
+            <th width="" nowrap="nowrap">World</th>
             <th width="" nowrap="nowrap">Uploaded</th>
             <th width="" nowrap="nowrap">Downloaded</th>
             <th width="" nowrap="nowrap">Details</th>
@@ -60,6 +62,8 @@ $().ready(function() {
             <td><a href="{{ o.get_absolute_url }}">{{ o.name }}</a></td>
             <td>{{ o.author }}</td>
             <td>{{ o.nr_players }}</td>
+            <td>{{ o.w }} x {{ o.h }}</td>
+            <td>{{ o.world_name|title }}</td>
             <td>At {{ o.pub_date|custom_date:user }} by {{ o.uploader.username }}</td>
             <td>{{ o.nr_downloads }} times</td>
             <td><a href="{{ o.get_absolute_url }}">Click here</a></td>
