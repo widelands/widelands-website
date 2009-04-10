@@ -38,12 +38,16 @@ def edit(request):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=instance, files = request.FILES)
         if form.is_valid():
+            if form.cleaned_data["delete_avatar"]:
+                instance.avatar.delete()
+
             form.save()
 
             return HttpResponseRedirect(reverse(view))
     form = EditProfileForm(instance=instance)
 
     template_params = {
+        "profile": instance,
         "profile_form": form,
     }
     return render_to_response("wlprofile/edit_profile.html",

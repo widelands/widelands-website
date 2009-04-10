@@ -38,7 +38,7 @@ class Profile(models.Model):
     # language = models.CharField(_('Language'), max_length=10, blank=True, default='',
     #                             choices=settings.LANGUAGES)
 
-    avatar = ExtendedImageField(_('Avatar'), blank=True, default='', upload_to=settings.AVATARS_UPLOAD_TO, width=settings.AVATAR_WIDTH, height=settings.AVATAR_HEIGHT)
+    avatar = ExtendedImageField(_('Avatar'), blank=True, default='', upload_to="wlprofile/avatars/", width=settings.AVATAR_WIDTH, height=settings.AVATAR_HEIGHT)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
     # markup = models.CharField(_('Default markup'), max_length=15, default=settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
 
