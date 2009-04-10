@@ -16,7 +16,7 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['markup', 'body']
+        fields = ['body']
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -25,7 +25,7 @@ class AddPostForm(forms.ModelForm):
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
-        self.fields.keyOrder = ['name', 'markup', 'body', 'attachment']
+        self.fields.keyOrder = ['name', 'body', 'attachment']
 
         if self.topic:
             self.fields['name'].widget = forms.HiddenInput()
@@ -55,7 +55,7 @@ class AddPostForm(forms.ModelForm):
             topic = self.topic
 
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
-                    markup=self.cleaned_data['markup'],
+                    markup="markdown",
                     body=self.cleaned_data['body'])
         post.save()
 
@@ -80,7 +80,7 @@ class AddPostForm(forms.ModelForm):
 class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['markup', 'body']
+        fields = ['body']
 
     def save(self):
         post = super(EditPostForm, self).save(commit=False)
@@ -98,30 +98,3 @@ class UserSearchForm(forms.Form):
             return qs.filter(username__contains=query)
         else:
             return qs
-
-
-class CreatePMForm(forms.ModelForm):
-    recipient = forms.CharField(label=_('Recipient'))
-
-    class Meta:
-        model = PrivateMessage
-        fields = ['subject', 'body', 'markup']
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(CreatePMForm, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['recipient', 'subject', 'body', 'markup']
-
-
-    def clean_recipient(self):
-        name = self.cleaned_data['recipient']
-        try:
-            user = User.objects.get(username=name)
-        except User.DoesNotExist:
-            raise forms.ValidationError(_('User with login %s does not exist') % name)
-        else:
-            return user
-    def save(self):
-        pm = PrivateMessage(src_user=self.user, dst_user=self.cleaned_data['recipient'])
-        pm = forms.save_instance(self, pm)
-        return pm

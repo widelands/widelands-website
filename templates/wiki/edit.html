@@ -6,6 +6,17 @@
 {% trans "Editing article" %} - {{ block.super }}
 {% endblock %}
 
+{% block extra_head %}
+<script type="text/javascript" src="/wlmedia/js/disableOnSubmit.js"></script>
+<script type="text/javascript">
+   $(function() {
+         $('form').disableOnSubmit();
+   });
+</script>
+
+{{ block.super }}
+{% endblock %}
+
 {% block content %}
    <script type="text/javascript">
       $(document).ready(

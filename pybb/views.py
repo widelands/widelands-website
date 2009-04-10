@@ -14,7 +14,7 @@ from django.utils import translation
 from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
                         MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm, UserSearchForm, CreatePMForm
+from pybb.forms import AddPostForm, EditPostForm, UserSearchForm 
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
@@ -329,61 +329,6 @@ def add_subscription(request, topic_id):
     return HttpResponseRedirect(reverse('pybb_topic', args=[topic.id]))
 
 
-@login_required
-def create_pm_ctx(request):
-    recipient = request.GET.get('recipient', '')
-    form = build_form(CreatePMForm, request, user=request.user,
-                      initial={'markup': "markdown",
-                               'recipient': recipient})
-
-    if form.is_valid():
-        post = form.save();
-        return HttpResponseRedirect(reverse('pybb_pm_outbox'))
-
-    return {'form': form,
-            'pm_mode': 'create',
-            }
-create_pm = render_to('pybb/pm/create_pm.html')(create_pm_ctx)
-
-
-@login_required
-def pm_outbox_ctx(request):
-    messages = PrivateMessage.objects.filter(src_user=request.user)
-    return {'messages': messages,
-            'pm_mode': 'outbox',
-            }
-pm_outbox = render_to('pybb/pm/outbox.html')(pm_outbox_ctx)
-
-
-@login_required
-def pm_inbox_ctx(request):
-    messages = PrivateMessage.objects.filter(dst_user=request.user)
-    return {'messages': messages,
-            'pm_mode': 'inbox',
-            }
-pm_inbox = render_to('pybb/pm/inbox.html')(pm_inbox_ctx)
-
-
-@login_required
-def show_pm_ctx(request, pm_id):
-    msg = get_object_or_404(PrivateMessage, pk=pm_id)
-    if not request.user in [msg.dst_user, msg.src_user]:
-        return HttpRedirectException('/')
-    if request.user == msg.dst_user:
-        pm_mode = 'inbox'
-        if not msg.read:
-            msg.read = True
-            msg.save()
-        post_user = msg.src_user
-    else:
-        pm_mode = 'outbox'
-        post_user = msg.dst_user
-    return {'msg': msg,
-            'pm_mode': pm_mode,
-            'post_user': post_user,
-            }
-show_pm = render_to('pybb/pm/message.html')(show_pm_ctx)
-
 
 @login_required
 def show_attachment(request, hash):
@@ -396,7 +341,7 @@ def show_attachment(request, hash):
 @ajax
 def post_ajax_preview(request):
     content = request.POST.get('content')
-    markup = request.POST.get('markup')
+    markup = "markdown"
 
     if not markup in dict(MARKUP_CHOICES).keys():
         return {'error': 'Invalid markup'}

@@ -1,5 +1,16 @@
 {% load i18n %}
 
+{% block extra_head %}
+<script type="text/javascript" src="/wlmedia/js/disableOnSubmit.js"></script>
+<script type="text/javascript">
+   $(function() {
+         $('form').disableOnSubmit();
+   });
+</script>
+
+{{ block.super }}
+{% endblock %}
+
 <form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
     <div class="preview-box" style="display: none">
         <div class="header">{% trans "Preview" %}</div>

@@ -106,18 +106,18 @@ $(function() {
         $('#upload_map_dialog').jqmHide();
     });
 
-    /* Bind upload button */
-/*    $('.upload_form .cancel_button').click( function() {
-        // $.post( '{% url wlmaps_upload %}', 
-    });
-*/
-    
     /* On submit, create a hidden iframe, use this as target for
        our submit, extract the result and then delete it */
     jQuery(".upload_form").submit( function(data) {
             var submittingForm = jQuery( this );
             var frameName = ("upload"+(new Date()).getTime());
             var uploadFrame = jQuery("<iframe name=\""+frameName+"\" />");
+
+            // Disable the submit and cancel until a unsuccesfull reply 
+            // was returned
+            $(".upload_form input[type='submit']").attr("disabled","disabled")
+            $(".upload_form input[type='button']").attr("disabled","disabled")
+            
             o = $('#upload_map_dialog .progress_indicator')
             o.html("<h3>Uploading...</h3> <div>Uploading your map. Please wait...</div>");
             uploadFrame.css("display", "none");
@@ -140,6 +140,11 @@ $(function() {
                 
                 } else {
                 o.html('<h3>An error occured:</h3><br /> <div class="errormessage">' + json_data["success_code"] + ': ' + json_data["error_msg"] + '</div>');
+                
+                // Enable the submit and cancel because the user might want to 
+                // try it again
+                $(".upload_form input[type='submit']").removeAttr("disabled")
+                $(".upload_form input[type='button']").removeAttr("disabled")
                 }
                 
                 // make sure the iframe is removed again
