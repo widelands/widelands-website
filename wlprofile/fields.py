@@ -47,10 +47,9 @@ class ExtendedImageField(models.ImageField):
 
     
     def save_form_data(self, instance, data):
-        print "Saving form data!"
         if data and self.width and self.height:
             content = self.resize_image(data.read(), width=self.width, height=self.height)
-            data = SimpleUploadedFile(data.name, content, data.content_type)
+            data = SimpleUploadedFile(instance.user.username + ".png", content, data.content_type)
             super(ExtendedImageField, self).save_form_data(instance, data)
 
 
@@ -67,19 +66,15 @@ class ExtendedImageField(models.ImageField):
         image = Image.open(StringIO(rawdata))
         try:
             oldw, oldh = image.size
-
-            # do nothing if width and height are correct
-            #if oldw == width and oldh == height:
-                #print 'image already OK!'
-                #return rawdata
             
-            if oldw >= oldh:
-                x = int(round((oldw - oldh) / 2.0))
-                image = image.crop((x, 0, (x + oldh) - 1, oldh - 1))
-            else:
-                y = int(round((oldh - oldw) / 2.0))
-                image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
-            image = image.resize((width, height), resample=Image.ANTIALIAS)
+            if oldw > width or oldh > height:
+                if oldw >= oldh:
+                    x = int(round((oldw - oldh) / 2.0))
+                    image = image.crop((x, 0, (x + oldh) - 1, oldh - 1))
+                else:
+                    y = int(round((oldh - oldw) / 2.0))
+                    image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
+                image = image.resize((width, height), resample=Image.ANTIALIAS)
         except Exception, err:
             logging.error(err)
             return ''

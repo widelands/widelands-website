@@ -36,24 +36,10 @@ def edit(request):
     instance = request.user.wlprofile
 
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=instance)
-         
+        form = EditProfileForm(request.POST, instance=instance, files = request.FILES)
         if form.is_valid():
-            if "avatar" in request.FILES:
-                a = request.FILES["avatar"]
-
-                fn = "%s/wlprofile/avatars/%s.png" % (settings.MEDIA_ROOT,request.user.username)
-                destination = open(fn, "wb")
-                for chunk in a.chunks():
-                    destination.write(chunk)
-                destination.close()
-
-                fn = "%s/wlprofile/avatars/%s.png" % (settings.MEDIA_URL,request.user.username)
-                instance.avatar = fn 
-                instance.save()
-
             form.save()
-            
+
             return HttpResponseRedirect(reverse(view))
     form = EditProfileForm(instance=instance)
 
