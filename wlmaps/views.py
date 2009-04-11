@@ -6,7 +6,7 @@ from forms import UploadMapForm
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.utils import simplejson as json
 from django.db import IntegrityError
@@ -30,6 +30,32 @@ def index( request ):
     return render_to_response("wlmaps/index.html", 
                 { "object_list": objects, },
                 context_instance = RequestContext(request))
+
+def rate( request, map_slug ):
+    """
+    Rate a given map
+    """
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["post"])
+
+    m = get_object_or_404( models.Map, slug = map_slug )
+
+    if not "vote" in request.POST:
+        return HttpResponseBadRequest()
+    try:
+        val = int(request.POST["vote"])
+    except ValueError:
+        return HttpResponseBadRequest()
+
+    if not (0 < val <= 10):
+        return HttpResponseBadRequest()
+   
+    m.rating.add(score=val, user=request.user, 
+                 ip_address=request.META['REMOTE_ADDR'])
+    # m.save() is not needed
+
+    return HttpResponseRedirect(reverse("wlmaps_view", None, {"map_slug": map_slug }))
+
 
 def download( request, map_slug ):
     """
@@ -81,10 +107,8 @@ def upload( request ):
         return HttpResponseNotAllowed(["post"])
     
     form = UploadMapForm( request.POST )
-    print "request.POST:", request.POST
     test = request.POST.get("test", False)
     comment = request.POST.get("comment",u"")
-    
 
     if "mapfile" in request.FILES: 
         mf = request.FILES["mapfile"]

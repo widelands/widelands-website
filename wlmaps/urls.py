@@ -10,5 +10,7 @@ urlpatterns = patterns('',
     
     url(r'^(?P<map_slug>[-\w]+)/$', view, name = "wlmaps_view" ),
     url(r'^(?P<map_slug>[-\w]+)/download/$', download, name = "wlmaps_download" ),
+    
+    url(r'^(?P<map_slug>[-\w]+)/rate/$', rate, name = "wlmaps_rate" ),
 )
 

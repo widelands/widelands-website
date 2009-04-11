@@ -205,7 +205,6 @@ INSTALLED_APPS = (
     'pybb', # Feature enriched version of pybb
 
     # Thirdparty apps
-    # 'simplestats',
     'threadedcomments',
     'messages',
     'registration', # User registration (per Email validation)
@@ -213,6 +212,7 @@ INSTALLED_APPS = (
     'tagging',
     'notification',
     'tracking',
+    'djangoratings',
 ) 
 
 try:

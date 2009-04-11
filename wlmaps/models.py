@@ -10,6 +10,10 @@ import settings
 if settings.USE_SPHINX:
     from djangosphinx import SphinxSearch
 
+from djangoratings import AnonymousRatingField
+
+RATING_CHOICES = [(n, str(n)) for n in range(1, 11)]
+
 class MapManager(models.Manager):
     def create(self,**kwargs):
         if 'slug' not in kwargs:
@@ -41,6 +45,8 @@ class Map(models.Model):
     uploader = models.ForeignKey(User)
     nr_downloads = models.PositiveIntegerField( verbose_name ="Download count", default = 0)
     
+    rating = AnonymousRatingField(choices=RATING_CHOICES)
+
     if settings.USE_SPHINX:
         search          = SphinxSearch(
             weights = {
