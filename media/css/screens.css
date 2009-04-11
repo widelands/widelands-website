@@ -20,6 +20,9 @@
 }
 
 .screenshot_list li {
-    display: inline;
+    text-align: center;
+    display: inline-block;
     padding: 15px;
+
 }
+
