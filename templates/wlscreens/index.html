@@ -106,7 +106,7 @@ $().ready(function() {
          img.attr("src",src);
          
          // Set the image comment
-         comment = $($(this).find("span.comment")).html();
+         comment = $($(this).find("div.comment")).html();
          $(".image_comment").html(comment);
 
          // Set the image title
@@ -165,7 +165,7 @@ $().ready(function() {
 {% for s in c.screenshots.all %}
 <li>
 <a class="displayimage" name="{{s.name}}" href="{{ s.screenshot.url }}"><img src="{{ s.thumbnail.url }}" />
-   <span class="comment" style="display: none;">{{ s.comment|wl_markdown }}</span></a>
+   <div class="comment" style="display: none;">{{ s.comment|wl_markdown }}</div></a>
 </li>
 {% endfor %}
 </ul>
