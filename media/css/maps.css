@@ -21,33 +21,6 @@ h1 {
 }
 
 /* Modified css for jqModal */
-.jqmDialog .box_title h3 {
-    padding-bottom: 3px;
-}
-div.jqDrag {cursor: move;}
-
-div.jqmDialog img.jqResize {position: absolute; right: 2px; bottom: 2px;}
 div.jqmDialog {
-    display: none;
-    position: absolute;
-    top: 0px; /* Positions are calculated on show */ 
-    left: 0px;
-    /* top: 20%;  */
-    /* left: 400px; */
-   
-    overflow: hidden;
-    
     width: 480px;
-    border: 1px solid #000;
-}
-  
-div.jqmDialog .jqmClose {
-  position: absolute;
-  cursor: pointer;
-  right: 2px;
-  top: 1px;
-}
-
-.modalOverlay {
-    background: black;
 }

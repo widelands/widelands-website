@@ -170,6 +170,11 @@ WIDELANDS_SVN_DIR=""
 #####################
 SVN_URL = "http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&revision=%s"
 
+###############
+# Screenshots #
+###############
+THUMBNAIL_SIZE = ( 160, 160 )
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -192,6 +197,7 @@ INSTALLED_APPS = (
     'widelands.wlsearch',
     'widelands.wlpoll',
     'widelands.wlmaps',
+    'widelands.wlscreens',
 
     # Modified 3rd party apps
     'widelands.wiki', # This is based on wikiapp, but has some local modifications

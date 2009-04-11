@@ -5,6 +5,12 @@
 
 {% load custom_date %}
 
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/modal_windows.css" />
+{{ block.super }}
+
+{% endblock %}
+
 {% block title %}{{ block.super }}{% endblock %}
 
 {% block content %}

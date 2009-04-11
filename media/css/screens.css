@@ -1,0 +1,25 @@
+.category {
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 1px;
+    background: url('../img/background-444.png');
+}
+
+.image_display {
+    margin: 4px 0px;
+}
+
+.sizes {
+    text-align: right;
+    font-size: 100%;
+}
+
+.screenshot_list {
+    list-style-type: none;
+}
+
+.screenshot_list li {
+    display: inline;
+    padding: 15px;
+}

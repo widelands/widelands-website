@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block extra_head %}
+{{ block.super }}
+
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/screens.css" />
+{% endblock %}
+
+{% block title %}Screenshots - {{ block.super }}{% endblock %}
+
+
