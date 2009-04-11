@@ -32,6 +32,6 @@ class TestWLScreens_IndexSite_ExceptCorrectResult(_LoginToSite):
         k = self.client.get(url)
 
         self.assertTemplateUsed(k,"wlscreens/index.html")
-        self.assertTrue("categories" in k.context)
+        self.assertTrue(k.context["categories"] is not None)
 
 

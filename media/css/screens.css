@@ -21,8 +21,8 @@
 
 .screenshot_list li {
     text-align: center;
-    display: inline-block;
     padding: 15px;
-
+    display: table-cell;    /* Work around for firefox 2 which doesn't support inline-block */
+	display: inline-block;  
 }
 

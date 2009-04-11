@@ -98,4 +98,4 @@ class TestScreenshot(_ScreenshotBase):
         self.assertTrue( self.i in c )
         self.assertEqual( c.count(), 1 )
         self.assertEqual( c2.count(), 0 )
-
+    

@@ -164,9 +164,9 @@ $().ready(function() {
 <ul class="screenshot_list">
 {% for s in c.screenshots.all %}
 <li class="displayimage">
-<a class="imagelink" name="{{s.name}}" href="{{ s.screenshot.url }}"><img src="{{ s.thumbnail.url }}" /></a><br/>
+<div><a class="imagelink" name="{{s.name}}" href="{{ s.screenshot.url }}"><img src="{{ s.thumbnail.url }}" /></a><br/>
 <span class="name">{{ s.name }}</span>
-<div class="comment" style="display: none;">{{ s.comment|wl_markdown }}</div>
+<div class="comment" style="display: none;">{{ s.comment|wl_markdown }}</div></div>
 </li>
 {% endfor %}
 </ul>
