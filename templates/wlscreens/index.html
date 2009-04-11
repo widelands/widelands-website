@@ -99,14 +99,14 @@ $().ready(function() {
       });
 
       // Links
-      $("a.displayimage").click( function() {
+      $(".displayimage a.imagelink").click( function() {
          // Set the image
          src = $(this).attr("href");
          img = $(".image_display");
          img.attr("src",src);
          
          // Set the image comment
-         comment = $($(this).find("span.comment")).html();
+         comment = $($(this).parent().find(".comment")).html();
          $(".image_comment").html(comment);
 
          // Set the image title
@@ -163,9 +163,9 @@ $().ready(function() {
 
 <ul class="screenshot_list">
 {% for s in c.screenshots.all %}
-<li>
-<a class="displayimage" name="{{s.name}}" href="{{ s.screenshot.url }}"><img src="{{ s.thumbnail.url }}" />
-   <span class="comment" style="display: none;">{{ s.comment|wl_markdown }}</span></a>
+<li class="displayimage">
+<a class="imagelink" name="{{s.name}}" href="{{ s.screenshot.url }}"><img src="{{ s.thumbnail.url }}" /></a>
+<div class="comment" style="display: none;">{{ s.comment|wl_markdown }}</div>
 </li>
 {% endfor %}
 </ul>
