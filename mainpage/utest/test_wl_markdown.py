@@ -215,6 +215,13 @@ class TestWlMarkdown(DBTestCase):
         wanted = u'<p><img alt="img_thisisNOTitalicplease_name.png" src="/wlmedia/blah.png" /></p>'
         # }}}
         self._check(input,wanted)
+    
+    def test_emptystring_problem(self):
+        # {{{ Test strings
+        input = u''
+        wanted = u''
+        # }}}
+        self._check(input,wanted)
 
     # Damned problem with tables
     def test_markdown_table_problem(self):

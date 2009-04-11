@@ -134,6 +134,10 @@ def do_wl_markdown( value, *args, **keyw ):
     # <a> and </a> we partition our site accordingly
     # BeautifoulSoup does all the heavy lifting
     soup = BeautifulSoup(nvalue)
+    if len(soup.contents) == 0:
+        # well, empty soup. Return it
+        return unicode(soup)
+
     ctag = soup.contents[0]
 
     for text in soup.findAll(text=True):
