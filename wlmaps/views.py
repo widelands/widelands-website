@@ -46,10 +46,10 @@ def rate( request, map_slug ):
         val = int(request.POST["vote"])
     except ValueError:
         return HttpResponseBadRequest()
-
+    
     if not (0 < val <= 10):
         return HttpResponseBadRequest()
-   
+  
     m.rating.add(score=val, user=request.user, 
                  ip_address=request.META['REMOTE_ADDR'])
     # m.save() is not needed
@@ -79,7 +79,13 @@ def download( request, map_slug ):
 def view(request, map_slug):
     m = get_object_or_404( models.Map, slug = map_slug )
     
+    if m.rating.votes > 0:
+        avg = "%.1f" %( float(m.rating.score) /m.rating.votes )
+    else: 
+        avg = "0"
+
     context = {
+        "average_rating": avg,
         "object": m,
     }
     return render_to_response( "wlmaps/map_detail.html", 
