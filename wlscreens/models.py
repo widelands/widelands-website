@@ -10,8 +10,8 @@ from settings import THUMBNAIL_SIZE
 
 # Create your models here.
 class Category(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=256, unique=True, blank = True)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, blank = True)
    
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -27,7 +27,7 @@ class Category(models.Model):
         return u"%s" % self.name
 
 class Screenshot(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=255)
     
     screenshot = models.ImageField(
         upload_to= lambda i,n: "wlscreens/screens/%s/%s.%s" % (i.category,i.name,n.rsplit(".",1)[-1].lower()),
