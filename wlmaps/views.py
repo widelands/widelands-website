@@ -54,7 +54,7 @@ def rate( request, map_slug ):
                  ip_address=request.META['REMOTE_ADDR'])
     # m.save() is not needed
 
-    return HttpResponseRedirect(reverse("wlmaps_view", None, {"map_slug": map_slug }))
+    return HttpResponseRedirect(reverse("wlmaps_view", None, {"map_slug": m.slug }))
 
 
 def download( request, map_slug ):

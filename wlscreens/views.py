@@ -3,6 +3,7 @@
 from models import Category, Screenshot
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import HttpResponseNotFound
 
 def index( request ):
     c = Category.objects.all()
@@ -12,4 +13,6 @@ def index( request ):
                 RequestContext(request) )
 
 def category(request, category_slug):
-    pass
+    "Not implemented at the moment"
+
+    return HttpResponseNotFound()

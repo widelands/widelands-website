@@ -5,6 +5,8 @@
 
 {% block extra_head %}
 {{ block.super }}
+
+{% if not user.is_anonymous %}
 <script src="{{ MEDIA_URL}}/js/jquery.sexy-vote.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(function() {
@@ -19,6 +21,8 @@ $(function() {
         });
 });
 </script>
+{% endif %}
+
 {% endblock %}
 
 {% load custom_date %}
@@ -28,7 +32,12 @@ $(function() {
 <div class="map_details">
    
    <h1>{{ object.name }}</h1>
-   <span id="vote"></span>, Average: {{ average_rating }}
+   Votes: {{ object.rating.votes }}, Average: {{ average_rating }}
+   {% if not user.is_anonymous %}
+   <span id="vote"></span>
+   {% else %}
+   (Login to vote)
+   {% endif %}
    <span class="author">by {{ object.author }}</span>
    <span class="uploader">uploaded by {{ object.uploader.username }} at {{ object.pub_date|custom_date:user }}</span>
 
