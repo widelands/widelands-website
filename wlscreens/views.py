@@ -3,7 +3,7 @@
 from models import Category, Screenshot
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseNotFound
+from django.http import Http404
 
 def index( request ):
     c = Category.objects.all()
@@ -15,4 +15,4 @@ def index( request ):
 def category(request, category_slug):
     "Not implemented at the moment"
 
-    return HttpResponseNotFound()
+    raise Http404
