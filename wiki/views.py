@@ -145,7 +145,7 @@ def article_list(request,
         if not allow_read:
             return HttpResponseForbidden()
 
-        articles = articles.order_by('-created_at')
+        articles = articles.order_by('title')
 
         template_params = {'articles': articles,
                            'allow_write': allow_write}
