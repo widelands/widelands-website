@@ -31,24 +31,33 @@
 
 <!-- Begin of text -->
 <div class="itemText">
+   <p>
             Widelands is an open source (GPLed) real-time strategy
             game. It is built upon the <a
                href='http://www.libsdl.org'>SDL</a> and other open
-            source libraries and still under heavy development. If
+            source libraries and is (and will always be) under heavy development. If
             you knew Settlers I &amp; II&#8482; (© Bluebyte), then you
-            already have a rough idea what Widelands is all about.
-            Yes, it is where the inspiration for Widelands came
-            from<br /><br />You can find more information on the
-            game in our wiki.<br />For playing rules, scenarios and
-            extensions see the  <a title="About Widelands"
-               href="{% url wiki_article "AboutWidelands" %}">About page</a>.<br />For
-            installation directions and various troubleshooting see
-            the <a href="{% url wiki_article "MainPage" %}">Help page</a>.<br />
-
-            Visit also the <a
-               href="{% url pybb_index %}">Forums</a>
-            for chat with the community about the game, playing,
-            translation, graphics, music and much more.<br />
+            already have a rough idea what Widelands is all about because
+            widelands is heavily inspired by those two games. 
+      </p>
+   <p>
+            You can find detailed information on the game in our <a
+               href="/wiki">Wiki</a>. I you want to get a quick Overview, go to
+            the <a title="About Widelands" href="{% url wiki_article "AboutWidelands" %}">AboutWidelands</a> page.
+      </p>
+            
+   <p>
+            You can download the game on the <a href="{% url wiki_article "DownloadPage" %}">DownloadPage</a>.  You can also find
+            installation instructions and various troubleshooting hints
+            there.
+      </p>
+            
+   <p>
+            You are also invited to visit the <a
+               href="{% url pybb_index %}">Forums</a>:
+            chat with the community about the game, find playing mates for multiplayer,
+            help translating, discuss graphics, music and much more.
+      </p>
 </div>
 
 {% get_latest_posts 3 as latest_posts_list %}
