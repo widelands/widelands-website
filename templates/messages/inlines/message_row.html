@@ -5,11 +5,11 @@
 {% load custom_date %}
 
    <tr class="message {% cycle "odd" "even" %}">
-          {% ifequal message.sender user %}
+       {% ifequal message.sender user %}
       <td>{{ message.recipient }}</td>
        {%else %}
       <td>{{ message.sender }}</td>
-      {%endifequal %}
+       {%endifequal %}
       <td>
           {% if message.new %}<u>{% endif %}
           {% if message.replied %}<em>{% endif %}

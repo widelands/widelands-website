@@ -15,7 +15,7 @@ class Ware(models.Model):
     tribe = models.ForeignKey(Tribe)
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
 
-    help = models.TextField(blank=True)
+    help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
     
     if settings.USE_SPHINX:
         search          = SphinxSearch(
