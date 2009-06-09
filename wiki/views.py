@@ -592,7 +592,7 @@ def article_preview( request ):
     runs the function through the view template and returns
     it to the caller
     """
-    rv = do_wl_markdown( request.POST["body"] )
+    rv = do_wl_markdown( request.POST["body"], safe_mode="escape" )
     return HttpResponse(rv, mimetype="text/html")
 
 def article_diff( request ):

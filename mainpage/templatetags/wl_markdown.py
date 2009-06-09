@@ -117,9 +117,12 @@ def _classify_link( tag ):
 
 custom_filters = [
     # Wikiwordification
-    # Match a wiki page link LikeThis. All !WikiWords (with a ! in front) are ignored
-    (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m: m.group(2) if m.group(1) == '!' \
-        else u"""<a href="/wiki/%(match)s">%(match)s</a>""" % {"match": m.group(2) }),
+    # Match a wiki page link LikeThis. All !WikiWords (with a ! 
+    # in front) are ignored
+    (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m:
+        m.group(2) if m.group(1) == '!' else 
+            u"""<a href="/wiki/%(match)s">%(match)s</a>""" %
+            {"match": m.group(2) }),
     
 ]
 
@@ -188,6 +191,9 @@ def wl_markdown(value, arg=''):
     """
     My own markup filter, wrapping the markup2 library, which is less bugged.
     """
-    return mark_safe(force_unicode(do_wl_markdown(value,)))
+    if arg != '':
+        return mark_safe(force_unicode(do_wl_markdown(value,safe_mode=arg)))
+    else:
+        return mark_safe(force_unicode(do_wl_markdown(value,)))
 wl_markdown.is_safe = True
 
