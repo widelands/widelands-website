@@ -51,8 +51,6 @@ class ExtendedImageField(models.ImageField):
 
             content = self.resize_image(data.read(), width=self.width, height=self.height)
             data = SimpleUploadedFile(instance.user.username + ".png", content, data.content_type)
-            print "After data:"
-
             super(ExtendedImageField, self).save_form_data(instance, data)
 
 

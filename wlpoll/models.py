@@ -17,7 +17,6 @@ class Poll(models.Model):
         return self.choices.all().aggregate(models.Sum("votes"))["votes__sum"]
     
     def is_closed(self):
-        print "self.closed_date:", self.closed_date
         if self.closed_date is None:
             return False
         return self.closed_date < datetime.datetime.now()

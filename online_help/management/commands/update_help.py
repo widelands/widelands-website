@@ -183,7 +183,6 @@ class TribeParser(object):
             ("warehouse types","W") ]:
             items = self._cf.items(secname)
             for name,displayname in items:
-                print "name:", name
                 b = _parse_common( name, displayname, type )
                 b.save()
 

@@ -601,17 +601,10 @@ def article_diff( request ):
     article as it is currently displayed with the current version 
     of the article
     """
-    print "request.POST['article']:", request.POST["article"]
-
     current_article = get_object_or_404(Article, pk=int(request.POST["article"]))
     content = request.POST["body"]
     
-    print "current_article.content:", current_article.content
-    print "########"
-    print "content:", content
-
     diffs = dmp.diff_main(current_article.content, content)
-    print "dmp.diff_prettyHtml(diffs):", dmp.diff_prettyHtml(diffs)
 
     return HttpResponse(dmp.diff_prettyHtml(diffs), mimetype="text/html")
 

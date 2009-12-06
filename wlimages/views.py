@@ -22,10 +22,6 @@ def get_real_ip(request):
     return request.META['REMOTE_ADDR']
 
 def display( request, image, revision ):
-    print "revision:", revision
-    print "image:", image
-
-    
     revision = int(revision)
 
     img = get_object_or_404( Image, name = image, revision = revision )

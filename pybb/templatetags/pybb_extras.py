@@ -99,13 +99,10 @@ def pybb_has_unreads(topic, user):
             return True 
         else:
             if hasattr(topic, '_read'):
-                print "hasattr:"
                 read = topic._read
             else:
-                print "Trying!"
                 try:
                     read = Read.objects.get(user=user, topic=topic)
-                    print "read:", read
 
                 except Read.DoesNotExist:
                     read = None
