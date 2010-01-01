@@ -1,0 +1,20 @@
+Django==1.1.1
+wsgiref==0.1.2
+-e git://github.com/dcramer/django-sphinx.git#egg=djangosphinx
+docutils==0.6
+PIL==1.1.7
+-e svn+http://django-pagination.googlecode.com/svn/trunk/#egg=pagination
+-e hg+https://django-tracking.googlecode.com/hg/#egg=tracking
+-e git://gitorious.org/python-markdown/mainline.git#egg=markdown
+BeautifulSoup
+-e hg+http://bitbucket.org/ubernostrum/django-registration/#egg=registration
+-e svn+http://django-tagging.googlecode.com/svn/trunk/#egg=tagging
+-e git://github.com/dcramer/django-ratings.git#egg=djangoratings
+-e git://github.com/ericflo/django-threadedcomments.git#egg=threadedcomments
+-e svn+http://django-messages.googlecode.com/svn/trunk/#egg=messages
+-e git://github.com/jtauber/django-notification.git#egg=notification
+-e bzr+ssh://bazaar.launchpad.net/~sirver/%2Bjunk/widelandslib/#egg=widelandslib
+numpy==1.4
+pydot
+ipython
+

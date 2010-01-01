@@ -2,10 +2,13 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from settings import WIDELANDS_SVN_DIR
 
+import sys
+
 def mainpage(request):
-    return render_to_response('mainpage.html', context_instance=RequestContext(request))
-    
-    
+    return render_to_response('mainpage.html',
+                context_instance=RequestContext(request))
+
+
 from forms import RegistrationWithCaptchaForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -24,7 +27,7 @@ def register(request):
             return HttpResponseRedirect(reverse('registration_complete'))
     else:
         form = RegistrationWithCaptchaForm(remote_ip)
-    
+
     context = RequestContext(request)
     return render_to_response("registration/registration_form.html",
                               { 'registration_form': form },
@@ -33,12 +36,12 @@ def register(request):
 
 def changelog(request):
     """
-    This reads out the changelog in the SVN directory, and returns it 
+    This reads out the changelog in the SVN directory, and returns it
     as a wl_markdown_object. This replaces the wiki changelog
     """
     data = open(WIDELANDS_SVN_DIR + "ChangeLog", "r").read()
-    return render_to_response("mainpage/changelog.html", 
-                              {"changelog": data}, 
-                              context_instance=RequestContext(request) 
+    return render_to_response("mainpage/changelog.html",
+                              {"changelog": data},
+                              context_instance=RequestContext(request)
     )
 

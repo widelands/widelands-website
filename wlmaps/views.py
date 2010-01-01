@@ -10,11 +10,11 @@ from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpRespon
 from django.core.urlresolvers import reverse
 from django.utils import simplejson as json
 from django.db import IntegrityError
+import Image
 import models
 
-from widelandslib.Map import WidelandsMap, WlMapLibraryException 
+from widelandslib.Map import WidelandsMap, WlMapLibraryException
 
-import scipy
 import os
 from cStringIO import StringIO
 import zipfile
@@ -27,8 +27,7 @@ from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT, MEDIA_URL
 #########
 def index( request ):
     objects = models.Map.objects.all()
-   
-    return render_to_response("wlmaps/index.html", 
+    return render_to_response("wlmaps/index.html",
                 { "object_list": objects, },
                 context_instance = RequestContext(request))
 
@@ -47,11 +46,11 @@ def rate( request, map_slug ):
         val = int(request.POST["vote"])
     except ValueError:
         return HttpResponseBadRequest()
-    
+
     if not (0 < val <= 10):
         return HttpResponseBadRequest()
-  
-    m.rating.add(score=val, user=request.user, 
+
+    m.rating.add(score=val, user=request.user,
                  ip_address=request.META['REMOTE_ADDR'])
     # m.save() is not needed
 
@@ -64,12 +63,12 @@ def download( request, map_slug ):
     the download count
     """
     m = get_object_or_404( models.Map, slug = map_slug )
-    
+
     file = open(m.file.path,"rb")
     data = file.read()
-    
-    # We have to find the correct filename, widelands is quite 
-    # buggy. The Filename must be the same as the directory 
+
+    # We have to find the correct filename, widelands is quite
+    # buggy. The Filename must be the same as the directory
     # packed in the zip.
     file.seek(0)
     zf = zipfile.ZipFile(file)
@@ -78,39 +77,39 @@ def download( request, map_slug ):
         probable_filename = os.path.basename("%s.wmf" % m.name)
     else:
         probable_filename = probable_filenames[0]
-   
+
     # Remember that this has been downloaded
     m.nr_downloads += 1
     m.save()
-    
+
     response =  HttpResponse( data, mimetype = "application/octet-stream")
     response['Content-Disposition'] = 'attachment; filename="%s"' % probable_filename
 
     return response
-    
+
 
 
 def view(request, map_slug):
     m = get_object_or_404( models.Map, slug = map_slug )
-    
+
     if m.rating.votes > 0:
         avg = "%.1f" %( float(m.rating.score) /m.rating.votes )
-    else: 
+    else:
         avg = "0"
 
     context = {
         "average_rating": avg,
         "object": m,
     }
-    return render_to_response( "wlmaps/map_detail.html", 
-                              context, 
+    return render_to_response( "wlmaps/map_detail.html",
+                              context,
                               context_instance=RequestContext(request))
 
 @login_required
 def upload( request ):
     """
     Uploads a map. This is an ajax post and returns an JSON object
-    with the following values. 
+    with the following values.
 
     success_code - integer (0 means success else error)
     error_msg - if success_code = 1 this contains an descriptive error
@@ -125,14 +124,14 @@ def upload( request ):
 
     if request.method != "POST":
         return HttpResponseNotAllowed(["post"])
-    
+
     form = UploadMapForm( request.POST )
     test = request.POST.get("test", False)
     comment = request.POST.get("comment",u"")
 
-    if "mapfile" in request.FILES: 
+    if "mapfile" in request.FILES:
         mf = request.FILES["mapfile"]
-        
+
         mfdata = mf.read()
 
         m = WidelandsMap()
@@ -146,13 +145,14 @@ def upload( request ):
         mm_path = "%s/wlmaps/minimaps/%s.png" % (MEDIA_ROOT,m.name)
         mm_url = "/wlmaps/minimaps/%s.png" % m.name
         file_path = "%s/wlmaps/maps/%s.wmf" % (MEDIA_ROOT,m.name)
-        
+
         if not test:
             f = open(file_path,"wb")
             f.write(mfdata)
             f.close()
-            scipy.misc.pilutil.imsave(mm_path, mm)
-        
+            i = Image.Image(mm)
+            i.save(mm_path)
+
 
         # Create the map
         try:
@@ -175,5 +175,5 @@ def upload( request ):
 
         nm.save()
         return JsonReply(0, map_id = nm.pk )
-    
+
     return JsonReply(1, "No mapfile in request!")

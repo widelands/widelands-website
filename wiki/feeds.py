@@ -9,7 +9,7 @@ from django.template import Context, Template
 from django.template.loader import get_template
 from wiki.models import ChangeSet, Article
 from wiki.utils import get_ct
-import atomformat as atom
+import notification.atomformat as atom
 
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
