@@ -9,33 +9,65 @@
 {% include "messages/inlines/navigation.html" %}
 {%endifequal%}
 
-
-<h1>{% trans "View Profile" %}</h1>
-{% if profile.avatar %}
-<img src="{{ profile.avatar.url }}" />
-{% endif %}
-
-<table width="50%">
-   <tr><td>User:</td> <td>{{ profile.user.username }}</td></tr>
-   <tr><td>Joined:</td> <td>{{ profile.user.date_joined|custom_date:user|title }}</td></tr>
-   <tr><td>Nr posts:</td> <td>{{ profile.post_count }}</td></tr>
-   <tr><td>Website:</td> <td><a href="{{profile.site}}">{{ profile.site }}</a></td></tr>
-
-   <tr><td>Location:</td> <td>{{ profile.location }}</td></tr>
-
-   <tr><td>Jabber:</td> <td>{{ profile.jabber }}</td></tr>
-   <tr><td>ICQ:</td> <td>{{ profile.icq }}</td></tr>
-   <tr><td>MSN:</td> <td>{{ profile.msn }}</td></tr>
-   <tr><td>AIM:</td> <td>{{ profile.aim }}</td></tr>
-   <tr><td>Yahoo:</td> <td>{{ profile.yahoo }}</td></tr>
+<div class="profile_item">
+    <h3 class="title">{% trans "View Profile" %}</h3>
+    <div class="content">
+	{% if profile.avatar %}
+	    <img src="{{ profile.avatar.url }}" />
+	{% endif %}
+	<table width="100%" cellspacing="1" class="text">
+		<tr>
+			<td class="odd">User:</td>
+			<td class="odd">{{ profile.user.username }}</td>
+		</tr>
+   		<tr>
+			<td class="even">Joined:</td>
+			<td class="even">{{ profile.user.date_joined|custom_date:user|title }}</td>
+		</tr>
+  		<tr>
+			<td class="odd">Nr posts:</td>
+			<td class="odd">{{ profile.post_count }}</td>
+		</tr>
+   		<tr>
+			<td class="even">Website:</td>
+			<td class="even"><a href="{{profile.site}}">{{ profile.site }}</a></td>
+		</tr>
+   		<tr>
+			<td class="odd">Location:</td>
+			<td class="odd">{{ profile.location }}</td>
+		</tr>
+   		<tr>
+			<td class="even">Jabber:</td>
+			<td class="even">{{ profile.jabber }}</td>
+		</tr>
+   		<tr>
+			<td class="odd">ICQ:</td>
+			<td class="odd">{{ profile.icq }}</td>
+		</tr>
+   		<tr>
+			<td class="even">MSN:</td>
+			<td class="even">{{ profile.msn }}</td>
+		</tr>
+   		<tr>
+			<td class="odd">AIM:</td>
+			<td class="odd">{{ profile.aim }}</td>
+		</tr>
+   		<tr>
+			<td class="even">Yahoo:</td>
+			<td class="even">{{ profile.yahoo }}</td>
+		</tr>
+	</table>
+</div>
+<table class="bottom_line" width="100%">
+	<tr>
+		<td>
+			{% ifequal user profile.user %}
+			<a href="{% url profile_edit %}">Edit Profile</a>
+			{% else %}
+			<a href="{% url messages_compose_to profile.user %}">Send User a PM</a>
+			{%endifequal%}
+		</td>
+	</tr>
 </table>
-
-<p>
-{% ifequal user profile.user %}
-<a href="{% url profile_edit %}">Edit Profile</a>
-{% else %}
-<a href="{% url messages_compose_to profile.user %}">Send User a PM</a>
-{%endifequal%}
-</p>
-
+</div>
 {% endblock %}
