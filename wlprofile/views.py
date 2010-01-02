@@ -36,15 +36,20 @@ def edit(request):
     instance = request.user.wlprofile
 
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=instance, files = request.FILES)
+        form = EditProfileForm(request.POST,
+                    instance=instance, files = request.FILES)
+        print "form.is_valid(: %s" % (form.is_valid())
         if form.is_valid():
             if form.cleaned_data["delete_avatar"]:
                 instance.avatar.delete()
 
             form.save()
 
+            print "Done!"
+
             return HttpResponseRedirect(reverse(view))
-    form = EditProfileForm(instance=instance)
+    else:
+        form = EditProfileForm(instance=instance)
 
     template_params = {
         "profile": instance,
