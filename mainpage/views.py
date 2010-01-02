@@ -13,6 +13,8 @@ from forms import RegistrationWithCaptchaForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
+from registration.backends.default import DefaultBackend as backend
+
 def register(request):
     """
     Overwritten view from registration to include a captcha.
@@ -21,9 +23,11 @@ def register(request):
     """
     remote_ip = request.META['REMOTE_ADDR']
     if request.method == 'POST':
-        form = RegistrationWithCaptchaForm(remote_ip,data=request.POST, files=request.FILES)
+        form = RegistrationWithCaptchaForm(remote_ip,data=request.POST,
+                            files=request.FILES)
         if form.is_valid():
-            new_user = form.save()
+            new_user = backend.register(request, **form.cleaned_data)
+            # new_user = form.save()
             return HttpResponseRedirect(reverse('registration_complete'))
     else:
         form = RegistrationWithCaptchaForm(remote_ip)
