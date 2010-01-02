@@ -1,7 +1,7 @@
 Installing the homepage
 =======================
 
-Getting the homepage to run locally is best supported using virutalenv and
+Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
 package manager. You will also need development tools (gcc or therelike), hg
 (mercurial), bzr and git. Go and install them all.
@@ -36,7 +36,7 @@ PIL and numpy; you can also try to migrate them over from your global site dir
 or add your global site dir to your PYTHONPATH. 
 Installation via pip should work like this::
 
-   $ pip install -r code/widelands/pip_requirements.txt
+   $ pip -E . install -r code/widelands/pip_requirements.txt
 
 This will take a while. If no errors we should be fine. 
 
