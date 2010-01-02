@@ -95,6 +95,9 @@ class TribeParser(object):
     def _parse_wares( self ):
         items = self._cf.items("ware types")
         for name,displayname in items:
+            conf = "%s/%s/conf" % (self._basedir,name)
+            cf = SaneConfigParser()
+            cf.read(conf)
             mp = "%s/%s/menu.png" % (self._basedir,name)
             nn = self._copy_picture(mp,name, "menu.png" )
             
@@ -103,8 +106,8 @@ class TribeParser(object):
             w.image_url = nn 
 
             # See if there is help available
-            if self._cf.has_option("default","help"):
-                helpstr = normalize_name(self._cf.get("default","help"))
+            if cf.has_option("default","help"):
+                helpstr = normalize_name(cf.get("default","help"))
                 w.help = helpstr
 
             w.save()
