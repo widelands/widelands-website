@@ -7,110 +7,138 @@
 {% endcomment %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <head>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-<title>{% block title %}Widelands.org{% endblock %}</title> 
-<link href="/wlmedia/favicon.ico" rel="SHORTCUT ICON" />
+    <title>{% block title %}Widelands.org{% endblock %}</title> 
+    <link href="/wlmedia/favicon.ico" rel="SHORTCUT ICON" />
 
-<!--  CSS --> 
-<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/base.css" />
-<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/navigation.css" />
+    <!--  CSS --> 
+    <link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/base.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/navigation.css" />
 
-<!-- Javascripts for navigation -->
-<script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
-<script type="text/javascript" src="/wlmedia/js/superfish.js"></script>
-<script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
-<script type="text/javascript">
-   // initialise plugins
-   $(document).ready(function() { 
-      $('ul.sf-menu').superfish({
-         delay:       500,                            // one second delay on mouseout 
-         animation:   {height:'show'},  // slide-down animation 
-         speed:       'fast',                          // faster animation speed 
-         autoArrows:  true,      
-         dropShadows: false,                          // disable drop shadows 
-         });
-    }); 
-</script>
+    <!-- Javascripts for navigation -->
+    <script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
+    <script type="text/javascript" src="/wlmedia/js/superfish.js"></script>
+    <script type="text/javascript" src="/wlmedia/js/hoverIntent.js"></script>
+    <script type="text/javascript">
+       // initialise plugins
+       $(document).ready(function() { 
+          $('ul.sf-menu').superfish({
+             delay:       500,                            // one second delay on mouseout 
+             animation:   {height:'show'},  // slide-down animation 
+             speed:       'fast',                          // faster animation speed 
+             autoArrows:  true,      
+             dropShadows: false,                          // disable drop shadows 
+             });
+        }); 
+    </script>
 
-{% block extra_head %}{% endblock %}
-</head>
+    {% block extra_head %}{% endblock %}
+  </head>
 
-<body>
-   
-<!-- Header Bar -->
-<div id="headerbanner">
-   <a href="{% url mainpage %}"><img src="/wlmedia/img/Logo.png" alt="Logo" align="middle" /></a>
-</div>
-<ul class="sf-menu">
-   {% include "navigation.html" %}
-</ul>
+  <body>
 
-<!-- Main Page starts here -->
-<!-- 
-   The decision here was between this table madness or a CSS + JS hack (resize
-   divisions after page load). Both solutions are ugly, but I prefer tables to JS hacks.
-   Can't wait for CSS3.
--->
+    <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
 
-<!-- 
-   Top Tables are not used by current theme, they
-   might be in a future one though 
--->
-<table border="0" cellpadding="0" cellspacing="0">
-   <tr>
-      <td id="table_topleft"></td>
-      <td id="table_topright"></td>
-   </tr>
-</table>
+      <tr>   
+        <td>
+
+          <!-- Header Bar -->
+          <div id="headerbanner">
+            <a href="{% url mainpage %}"><img src="/wlmedia/img/Logo.png" alt="Logo" align="middle" /></a>
+          </div>
+
+          <!-- Navigation -->
+          <ul class="sf-menu">
+            {% include "navigation.html" %}
+          </ul>
+
+        </td>
+      </tr>
+
+      {% comment %}
+      <!-- Main Page starts here -->
+      <!-- 
+         The decision here was between this table madness or a CSS + JS hack (resize
+         divisions after page load). Both solutions are ugly, but I prefer tables to JS hacks.
+         Can't wait for CSS3.
+      -->
+      {% endcomment %}
+
+      <tr>
+        <td>
+
+          {% comment %}
+          <!-- 
+             Top Tables are not used by current theme, they
+             might be in a future one though 
+          -->
+
+          <table border="0" cellpadding="0" cellspacing="0">
+             <tr>
+                <td id="table_topleft"></td>
+                <td id="table_topright"></td>
+             </tr>
+          </table>
+          {% endcomment %}
+
+          <!-- Table with Menus and Content -->
+          <table border="0" cellpadding="0" cellspacing="0" >
+            <tr>
+               {% comment %}
+               <!-- Left Column -->
+               <td id="leftcolumn">
+                  <div id="leftcontent">
+                  {% include "left_boxes.html" %}
+                  </div>
+
+               </td>
+               {% endcomment %}
+
+               <!-- Center Column/Content -->
+               <td id="content" style="overflow: hidden;">
+                 <!-- ################### CONTENT STARTS HERE ################### -->       
+                 {% block content %}
+                  No Content here!
+                 {% endblock %}
+                 <!-- ###################  CONTENT ENDS HERE  ################### -->       
+               </td>
+             
+               <!-- Right Column -->
+               <td id="rightcolumn">
+                  <div id="rightcontent">
+                    {% include "right_boxes.html" %}
+                  </div>
+               </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
 
 
-<!-- Table with Menus and Content -->
-<table border="0" cellpadding="0" cellspacing="0" >
-  <tr>
-     <!-- Left Column -->
-     {% comment %}
-     <td id="leftcolumn">
-        <div id="leftcontent">
-        {% include "left_boxes.html" %}
-        </div>
+      {% comment %}
+      <tr>
+        <td>
+          <!-- Footer -->
+          {% include "footer.html" %}
 
-     </td>
-     {% endcomment %}
+          <!-- Bottom Table -->
+          <table border="0" cellpadding="0" cellspacing="0" id="table_bottom">
+             <tr>
+                <td id="table_bottomleft">
+                </td>
+                <td id="table_bottomright">
+                </td>
+             </tr>
+          </table>
+        </td>
+      </tr>
+      {% endcomment %}
 
-     <!-- Center Column/Content -->
-     <td id="content">
-<!-- ################### CONTENT STARTS HERE ################### -->       
-       {% block content %}
-        No Content here!
-       {% endblock %}
-<!-- ###################  CONTENT ENDS HERE  ################### -->       
-     </td>
-   
-     <!-- Right Column -->
-     <td id="rightcolumn">
-        <div id="rightcontent">
-        {% include "right_boxes.html" %}
-        </div>
-     </td>
-  </tr>
-</table>
+    </table>
 
-
-<!-- Footer -->
-{% include "footer.html" %}
-
-<!-- Bottom Table -->
-<table border="0" cellpadding="0" cellspacing="0" id="table_bottom">
-   <tr>
-      <td id="table_bottomleft">
-      </td>
-      <td id="table_bottomright">
-      </td>
-   </tr>
-</table>
-
-</body>
+  </body>
 </html>
 
