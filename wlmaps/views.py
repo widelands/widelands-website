@@ -150,9 +150,8 @@ def upload( request ):
             f = open(file_path,"wb")
             f.write(mfdata)
             f.close()
-            i = Image.Image(mm)
+            i = Image.fromarray(mm)
             i.save(mm_path)
-
 
         # Create the map
         try:
@@ -174,6 +173,7 @@ def upload( request ):
             return JsonReply(2, "Map with the same name already exists in database!")
 
         nm.save()
+
         return JsonReply(0, map_id = nm.pk )
 
     return JsonReply(1, "No mapfile in request!")
