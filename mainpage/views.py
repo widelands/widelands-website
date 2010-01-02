@@ -27,7 +27,6 @@ def register(request):
                             files=request.FILES)
         if form.is_valid():
             new_user = DefaultBackend().register(request, **form.cleaned_data)
-            # new_user = form.save()
             return HttpResponseRedirect(reverse('registration_complete'))
     else:
         form = RegistrationWithCaptchaForm(remote_ip)
