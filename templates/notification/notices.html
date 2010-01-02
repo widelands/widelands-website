@@ -56,7 +56,7 @@
             <p>
                 {% trans "Primary email" %}:<br />
                 <b>{{ user.email }}</b><br />
-                ({% blocktrans %}change under <a href="{{ email_url }}">Account</a>{% endblocktrans %})
+                (change under <a href="{% url profile_view %}">Account</a>)
             </p>
         {% else %}
             <p>
@@ -66,7 +66,7 @@
         {% endif %}
         
         <form method="POST" action=""> {# doubt this easy to do in uni-form #}
-            <table class="notice_settings">
+            <table class="notice_settings" cellspacing="1">
                 <tr>
                     <th>{% trans "Notification Type" %}</th>
                     {% for header in notice_settings.column_headers %}
@@ -75,11 +75,11 @@
                 </tr>
                 {% for row in notice_settings.rows %}
                     <tr>
-                        <td>{% trans row.notice_type.display %}<br/>
+                        <td class="{% cycle "odd" "even" %}">{% trans row.notice_type.display %}<br/>
                             <span class="notice_type_description">{% trans row.notice_type.description %}</span>
                         </td>
                         {% for cell in row.cells %}
-                            <td>
+                            <td class="{% cycle "odd" "even" %}">
                                 <input type="checkbox" name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %}/>
                             </td>
                         {% endfor %}
