@@ -29,6 +29,8 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     (r'^notification/', include('notification.urls')),
     # (r'^stats/', include('simplestats.urls')),
     (r'^messages/', include('messages.urls')),
+    (r'^threadedcomments/', include('threadedcomments.urls')),
+
 
     # 3rd party, modified for widelands
     (r'^wiki/', include('wiki.urls')),

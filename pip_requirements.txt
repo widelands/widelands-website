@@ -10,7 +10,7 @@ BeautifulSoup
 -e hg+http://bitbucket.org/ubernostrum/django-registration/#egg=registration
 -e svn+http://django-tagging.googlecode.com/svn/trunk/#egg=tagging
 -e git://github.com/dcramer/django-ratings.git#egg=djangoratings
--e git://github.com/ericflo/django-threadedcomments.git#egg=threadedcomments
+django-threadedcomments==0.5.2
 -e svn+http://django-messages.googlecode.com/svn/trunk/#egg=messages
 -e git://github.com/jtauber/django-notification.git#egg=notification
 -e bzr+http://bazaar.launchpad.net/~sirver/%2Bjunk/widelandslib/#egg=widelandslib

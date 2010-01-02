@@ -4,7 +4,7 @@
  This file contains the simple way to render a news item
 
 {% endcomment %}
-{% load threadedcomments_tags %}
+{% load threadedcommentstags %}
 {% load news wl_markdown tagging_tags wlprofile custom_date %}
 
 
@@ -27,9 +27,9 @@
          
         <table class="bottom_line" width="100%">
          <tr>
-         {% get_comment_list for object as clist %}
+         {% get_comment_count for object as ccount %}
          <td class="comments">
-             <a href="{{ object.get_absolute_url }}">{{ clist|length }} comments</a>
+             <a href="{{ object.get_absolute_url }}">{{ ccount }} comments</a>
          </td>
          
          <td class="admin">

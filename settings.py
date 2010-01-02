@@ -183,7 +183,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.markup',
     'django.contrib.humanize',
-    'django.contrib.comments',
 
     # TODO: only temporary for webdesign stuff
     'django.contrib.webdesign',
