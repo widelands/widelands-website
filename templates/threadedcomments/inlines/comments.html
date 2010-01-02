@@ -10,14 +10,16 @@
   
     {% get_threaded_comment_tree for object as tree %}
     {% for comment in tree %}
-        <div style="margin-left: {{ comment.depth }}em;" class="comment {% cycle "odd" "even" %}">
-            {% if comment.user.wlprofile.avatar %}
+        {% if comment.user.wlprofile.avatar %}
+        <div style="margin-left: {{ comment.depth }}em; min-height: 80px;" class="comment {% cycle "odd" "even" %}"> 
             <span class="avatar" style="margin: 2px; margin-right: 10px; float: left;">
                 <a href="{% url profile_view comment.user %}">
                 <img src="{{ comment.user.wlprofile.avatar.url }}" />
                 </a>
             </span>
-            {% endif %}
+        {% else %}
+        <div style="margin-left: {{ comment.depth }}em;" class="comment {% cycle "odd" "even" %}">
+        {% endif %}
             <p class="author">{{ comment.user|user_link }} said:</p>
             {% auto_transform_markup comment %}
             {% if user.is_authenticated %}

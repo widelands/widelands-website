@@ -8,7 +8,8 @@
 {% ifequal user profile.user %}
 {% include "messages/inlines/navigation.html" %}
 {%endifequal%}
-
+<br />
+<br />
 <div class="profile_item">
     <h3 class="title">{% trans "View Profile" %}</h3>
     <div class="content">
@@ -58,8 +59,8 @@
 		</tr>
 		</tr>
    		<tr>
-			<td class="even">Email:</td>
-			<td class="even">{{ profile.user.email }}</td>
+			<td class="odd">Email:</td>
+			<td class="odd">{{ profile.user.email }}</td>
 		</tr>
 	</table>
 </div>
