@@ -13,7 +13,7 @@ BeautifulSoup
 -e git://github.com/ericflo/django-threadedcomments.git#egg=threadedcomments
 -e svn+http://django-messages.googlecode.com/svn/trunk/#egg=messages
 -e git://github.com/jtauber/django-notification.git#egg=notification
--e bzr://lp:~sirver/+junk/widelandslib/#egg=widelandslib
+-e http://bazaar.launchpad.net/~sirver/%2Bjunk/widelandslib/#egg=widelandslib
 numpy==1.4
 pydot
 ipython
