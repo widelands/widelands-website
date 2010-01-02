@@ -43,20 +43,26 @@ This will take a while. If no errors we should be fine.
 Setting up the website
 ----------------------
 
+Go back into the widelands bzr directory::
+
+   $ cd code/widelands
+
 Setting your local paths
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Copy or symlink the two files settings_local.py.sample and
 local_urls.py.sample to settings_local.py and local_urls.py. Take a look at
 those files and modify them to your needs - most likely everything works
-directly, but you might want to edit the bd variable in local_settings.py.
+directly, but you might want to edit the bd variable in local_settings.py::
+
+   $ ln -s local_urls.py.sample local_urls.py
+   $ ln -s local_settings.py.sample local_settings.py
 
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Now, let's try if everything works out::
 
-   $ cd code/widelands/
    $ ./manage.py syncdb
 
 You will need to enter a superuser name and account. Now, let's run the page::
