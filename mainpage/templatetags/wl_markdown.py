@@ -35,7 +35,11 @@ except ImportError:
 # We will also need the site domain
 from django.contrib.sites.models import Site
 from settings import SITE_ID, SMILEYS, SMILEY_DIR, SMILEY_PREESCAPING, SVN_URL
-_domain = Site.objects.get(pk=SITE_ID).domain
+
+try:
+    _domain = Site.objects.get(pk=SITE_ID).domain
+except:
+    _domain = ""
 
 # Getting local domain lists
 try:

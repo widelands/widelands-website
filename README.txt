@@ -1,43 +1,86 @@
-This directory contains the widelands homepage django project. It needs a bunch of third party applications. A (maybe not complete list) is here:
+Installing the homepage
+=======================
 
-* atomformat.py
-    http://code.google.com/p/django-notification/
-    in /notification/atomformat.py
-* diff_match_patch.py
-    http://code.google.com/p/google-diff-match-patch/
-    in /python/diff_match_patch.py
-* django-messages
-    http://code.google.com/p/django-messages/
-* django-notification
-    http://code.google.com/p/django-notification/
-* django-pagination
-    http://code.google.com/p/django-pagination/
-* django-registration
-    http://bitbucket.org/ubernostrum/django-registration/wiki/Home
-* django-tagging
-    http://code.google.com/p/django-tagging/
-* django-simplestats
-    http://code.google.com/p/django-simplestats/
-* django-comment_utils
-    http://code.google.com/p/django-comment-utils/
-* django-threadedcomments
-    http://code.google.com/p/django-threadedcomments/
-* djangosphinx (for search)
-    http://django-sphinx.googlecode.com/p/django-sphinx/
-* django-tracking
-    http://code.google.com/p/django-tracking/
-* widelandslib
-    This is currently a scratch project on launchpad:
-    bzr get lp:~/sirver/+junk/widelandslib 
-    this depends on python-scipy and Image
+Getting the homepage to run locally is best supported using virtualenv and
+pip. Install those two tools first, either via easy_install or via your local
+package manager. You will also need development tools (gcc or therelike), hg
+(mercurial), bzr and git. Go and install them all.
 
-# Installation
+Setting up the local environment
+--------------------------------
 
-Most of these subprojects have dependencies on their own. Install all of them.
-Then put this directory and it's direct parent into your PYTHONPATH, create a
-local_settings.py file with (at least) your database settings and launch the
-testserver:
+Go to the directory you want to install the homepage to, then run::
 
-$ ./manage.py runserver
+   $ export PYTHONPATH=
 
+This will make sure that your virtual environment is not tainted with python
+packages from your global site packages. Very important!
+Now, we create our environment and download the website::
+
+   $ virtualenv --no-site-packages wlwebsite
+   $ cd wlwebsite
+   $ mkdir code
+   $ cd code
+   $ bzr get lp:widelands-website widelands
+
+All fine and good. Now we have to install all the third party modules the
+website needs. We use pip for that. But first, we have to change into our
+local environment::
+
+   $ cd .. # Now, we are in the root dir of our environemnt
+   $ source bin/activate
+
+Installation of the third party libraries should be easy, given you have
+development tools installed and in your path. The two difficult packages are
+PIL and numpy; you can also try to migrate them over from your global site dir
+or add your global site dir to your PYTHONPATH. 
+Installation via pip should work like this::
+
+   $ pip -E . install -r code/widelands/pip_requirements.txt
+
+This will take a while. If no errors we should be fine. 
+
+Setting up the website
+----------------------
+
+Go back into the widelands bzr directory::
+
+   $ cd code/widelands
+
+Setting your local paths
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Copy or symlink the two files settings_local.py.sample and
+local_urls.py.sample to settings_local.py and local_urls.py. Take a look at
+those files and modify them to your needs - most likely everything works
+directly, but you might want to edit the bd variable in local_settings.py::
+
+   $ ln -s local_urls.py.sample local_urls.py
+   $ ln -s local_settings.py.sample local_settings.py
+
+Setting up the database
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Now, let's try if everything works out::
+
+   $ ./manage.py syncdb
+
+You will need to enter a superuser name and account. Now, let's run the page::
+
+   $ ./manage.py runserver
+
+Open your browser to http://localhost:8000. You should see something that
+resembles the widelands homepage quite closely. All content is missing though. 
+
+Some important settings
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Go to http://localhost:8000/admin. Log in with your super user and go to the
+Sites Admin. Change your site name from example.com to localhost. Now,
+everything should work out.
+
+Contact
+=======
+
+Contact SirVer on the homepage for more information and problems.
 

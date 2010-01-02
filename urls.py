@@ -11,7 +11,7 @@ from widelands.wiki.feeds import RssHistoryFeed
 
 feeds = {
     'news': NewsPostsFeed,
-    
+
     # Wiki has it's own set of feeds
 }
 
@@ -29,13 +29,12 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     (r'^notification/', include('notification.urls')),
     # (r'^stats/', include('simplestats.urls')),
     (r'^messages/', include('messages.urls')),
-    (r'^threadedcomments/', include('threadedcomments.urls')),
-                       
+
     # 3rd party, modified for widelands
     (r'^wiki/', include('wiki.urls')),
     (r'^news/', include('news.urls')),
     (r'^forum/', include('pybb.urls')),
-    
+
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
     url(r'^changelog/$', "mainpage.views.changelog", name="changelog"),

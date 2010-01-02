@@ -12,8 +12,6 @@ if settings.USE_SPHINX:
 
 from djangoratings import AnonymousRatingField
 
-RATING_CHOICES = [(n, str(n)) for n in range(1, 11)]
-
 class MapManager(models.Manager):
     def create(self,**kwargs):
         if 'slug' not in kwargs:
@@ -24,7 +22,7 @@ class MapManager(models.Manager):
             m = super(MapManager,self).create(**kwargs)
 
         return m
-        
+
 
 class Map(models.Model):
     name = models.CharField( max_length = 255, unique = True )
@@ -33,19 +31,19 @@ class Map(models.Model):
     w = models.PositiveIntegerField( verbose_name = 'Width')
     h = models.PositiveIntegerField( verbose_name = 'Height')
     nr_players = models.PositiveIntegerField( verbose_name = 'Max Players')
-    
+
     descr = models.TextField( verbose_name = "Description" )
     minimap = models.ImageField( upload_to ="/wlmaps/minimaps/" )
     file = models.FileField( upload_to ="/wlmaps/maps/" )
-    
+
     world_name = models.CharField( max_length = 50  )
 
     pub_date = models.DateTimeField( default = datetime.datetime.now )
     uploader_comment = models.TextField( )
     uploader = models.ForeignKey(User)
     nr_downloads = models.PositiveIntegerField( verbose_name ="Download count", default = 0)
-    
-    rating = AnonymousRatingField(choices=RATING_CHOICES)
+
+    rating = AnonymousRatingField(range=10)
 
     if settings.USE_SPHINX:
         search          = SphinxSearch(
@@ -54,13 +52,13 @@ class Map(models.Model):
                 'author': 60,
                 }
         )
-    
+
     class Meta:
         ordering  = ('-pub_date',)
         get_latest_by = 'pub_date'
-    
+
     objects = MapManager()
-    
+
     @models.permalink
     def get_absolute_url( self ):
         return ("wlmaps_view", None, {"map_slug": self.slug } )

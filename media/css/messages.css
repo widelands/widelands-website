@@ -50,3 +50,17 @@ h1 {
    margin: 10px;
 }
 
+/*
+ * Compose
+ */
+#id_recipient {
+    width: 40%;
+}
+#id_subject {
+    width: 40%;
+}
+#id_body {
+   width: 100%;
+   height: 400px;
+}
+
