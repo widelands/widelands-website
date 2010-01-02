@@ -14,17 +14,23 @@ import re
 
 class EditProfileForm(forms.ModelForm):
     delete_avatar = forms.BooleanField(initial=False,required=False)
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = Profile
         fields = ['site', 'jabber', 'icq', 'msn', 'aim', 'yahoo',
-                  'location', 'signature', 'time_zone', "time_display", 
-                  'avatar', 'delete_avatar', 'show_signatures',
+                  'location', 'signature', 'time_zone', "time_display",
+                  'avatar', 'delete_avatar', 'show_signatures', "email",
                   ]
 
 
     def __init__(self, *args, **kwargs):
-        super(EditProfileForm, self).__init__(*args, **kwargs)
+        instance = kwargs.pop("instance")
+
+        print "instance: %s, kwargs: %s" % (instance, kwargs)
+        super(EditProfileForm, self).__init__(instance=instance, *args,**kwargs)
+
+        self.fields['email'].initial = instance.user.email
 
     def clean_signature(self):
         value = self.cleaned_data['signature'].strip()
@@ -33,4 +39,15 @@ class EditProfileForm(forms.ModelForm):
         if len(value) > settings.SIGNATURE_MAX_LENGTH:
             raise forms.ValidationError('Length of signature is limited to %d' % settings.SIGNATURE_MAX_LENGTH)
         return value
+
+    def save(self):
+        super(EditProfileForm, self).save()
+
+        u = self.instance.user
+        u.email = self.cleaned_data['email']
+        print "u.email: %s" % (u.email)
+
+        u.save()
+
+
 

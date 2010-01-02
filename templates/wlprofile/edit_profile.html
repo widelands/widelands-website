@@ -17,6 +17,7 @@
 
         <form method="post" enctype="multipart/form-data">
             <table width="100%" cellspacing="1" class="text">
+            {# FIXME: change the right color #}
     {% if profile_form.errors %}
                 <tr>
                     <td class="even" colspan="2">{{ profile_form.errors }}</td>
@@ -25,37 +26,19 @@
 
     {% for field in profile_form %}
                 <tr>
-            {% ifequal field.name "delete_avatar" %}
-                {% if profile.avatar %}
-                    {% if field.errors  %}
+            {% if field.errors %}
                     <td colspan="2" class="{% cycle "odd" "even" %}">
                         <div class="errormessage">{{ field.errors }}</div>
                     </td>
                 </tr>
                 <tr>
-                    {% endif %}
-                    <td class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-                    <td class="{% cycle "odd" "even" %}">{{ field }}</td>
-                {% endif %}
-           {% else %}
-           {% if field.errors %}
-                    <td class="{% cycle "odd" "even" %}">
-                        <div class="errormessage">{{ field.errors }}</div>
-                    </td>
-                </tr>
-                <tr>
             {% endif %}
-            {% ifequal field.name "signature" %}
-                    <td valign="top" class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-            {% else %}
-                    <td class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-            {% endifequal %}
-                    <td class="{% cycle "odd" "even" %}">{{ field }}
+                    <td {% ifequal field.name "signature" %} valign="top" {% endifequal %}class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field }}                 
                 {% ifequal field.name "time_display" %}
                         <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
                 {% endifequal %}
                     </td>
-            {% endifequal %}
                 </tr>
     {% endfor %}
             </table>
