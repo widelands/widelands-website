@@ -34,7 +34,7 @@
               </tr>
 
               {# List all forums #}
-              {% for topic in forum.topics.all %}
+              {% for topic in topics %}
               {% include "pybb/inlines/topic_row.html" %}
               {% endfor %}
             </table>
