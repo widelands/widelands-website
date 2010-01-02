@@ -13,7 +13,7 @@ from forms import RegistrationWithCaptchaForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from registration.backends.default import DefaultBackend as backend
+from registration.backends.default import DefaultBackend
 
 def register(request):
     """
@@ -26,7 +26,7 @@ def register(request):
         form = RegistrationWithCaptchaForm(remote_ip,data=request.POST,
                             files=request.FILES)
         if form.is_valid():
-            new_user = backend.register(request, **form.cleaned_data)
+            new_user = DefaultBackend().register(request, **form.cleaned_data)
             # new_user = form.save()
             return HttpResponseRedirect(reverse('registration_complete'))
     else:
