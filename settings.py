@@ -64,8 +64,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    # 'tracking.middleware.VisitorTrackingMiddleware',
-    # 'tracking.middleware.VisitorCleanUpMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
+    'tracking.middleware.VisitorCleanUpMiddleware',
 )
 
 ROOT_URLCONF = 'widelands.urls'
