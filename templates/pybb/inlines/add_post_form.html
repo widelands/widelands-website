@@ -10,28 +10,39 @@
 
 {{ block.super }}
 {% endblock %}
-
-<form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
-    <div class="preview-box" style="display: none">
-        <div class="header">{% trans "Preview" %}</div>
-        <div class="content"></div>
-    </div>
-    <fieldset>
-       <legend>{% if forum %}{% trans "New topic" %}{% else %}
-          {%if post %}
-          {% trans "Edit reply" %}
-          {% else %}
-          {% trans "New reply" %}
-          {% endif %}
-          {% endif %}</legend>
-        {{ form.as_p }}
-        <p class="submit">
-            <input type="submit" value="{% trans "Submit" %}" />
-            <input class="preview-button" type="button" value="{% trans "Preview" %}" />
-        </p>
-    </fieldset>
-</form>
-
+	<form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
+    		<div class="preview-box" style="display: none">
+        		<div class="header"><h3 class="title">{% trans "Preview" %}</h3></div>
+        		<div class="content"></div>
+    		</div>
+	<h3 class="title">{% if forum %}
+		{% trans "New topic" %}
+	{% else %}
+		{%if post %}
+			{% trans "Edit reply" %}
+		{% else %}
+			{% trans "New reply" %}
+		{% endif %}
+	{% endif %}</h3>
+	<div class="content">
+		<table width="100%" colspan="1" class="text">
+			<tr>
+				<td width="99%">
+					{{ form.as_p }}
+				</td>
+				<td width="1%"> </td>
+			</tr>
+		</table>
+	</div>
+		<table class="bottom_line" width="100%">
+			<tr>
+				<td>
+					<input type="submit" value="{% trans "Submit" %}" />
+					<input class="preview-button" type="button" value="{% trans "Preview" %}" />
+				</td>
+			</tr>
+		</table>
+	</form>
 <script type="text/javascript">
 $(function() {
     $('.post-form .preview-button').click(function() {
