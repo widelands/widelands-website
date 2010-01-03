@@ -1,0 +1,10 @@
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+   <tr class="odd">
+      <td><img src="{{ MEDIA_URL }}/{{ worker.image_url }}"  alt="{{ worker.name }}" /></td>
+      <td>{{ worker.displayname }}</td>
+      <td>{{ worker.help }}</td> 
+   </tr>
+

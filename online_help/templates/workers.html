@@ -5,16 +5,16 @@
 
 {% block content %}
 
-<!-- Wares -->
-<h1>Wares</h1>
+<!-- Workers -->
+<h1>Workers</h1>
 <table class="ware" width="100%" cellspacing="1">
    <tr>
       <th width="48px">Image</th>
       <th width="96px">Name</th>
       <th             >Description</th>
    </tr>
-{% for ware in wares %}
-{% include "inlines/display_ware.html" %}
+{% for worker in workers %}
+{% include "inlines/display_worker.html" %}
 {% endfor %}
 </table>
 {% endblock %}
