@@ -9,7 +9,7 @@
 # Last Modified: $Date$
 #
 
-from ...models import Ware, Tribe, Building
+from ...models import Worker, Ware, Tribe, Building
 
 from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
@@ -69,6 +69,7 @@ class TribeParser(object):
         self._basedir = os.path.dirname(conf)
 
     def parse( self ):
+        self._parse_workers()
         self._parse_wares()
         self._parse_buildings()
 
@@ -91,6 +92,26 @@ class TribeParser(object):
         new_name = dn + '/' + fname
         shutil.copy(file, new_name )
         return new_name[len(MEDIA_ROOT):]
+    
+    def _parse_workers( self ):
+        items = self._cf.items("worker types")
+        for name,displayname in items:
+            conf = "%s/%s/conf" % (self._basedir,name)
+            cf = SaneConfigParser()
+            cf.read(conf)
+            mp = "%s/%s/menu.png" % (self._basedir,name)
+            nn = self._copy_picture(mp,name, "menu.png" )
+            
+            worker = Worker.objects.get_or_create( tribe = self._to, name = name )[0]
+            worker.displayname = normalize_name(displayname)
+            worker.image_url = nn 
+
+            # See if there is help available
+            if cf.has_option("default","help"):
+                helpstr = normalize_name(cf.get("default","help"))
+                worker.help = helpstr
+
+            worker.save()
     
     def _parse_wares( self ):
         items = self._cf.items("ware types")

@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse
-from .models import Ware, Building, Tribe
+from .models import Worker, Ware, Building, Tribe
 
 
 import pydot
@@ -203,6 +203,11 @@ def building_details( request, tribe, building ):
         context_instance=RequestContext(request, 
         { "building": b , 
           "map": svg,}))
+
+def workers(request, tribe="barbarians"):
+    t = get_object_or_404(Tribe,name=tribe)
+    return render_to_response('workers.html', context_instance=RequestContext(request, 
+        { "workers": Worker.objects.filter(tribe=t) }))
 
 def wares(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
