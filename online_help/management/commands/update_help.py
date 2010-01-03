@@ -94,7 +94,7 @@ class TribeParser(object):
         return new_name[len(MEDIA_ROOT):]
     
     def _parse_workers( self ):
-        items = self._cf.items("worker types")
+        items = self._cf.items("worker types") + self._cf.items("carrier types") + self._cf.items("soldier types")
         for name,displayname in items:
             conf = "%s/%s/conf" % (self._basedir,name)
             cf = SaneConfigParser()
