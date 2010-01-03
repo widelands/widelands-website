@@ -9,6 +9,28 @@ class Tribe(models.Model):
     displayname = models.CharField(max_length=100)
 
 
+class Worker(models.Model):
+    name = models.CharField(max_length=100)
+    displayname = models.CharField(max_length=100)
+    tribe = models.ForeignKey(Tribe)
+    image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
+
+    help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
+    
+    if settings.USE_SPHINX:
+        search          = SphinxSearch(
+            weights = {
+                'displayname': 100,
+                'help': 60,
+                'name': 20,
+                }
+        )
+
+
+    def __unicode__(self):
+        return u'%s' % self.name
+
+
 class Ware(models.Model):
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)

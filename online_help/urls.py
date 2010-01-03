@@ -21,7 +21,7 @@ urlpatterns= patterns('',
     url(r'^(?P<tribe>\w+)/wares/(?P<ware>[^/]+)/$', ware_details, name="help_ware_details"),
     url(r'^(?P<tribe>\w+)/buildings/(?P<building>[^/]+)/$', building_details, name="help_building_details"),
 
-                      
+    url(r'^(?P<tribe>\w+)/workers/$', workers, name="help_workers"),
     url(r'^(?P<tribe>\w+)/wares/$', wares, name="help_wares"),
     url(r'^(?P<tribe>\w+)/buildings/$', buildings, name="help_buildings"),
 )

@@ -57,10 +57,12 @@
 			<td class="even">Yahoo:</td>
 			<td class="even">{{ profile.yahoo }}</td>
 		</tr>
+		{% ifequal user profile.user %}
    		<tr>
 			<td class="odd">Email:</td>
 			<td class="odd">{{ profile.user.email }}</td>
 		</tr>
+		{% endifequal %}
 	</table>
 </div>
 <table class="bottom_line" width="100%">
