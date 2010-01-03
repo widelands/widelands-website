@@ -6,7 +6,7 @@
 .comment {
    margin: 0px;
    padding-bottom: 2px;
-   border: 1px solid rgb(20%,20%,20%); 
+/*   border: 1px solid rgb(20%,20%,20%); */
    border-top: 0px;
    width: 100%;
 }
@@ -23,4 +23,7 @@
    font-style: italic;
    vertical-align: top;
    margin-bottom: 5px;
+}
+.text textarea {
+    width: 100%;
 }
