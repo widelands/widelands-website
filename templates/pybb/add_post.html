@@ -3,13 +3,9 @@
 {% load i18n %}
 
 {% block content %}
-<h1>
-   {% if forum %}
-   {% trans "New topic" %}
-   {% else %}
-   {% trans "New reply" %}
-   {% endif %}</h1>
-
+<br />
+<br />
+<div class="forum_item">
 {% include "pybb/inlines/add_post_form.html" %}
-
+</div>
 {% endblock %}

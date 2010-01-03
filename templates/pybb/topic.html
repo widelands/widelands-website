@@ -71,7 +71,11 @@
 
 {% if user.is_authenticated %}
 {% if not topic.closed %}
+<br />
+<br />
+<div class="forum_item">
 {% include "pybb/inlines/add_post_form.html" %}
+</div>
 {% endif %}
 {% endif %}
 
