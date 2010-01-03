@@ -64,3 +64,85 @@ h1 {
    height: 400px;
 }
 
+/*
+ * MessageBox style
+ */
+
+.message_item .message_image img {
+   float: right;   
+   padding: 0px;
+   margin-left: 20px;
+}
+
+.message_item {
+    border: 1px solid rgb(9, 9, 9);
+    width: 100%;
+}
+
+.message_item p {
+   margin-bottom: 5px;
+}
+
+.message_item h3.title {
+    font-weight: bold;
+    font-size: 12px;
+    padding-left: 12px;
+    background-image: url('../img/Navbar.png');
+    background-repeat: repeat-x;
+    border-left: 0px solid #999999;
+    border-right: 0px solid #999999;
+    border-bottom: 0px solid #999999;
+    padding-top: 2px;
+    padding-bottom: 0px;
+    margin: 0px;
+}
+.message_item .content {
+ line-height: 120%;
+ border: 0px;
+ padding: 2px;
+ padding-top: 5px;
+ padding-left: 15px;
+ background-color: #3F3F3F;
+ background: url(../img/background-3F3F3F.png);
+}
+
+.message_item .info_line {
+	 text-align: right;
+	 padding: 3px;
+	 margin: 0px;
+    background-color: #222222;
+	 background: url(../img/background-222.png);
+}
+	
+.message_item .text {
+    vertical-align: baseline;;
+	 margin-top: 5px;
+	 margin-bottom: 5px;
+    margin: 0px;
+	 line-height: 130%;
+}
+
+.message_item .text:first-letter {
+    vertical-align: baseline;
+	 color: #7070FF;
+	 font-size: 180%;
+	 font-family: Cretino, "Bitstream Vera Serif", serif;
+	 font-weight: bold;
+	}
+
+.message_item .bottom_line {
+	 background-color: #222222;
+	 background: url(../img/background-222.png);
+    table-layout: fixed;
+}
+.message_item .tags {
+	text-align: right;
+}
+.message_item .comments {
+	text-align: left;
+}
+.message_item .admin {
+	text-align: center;
+}
+	
+	
