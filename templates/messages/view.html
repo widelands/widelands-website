@@ -8,26 +8,50 @@ Message - {{ block.super }}
 
 {% block content %}
 {% include "messages/inlines/navigation.html" %} 
-<h1>{% trans "View Message" %}</h1>
-<div class="message_display">
-   <dl class="headers">
-       <dt>{% trans "Subject" %}</dt>
-       <dd><strong>{{ message.subject }}</strong></dd>
-       <dt>{% trans "Sender" %}</dt>
-       <dd>{{ message.sender }}</dd>
-       <dt>{% trans "Date" %} </dt>
-       <dd>{{ message.sent_at|custom_date:user}}</dd>
-       <dt>{% trans "Recipient" %}</dt>
-       <dd>{{ message.recipient }}</dd>
-   </dl>
-
-   <div class="content">
-      {{ message.body|urlize|linebreaksbr }}<br /><br />
-   </div>
+<br />
+<br />
+<div class="message_item">
+	<h3 class="title">{% trans "View Message" %}</h3>
+	<div class="content">
+		<table class="text" width="100%" cellspacing="1">
+			<tr>
+				<td width="80" class="odd">{% trans "Subject" %}:</td>
+				<td width="120" class="odd">{{ message.subject }}</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="even">{% trans "Sender" %}:</td>
+				<td class="even">{{ message.sender }}</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="odd">{% trans "Date" %}:</td>
+				<td class="odd">{{ message.sent_at|custom_date:user }}</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="even">{% trans "Recipient" %}:</td>
+				<td class="even">{{ message.recipient }}</td>
+				<td></td>
+			</tr>
+			<tr> 
+				<td colspan="3" class="odd">
+					<div class="message_display content message">
+						{{ message.body|urlize|linebreaksbr }}
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<table class="bottom_line" width="100%">
+		<tr>
+			<td class="admin">
+				{% ifequal message.recipient user %}
+					<a href="{% url messages_reply message.id %}">{% trans "Reply" %}</a>&nbsp;|
+				{% endifequal %}
+				<a href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
+			</td>
+		</tr>
+	</table>
 </div>
-
-{% ifequal message.recipient user %}
-<a href="{% url messages_reply message.id %}">{% trans "Reply" %} | </a>
-{% endifequal %}
-<a href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
 {% endblock %}

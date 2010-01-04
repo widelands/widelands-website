@@ -78,4 +78,19 @@
    height: 100px;
 }
 
+/*************/
+/* Changeset */
+/*************/
+
+.changeset_content {
+	line-height: 120%;
+	border: 0px;
+	padding: 2px;
+	padding-top: 5px;
+	padding-left: 15px;
+	background-color: #3F3F3F;
+	background: url(../img/background-3F3F3F.png);
+}
+
+
 

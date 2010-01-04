@@ -10,7 +10,7 @@ function show_reply_form(comment_id, url, person_name) {
     var to_add = $( new Array(
     '<div class="response"><p>Reply to ' + person_name + ':</p>',
     '<form method="POST" action="' + url + '">',
-    '<div class="comment_post">',  '<div class="comment"> <span class=errorclass">{{ form.comment.errors }}</span>{{ form.comment }}',  
+    '<div class="comment_post">',  '<div class="comment text"> <span class=errorclass">{{ form.comment.errors }}</span>{{ form.comment }}',  
     '</div> <input type="hidden" name="markup" value="1" />',
               '<input type="submit" value="Submit Comment" />',
     '</div>', '</form>', '</div>').join(''));

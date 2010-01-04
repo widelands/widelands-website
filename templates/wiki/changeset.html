@@ -22,5 +22,7 @@ Changes in {{ article_title }} - {{ block.super }}
     </div>
     {%endif %}
     <h3>Revision differences</h3>
+    <div class="changeset_content">
     {{ changeset.display_diff|safe }}
+    </div>
 {% endblock %}
