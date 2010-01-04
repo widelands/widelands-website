@@ -9,7 +9,7 @@ function show_reply_form(comment_id, url, person_name) {
     var comment_reply = $('#' + comment_id);
     var to_add = $( new Array(
     '<div class="response"><p>Reply to ' + person_name + ':</p>',
-    '<form method="POST" action="' + url + '">',
+    '<form method="POST" action="' + url + '?next={{object.get_absolute_url}}">',
     '<div class="comment_post">',  '<div class="comment text"> <span class=errorclass">{{ form.comment.errors }}</span>{{ form.comment }}',  
     '</div> <input type="hidden" name="markup" value="1" />',
               '<input type="submit" value="Submit Comment" />',
@@ -22,6 +22,8 @@ function show_reply_form(comment_id, url, person_name) {
         comment_id, '\',\'', url, '\',\'', person_name,
         '\')">Stop Replying</a>').join(''));
     });
+
+    check_posting();
 }
 function hide_reply_form(comment_id, url, person_name) {
     var comment_reply = $('#' + comment_id);
@@ -32,6 +34,8 @@ function hide_reply_form(comment_id, url, person_name) {
         comment_id, '\',\'', url, '\',\'', person_name,
         '\')">Reply</a>').join(''));
     });
+    
+   check_posting();
 }
 -->
 </script>

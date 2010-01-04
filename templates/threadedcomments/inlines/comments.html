@@ -32,7 +32,7 @@
 	<br />
 	<div class="news_item">
 		<h3 class="title">Reply to Original:</h3>
-    	<form method="POST" action="{% get_comment_url object %}">
+      <form method="POST" action="{% get_comment_url object %}?next={{object.get_absolute_url}}">
       		<div class="content">
           		<table class="text" width="100%">
 					<tr>
@@ -48,6 +48,7 @@
 				<tr>
 					<td class="admin">
 						<input type="hidden" name="markup" value="1" />
+                  <input type="hidden" value="next" value="{{ object.get_absolute_url }}" />
 						<input type="submit" value="Submit Comment" />
 					</td>
 				</tr>
