@@ -24,7 +24,7 @@ import re
 from BeautifulSoup import BeautifulSoup
 
 # If we can import a Wiki module with Articles, we
-# will check for internal wikipages links in all internal 
+# will check for internal wikipages links in all internal
 # links starting with /wiki/
 try:
     from widelands.wiki.models import Article
@@ -46,7 +46,7 @@ try:
     from settings import LOCAL_DOMAINS as _LOCAL_DOMAINS
     LOCAL_DOMAINS = [ _domain ] + _LOCAL_DOMAINS
 except ImportError:
-    LOCAL_DOMAINS = [ _domain ] 
+    LOCAL_DOMAINS = [ _domain ]
 
 
 register = template.Library()
@@ -58,7 +58,7 @@ def _insert_smileys( text ):
     """
     for sc,img in SMILEYS:
         text = text.replace(sc,"<img src='%s%s' alt='%s' />" % ( SMILEY_DIR, img, img ))
-    
+
     return text
 def _insert_smiley_preescaping( text ):
     """
@@ -67,7 +67,7 @@ def _insert_smiley_preescaping( text ):
     """
     for before,after in SMILEY_PREESCAPING:
         text = text.replace(before,after)
-    
+
     return text
 
 
@@ -89,9 +89,9 @@ def _classify_link( tag ):
     # No class change for image links
     if tag.findChild("img") != None:
         return None
-    
+
     href = tag["href"].lower()
-    
+
     # Check for external link
     if href.startswith("http"):
         for domain in LOCAL_DOMAINS:
@@ -101,12 +101,12 @@ def _classify_link( tag ):
                 break
         if external:
             return "external"
-    
+
     if check_for_missing_wikipages and href.startswith("/wiki"):
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
         pn = tag["href"][6:].split('/',1)[0]
-        
+
         if not len(pn): # Wiki root link is not a page
             return None
 
@@ -117,26 +117,27 @@ def _classify_link( tag ):
         if Article.objects.filter(title=pn).count() == 0:
             return "missing"
 
-    return None 
+    return None
 
 custom_filters = [
     # Wikiwordification
-    # Match a wiki page link LikeThis. All !WikiWords (with a ! 
+    # Match a wiki page link LikeThis. All !WikiWords (with a !
     # in front) are ignored
     (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m:
-        m.group(2) if m.group(1) == '!' else 
+        m.group(2) if m.group(1) == '!' else
             u"""<a href="/wiki/%(match)s">%(match)s</a>""" %
             {"match": m.group(2) }),
-    
+
 ]
 
 def do_wl_markdown( value, *args, **keyw ):
     # Do Preescaping for markdown, so that some things stay intact
     value = _insert_smiley_preescaping( value )
 
+    custom = keyw.pop('custom', True)
     # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
     nvalue = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
-    
+
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
     # BeautifoulSoup does all the heavy lifting
@@ -152,33 +153,35 @@ def do_wl_markdown( value, *args, **keyw ):
         if text.parent.name == "a":
             continue
 
-        # We do our own small preprocessing of the stuff we got, after markdown went over it
-        # General consensus is to avoid replacing anything in links [blah](blkf)
-        for pattern,replacement in custom_filters:
-            if not len(text.strip()):
-                continue
-    
-            # Replace svn revisions
-            rv = _insert_revision( text )
-            # Replace smileys
-            rv = _insert_smileys( rv )
-             
-            rv = pattern.sub( replacement, rv )
-            if rv:
-                # We can't do a simple text substitution, because we 
-                # need this parsed for further processing
-                # Hmpf, this code didn't work, so we DID text substitution
-                # and then reparsedj
-                # ns = BeautifulSoup(rv)
-                # text.replaceWith(BeautifulSoup(rv))
-                text.replaceWith(rv)
-                # Only one replacement allowed!
-                break
-    
-    # This call slows the whole function down... 
-    # unicode->reparsing. 
+        # We do our own small preprocessing of the stuff we got, after markdown
+        # went over it General consensus is to avoid replacing anything in
+        # links [blah](blkf)
+        if custom:
+            for pattern,replacement in custom_filters:
+                if not len(text.strip()):
+                    continue
+
+                # Replace svn revisions
+                rv = _insert_revision( text )
+                # Replace smileys
+                rv = _insert_smileys( rv )
+
+                rv = pattern.sub( replacement, rv )
+                if rv:
+                    # We can't do a simple text substitution, because we
+                    # need this parsed for further processing
+                    # Hmpf, this code didn't work, so we DID text substitution
+                    # and then reparsedj
+                    # ns = BeautifulSoup(rv)
+                    # text.replaceWith(BeautifulSoup(rv))
+                    text.replaceWith(rv)
+                    # Only one replacement allowed!
+                    break
+
+    # This call slows the whole function down...
+    # unicode->reparsing.
     # The function goes from .5 ms to 1.5ms on my system
-    # Well, for our site with it's little traffic it's maybe not so important... 
+    # Well, for our site with it's little traffic it's maybe not so important...
     soup = BeautifulSoup(unicode(soup)) # What a waste of cycles :(
 
     # We have to go over this to classify links

@@ -40,6 +40,7 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
     url(r'^changelog/$', "mainpage.views.changelog", name="changelog"),
+    url(r'^developers/$', "mainpage.views.developers", name="developers"),
     url(r'^help/', include("online_help.urls")),
     url(r'^webchat/', include("wlwebchat.urls")),
     url(r'^images/', include("wlimages.urls")),
