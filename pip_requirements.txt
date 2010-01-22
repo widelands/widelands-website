@@ -14,6 +14,7 @@ django-threadedcomments==0.5.2
 -e svn+http://django-messages.googlecode.com/svn/trunk/#egg=messages
 -e git://github.com/jtauber/django-notification.git#egg=notification
 -e bzr+http://bazaar.launchpad.net/~sirver/%2Bjunk/widelandslib/#egg=widelandslib
+-e hg+http://bitbucket.org/scherfke/django-sphinxdoc/#egg=sphinxdoc
 django-tracking
 numpy==1.4
 pydot

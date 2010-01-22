@@ -213,7 +213,8 @@ INSTALLED_APPS = (
     'notification',
     'tracking',
     'djangoratings',
-) 
+    'sphinxdoc',
+)
 
 try:
     from local_settings import *
