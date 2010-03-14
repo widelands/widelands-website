@@ -28,7 +28,7 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     # 3rd party, unmodified
     (r'^notification/', include('notification.urls')),
     # (r'^stats/', include('simplestats.urls')),
-    (r'^messages/', include('messages.urls')),
+    (r'^messages/', include('django_messages.urls')),
     (r'^threadedcomments/', include('threadedcomments.urls')),
     (r'^docs/', include('sphinxdoc.urls')),
 

@@ -1,4 +1,4 @@
-{% extends "messages/base.html" %} 
+{% extends "django_messages/base.html" %} 
 {% load i18n %} 
 
 {% block title %}
@@ -6,7 +6,7 @@ Trash - {{ block.super }}
 {% endblock %}
 
 {% block content %} 
-{% include "messages/inlines/navigation.html" %} 
+{% include "django_messages/inlines/navigation.html" %} 
 <h1>{% trans "Deleted Messages" %}</h1>
 <table class="messages" cellspacing="1">
     <thead>
@@ -19,7 +19,7 @@ Trash - {{ block.super }}
     </thead>
     <tbody>
 {% for message in message_list %} 
-   {% include "messages/inlines/message_row.html" %}
+   {% include "django_messages/inlines/message_row.html" %}
 {% endfor %}
     </tbody>
 </table>

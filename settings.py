@@ -206,7 +206,7 @@ INSTALLED_APPS = (
 
     # Thirdparty apps
     'threadedcomments',
-    'messages',
+    'django_messages',
     'registration', # User registration (per Email validation)
     'pagination',
     'tagging',

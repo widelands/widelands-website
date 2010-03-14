@@ -1,4 +1,4 @@
-{% extends "messages/base.html" %} 
+{% extends "django_messages/base.html" %} 
 {% load i18n %} 
 
 {% block title %}
@@ -7,7 +7,7 @@ Compose - {{ block.super }}
 
 
 {% block content %} 
-{% include "messages/inlines/navigation.html" %}
+{% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
 <div class="message_item">
