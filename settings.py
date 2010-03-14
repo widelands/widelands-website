@@ -169,6 +169,7 @@ WIDELANDS_SVN_DIR=""
 # ChangeLog display #
 #####################
 SVN_URL = "http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&revision=%s"
+BZR_URL = r"http://bazaar.launchpad.net/%%7Ewidelands-dev/widelands/trunk/revision/%s"
 
 ###############
 # Screenshots #

@@ -9,7 +9,7 @@
 # Last Modified: $Date$
 #
 
-# Since we want to include something from one path up, 
+# Since we want to include something from one path up,
 # we append the parent path to sys.path
 import sys; sys.path.append("..")
 
@@ -42,7 +42,7 @@ class TestWlMarkdown(DBTestCase):
         input = u"Na Du HalloWelt, Du?"
         wanted = u"""<p>Na Du <a href="/wiki/HalloWelt">HalloWelt</a>, Du?</p>"""
         self._check(input,wanted)
-    
+
     def test_wikiwords_avoid__except_correct_result(self):
         input = u"Hi !NotAWikiWord Moretext"
         wanted = u"""<p>Hi NotAWikiWord Moretext</p>"""
@@ -67,7 +67,7 @@ class TestWlMarkdown(DBTestCase):
         input =  u"""<a href="http://www.ccc.de"><img src="/blub" /></a>"""
         wanted = u"""<p><a href="http://www.ccc.de"><img src="/blub" /></a></p>"""
         self._check(input,wanted)
-    
+
     # Existing links
     def test_existing_link_html(self):
         input = u"""<a href="/wiki/MainPage">this page</a>"""
@@ -110,7 +110,7 @@ class TestWlMarkdown(DBTestCase):
         input = u"""<a href="/wiki/MissingPage/edit/">this page</a>"""
         wanted = u"""<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>"""
         self._check(input,wanted)
-    
+
     # Check smileys
     def test_smiley_angel(self):
         input = """O:-)"""
@@ -201,13 +201,13 @@ class TestWlMarkdown(DBTestCase):
         input = u"""[list](/wiki/list)"""
         wanted = u"""<p><a href="/wiki/list">list</a></p>"""
         self._check(input,wanted)
-    
+
     # Special problem with emphasis
     def test_markdown_emphasis_problem(self):
         input = u"""*This is bold*  _This too_\n\n"""
         wanted = u"""<p><em>This is bold</em> <em>This too</em></p>"""
         self._check(input,wanted)
-    
+
     # Another markdown problem with alt tag escaping
     def test_markdown_alt_problem(self):
         # {{{ Test strings
@@ -215,7 +215,7 @@ class TestWlMarkdown(DBTestCase):
         wanted = u'<p><img alt="img_thisisNOTitalicplease_name.png" src="/wlmedia/blah.png" /></p>'
         # }}}
         self._check(input,wanted)
-    
+
     def test_emptystring_problem(self):
         # {{{ Test strings
         input = u''
@@ -231,7 +231,7 @@ Header1 | Header 2
 ------- | --------
 Value 1 | Value 2
 Value 3 | Value 4
-"""     
+"""
         wanted = u"""<table>
 <thead>
 <tr>
@@ -253,14 +253,14 @@ Value 3 | Value 4
         # }}}
         self._check(input,wanted)
     def test_svnrevision_replacement( self ):
-        input = u"- Fixed this bug (svn:r3222)"
-        wanted = u"""<ul>\n<li>Fixed this bug (<a href="http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&amp;revision=3222" class="external">r3222</a>)</li>\n</ul>"""
+        input = u"- Fixed this bug (bzr:r3222)"
+        wanted = u"""<ul>\n<li>Fixed this bug (<a href="http://bazaar.launchpad.net/%7Ewidelands-dev/widelands/trunk/revision/3222" class="external">r3222</a>)</li>\n</ul>"""
         self._check(input,wanted)
     def test_svnrevision_multiple_replacement( self ):
-        input = u"- Fixed this bug (svn:r3222, svn:r3424)"
-        wanted = u"""<ul>\n<li>Fixed this bug (<a href="http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&amp;revision=3222" class="external">r3222</a>, <a href="http://widelands.svn.sourceforge.net/viewvc/widelands?view=rev&amp;revision=3424" class="external">r3424</a>)</li>\n</ul>"""
+        input = u"- Fixed this bug (bzr:r3222, bzr:r3424)"
+        wanted = u"""<ul>\n<li>Fixed this bug (<a href="http://bazaar.launchpad.net/%7Ewidelands-dev/widelands/trunk/revision/3222" class="external">r3222</a>, <a href="http://bazaar.launchpad.net/%7Ewidelands-dev/widelands/trunk/revision/3424" class="external">r3424</a>)</li>\n</ul>"""
         self._check(input,wanted)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
