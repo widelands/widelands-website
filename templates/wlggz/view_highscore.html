@@ -1,0 +1,33 @@
+{% extends "wlggz/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{% load custom_date %}
+
+{% ifequal user profile.user %}
+{% include "django_messages/inlines/navigation.html" %}
+{%endifequal%}
+
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>ranking</th>
+                    <th>rating</th>
+                    <th>wins</th>
+                    <th>losses</th>
+                </tr>
+    {% for userstat in ggzstats %}
+                <tr>
+                    <td><a href="{% url profile_view userstat.handle %}">{{ userstat.handle }}</a></td>
+                    <td> {{ userstat.ranking|floatformat }} </td>
+                    <td> {{ userstat.rating|floatformat }} </td>
+                    <td> {{ userstat.wins|floatformat }} </td>
+                    <td> {{ userstat.losses|floatformat }} </td>
+                </tr>
+    {% empty %}
+            <p>Sorry, no rankings yet</p>
+    {% endfor %}
+            </table>
+</p>
+{% endblock %}

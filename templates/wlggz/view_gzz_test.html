@@ -1,0 +1,27 @@
+{% extends "wlggz/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{% load custom_date %}
+
+{% ifequal user profile.user %}
+{% include "django_messages/inlines/navigation.html" %}
+{%endifequal%}
+<br />
+<br />
+<h2>Just a test</h2>
+<p>
+Username: {{ ggzauth.user.username }}
+<br />
+Last ggz login: {{ ggzauth.lastlogin }}
+<br />
+Permissions: {{ ggzauth.permissions }}
+</p>
+<p>
+Ranking: {{ ggzstats.ranking }} <br />
+Ranting: {{ ggzstats.rating }} <br />
+wins: {{ ggzstats.wins }} <br />
+losses: {{ ggzstats.losses }} <br />
+</p>
+{% endblock %}
