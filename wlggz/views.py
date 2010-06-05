@@ -53,7 +53,7 @@ def view(request, user = None):
             "ggzmatches": matches,
             "ggzwonmatches": wonmatches,
         }
-    except User.DoesNotExist:
+    except (User.DoesNotExist, ggz_models.GGZStats.DoesNotExist):
         template_params = {}
 
     return render_to_response("wlggz/view_ggz_test.html",

@@ -7,48 +7,53 @@
 
 {% ifequal user profile.user %}
 {% include "django_messages/inlines/navigation.html" %}
+
 {%endifequal%}
 <br />
 <br />
-<h3>GGZ results for {{ ggzauth.user.username }}</h3>
-Last ggz login: {{ ggzauth.lastlogin }}
-<br />
-Permissions: {{ ggzauth.permissions }}
-</p>
-<p>
-Ranking: {{ ggzstats.ranking }} <br />
-Rating: {{ ggzstats.rating|floatformat }} <br />
-wins: {{ ggzstats.wins }} <br />
-losses: {{ ggzstats.losses }} <br />
-</p>
-<h3>Last 10 matches of {{ ggzauth.user.username }}</h3>
 
-            <table>
-                <tr>
-                   <th>Date</th>
-                   <th>Winner</th>
-                   <th>Participants</th>
-    {% for match in ggzmatches %}
-                <tr>
-                   <td>{{ match.match.date  }}</td>
-                   <td>{{ match.match.winner }}</td>
-                   <td>
+{% if ggzauth.user %}
+    <h3>GGZ results for {{ ggzauth.user.username }}</h3>
+    <table>
+        <tr><td>Last ggz login:</td><td> {{ ggzauth.lastlogin }}</td></tr>
+        <tr><td>Ranking:</td><td> {{ ggzstats.ranking }}</td></tr>
+        <tr><td>Rating:</td><td> {{ ggzstats.rating|floatformat }}</td></tr>
+        <tr><td>wins:</td><td> {{ ggzstats.wins }}</td></tr>
+        <tr><td>losses:</td><td> {{ ggzstats.losses }}</td></tr>
+    </table>
+
+<h3>Last 10 matches of {{ ggzauth.user.username }}</h3>
+    {% if ggzmatches %}
+          <table>
+            <tr>
+                <th>Date</th>
+                <th>Winner</th>
+                <th>Participants</th>
+        {% for match in ggzmatches %}
+            <tr>
+                <td>{{ match.match.date  }}</td>
+                <td>{{ match.match.winner }}</td>
+                <td>
                        {% for player in match.match.wlggz_matchplayers.all %}
                            {{ player.handle }} 
                        {% endfor %}
-                   </td>
-                </tr>
+                </td>
+            </tr>
+        {% endfor %}
+          </table>
+    {% else %}
+         <p>User has not participated in any matches</p>
+    {% endif %}
 
-    {% endfor %}
-           </table>
 <h3>Last 5 matches {{ ggzauth.user.username }} won</h3>
-<p>
+
+    {% if ggzwonmatches %}
             <table>
                 <tr>
                    <th>Date</th>
                    <th>Winner</th>
                    <th>Participants</th>
-    {% for match in ggzwonmatches %}
+        {% for match in ggzwonmatches %}
                 <tr>
                    <td>{{ match.date  }}</td>
                    <td>{{ match.winner }}</td>
@@ -59,7 +64,17 @@ losses: {{ ggzstats.losses }} <br />
                    </td>
                 </tr>
 
-    {% endfor %}
+        {% endfor %}
            </table>
-</p>
+    {% else %}
+         <p>User has won no matches</p>
+    {% endif %}
+
+
+{% else %}
+    <p>
+        <b>User does not exist or has no ggz account</b>
+    </p>
+{% endif %}
+
 {% endblock %}
