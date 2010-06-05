@@ -4,7 +4,7 @@
 
 {% block content %}
 {% ifequal user profile.user %}
-	{% include "messages/inlines/navigation.html" %}
+	{% include "django_messages/inlines/navigation.html" %}
 {% endifequal %}
 <br />
 <br />
@@ -49,5 +49,12 @@
         </tr>
     </table>
     </form>
+</div>
+<div class="profile_item">
+    <h3 class="title">Change password for online lobby</h3>
+    <p>
+        <b>WARNING: GGZ transmitts the password in cleartext. Choose a different password for online gaming here:</b>
+    </p>
+    <a href="{% url wlggz_changepw %}">Change online lobby password</a>
 </div>
 {% endblock %}

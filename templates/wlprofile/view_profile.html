@@ -6,7 +6,7 @@
 {% load custom_date %}
 
 {% ifequal user profile.user %}
-{% include "messages/inlines/navigation.html" %}
+{% include "django_messages/inlines/navigation.html" %}
 {%endifequal%}
 <br />
 <br />
@@ -77,4 +77,8 @@
 	</tr>
 </table>
 </div>
+<div class="profile_item">
+    <a href="{% url wlggz_userstats %}">View GGZ Statistics of this user</a>
+</div>
+
 {% endblock %}
