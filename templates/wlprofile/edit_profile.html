@@ -50,11 +50,17 @@
     </table>
     </form>
 </div>
+<br />
 <div class="profile_item">
-    <h3 class="title">Change password for online lobby</h3>
-    <p>
-        <b>WARNING: GGZ transmitts the password in cleartext. Choose a different password for online gaming here:</b>
-    </p>
-    <a href="{% url wlggz_changepw %}">Change online lobby password</a>
+    <table class="bottom_line" width="100%">
+        <tr>
+            <td>
+                <a href="{% url wlggz_changepw %}">Change online lobby password</a>
+            <p>
+                <b>WARNING: GGZ transmitts the password in cleartext. Choose a different password for online gaming.</b>
+            </p>
+            </td>
+        </tr>
+    </table>
 </div>
 {% endblock %}
