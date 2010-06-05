@@ -1,0 +1,34 @@
+{% extends "wlggz/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{% load custom_date %}
+
+{% ifequal user profile.user %}
+{% include "django_messages/inlines/navigation.html" %}
+{%endifequal%}
+<h3>Last 10 matches</h3>
+<p>
+            <table>
+                <tr>
+                   <th>Date</th>
+                   <th>Winner</th>
+                   <th>Participants</th>
+                </tr>
+    {% for match in ggzmatches %}
+                <tr>
+                   <td>{{ match.date  }}</td>
+                   <td>{{ match.winner }}</td>
+                   <td>
+                       {% for player in match.wlggz_matchplayers.all %}
+                           {{ player.handle }}
+                       {% endfor %}
+                   </td>
+                </tr>
+    {% empty %}
+            <p>Sorry, no rankings yet</p>
+    {% endfor %}
+            </table>
+</p>
+{% endblock %}
