@@ -19,16 +19,29 @@ def view(request, user = None):
     """
     empty text
     """
+
+
     if user is None:
-        wlggz = request.user.wlggz
-        wlggzstats = request.user.wlggzstats
+        u = request.user
     else:
-        wlggz = User.objects.get( username = user ).wlggz
-        wlggzstats = User.objects.get( username = user ).wlggzstats
+        u = User.objects.get( username = user )
+
+    wlggz = u.wlggz
+    wlggzstats = u.wlggzstats
+    matches = u.wlggz_matches.order_by('-id')[:10]
+    wonmatches = u.wlggz_matchwins.order_by('-id')[:10]
+
+    #else:
+    #    wlggz = User.objects.get( username = user ).wlggz
+    #    wlggzstats = User.objects.get( username = user ).wlggzstats
+    #    matches = User.objects.get( username = user ).wlggz_matches.order_by('-id')[:10]
+    #    wonmatches = User.objects.get( username = user ).wlggz_matchwins.order_by('-date')[:10]
 
     template_params = {
         "ggzauth": wlggz,
         "ggzstats": wlggzstats,
+        "ggzmatches": matches,
+        "ggzwonmatches": wonmatches,
     }
 
     return render_to_response("wlggz/view_gzz_test.html",

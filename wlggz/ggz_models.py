@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python -tt
 # encoding: utf-8
 #
@@ -12,23 +11,22 @@
 #
 
 from django.db import models
-from django.db.models import OneToOneField
-from fields import AutoOneToOneField
+from django.db.models import OneToOneField, ForeignKey
 from django.contrib.auth.models import User
 
 class GGZMatches(models.Model):
     id = models.IntegerField(primary_key=True)
     date = models.IntegerField()
     game = models.TextField()
-    winner = models.CharField(max_length=768, blank=True)
+    winner = ForeignKey(User, to_field='username', db_column='winner', related_name='wlggz_matchwins')
     savegame = models.TextField(blank=True)
     class Meta:
         db_table = u'wlggz_matches'
 
 class GGZMatchplayers(models.Model):
     id = models.IntegerField(primary_key=True)
-    match = models.IntegerField()
-    handle = models.CharField(max_length=768, blank=True)
+    match = ForeignKey(GGZMatches, to_field='id', db_column='match', related_name='wlggz_matchplayers')
+    handle = ForeignKey(User, to_field='username', db_column='handle', related_name='wlggz_matches')
     playertype = models.CharField(max_length=768)
     class Meta:
         db_table = u'wlggz_matchplayers'

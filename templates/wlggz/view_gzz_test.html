@@ -10,18 +10,56 @@
 {%endifequal%}
 <br />
 <br />
-<h2>Just a test</h2>
-<p>
-Username: {{ ggzauth.user.username }}
-<br />
+<h3>GGZ results for {{ ggzauth.user.username }}</h3>
 Last ggz login: {{ ggzauth.lastlogin }}
 <br />
 Permissions: {{ ggzauth.permissions }}
 </p>
 <p>
 Ranking: {{ ggzstats.ranking }} <br />
-Ranting: {{ ggzstats.rating }} <br />
+Rating: {{ ggzstats.rating|floatformat }} <br />
 wins: {{ ggzstats.wins }} <br />
 losses: {{ ggzstats.losses }} <br />
+</p>
+<h3>Last 10 matches of {{ ggzauth.user.username }}</h3>
+
+            <table>
+                <tr>
+                   <th>Date</th>
+                   <th>Winner</th>
+                   <th>Participants</th>
+    {% for match in ggzmatches %}
+                <tr>
+                   <td>{{ match.match.date  }}</td>
+                   <td>{{ match.match.winner }}</td>
+                   <td>
+                       {% for player in match.match.wlggz_matchplayers.all %}
+                           {{ player.handle }} 
+                       {% endfor %}
+                   </td>
+                </tr>
+
+    {% endfor %}
+           </table>
+<h3>Last 5 matches {{ ggzauth.user.username }} won</h3>
+<p>
+            <table>
+                <tr>
+                   <th>Date</th>
+                   <th>Winner</th>
+                   <th>Participants</th>
+    {% for match in ggzwonmatches %}
+                <tr>
+                   <td>{{ match.date  }}</td>
+                   <td>{{ match.winner }}</td>
+                   <td>
+                       {% for player in match.wlggz_matchplayers.all %}
+                           {{ player.handle }}
+                       {% endfor %}
+                   </td>
+                </tr>
+
+    {% endfor %}
+           </table>
 </p>
 {% endblock %}
