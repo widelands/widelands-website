@@ -10,18 +10,18 @@
 
 {% block extra_head %}
     <link rel="alternate" type="application/atom+xml" title="Notices Feed" href="{% url notification_feed_for_user %}" />
-    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/profile.css" />{{ block.super}}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/notice.css" />{{ block.super}}
 {% endblock %}
 
 {% block content %}
     {% include "django_messages/inlines/navigation.html" %}
     <br />
     <br />
-    <div class="profile_item">
+    <div class="notice_item" width="100%">
     <h3 class="title">{% trans "Notices" %}</h3>
     
     {% autopaginate notices %}
-    
+   
     {% if notices %}
         <div class="bottom_line admin">
             <br />
@@ -40,27 +40,32 @@
                 {% else %}
                 <div class="{% cycle "odd" "even" %} notice border_top">
                 {% endif %}
-                    <span class="notice_type">[{% trans notice.notice_type.display %}]</span>
+                    <span class="notice_type"><a href="{% url notification_notice notice.pk %} ">[{% trans notice.notice_type.display %}]</a></span>
                     <span class="notice_message">{{ notice.message|safe }}</span>
                     <span class="notice_time">{{ notice.added }}</span>
                 </div>
             {% endfor %}
         {% endfor %}
-        
+        <div class="bottom_line" 
         {% paginate %}
-        
+        </div>
     {% else %}
-        <p>{% trans "No notices." %}</p>
+        <div class="bottom_line admin">
+            <br />>
+            {% trans "No notices." %}
+            <br />
+            <br />
+        </div>
     {% endif %}
     </div>
     <br />
     <br />
-    <div class="profile_item notice_settings">
+    <div class="notice_item notice_settings">
         <h3 class="title">{% trans "Settings" %}</h2>
         
         {% url acct_email as email_url %}
         {% if user.email %}
-            <div class="bottom_line">
+            <div class="bottom_line admin">
                 <br />
                 {% trans "Primary email" %}:<br />
                 <b>{{ user.email }}</b><br />
@@ -69,7 +74,7 @@
                 <br />
             </div>
         {% else %}
-            <div class="bottom_line">
+            <div class="bottom_line admin">
                 <br />
                 <span class="warning">{% trans "Note" %}</span>:
                 You do not have a verified email address to which notices can be sent. You can add one by going to <a href="{% url profile_edit %}">Account</a>.
@@ -80,7 +85,7 @@
         
         <form method="POST" action=""> {# doubt this easy to do in uni-form #}
             <table width="100%" class="notice_settings" cellspacing="1">
-                <tr>
+              <tr>
                     <th>{% trans "Notification Type" %}</th>
                     {% for header in notice_settings.column_headers %}
                         <th>{{ header }}</th>

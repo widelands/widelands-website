@@ -1,0 +1,50 @@
+{% extends "notification/base.html" %}
+
+{% load humanize i18n %}
+{% load pagination_tags %}
+{% load custom_date %}
+
+{% block title %}
+{% trans "Notices "%} - Account - {{ block.super }}
+{% endblock %}
+
+{% block extra_head %}
+    <link rel="alternate" type="application/atom+xml" title="Notices Feed" href="{% url notification_feed_for_user %}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/profile.css" />{{ block.super}}
+{% endblock %}
+
+{% block content %}
+    {% include "django_messages/inlines/navigation.html" %}
+    <br />
+    <br />
+    <div class="profile_item">
+        <h3 class="title">{% trans "Notice" %}</h3>
+        <table width="100%">
+            <tr>
+                <td class="odd">Notice:</td>
+                <td class="odd">{{ notice.message|safe }}</td>
+            </tr>
+            <tr>
+                <td class="even">Notice Type:</td>
+                <td class="even">{{ notice.notice_type }}</td>
+            </tr>
+            <tr>
+                <td class="odd">Date of Notice:</td>
+                <td class="odd">{{ notice.added }}</td>
+            </tr>
+            <tr>
+                <td class="even">Notice Unseen:</td>
+                <td class="even">{{ notice.unseen }}</td>
+            </tr>
+            <tr>
+                <td class="odd">Notice Archiv:</td>
+                <td class="odd">{{ notice.archived }}</td>
+            </tr>
+            <tr>
+                <td class="even">Notice Site:</td>
+                <td class="even">{{ notice.on_site }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
