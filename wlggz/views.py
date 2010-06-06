@@ -20,7 +20,11 @@ def view_overview(request):
                               context_instance=RequestContext(request))
 
 def view_matches(request):
-    matches = ggz_models.GGZMatches.objects.order_by('-date')[:10]
+    
+    try:
+        matches = ggz_models.GGZMatches.objects.order_by('-date')[:10]
+    except ggz_models.GGZMatches.DoesNotExist:
+        matches = None
 
     template_params = {
         "ggzmatches": matches,
@@ -37,24 +41,32 @@ def view(request, user = None):
     empty text
     """
 
+    template_params = {}
+
     try:
         if user is None:
             u = request.user
         else:
             u = User.objects.get( username = user )
+        
+        template_params["profile"] = u.wlprofile
+    except User.DoesNotExist:
+        u = None
 
-        wlggz = u.wlggz
-        wlggzstats = u.wlggzstats
-        matches = u.wlggz_matches.order_by('-id')[:10]
-        wonmatches = u.wlggz_matchwins.order_by('-id')[:10]
-        template_params = {
-            "ggzauth": wlggz,
-            "ggzstats": wlggzstats,
-            "ggzmatches": matches,
-            "ggzwonmatches": wonmatches,
-        }
-    except (User.DoesNotExist, ggz_models.GGZStats.DoesNotExist):
-        template_params = {}
+    if u:
+        try:
+            template_params["ggzauth"] = u.wlggz
+        except ggz_models.GGZauth.DoesNotExist:
+            pass
+        try:
+            wlggzstats = u.wlggzstats
+            matches = u.wlggz_matches.order_by('-id')[:10]
+            wonmatches = u.wlggz_matchwins.order_by('-id')[:10]
+            template_params["ggzstats"] = wlggzstats
+            template_params["ggzmatches"] = matches
+            template_params["ggzwonmatches"] = wonmatches
+        except (ggz_models.GGZStats.DoesNotExist):
+            pass
 
     return render_to_response("wlggz/view_ggz_test.html",
                               template_params,
@@ -65,7 +77,10 @@ def view_ranking(request):
     empty text
     """
 
-    stats = ggz_models.GGZStats.objects.order_by('-rating')[:10]
+    try:
+        stats = ggz_models.GGZStats.objects.order_by('-rating')[:10]
+    except (ggz_models.GGZStats.DoesNotExist):
+        stats = None
 
     template_params = {
         "ggzstats": stats,
