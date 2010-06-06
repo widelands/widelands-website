@@ -21,5 +21,11 @@ def user_link(user):
         reverse('profile_view', args=[user.username]), user.username)
     return mark_safe(data)
 
+@register.filter
+def user_link_ggz(user):
+    data = u'<a href="%s">%s</a>' % (\
+        reverse('wlggz_userstats', args=[user.username]), user.username)
+    return mark_safe(data)
+
 
 
