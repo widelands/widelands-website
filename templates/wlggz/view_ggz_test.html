@@ -12,70 +12,103 @@
 <br />
 
 {% if ggzauth.user %}
-    <h3>GGZ results for {{ ggzauth.user.username }}</h3>
-    <table>
-        <tr><td>Last ggz login:</td><td> {{ ggzauth.lastlogin }}</td></tr>
-        <tr><td>Ranking:</td><td> {{ ggzstats.ranking }}</td></tr>
-        <tr><td>Rating:</td><td> {{ ggzstats.rating|floatformat }}</td></tr>
-        <tr><td>wins:</td><td> {{ ggzstats.wins }}</td></tr>
-        <tr><td>losses:</td><td> {{ ggzstats.losses }}</td></tr>
-    </table>
+    <div class="ggz_item">
+        <h3 class="title">{% trans "GGZ results for" %} {{ ggzauth.user.username }}</h3>
+            <table class="bottom_line" width="100%">
+                <tr><td class="ggz_stats">Last ggz login:</td><td> {{ ggzauth.lastlogin }}</td></tr>
+                <tr><td class="ggz_stats">Ranking:</td><td> {{ ggzstats.ranking }}</td></tr>
+                <tr><td class="ggz_stats">Rating:</td><td> {{ ggzstats.rating|floatformat }}</td></tr>
+                <tr><td class="ggz_stats">wins:</td><td> {{ ggzstats.wins }}</td></tr>
+                <tr><td class="ggz_stats">losses:</td><td> {{ ggzstats.losses }}</td></tr>
+            </table>
+    </div>
+    <br />
+    <br />
 
-<h3>Last 10 matches of {{ ggzauth.user.username }}</h3>
-    {% if ggzmatches %}
-          <table>
+    <div class="ggz_item">
+        <h3 class="title">Last 10 matches of {{ ggzauth.user.username }}</h3>
+        {% if ggzmatches %}
+	    <table width="100%" cellspacing="1" class="text">
             <tr>
-                <th>Date</th>
-                <th>Winner</th>
-                <th>Participants</th>
+                <td class="ggz_date">Date</td>
+                <td class="ggz_winner">Winner</td>
+                <td class="ggz_vs">Participants</td>
             </tr>
-        {% for match in ggzmatches %}
+            {% for match in ggzmatches %}
             <tr>
-                <td>{{ match.match.date  }}</td>
-                <td>{{ match.match.winner|user_link }}</td>
-                <td>
-                       {% for player in match.match.wlggz_matchplayers.all %}
-                           {{ player.handle|user_link }} 
-                       {% endfor %}
+                <td class="{% cycle "odd" "even" %}">{{ match.match.date_date  }}</td>
+                <td class="{% cycle "odd" "even" %}">{{ match.match.winner|user_link_ggz }}</td>
+                <td class="{% cycle "odd" "even" %}">
+                    {% for player in match.match.wlggz_matchplayers.all %}
+                        {{ player.handle|user_link_ggz }} 
+                    {% endfor %}
+                </td class="{% cycle "odd" "even" %}">
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <table width="100%" class="bottom_line">
+            <tr>
+                <td class="error">
+                    <br />
+                    <b>User has not participated in any matches</b>
+                    <br />
+                    <br />
                 </td>
             </tr>
-        {% endfor %}
-          </table>
-    {% else %}
-         <p>User has not participated in any matches</p>
-    {% endif %}
-
-<h3>Last 10 matches {{ ggzauth.user.username }} won</h3>
-
-    {% if ggzwonmatches %}
-            <table>
-                <tr>
-                   <th>Date</th>
-                   <th>Winner</th>
-                   <th>Participants</th>
-                </tr>
-        {% for match in ggzwonmatches %}
-                <tr>
-                   <td>{{ match.date  }}</td>
-                   <td>{{ match.winner|user_link }}</td>
-                   <td>
-                       {% for player in match.wlggz_matchplayers.all %}
-                           {{ player.handle|user_link }}
-                       {% endfor %}
-                   </td>
-                </tr>
-
-        {% endfor %}
-           </table>
-    {% else %}
-         <p>User has won no matches</p>
-    {% endif %}
-
-
+        </table>
+        {% endif %}
+    </div>
+    <br />
+    <br />
+    <div class="ggz_item">
+        <h3 class="title">Last 10 matches {{ ggzauth.user.username }} won</h3>
+        {% if ggzwonmatches %}
+        <table width="100%" cellspacing="1" class="text">
+            <tr>
+                <td class="ggz_date">Date</td>
+                <td class="ggz_winner">Winner</td>
+                <td class="ggz_vs">Participants</td>
+            </tr>
+            {% for match in ggzwonmatches %}
+            <tr>
+                <td class="{% cycle "odd" "even" %}">{{ match.date_date  }}</td>
+                <td class="{% cycle "odd" "even" %}">{{ match.winner|user_link_ggz }}</td>
+                <td class="{% cycle "odd" "even" %}">
+                    {% for player in match.wlggz_matchplayers.all %}
+                        {{ player.handle|user_link_ggz }}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <table width="100%" class="bottom_line">
+            <tr>
+                <td class="error">
+                    <br />
+                    <b>User has won no matches</b>
+                    <br />
+                    <br />
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+	</div>
 {% else %}
-    <p>
-        <b>User does not exist or has no ggz account</b>
-    </p>
+    <div class="ggz_item">
+        <h3 class="title">{% trans "GGZ results for" %} {{ ggzauth.user.username }}</h3>
+        <table width="100%" class="bottom_line">
+            <tr>
+                <td class="error">
+                    <br />
+                    <b>User does not exist or has no ggz account
+                    <br />
+                    <br />
+                </td>
+            </tr>
+        </table>
+    </div>
 {% endif %}
 
 {% endblock %}

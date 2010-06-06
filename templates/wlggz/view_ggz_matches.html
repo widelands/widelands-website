@@ -6,30 +6,39 @@
 {% load custom_date %}
 {% load wlprofile %}
 
-{% ifequal user profile.user %}
 {% include "django_messages/inlines/navigation.html" %}
-{%endifequal%}
-<h3>Last 10 matches</h3>
-<p>
-            <table>
-                <tr>
-                   <th>Date</th>
-                   <th>Winner</th>
-                   <th>Participants</th>
-                </tr>
-    {% for match in ggzmatches %}
-                <tr>
-                   <td>{{ match.date  }}</td>
-                   <td>{{ match.winner|user_link }}</td>
-                   <td>
-                       {% for player in match.wlggz_matchplayers.all %}
-                           {{ player.handle|user_link }}
-                       {% endfor %}
-                   </td>
-                </tr>
-    {% empty %}
-            <p>Sorry, no rankings yet</p>
-    {% endfor %}
-            </table>
-</p>
+
+<br />
+<br />
+
+<div class="ggz_item">
+    <h3 class="title">Last 10 matches</h3>
+    <table width="100%" cellspacing="1" class="text">
+        <tr>
+            <td class="ggz_date">Date</td>
+            <td class="ggz_winner">Winner</td>
+            <td class="ggz_vs">Participants</td>
+        </tr>
+        {% for match in ggzmatches %}
+        <tr>
+            <td class="{% cycle "odd" "even" %}">{{ match.date_date }}</td>
+            <td class="{% cycle "odd" "even" %}">{{ match.winner|user_link_ggz }}</td>
+            <td class="{% cycle "odd" "even" %}">
+            {% for player in match.wlggz_matchplayers.all %}
+                {{ player.handle|user_link_ggz }}
+            {% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td class="even error"colspan="3">
+                <br />
+                <b>Sorry, no matches yet</b>
+                <br />
+                <br />
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

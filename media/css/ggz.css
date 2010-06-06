@@ -1,27 +1,39 @@
+.ggz_poster { font-size: 90%;}
+.ggz_post_date { font-size: 90%;}
 
-.profile_poster { font-size: 90%;}
-.profile_post_date { font-size: 90%;}
 
-
-.profile_item .profile_image img {
+.ggz_item .ggz_image img {
    float: right;   
    padding: 0px;
    margin-left: 20px;
 }
 
-.profile_item {
+.ggz_item {
     border: 1px solid rgb(9, 9, 9);
     width: 540px;
 }
 
-.profile_item p {
+.ggz_item p {
    margin-bottom: 5px;
 }
-.profile_item .red {
-    color: red;
+
+.ggz_item .ggz_stats {
+    width: 120px;
+}
+.ggz_item .ggz_date {
+    width: 150px;
+}
+.ggz_item .ggz_winner {
+    width: 100px;
+}
+.ggz_item .ggz_vs {
+    width: 290px;
+}
+.ggz_item .error{
+    text-align: center;
 }
 
-.profile_item h3.title {
+.ggz_item h3.title {
     font-weight: bold;
     font-size: 12px;
     padding-left: 12px;
@@ -34,7 +46,7 @@
     padding-bottom: 0px;
     margin: 0px;
 }
-.profile_item .content {
+.ggz_item .content {
  line-height: 120%;
  border: 0px;
  padding: 2px;
@@ -44,7 +56,7 @@
  background: url(../img/background-3F3F3F.png);
 }
 
-.profile_item .info_line {
+.ggz_item .info_line {
 	 text-align: right;
 	 padding: 3px;
 	 margin: 0px;
@@ -52,7 +64,7 @@
 	 background: url(../img/background-222.png);
 }
 	
-.profile_item .text {
+.ggz_item .text {
     vertical-align: baseline;;
 	 margin-top: 5px;
 	 margin-bottom: 5px;
@@ -60,7 +72,7 @@
 	 line-height: 130%;
 }
 
-.profile_item .text:first-letter {
+.ggz_item .text:first-letter {
     vertical-align: baseline;
 	 color: #7070FF;
 	 font-size: 180%;
@@ -68,18 +80,18 @@
 	 font-weight: bold;
 	}
 
-.profile_item .bottom_line {
+.ggz_item .bottom_line {
 	 background-color: #222222;
 	 background: url(../img/background-222.png);
     table-layout: fixed;
 }
-.profile_item .tags {
+.ggz_item .tags {
 	text-align: right;
 }
-.profile_item .comments {
+.ggz_item .comments {
 	text-align: left;
 }
-.profile_item .admin {
+.ggz_item .admin {
 	text-align: center;
 }
 	

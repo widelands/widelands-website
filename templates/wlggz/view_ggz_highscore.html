@@ -4,32 +4,41 @@
 
 {% block content %}
 {% load custom_date %}
+{% load wlprofile %}
 
-{% ifequal user profile.user %}
 {% include "django_messages/inlines/navigation.html" %}
-{%endifequal%}
 
-<h3>Top ten widelands players</h3>
-<p>
-            <table>
-                <tr>
-                    <th>User</th>
-                    <th>ranking</th>
-                    <th>rating</th>
-                    <th>wins</th>
-                    <th>losses</th>
-                </tr>
-    {% for userstat in ggzstats %}
-                <tr>
-                    <td><a href="{% url profile_view userstat.handle %}">{{ userstat.handle }}</a></td>
-                    <td> {{ userstat.ranking|floatformat }} </td>
-                    <td> {{ userstat.rating|floatformat }} </td>
-                    <td> {{ userstat.wins|floatformat }} </td>
-                    <td> {{ userstat.losses|floatformat }} </td>
-                </tr>
-    {% empty %}
-            <p>Sorry, no rankings yet</p>
-    {% endfor %}
-            </table>
-</p>
+<br />
+<br />
+
+<div class="ggz_item">
+    <h3 class="title">Top ten widelands players</h3>
+    <table width="100%" cellspacing="1" class="text">
+        <tr>
+            <td>User</td>
+            <td>ranking</td>
+            <td>rating</td>
+            <td>wins</td>
+            <td>losses</td>
+        </tr>
+        {% for userstat in ggzstats %}
+        <tr>
+            <td class="{% cycle "odd" "even" %}"><a href="{% url wlggz_userstats userstat.handle %}">{{ userstat.handle }}</a></td>
+            <td class="{% cycle "odd" "even" %}"> {{ userstat.ranking|floatformat }} </td>
+            <td class="{% cycle "odd" "even" %}"> {{ userstat.rating|floatformat }} </td>
+            <td class="{% cycle "odd" "even" %}"> {{ userstat.wins|floatformat }} </td>
+            <td class="{% cycle "odd" "even" %}"> {{ userstat.losses|floatformat }} </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td class="even error" colspan="5">
+                <br />
+                <b>Sorry, no ranking yet</b>
+                <br />
+                <br />
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

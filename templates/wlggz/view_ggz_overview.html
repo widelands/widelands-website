@@ -5,24 +5,25 @@
 {% block content %}
 {% load custom_date %}
 
-{% ifequal user profile.user %}
 {% include "django_messages/inlines/navigation.html" %}
-{%endifequal%}
 <br />
 <br />
 
 
-<p>
-<a href="{% url wlggz_matches %}">Last matches</a><br />
-<a href="{% url wlggz_ranking %}">GGZ ranking</a><br />
-
-</p>
-{% if user.is_authenticated %}
-<p>
-<a href="{% url wlggz_userstats %}">View your ggz statistics</a><br />
-<a href="{% url wlggz_userinfo %}">About your ggz account</a><br />
-<a href="{% url wlggz_changepw %}">Change your ggz password</a><br />
-</p>
-{% endif %}
+<div class="ggz_item">
+    <h3 class="title">{% trans "Available Links" %}</h3>
+    <div class="bottom_line">
+        <br />
+        &nbsp;&nbsp;<a href="{% url wlggz_matches %}">Last matches</a><br />
+        &nbsp;&nbsp;<a href="{% url wlggz_ranking %}">GGZ ranking</a><br />
+        <br />
+        {% if user.is_authenticated %}
+        &nbsp;&nbsp;<a href="{% url wlggz_userstats %}">View your ggz statistics</a><br />
+        &nbsp;&nbsp;<a href="{% url wlggz_userinfo %}">About your ggz account</a><br />
+        &nbsp;&nbsp;<a href="{% url wlggz_changepw %}">Change your ggz password</a><br />
+        <br />
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}

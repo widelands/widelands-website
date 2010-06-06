@@ -3,48 +3,44 @@
 {% load i18n %}
 
 {% block content %}
-{% ifequal user profile.user %}
-	{% include "django_messages/inlines/navigation.html" %}
-{% endifequal %}
+{% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
-<div class="profile_item">
+<div class="ggz_item">
     <h3 class="title">{% trans "Set GGZ password" %}</h3>
-    <div class="content">
-
-        <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
+        <div class="content">
             <table width="100%" cellspacing="1" class="text">
             {# FIXME: change the right color #}
-    {% if profile_form.errors %}
+            {% if profile_form.errors %}
                 <tr>
                     <td class="even" colspan="2">{{ profile_form.errors }}</td>
                 </tr>
-    {% endif %}
-
-    {% for field in ggz_form %}
+            {% endif %}
+            {% for field in ggz_form %}
                 <tr>
-            {% if field.errors %}
+                {% if field.errors %}
                     <td colspan="2" class="{% cycle "odd" "even" %}">
                         <div class="errormessage">{{ field.errors }}</div>
                     </td>
                 </tr>
                 <tr>
-            {% endif %}
+                {% endif %}
                     <td {% ifequal field.name "signature" %} valign="top" {% endifequal %}class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
                     <td class="{% cycle "odd" "even" %}">{{ field }}                 
-                {% ifequal field.name "time_display" %}
+                    {% ifequal field.name "time_display" %}
                         <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
-                {% endifequal %}
+                    {% endifequal %}
                     </td>
                 </tr>
-    {% endfor %}
+            {% endfor %}
             </table>
-    </div>
-    <table class="bottom_line" width="100%">
-        <tr>
-            <td><input type="submit" value="{% trans "Save" %}" /></td>
-        </tr>
-    </table>
+        </div>
+        <table class="bottom_line" width="100%">
+            <tr>
+                <td><input type="submit" value="{% trans "Save" %}" /></td>
+            </tr>
+        </table>
     </form>
 </div>
 {% endblock %}

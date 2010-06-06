@@ -4,18 +4,27 @@
    <table width="100%">
    <tr>
       <td align="left">
-          <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
+              {% if profile.user %}
+              <a href="{% url profile_view profile.user %} ">{% trans "Profile" %}</a>
+              | <a href="{% url wlggz_userstats profile.user %} ">{% trans "GGZ Stats" %}</a>
+              {% else %}
+              <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
+              | <a href="{% url wlggz_userstats %} ">{% trans "GGZ Stats" %}</a>
+              {% endif %}
+              | <a href="{% url wlggz_ranking %}">{% trans "GGZ Ranking" %}</a>
+              | <a href="{% url wlggz_matches %}">{% trans "GGZ Matches" %}</a>
               {% ifequal user profile.user %}
               | <a href="{% url notification_notices %} ">{% trans "Notifications" %}</a>
               {% endifequal %}
-              | <a href="{% url wlggz_userstats %} ">{% trans "GGZ Stats" %}</a>
       </td>
+      {% ifequal user profile.user %}
       <td align="right" style="table-layout: fixed;">
          <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>
          | <a href="{% url messages_outbox %} ">{% trans "Sent Messages" %}</a>
          | <a href="{% url messages_compose %} ">{% trans "New Message" %}</a>
          | <a href="{% url messages_trash %} ">{% trans "Message Trash" %}</a>
       </td>
+      {% endifequal %}
    </tr>
    </table>
 </div>
