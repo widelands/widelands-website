@@ -36,14 +36,25 @@
                     </a>
                 </div>
                 {% endif %}
-               <strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
-               <strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
-               {% if post.user.wlprofile.location %}
-               <strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
-               {% endif %}
+                <strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
+                <strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+                <img src="{{ MEDIA_URL }}img/{{ post.user.wlprofile.user_status.image }}" alt="Ranking" />
+                <br />
+                <strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
+                {% if post.user.wlprofile.location %}
+                <strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
+                {% endif %}
+                {{ wlprofile.user_rank.image }}
+                {{ wlprofile.user_rank.text }}
+                {% if post.user.wlggzstats.ranking %}
+                <strong>GGZ ranking:</strong> {{ post.user.wlggzstats.ranking|floatformat }}<br />
+                <strong>GGZ rating:</strong> {{ post.user.wlggzstats.rating|floatformat }}<br />
+                <strong>GGZ win:</strong> {{ post.user.wlggzstats.wins|floatformat }}<br />
+                <strong>GGZ loses:</strong> {{ post.user.wlggzstats.losses|floatformat }}<br />
+                {% endif %}
             </div>
          </td>
-         <td width="85%" class="content">
+         <td width="85%" class="content top">
             {{ post.body_html|safe }}
             {% if not user.is_authenticated or user.pybb_profile.show_signatures %}
             {% if post.user.pybb_profile.signature %}

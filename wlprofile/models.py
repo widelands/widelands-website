@@ -57,4 +57,22 @@ class Profile(models.Model):
         database grows to not be always calculated.
         """
         return Post.objects.filter(user=self.user).count()
+  
+    def user_status(self):
+        nump = self.post_count()
+       
+	if nump < 6:
+            return { "text":"Just found this site", "image":"sterne_0.png" }
+        elif nump < 16:
+            return { "text":"Pry about Widelands", "image":"sterne_1.png" }
+        elif nump < 30:
+            return { "text":"Likes to be here", "image":"sterne_2.png" }
+        elif nump < 80:
+            return { "text":"At home in WL-forums", "image":"sterne_3.png" }
+        elif nump < 150:
+            return { "text":"Widelands-Forum-Junkie", "image":"sterne_4.png" }
+        elif nump < 250:
+            return { "text":"Tribe Member", "image":"sterne_5.png" }
+        else:
+            return { "text":"One Elder of Players", "image":"sterne_6.png" }
 

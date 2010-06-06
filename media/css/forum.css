@@ -30,6 +30,10 @@
    height: auto;
 }
 
+.top {
+    vertical-align: top;
+}
+
 /* 
  * Post
  */
@@ -129,6 +133,7 @@
 }
 .forum_item .content {
  line-height: 120%;
+ vertical-align: text-top;
  border: 0px;
  padding: 2px;
  padding-top: 5px;
