@@ -20,7 +20,15 @@
 .profile_item .red {
     color: red;
 }
-
+.profile_item .unseen_notice {
+    font-style: italic;
+}
+.profile_item .notice_type {
+    font-weight: bold;
+}
+.profile_item .border_top {
+    border-top: 1px solid rgb(9, 9, 9);
+}
 .profile_item h3.title {
     font-weight: bold;
     font-size: 12px;
