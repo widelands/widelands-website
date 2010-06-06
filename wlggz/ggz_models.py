@@ -14,6 +14,8 @@ from django.db import models
 from django.db.models import OneToOneField, ForeignKey
 from django.contrib.auth.models import User
 
+import datetime
+
 class GGZMatches(models.Model):
     id = models.IntegerField(primary_key=True)
     date = models.IntegerField()
@@ -22,6 +24,9 @@ class GGZMatches(models.Model):
     savegame = models.TextField(blank=True)
     class Meta:
         db_table = u'wlggz_matches'
+
+    def date_date(self):
+        return datetime.datetime.fromtimestamp(self.date)
 
 class GGZMatchplayers(models.Model):
     id = models.IntegerField(primary_key=True)
