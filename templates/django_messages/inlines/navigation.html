@@ -4,8 +4,11 @@
    <table width="100%">
    <tr>
       <td align="left">
-         <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
-         | <a href="{% url notification_notices %} ">{% trans "Notifications" %}</a>
+          <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
+              {% ifequal user profile.user %}
+              | <a href="{% url notification_notices %} ">{% trans "Notifications" %}</a>
+              {% endifequal %}
+              | <a href="{% url wlggz_userstats %} ">{% trans "GGZ Stats" %}</a>
       </td>
       <td align="right" style="table-layout: fixed;">
          <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>

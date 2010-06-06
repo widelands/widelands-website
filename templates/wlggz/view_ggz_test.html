@@ -4,11 +4,10 @@
 
 {% block content %}
 {% load custom_date %}
+{% load wlprofile %}
 
-{% ifequal user profile.user %}
 {% include "django_messages/inlines/navigation.html" %}
 
-{%endifequal%}
 <br />
 <br />
 
@@ -33,10 +32,10 @@
         {% for match in ggzmatches %}
             <tr>
                 <td>{{ match.match.date  }}</td>
-                <td>{{ match.match.winner }}</td>
+                <td>{{ match.match.winner|user_link }}</td>
                 <td>
                        {% for player in match.match.wlggz_matchplayers.all %}
-                           {{ player.handle }} 
+                           {{ player.handle|user_link }} 
                        {% endfor %}
                 </td>
             </tr>
@@ -46,7 +45,7 @@
          <p>User has not participated in any matches</p>
     {% endif %}
 
-<h3>Last 5 matches {{ ggzauth.user.username }} won</h3>
+<h3>Last 10 matches {{ ggzauth.user.username }} won</h3>
 
     {% if ggzwonmatches %}
             <table>
@@ -58,10 +57,10 @@
         {% for match in ggzwonmatches %}
                 <tr>
                    <td>{{ match.date  }}</td>
-                   <td>{{ match.winner }}</td>
+                   <td>{{ match.winner|user_link }}</td>
                    <td>
                        {% for player in match.wlggz_matchplayers.all %}
-                           {{ player.handle }}
+                           {{ player.handle|user_link }}
                        {% endfor %}
                    </td>
                 </tr>
