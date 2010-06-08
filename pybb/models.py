@@ -136,11 +136,13 @@ class Topic(models.Model):
         new = self.id is None
         if new:
             self.created = datetime.now()
-	    if None not in (notification, self.user):
-                notification.send([self.user], "forum_new_topic",
-                    {'topic': self,'user':self.user})
         super(Topic, self).save(*args, **kwargs)
 
+        if new and None not in (notification, self.user):
+            notification.send(User.objects.all(), "forum_new_topic",
+                {'topic': self, 'user':self.user})
+
+      
     def update_read(self, user):
         read, new = Read.objects.get_or_create(user=user, topic=self)
         if not new:
