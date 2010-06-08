@@ -1,0 +1,2 @@
+{% load i18n %}{% url profile_detail username=user.username as user_url %}
+{% blocktrans with topic.get_absolute_url as topic_url %}A new forum post has be created in forum under topic <a href="{{ topic_url }}">{{ topic }}</a> by <a href="{{ user_url }}">{{ user }}</a>.{% endblocktrans %}

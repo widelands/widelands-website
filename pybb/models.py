@@ -18,6 +18,12 @@ from django.conf import settings
 if settings.USE_SPHINX:
     from djangosphinx import SphinxSearch
 
+try:
+    from notification import models as notification
+    from django.db.models import signals
+except ImportError:
+    notification = None
+
 MARKUP_CHOICES = (
     ('markdown', 'markdown'),
     #    ('bbcode', 'bbcode'),
@@ -127,8 +133,12 @@ class Topic(models.Model):
         return reverse('pybb_topic', args=[self.id])
 
     def save(self, *args, **kwargs):
-        if self.id is None:
+        new = self.id is None
+        if new:
             self.created = datetime.now()
+	    if None not in (notification, self.user):
+                notification.send([self.user], "forum_new_topic",
+                    {'topic': self,'user':self.user})
         super(Topic, self).save(*args, **kwargs)
 
     def update_read(self, user):
@@ -207,6 +217,7 @@ class Post(RenderableItem):
     def save(self, *args, **kwargs):
         if self.created is None:
             self.created = datetime.now()
+
         self.render()
 
         new = self.id is None
@@ -220,6 +231,10 @@ class Post(RenderableItem):
             self.topic.forum.save()
 
         super(Post, self).save(*args, **kwargs)
+        if new and None not in (notification, self.user):
+            notification.send(self.topic.subscribers.all(), "forum_new_post",
+                {'post': self, 'topic':self.topic, 'user':self.user})
+
 
 
     def get_absolute_url(self):
@@ -338,6 +353,9 @@ class Attachment(models.Model):
         return os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO,
                             self.path)
 
+
+#if notification is not None:
+#    signals.post_save.connect(notification.handle_observations, sender=Post)
 
 from pybb import signals
 signals.setup_signals()
