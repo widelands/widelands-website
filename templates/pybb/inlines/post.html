@@ -56,12 +56,12 @@
          </td>
          <td width="85%" class="content top">
             {{ post.body_html|safe }}
-            {% if not user.is_authenticated or user.pybb_profile.show_signatures %}
-            {% if post.user.pybb_profile.signature %}
+            {% comment %}{% if not user.is_authenticated or user.profile.show_signatures %} {% endcomment %}
+            {% comment %}{% endif %}{% endcomment %}
+            {% if post.user.wlprofile.signature %}
             <div class="signature">
-                {{ post.user.pybb_profile.signature|urlize|linebreaks }}
+                {{ post.user.wlprofile.signature|urlize|linebreaks }}
             </div>
-            {% endif %}
             {% endif %}
             {% if post.updated %}
             <div class="updated-message"><strong>{% trans "Edited" %}:</strong> {{ post.updated|custom_date:user|title}}</div>
