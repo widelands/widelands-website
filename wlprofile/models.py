@@ -61,7 +61,7 @@ class Profile(models.Model):
     def user_status(self):
         nump = self.post_count()
        
-	if nump < 6:
+        if nump < 6:
             return { "text":"Just found this site", "image":"sterne_0.png" }
         elif nump < 16:
             return { "text":"Pry about Widelands", "image":"sterne_1.png" }
