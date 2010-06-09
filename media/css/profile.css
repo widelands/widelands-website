@@ -23,6 +23,9 @@
 .profile_item .red {
     color: red;
 }
+.profile_item .top {
+    vertical-align: top;
+}
 .profile_item .unseen_notice {
     font-style: italic;
 }

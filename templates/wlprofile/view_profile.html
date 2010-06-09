@@ -56,10 +56,14 @@
 			<td class="even">Yahoo:</td>
 			<td class="even">{{ profile.yahoo }}</td>
 		</tr>
+   		<tr>
+			<td class="odd top">Signature:</td>
+			<td class="odd top">{{ profile.signature|urlize|linebreaks }}</td>
+		</tr>
 		{% ifequal user profile.user %}
    		<tr>
-			<td class="odd">Email:</td>
-			<td class="odd">{{ profile.user.email }}</td>
+			<td class="even">Email:</td>
+			<td class="even">{{ profile.user.email }}</td>
 		</tr>
 		{% endifequal %}
 	</table>

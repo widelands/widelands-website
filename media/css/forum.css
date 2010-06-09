@@ -30,8 +30,12 @@
    height: auto;
 }
 
-.top {
+.post .top {
     vertical-align: top;
+}
+.post .top .signature .line {
+    color: #D0DFFF;
+    font-weight: bolder;
 }
 
 /* 
@@ -181,9 +185,4 @@
 	text-align: center;
 }
 
-.signature {
-    position: absolute;
-    left: 0px;
-    bottom: 0px;
-}
 	

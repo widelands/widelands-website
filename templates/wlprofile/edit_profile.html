@@ -25,21 +25,30 @@
     {% endif %}
 
     {% for field in profile_form %}
+        {% if field.errors %}
                 <tr>
-            {% if field.errors %}
                     <td colspan="2" class="{% cycle "odd" "even" %}">
                         <div class="errormessage">{{ field.errors }}</div>
                     </td>
                 </tr>
+        {% endif %}
+        {% ifequal field.name "delete_avatar" %}
+            {% if profile.avatar %}
                 <tr>
+                    <td class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field }}
+                </tr>
             {% endif %}
-                    <td {% ifequal field.name "signature" %} valign="top" {% endifequal %}class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-                    <td class="{% cycle "odd" "even" %}">{{ field }}                 
+        {% else %}
+                <tr>
+                    <td class="{% cycle "odd" "even" %} {%ifequal field.name "signature" %}top{% endifequal %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field }}
                 {% ifequal field.name "time_display" %}
                         <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
                 {% endifequal %}
                     </td>
                 </tr>
+        {% endifequal %}
     {% endfor %}
             </table>
     </div>
