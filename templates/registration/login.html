@@ -1,26 +1,55 @@
+{% extends "registration/base.html" %}
 
-{% extends "base.html" %}
+{% block title %}
+{{ block.super }} - Login
+{% endblock %}
 
 {% block content %}
-
+{% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
+<div class="register_item">
+    <h3 class="title">Login</h3>
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+    <div class="bottom_line show_center errormessage">
+        <br />
+        Your username and password didn't match.
+        <br />
+        Please try again.
+        <br />
+        <br />
+    </div>
 {% endif %}
-
-<form method="post" action=".">
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
+    <div class="bottom_line show_center">
+        <br />
+        <form method="post" action=".">
+            <table>
+                <tr>
+                    <td>
+                        {{ form.username.label_tag }}: 
+                    </td>
+                    <td>
+                        {{ form.username }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.password.label_tag }}: 
+                    </td>
+                    <td>
+                        {{ form.password }}
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="show_right">
+                        <input type="submit" value="login" />
+                        <input type="hidden" name="next" value="{{ next }}" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br />
+    </div>
+</div>
 {% endblock %}

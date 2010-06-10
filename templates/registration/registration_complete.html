@@ -1,13 +1,24 @@
-{% extends "base.html" %}
+{% extends "registration/base.html" %}
+{% comment %}
+vim:ft=htmldjango: 
+{% endcomment %}
 
 {% block title %}
-registration_complete.html | {{ block.super }}
-{% endblock %}
-
-{% block header %}
-<h1>registration_complete.html</h1>
+{{ block.super }} - Registration complete
 {% endblock %}
 
 {% block content %}
-Thank you for signing up. An email with the activation code has been send to your inbox. 
+{% include "django_messages/inlines/navigation.html" %}
+
+<br />
+<br />
+<div class="register_item">
+    <h3 class="title">Registration</h3>
+    <div class="bottom_line">
+        <br />
+        <div class="show_center errormessage">
+            Thank you for signing up. An email with the activation code has been send to your inbox. 
+        </div>
+    </div>
+</div>
 {% endblock %}
