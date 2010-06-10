@@ -138,10 +138,6 @@ class Topic(models.Model):
             self.created = datetime.now()
         super(Topic, self).save(*args, **kwargs)
 
-        if new and None not in (notification, self.user):
-            notification.send(User.objects.all(), "forum_new_topic",
-                {'topic': self, 'user':self.user})
-
       
     def update_read(self, user):
         read, new = Read.objects.get_or_create(user=user, topic=self)
@@ -233,10 +229,6 @@ class Post(RenderableItem):
             self.topic.forum.save()
 
         super(Post, self).save(*args, **kwargs)
-        if new and None not in (notification, self.user):
-            notification.send(self.topic.subscribers.all(), "forum_new_post",
-                {'post': self, 'topic':self.topic, 'user':self.user})
-
 
 
     def get_absolute_url(self):
