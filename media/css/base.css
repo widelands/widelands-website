@@ -1,24 +1,24 @@
 /* HEADER */
 div#headerbanner {
-background: url(../img/headback.jpg);
-background-repeat: repeat-x;
-color: #FFFFFF;
-text-align: center;
-height:110px;
-border-bottom:2px solid #090909;
+    background: url(../img/headback.jpg);
+    background-repeat: repeat-x;
+    color: #FFFFFF;
+    text-align: center;
+    height:110px;
+    order-bottom:2px solid #090909;
 }
 
 /***************************************************************/
 /*                         SIDECOLUMNS                         */
 /***************************************************************/
 #leftcolumn, #rightcolumn {
- background-color: #555555;
- background-image: url('../img/Menubackground.png');
- border-left: 1px solid #151515;
- border-right: 1px solid #090909;
- border-bottom: 1px solid #090909;
- padding-top: 4px; /* A small space */
- vertical-align: top;
+    background-color: #555555;
+    background-image: url('../img/Menubackground.png');
+    border-left: 1px solid #151515;
+    border-right: 1px solid #090909;
+    border-bottom: 1px solid #090909;
+    padding-top: 4px; /* A small space */
+    vertical-align: top;
 
 }
 /* The content is capsuled in divs, because
@@ -26,10 +26,10 @@ border-bottom:2px solid #090909;
  * for tables
  */
 #leftcontent {
-   min-width: 175px;
+    min-width: 175px;
 }
-#rightcontent {
-   min-width: 170px;
+#rightcontent { 
+    min-width: 170px;
 }
 
 
@@ -37,19 +37,19 @@ border-bottom:2px solid #090909;
 * Mainmenu
 */
 #mainmenu { 
-margin: 0px;
-padding: 0px;
+    margin: 0px;
+    padding: 0px;
 } 
 #mainmenu li {
- list-style-image: url('../img/1.gif'); 
- list-style-position: inside;
- font-weight: bold;
- padding: 4px;
+    list-style-image: url('../img/1.gif'); 
+    list-style-position: inside;
+    font-weight: bold;
+    padding: 4px;
 } 
 #mainmenu .sub {
-padding-left: 20px;
-color: red;
-font-weight: normal;
+    padding-left: 20px;
+    color: red;
+    font-weight: normal;
 }
 
 
@@ -57,52 +57,55 @@ font-weight: normal;
 /* CONTENT COLUMN */
 /******************/
 #content {
- text-align: left;
- vertical-align: top;
- padding: 8px;
- padding-top: 0px;
- background-color: #000000;
- background: url(../img/background.png);
+    text-align: left;
+    vertical-align: top;
+    padding: 8px;
+    padding-top: 0px;
+    background-color: #000000;
+    background: url(../img/background.png);
 
- font-size: 12px;
- color: #D0DFFF;
- width: 100%;
+    font-size: 12px;
+    color: #D0DFFF;
+    width: 100%;
 }
 
 /****************/
 /* BOTTOM TABLE */
 /****************/
 table#table_bottom {
- background-color: #333333;
- background: url(../img/background.png);
+    background-color: #333333;
+    background: url(../img/background.png);
 
- width: 100%;
+    width: 100%;
 }
 td#table_bottomleft {
- background: url(../img/table_bottomleft.png);
- background-repeat: no-repeat;
- background-position: left;
- height:8px;
- width:8px;
+    background: url(../img/table_bottomleft.png);
+    background-repeat: no-repeat;
+    background-position: left;
+    height:8px;
+    width:8px;
 }
 
 td#table_bottomright {
- background: url(../img/table_bottomright.png);
- background-repeat: no-repeat;
- background-position: right;
- height:8px;
- width:8px;
+    background: url(../img/table_bottomright.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    height:8px;
+    width:8px;
 }
 
 /**********/
 /* FOOTER */
 /**********/
 #footer {
- width: 100%;
- height: 8px;
- background: url(../img/background.png); 
+    width: 100%;
+    height: 8px;
+    background: url(../img/background.png); 
 }
-/* Menu Blocks */
+
+/*
+ * Menu Blocks 
+ */
 h3.box_title {
     color: #D0DFFF;
     font-weight: bold;
@@ -117,96 +120,100 @@ h3.box_title {
     padding-bottom: 6px;
     margin: 0px;
 }
+
 div.box_content {
- font-size:12px;
- line-height: 120%;
- border-left: 0px solid #999999;
- border-right: 0px solid #999999;
- padding: 6px;
- padding-top: 0px;
- padding-bottom: 20px;
- background-color: #555555;
- background-image: url('../img/Menubackground.png');
-}
-.box_content p {
-   margin: 0px;
-   padding: 0px;
-   padding-bottom: 4px;
+    font-size:12px;
+    line-height: 120%;
+    border-left: 0px solid #999999;
+    border-right: 0px solid #999999;
+    padding: 6px;
+    padding-top: 0px;
+    padding-bottom: 20px;
+    background-color: #555555;
+    background-image: url('../img/Menubackground.png');
 }
 
+.box_content p {
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 4px;
+}
+
+.block_center {
+    text-align: center;
+}
 
 /***************************************************************/
 /*                   GENERAL STYLE ELEMENTS                    */
 /***************************************************************/
 body {
- color: #D0DFFF;
- font-family: Verdana, Arial, Helvetica, sans-serif;
- font-size: 12px;
- background-color: #000000;
- margin: 0;
- padding: 0;
+    color: #D0DFFF;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: #000000;
+    margin: 0;
+    padding: 0;
 }
 
 img {
-   border: 0px;
+    border: 0px;
 }
 
 a {
- color: #D0DFFF;
- text-decoration: none;
- font-weight: bold;
- background-color: transparent;
+    color: #D0DFFF;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: transparent;
 }
 a.external:before {
 	padding-right: 2px;
-   /* Must be an absolute reference, otherwise some browsers give errors */
-   content: url(/wlmedia/img/external_link.gif);
+    /* Must be an absolute reference, otherwise some browsers give errors */
+    content: url(/wlmedia/img/external_link.gif);
 }
 a.missing {
-   color: rgb(255, 85, 0);
+    color: rgb(255, 85, 0);
 } 
 
 
 a:hover {
- color: #A0AAFF;
- text-decoration: underline;
+    color: #A0AAFF;
+    text-decoration: underline;
 }
-
-   
+  
 /*
  * Default table layout
  */
 th {
-   font-weight: bold;
-   background-position: left;
-   text-align: left;
-   padding-left: 4px;
-   background-image: url('../img/Navbar.png');
-   background-repeat: repeat-x;
-   height: 20px;
+    font-weight: bold;
+    background-position: left;
+    text-align: left;
+    padding-left: 4px;
+    background-image: url('../img/Navbar.png');
+    background-repeat: repeat-x;
+    height: 20px;
 }
 
 /*
  * Odd Even Tags (mainly for tables)
  */
 .even {
- background-color: #444444;
- background: url(../img/background-444.png);
- padding: 5px;
+    background-color: #444444;
+    background: url(../img/background-444.png);
+    padding: 5px;
 }
 
 .odd {
- background-color: #4f4f4f;
- background: url(../img/background-4F4F4F.png);
- padding: 5px;
+    background-color: #4f4f4f;
+    background: url(../img/background-4F4F4F.png);
+    padding: 5px;
 }
 
-.legend {
-}
-
+/*
+ * Error Handling
+ */
 .errormessage {
- color: #ff0000;
- font-size: 13px;
+    color: #ff0000;
+    font-size: 13px;
 }
 
 /* 
@@ -214,4 +221,91 @@ th {
  */
 #id_search {
     width: 150px; 
+}
+
+/*
+ * Box Item Model
+ */
+.box_item_model {
+    border: 1px solid rgb(9, 9, 9);
+}
+
+.box_item_model .full_site {
+    width: 100%;
+}
+
+.box_item_model .fixed_site {
+    width: 500px;
+}
+
+.box_item_model img {
+    float: right;
+    padding: 0px;
+    width: 20px;
+}
+
+.box_item_model .border_top {
+    border-top: 1px solid rgb(9, 9, );
+}
+
+.box_item_model h3.title {
+    font-weight: bold;
+    font-size: 12px;
+    padding-left: 12px;
+    background-image: url('../img/Navbar.png');
+    background-repeat: repeat-x;
+    border-left: 0px solid #999999;
+    bolder-right: 0px solid #999999;
+    border-top: 0px solid #999999;
+    padding-top: 2px;
+    padding-bottom: 0px;
+    margin: 0px;
+}
+
+.box_item_model .content {
+    line-height: 120%;
+    border: 0px;
+    padding: 2px;
+    padding-top: 5px;
+    padding-left: 15px;
+    background-color: #3F3F3F;
+    background: url('../img/background-3F3F3F.png');
+}
+
+.box_item_model .info_line {
+    text-align: right;
+    padding: 3px;
+    margin: 0px;
+    background-color: #222222;
+    background: url('../img/background-222.png');
+}
+
+.box_item_model .text {
+   vertical-align: baseline;
+   margin-top: 5px;
+   margin-bottom: 5px;
+   margin: 0px;
+   line-height: 130%;
+}
+
+.box_item_model .text:first-letter {
+    color: #7070FF;
+    font-size: 180%;
+    font-family: Cretino, "Bitstream Vera Serif", serif;
+    font-weight: bold;
+}
+
+.box_item_model .show_right {
+    text-align: right;
+    vertical-align: top;
+}
+
+.box_item_model .show_left {
+    text-align: left;
+    vertical-align: top;
+}
+
+.box_item_model .show_center {
+    text-align: center;
+    vertical-align: top;
 }
