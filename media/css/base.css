@@ -230,11 +230,11 @@ th {
     border: 1px solid rgb(9, 9, 9);
 }
 
-.box_item_model .full_site {
+.full_site {
     width: 100%;
 }
 
-.box_item_model .fixed_site {
+.fixed_site {
     width: 500px;
 }
 
