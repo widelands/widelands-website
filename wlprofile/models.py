@@ -78,6 +78,6 @@ class Profile(models.Model):
 
     def get_ggzstats(self):
         try:
-            return self.user.ggzstats
+            return self.user.wlggzstats
         except:
             return None

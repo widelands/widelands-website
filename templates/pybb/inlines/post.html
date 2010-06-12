@@ -44,13 +44,11 @@
                 {% if post.user.wlprofile.location %}
                 <strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
                 {% endif %}
-                {{ wlprofile.user_rank.image }}
-                {{ wlprofile.user_rank.text }}
-                {% if post.user.wlggzstats.ranking %}
-                <strong>GGZ ranking:</strong> {{ post.user.wlggzstats.ranking|floatformat }}<br />
-                <strong>GGZ rating:</strong> {{ post.user.wlggzstats.rating|floatformat }}<br />
-                <strong>GGZ win:</strong> {{ post.user.wlggzstats.wins|floatformat }}<br />
-                <strong>GGZ loses:</strong> {{ post.user.wlggzstats.losses|floatformat }}<br />
+                {% if post.user.wlprofile.get_ggzstats and post.user.wlprofile.get_ggzstats.ranking %} 
+                <strong>GGZ ranking:</strong> {{ post.user.wlprofile.get_ggzstats.ranking|floatformat }}<br />
+                <strong>GGZ rating:</strong> {{ post.user.wlprofile.get_ggzstats.rating|floatformat }}<br />
+                <strong>GGZ win:</strong> {{ post.user.wlprofile.get_ggzstats.wins|floatformat }}<br />
+                <strong>GGZ loses:</strong> {{ post.user.wlprofile.get_ggzstats.losses|floatformat }}<br />
                 {% endif %}
             </div>
          </td>
