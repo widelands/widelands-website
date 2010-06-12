@@ -1,2 +1,11 @@
-.news_poster { font-size: 90%;}
-.news_post_date { font-size: 90%;}
+.news_poster { 
+    font-size: 90%;
+}
+.news_post_date { 
+    font-size: 90%;
+}
+.news_image img {
+    float:right;
+    margin-left:20px;
+    padding:0;
+}

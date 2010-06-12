@@ -238,7 +238,7 @@ th {
     width: 500px;
 }
 
-.box_item_model img {
+.box_item_model img.news {
     float: right;
     padding: 0px;
     width: 20px;

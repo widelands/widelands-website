@@ -8,7 +8,7 @@
 {% endifequal %}
 <br />
 <br />
-<div class="profile_item">
+<div class="box_item_model fixed_site">
     <h3 class="title">{% trans "Profile editing" %}</h3>
     <div class="content">
     {% if profile.avatar %}
@@ -41,7 +41,7 @@
             {% endif %}
         {% else %}
                 <tr>
-                    <td class="{% cycle "odd" "even" %} {%ifequal field.name "signature" %}top{% endifequal %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %} {%ifequal field.name "signature" %}show_left{% endifequal %}">{{ field.label_tag }}:</td>
                     <td class="{% cycle "odd" "even" %}">{{ field }}
                 {% ifequal field.name "time_display" %}
                         <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
@@ -60,27 +60,27 @@
     </form>
 </div>
 <br />
-<div class="profile_item">
-    <table class="bottom_line" width="100%">
+<div class="box_item_model fixed_site">
+    <table class="info_line" width="100%">
         <tr>
-            <td>
+            <td class="show_left">
                 <a href="{% url auth_change_password %}">Change website password</a>
                 <br />
                 <br />
-                <b class="red">WARNING: Passwords are transmitted in cleartext.</b>
+                <b class="errormessage">WARNING: Passwords are transmitted in cleartext.</b>
             </td>
         </tr>
     </table>
 </div>
 <br />
-<div class="profile_item">
-    <table class="bottom_line" width="100%">
+<div class="box_item_model fixed_site">
+    <table class="info_line" width="100%">
         <tr>
-            <td>
+            <td class="show_left">
                 <a href="{% url wlggz_changepw %}">Change online lobby password</a>
                 <br />
                 <br />
-                <b class="red">WARNING: GGZ transmitts the password in cleartext. Choose a different password for online gaming.</b>
+                <b class="errormessage">WARNING: GGZ transmitts the password in cleartext. Choose a different password for online gaming.</b>
             </td>
         </tr>
     </table>

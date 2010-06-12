@@ -9,13 +9,13 @@
 
 <br />
 <br />
-<div class="profile_item">
+<div class="box_item_model fixed_site">
     <h3 class="title">{% trans "View Profile" %}</h3>
     <div class="content">
 	{% if profile.avatar %}
 	    <img src="{{ profile.avatar.url }}" />
 	{% endif %}
-	<table width="100%" cellspacing="1" class="text">
+	<table cellspacing="1" class="text full_site">
 		<tr>
 			<td class="odd">User:</td>
 			<td class="odd">{{ profile.user.username }}</td>
@@ -57,8 +57,8 @@
 			<td class="even">{{ profile.yahoo }}</td>
 		</tr>
    		<tr>
-			<td class="odd top">Signature:</td>
-			<td class="odd top">{{ profile.signature|urlize|linebreaks }}</td>
+			<td class="odd show_left">Signature:</td>
+			<td class="odd show_left">{{ profile.signature|urlize|linebreaks }}</td>
 		</tr>
 		{% ifequal user profile.user %}
    		<tr>
