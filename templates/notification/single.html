@@ -10,14 +10,14 @@
 
 {% block extra_head %}
     <link rel="alternate" type="application/atom+xml" title="Notices Feed" href="{% url notification_feed_for_user %}" />
-    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/profile.css" />{{ block.super}}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/notice.css" />{{ block.super}}
 {% endblock %}
 
 {% block content %}
     {% include "django_messages/inlines/navigation.html" %}
     <br />
     <br />
-    <div class="profile_item">
+    <div class="box_item_model fixed_site">
         <h3 class="title">{% trans "Notice" %}</h3>
         <table width="100%">
             <tr>

@@ -15,15 +15,15 @@
 
 {% block content %}
     {% include "django_messages/inlines/navigation.html" %}
-    <br />
-    <br />
-    <div class="notice_item" width="100%">
+<br />
+<br />
+<div class="box_item_model full_site" width="100%">
     <h3 class="title">{% trans "Notices" %}</h3>
     
     {% autopaginate notices %}
    
     {% if notices %}
-        <div class="bottom_line admin">
+        <div class="info_line show_center">
             <br />
             <a href="{% url notification_mark_all_seen %}">{% trans "Mark all unseen notices seen" %}</a>
             <br />
@@ -36,9 +36,9 @@
             <h3 class="title notice_date">{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}</h3>
             {% for notice in date.list %}
                 {% if notice.is_unseen %}
-                <div class="{% cycle "odd" "even" %} unseen_notice border_top">
+                <div class="{% cycle "odd" "even" %} notice_unseen_notice border_top">
                 {% else %}
-                <div class="{% cycle "odd" "even" %} notice border_top">
+                <div class="{% cycle "odd" "even" %} border_top">
                 {% endif %}
                     <span class="notice_type"><a href="{% url notification_notice notice.pk %} ">[{% trans notice.notice_type.display %}]</a></span>
                     <span class="notice_message">{{ notice.message|safe }}</span>
@@ -46,12 +46,12 @@
                 </div>
             {% endfor %}
         {% endfor %}
-        <div class="bottom_line" 
-        {% paginate %}
+        <div class="info_line show_center">
+            {% paginate %}
         </div>
     {% else %}
-        <div class="bottom_line admin">
-            <br />>
+        <div class="info_line show_center">
+            <br />
             {% trans "No notices." %}
             <br />
             <br />
@@ -60,12 +60,12 @@
     </div>
     <br />
     <br />
-    <div class="notice_item notice_settings">
+    <div class="box_item_model full_site">
         <h3 class="title">{% trans "Settings" %}</h2>
         
         {% url acct_email as email_url %}
         {% if user.email %}
-            <div class="bottom_line admin">
+            <div class="info_line show_center">
                 <br />
                 {% trans "Primary email" %}:<br />
                 <b>{{ user.email }}</b><br />
@@ -74,7 +74,7 @@
                 <br />
             </div>
         {% else %}
-            <div class="bottom_line admin">
+            <div class="info_line show_center">
                 <br />
                 <span class="warning">{% trans "Note" %}</span>:
                 You do not have a verified email address to which notices can be sent. You can add one by going to <a href="{% url profile_edit %}">Account</a>.
@@ -104,7 +104,7 @@
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td class="bottom_line" colspan="2"><input type="submit" value="{% trans "Change" %}" /></td>
+                    <td class="info_line show_center" colspan="2"><input type="submit" value="{% trans "Change" %}" /></td>
                 </tr>
             </table>
         </form>
