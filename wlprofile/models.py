@@ -76,3 +76,8 @@ class Profile(models.Model):
         else:
             return { "text":"One Elder of Players", "image":"sterne_6.png" }
 
+    def get_ggzstats(self):
+        try:
+            return self.user.ggzstats
+        except:
+            return None

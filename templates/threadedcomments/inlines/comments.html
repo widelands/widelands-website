@@ -34,7 +34,7 @@
         <h3 class="title">Reply to Original:</h3>
         <form method="POST" action="{% get_comment_url object %}?next={{object.get_absolute_url}}">
             <div class="content">
-                <table class="text" width="100%">
+                <table class="text full_site">
                     <tr>
                         <td width="99%">
                             <span class="errormessage">{{ form.comment.errors }}</span>
@@ -50,6 +50,7 @@
                         <input type="hidden" name="markup" value="1" />
                         <input type="hidden" value="next" value="{{ object.get_absolute_url }}" />
                         <input type="submit" value="Submit Comment" />
+                        <input type="button" value="Preview" /> 
                     </td>
                 </tr>
             </table>
@@ -58,7 +59,7 @@
         <h3 class="title">Comments</h3>
         <div class="info_line errormessage show_center">
             <br /> 
-            !! Log in to post comments !!!
+            !!! Log in to post comments !!!
             <br /> 
             <br /> 
         </div>

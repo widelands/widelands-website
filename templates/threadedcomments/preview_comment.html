@@ -7,24 +7,22 @@
         <div id="comment_preview">{% auto_transform_markup comment %}</div>
     {% endif %}
    <form method="POST" action="">
-         <div class="content">
+        <div class="content">
             <table class="text" width="100%">
-            <tr>
-               <td width="99%">
-                  <span class="errorclass">{{ form.comment.errors }}</span>
-                     {{ form.comment }}
-               </td>
-               <td width="1%"></td>
-            </tr>
+                <tr>
+                    <td width="99%">
+                        <span class="errormessage">{{ form.comment.errors }}</span>
+                        {{ form.comment }}
+                    </td>
+                    <td width="1%"></td>
+                </tr>
+                <tr>
+                    <td class="bottom_line show_center">
+                        <input type="hidden" name="markup" value="1" />
+                        <input type="submit" value="Submit Comment" />
+                    </td>
+                </tr>
             </table>
-      </div>
-			<table class="bottom_line" width="100%">
-				<tr>
-					<td class="admin">
-						<input type="hidden" name="markup" value="1" />
-						<input type="submit" value="Submit Comment" />
-					</td>
-				</tr>
-			</table>
-    	</form>
+        </div>
+    </form>
 {% endblock %}
