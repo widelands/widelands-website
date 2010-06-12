@@ -3,9 +3,10 @@
 {% load i18n %}
 
 {% block content %}
+{% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
-<div class="forum_item">
-{% include "pybb/inlines/add_post_form.html" %}
+<div class="box_item_model">
+    {% include "pybb/inlines/add_post_form.html" %}
 </div>
 {% endblock %}

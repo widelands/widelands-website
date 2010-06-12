@@ -1,12 +1,10 @@
 {% comment %}
   vim:ft=htmldjango:
 {% endcomment %}
-
 {% load humanize %}
 {% load pybb_extras %}
 {% load wlprofile %}
 {% load custom_date %}
-
     <tr>
       <td class="even" align="center" valign="middle">
          {% if forum|pybb_has_unreads:user %}

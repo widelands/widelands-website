@@ -3,26 +3,20 @@
 
    How to display a Forum list in the index page
 {% endcomment %}
-
-<div class="index_category">
-
-    <span class="title"> {{category.cat}} </span>
-    
-    <table cellspacing="1" width="100%">
-        <tr align="center">
-            <th width="5%">&nbsp;</th>
-            <th width="57%" nowrap="nowrap" align="left">Forum</th>
-            <th width="9%" nowrap="nowrap">Topics</th>
-            <th width="9%" nowrap="nowrap">Posts</th>
-            <th width="20%" nowrap="nowrap">Last Post</th>
+<div class="box_item_model index_category">
+    <h3 class="title">{{category.cat}} </h3>
+    <table class="full_site" cellspacing="1">
+        <tr class="show_center" cellspacing="0">
+            <td width="5%" class="info_line show_left">&nbsp;</td>
+            <td width="57%" nowrap="nowrap" class="info_line show_left">Forum</td>
+            <td width="9%" nowrap="nowrap" class="info_line show_left">Topics</td>
+            <td width="9%" nowrap="nowrap" class="info_line show_left">Posts</td>
+            <td width="20%" nowrap="nowrap" class="info_line show_left">Last Post</td>
         </tr>
-
         {# List all forums #}
         {% for forum in category.forums %}
         {% include 'pybb/inlines/forum_row.html' %}
         {% endfor %}
-
     </table>
-
 </div>
 

@@ -13,70 +13,71 @@
 {% endblock %}
 
 {% block content %}
-
+{% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
 {% pybb_pagination _('Posts') %}
+<div class="box_item_model">
+    <div class="posts">
+        <a name="top" id="top"></a>
+        <table cellspacing="1" width="100%">
+            <tr align="center">
+                <th>Author</th>
+                <th width="85%" nowrap="nowrap">Message</th>
+            </tr>
+        </table>
 
-<div class="posts">
-   <a name="top" id="top"></a>
-   <table cellspacing="1" width="100%">
-     <tr align="center">
-        <th>Author</th>
-        <th width="85%" nowrap="nowrap">Message</th>
-     </tr>
-   </table>
-
-   {% if first_post %}
-      {% ifnotequal first_post posts.0 %}
-         {% with first_post as post %}
-         <div class="post first_post">
-            {% include "pybb/inlines/post.html" %}
-         </div>
-         {% endwith %}
-      {% endifnotequal %}
-   {% endif %}
-   {% for post in posts %}
-   <div class="post">
-      {% include "pybb/inlines/post.html" %}
-   </div>
-   {% endfor %}
-</div>
-
+    {% if first_post %}
+        {% ifnotequal first_post posts.0 %}
+            {% with first_post as post %}
+        <div class="post first_post">
+                {% include "pybb/inlines/post.html" %}
+        </div>
+            {% endwith %}
+        {% endifnotequal %}
+    {% endif %}
+    {% for post in posts %}
+        <div class="post">
+        {% include "pybb/inlines/post.html" %}
+        </div>
+    {% endfor %}
+    </div>
 {% pybb_pagination _('Posts') %}
-<div class="controls">
+    <div class="controls">
     {% if moderator %}
-    {% if topic.sticky %}
+        {% if topic.sticky %}
     <a href="{% url pybb_unstick_topic topic.id %}">{% trans "Unstick topic" %}</a>
-    {% else %}
+        {% else %}
     <a href="{% url pybb_stick_topic topic.id %}">{% trans "Stick topic" %}</a>
-    {% endif %}
+        {% endif %}
     |
-    {% if topic.closed %}
+        {% if topic.closed %}
     <a href="{% url pybb_open_topic topic.id %}">{% trans "Open topic" %}</a>
-    {% else %}
+        {% else %}
     <a href="{% url pybb_close_topic topic.id %}">{% trans "Close topic" %}</a>
-    {% endif %}
+        {% endif %}
     |
     {% endif %}
 
 
     {% if user.is_authenticated %}
-    {% if subscribed %}
+        {% if subscribed %}
     <a href="{% url pybb_delete_subscription topic.id %}?from_topic">{% trans "Unsubscribe" %}</a>
-    {% else %}
+        {% else %}
     <a href="{% url pybb_add_subscription topic.id %}">{% trans "Subscribe" %}</a>
-    {% endif %}
+        {% endif %}
     {% endif %}
 
+    </div>
 </div>
-
 {% if user.is_authenticated %}
-{% if not topic.closed %}
+    {% if not topic.closed %}
 <br />
 <br />
-<div class="forum_item">
-{% include "pybb/inlines/add_post_form.html" %}
+<div class="box_item_model">
+    {% include "pybb/inlines/add_post_form.html" %}
 </div>
-{% endif %}
+    {% endif %}
 {% endif %}
 
 {% endblock %}
