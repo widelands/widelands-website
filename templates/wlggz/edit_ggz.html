@@ -6,12 +6,11 @@
 {% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
-<div class="ggz_item">
+<div class="box_item_model fixed_site">
     <h3 class="title">{% trans "Set GGZ password" %}</h3>
     <form method="post" enctype="multipart/form-data">
         <div class="content">
-            <table width="100%" cellspacing="1" class="text">
-            {# FIXME: change the right color #}
+            <table cellspacing="1" class="text full_site">
             {% if profile_form.errors %}
                 <tr>
                     <td class="even" colspan="2">{{ profile_form.errors }}</td>
@@ -26,7 +25,7 @@
                 </tr>
                 <tr>
                 {% endif %}
-                    <td {% ifequal field.name "signature" %} valign="top" {% endifequal %}class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
                     <td class="{% cycle "odd" "even" %}">{{ field }}                 
                     {% ifequal field.name "time_display" %}
                         <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
@@ -36,11 +35,9 @@
             {% endfor %}
             </table>
         </div>
-        <table class="bottom_line" width="100%">
-            <tr>
-                <td><input type="submit" value="{% trans "Save" %}" /></td>
-            </tr>
-        </table>
+        <div class="info_line">
+            <input type="submit" value="{% trans "Save" %}" />
+        </div>
     </form>
 </div>
 {% endblock %}

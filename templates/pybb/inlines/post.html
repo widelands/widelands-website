@@ -107,12 +107,12 @@
                      <img src="{{MEDIA_URL}}/forum/img/en/p_delete.png" height="26" alt ="{% trans "Delete" %}" />
                   </a>
                   {% endif %}
-                  {% endif %}
             </div>
             <div class="tools" style="float: right;">
                 <a href="{% url pybb_add_post topic.id %}?quote_id={{ post.id }}">
                      <img src="{{MEDIA_URL}}/forum/img/en/p_quote.png" height="26" alt ="{% trans "Quote" %}" />
                   </a>
+                  {% endif %}
             </div>
          </td>
       </tr>
