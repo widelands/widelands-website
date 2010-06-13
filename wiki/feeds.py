@@ -9,15 +9,16 @@ from django.template import Context, Template
 from django.template.loader import get_template
 from wiki.models import ChangeSet, Article
 from wiki.utils import get_ct
-import notification.atomformat as atom
+from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
 
 class RssHistoryFeed(Feed):
 
+    feed_type = Rss201rev2Feed
     title = 'History for all articles'
-    link = '/wiki/'
+    link = '/wiki/feeds/rss'
     description = 'Recent changes in wiki'
 
     def __init__(self, request,
@@ -49,37 +50,21 @@ class RssHistoryFeed(Feed):
         """
         return item.modified
 
+    def item_author_name(self, item):
+        """
+        Takes the object returned by get_object and returns the feeds's
+        auhor's name as a Python string
+        """
+        if item.is_anonymous_change():
+            return _("Anonymous")
+        return item.editor.username
 
-class AtomHistoryFeed(atom.Feed):
 
-    feed_title = 'History for all articles'
+class AtomHistoryFeed(RssHistoryFeed):
+
+    feed_type = Atom1Feed
     feed_subtitle = 'Recent changes in wiki'
-
-    def __init__(self, request,
-                 group_slug=None, group_slug_field=None, group_qs=None, 
-                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES, 
-                 extra_context=None, 
-                 title_template = u'feeds/history_title.html', 
-                 description_template = u'feeds/history_description.html', 
-                 *args, **kw):
-
-        if  group_slug is not None:
-            group = get_object_or_404(group_qs, 
-                                      **{group_slug_field : group_slug})
-            self.changes_qs = changes_qs.filter(article__content_type=get_ct(group), 
-                                                article__object_id=group.id)
-        else:
-            self.changes_qs = changes_qs
-
-        self.title_template = get_template(title_template)
-        self.description_template = get_template(description_template)
-        super(AtomHistoryFeed, self).__init__('', request)
-
-    def feed_id(self):
-        return "feed_id"
-
-    def items(self):
-        return self.changes_qs.order_by('-modified')[:30]
+    link = '/wiki/feeds/atom'
 
     def item_id(self, item):
         return "%s" % item.id
@@ -103,9 +88,19 @@ class AtomHistoryFeed(atom.Feed):
         c = Context({'obj' : item,})
         return ({'type': 'html'}, self.description_template.render(c))
 
+    def item_author_name(self, item):
+        """
+        Takes the object returned by get_object and returns the feeds's
+        auhor's name as a Python string
+        """
+        if item.is_anonymous_change():
+            return _("Anonymous")
+        return item.editor.username
+
 
 class RssArticleHistoryFeed(Feed):
 
+    feed_type = Rss201rev2Feed
     def __init__(self, title, request, 
                 group_slug=None, group_slug_field=None, group_qs=None,
                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
@@ -150,27 +145,8 @@ class RssArticleHistoryFeed(Feed):
         return item.modified
 
 
-class AtomArticleHistoryFeed(atom.Feed):
-    
-    def __init__(self, title, request, 
-                group_slug=None, group_slug_field=None, group_qs=None,
-                article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
-                extra_context=None,
-                title_template = u'feeds/history_title.html',
-                description_template = u'feeds/history_description.html',
-                *args, **kw):
-
-        if  group_slug is not None:
-            group = get_object_or_404(group_qs,
-                                      **{group_slug_field : group_slug})
-            self.article_qs = article_qs.filter(content_type=get_ct(group),
-                                           object_id=group.id)
-        else:
-            self.article_qs = article_qs
-
-        self.title_template = get_template(title_template)
-        self.description_template = get_template(description_template)
-        super(AtomArticleHistoryFeed, self).__init__('', request)
+class AtomArticleHistoryFeed(RssArticleHistoryFeed):
+    feed_type = Atom1Feed
 
     def get_object(self, bits):
         # We work around a bug here which is likely in atomformat.py; 
@@ -189,9 +165,6 @@ class AtomArticleHistoryFeed(atom.Feed):
 
     def feed_id(self):
         return "feed_id"
-
-    def items(self, obj):
-        return ChangeSet.objects.filter(article__id__exact=obj.id).order_by('-modified')[:30]
 
     def item_id(self, item):
         return "%s" % item.id
