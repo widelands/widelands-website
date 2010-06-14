@@ -22,6 +22,7 @@
     <br />
     {% for object in object_list %}
         {% include "news/inlines/post_detail.html" %}
+        <br />
     {% endfor %}
     <br />
     {% if page_obj.has_other_pages %}
