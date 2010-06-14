@@ -1,22 +1,37 @@
 {% extends "news/base_news.html" %}
 {% load custom_date %}
+{% load news %}
+{% load pagination_tags %}
 
 
 {% block title %}Post archive for {{ year }}{% endblock %}
 {% block body_class %}{{ block.super }} post_archive_year{% endblock %}
 
-
-{% block content_title %}
-  <h2>Post archive for {{ year }}</h2>
-{% endblock %}
-
-
 {% block content %}
   {% load markup %}
-  
-  <ul class="link_list">
+{% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
+<div class="muttis_liebling">
+    <div class="box_item_model even show_center">
+        <a href="/news/">News Archiv</a>
     {% for month in date_list %}
-    <li><a href="{% url news_index %}{{ year }}/{{ month|date:"m" }}/">{{ month|date:"F" }}</a></li>
+        | <a href="{% url news_index %}{{ year }}/{{ month|date:"m" }}/">{{ month|date:"F" }}</a>
     {% endfor %}
-  </ul>
+    <br />
+    {% autopaginate object_list 10 %}
+    {% paginate %}
+    </div>
+    <br />
+    {% for object in object_list %}
+        {% include "news/inlines/post_detail.html" %}
+        <br />
+    {% endfor %}
+    {% if page_obj.has_other_pages %}
+    <div class="box_item_model even show_center">
+    {% paginate %}
+    </div>
+    {% endif %}
+
+</div>
 {% endblock %}
