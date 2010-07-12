@@ -117,6 +117,7 @@ class Building(models.Model):
     
     # Output
     output_wares = models.ManyToManyField(Ware, related_name="produced_by_buildings",blank=True)
+    output_workers = models.ManyToManyField(Worker, related_name="trained_by_buildings",blank=True)
 
     def has_build_cost(self):
         return (self.build_wares.all().count() != 0)
@@ -129,6 +130,10 @@ class Building(models.Model):
         return (self.output_wares.all().count() != 0)
     def get_outputs(self):
         return self.output_wares.all()
+    def trains(self):
+        return (self.output_workers.all().count() != 0)
+    def get_worker_outputs(self):
+        return self.output_workers.all()
     
     def has_stored_wares(self):
         return (self.store_wares.all().count() != 0)

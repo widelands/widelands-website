@@ -196,11 +196,13 @@ class TribeParser(object):
                 if line.startswith("output"):
                     outputs.append( line.split("=")[-1].strip() )
             if len(outputs):
-                # TODO: some buildings also output workers (e.g. horsefarm).
-                # Those will crash the parsing here.
-                w = [ Ware.objects.get(tribe = self._to, name = ware.lower())
-                     for ware in outputs ]
-                b.output_wares = w
+                # TODO: find a better way to check for this
+                if cf.has_option("work","recruit"):
+                    wor = [ Worker.objects.get( tribe = self._to, name = worker.lower()) for worker in outputs ]
+                    b.output_workers = wor
+                else:
+                    w = [ Ware.objects.get( tribe = self._to, name = ware.lower()) for ware in outputs ]
+                    b.output_wares = w
 
 
             return b
