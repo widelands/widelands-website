@@ -134,6 +134,8 @@ class Building(models.Model):
         return (self.output_workers.all().count() != 0)
     def get_worker_outputs(self):
         return self.output_workers.all()
+    def has_outputs(self):
+        return (self.output_workers.all().count() != 0 or self.output_wares.all().count() != 0)
     
     def has_stored_wares(self):
         return (self.store_wares.all().count() != 0)
