@@ -36,7 +36,6 @@ class SaneConfigParser(ConfigParser):
             s = "[default]\n"+s
             sio = StringIO(s)
             rv = ConfigParser.readfp(self,sio)
-            
         self._string = s
 
     @property
@@ -54,13 +53,13 @@ class TribeParser(object):
     def __init__(self,name, conf):
         """
         Parses the definitions for one tribe and generates the models
-    
+
         name - name of the tribe
         conf - path to the tribe/conf file
         """
         self._cf = SaneConfigParser()
         self._cf.read(conf)
-        
+
         # Generate the Tribe
         self._to = Tribe.objects.get_or_create(name=name.lower())[0]
         self._to.displayname = normalize_name(self._cf.get("tribe","name"))
@@ -76,7 +75,7 @@ class TribeParser(object):
     def _copy_picture( self, file, name, fname ):
         """
         Copy the given image into the media directory
-        
+
         file            - original path of image
         name            - name of the item (coal, iron...)
         fname           - file name of the picture
@@ -92,7 +91,7 @@ class TribeParser(object):
         new_name = dn + '/' + fname
         shutil.copy(file, new_name )
         return new_name[len(MEDIA_ROOT):]
-    
+
     def _parse_workers( self ):
         items = self._cf.items("worker types") + self._cf.items("carrier types") + self._cf.items("soldier types")
         for name,displayname in items:
@@ -101,10 +100,10 @@ class TribeParser(object):
             cf.read(conf)
             mp = "%s/%s/menu.png" % (self._basedir,name)
             nn = self._copy_picture(mp,name, "menu.png" )
-            
+
             worker = Worker.objects.get_or_create( tribe = self._to, name = name )[0]
             worker.displayname = normalize_name(displayname)
-            worker.image_url = nn 
+            worker.image_url = nn
 
             # See if there is help available
             if cf.has_option("default","help"):
@@ -112,7 +111,7 @@ class TribeParser(object):
                 worker.help = helpstr
 
             worker.save()
-    
+
     def _parse_wares( self ):
         items = self._cf.items("ware types")
         for name,displayname in items:
@@ -121,10 +120,10 @@ class TribeParser(object):
             cf.read(conf)
             mp = "%s/%s/menu.png" % (self._basedir,name)
             nn = self._copy_picture(mp,name, "menu.png" )
-            
+
             w = Ware.objects.get_or_create( tribe = self._to, name = name )[0]
             w.displayname = normalize_name(displayname)
-            w.image_url = nn 
+            w.image_url = nn
 
             # See if there is help available
             if cf.has_option("default","help"):
@@ -132,26 +131,27 @@ class TribeParser(object):
                 w.help = helpstr
 
             w.save()
-    
+
     def _parse_buildings( self ):
         def _parse_common( name, displayname, type ):
             def _parse_item_with_counts( cf, section ):
                 counts = []
-                wares = [] 
+                wares = []
                 for ware,count in cf.items(section):
                     wares.append(ware)
                     counts.append(count)
-                w = [ Ware.objects.get( tribe = self._to, name = ware.lower()) for ware in wares ]
+                w = [ Ware.objects.get( tribe = self._to, name = ware.lower())
+                     for ware in wares ]
                 return w, counts
 
             conf = "%s/%s/conf" % (self._basedir,name)
             cf = SaneConfigParser()
             cf.read(conf)
-            
+
             b = Building.objects.get_or_create( tribe = self._to, name = name )[0]
             b.displayname = normalize_name(displayname)
-            b.type = type 
-            
+            b.type = type
+
             # Get the building size
             size = cf.get("default","size")
             res, = [ k for k,v in Building.SIZES if v == size ]
@@ -159,7 +159,8 @@ class TribeParser(object):
             b.size = res
 
             # Try to figure out idle picture
-            idle_pattern =cf.get("idle","pics").split()[0] if cf.has_option("idle","pics") else "idle*png"
+            idle_pattern = cf.get("idle","pics").split()[0] if \
+                cf.has_option("idle","pics") else "idle*png"
             glob_files = glob( self._basedir + '/' + name + '/' + idle_pattern)
             picpath = glob_files[0]
             nn = self._copy_picture(picpath,name, "idle.png" )
@@ -174,7 +175,8 @@ class TribeParser(object):
             # Try to figure out if this is an enhanced building
             if cf.has_option("default","enhancement"):
                 enname = cf.get("default","enhancement")
-                b.enhancement = Building.objects.get_or_create( name=enname, tribe = self._to )[0]
+                b.enhancement = Building.objects.get_or_create(
+                    name=enname, tribe = self._to)[0]
 
             # See if there is help available
             if cf.has_option("default","help"):
@@ -186,7 +188,7 @@ class TribeParser(object):
                 w,counts = _parse_item_with_counts(cf,"inputs")
                 b.store_count = ' '.join(counts)
                 b.store_wares = w
-            
+
             # Check for outputs
             outputs = []
             for line in cf.string.split('\n'):
@@ -194,7 +196,10 @@ class TribeParser(object):
                 if line.startswith("output"):
                     outputs.append( line.split("=")[-1].strip() )
             if len(outputs):
-                w = [ Ware.objects.get( tribe = self._to, name = ware.lower()) for ware in outputs ]
+                # TODO: some buildings also output workers (e.g. horsefarm).
+                # Those will crash the parsing here.
+                w = [ Ware.objects.get(tribe = self._to, name = ware.lower())
+                     for ware in outputs ]
                 b.output_wares = w
 
 
@@ -210,7 +215,7 @@ class TribeParser(object):
                 b = _parse_common( name, displayname, type )
                 b.save()
 
-            
+
 
 class Command(BaseCommand):
     help =\
@@ -218,13 +223,14 @@ class Command(BaseCommand):
 
     def handle(self, directory = WIDELANDS_SVN_DIR, **kwargs):
 
-        tribes = [ d for d in glob("%s/tribes/*" % directory) if os.path.isdir(d) ]
-        
+        tribes = [d for d in glob("%s/tribes/*" % directory)
+                    if os.path.isdir(d)]
+
         for t in tribes:
             tribename = os.path.basename(t)
             p = TribeParser(tribename,t+'/conf')
-            
+
             p.parse()
-        
+
 
 
