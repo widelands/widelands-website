@@ -110,6 +110,17 @@ class TribeParser(object):
                 helpstr = normalize_name(cf.get("default","help"))
                 worker.help = helpstr
 
+            # Check for experience
+            if cf.has_option("default","experience"):
+                experience = normalize_name(cf.get("default","experience"))
+                worker.exp = experience
+
+            # See what the worker becomes
+            if cf.has_option("default","becomes"):
+                enname = cf.get("default","becomes")
+                worker.becomes = Worker.objects.get_or_create(
+                    name=enname, tribe = self._to)[0]
+
             worker.save()
 
     def _parse_wares( self ):
