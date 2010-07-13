@@ -112,6 +112,10 @@ class Building(models.Model):
     build_wares = models.ManyToManyField(Ware, related_name="build_ware_for_buildings", blank=True)
     build_costs = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
 
+    # Workers
+    workers_types = models.ManyToManyField(Worker, related_name="workers_for_buildings", blank=True)
+    workers_count = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
+
     # Store
     store_wares = models.ManyToManyField(Ware, related_name="stored_ware_for_buildings", blank=True)
     store_count = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
@@ -126,7 +130,14 @@ class Building(models.Model):
         count = map(int,self.build_costs.split( ))
         for c,w in zip(count,self.build_wares.all()):
             yield [w]*c
-    
+
+    def has_workers(self):
+        return (self.workers_types.all().count() != 0)
+    def get_workers(self):
+        count = map(int,self.workers_count.split( ))
+        for c,wor in zip(count,self.workers_types.all()):
+            yield [wor]*c
+
     def produces(self):
         return (self.output_wares.all().count() != 0)
     def get_outputs(self):
@@ -137,7 +148,7 @@ class Building(models.Model):
         return self.output_workers.all()
     def has_outputs(self):
         return (self.output_workers.all().count() != 0 or self.output_wares.all().count() != 0)
-    
+
     def has_stored_wares(self):
         return (self.store_wares.all().count() != 0)
     def get_stored_wares(self):

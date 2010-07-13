@@ -155,6 +155,16 @@ class TribeParser(object):
                      for ware in wares ]
                 return w, counts
 
+            def _parse_worker_with_counts( cf, section ):
+                counts = []
+                workers = []
+                for worker,count in cf.items(section):
+                    workers.append(worker)
+                    counts.append(count)
+                wor = [ Worker.objects.get( tribe = self._to, name = worker.lower())
+                     for worker in workers ]
+                return wor, counts
+
             conf = "%s/%s/conf" % (self._basedir,name)
             cf = SaneConfigParser()
             cf.read(conf)
@@ -182,6 +192,12 @@ class TribeParser(object):
                 w,counts = _parse_item_with_counts(cf,"buildcost")
                 b.build_costs = ' '.join(counts)
                 b.build_wares = w
+
+            # Try to figure out who works there
+            if cf.has_section("working positions"):
+                wor,counts = _parse_worker_with_counts(cf,"working positions")
+                b.workers_count = ' '.join(counts)
+                b.workers_types = wor
 
             # Try to figure out if this is an enhanced building
             if cf.has_option("default","enhancement"):
