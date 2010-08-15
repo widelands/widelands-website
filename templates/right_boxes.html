@@ -7,6 +7,7 @@
 {% load inbox %}
 {% load i18n %}
 {% load wlprofile wlpoll %}
+{% load pybb_extras %}
 
       <!-- Search Box -->
       <h3 class="box_title">Search</h3>
@@ -74,7 +75,6 @@
          </center>
          </div>
          {% endif %}
-         
          <!-- Current polls if any -->
          {% get_open_polls as polls %}
          {% if polls.count %}
@@ -105,5 +105,10 @@
          <h3 class="box_title">Currently online</h3>
          <div class="box_content"> 
              {% online_users 10 %}
+         </div>
+         <!-- Placeholder for The Last 5 Forum Posts -->
+         <h3 class="box_title">Last 5 Forum Posts</h3>
+         <div class="box_content">
+	 {% pybb_last_posts %}
          </div>
 
