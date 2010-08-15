@@ -73,10 +73,13 @@ def pybb_pagination(context, label):
             'label': label,
             }
 
-@register.inclusion_tag('pybb/last_posts.html')
-def pybb_last_posts(number = 5):
+@register.inclusion_tag('pybb/last_posts.html', takes_context=True)
+def pybb_last_posts(context, number = 5):
     last_posts = Post.objects.order_by('-created').select_related()[:5]
-    return {'posts': last_posts }
+    return {
+        'posts': last_posts,
+        'user': context['user'],
+	}
 
 @register.simple_tag
 def pybb_link(object, anchor=u''):
