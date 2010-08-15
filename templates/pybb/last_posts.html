@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load wlprofile %}
+{% load custom_date %}
+
+<div>
+last Forum posts:<br/>
+{% for post in posts %}
+    <table>
+      <tr>
+        <a href="{{ post.get_absolute_url }}" >{{ post.topic }}</a> @ 
+	<a href="{{ post.topic.get_absolute_url}}">{{ post.topic.forum }}</a>
+	by {{ post.user|user_link }} at {{ post.created }}
+      </tr>
+    </table>
+{% endfor %}
+<div>

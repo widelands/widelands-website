@@ -10,7 +10,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils import dateformat
 
-from pybb.models import Forum, Topic, Read, PrivateMessage
+from pybb.models import Post, Forum, Topic, Read, PrivateMessage
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
 
@@ -73,6 +73,10 @@ def pybb_pagination(context, label):
             'label': label,
             }
 
+@register.inclusion_tag('pybb/last_posts.html')
+def pybb_last_posts(number = 5):
+    last_posts = Post.objects.order_by('-created').select_related()[:5]
+    return {'posts': last_posts }
 
 @register.simple_tag
 def pybb_link(object, anchor=u''):
