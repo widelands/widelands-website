@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 from datetime import datetime, timedelta
 
 from django import template
@@ -187,6 +189,19 @@ def pybb_equal_to(obj1, obj2):
 @register.filter
 def pybb_unreads(qs, user):
     return cache_unreads(qs, user)
+
+@register.filter
+@stringfilter
+def pybb_cut_string(value, arg):
+    if len(value) > arg:
+        return value[0:arg-3] + "..."
+    else:
+        return value
+
+
+"""
+Spielwiese, Playground, Cour de récréati ;)
+"""
 
 @register.filter
 @stringfilter
