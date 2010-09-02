@@ -17,7 +17,7 @@ from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
 
 import re
-import datetime
+from datetime import date as ddate, tzinfo, timedelta, datetime
 
 register = template.Library()
 
@@ -25,7 +25,26 @@ register = template.Library()
 natural_day_expr =  re.compile(r'''\%ND\((.*?)\)''')
 natural_year_expr =  re.compile(r'''\%NY\((.*?)\)''')
 
-def do_custom_date( format, date, now= None ):
+ZERO = timedelta(0)
+HOUR = timedelta(hours=1)
+
+class FixedOffset(tzinfo):
+    """Fixed offset in minutes east from UTC."""
+
+    def __init__(self, offset, name):
+        self.__offset = timedelta(minutes = offset)
+        self.__name = name
+
+    def utcoffset(self, dt):
+        return self.__offset
+
+    def tzname(self, dt):
+        return self.__name
+
+    def dst(self, dt):
+        return ZERO
+
+def do_custom_date( format, date, timezone, now= None ):
     """
     Returns a string formatted representation of date according to format. This accepts
     all formats that strftime also accepts, but it also accepts some new options which are dependant
@@ -35,21 +54,50 @@ def do_custom_date( format, date, now= None ):
         %ND(alternatives)  (natural day) for example %ND(%d.%m.%Y) 
         -> Yields today, yesterday, tomorrow or 2.12.2008
     
-    format - format string as described above
-    date   - datetime object to display
-    now    - overwrite the value for now; only for debug reasons 
+    format      - format string as described above
+    date        - datetime object to display
+    timezone    - vaild timzone as int
+    now         - overwrite the value for now; only for debug reasons 
     """
     if now is None:
-        now = datetime.datetime.now()
-        
+        now = datetime.now()
+    
+    ############################
+    # Set Tinezone Information's
+    #
+    # set the timezone named info
+    # FIXME: 
+    #       it is not tested if it works withe the sommer and winter time (+1h)
+    if timezone > 0:
+        tz_info = 'UTC+' + str(timezone)
+    elif timezone < 0:
+        tz_info = 'UTC' + str(timezone)
+    else:
+        tz_info = 'UTC'
+  
+    # set the server timezone for tzinfo
+    ForumStdTimeZone = FixedOffset(60, 'UTC+1')
+    
+    # set the user's timezone information
+    ForumUserTimeZone = FixedOffset(timezone*60, tz_info)
+
+    # if there is tzinfo not set
+    if not date.tzinfo:
+        date = date.replace(tzinfo=ForumStdTimeZone)
+    
+    date = date.astimezone(ForumUserTimeZone)
+    
+    # If it's done, timezone informations are now available ;)
+    ############################
+
     def _replace_ny(g):
         if now.year == date.year:
             return ""
         return g.group(1)
     
     def _replace_nd(g):
-        delta = datetime.date(date.year,date.month,date.day) - \
-                datetime.date(now.year,now.month,now.day)
+        delta = ddate(date.year,date.month,date.day) - \
+                ddate(now.year,now.month,now.day)
         if delta.days == 0:
             return _(ur'\t\o\d\a\y')
         elif delta.days == 1:
@@ -81,7 +129,7 @@ def custom_date( date, user ):
     if user.is_anonymous():
         return django_date("j F Y", date)
     try:
-        return do_custom_date( user.get_profile().time_display, date )
+        return do_custom_date( user.get_profile().time_display, date, user.get_profile().time_zone )
     except ObjectDoesNotExist:
         return django_date("j F Y", date)
 custom_date.is_safe = False
