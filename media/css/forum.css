@@ -108,3 +108,12 @@
    width: 98%;
    height: 150px;
 }
+.post .bold  {
+    font-weight: bold;
+}
+.post .underline {
+    text-decoration: underline;
+}
+.post .italic {
+    font-style: italic;
+}

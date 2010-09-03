@@ -1,6 +1,8 @@
 # coding=UTF-8
 
 from datetime import datetime, timedelta
+import re
+from pprint import pprint
 
 from django import template
 from django.core.urlresolvers import reverse
@@ -198,6 +200,52 @@ def pybb_cut_string(value, arg):
     else:
         return value
 
+@register.filter
+@stringfilter
+def pybb_output_bbcode(post):
+    """
+    post = post.replace('[b]', '<span class="bold">')
+    post = post.replace('[i]', '<span class="italic">')
+    post = post.relpace('[u]', '<span class="underline">')
+
+    post = post.replace('[/b]', '</span>')
+    post = post.replace('[/i]', '</span>')
+    post = post.replace('[/u]', '</span>')
+    """
+    return pprint(post)
+
+@register.simple_tag
+def pybb_render_post(post, mode='html'):
+    """
+    Process post contents and replace special tags with human readeable messages.
+
+    Arguments:
+        post - the ``Post`` instance
+        mode - "html" or "text". Control which field to use ``body_html`` or ``body_text``
+
+    Currently following tags are supported:
+    
+        @@@AUTOJOIN-(SECONDS)@@@ - autojoin message
+
+    """
+
+    def render_autojoin_message(match):
+        time_diff = int(match.group(1)) / 60
+
+        join_message = ungettext(u"Added after %s minute",
+                                 u"Added after %s minutes",
+                                 time_diff)
+        join_message %= time_diff
+
+        if mode == 'html':
+            return u'<div class="autojoin-message">%s</div>' % join_message
+        else:
+            return join_message
+
+
+    body = getattr(post, 'body_%s' % mode)
+    re_tag = re.compile(r'@@@AUTOJOIN-(\d+)@@@')
+    return re_tag.sub(render_autojoin_message, body)
 
 """
 Spielwiese, Playground, Cour de récréati ;)

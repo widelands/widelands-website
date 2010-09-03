@@ -16,7 +16,9 @@
             <table width="100%" cellpadding="0" cellspacing="0" style="table-layout: fixed; border: 0px;">
                <tr>
                   <td style="text-align: left; border: 0px;">
-                     <a href="{{post.get_absolute_url}}">Permalink</a>
+                     <a href="{{post.get_absolute_url}}">
+                        <img src="{{MEDIA_URL}}/forum/img/en/permalink.png" height="25" alt ="{% trans "Permalink" %}" />
+                     </a>
                   </td>
                   <td style="text-align: right; border: 0px;">
                      <strong>Posted at:</strong> {{ post.created|custom_date:user}}
@@ -83,7 +85,9 @@
       </tr>
       <tr>
          <td class="toplink">
-            <a href="#top">Top</a>
+            <a href="#top">
+                <img src="{{MEDIA_URL}}/forum/img/en/top.png" height="25" alt ="{% trans "Top" %}" />
+            </a>
          </td>
 
          <td>
@@ -91,25 +95,25 @@
                   {% if user.is_authenticated %}
                   {% ifnotequal user post.user %}
                   <a href="{% url messages_compose_to post.user %}">
-                     Send PM
+                     <img src="{{MEDIA_URL}}/forum/img/en/send_pm.png" height="25" alt ="{% trans "Send PM" %}" />
                   </a>
                   {% endifnotequal %}
                   {% endif %}
                   {% if moderator or post|pybb_posted_by:user %}
                   <a href="{% url pybb_edit_post post.id %}">
-                     <img src="{{MEDIA_URL}}/forum/img/en/p_edit.png" height="26" alt ="{% trans "Edit" %}" />
+                    <img src="{{MEDIA_URL}}/forum/img/en/edit.png" height="25" alt ="{% trans "Edit" %}" />
                   </a>
                   {% endif %}
                   {% if moderator or post|pybb_equal_to:last_post %}
                   {% if moderator or post.user|pybb_equal_to:user %}
                   <a href="{% url pybb_delete_post post.id %}">
-                     <img src="{{MEDIA_URL}}/forum/img/en/p_delete.png" height="26" alt ="{% trans "Delete" %}" />
+                     <img src="{{MEDIA_URL}}/forum/img/en/delete.png" height="25" alt ="{% trans "Delete" %}" />
                   </a>
                   {% endif %}
             </div>
             <div class="tools" style="float: right;">
                 <a href="{% url pybb_add_post topic.id %}?quote_id={{ post.id }}">
-                     <img src="{{MEDIA_URL}}/forum/img/en/p_quote.png" height="26" alt ="{% trans "Quote" %}" />
+                     <img src="{{MEDIA_URL}}/forum/img/en/quote.png" height="25" alt ="{% trans "Quote" %}" />
                   </a>
                   {% endif %}
             </div>

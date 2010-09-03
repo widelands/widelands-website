@@ -163,6 +163,7 @@ class RenderableItem(models.Model):
         abstract = True
 
     def render(self):
+        raise Exception('Invalid markup property: %s' % self.markup)
         if self.markup == 'bbcode':
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':

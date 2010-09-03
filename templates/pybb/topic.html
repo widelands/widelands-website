@@ -48,21 +48,25 @@
         {% if topic.sticky %}
     <a href="{% url pybb_unstick_topic topic.id %}">{% trans "Unstick topic" %}</a>
         {% else %}
-    <a href="{% url pybb_stick_topic topic.id %}">{% trans "Stick topic" %}</a>
+    <a href="{% url pybb_stick_topic topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/stick_topic.png" height="25" alt ="{% trans "Stick Topic" %}" />
+    </a>
         {% endif %}
-    |
         {% if topic.closed %}
     <a href="{% url pybb_open_topic topic.id %}">{% trans "Open topic" %}</a>
         {% else %}
-    <a href="{% url pybb_close_topic topic.id %}">{% trans "Close topic" %}</a>
+    <a href="{% url pybb_close_topic topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/close_topic.png" height="25" alt ="{% trans "Close Topic" %}" />
+    </a>
         {% endif %}
-    |
     {% endif %}
 
 
     {% if user.is_authenticated %}
         {% if subscribed %}
-    <a href="{% url pybb_delete_subscription topic.id %}?from_topic">{% trans "Unsubscribe" %}</a>
+    <a href="{% url pybb_delete_subscription topic.id %}?from_topic">
+        <img src="{{MEDIA_URL}}/forum/img/en/unsubscribe.png" height="25" alt ="{% trans "Unsubscribe" %}" />
+    </a>
         {% else %}
     <a href="{% url pybb_add_subscription topic.id %}">{% trans "Subscribe" %}</a>
         {% endif %}

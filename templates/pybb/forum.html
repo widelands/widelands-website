@@ -23,7 +23,9 @@
         <div class="index_forum">
             {% pybb_pagination _('Topics') %}
             <div class="controls">
-                <a href="{% url pybb_add_topic forum.id %}">{% trans "New topic" %}</a>
+                <a href="{% url pybb_add_topic forum.id %}">
+                    <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" />
+                </a>
             </div>
 
             <table cellspacing="1" width="100%">
@@ -45,7 +47,9 @@
            
             {% pybb_pagination _('Topics') %}
             <div class="controls">
-                <a href="{% url pybb_add_topic forum.id %}">{% trans "New topic" %}</a>
+                <a href="{% url pybb_add_topic forum.id %}">
+                    <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" />
+                </a>
             </div>
         
         </div>        
