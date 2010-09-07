@@ -110,6 +110,17 @@ class TribeParser(object):
                 helpstr = normalize_name(cf.get("default","help"))
                 worker.help = helpstr
 
+            # Check for experience
+            if cf.has_option("default","experience"):
+                experience = normalize_name(cf.get("default","experience"))
+                worker.exp = experience
+
+            # See what the worker becomes
+            if cf.has_option("default","becomes"):
+                enname = cf.get("default","becomes")
+                worker.becomes = Worker.objects.get_or_create(
+                    name=enname, tribe = self._to)[0]
+
             worker.save()
 
     def _parse_wares( self ):
@@ -144,6 +155,16 @@ class TribeParser(object):
                      for ware in wares ]
                 return w, counts
 
+            def _parse_worker_with_counts( cf, section ):
+                counts = []
+                workers = []
+                for worker,count in cf.items(section):
+                    workers.append(worker)
+                    counts.append(count)
+                wor = [ Worker.objects.get( tribe = self._to, name = worker.lower())
+                     for worker in workers ]
+                return wor, counts
+
             conf = "%s/%s/conf" % (self._basedir,name)
             cf = SaneConfigParser()
             cf.read(conf)
@@ -171,6 +192,12 @@ class TribeParser(object):
                 w,counts = _parse_item_with_counts(cf,"buildcost")
                 b.build_costs = ' '.join(counts)
                 b.build_wares = w
+
+            # Try to figure out who works there
+            if cf.has_section("working positions"):
+                wor,counts = _parse_worker_with_counts(cf,"working positions")
+                b.workers_count = ' '.join(counts)
+                b.workers_types = wor
 
             # Try to figure out if this is an enhanced building
             if cf.has_option("default","enhancement"):
