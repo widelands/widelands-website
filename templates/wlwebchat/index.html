@@ -15,80 +15,13 @@ This is a webchat applet provided by the <a
 solution if you just want to chat in the #widelands channel on freenode. 
 </p>
 
-<!-- Start of PjIRC applet -->
-<applet width="100%" height="400" code="IRCApplet.class" archive="irc.jar,pixx.jar" codebase="http://java.freenode.net/freenode/pjirc/">
 
-<!--
-<param name="CABINETS" value="irc.cab,pixx.cab">-->
+<!-- Start of Webchat -->
 {% if user.is_anonymous %}
-<param name="nick" value="Anonymous"/>
-<param name="alternatenick" value="Anonymous??"/>
-Anonymous
+<iframe src="http://webchat.freenode.net?nick=guest&channels=widelands&uio=d4" width="647" height="400"></iframe>
 {% else %}
-<param name="nick" value="{{ user.username }}"/>
-<param name="alternatenick" value="{{ user.username}}??"/>
+<iframe src="http://webchat.freenode.net?nick={{ user.username }}&channels=widelands&uio=d4" width="100%" height="400"></iframe>
 {% endif %}
-<param name="userid" value="fn-javachat"/>
-<param name="name" value="Widelands.org"/>
-<param name="host" value="chat.freenode.net"/>
-<param name="gui" value="pixx"/>
-
-<param name="quitmessage" value="Java user signed off"/>
-
-<param name="asl" value="false"/>
-<param name="useinfo" value="true"/>
-
-<param name="command1" value="/join #widelands"/>
-
-<param name="style:bitmapsmileys" value="false"/>
-{% comment %}
-No smileys for now
-<param name="style:smiley1" value=":) img/sourire.gif"/>
-<param name="style:smiley2" value=":-) img/sourire.gif"/>
-<param name="style:smiley3" value=":-D img/content.gif"/>
-<param name="style:smiley4" value=":d img/content.gif"/>
-<param name="style:smiley5" value=":-O img/OH-2.gif"/>
-<param name="style:smiley6" value=":o img/OH-1.gif"/>
-<param name="style:smiley7" value=":-P img/langue.gif"/>
-<param name="style:smiley8" value=":p img/langue.gif"/>
-<param name="style:smiley9" value=";-) img/clin-oeuil.gif"/>
-<param name="style:smiley10" value=";) img/clin-oeuil.gif"/>
-<param name="style:smiley11" value=":-( img/triste.gif"/>
-
-<param name="style:smiley12" value=":( img/triste.gif"/>
-<param name="style:smiley13" value=":-| img/OH-3.gif"/>
-<param name="style:smiley14" value=":| img/OH-3.gif"/>
-<param name="style:smiley15" value=":'( img/pleure.gif"/>
-<param name="style:smiley16" value=":$ img/rouge.gif"/>
-<param name="style:smiley17" value=":-$ img/rouge.gif"/>
-<param name="style:smiley18" value="(H) img/cool.gif"/>
-<param name="style:smiley19" value="(h) img/cool.gif"/>
-<param name="style:smiley20" value=":-@ img/enerve1.gif"/>
-<param name="style:smiley21" value=":@ img/enerve2.gif"/>
-<param name="style:smiley22" value=":-S img/roll-eyes.gif"/>
-<param name="style:smiley23" value=":s img/roll-eyes.gif"/>
-<param name="style:backgroundimage" value="true"/>
-<param name="style:backgroundimage1" value="all all 0 pjirc-logo.gif"/>
-<param name="style:sourcefontrule1" value="all all Serif 12"/>
-<param name="style:floatingasl" value="true"/>
-{% endcomment %}
-
-<param name="pixx:timestamp" value="true"/>
-<param name="pixx:highlight" value="true"/>
-<param name="pixx:highlightnick" value="true"/>
-<param name="pixx:nickfield" value="false"/>
-<param name="pixx:styleselector" value="false"/>
-<param name="pixx:setfontonstyle" value="false"/>
-<param name="pixx:color5" value="595959"/>
-<param name="pixx:color6" value="353535"/>
-<param name="pixx:color7" value="292929"/>
-<param name="pixx:color9" value="595959"/>
-
-<h1>No java support</h1>
-<p>
-<font color="green">Sorry, but you need a Java 1.4.x enabled browser to use PJIRC.</font></p>
-</applet>
-
-<!-- End of PjIRC applet -->
+<!-- End of Webchat -->
 
 {% endblock %}

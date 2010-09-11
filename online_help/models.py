@@ -10,13 +10,6 @@ class Tribe(models.Model):
 
 
 class Worker(models.Model):
-    name = models.CharField(max_length=100)
-    displayname = models.CharField(max_length=100)
-    tribe = models.ForeignKey(Tribe)
-    image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
-
-    help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
-    
     if settings.USE_SPHINX:
         search          = SphinxSearch(
             weights = {
@@ -26,6 +19,14 @@ class Worker(models.Model):
                 }
         )
 
+    name = models.CharField(max_length=100)
+    displayname = models.CharField(max_length=100)
+    tribe = models.ForeignKey(Tribe)
+    image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
+
+    help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
+    exp = models.TextField(max_length=8) # Just in case
+    becomes = models.OneToOneField('self', related_name="trained_by_experience", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -38,7 +39,7 @@ class Ware(models.Model):
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
 
     help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
-    
+
     if settings.USE_SPHINX:
         search          = SphinxSearch(
             weights = {
@@ -105,18 +106,23 @@ class Building(models.Model):
     help = models.TextField(blank=True)
     
     # Enhances to
-    enhancement = models.OneToOneField('self',related_name='enhanced_from', blank=True, null=True)
+    enhancement = models.OneToOneField('self', related_name='enhanced_from', blank=True, null=True)
 
     # Build cost
     build_wares = models.ManyToManyField(Ware, related_name="build_ware_for_buildings", blank=True)
-    build_costs = models.CharField(max_length=100,blank=True) # ' '.joined() integer strings
+    build_costs = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
+
+    # Workers
+    workers_types = models.ManyToManyField(Worker, related_name="workers_for_buildings", blank=True)
+    workers_count = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
 
     # Store
-    store_wares = models.ManyToManyField(Ware, related_name="stored_ware_for_buildings",blank=True)
+    store_wares = models.ManyToManyField(Ware, related_name="stored_ware_for_buildings", blank=True)
     store_count = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
     
     # Output
-    output_wares = models.ManyToManyField(Ware, related_name="produced_by_buildings",blank=True)
+    output_wares = models.ManyToManyField(Ware, related_name="produced_by_buildings", blank=True)
+    output_workers = models.ManyToManyField(Worker, related_name="trained_by_buildings", blank=True)
 
     def has_build_cost(self):
         return (self.build_wares.all().count() != 0)
@@ -124,12 +130,25 @@ class Building(models.Model):
         count = map(int,self.build_costs.split( ))
         for c,w in zip(count,self.build_wares.all()):
             yield [w]*c
-    
+
+    def has_workers(self):
+        return (self.workers_types.all().count() != 0)
+    def get_workers(self):
+        count = map(int,self.workers_count.split( ))
+        for c,wor in zip(count,self.workers_types.all()):
+            yield [wor]*c
+
     def produces(self):
         return (self.output_wares.all().count() != 0)
     def get_outputs(self):
         return self.output_wares.all()
-    
+    def trains(self):
+        return (self.output_workers.all().count() != 0)
+    def get_worker_outputs(self):
+        return self.output_workers.all()
+    def has_outputs(self):
+        return (self.output_workers.all().count() != 0 or self.output_wares.all().count() != 0)
+
     def has_stored_wares(self):
         return (self.store_wares.all().count() != 0)
     def get_stored_wares(self):
