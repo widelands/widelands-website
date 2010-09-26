@@ -215,3 +215,18 @@ th {
 #id_search {
     width: 150px; 
 }
+
+/*
+ * Events
+ */
+.event {
+    text-align: center;
+    width: 100%;
+    padding-bottom: 5px;
+}
+
+.event .date {
+    font-size: 80%
+}
+
+

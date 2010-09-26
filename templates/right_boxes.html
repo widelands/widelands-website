@@ -7,7 +7,7 @@
 {% endcomment %}
 {% load inbox %}
 {% load i18n %}
-{% load wlprofile wlpoll %}
+{% load wlprofile wlpoll wlevents %}
 
       <!-- Search Box -->
       <h3 class="box_title">Search</h3>
@@ -100,6 +100,25 @@
             <a href="{% url wlpoll_archive %}">Archive</a>
          </div>
          {%endif %}
+
+         <!-- Future Events if any -->
+         {% get_future_events as events %}
+         {% if events.count %}
+         <h3 class="box_title">Important Dates</h3>
+         <div class="box_content" align="center">
+         {% for e in events %}
+            <div class="event">
+               <a href="{{e.link}}" class="link">{{e.name}}</a><br>
+               <div class="date">
+               {{e.start_date|date:"d M"}}
+               {% ifnotequal e.start_date e.end_date %}
+                  - {{e.end_date|date:"d M"}}
+               {% endifnotequal %}
+               </div>
+            </div>
+         {% endfor %}
+         </div>
+         {% endif %}
 
          <!-- Logged in users -->
          {%load online_users %}
