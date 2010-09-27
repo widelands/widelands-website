@@ -1,1 +1,3 @@
-{{ obj.body }}
+{% load wl_markdown %}
+
+{{ obj.body|wl_markdown:"safe" }}
