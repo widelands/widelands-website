@@ -196,6 +196,7 @@ INSTALLED_APPS = (
     'widelands.wlprofile',
     'widelands.wlsearch',
     'widelands.wlpoll',
+    'widelands.wlevents',
     'widelands.wlmaps',
     'widelands.wlscreens',
     'widelands.wlggz',

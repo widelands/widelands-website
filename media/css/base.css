@@ -224,6 +224,20 @@ th {
 }
 
 /*
+ * Events
+ */
+.event {
+    text-align: center;
+    width: 100%;
+    padding-bottom: 5px;
+}
+
+.event .date {
+    font-size: 80%
+}
+
+
+/*
  * Box Item Model
  */
 .box_item_model {
