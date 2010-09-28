@@ -26,7 +26,7 @@ except ImportError:
 
 MARKUP_CHOICES = (
     ('markdown', 'markdown'),
-    #    ('bbcode', 'bbcode'),
+    ('bbcode', 'bbcode'),
 )
 
 

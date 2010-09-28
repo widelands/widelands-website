@@ -173,14 +173,12 @@ def quote_text(text, user, markup):
     text = user.username + " wrote:\n" + text
 
     # if markup == 'markdown':
-    if markup:
+    if markup == 'markdown':
         return '>'+text.replace('\n','\n>').replace('\r','\n>') + '\n'
+    elif markup == 'bbcode':
+        return '[quote]\n%s\n[/quote]\n' % text
     else:
         return text
-    # elif markup == 'bbcode':
-    #     return '[quote]\n%s\n[/quote]\n' % text
-    # else:
-        # return text
 
 
 def absolute_url(path):
