@@ -16,9 +16,11 @@
 {% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
-{% pybb_pagination _('Posts') %}
 <div class="box_item_model">
-    <div class="posts">
+    <h3 class="title"><a href="/forum/">Forum</a> &rArr; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &rArr; {{ topic }}</h3>
+    <br />
+    {% pybb_pagination _('Posts') %}
+    <div class="posts" style="clear:left">
         <a name="top" id="top"></a>
         <table cellspacing="1" width="100%">
             <tr align="center">
@@ -42,7 +44,8 @@
         </div>
     {% endfor %}
     </div>
-{% pybb_pagination _('Posts') %}
+    {% pybb_pagination _('Posts') %}
+    <br />
     <div class="controls">
         <br />
     {% if moderator %}

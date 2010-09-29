@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="pagination">
+<div class="pagination" style="float:left">
     <span class="summary">{{ label }} <strong>{{ page.start_index }}</strong>&mdash;<strong>{{ page.end_index }}</strong> {% trans "of" %} <strong>{{ paginator.count }}</strong> {{ label }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
     {% if page.has_previous %}
         {% ifequal page.previous_page_number 1 %}

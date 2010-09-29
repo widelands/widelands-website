@@ -18,16 +18,23 @@
 <br />
 <div class="box_item_model">
     <div class="forum-list">
-        <h3 class="title">{{ forum }}</h3>
-         
+        <h3 class="title"><a href="/forum/">Forum</a> &rArr; {{ forum }}</h3>
+        <br /> 
         <div class="index_forum">
-            {% pybb_pagination _('Topics') %}
-            <div class="controls">
-                <a href="{% url pybb_add_topic forum.id %}">
-                    <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" />
-                </a>
-            </div>
-
+            <table width="100%">
+                <tr>
+                    <td>
+                        {% pybb_pagination _('Topics') %}
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <a href="{% url pybb_add_topic forum.id %}">
+                                <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" style="float:right" />
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
             <table cellspacing="1" width="100%">
                 <tr align="center">
                     <th width="5%">&nbsp;</th>
@@ -44,14 +51,20 @@
                 {% include "pybb/inlines/topic_row.html" %}
                 {% endfor %}
             </table>
-           
-            {% pybb_pagination _('Topics') %}
-            <div class="controls">
-                <a href="{% url pybb_add_topic forum.id %}">
-                    <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" />
-                </a>
-            </div>
-        
+            <table width="100%">
+                <tr>
+                    <td>
+                        {% pybb_pagination _('Topics') %}
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <a href="{% url pybb_add_topic forum.id %}">
+                                <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" style="float:right"/>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </table>     
         </div>        
         
         <table class="legend">
