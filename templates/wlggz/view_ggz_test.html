@@ -39,12 +39,12 @@
                 <td class="{% cycle "odd" "even" %}">{{ match.match.date_date  }}</td>
                 <td class="{% cycle "odd" "even" %}">
                     {% if match.match.winner %}
-                        {{ match.match.winner|user_link_ggz }}
+                        {{ match.match.winner_as_userlink }}
                     {% endif %}
                 </td>
                 <td class="{% cycle "odd" "even" %}">
                     {% for player in match.match.wlggz_matchplayers.all %}
-                        {{ player.handle|user_link_ggz }} 
+                        {{ player.handle_as_userlink }} 
                     {% endfor %}
                 </td class="{% cycle "odd" "even" %}">
             </tr>
@@ -73,10 +73,10 @@
             {% for match in ggzwonmatches %}
             <tr>
                 <td class="{% cycle "odd" "even" %}">{{ match.date_date  }}</td>
-                <td class="{% cycle "odd" "even" %}">{{ match.winner|user_link_ggz }}</td>
+                <td class="{% cycle "odd" "even" %}">{{ match.winner_as_userlink }}</td>
                 <td class="{% cycle "odd" "even" %}">
                     {% for player in match.wlggz_matchplayers.all %}
-                        {{ player.handle|user_link_ggz }}
+                        {{ player.handle_as_userlink }}
                     {% endfor %}
                 </td>
             </tr>

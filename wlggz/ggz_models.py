@@ -13,15 +13,32 @@
 from django.db import models
 from django.db.models import OneToOneField, ForeignKey
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 import datetime
+
+def ggz_userlink(user):
+    data = u'<a href="%s">%s</a>' % (\
+        reverse('wlggz_userstats', args=[user.username]), user.username)
+    return mark_safe(data)
 
 class GGZMatches(models.Model):
     id = models.IntegerField(primary_key=True)
     date = models.IntegerField()
     game = models.TextField()
-    winner = ForeignKey(User, to_field='username', db_column='winner', related_name='wlggz_matchwins')
+    winner = models.CharField()
+    winner_user = ForeignKey(User, to_field='username', db_column='winner', related_name='wlggz_matchwins')
     savegame = models.TextField(blank=True)
+
+    def winner_as_userlink(self):
+        try:
+            return ggz_userlink(self.winner_user)
+        except:
+            if len(self.winner) > 0:
+                return "%s[Guest]" % (self.winner)
+            return ""
+
     class Meta:
         db_table = u'wlggz_matches'
 
@@ -31,8 +48,16 @@ class GGZMatches(models.Model):
 class GGZMatchplayers(models.Model):
     id = models.IntegerField(primary_key=True)
     match = ForeignKey(GGZMatches, to_field='id', db_column='match', related_name='wlggz_matchplayers')
-    handle = ForeignKey(User, to_field='username', db_column='handle', related_name='wlggz_matches')
+    handle_user = ForeignKey(User, to_field='username', db_column='handle', related_name='wlggz_matches')
+    handle = models.CharField()
     playertype = models.CharField(max_length=768)
+
+    def handle_as_userlink(self):
+        try:
+            return ggz_userlink(self.handle_user)
+        except:
+            return "%s[Guest]" % (self.handle)
+
     class Meta:
         db_table = u'wlggz_matchplayers'
 
@@ -74,8 +99,8 @@ class GGZPermissions(models.Model):
 
 class GGZStats(models.Model):
     id = models.IntegerField(primary_key=True)
-    handle = OneToOneField(User, to_field='username', related_name='wlggzstats', db_column='handle') 
-    #handle = models.CharField(max_length=768, blank=True)
+    handle_user = OneToOneField(User, to_field='username', related_name='wlggzstats', db_column='handle') 
+    handle = models.CharField(max_length=768, blank=True)
     game = models.TextField()
     wins = models.IntegerField()
     losses = models.IntegerField()
@@ -84,6 +109,13 @@ class GGZStats(models.Model):
     rating = models.FloatField()
     ranking = models.IntegerField()
     highscore = models.IntegerField()
+
+    def handle_as_userlink():
+        try:
+            return ggz_userlink(self.handle_user)
+        except:
+            return "%s[Guest]" % (self.handle)
+
     class Meta:
         db_table = u'wlggz_stats'
 

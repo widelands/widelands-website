@@ -22,13 +22,11 @@
         <tr>
             <td class="{% cycle "odd" "even" %}">{{ match.date_date }}</td>
             <td class="{% cycle "odd" "even" %}">
-                {% if match.winner %}
-                    {{ match.winner|user_link_ggz }}
-                {% endif %}
+                {{ match.winner_as_userlink }}
 	    </td>
             <td class="{% cycle "odd" "even" %}">
             {% for player in match.wlggz_matchplayers.all %}
-                {{ player.handle|user_link_ggz }}
+		{{ player.handle_as_userlink }}
             {% endfor %}
             </td>
         </tr>
