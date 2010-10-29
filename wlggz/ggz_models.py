@@ -51,6 +51,9 @@ class GGZMatchplayers(models.Model):
     handle_user = ForeignKey(User, to_field='username', db_column='handle', related_name='wlggz_matches')
     handle = models.CharField()
     playertype = models.CharField(max_length=768)
+    result = models.CharField(max_length=10)
+    points = models.IntegerField()
+    team = models.IntegerField()
 
     def handle_as_userlink(self):
         try:
