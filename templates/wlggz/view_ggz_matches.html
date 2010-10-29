@@ -26,7 +26,7 @@
 	    </td>
             <td class="{% cycle "odd" "even" %}">
             {% for player in match.wlggz_matchplayers.all %}
-		{{ player.handle_as_userlink }}
+		{{ player.handle_as_userlink }}({{ player.result }}, {{ player.points }})
             {% endfor %}
             </td>
         </tr>
