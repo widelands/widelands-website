@@ -68,7 +68,7 @@ def view(request, user = None):
         except (ggz_models.GGZStats.DoesNotExist):
             pass
 
-    return render_to_response("wlggz/view_ggz_test.html",
+    return render_to_response("wlggz/view_ggz_playerstats.html",
                               template_params,
                               context_instance=RequestContext(request))
 
