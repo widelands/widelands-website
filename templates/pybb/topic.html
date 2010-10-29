@@ -17,7 +17,7 @@
 <br />
 <br />
 <div class="box_item_model">
-    <h3 class="title"><a href="/forum/">Forum</a> &rArr; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &rArr; {{ topic }}</h3>
+    <span class="title"><a href="/forum/">Forum</a> &rArr; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &rArr; {{ topic }}</span>
     <br />
     {% pybb_pagination _('Posts') %}
     <div class="posts" style="clear:left">
