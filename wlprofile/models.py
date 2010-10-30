@@ -63,15 +63,15 @@ class Profile(models.Model):
        
         if nump < 6:
             return { "text":"Just found this site", "image":"rang_1.png" }
-        elif nump < 16:
+        elif nump < 50:
             return { "text":"Pry about Widelands", "image":"rang_2.png" }
-        elif nump < 30:
+        elif nump < 120:
             return { "text":"Likes to be here", "image":"rang_3.png" }
-        elif nump < 80:
+        elif nump < 180:
             return { "text":"At home in WL-forums", "image":"rang_4.png" }
-        elif nump < 150:
-            return { "text":"Widelands-Forum-Junkie", "image":"rang_5.png" }
         elif nump < 250:
+            return { "text":"Widelands-Forum-Junkie", "image":"rang_5.png" }
+        elif nump < 500:
             return { "text":"Tribe Member", "image":"rang_6.png" }
         else:
             return { "text":"One Elder of Players", "image":"rang_7.png" }
