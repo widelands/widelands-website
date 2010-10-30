@@ -121,10 +121,12 @@
 
          <!-- Logged in users -->
          {%load online_users %}
+         {% if users %}
          <h3 class="box_title">Currently online</h3>
          <div class="box_content"> 
              {% online_users 10 %}
          </div>
+         {% endif %}
          <!-- Placeholder for The Last 5 Forum Posts -->
          <h3 class="box_title">Last 5 Forum Posts</h3>
          <div class="box_content">
