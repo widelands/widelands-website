@@ -1,0 +1,45 @@
+{% extends "wlggz/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{% load custom_date %}
+{% load wlprofile %}
+
+{% include "django_messages/inlines/navigation.html" %}
+
+<br />
+<br />
+<div class="box_item_model fixed_site border">
+    <h3 class="title">Last 10 matches</h3>
+    <table cellspacing="1" class="text full_site">
+        <tr>
+            <td class="ggz_date">Date</td>
+            <td class="ggz_winner">Winner</td>
+            <td class="ggz_vs">Participants</td>
+        </tr>
+        {% for match in ggzmatches %}
+        <tr>
+            <td class="{% cycle "odd" "even" %}">{{ match.date_date }}</td>
+            <td class="{% cycle "odd" "even" %}">
+                {{ match.winner_as_userlink }}
+	    </td>
+            <td class="{% cycle "odd" "even" %}">
+            {% for player in match.wlggz_matchplayers.all %}
+		{{ player.handle_as_userlink }}({{ player.result }}, {{ player.points }})
+            {% endfor %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td class="even show_center" colspan="3">
+                <br />
+                <b>Sorry, no matches yet</b>
+                <br />
+                <br />
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

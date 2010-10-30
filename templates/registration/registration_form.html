@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "registration/base.html" %}
 {% comment %}
 vim:ft=htmldjango: 
 {% endcomment %}
@@ -8,57 +8,85 @@ vim:ft=htmldjango:
 {% endblock %}
 
 {% block content %}
-<form action="{% url registration_register %}" method="POST">
-<table>
-<tr>
-    <td align="right" valign="top">Username:</td>
-    <td>
-        {{ registration_form.username }} <br/>
-        {% for error in registration_form.username.errors %}
-        <span class="errormessage">{{ error }}</span>
-        {% endfor %}
-    </td>
-</tr>
-<tr>
-    <td align="right" valign="top">Email:</td>
-    <td>
-        {{ registration_form.email }} <br/>
-        {% for error in registration_form.email.errors %}
-        <span class="errormessage">{{ error }}</span>
-        {% endfor %}
-    </td>
-</tr>
-<tr>
-    <td align="right" valign="top">Password:</td>
-    <td>
-        {{ registration_form.password1 }} <br/>
-        {% for error in registration_form.password1.errors %}
-        <span class="errormessage">{{ error }}</span>
-        {% endfor %}
-    </td>
-</tr>
-<tr>
-    <td align="right" valign="top">Password (again):</td>
-    <td>
-        {{ registration_form.password2 }} <br/>
-        {% for error in registration_form.password2.errors %}
-        <span class="errormessage">{{ error }}</span>
-        {% endfor %}
-    </td>
-</tr>
-<tr align="right">
-    <td align="right" valign="top">Prove that you're no spambot:</td>
-    <td>
-        {{ registration_form.captcha|safe }} <br/>
-        {% for error in registration_form.captcha.errors %}
-        <span class="errormessage">{{ error }}</span>
-        {% endfor %}
-    </td>
-</tr>
-<tr>
-    <td>&nbsp;</td>
-    <td><input type="submit" value="Register" /></td>
-</tr>
-</table>
-</form>
+{% include "django_messages/inlines/navigation.html" %}
+
+<br />
+<br />
+<div class="box_item_model fixed_site border">
+    <h3 class="title">Registration</h3>
+    <div class="info_line">
+        <br />
+        <form action="{% url registration_register %}" method="POST">
+            <table>
+                <tr>
+                    <td class="show_right">Username:</td>
+                    <td class="show_left">
+                        {{ registration_form.username }}
+                        <br/>
+    {% for error in registration_form.username.errors %}
+                        <span class="errormessage">
+                            {{ error }}
+                        </span>
+    {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="show_right">Email:</td>
+                    <td class="show_left">
+                        {{ registration_form.email }}
+                        <br/>
+    {% for error in registration_form.email.errors %}
+                        <span class="errormessage">
+                            {{ error }}
+                        </span>
+    {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="show_right">Password:</td>
+                    <td class="show_left">
+                        {{ registration_form.password1 }}
+                        <br/>
+    {% for error in registration_form.password1.errors %}
+                        <span class="errormessage">
+                            {{ error }}
+                        </span>
+    {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="show_right">Password (again):</td>
+                    <td class="show_left">
+                        {{ registration_form.password2 }}
+                        <br/>
+     {% for error in registration_form.password2.errors %}
+                        <span class="errormessage">
+                            {{ error }}
+                        </span>
+     {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="show_right">Prove that you're no spambot:</td>
+                    <td class="show_left">
+                        {{ registration_form.captcha|safe }}
+                        <br/>
+     {% for error in registration_form.captcha.errors %}
+                        <span class="errormessage">
+                            {{ error }}
+                        </span>
+     {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="show_right">&nbsp;</td>
+                    <td class="show_left">
+                        <input type="submit" value="Register" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <br />
+    </div>
+</div>
 {% endblock %}

@@ -57,4 +57,27 @@ class Profile(models.Model):
         database grows to not be always calculated.
         """
         return Post.objects.filter(user=self.user).count()
+  
+    def user_status(self):
+        nump = self.post_count()
+       
+        if nump < 6:
+            return { "text":"Just found this site", "image":"rang_1.png" }
+        elif nump < 50:
+            return { "text":"Pry about Widelands", "image":"rang_2.png" }
+        elif nump < 120:
+            return { "text":"Likes to be here", "image":"rang_3.png" }
+        elif nump < 180:
+            return { "text":"At home in WL-forums", "image":"rang_4.png" }
+        elif nump < 250:
+            return { "text":"Widelands-Forum-Junkie", "image":"rang_5.png" }
+        elif nump < 500:
+            return { "text":"Tribe Member", "image":"rang_6.png" }
+        else:
+            return { "text":"One Elder of Players", "image":"rang_7.png" }
 
+    def get_ggzstats(self):
+        try:
+            return self.user.wlggzstats
+        except:
+            return None

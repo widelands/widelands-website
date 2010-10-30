@@ -13,70 +13,84 @@
 {% endblock %}
 
 {% block content %}
+{% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
+<div class="box_item_model">
+    <span class="title"><a href="/forum/">Forum</a> &rArr; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &rArr; {{ topic }}</span>
+    <br />
+    {% pybb_pagination _('Posts') %}
+    <div class="posts" style="clear:left">
+        <a name="top" id="top"></a>
+        <table cellspacing="1" width="100%">
+            <tr align="center">
+                <th>Author</th>
+                <th width="85%" nowrap="nowrap">Message</th>
+            </tr>
+        </table>
 
-{% pybb_pagination _('Posts') %}
-
-<div class="posts">
-   <a name="top" id="top"></a>
-   <table cellspacing="1" width="100%">
-     <tr align="center">
-        <th>Author</th>
-        <th width="85%" nowrap="nowrap">Message</th>
-     </tr>
-   </table>
-
-   {% if first_post %}
-      {% ifnotequal first_post posts.0 %}
-         {% with first_post as post %}
-         <div class="post first_post">
-            {% include "pybb/inlines/post.html" %}
-         </div>
-         {% endwith %}
-      {% endifnotequal %}
-   {% endif %}
-   {% for post in posts %}
-   <div class="post">
-      {% include "pybb/inlines/post.html" %}
-   </div>
-   {% endfor %}
-</div>
-
-{% pybb_pagination _('Posts') %}
-<div class="controls">
+    {% if first_post %}
+        {% ifnotequal first_post posts.0 %}
+            {% with first_post as post %}
+        <div class="post first_post">
+                {% include "pybb/inlines/post.html" %}
+        </div>
+            {% endwith %}
+        {% endifnotequal %}
+    {% endif %}
+    {% for post in posts %}
+        <div class="post">
+        {% include "pybb/inlines/post.html" %}
+        </div>
+    {% endfor %}
+    </div>
+    {% pybb_pagination _('Posts') %}
+    <br />
+    <div class="controls">
+        <br />
     {% if moderator %}
-    {% if topic.sticky %}
-    <a href="{% url pybb_unstick_topic topic.id %}">{% trans "Unstick topic" %}</a>
-    {% else %}
-    <a href="{% url pybb_stick_topic topic.id %}">{% trans "Stick topic" %}</a>
+        {% if topic.sticky %}
+    <a href="{% url pybb_unstick_topic topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/unstick_topic.png" height="25" alr="{% trans "Unstick topic" %}" />
+    </a>
+        {% else %}
+    <a href="{% url pybb_stick_topic topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/stick_topic.png" height="25" alt ="{% trans "Stick Topic" %}" />
+    </a>
+        {% endif %}
+        {% if topic.closed %}
+    <a href="{% url pybb_open_topic topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/open_topic.png" height="25" alt="{% trans "Open topic" %}" />
+    </a>
+        {% else %}
+    <a href="{% url pybb_close_topic topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/close_topic.png" height="25" alt ="{% trans "Close Topic" %}" />
+    </a>
+        {% endif %}
     {% endif %}
-    |
-    {% if topic.closed %}
-    <a href="{% url pybb_open_topic topic.id %}">{% trans "Open topic" %}</a>
-    {% else %}
-    <a href="{% url pybb_close_topic topic.id %}">{% trans "Close topic" %}</a>
-    {% endif %}
-    |
-    {% endif %}
-    {% comment %}
-    TODO: subscribe
-    {% if user.is_authenticated %}
-    {% if subscribed %}
-    <a href="{% url pybb_delete_subscription topic.id %}?from_topic">{% trans "Unsubscribe" %}</a>
-    {% else %}
-    <a href="{% url pybb_add_subscription topic.id %}">{% trans "Subscribe" %}</a>
-    {% endif %}
-    {% endif %}
-    {% endcomment %}
-</div>
 
-{% if user.is_authenticated %}
-{% if not topic.closed %}
-<br />
-<br />
-<div class="forum_item">
-{% include "pybb/inlines/add_post_form.html" %}
+
+    {% if user.is_authenticated %}
+        {% if subscribed %}
+    <a href="{% url pybb_delete_subscription topic.id %}?from_topic">
+        <img src="{{MEDIA_URL}}/forum/img/en/unsubscribe.png" height="25" alt ="{% trans "Unsubscribe" %}" />
+    </a>
+        {% else %}
+    <a href="{% url pybb_add_subscription topic.id %}">
+        <img src="{{MEDIA_URL}}/forum/img/en/subscribe.png" height="25" alt="{% trans "Subscribe" %}" /></a>
+        {% endif %}
+    {% endif %}
+
+    </div>
 </div>
-{% endif %}
+{% if user.is_authenticated %}
+    {% if not topic.closed %}
+<br />
+<br />
+<div class="box_item_model border">
+    {% include "pybb/inlines/add_post_form.html" %}
+</div>
+    {% endif %}
 {% endif %}
 
 {% endblock %}

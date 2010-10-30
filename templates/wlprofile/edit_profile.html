@@ -4,11 +4,11 @@
 
 {% block content %}
 {% ifequal user profile.user %}
-	{% include "messages/inlines/navigation.html" %}
+	{% include "django_messages/inlines/navigation.html" %}
 {% endifequal %}
 <br />
 <br />
-<div class="profile_item">
+<div class="box_item_model fixed_site border">
     <h3 class="title">{% trans "Profile editing" %}</h3>
     <div class="content">
     {% if profile.avatar %}
@@ -25,29 +25,54 @@
     {% endif %}
 
     {% for field in profile_form %}
+        {% if field.errors %}
                 <tr>
-            {% if field.errors %}
                     <td colspan="2" class="{% cycle "odd" "even" %}">
                         <div class="errormessage">{{ field.errors }}</div>
                     </td>
                 </tr>
+        {% endif %}
+        {% ifequal field.name "delete_avatar" %}
+            {% if profile.avatar %}
                 <tr>
+                    <td class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field }}
+                </tr>
             {% endif %}
-                    <td {% ifequal field.name "signature" %} valign="top" {% endifequal %}class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-                    <td class="{% cycle "odd" "even" %}">{{ field }}                 
+        {% else %}
+                <tr>
+                    <td class="{% cycle "odd" "even" %} {%ifequal field.name "signature" %}show_left{% endifequal %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field }}
                 {% ifequal field.name "time_display" %}
                         <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
                 {% endifequal %}
                     </td>
                 </tr>
+        {% endifequal %}
     {% endfor %}
             </table>
-    </div>
-    <table class="bottom_line" width="100%">
-        <tr>
-            <td><input type="submit" value="{% trans "Save" %}" /></td>
-        </tr>
-    </table>
+        </div>
+        <div class="info_line">
+            <input type="submit" value="{% trans "Save" %}" />
+        </div>
     </form>
+</div>
+<br />
+<div class="box_item_model fixed_site border">
+    <div class="info_line show_left">
+        <a href="{% url auth_change_password %}">Change website password</a>
+        <br />
+        <br />
+        <b class="errormessage">WARNING: Passwords are transmitted in cleartext.</b>
+    </div>
+</div>
+<br />
+<div class="box_item_model fixed_site border">
+    <div class="info_line show_left">
+        <a href="{% url wlggz_changepw %}">Change online lobby password</a>
+        <br />
+        <br />
+        <b class="errormessage">WARNING: GGZ transmitts the password in cleartext. Choose a different password for online gaming.</b>
+    </div>
 </div>
 {% endblock %}

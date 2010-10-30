@@ -6,11 +6,20 @@ Delete post - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-<h1>{% trans "Are you sure you want to delete this message?" %}</h1>
-<p class="post-preview">
+{% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
+<div class="box_item_model fixed_site border">
+    <h3 class="title">{% trans "Are you sure you want to delete this message?" %}</h3>
+    <div class="even">
+        <p class="post-preview">
     {{ post.body_html|safe }}
-</p>
-<form method="post">
-    <p><input type="submit" value="{% trans "Yes, I am sure." %}" /></p>
-</form>
+        </p>
+    </div>
+    <form method="post">
+        <div class="info_line">
+            <input type="submit" value="{% trans "Yes, I am sure." %}" />
+        </div>
+    </form>
+</div>
 {% endblock %}

@@ -7,22 +7,33 @@ Trash - {{ block.super }}
 
 {% block content %} 
 {% include "django_messages/inlines/navigation.html" %} 
-<h1>{% trans "Deleted Messages" %}</h1>
-<table class="messages" cellspacing="1">
-    <thead>
-        <tr>
-            <th>{% trans "Sender" %}</th>
-            <th>{% trans "Subject" %}</th>
-            <th>{% trans "Date" %}</th>
-            <th>{% trans "Action" %}</th>
-        </tr>
-    </thead>
-    <tbody>
+<br />
+<br />
+<div class="box_item_model border">
+    <h3 class="title">{% trans "Deleted Messages" %}</h3>
+    <table class="messages" cellspacing="1">
+        <thead>
+            <tr>
+                <td>{% trans "Sender" %}</td>
+                <td>{% trans "Subject" %}</td>
+                <td>{% trans "Date" %}</td>
+                <td>{% trans "Action" %}</td>
+            </tr>
+        </thead>
+        <tbody>
 {% for message in message_list %} 
    {% include "django_messages/inlines/message_row.html" %}
 {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 <br />
-<p>{% trans "Deleted Messages are removed from the trash at unregular intervals, don't rely on this feature for long-time storage." %}</p>
+<div class="box_item_model border">
+    <div class="info_line show_center errormessage">
+        <br />
+        {% trans "Deleted Messages are removed from the trash at unregular intervals, don't rely on this feature for long-time storage." %}
+        <br />
+        <br />
+    </div>
+</div>
 {% endblock %}

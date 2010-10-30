@@ -1,6 +1,17 @@
 
 .index_category, .index_forum {
     margin-bottom: 20px;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.list_overview {
+    display: block;
+    font-weight: bold;
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    background: url('../img/background-444.png');
 }
 
 .title {
@@ -16,7 +27,6 @@
    text-align: center;
 }
 
-
 /*
  * POSTS
  */
@@ -28,6 +38,14 @@
    margin-top: 0px;
    margin-bottom: 0px;
    height: auto;
+}
+
+.post .top {
+    vertical-align: top;
+}
+.post .top .signature .line {
+    color: #D0DFFF;
+    font-weight: bolder;
 }
 
 /* 
@@ -87,93 +105,15 @@
     width: 40%;
 }
 .post-form #id_body {
-   width: 100%;
-   height: 400px;
+   width: 98%;
+   height: 150px;
 }
-
-/*
- * Post and Edit field
- */
-
-.forum_poster { font-size: 90%;}
-.forum_post_date { font-size: 90%;}
-
-
-.forum_item .forum_image img {
-   float: right;   
-   padding: 0px;
-   margin-left: 20px;
-}
-
-.forum_item {
-    border: 1px solid rgb(9, 9, 9);
-    width: 100%;
-}
-
-.forum_item p {
-   margin-bottom: 5px;
-}
-
-.forum_item h3.title {
+.post .bold  {
     font-weight: bold;
-    font-size: 12px;
-    padding-left: 12px;
-    background-image: url('../img/Navbar.png');
-    background-repeat: repeat-x;
-    border-left: 0px solid #999999;
-    border-right: 0px solid #999999;
-    border-bottom: 0px solid #999999;
-    padding-top: 2px;
-    padding-bottom: 0px;
-    margin: 0px;
 }
-.forum_item .content {
- line-height: 120%;
- border: 0px;
- padding: 2px;
- padding-top: 5px;
- padding-left: 15px;
- background-color: #3F3F3F;
- background: url(../img/background-3F3F3F.png);
+.post .underline {
+    text-decoration: underline;
 }
-
-.forum_item .info_line {
-	 text-align: right;
-	 padding: 3px;
-	 margin: 0px;
-    background-color: #222222;
-	 background: url(../img/background-222.png);
+.post .italic {
+    font-style: italic;
 }
-	
-.forum_item .text {
-    vertical-align: baseline;;
-	 margin-top: 5px;
-	 margin-bottom: 5px;
-    margin: 0px;
-	 line-height: 130%;
-}
-
-.forum_item .text:first-letter {
-    vertical-align: baseline;
-	 color: #7070FF;
-	 font-size: 180%;
-	 font-family: Cretino, "Bitstream Vera Serif", serif;
-	 font-weight: bold;
-	}
-
-.forum_item .bottom_line {
-	 background-color: #222222;
-	 background: url(../img/background-222.png);
-    table-layout: fixed;
-}
-.forum_item .tags {
-	text-align: right;
-}
-.forum_item .comments {
-	text-align: left;
-}
-.forum_item .admin {
-	text-align: center;
-}
-	
-	

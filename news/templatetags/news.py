@@ -47,6 +47,37 @@ def get_latest_posts(parser, token):
     format_string, var_name = m.groups()
     return LatestPosts(format_string, var_name)
 
+class NewsYears(template.Node):
+    def __init__(self, var_name):
+        self.var_name = var_name
+
+    def render(self, context):
+        years = Post.objects.all().dates('publish', 'year')
+        context[self.var_name] = years
+        return ''
+
+@register.tag
+def get_news_years(parser, token):
+    """
+    Gets any number of latest posts and stores them in a varable.
+
+    Syntax::
+
+    {% get_latest_posts [limit] as [var_name] %}
+
+    Example usage::
+
+    {% get_latest_posts 10 as latest_post_list %}
+    """
+    try:
+        tag_name, arg = token.contents.split(None, 1)
+    except ValueError:
+        raise template.TemplateSyntaxError, "%s tag requires arguments" % token.contents.split()[0]
+    m = re.search(r'as (\w+)', arg)
+    if not m:
+        raise template.TemplateSyntaxError, "%s tag had invalid arguments" % tag_name
+    (var_name, ) = m.groups()
+    return NewsYears(var_name)
 
 class NewsCategories(template.Node):
     def __init__(self, var_name):

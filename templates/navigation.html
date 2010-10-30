@@ -38,7 +38,9 @@
         <li><a href="{% url pybb_forum 12 %}">Translations &amp; Internationalization</a></li>
     </ul>
 </li>
-<li><a href="{% url webchat_index %}">IRC Chat</a></li>
+<li>
+    <a href="{% url webchat_index %}">IRC Chat</a>
+</li>
 <li>
     <a href="{% url wiki_article "DevelopmentPage" %}">Development</a>
     <ul>
@@ -50,4 +52,16 @@
         <li><a href="https://bugs.launchpad.net/widelands-website">Website Bugtracker</a></li>
     </ul>
 </li>
-
+        <!--
+<li>
+    <a href="{% url wlggz_main %}">Online Gaming</a>
+    <ul>
+        <li><a href="{% url wlggz_ranking %}">GGZ Ranking</a></li>
+        <li><a href="{% url wlggz_matches %}">GGZ Matches</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url wlggz_userstats %}">GGZ Status</a></li>
+        {% endif %}
+        <li><a href="{% url wiki_article "InternetGaming" %}">HowTo</a></li>
+    </ul>
+</li>
+        -->

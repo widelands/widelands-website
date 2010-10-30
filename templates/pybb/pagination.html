@@ -1,20 +1,41 @@
 {% load i18n %}
-<div class="pagination">
-
+<div class="pagination" style="float:left">
+    <span class="summary">{{ label }} <strong>{{ page.start_index }}</strong>&mdash;<strong>{{ page.end_index }}</strong> {% trans "of" %} <strong>{{ paginator.count }}</strong> {{ label }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
     {% if page.has_previous %}
-    <a href="{{ page.previous_link }}">&lt;{% trans "Back" %}</a>
+        {% ifequal page.previous_page_number 1 %}
+            <a href="?page={{ page.previous_page_number }}" class="prev">&lsaquo;&lsaquo; </a>
+        {% else %}
+            <a href="?page=1" class="prev">&lsaquo;&lsaquo;&lsaquo;&lsaquo; </a>
+            <a href="?page={{ page.previous_page_number }}" class="prev">&lsaquo;&lsaquo; </a>
+        {% endifequal %}
+    {% else %}
+        {% ifnotequal paginator.num_pages 1 %}
+            <span class="disabled prev">&lsaquo;&lsaquo; </span>
+        {% endifnotequal %}
     {% endif %}
-
-<span class="summary">{{ label }} <strong>{{ page.start_index }}</strong>&mdash;<strong>{{ page.end_index }}</strong> {% trans "of" %} <strong>{{ paginator.count }}</strong> {{ label }}
-   {% if page.has_other_pages %} 
-   {% trans "in" %} <strong>{{ paginator.num_pages }}</strong> 
-   {% trans "pages" %} 
-   {% endif %}
-    </span>
-
+    {% for pages in paginator.page_range %}
+        {% if pages %}
+            {% ifequal paginator.num_pages 1 %}
+                ...
+            {% else %}
+                {% ifequal pages page.number %}
+                    <span class="current page">| {{ page.number }} |</span>
+                {% else %}
+                    <a href="?page={{ pages }}" class="page">{{ pages }}</a>
+                {% endifequal %}
+            {% endifequal %}
+        {% endif %}
+    {% endfor %}
     {% if page.has_next %}
-    <a href="{{ page.next_link }}">{% trans "Forward" %}&gt;</a>
+        {% ifequal page.next_page_number paginator.num_pages %}
+            <a href="?page={{ page.next_page_number }}" class="next"> &rsaquo;&rsaquo;</a>
+        {% else %}
+            <a href="?page={{ page.next_page_number }}" class="next"> &rsaquo;&rsaquo;</a>
+            <a href="?page={{ paginator.num_pages }}" class="next"> &rsaquo;&rsaquo;&rsaquo;&rsaquo;</a>
+        {% endifequal %}
+    {% else %}
+        {% ifnotequal paginator.num_pages 1 %}
+            <span class="disabled next"> &rsaquo;&rsaquo;</span>
+        {% endifnotequal %}
     {% endif %}
-
-
 </div>

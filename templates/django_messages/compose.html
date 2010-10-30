@@ -10,28 +10,23 @@ Compose - {{ block.super }}
 {% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
-<div class="message_item">
+<div class="box_item_model fixed_site border">
 	<h3 class="title">{% trans "Compose Message"%}</h3>
-	<div class="content">
-		<form action="" method="post">
-			<table class="text" width="100%" cellspacing="1">
-				{% for field in form %}
-				<tr>
-					<td {% ifequal field.name "body" %}valign="top" {% endifequal %}width="80" class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-					<td class="{% cycle "odd" "even" %}">{{ field }}</td>
-					<td width="1%" class="{% cycle "odd" "even" %}"></td>
-				</tr>
-				{% endfor %}
-			</table>
-	</div>
-	<table class="bottom_line" width="100%">
-		<tr>
-			<td class="admin">
-				<input type="submit" value="{% trans "Send" %} &raquo;"/>
-			</td>
-		<tr>
-	</table>
-		</form>
+    <form action="" method="post">
+        <div class="content">
+            <table class="text full_site" cellspacing="1">
+                {% for field in form %}
+                <tr>
+                    <td width="80" class="{% cycle "odd" "even" %}{% ifequal field.name "body" %} show_left{% endifequal %}">{{ field.label_tag }}:</td>
+                    <td class="{% cycle "odd" "even" %}">{{ field }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="info_line show_center">
+            <input type="submit" value="{% trans "Send" %} &raquo;"/>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

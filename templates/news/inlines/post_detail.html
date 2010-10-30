@@ -6,50 +6,52 @@
 {% endcomment %}
 {% load threadedcommentstags %}
 {% load news wl_markdown tagging_tags wlprofile custom_date %}
-
-
-   <div class="news_item">
-         <h3 class="title">{# TODO: categories! #} {{ object.title }}</h3>
-         <div class="info_line"> 
-            <span class="news_poster">Posted by {{object.author|user_link}}</span>
-            <span class="news_post_date">on {{ object.publish|custom_date:user }}</span> 
-         </div>
-         <div class="content">
-            {% if object.has_image %}
-            <span class="news_image"><img src='{{MEDIA_URL}}{{ object.image }}' alt='{{ object.image_alt }}' /></span>
-            <div class="text" style='min-height: {{ object.image.height }}px;'>
-            {% else %}
-            <div class="text">
-            {% endif %}
-            {{ object.body|wl_markdown:"safe" }}
+    <div class="box_item_model border">
+        <h3 class="title">{# TODO: categories! #} {{ object.title }}</h3>
+            <div class="info_line"> 
+                <span class="news_poster">Posted by {{object.author|user_link}}</span>
+                <span class="news_post_date">on {{ object.publish|custom_date:user }}</span> 
             </div>
-         </div>
+            <div class="content">
+{% if object.has_image %}
+                <span class="news_image"><img src='{{MEDIA_URL}}{{ object.image }}' alt='{{ object.image_alt }}' /></span>
+                <div class="text" style='min-height: {{ object.image.height }}px;'>
+{% else %}
+                <div class="text">
+{% endif %}
+{{ object.body|wl_markdown:"safe" }}
+                </div>
+            </div>
          
-        <table class="bottom_line" width="100%">
-         <tr>
-         {% get_comment_count for object as ccount %}
-         <td class="comments">
-             <a href="{{ object.get_absolute_url }}">{{ ccount }} comments</a>
-         </td>
-         
-         <td class="admin">
-         {% if perms.news %}
-         {% if perms.news.post_can_add %}<a href="/admin/news/post/add/">Add New Post</a>{% endif %}
-         {% if perms.news.post_can_edit %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
-         {% if perms.news.post_can_delete %}| <a href="/admin/news/post/{{object.id}}/delete/">Delete</a>{% endif %}
-         {% endif %}
-         </td>
-         
-         {% tags_for_object object as tag_list %}
-         <td class="tags">
-         {% if tag_list %}
-            <strong>Tags:</strong>
-            {% for tag in tag_list %}
-            {{ tag }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-         {% endif %}
-         </td>
-         </tr>
-
-      </table>
-   </div>
+            <table class="info_line full_site">
+                <tr>
+{% get_comment_count for object as ccount %}
+                    <td class="comments show_left">
+                        <a href="{{ object.get_absolute_url }}">{{ ccount }} comments</a>
+                    </td>
+                    <td class="show_center">
+{% if perms.news %}
+    {% if perms.news.post_can_add %}
+                        <a href="/admin/news/post/add/">Add New Post</a>
+    {% endif %}
+    {% if perms.news.post_can_edit %}
+                        | <a href="/admin/news/post/{{object.id}}/">Edit</a>
+    {% endif %}
+    {% if perms.news.post_can_delete %}
+                        | <a href="/admin/news/post/{{object.id}}/delete/">Delete</a>
+    {% endif %}
+{% endif %}
+                    </td>
+{% tags_for_object object as tag_list %}
+                    <td class="show_right">
+{% if tag_list %}
+                        <strong>Tags:</strong>
+    {% for tag in tag_list %}
+        {{ tag }}
+        {% if not forloop.last %}, {% endif %}
+    {% endfor %}
+{% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>

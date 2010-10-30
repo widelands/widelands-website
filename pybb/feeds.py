@@ -1,8 +1,8 @@
 from django.contrib.syndication.feeds import Feed
-from django.utils.feedgenerator import Atom1Feed
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from pybb.models import Post, Topic, Forum
 
@@ -27,10 +27,10 @@ class PybbFeed(Feed):
         else: 
             return self.items_for_object(obj)
 
-    def link(self,obj):
+    def link(self, obj):
         if obj == self.all_objects:
             return reverse('pybb_index')
-        return reverse('pybb_forum', args=(obj.pk,))
+        return "/ewfwevw%s" % reverse('pybb_forum', args=(obj.pk,))
    
     def get_object(self,bits):
         """
@@ -46,12 +46,15 @@ class PybbFeed(Feed):
     ##########################
     # Individual items below #
     ##########################
-    def item_guid(self, obj):
+    def item_id(self, obj):
         return str(obj.id)
 
     def item_pubdate(self, obj):
         return obj.created
-    
+
+    def item_links(self, item):
+        return [{'href': item.get_absolute_url()}, ]
+
 
 class LastPosts(PybbFeed):
     all_title = _('Latest posts on all forums')
@@ -66,6 +69,13 @@ class LastPosts(PybbFeed):
     def items_for_object(self,obj):
         return Post.objects.filter( topic__forum = obj ).order_by('-created')[:15]
 
+    def item_author_name(self, item):
+        """
+        Takes the object returned by get_object and returns the feeds's
+        auhor's name as a Python string
+        """
+        return item.user.username
+
 
 class LastTopics(PybbFeed):
     all_title = _('Latest topics on all forums')
@@ -79,4 +89,11 @@ class LastTopics(PybbFeed):
     
     def items_for_object(self,obj):
         return Topic.objects.filter( forum = obj ).order_by('-created')[:15]
+
+    def item_author_name(self, item):
+        """
+        Takes the object returned by get_object and returns the feeds's
+        auhor's name as a Python string
+        """
+        return item.user.username
 

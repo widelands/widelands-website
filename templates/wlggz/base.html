@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block title %}
+GGZ statistics - {{ block.super }}
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/ggz.css" />{{ block.super}}
+{% endblock %}

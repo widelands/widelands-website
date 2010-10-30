@@ -16,58 +16,54 @@
 {{ block.super}}{% endblock %}
 {% block content %}
 
-
-<div class="blockContent">
-   <center>
-      <h1>Welcome to Widelands.org</h1>
-      <h3>Home of the free realtime strategy game and its community</h3>
-   <p>
-      <br/>
-      <img src='{{ MEDIA_URL }}/img/HomepageSplash.jpg' title='Widelands' alt='Widelands-Screenshot' />
-      <br/><br/>
-   </p>
-   </center>
+<div class="block_center">
+    <h1>Welcome to Widelands.org</h1>
+    <h3>Home of the free realtime strategy game and its community</h3>
+    <br/>
+    <img src='{{ MEDIA_URL }}/img/HomepageSplash.jpg' title='Widelands' alt='Widelands-Screenshot' />
+    <br/>
+    <br/>
 </div>
 
 <!-- Begin of text -->
 <div class="itemText">
-   <p>
-            Widelands is an open source (GPLed) real-time strategy
-            game. It is built upon the <a
-               href='http://www.libsdl.org'>SDL</a> and other open
-            source libraries and is (and will always be) under heavy development. If
-            you knew Settlers I &amp; II&#8482; (© Bluebyte), then you
-            already have a rough idea what Widelands is all about because
-            widelands is heavily inspired by those two games. 
-      </p>
-   <p>
-            You can find detailed information on the game in our <a
-               href="/wiki">Wiki</a>. I you want to get a quick Overview, go to
-            the <a title="General Info" href="{% url wiki_article "GeneralInfo" %}">General Info</a> page.
-      </p>
-            
-   <p>
-            You can download the game on the <a href="{% url wiki_article "DownloadPage" %}">DownloadPage</a>.  You can also find
-            installation instructions and various troubleshooting hints
-            there.
-      </p>
-            
-   <p>
-            You are also invited to visit the <a
-               href="{% url pybb_index %}">Forums</a>:
-            chat with the community about the game, find playing mates for multiplayer,
-            help translating, discuss graphics, music and much more.
-      </p>
+    <p>
+        Widelands is an open source (GPLed) real-time strategy game.
+        It is built upon the <a href='http://www.libsdl.org'>SDL</a> and other
+        open source libraries and is (and will always be) under heavy 
+        development. If you knew Settlers I &amp; II&#8482; (© Bluebyte), then
+        you already have a rough idea what Widelands is all about because 
+        widelands is heavily inspired by those two games.
+    </p>
+    <p>
+        You can find detailed information on the game in our 
+        <a href="/wiki">Wiki</a>. I you want to get a quick Overview, go to the
+        <a title="General Info" href="{% url wiki_article "GeneralInfo" %}">General Info</a> 
+        page.
+    </p>
+    <p>
+        You can download the game on the 
+        <a href="{% url wiki_article "DownloadPage" %}">DownloadPage</a>. You 
+        can also find installation instructions and various troubleshooting 
+        hints there.
+    </p>
+    <p>
+        You are also invited to visit the <a href="{% url pybb_index %}">Forums</a>:
+        chat with the community about the game, find playing mates for
+        multiplayer, help translating, discuss graphics, music and much more.
+    </p>
 </div>
 
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
-   <h2><a href="{% url news_index %}">Latest news:</a></h2>
-   {% for object in latest_posts_list %}
-   {% include "news/inlines/post_detail.html" %} 
-   <br />
-   {% endfor %}
-   <a href="{% url news_index %}">News archive</a>
+<h2>
+    <a href="{% url news_index %}">Latest news:</a>
+</h2>
+    {% for object in latest_posts_list %}
+        {% include "news/inlines/post_detail.html" %} 
+    <br />
+    {% endfor %}
+    <a href="{% url news_index %}">News archive</a>
 {% endif %}
 
 {% endblock %}

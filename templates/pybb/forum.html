@@ -13,52 +13,75 @@
 {% endblock %}
 
 {% block content %}
+{% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
+<div class="box_item_model">
     <div class="forum-list">
-        <span class="title">{{ forum }}</span>
-         
+        <span class="title"><a href="/forum/">Forum</a> &rArr; {{ forum }}</span>
+        <br /> 
         <div class="index_forum">
-           {% pybb_pagination _('Topics') %}
-           <div class="controls">
-               <a href="{% url pybb_add_topic forum.id %}">{% trans "New topic" %}</a>
-           </div>
-
-           <table cellspacing="1" width="100%">
-              <tr align="center">
-                 <th width="5%">&nbsp;</th>
-                 <th width="40%" nowrap="nowrap" align="left">Topic</th>
-                 <th             nowrap="nowrap">Creator</th>
-                 <th             nowrap="nowrap">At</th>
-                 <th             nowrap="nowrap">Posts</th>
-                 <th             nowrap="nowrap">Views</th>
-                 <th width="20%" nowrap="nowrap">Last Post</th>
-              </tr>
-
-              {# List all forums #}
-              {% for topic in topics %}
-              {% include "pybb/inlines/topic_row.html" %}
-              {% endfor %}
+            <table width="100%">
+                <tr>
+                    <td>
+                        {% pybb_pagination _('Topics') %}
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <a href="{% url pybb_add_topic forum.id %}">
+                                <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" style="float:right" />
+                            </a>
+                        </div>
+                    </td>
+                </tr>
             </table>
-           
-           {% pybb_pagination _('Topics') %}
-           <div class="controls">
-               <a href="{% url pybb_add_topic forum.id %}">{% trans "New topic" %}</a>
-           </div>
-        
+            <table cellspacing="1" width="100%">
+                <tr align="center">
+                    <th width="5%">&nbsp;</th>
+                    <th width="40%" nowrap="nowrap" align="left">Topic</th>
+                    <th             nowrap="nowrap">Creator</th>
+                    <th             nowrap="nowrap">At</th>
+                    <th             nowrap="nowrap">Posts</th>
+                    <th             nowrap="nowrap">Views</th>
+                    <th width="20%" nowrap="nowrap">Last Post</th>
+                </tr>
+
+                {# List all forums #}
+                {% for topic in topics %}
+                {% include "pybb/inlines/topic_row.html" %}
+                {% endfor %}
+            </table>
+            <table width="100%">
+                <tr>
+                    <td>
+                        {% pybb_pagination _('Topics') %}
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <a href="{% url pybb_add_topic forum.id %}">
+                                <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" style="float:right"/>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </table>     
         </div>        
         
         <table class="legend">
-           <tr>
-              <td>
-                 <img src="{{MEDIA_URL}}/forum/img/folder_new.png" style=":" alt="" align="middle" />
-              </td><td>= Unread posts</td>
-              <td>
-                  <img src="{{MEDIA_URL}}/forum/img/folder.png" style="" alt="" align="middle" /> 
-              </td><td>= No unread posts</td>
-              <td>
-           </tr>
+            <tr>
+                <td>
+                    <img src="{{MEDIA_URL}}/forum/img/folder_new.png" style=":" alt="" align="middle" />
+                </td>
+                <td>= Unread posts</td>
+                <td>
+                    <img src="{{MEDIA_URL}}/forum/img/folder.png" style="" alt="" align="middle" /> 
+                </td>
+                <td>= No unread posts</td>
+                <td>
+            </tr>
         </table>
     </div>
-
+</div>
 {% endblock %}
 
 {% comment %}

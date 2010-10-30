@@ -10,64 +10,82 @@
 
 {% block extra_head %}
     <link rel="alternate" type="application/atom+xml" title="Notices Feed" href="{% url notification_feed_for_user %}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/notice.css" />{{ block.super}}
 {% endblock %}
 
 {% block content %}
-    {% include "messages/inlines/navigation.html" %}
-
-    <h1>{% trans "Notices" %}</h1>
+    {% include "django_messages/inlines/navigation.html" %}
+<br />
+<br />
+<div class="box_item_model full_site border" width="100%">
+    <h3 class="title">{% trans "Notices" %}</h3>
     
     {% autopaginate notices %}
-    
+   
     {% if notices %}
-        <a href="{% url notification_mark_all_seen %}">{% trans "Mark all unseen notices seen" %}</a>
-        
+        <div class="info_line show_center">
+            <br />
+            <a href="{% url notification_mark_all_seen %}">{% trans "Mark all unseen notices seen" %}</a>
+            <br />
+            <br />
+        </div>
         {# TODO: get timezone support working with regroup #}
         {% regroup notices by added.date as notices_by_date %}
         
         {% for date in notices_by_date %}
-            <h2 class="notice_date">{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}</h2>
-            
+            <h3 class="title notice_date">{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}</h3>
             {% for notice in date.list %}
                 {% if notice.is_unseen %}
-                    <div class="unseen_notice">
+                <div class="{% cycle "odd" "even" %} notice_unseen_notice border_top">
                 {% else %}
-                    <div class="notice">
+                <div class="{% cycle "odd" "even" %} border_top">
                 {% endif %}
-                    <span class="notice_type">[{% trans notice.notice_type.display %}]</span>
+                    <span class="notice_type"><a href="{% url notification_notice notice.pk %} ">[{% trans notice.notice_type.display %}]</a></span>
                     <span class="notice_message">{{ notice.message|safe }}</span>
                     <span class="notice_time">{{ notice.added }}</span>
                 </div>
             {% endfor %}
         {% endfor %}
-        
-        {% paginate %}
-        
+        <div class="info_line show_center">
+            {% paginate %}
+        </div>
     {% else %}
-        <p>{% trans "No notices." %}</p>
+        <div class="info_line show_center">
+            <br />
+            {% trans "No notices." %}
+            <br />
+            <br />
+        </div>
     {% endif %}
-    
-    
-    <div class="notice_settings">
-        <h2>{% trans "Settings" %}</h2>
+    </div>
+    <br />
+    <br />
+    <div class="box_item_model full_site border">
+        <h3 class="title">{% trans "Settings" %}</h2>
         
         {% url acct_email as email_url %}
         {% if user.email %}
-            <p>
+            <div class="info_line show_center">
+                <br />
                 {% trans "Primary email" %}:<br />
                 <b>{{ user.email }}</b><br />
-                (change under <a href="{% url profile_view %}">Account</a>)
-            </p>
+                (change under <a href="{% url profile_view user %}">Account</a>)
+                <br />
+                <br />
+            </div>
         {% else %}
-            <p>
+            <div class="info_line show_center">
+                <br />
                 <span class="warning">{% trans "Note" %}</span>:
-                {% blocktrans %}You do not have a verified email address to which notices can be sent. You can add one by going to <a href="{{ email_url }}">Account</a>.{% endblocktrans %}
-            </p>
+                You do not have a verified email address to which notices can be sent. You can add one by going to <a href="{% url profile_edit %}">Account</a>.
+                <br />
+                <br />
+            </div>
         {% endif %}
         
         <form method="POST" action=""> {# doubt this easy to do in uni-form #}
-            <table class="notice_settings" cellspacing="1">
-                <tr>
+            <table width="100%" class="notice_settings" cellspacing="1">
+              <tr>
                     <th>{% trans "Notification Type" %}</th>
                     {% for header in notice_settings.column_headers %}
                         <th>{{ header }}</th>
@@ -86,7 +104,7 @@
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td><input type="submit" value="{% trans "Change" %}" /></td>
+                    <td class="info_line show_center" colspan="2"><input type="submit" value="{% trans "Change" %}" /></td>
                 </tr>
             </table>
         </form>

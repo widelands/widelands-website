@@ -1,12 +1,10 @@
 {% comment %}
   vim:ft=htmldjango:
 {% endcomment %}
-
 {% load humanize %}
 {% load pybb_extras %}
 {% load wlprofile %}
 {% load custom_date %}
-
    <tr class="topic_description {% cycle "odd" "even" %}">
          <td align="center" valign="middle">
             {% if topic|pybb_has_unreads:user %}
@@ -16,7 +14,17 @@
             {% endif %}
          </td>
          <td id="name">
-            <span class="name"><a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></span>
+            <span class="name">
+                <a href="{{ topic.get_absolute_url }}">
+                    {% comment %}
+                        oehm ja, geht nicht weil ka muss ich guggn, die frage ist. soll es fuer alle gelten oder nur fuer eine topic
+                    {% endcomment %}
+                    {% if subscribed %}<img src="{{MEDIA_URL}}/forum/img/en/subscribe_small.png" height="20" alt="subscribe" style="float:left" />{% endif %}
+                    {% if topic.sticky %}<img src="{{MEDIA_URL}}/forum/img/en/stick_topic_small.png" height="20" alt ="Sticky" style="float:left;" /> {% endif %}
+                    {% if topic.closed %}<img src="{{MEDIA_URL}}/forum/img/en/close_small.png" height="20" alt ="Closed" style="float:left; " /> {% endif %}
+                    &nbsp;{{ topic.name }}
+                </a>
+            </span>
          </td>
          <td><span class="creator">{{ topic.user|user_link }}</span></td>
          <td><span class="at">{{ topic.created|custom_date:user }}</span></td>

@@ -10,13 +10,15 @@ from django.contrib.auth.models import User
 from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
 
+from notification import models as notification
+
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
     attachment = forms.FileField(label=_('Attachment'), required=False)
 
     class Meta:
         model = Post
-        fields = ['body']
+        fields = ['body', 'markup',]
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -25,7 +27,7 @@ class AddPostForm(forms.ModelForm):
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
-        self.fields.keyOrder = ['name', 'body', 'attachment']
+        self.fields.keyOrder = ['name', 'body', 'markup', 'attachment']
 
         if self.topic:
             self.fields['name'].widget = forms.HiddenInput()
@@ -47,20 +49,29 @@ class AddPostForm(forms.ModelForm):
 
     def save(self):
         if self.forum:
+	    topic_is_new = True
             topic = Topic(forum=self.forum,
                           user=self.user,
                           name=self.cleaned_data['name'])
             topic.save()
         else:
+            topic_is_new = False
             topic = self.topic
 
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
-                    markup="markdown",
+                    markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
         post.save()
 
         if pybb_settings.ATTACHMENT_ENABLE:
             self.save_attachment(post, self.cleaned_data['attachment'])
+
+        if topic_is_new:
+            notification.send(User.objects.all(), "forum_new_topic",
+                {'topic': topic, 'post':post, 'user':topic.user})
+        else:
+            notification.send(self.topic.subscribers.all(), "forum_new_post",
+                {'post':post, 'topic':topic, 'user':post.user})
         return post
 
 

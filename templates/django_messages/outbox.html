@@ -7,14 +7,17 @@ Outbox - {{ block.super }}
 
 {% block content %} 
 {% include "django_messages/inlines/navigation.html" %}
-<h1>{% trans "Sent Messages" %}</h1>
+<br />
+<br />
+<div class="box_item_model border">
+<h3 class="title">{% trans "Sent Messages" %}</h3>
 <table class="messages" cellspacing="1"> 
     <thead>
         <tr>
-            <th>{% trans "Recipient" %}</th>
-            <th>{% trans "Subject" %}</th>
-            <th>{% trans "Sent" %}</th>
-            <th>{% trans "Action" %}</th>
+            <td>{% trans "Recipient" %}</td>
+            <td>{% trans "Subject" %}</td>
+            <td>{% trans "Sent" %}</td>
+            <td>{% trans "Action" %}</td>
         </tr>
     </thead>
     <tbody>
@@ -23,4 +26,5 @@ Outbox - {{ block.super }}
    {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

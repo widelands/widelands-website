@@ -1,19 +1,19 @@
 {% load i18n %} 
 
+{% if user.is_authenticated %}
 <div>
-   <table width="100%">
-   <tr>
-      <td align="left">
-         <a href="{% url profile_view %} ">{% trans "Profile" %}</a>
-         | <a href="{% url notification_notices %} ">{% trans "Notifications" %}</a>
-      </td>
-      <td align="right" style="table-layout: fixed;">
-         <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>
-         | <a href="{% url messages_outbox %} ">{% trans "Sent Messages" %}</a>
-         | <a href="{% url messages_compose %} ">{% trans "New Message" %}</a>
-         | <a href="{% url messages_trash %} ">{% trans "Message Trash" %}</a>
-      </td>
-   </tr>
-   </table>
+    <table width="100%">
+        <tr>
+            <td width="">&nbsp;
+            </td>
+            <td width="370" align="right" style="table-layout: fixed; background-image: url(http://wl-testbed.dyndns.org/wlmedia/img/background-4F4F4F.png);">
+                <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>
+                | <a href="{% url messages_outbox %} ">{% trans "Sent Messages" %}</a>
+                | <a href="{% url messages_compose %} ">{% trans "New Message" %}</a>
+                | <a href="{% url messages_trash %} ">{% trans "Message Trash" %}</a>
+            </td>
+        </tr>
+    </table>
 </div>
+{% endif %}
 

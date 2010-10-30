@@ -1,0 +1,12 @@
+.notice_poster { 
+    font-size: 90%;
+}
+.notice_post_date { 
+    font-size: 90%;
+}
+.notice_unseen_notice {
+    font-style: italic;
+}
+.notice_type {
+    font-weight: bold;
+}

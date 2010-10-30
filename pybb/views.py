@@ -18,6 +18,11 @@ from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
+try:
+    from notification import models as notification
+except ImportError:
+    notification = None
+
 def index_ctx(request):
     quick = {'posts': Post.objects.count(),
              'topics': Topic.objects.count(),
@@ -165,6 +170,8 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save();
+	if not topic:
+            post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
 
     if topic:

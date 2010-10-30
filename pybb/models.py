@@ -18,9 +18,15 @@ from django.conf import settings
 if settings.USE_SPHINX:
     from djangosphinx import SphinxSearch
 
+try:
+    from notification import models as notification
+    from django.db.models import signals
+except ImportError:
+    notification = None
+
 MARKUP_CHOICES = (
     ('markdown', 'markdown'),
-    #    ('bbcode', 'bbcode'),
+    ('bbcode', 'bbcode'),
 )
 
 
@@ -127,10 +133,12 @@ class Topic(models.Model):
         return reverse('pybb_topic', args=[self.id])
 
     def save(self, *args, **kwargs):
-        if self.id is None:
+        new = self.id is None
+        if new:
             self.created = datetime.now()
         super(Topic, self).save(*args, **kwargs)
 
+      
     def update_read(self, user):
         read, new = Read.objects.get_or_create(user=user, topic=self)
         if not new:
@@ -207,6 +215,7 @@ class Post(RenderableItem):
     def save(self, *args, **kwargs):
         if self.created is None:
             self.created = datetime.now()
+
         self.render()
 
         new = self.id is None
@@ -338,6 +347,9 @@ class Attachment(models.Model):
         return os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO,
                             self.path)
 
+
+#if notification is not None:
+#    signals.post_save.connect(notification.handle_observations, sender=Post)
 
 from pybb import signals
 signals.setup_signals()

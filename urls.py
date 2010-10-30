@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     # Django builtin / Registration
     (r'^accounts/logout/(next=(?P<next_page>.*))?$', 'django.contrib.auth.views.logout'),
 url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
+    url(r'^accounts/changepw/$', 'django.contrib.auth.views.password_change', name="auth_change_password"),
     (r'^accounts/', include('registration.backends.default.urls')),
     (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
@@ -49,6 +50,7 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     url(r'^poll/', include("wlpoll.urls")),
     url(r'^maps/', include("wlmaps.urls")),
     url(r'^screenshots/', include("wlscreens.urls")),
+    url(r'^ggz/', include("wlggz.urls")),
 )
 
 try:

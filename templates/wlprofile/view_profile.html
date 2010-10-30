@@ -5,18 +5,17 @@
 {% block content %}
 {% load custom_date %}
 
-{% ifequal user profile.user %}
-{% include "messages/inlines/navigation.html" %}
-{%endifequal%}
+{% include "django_messages/inlines/navigation.html" %}
+
 <br />
 <br />
-<div class="profile_item">
+<div class="box_item_model fixed_site border">
     <h3 class="title">{% trans "View Profile" %}</h3>
     <div class="content">
 	{% if profile.avatar %}
 	    <img src="{{ profile.avatar.url }}" />
 	{% endif %}
-	<table width="100%" cellspacing="1" class="text">
+	<table cellspacing="1" class="text full_site">
 		<tr>
 			<td class="odd">User:</td>
 			<td class="odd">{{ profile.user.username }}</td>
@@ -57,14 +56,19 @@
 			<td class="even">Yahoo:</td>
 			<td class="even">{{ profile.yahoo }}</td>
 		</tr>
+   		<tr>
+			<td class="odd show_left">Signature:</td>
+			<td class="odd show_left">{{ profile.signature|urlize|linebreaks }}</td>
+		</tr>
 		{% ifequal user profile.user %}
    		<tr>
-			<td class="odd">Email:</td>
-			<td class="odd">{{ profile.user.email }}</td>
+			<td class="even">Email:</td>
+			<td class="even">{{ profile.user.email }}</td>
 		</tr>
 		{% endifequal %}
 	</table>
 </div>
+{% comment %}
 <table class="bottom_line" width="100%">
 	<tr>
 		<td>
@@ -76,5 +80,13 @@
 		</td>
 	</tr>
 </table>
+<table class="bottom_line" width="100%">
+	<tr>
+		<td>
+    			<a href="{% url wlggz_userstats profile.user %}">View GGZ Statistics of this user</a>
+		</td>
+	</tr>
+</table>
+{% endcomment %}
 </div>
 {% endblock %}
