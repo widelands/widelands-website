@@ -1006,10 +1006,10 @@ class diff_match_patch:
       text = (data.replace("&", "&amp;").replace("<", "&lt;")
                  .replace(">", "&gt;").replace("\n", "&para;<BR>"))
       if op == self.DIFF_INSERT:
-        html.append("<INS STYLE=\"color: #00FF00;\" TITLE=\"i=%i\">%s</INS>"
+        html.append("<SPAN STYLE=\"color: #00FF00;\" TITLE=\"i=%i\">%s</SPAN>"
             % (i, text))
       elif op == self.DIFF_DELETE:
-        html.append("<DEL STYLE=\"color: #FF0000;\" TITLE=\"i=%i\">%s</DEL>"
+        html.append("<SPAN STYLE=\"color: #FF0000;\" TITLE=\"i=%i\">%s</SPAN>"
             % (i, text))
       elif op == self.DIFF_EQUAL:
         html.append("<SPAN TITLE=\"i=%i\">%s</SPAN>" % (i, text))

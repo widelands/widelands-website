@@ -1,3 +1,60 @@
+/**************************/
+/* General Style elements */
+/**************************/
+.text h1 {
+    font-size: 2.5em;
+    margin: 10px 0px;
+}
+.text h2 {
+    font-size: 2em;
+    margin: 25px 0px 10px;
+    line-height: 70%;
+}
+.text h3 {
+    font-size: 1.4em;
+    margin: 5px 0px;
+}
+.text h4 {
+    font-size: 1.30em;
+    margin: 5px 0px;
+    /*
+     * text-decoration: underline; 
+     * */
+}
+.text h5 {
+    font-size: 1.2em;
+    margin: 5px 0px;
+    /*
+     * text-decoration: underline;
+     * font-style: italic;
+     * */
+}
+.text h6 {
+    font-size: 1.1em; 
+    margin: 5px 0px;
+    /*
+     * font-style: italic;
+     * */
+}
+
+.text h1:first-letter,.text h2:first-letter,.text h3:first-letter,.text h4:first-letter,.text h5:first-letter {
+     vertical-align: baseline;
+     color: #7070FF;
+     font-size: 180%;
+     font-family: Cretino, "Bitstream Vera Serif", serif;
+     font-weight: bold;
+}
+.text h3:first-letter {
+    color: rgb(156,156,86);
+}
+.text h4:first-letter {
+    color: rgb(156,86,156);
+    font-size: 150%;
+}
+.text h5:first-letter {
+    color: rgb(86,156,156);
+    font-size: 120%;
+}
 .news_poster { 
     font-size: 90%;
 }
