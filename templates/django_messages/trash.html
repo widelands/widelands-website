@@ -9,7 +9,7 @@ Trash - {{ block.super }}
 {% include "django_messages/inlines/navigation.html" %} 
 <br />
 <br />
-<div class="box_item_model">
+<div class="box_item_model border">
     <h3 class="title">{% trans "Deleted Messages" %}</h3>
     <table class="messages" cellspacing="1">
         <thead>
@@ -28,7 +28,7 @@ Trash - {{ block.super }}
     </table>
 </div>
 <br />
-<div class="box_item_model">
+<div class="box_item_model border">
     <div class="info_line show_center errormessage">
         <br />
         {% trans "Deleted Messages are removed from the trash at unregular intervals, don't rely on this feature for long-time storage." %}

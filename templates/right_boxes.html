@@ -40,20 +40,24 @@
          <!-- Login Block / User informations -->
          {% if user.is_authenticated %}
          <h3 class="box_title">Account</h3>
-         <div class="box_content" align="center"> 
-            <p>
-            You are logged in as<br/>
-            <b>{{ user|user_link }}</b>
+         <div class="box_content"> 
+            <p align="center">
+            Welcome <b>{{ user|user_link }}</b>,<br />
+            you've <a href="{% url messages_inbox %}">{% inbox_count %}</a> new messages
             </p>
-      
-            <p>
-            <a href="{% url messages_inbox %}">{% inbox_count %} {% trans "new messages" %}</a>
-            </p>
-
-            <p>
-            <a href="/accounts/logout/next={{ request.path }}">Logout</a>
-            </p>
-
+            <ul>
+            <li>
+            </li>
+                <li>
+                    <a href="{% url profile_edit %}">Edit Profile</a>
+                </li>
+                <li>
+                    <a href="{% url notification_notices %} ">Notifications</a>
+                </li>
+                <li>
+                    <a href="/accounts/logout/next={{ request.path }}">Logout</a>
+                </li>
+            </ul>
          </div>
          {% else %}
          <h3 class="box_title">Login</h3>

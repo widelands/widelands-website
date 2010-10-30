@@ -55,11 +55,13 @@
 <li>
     <a href="{% url wlggz_main %}">Online Gaming</a>
     <ul>
+        <!--
         <li><a href="{% url wlggz_ranking %}">GGZ Ranking</a></li>
         <li><a href="{% url wlggz_matches %}">GGZ Matches</a></li>
         {% if user.is_authenticated %}
         <li><a href="{% url wlggz_userstats %}">GGZ Status</a></li>
         {% endif %}
+        -->
         <li><a href="{% url wiki_article "InternetGaming" %}">HowTo</a></li>
     </ul>
 </li>

@@ -12,7 +12,7 @@
 <br />
 
 {% if ggzauth.user %}
-    <div class="box_item_model fixed_site">
+    <div class="box_item_model fixed_site border">
         <h3 class="title">{% trans "GGZ results for" %} {{ ggzauth.user.username }}</h3>
         <table class="info_line full_site">
             <tr><td class="ggz_stats">Last ggz login:</td><td class="show_left"> {{ ggzauth.lastlogin }}</td></tr>
@@ -25,7 +25,7 @@
     <br />
     <br />
 
-    <div class="box_item_model fixed_site">
+    <div class="box_item_model fixed_site border">
         <h3 class="title">Last 10 matches of {{ ggzauth.user.username }}</h3>
         {% if ggzmatches %}
 	    <table width="100%" cellspacing="1" class="text">
@@ -61,7 +61,7 @@
     </div>
     <br />
     <br />
-    <div class="box_item_model fixed_site">
+    <div class="box_item_model fixed_site border">
         <h3 class="title">Last 10 matches {{ ggzauth.user.username }} won</h3>
         {% if ggzwonmatches %}
         <table cellspacing="1" class="text full_site">

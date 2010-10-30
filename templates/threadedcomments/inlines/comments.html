@@ -29,7 +29,7 @@
     {% endfor %}
     <br />
 	<br />
-	<div class="box_item_model fixed_site">
+	<div class="box_item_model fixed_site border">
     {% if user.is_authenticated %}
         <h3 class="title">Reply to Original:</h3>
         <form method="POST" action="{% get_comment_url object %}?next={{object.get_absolute_url}}">

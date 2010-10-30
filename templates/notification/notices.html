@@ -17,7 +17,7 @@
     {% include "django_messages/inlines/navigation.html" %}
 <br />
 <br />
-<div class="box_item_model full_site" width="100%">
+<div class="box_item_model full_site border" width="100%">
     <h3 class="title">{% trans "Notices" %}</h3>
     
     {% autopaginate notices %}
@@ -60,7 +60,7 @@
     </div>
     <br />
     <br />
-    <div class="box_item_model full_site">
+    <div class="box_item_model full_site border">
         <h3 class="title">{% trans "Settings" %}</h2>
         
         {% url acct_email as email_url %}
