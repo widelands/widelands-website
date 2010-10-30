@@ -1,9 +1,12 @@
 {% load wlprofile %}
 
 {% if users %}
-    <ul>
-    {% for user in users %}
-    <li><a href="{% url profile_view user %}">{{user.username}}</a></li>
-    {% endfor %}
-    </ul>
+    <h3 class="box_title">Currently online</h3>
+    <div class="box_content"> 
+        <ul>
+            {% for user in users %}
+            <li><a href="{% url profile_view user %}">{{user.username}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endif %}
