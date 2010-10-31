@@ -20,8 +20,8 @@ class SecureURL(template.Node):
 
     def render(self, context):
         if self.use_ssl:
-            return "https://%s/accounts/login" % self.site_name
-        return "/accounts/login"
+            return "https://%s/accounts/login/" % self.site_name
+        return "/accounts/login/"
 
 def secure_login(parser, token):
     return SecureURL()
