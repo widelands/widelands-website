@@ -7,7 +7,7 @@
 {% load inbox %}
 {% load i18n %}
 {% load wlprofile wlpoll wlevents%}
-{% load pybb_extras %}
+{% load pybb_extras secure_login %}
 
       <!-- Search Box -->
       <h3 class="box_title">Search</h3>
@@ -60,7 +60,7 @@
          {% else %}
          <h3 class="box_title">Login</h3>
          <div class="box_content"> 
-            <form method="post" action="https://{{request.META.SERVER_NAME }}/accounts/login/">
+            <form method="post" action="{% secure_login %}">
                <table cellspacing="0">
                   <tr><td>Username:</td></tr>
                   <tr><td><input type="text" name="username" value="" maxlength="25" /></td></tr>
