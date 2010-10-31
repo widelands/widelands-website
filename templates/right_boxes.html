@@ -60,7 +60,7 @@
          {% else %}
          <h3 class="box_title">Login</h3>
          <div class="box_content"> 
-            <form method="post" action="/accounts/login/">
+            <form method="post" action="https://{{request.META.SERVER_NAME }}/accounts/login/">
                <table cellspacing="0">
                   <tr><td>Username:</td></tr>
                   <tr><td><input type="text" name="username" value="" maxlength="25" /></td></tr>
