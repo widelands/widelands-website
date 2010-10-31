@@ -24,8 +24,6 @@ def _add_building_node( d, b ):
         fillcolor = '#ff00ffe2'
     elif b.type == 'W':
         fillcolor = 'blue'
-    else:
-        print b.type
 
     url = "/help/%s/buildings/%s/" % (b.tribe.name, b.name )
     n = pydot.Node( b.name, shape = 'rect', label = table, URL = url, fillcolor=fillcolor, style="filled"   ) 

@@ -25,16 +25,12 @@ class EditGGZForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         instance = kwargs.pop("instance")
 
-        print "instance: %s, kwargs: %s" % (instance, kwargs)
         super(EditGGZForm, self).__init__(instance=instance, *args,**kwargs)
 
     def clean_password(self):
         pw = self.cleaned_data['password']
-        print "pw:   %s" % (pw)
         pw_hash = hashlib.sha1(pw).digest()
         pw_base64 = base64.standard_b64encode(pw_hash)
-        print "sha1: %s" % (pw_hash)
-        print "base: %s" % (pw_base64)
         return pw_base64
 
 

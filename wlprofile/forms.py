@@ -27,7 +27,6 @@ class EditProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         instance = kwargs.pop("instance")
 
-        print "instance: %s, kwargs: %s" % (instance, kwargs)
         super(EditProfileForm, self).__init__(instance=instance, *args,**kwargs)
 
         self.fields['email'].initial = instance.user.email
@@ -45,7 +44,6 @@ class EditProfileForm(forms.ModelForm):
 
         u = self.instance.user
         u.email = self.cleaned_data['email']
-        print "u.email: %s" % (u.email)
 
         u.save()
 

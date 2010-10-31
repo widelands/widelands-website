@@ -48,8 +48,6 @@ def developers(request):
     for line in data:
         line = line.strip('"_ \n\r').rstrip('" _ \n\r')
         newdata.append(line)
-        print line
-
 
     txt = ''.join(newdata)
     txt,_ = re.subn(r'<\/?rt.*?>', "", txt)
