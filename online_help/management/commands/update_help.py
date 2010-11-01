@@ -74,6 +74,8 @@ class TribeParser(object):
                 except Exception, e:
                     print "Exception while handling", cls, "of", self._tribe.name, ":", inst.name
                     print type(e), e, repr(e)
+        
+        shutil.rmtree(tdir)
 
     def _copy_picture( self, file, name, fname ):
         """
