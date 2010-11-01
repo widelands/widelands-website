@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 def clear_string(s):
-    idx = s.rfind('#')
+    idx = s.find('#')
     if idx != -1:
         s = s[:idx]
 
@@ -59,7 +59,7 @@ class WidelandsConfigParser(SafeConfigParser):
                 return default
             raise
         except ValueError:
-            return int(SafeConfigParser.get(self,s,opt)[1:-1])
+            return int(clear_string(SafeConfigParser.get(self,s,opt)))
 
     def getboolean( self, s, opt, default = None):
         try:

@@ -21,13 +21,16 @@ from optparse import make_option
 from ConfigParser import ConfigParser, MissingSectionHeaderError
 from glob import glob
 import os
+from os import path
 import shutil
 from cStringIO import StringIO
 import re
+from itertools import chain
 
 from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR
 
 from widelandslib.tribe import *
+from widelandslib.make_flow_diagram import make_all_subgraphs
 
 def normalize_name( s ):
     """
@@ -55,6 +58,23 @@ class TribeParser(object):
         self._parse_wares()
         self._parse_buildings()
 
+    def graph( self ):
+        """Make all graphs"""
+        tdir = make_all_subgraphs(self._tribe)
+        for obj, cls in [(WorkerModel, "workers"),
+                         (BuildingModel, "buildings"),
+                         (WareModel, "wares")]:
+            for inst in obj.objects.all().filter(tribe=self._to):
+                try:
+                    fpath = path.join(tdir,"help/{t.name}/{cls}/{inst.name}/".format(t=self._tribe, cls=cls, inst=inst))
+                    url = self._copy_picture(path.join(fpath, "image.png"), inst.name, "graph.png")
+                    inst.graph_url = url
+                    inst.imagemap = open(path.join(fpath, "map.map")).read()
+                    inst.save()
+                except Exception, e:
+                    print "Exception while handling", cls, "of", self._tribe.name, ":", inst.name
+                    print type(e), e, repr(e)
+
     def _copy_picture( self, file, name, fname ):
         """
         Copy the given image into the media directory
@@ -77,7 +97,9 @@ class TribeParser(object):
 
     def _parse_workers( self ):
         """Put the workers into the database"""
+        print "  parsing workers"
         for worker in self._tribe.workers.values():
+            print "    " + worker.name
             nn = self._copy_picture(worker.image, worker.name, "menu.png")
 
             workero = WorkerModel.objects.get_or_create( tribe = self._to, name = worker.name )[0]
@@ -105,7 +127,9 @@ class TribeParser(object):
             workero.save()
 
     def _parse_wares( self ):
+        print "  parsing wares"
         for ware in self._tribe.wares.values():
+            print "    " + ware.name
             nn = self._copy_picture(ware.image, ware.name, "menu.png")
 
             w = WareModel.objects.get_or_create( tribe = self._to, name = ware.name )[0]
@@ -126,7 +150,9 @@ class TribeParser(object):
             return counts, objects
 
         enhancement_hier = []
+        print "  parsing buildings"
         for building in self._tribe.buildings.values():
+            print "    " + building.name
             b = BuildingModel.objects.get_or_create( tribe = self._to, name = building.name )[0]
             b.displayname = normalize_name(building.descname)
             b.type = building.btype
@@ -149,7 +175,6 @@ class TribeParser(object):
 
             # Try to figure out if this is an enhanced building
             if building.enhancement:
-                print building.enhancement
                 enhancement_hier.append((b, building.enhancement))
 
             if building._conf.has_option("global","help"):
@@ -173,7 +198,6 @@ class TribeParser(object):
             try:
                 b.enhancement = BuildingModel.objects.get(name = tgt, tribe = self._to)
             except Exception, e:
-                print b, b.name, tgt, e
                 raise
             b.save()
 
@@ -188,6 +212,8 @@ class Command(BaseCommand):
 
         for t in tribes:
             tribename = os.path.basename(t)
+            print "updating help for tribe ", tribename
             p = TribeParser(tribename)
 
             p.parse()
+            p.graph()

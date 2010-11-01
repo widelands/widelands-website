@@ -4,7 +4,7 @@
 import pydot as d
 
 from widelandslib.tribe import *
-from pudb import set_trace; set_trace()
+#from pudb import set_trace; set_trace()
 
 from os import makedirs, path
 import subprocess
@@ -95,7 +95,7 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 <TR><TD align="left" colspan="2">{b.descname}</TD></TR>
 {costs}
 </TABLE>>""".format(b=b, workers=workers, costs=costs).replace('\n',''),
-        URL = "../../buildings/{b.name}/test.html".format(b=b),
+        URL = "../../buildings/{b.name}/".format(b=b),
         bgcolor = "#dddddd",
     )
 
@@ -139,7 +139,7 @@ def add_ware(g, w):
 <TR><TD><IMG SRC="{w.image}"/></TD></TR>
 <TR><TD>{w.descname}</TD></TR>
 </TABLE>>""").format(w=w),
-             URL = "../../wares/{warename}/test.html".format(warename=w.name),
+             URL = "../../wares/{warename}/".format(warename=w.name),
              bgcolor = "#dddddd",
 )
 
@@ -153,7 +153,7 @@ def add_worker(g, w):
 <TR><TD><IMG SRC="{w.image}"/></TD>
 <TD>{w.descname}</TD></TR>
 </TABLE>>""").format(w=w),
-            URL="../../workers/{w.name}/test.html".format(w=w),
+            URL="../../workers/{w.name}/".format(w=w),
         )
 
     g.add_node(n)
@@ -172,7 +172,7 @@ def make_graph(tribe_name):
     #     add_worker(g, w)
 
     for name,b in t.buildings.items():
-        add_building(g, b)
+        add_building(g, b, link_workers=False)
 
 
     g.write("%s.dot" % tribe_name)
@@ -264,32 +264,34 @@ def make_ware_graph(t, ware_name):
 
 def process_dotfile(directory):
     subprocess.Popen("dot -Tpng -o {dir}/image.png -Tcmapx -o {dir}/map.map {dir}/source.dot".format(dir=directory).split(" ")).wait()
-    with open(path.join(directory, "test.html"), "w") as html:
-        html.write(r"""<IMG SRC="image.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
+    #with open(directory,"w") as html:
+    #    html.write(r"""<IMG SRC="image.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
 
-def make_all_subgraphs(tribe_name):
+def make_all_subgraphs(t):
     global tdir
     tdir = mkdtemp(prefix="widelands-help")
-    t = Tribe(tribe_name)
+    if isinstance(t, basestring):
+        t = Tribe(t)
+    print "making all subgraphs for tribe", t.name, "in", tdir
 
-    print "making workers"
+    print "  making workers"
 
     for w in t.workers:
-        print "  " + w
+        print "    " + w
         make_worker_graph(t, w)
         process_dotfile(path.join(tdir, "help/{tribename}/workers/{workername}/".format(tribename=t.name, workername=w)))
 
-    print "making wares"
+    print "  making wares"
 
     for w in t.wares:
-        print "  "+w
+        print "    " + w
         make_ware_graph(t, w)
         process_dotfile(path.join(tdir, "help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=w)))
 
-    print "making buildings"
+    print "  making buildings"
 
     for b in t.buildings:
-        print "  " + b
+        print "    " + b
         make_building_graph(t, b)
         process_dotfile(path.join(tdir, "help/{tribename}/buildings/{buildingname}/".format(tribename=t.name, buildingname=b)))
 

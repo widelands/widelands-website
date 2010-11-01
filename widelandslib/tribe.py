@@ -140,7 +140,7 @@ class MilitarySite(Building):
 
     @property
     def heal_per_second(self):
-        return self._conf.get("global", "heal_per_second")
+        return self._conf.getint("global", "heal_per_second")
 
 
 class Tribe(object):
