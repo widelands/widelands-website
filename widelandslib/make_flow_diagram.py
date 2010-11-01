@@ -96,7 +96,7 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 {costs}
 </TABLE>>""".format(b=b, workers=workers, costs=costs).replace('\n',''),
         URL = "../../buildings/{b.name}/".format(b=b),
-        bgcolor = "#dddddd",
+        bgcolor = "orange",
     )
 
     sg = Subgraph("%s_enhancements" % b.name,
@@ -164,8 +164,8 @@ def make_graph(tribe_name):
     tdir = mkdtemp(prefix="widelands-help")
     t = Tribe(tribe_name)
 
-    g = CleanedDot(concentrate="false", 
-                overlap="false", splines="true", rankdir="LR", bgcolor="#dddddd")
+    g = CleanedDot(concentrate="false", bgcolor="white",
+                overlap="false", splines="true", rankdir="LR")
 
     for name,w in t.wares.items():
         add_ware(g, w)
@@ -191,7 +191,7 @@ def make_building_graph(t, building_name):
 
     b = t.buildings[building_name]
 
-    g = CleanedDot(concentrate="false", 
+    g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
     if not isinstance(b, (ProductionSite,)):
@@ -225,7 +225,7 @@ def make_worker_graph(t, worker_name):
 
     w = t.workers[worker_name]
 
-    g = CleanedDot(concentrate="false", 
+    g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
     buildings = [bld for bld in t.buildings.values() if isinstance(bld, ProductionSite) and w.name in bld.workers]
@@ -233,7 +233,7 @@ def make_worker_graph(t, worker_name):
         add_building(g, bld, limit_inputs=[], limit_outputs=[], limit_buildings=[buildings], link_workers=False)
         g.add_edge(Edge(bld.name, w.name, color="orange"))
 
-    sg = Subgraph("%s_enhancements" % w.name,
+    sg = Subgraph("%s_enhancements" % w.name,bgcolor="transparent",
         ordering = "out", rankdir="TB", rank="same")
     # find exactly one level of enhancement
     for other in t.workers.values():
@@ -256,7 +256,7 @@ def make_ware_graph(t, ware_name):
         t = Tribe(t)
     w = t.wares[ware_name]
 
-    g = CleanedDot(concentrate="false", 
+    g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
     buildings = [bld for bld in t.buildings.values() if isinstance(bld, (ProductionSite, )) and (w.name in bld.inputs or w.name in bld.outputs)]
