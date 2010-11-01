@@ -242,7 +242,7 @@ def make_worker_graph(t, worker_name):
     for bld in buildings:
         add_building(g, bld, limit_inputs=[], limit_outputs=[], limit_buildings=[buildings], link_workers=False, limit_recruits=[w.name])
         if w.name in bld.workers:
-            g.add_edge(Edge(bld.name, w.name, color="orange"), arrowhead="none")
+            g.add_edge(Edge(bld.name, w.name, color="orange", arrowhead="none"))
 
     sg = Subgraph("%s_enhancements" % w.name,
         ordering = "out", rankdir="TB", rank="same")
