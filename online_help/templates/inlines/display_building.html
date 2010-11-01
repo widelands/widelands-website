@@ -71,12 +71,12 @@
 
       {% if b.has_build_cost and b.has_outputs and b.has_stored_wares %}
             <!-- With build cost and production and stored wares 111 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td>{{ b.help }}</td>
         <td>
           {% for costs in b.get_build_cost %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -84,19 +84,19 @@
         <td>
           {% if b.produces and not b.trains %}
             {% for w in b.get_ware_outputs %}
-            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
             {%endfor%}
           {% endif %}
           {% if b.trains and not b.produces %}
             {% for wor in b.get_worker_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ wor.image_url }}" alt="{{ wor.name }}" />
+            <img src="{{ wor.image_url }}" alt="{{ wor.name }}" />
             {%endfor%}
           {% endif %}
         </td>
         <td>
           {% for costs in b.get_stored_wares %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -105,12 +105,12 @@
 
       {% if b.has_build_cost and b.has_outputs and not b.has_stored_wares %}
             <!-- With build cost and production 110 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="2">{{ b.help }}</td>
         <td>
           {% for costs in b.get_build_cost %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -118,12 +118,12 @@
         <td>
           {% if b.produces and not b.trains %}
             {% for w in b.get_ware_outputs %}
-            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
             {%endfor%}
           {% endif %}
           {% if b.trains and not b.produces %}
             {% for wor in b.get_worker_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ wor.image_url }}" alt="{{ wor.name }}" />
+            <img src="{{ wor.image_url }}" alt="{{ wor.name }}" />
             {%endfor%}
           {% endif %}
         </td>
@@ -131,12 +131,12 @@
 
       {% if b.has_build_cost and not b.has_outputs and b.has_stored_wares%}
             <!-- With build cost and stored wares 101 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="2">{{ b.help }}</td>
         <td>
           {% for costs in b.get_build_cost %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -144,7 +144,7 @@
         <td>
           {% for costs in b.get_stored_wares %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -153,24 +153,24 @@
 
       {% if not b.has_build_cost and b.has_outputs and b.has_stored_wares %}
             <!-- With production and stored wares 011 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="2">{{ b.help }}</td>
         <td>
           {% if b.produces and not b.trains %}
             {% for w in b.get_ware_outputs %}
-            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
             {%endfor%}
           {% endif %}
           {% if b.trains and not b.produces %}
             {% for wor in b.get_worker_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ wor.image_url }}" alt="{{ wor.name }}" />
+            <img src="{{ wor.image_url }}" alt="{{ wor.name }}" />
             {%endfor%}
           {% endif %}
         </td>
         <td>
           {% for costs in b.get_stored_wares %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -179,12 +179,12 @@
 
       {% if b.has_build_cost and not b.has_outputs and not b.has_stored_wares %}
             <!-- With build cost 100 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="3">{{ b.help }}</td>
         <td>
           {% for costs in b.get_build_cost %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -193,17 +193,17 @@
 
       {% if not b.has_build_cost and b.has_outputs and not b.has_stored_wares %}
             <!-- With production 010 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="3">{{ b.help }}</td>
         <td>
           {% if b.produces and not b.trains %}
             {% for w in b.get_ware_outputs %}
-            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+            <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
             {%endfor%}
           {% endif %}
           {% if b.trains and not b.produces %}
             {% for wor in b.get_worker_outputs %}
-            <img src="{{ MEDIA_URL }}/{{ wor.image_url }}" alt="{{ wor.name }}" />
+            <img src="{{ wor.image_url }}" alt="{{ wor.name }}" />
             {%endfor%}
           {% endif %}
         </td>
@@ -211,12 +211,12 @@
 
       {% if not b.has_build_cost and not b.has_outputs and b.has_stored_wares %}
             <!-- With stored wares 001 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{ b.displayname }}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="3">{{ b.help }}</td>
         <td>
           {% for costs in b.get_stored_wares %}
               {% for w in costs %}
-              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ MEDIA_URL }}/{{ w.image_url }}" alt="{{ w.name }}" /></a>
+              <a href="{% url help_ware_details w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
               {% endfor %}
             <br />
           {%endfor%}
@@ -225,7 +225,7 @@
 
       {% if not b.has_build_cost and not b.has_outputs and not b.has_stored_wares %}
             <!-- For headquaters 000 -->
-        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ MEDIA_URL }}/{{ b.image_url }}" /></a></td>
+        <td><a href="{% url help_building_details b.tribe.name b.name %}" title="{{b.displayname}}"><img alt="{{b.displayname}}" src="{{ b.image_url }}" /></a></td>
         <td colspan="4">{{ b.help }}</td>
       {% endif %}
     </tr>

@@ -5,7 +5,7 @@ from .models import Worker, Ware, Building, Tribe
 
 
 import pydot
-from settings import WIDELANDS_SVN_DIR, MEDIA_URL, MEDIA_ROOT
+from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
 import os
 
 def ware_details( request, tribe, ware ):

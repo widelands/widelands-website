@@ -3,7 +3,7 @@
 {% endcomment %}
 
    <tr class="odd">
-      <td><a href="{% url help_ware_details ware.tribe.name ware.name %}" title="{{ ware.displayname }}"><img src="{{ MEDIA_URL }}/{{ ware.image_url }}"  alt="{{ ware.name }}" /></a></td>
+      <td><a href="{% url help_ware_details ware.tribe.name ware.name %}" title="{{ ware.displayname }}"><img src="{{ ware.image_url }}"  alt="{{ ware.name }}" /></a></td>
       <td><a href="{% url help_ware_details ware.tribe.name ware.name %}" title="{{ ware.displayname }}" name="{{ ware.name }}">{{ ware.displayname }}</a></td>
       <td>{{ ware.help }}</td> 
    </tr>
