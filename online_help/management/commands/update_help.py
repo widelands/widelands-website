@@ -27,7 +27,7 @@ from cStringIO import StringIO
 import re
 from itertools import chain
 
-from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR
+from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
 
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_all_subgraphs
