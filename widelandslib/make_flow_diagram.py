@@ -55,7 +55,7 @@ class CleanedDot(d.Dot):
 # Begin of drawing #
 ####################
 
-def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=None, link_workers=True):
+def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=None, link_workers=True, limit_recruits=None):
     # Add the nice node
     workers = ""
     if isinstance(b, (ProductionSite,)):
@@ -67,7 +67,12 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
             )
             if link_workers:
                 add_worker(g, wo)
-                g.add_edge(Edge(b.name, wo.name, color="orange"))
+                g.add_edge(Edge(b.name, wo.name, color="orange", arrowhead="none"))
+        for worker in b.recruits:
+            if limit_recruits is None or worker in limit_recruits:
+                wo = b.tribe.workers[worker]
+                add_worker(g, wo, as_recruit=True)
+                g.add_edge(Edge(b.name, wo.name, color="darkgreen"))
         workers += r"""</table>"""
 
     if isinstance(b, (MilitarySite,)):
@@ -96,7 +101,8 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 {costs}
 </TABLE>>""".format(b=b, workers=workers, costs=costs).replace('\n',''),
         URL = "../../buildings/{b.name}/".format(b=b),
-        bgcolor = "#dddddd",
+        fillcolor = "orange",
+        style = "filled",
     )
 
     sg = Subgraph("%s_enhancements" % b.name,
@@ -140,20 +146,22 @@ def add_ware(g, w):
 <TR><TD>{w.descname}</TD></TR>
 </TABLE>>""").format(w=w),
              URL = "../../wares/{warename}/".format(warename=w.name),
-             bgcolor = "#dddddd",
+             fillcolor = "#dddddd",
+             style="filled",
 )
 
     g.add_node(n)
 
-def add_worker(g, w):
+def add_worker(g, w, as_recruit=False):
     # Add the nice node
     n = Node(w.name,
-            shape = "octagon",
+            shape = "octagon" if not as_recruit else "ellipse",
             label = (r"""<<TABLE border="0px">
 <TR><TD><IMG SRC="{w.image}"/></TD>
 <TD>{w.descname}</TD></TR>
 </TABLE>>""").format(w=w),
             URL="../../workers/{w.name}/".format(w=w),
+            style="filled",
         )
 
     g.add_node(n)
@@ -164,8 +172,8 @@ def make_graph(tribe_name):
     tdir = mkdtemp(prefix="widelands-help")
     t = Tribe(tribe_name)
 
-    g = CleanedDot(concentrate="false", 
-                overlap="false", splines="true", rankdir="LR", bgcolor="#dddddd")
+    g = CleanedDot(concentrate="false", style="filled", bgcolor="white",
+                overlap="false", splines="true", rankdir="LR")
 
     for name,w in t.wares.items():
         add_ware(g, w)
@@ -191,7 +199,7 @@ def make_building_graph(t, building_name):
 
     b = t.buildings[building_name]
 
-    g = CleanedDot(concentrate="false", 
+    g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
     if not isinstance(b, (ProductionSite,)):
@@ -205,7 +213,7 @@ def make_building_graph(t, building_name):
     while bb.base_building:
         bb = bb.base_building
         add_building(g, bb, limit_inputs=[], limit_outputs=[], link_workers=False)
-    
+
     add_building(g, b)
 
     bb = b
@@ -225,13 +233,17 @@ def make_worker_graph(t, worker_name):
 
     w = t.workers[worker_name]
 
-    g = CleanedDot(concentrate="false", 
+    g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
-    buildings = [bld for bld in t.buildings.values() if isinstance(bld, ProductionSite) and w.name in bld.workers]
+    buildings = [bld for bld in t.buildings.values() if 
+            isinstance(bld, ProductionSite) and 
+              (w.name in bld.workers or w.name in bld.recruits)]
+
     for bld in buildings:
-        add_building(g, bld, limit_inputs=[], limit_outputs=[], limit_buildings=[buildings], link_workers=False)
-        g.add_edge(Edge(bld.name, w.name, color="orange"))
+        add_building(g, bld, limit_inputs=[], limit_outputs=[], limit_buildings=[buildings], link_workers=False, limit_recruits=[w.name])
+        if w.name in bld.workers:
+            g.add_edge(Edge(bld.name, w.name, color="orange"))
 
     sg = Subgraph("%s_enhancements" % w.name,
         ordering = "out", rankdir="TB", rank="same")
@@ -256,7 +268,7 @@ def make_ware_graph(t, ware_name):
         t = Tribe(t)
     w = t.wares[ware_name]
 
-    g = CleanedDot(concentrate="false", 
+    g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
     buildings = [bld for bld in t.buildings.values() if isinstance(bld, (ProductionSite, )) and (w.name in bld.inputs or w.name in bld.outputs)]
