@@ -130,6 +130,16 @@ class Building(models.Model):
     output_wares = models.ManyToManyField(Ware, related_name="produced_by_buildings", blank=True)
     output_workers = models.ManyToManyField(Worker, related_name="trained_by_buildings", blank=True)
 
+    def save(self, *args, **kwargs):
+
+        tdict = dict((b,a) for a,b in self.TYPES)
+        sdict = dict((b,a) for a,b in self.SIZES)
+
+        self.type = tdict.get(self.type, self.type)
+        self.size = sdict.get(self.size, self.size)
+
+        return models.Model.save(self, *args, **kwargs)
+
     def has_build_cost(self):
         return (self.build_wares.all().count() != 0)
     def get_build_cost(self):
