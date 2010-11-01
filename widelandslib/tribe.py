@@ -62,9 +62,9 @@ class Building(BaseDescr):
             return None
         bases = [b for b in self.tribe.buildings.values() if b.enhancement == self.name]
         if len(bases) == 0 and self.enhanced_building:
-            raise Exception("Building {b.name} has no bases in tribe {b.tribe.name}".format(b=self))
+            raise Exception("Building %s has no bases in tribe %s" % (self.name, self.tribe.name))
         if len(bases) > 1:
-            raise Exception("Building {b.name} seems to have more than one base in tribe {b.tribe.name}.".format(b=self))
+            raise Exception("Building %s seems to have more than one base in tribe %s." % (self.name, self.tribe.name))
         return bases[0]
 
     @property
