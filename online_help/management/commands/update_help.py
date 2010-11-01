@@ -68,7 +68,7 @@ class TribeParser(object):
                          (WareModel, "wares")]:
             for inst in obj.objects.all().filter(tribe=self._to):
                 try:
-                    fpath = path.join(tdir,"help/{t.name}/{cls}/{inst.name}/".format(t=self._tribe, cls=cls, inst=inst))
+                    fpath = path.join(tdir,"help/%s/%s/%s/" % (self._tribe.name, cls, inst.name))
                     url = self._copy_picture(path.join(fpath, "image.png"), inst.name, "graph.png")
                     inst.graph_url = url
                     inst.imagemap = open(path.join(fpath, "map.map")).read()

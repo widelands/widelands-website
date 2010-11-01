@@ -62,9 +62,9 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
         workers = r"""<table border="0px" cellspacing="0">"""
         for worker in b.workers:
             wo = b.tribe.workers[worker]
-            workers += ('<tr><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'.
-                format(w=wo)
-            )
+            workers += ('<tr><td border="0px"><img src="%s"/></td><td border="0px">%s</td></tr>' % (
+                wo.image, wo.descname
+            ))
             if link_workers:
                 add_worker(g, wo)
                 g.add_edge(Edge(b.name, wo.name, color="orange", arrowhead="none"))
@@ -77,30 +77,29 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 
     if isinstance(b, (MilitarySite,)):
         workers = r"""<table border="0px" cellspacing="0">"""
-        workers += (r"""<tr><td border="0px">Keeps {b.max_soldiers} Soldiers</td></tr>"""
-                    r"""<tr><td border="0px">Conquers {b.conquers} fields</td></tr>"""
-                    r"""<tr><td border="0px">Heals {b.heal_per_second} HP per second</td></tr>""").format(b=b)
+        workers += (r"""<tr><td border="0px">Keeps %s Soldiers</td></tr>"""
+                    r"""<tr><td border="0px">Conquers %s fields</td></tr>"""
+                    r"""<tr><td border="0px">Heals %s HP per second</td></tr>""") % (b.max_soldiers, b.conquers, b.heal_per_second)
         workers += r"""</table>"""
 
     costs = r"""<tr><td colspan="2"><table border="0px" cellspacing="0">"""
     for ware, count in b.buildcost.items():
         w = b.tribe.wares[ware]
-        costs += ('<tr><td border="0px">{count} x </td><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'.
-                format(w=w, count=count))
+        costs += ('<tr><td border="0px">%s x </td><td border="0px"><img src="%s"/></td><td border="0px">%s</td></tr>' % (count, w.image, w.descname))
     costs += r"""</table></td></tr>"""
     if not b.buildcost:
         costs = ""
 
     n = Node(b.name,
         shape = "none",
-        label = r"""<<TABLE border="1px" cellborder="0px" cellspacing="0px" cellpadding="0px">
-<TR><TD><IMG SRC="{b.image}"/></TD>
-<TD valign="bottom">{workers}</TD>
+        label = (r"""<<TABLE border="1px" cellborder="0px" cellspacing="0px" cellpadding="0px">
+<TR><TD><IMG SRC="%s"/></TD>
+<TD valign="bottom">%s</TD>
 </TR>
-<TR><TD align="left" colspan="2">{b.descname}</TD></TR>
-{costs}
-</TABLE>>""".format(b=b, workers=workers, costs=costs).replace('\n',''),
-        URL = "../../buildings/{b.name}/".format(b=b),
+<TR><TD align="left" colspan="2">%s</TD></TR>
+%s
+</TABLE>>""" % (b.image, workers, b.descname, costs)).replace('\n',''),
+        URL = "../../buildings/%s/" % b.name,
         fillcolor = "orange",
         style = "filled",
     )
@@ -142,10 +141,10 @@ def add_ware(g, w):
     n = Node(w.name,
              shape = "ellipse",
              label = (r"""<<TABLE border="0px">
-<TR><TD><IMG SRC="{w.image}"/></TD></TR>
-<TR><TD>{w.descname}</TD></TR>
-</TABLE>>""").format(w=w),
-             URL = "../../wares/{warename}/".format(warename=w.name),
+<TR><TD><IMG SRC="%s"/></TD></TR>
+<TR><TD>%s</TD></TR>
+</TABLE>>""") % (w.image, w.descname),
+             URL = "../../wares/%s/" % (w.name),
              fillcolor = "#dddddd",
              style="filled",
 )
@@ -157,10 +156,10 @@ def add_worker(g, w, as_recruit=False):
     n = Node(w.name,
             shape = "octagon" if not as_recruit else "ellipse",
             label = (r"""<<TABLE border="0px">
-<TR><TD><IMG SRC="{w.image}"/></TD>
-<TD>{w.descname}</TD></TR>
-</TABLE>>""").format(w=w),
-            URL="../../workers/{w.name}/".format(w=w),
+<TR><TD><IMG SRC="%s"/></TD>
+<TD>%s</TD></TR>
+</TABLE>>""") % (w.image, w.descname),
+            URL="../../workers/%s/" % w.name,
             style="filled",
         )
 
@@ -223,9 +222,9 @@ def make_building_graph(t, building_name):
 
     [add_ware(g, w) for w in inputs + outputs]
 
-    try: makedirs(path.join(tdir, "help/{tribename}/buildings/{building_name}/".format(tribename=t.name, building_name=building_name)))
+    try: makedirs(path.join(tdir, "help/%s/buildings/%s/" % (t.name, building_name)))
     except: pass
-    g.write(path.join(tdir, "help/{tribename}/buildings/{building_name}/source.dot".format(tribename=t.name, building_name=building_name)))
+    g.write(path.join(tdir, "help/%s/buildings/%s/source.dot" % (t.name, building_name)))
 
 def make_worker_graph(t, worker_name):
     if isinstance(t, basestring):
@@ -259,9 +258,9 @@ def make_worker_graph(t, worker_name):
     add_worker(sg, w)
     g.add_subgraph(sg)
 
-    try: makedirs(path.join(tdir, "help/{tribename}/workers/{workername}/".format(tribename=t.name, workername=w.name)))
+    try: makedirs(path.join(tdir, "help/%s/workers/%s/" % (t.name, w.name)))
     except OSError: pass
-    g.write(path.join(tdir, "help/{tribename}/workers/{workername}/source.dot".format(tribename=t.name, workername=w.name)))
+    g.write(path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name)))
 
 def make_ware_graph(t, ware_name):
     if isinstance(t, basestring):
@@ -276,12 +275,12 @@ def make_ware_graph(t, ware_name):
 
     add_ware(g, w)
 
-    try: makedirs(path.join(tdir, "help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=ware_name)))
+    try: makedirs(path.join(tdir, "help/%s/wares/%s/" % (t.name, ware_name)))
     except OSError: pass
-    g.write(path.join(tdir, "help/{tribename}/wares/{warename}/source.dot".format(tribename=t.name, warename=ware_name)))
+    g.write(path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name)))
 
 def process_dotfile(directory):
-    subprocess.Popen("dot -Tpng -o {dir}/image.png -Tcmapx -o {dir}/map.map {dir}/source.dot".format(dir=directory).split(" ")).wait()
+    subprocess.Popen(("dot -Tpng -o %s/image.png -Tcmapx -o %s/map.map %s/source.dot" % (directory, directory, directory)).split(" ")).wait()
     #with open(directory,"w") as html:
     #    html.write(r"""<IMG SRC="image.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
 
@@ -297,21 +296,21 @@ def make_all_subgraphs(t):
     for w in t.workers:
         print "    " + w
         make_worker_graph(t, w)
-        process_dotfile(path.join(tdir, "help/{tribename}/workers/{workername}/".format(tribename=t.name, workername=w)))
+        process_dotfile(path.join(tdir, "help/%s/workers/%s/" % (t.name, w)))
 
     print "  making wares"
 
     for w in t.wares:
         print "    " + w
         make_ware_graph(t, w)
-        process_dotfile(path.join(tdir, "help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=w)))
+        process_dotfile(path.join(tdir, "help/%s/wares/%s/" % (t.name, w)))
 
     print "  making buildings"
 
     for b in t.buildings:
         print "    " + b
         make_building_graph(t, b)
-        process_dotfile(path.join(tdir, "help/{tribename}/buildings/{buildingname}/".format(tribename=t.name, buildingname=b)))
+        process_dotfile(path.join(tdir, "help/%s/buildings/%s/" % (t.name, b)))
 
     rtdir, tdir = tdir, ""
     return rtdir
