@@ -83,7 +83,7 @@ class TribeParser(object):
         name            - name of the item (coal, iron...)
         fname           - file name of the picture
         """
-        dn = "%s/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
+        dn = "%s/wlmedia/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
         try:
             if os.path.exists(dn):
                 shutil.rmtree(dn)
@@ -91,7 +91,7 @@ class TribeParser(object):
         except OSError, o:
             if o.errno != 17:
                 raise
-        new_name = dn + '/' + fname
+        new_name = path.join(dn, fname)
         shutil.copy(file, new_name )
         return new_name[len(MEDIA_ROOT):]
 
