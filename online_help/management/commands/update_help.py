@@ -39,6 +39,7 @@ def normalize_name( s ):
     return s.strip('_')
 
 class TribeParser(object):
+    map_mouseover_pattern = re.compile(r'(?P<beginning>.*href="../../(?P<type>[^/]+)s/(?P<name>[^/]+)/".*")&lt;TABLE&gt;(?P<rest>.*)')
     def __init__(self, name):
         """
         Parses the definitions for one tribe and generates the models
@@ -71,6 +72,7 @@ class TribeParser(object):
                     url = self._copy_picture(path.join(fpath, "image.png"), inst.name, "graph.png")
                     inst.graph_url = url
                     inst.imagemap = open(path.join(fpath, "map.map")).read()
+                    inst.imagemap = self.map_mouseover_pattern.sub(r"\1Show the \2 \3\4", inst.imagemap)
                     inst.save()
                 except Exception, e:
                     print "Exception while handling", cls, "of", self._tribe.name, ":", inst.name
