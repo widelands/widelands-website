@@ -83,7 +83,7 @@ class TribeParser(object):
         name            - name of the item (coal, iron...)
         fname           - file name of the picture
         """
-        dn = "%s/wlmedia/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
+        dn = "%s/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
         try:
             if os.path.exists(dn):
                 shutil.rmtree(dn)
@@ -93,7 +93,7 @@ class TribeParser(object):
                 raise
         new_name = path.join(dn, fname)
         shutil.copy(file, new_name )
-        return new_name[len(MEDIA_ROOT):]
+        return path.join(MEDIA_URL, new_name[len(MEDIA_ROOT):])
 
     def _parse_workers( self ):
         """Put the workers into the database"""
