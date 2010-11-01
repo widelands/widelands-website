@@ -22,6 +22,13 @@ def building_details( request, tribe, building ):
         context_instance=RequestContext(request, 
         { "building": b }))
 
+def worker_details( request, tribe, worker ):
+    w = get_object_or_404(Worker,tribe__name=tribe,name=worker)
+
+    return render_to_response('worker_details.html', 
+        context_instance=RequestContext(request, 
+        { "worker": w }))
+
 def workers(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
     return render_to_response('workers.html', context_instance=RequestContext(request, 
