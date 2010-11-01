@@ -54,6 +54,7 @@ class TribeParser(object):
 
     def parse( self ):
         """Put all data into the database"""
+        self._delete_old_media_dir()
         self._parse_workers()
         self._parse_wares()
         self._parse_buildings()
@@ -77,6 +78,11 @@ class TribeParser(object):
         
         shutil.rmtree(tdir)
 
+    def _delete_old_media_dir(self):
+        sdir = os.path.join(MEDIA_ROOT, "online_help", self._tribe.name)
+        if os.path.exists(sdir):
+            shutil.rmtree(sdir)
+
     def _copy_picture( self, file, name, fname ):
         """
         Copy the given image into the media directory
@@ -87,15 +93,14 @@ class TribeParser(object):
         """
         dn = "%s/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
         try:
-            if os.path.exists(dn):
-                shutil.rmtree(dn)
             os.makedirs(dn)
         except OSError, o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, fname)
         shutil.copy(file, new_name )
-        return path.join(MEDIA_URL, new_name[len(MEDIA_ROOT):])
+
+        return "%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
 
     def _parse_workers( self ):
         """Put the workers into the database"""
@@ -137,6 +142,7 @@ class TribeParser(object):
             w = WareModel.objects.get_or_create( tribe = self._to, name = ware.name )[0]
             w.displayname = normalize_name(ware.descname)
             w.image_url = nn
+
 
             # See if there is help available
             if ware._conf.has_option("default","help"):
