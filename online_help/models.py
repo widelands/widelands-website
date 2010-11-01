@@ -23,6 +23,8 @@ class Worker(models.Model):
     displayname = models.CharField(max_length=100)
     tribe = models.ForeignKey(Tribe)
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
+    graph_url = models.CharField( max_length=256 ) # URL to the help graph
+    imagemap = models.TextField() # the image map for the help graph
 
     help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
     exp = models.TextField(max_length=8) # Just in case
@@ -37,6 +39,8 @@ class Ware(models.Model):
     displayname = models.CharField(max_length=100)
     tribe = models.ForeignKey(Tribe)
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
+    graph_url = models.CharField( max_length=256 ) # URL to the help graph
+    imagemap = models.TextField() # the image map for the help graph
 
     help = models.TextField(max_length=256) # This limit shall probably cover the longest help (found 209, nothing more)
 
@@ -99,12 +103,14 @@ class Building(models.Model):
     displayname = models.CharField(max_length=100)
     tribe = models.ForeignKey(Tribe)
     image_url = models.CharField( max_length=256 ) # URL to include this, i wasn't able to feed django local images
-   
+    graph_url = models.CharField( max_length=256 ) # URL to the help graph
+    imagemap = models.TextField() # the image map for the help graph
+
     size = models.CharField(max_length=1,choices=SIZES)
     type = models.CharField( max_length=1, choices=TYPES) # productionsite...
 
     help = models.TextField(blank=True)
-    
+
     # Enhances to
     enhancement = models.OneToOneField('self', related_name='enhanced_from', blank=True, null=True)
 
@@ -119,7 +125,7 @@ class Building(models.Model):
     # Store
     store_wares = models.ManyToManyField(Ware, related_name="stored_ware_for_buildings", blank=True)
     store_count = models.CharField(max_length=100, blank=True) # ' '.joined() integer strings
-    
+
     # Output
     output_wares = models.ManyToManyField(Ware, related_name="produced_by_buildings", blank=True)
     output_workers = models.ManyToManyField(Worker, related_name="trained_by_buildings", blank=True)

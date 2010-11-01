@@ -13,7 +13,7 @@ from django.db import IntegrityError
 import Image
 import models
 
-from widelandslib.Map import WidelandsMap, WlMapLibraryException
+from widelandslib.map import WidelandsMap, WlMapLibraryException
 
 import os
 from cStringIO import StringIO

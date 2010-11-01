@@ -8,9 +8,9 @@
 
 
 <center>
-<img src="{% url help_building_graph building.tribe.name building.name %}" usemap="#building_graph" alt="Graph for {{ building.name }}" />
+<img src="{{ building.graph_url }}" usemap="#G" alt="Graph for {{ building.name }}" />
 
-{{ map|safe }}
+{{ building.imagemap|safe }}
 </center>
 
 {% endblock %}
