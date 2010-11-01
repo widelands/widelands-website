@@ -4,10 +4,13 @@
 import pydot as d
 
 from widelandslib.tribe import *
-#from pudb import set_trace; set_trace()
+from pudb import set_trace; set_trace()
 
 from os import makedirs, path
 import subprocess
+from tempfile import mkdtemp
+
+tdir = ""
 
 ##############################
 # To Do Make_Flow_Diagram.py #
@@ -52,15 +55,19 @@ class CleanedDot(d.Dot):
 # Begin of drawing #
 ####################
 
-def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=None):
+def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=None, link_workers=True):
     # Add the nice node
     workers = ""
     if isinstance(b, (ProductionSite,)):
         workers = r"""<table border="0px" cellspacing="0">"""
-        for worker,c in b.workers:
+        for worker in b.workers:
+            wo = b.tribe.workers[worker]
             workers += ('<tr><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'.
-                format(w=b.tribe.workers[worker])
+                format(w=wo)
             )
+            if link_workers:
+                add_worker(g, wo)
+                g.add_edge(Edge(b.name, wo.name, color="orange"))
         workers += r"""</table>"""
 
     if isinstance(b, (MilitarySite,)):
@@ -70,7 +77,7 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
                     r"""<tr><td border="0px">Heals {b.heal_per_second} HP per second</td></tr>""").format(b=b)
         workers += r"""</table>"""
 
-    costs = r"""<tr><td colspan="2"><table border="1px" cellspacing="0">"""
+    costs = r"""<tr><td colspan="2"><table border="0px" cellspacing="0">"""
     for ware, count in b.buildcost.items():
         w = b.tribe.wares[ware]
         costs += ('<tr><td border="0px">{count} x </td><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'.
@@ -89,13 +96,12 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 {costs}
 </TABLE>>""".format(b=b, workers=workers, costs=costs).replace('\n',''),
         URL = "../../buildings/{b.name}/test.html".format(b=b),
-        bgcolor = "#eeeeee",
+        bgcolor = "#dddddd",
     )
 
-
+    sg = Subgraph("%s_enhancements" % b.name,
+        ordering = "out", rankdir="TB", rank="same")
     if b.enhancement and not b.enhanced_building:
-        sg = Subgraph("%s_enhancements" % b.name,
-            ordering = "out", rankdir="TB")
         cb = b
         while cb.enhancement:
             if limit_buildings == None or (cb.name in limit_buildings):
@@ -105,7 +111,11 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
             cb = b.tribe.buildings[cb.enhancement]
         if limit_buildings == None or (cb.name in limit_buildings):
             sg.add_node(Node(_cleanup_str(cb.name)))
+        sg.add_node(n)
         g.add_subgraph(sg)
+    else:
+        g.add_node(n)
+
 
     if isinstance(b, (ProductionSite,)):
         # for worker,c in b.workers: 
@@ -118,10 +128,7 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
         for input_ in b.inputs:
             if limit_inputs is None or input_ in limit_inputs:
                 g.add_edge(Edge(input_, b.name, color="#cd0000"))
-
-    g.add_node(n)
     return n
-
 
 
 def add_ware(g, w):
@@ -133,19 +140,21 @@ def add_ware(g, w):
 <TR><TD>{w.descname}</TD></TR>
 </TABLE>>""").format(w=w),
              URL = "../../wares/{warename}/test.html".format(warename=w.name),
-             bgcolor = "#eeeeee",
+             bgcolor = "#dddddd",
 )
 
     g.add_node(n)
 
 def add_worker(g, w):
     # Add the nice node
-    n = Node(w.name)
-    n.set_shape("ellipse")
-    n.set_label((r"""<<TABLE border="0px">
+    n = Node(w.name,
+            shape = "octagon",
+            label = (r"""<<TABLE border="0px">
 <TR><TD><IMG SRC="{w.image}"/></TD>
 <TD>{w.descname}</TD></TR>
-</TABLE>>""").format(w=w))
+</TABLE>>""").format(w=w),
+            URL="../../workers/{w.name}/test.html".format(w=w),
+        )
 
     g.add_node(n)
 
@@ -154,7 +163,7 @@ def make_graph(tribe_name):
     t = Tribe(tribe_name)
 
     g = CleanedDot(concentrate="false", 
-                overlap="false", splines="true", rankdir="LR", bgcolor="#eeeeee")
+                overlap="false", splines="true", rankdir="LR", bgcolor="#dddddd")
 
     for name,w in t.wares.items():
         add_ware(g, w)
@@ -175,7 +184,7 @@ def make_building_graph(t, building_name):
         t = Tribe(t)
 
     b = t.buildings[building_name]
-   
+
     g = CleanedDot(concentrate="false", 
                 overlap="false", splines="true", rankdir="LR")
 
@@ -189,21 +198,52 @@ def make_building_graph(t, building_name):
     bb = b
     while bb.base_building:
         bb = bb.base_building
-        add_building(g, bb, limit_inputs=[], limit_outputs=[])
+        add_building(g, bb, limit_inputs=[], limit_outputs=[], link_workers=False)
     
     add_building(g, b)
 
     bb = b
     while bb.enhancement:
         bb = t.buildings[bb.enhancement]
-        add_building(g, bb, limit_inputs=[], limit_outputs=[])
+        add_building(g, bb, limit_inputs=[], limit_outputs=[], link_workers=False)
 
     [add_ware(g, w) for w in inputs + outputs]
 
-    try: makedirs("help/{tribename}/buildings/{building_name}/".format(tribename=t.name, building_name=building_name))
+    try: makedirs(path.join(tdir, "help/{tribename}/buildings/{building_name}/".format(tribename=t.name, building_name=building_name)))
     except: pass
-    g.write("help/{tribename}/buildings/{building_name}/source.dot".format(tribename=t.name, building_name=building_name))
+    g.write(path.join(tdir, "help/{tribename}/buildings/{building_name}/source.dot".format(tribename=t.name, building_name=building_name)))
 
+def make_worker_graph(t, worker_name):
+    if isinstance(t, basestring):
+        t = Tribe(t)
+
+    w = t.workers[worker_name]
+
+    g = CleanedDot(concentrate="false", 
+                overlap="false", splines="true", rankdir="LR")
+
+    buildings = [bld for bld in t.buildings.values() if isinstance(bld, ProductionSite) and w.name in bld.workers]
+    for bld in buildings:
+        add_building(g, bld, limit_inputs=[], limit_outputs=[], limit_buildings=[buildings], link_workers=False)
+        g.add_edge(Edge(bld.name, w.name, color="orange"))
+
+    sg = Subgraph("%s_enhancements" % w.name,
+        ordering = "out", rankdir="TB", rank="same")
+    # find exactly one level of enhancement
+    for other in t.workers.values():
+        if other.becomes == w.name:
+            add_worker(sg, other)
+            g.add_edge(Edge(other.name, w.name, color="blue"))
+        elif w.becomes == other.name:
+            add_worker(sg, other)
+            g.add_edge(Edge(w.name, other.name, color="blue"))
+
+    add_worker(sg, w)
+    g.add_subgraph(sg)
+
+    try: makedirs(path.join(tdir, "help/{tribename}/workers/{workername}/".format(tribename=t.name, workername=w.name)))
+    except OSError: pass
+    g.write(path.join(tdir, "help/{tribename}/workers/{workername}/source.dot".format(tribename=t.name, workername=w.name)))
 
 def make_ware_graph(t, ware_name):
     if isinstance(t, basestring):
@@ -214,13 +254,13 @@ def make_ware_graph(t, ware_name):
                 overlap="false", splines="true", rankdir="LR")
 
     buildings = [bld for bld in t.buildings.values() if isinstance(bld, (ProductionSite, )) and (w.name in bld.inputs or w.name in bld.outputs)]
-    [add_building(g, bld, limit_inputs=[w.name], limit_outputs=[w.name], limit_buildings=[b.name for b in buildings]) for bld in buildings]
+    [add_building(g, bld, limit_inputs=[w.name], limit_outputs=[w.name], limit_buildings=[b.name for b in buildings], link_workers=False) for bld in buildings]
 
     add_ware(g, w)
 
-    try: makedirs("help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=ware_name))
+    try: makedirs(path.join(tdir, "help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=ware_name)))
     except OSError: pass
-    g.write("help/{tribename}/wares/{warename}/source.dot".format(tribename=t.name, warename=ware_name))
+    g.write(path.join(tdir, "help/{tribename}/wares/{warename}/source.dot".format(tribename=t.name, warename=ware_name)))
 
 def process_dotfile(directory):
     subprocess.Popen("dot -Tpng -o {dir}/image.png -Tcmapx -o {dir}/map.map {dir}/source.dot".format(dir=directory).split(" ")).wait()
@@ -228,24 +268,36 @@ def process_dotfile(directory):
         html.write(r"""<IMG SRC="image.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
 
 def make_all_subgraphs(tribe_name):
+    global tdir
+    tdir = mkdtemp(prefix="widelands-help")
     t = Tribe(tribe_name)
+
+    print "making workers"
+
+    for w in t.workers:
+        print "  " + w
+        make_worker_graph(t, w)
+        process_dotfile(path.join(tdir, "help/{tribename}/workers/{workername}/".format(tribename=t.name, workername=w)))
 
     print "making wares"
 
     for w in t.wares:
         print "  "+w
         make_ware_graph(t, w)
-        process_dotfile("help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=w))
+        process_dotfile(path.join(tdir, "help/{tribename}/wares/{warename}/".format(tribename=t.name, warename=w)))
 
     print "making buildings"
 
     for b in t.buildings:
         print "  " + b
         make_building_graph(t, b)
-        process_dotfile("help/{tribename}/buildings/{buildingname}/".format(tribename=t.name, buildingname=b))
+        process_dotfile(path.join(tdir, "help/{tribename}/buildings/{buildingname}/".format(tribename=t.name, buildingname=b)))
+
+    rtdir, tdir = tdir, ""
+    return rtdir
 
 def add_bases(tribe, building, g):
-    if b.enhanced_building:        add_building()
+    if b.enhanced_building:
         add_building()
 
 if __name__ == "__main__":

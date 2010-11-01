@@ -95,10 +95,12 @@ class TribeParser(object):
                 workero.exp = experience
 
             # See what the worker becomes
-            if worker._conf.has_option("default","becomes"):
-                enname = worker._conf.get("default","becomes")
+            try:
+                enname = worker.becomes
                 workero.becomes = WorkerModel.objects.get_or_create(
-                    name=enname, tribe = self._to)[0]
+                        name=enname, tribe = self._to)[0]
+            except:
+                pass
 
             workero.save()
 

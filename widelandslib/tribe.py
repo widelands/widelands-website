@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from conf import WidelandsConfigParser
-from ConfigParser import NoSectionError
+from ConfigParser import NoSectionError, NoOptionError
 import conf
 from itertools import chain
 import os.path as p
@@ -40,6 +40,13 @@ class Worker(BaseDescr):
                 open(self._conf_file).read())
         ))
         return rv
+
+    @property
+    def becomes(self):
+        try:
+            return self._conf.get("global", "becomes")
+        except NoOptionError:
+            return None
 
     def __str__(self):
         return "Worker(%s)" % self.name
