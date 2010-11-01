@@ -160,6 +160,8 @@ def add_worker(g, w):
 
 
 def make_graph(tribe_name):
+    global tdir
+    tdir = mkdtemp(prefix="widelands-help")
     t = Tribe(tribe_name)
 
     g = CleanedDot(concentrate="false", 
@@ -175,9 +177,13 @@ def make_graph(tribe_name):
         add_building(g, b, link_workers=False)
 
 
-    g.write("%s.dot" % tribe_name)
-    # g.write_pdf("%s.pdf" % tribe_name)
+    g.write_pdf(path.join(tdir, "%s.pdf" % tribe_name))
 
+    g.set_size("6")
+    g.write_gif(path.join(tdir, "%s.gif" % tribe_name))
+
+    rtdir, tdir = tdir, ""
+    return rtdir
 
 def make_building_graph(t, building_name):
     if isinstance(t, basestring):

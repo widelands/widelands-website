@@ -75,6 +75,8 @@ class TribeParser(object):
                 except Exception, e:
                     print "Exception while handling", cls, "of", self._tribe.name, ":", inst.name
                     print type(e), e, repr(e)
+        
+        shutil.rmtree(tdir)
 
     def _delete_old_media_dir(self):
         sdir = os.path.join(MEDIA_ROOT, "online_help", self._tribe.name)
