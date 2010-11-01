@@ -116,13 +116,13 @@ class TribeParser(object):
             workero.image_url = nn
 
             # See if there is help available
-            if worker._conf.has_option("default","help"):
-                helpstr = normalize_name(worker._conf.get("default","help"))
+            if worker._conf.has_option("global","help"):
+                helpstr = normalize_name(worker._conf.get("global","help"))
                 workero.help = helpstr
 
             # Check for experience
-            if worker._conf.has_option("default","experience"):
-                experience = normalize_name(worker._conf.get("default","experience"))
+            if worker._conf.has_option("global","experience"):
+                experience = normalize_name(worker._conf.get("global","experience"))
                 workero.exp = experience
 
             # See what the worker becomes
@@ -147,8 +147,8 @@ class TribeParser(object):
 
 
             # See if there is help available
-            if ware._conf.has_option("default","help"):
-                helpstr = normalize_name(ware._conf.get("default","help"))
+            if ware._conf.has_option("global","help"):
+                helpstr = normalize_name(ware._conf.get("global","help"))
                 w.help = helpstr
 
             w.save()
