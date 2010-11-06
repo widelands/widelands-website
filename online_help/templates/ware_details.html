@@ -8,10 +8,30 @@
 
 
 <center>
-<img src="{{ ware.graph_url }}" usemap="#G" alt="Graph for {{ ware.name }}" />
+<img src="{{ ware.graph_url }}" usemap="#G" alt="Graph for {{ ware.displayname }}" />
 
 {{ ware.imagemap|safe }}
 </center>
+
+{% if ware.build_ware_for_buildings.all %}
+<h2>Used for building</h2>
+<table style="width:100%" class="building">
+    <tr>
+        <th>Building</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    {% for b in ware.build_ware_for_buildings.all %}
+    <tr class="odd">
+        <td><img src="{{ b.image_url }}" alt="{{b.displayname}}" /></td>
+        <td>{{ b.displayname }}</td>
+        <td>{{ b.help }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+Not used for building.<br />
+{% endif %}
 
 Return to the <a href="../">Ware overview</a>.
 
