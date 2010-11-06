@@ -7,7 +7,7 @@ from django.db import models
 
 class EventsManager(models.Manager):
     def open(self):
-        return self.all().exclude(end_date__lte=datetime.datetime.now).\
+        return self.all().exclude(end_date__lt=datetime.datetime.now).\
                 order_by("end_date")
 
 class Event(models.Model):
