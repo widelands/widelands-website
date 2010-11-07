@@ -188,8 +188,12 @@ class TribeParser(object):
                 enhancement_hier.append((b, building.enhancement))
 
             if building._conf.has_option("global","help"):
-                helpstr = normalize_name(building._conf.get("global","help"))
-                b.help = helpstr
+                b.help = normalize_name(building._conf.get("global","help"))
+            else:
+                try:
+                    b.help = [worker.help for worker in b.workers_types.all()][0]
+                except IndexError:
+                    print "could not find a help string for %s (%s) anywhere!" % (b.name, self._tribe.name)
 
             # See if there is any inputs field around
             if isinstance(building, ProductionSite):
