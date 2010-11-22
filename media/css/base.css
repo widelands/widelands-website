@@ -342,6 +342,7 @@ th {
     font-size:12px;
     width:100px;
     height: 25px;
+    cursor: pointer;
 }
 .button_preview {
     padding:0;
@@ -353,4 +354,5 @@ th {
     font-size:12px;
     width:100px;
     height: 25px;
+    cursor: pointer;
 }
