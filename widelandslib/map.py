@@ -3,7 +3,7 @@
 #
 
 from conf import WidelandsConfigParser as Cp, NoOptionError, NoSectionError
-from numpy import fromstring,array,empty, gradient
+from numpy import fromstring, array, empty, gradient
 import struct
 import os
 import numpy
@@ -267,7 +267,7 @@ class WidelandsMap(object):
         # This is taken from the gimps overlay functionality
         # see here:
         # http://docs.gimp.org/en/gimp-concepts-layer-modes.html
-        mm = mm/255. *(mm + 2*dx/255.*(255.-mm))
+        mm = mm / 255. * (mm + 2 * dx / 255. * (255. - mm))
 
         return mm.astype("uint8")
 
