@@ -87,6 +87,20 @@ Go to http://localhost:8000/admin. Log in with your super user and go to the
 Sites Admin. Change your site name from example.com to localhost. Now,
 everything should work out.
 
+Accessing the website from other machines
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When starting the server as described above, the website will by default
+only be available from the machine it is running on. If you wish to access
+the website from other machines you need to specify an IP-address and
+port number. Please note, however, that this server is NOT intended for
+production environments, only for development/testing.
+
+   $ ./manage.py runserver 169.254.1.0:8000
+
+See also http://docs.djangoproject.com/en/dev/ref/django-admin/#runserver-port-or-address-port
+for further details. 
+
 Contact
 =======
 
