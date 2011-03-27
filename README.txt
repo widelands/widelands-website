@@ -4,7 +4,15 @@ Installing the homepage
 Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
 package manager. You will also need development tools (gcc or therelike), hg
-(mercurial), bzr and git. Go and install them all.
+(mercurial), bzr, subversion and git. Finally you are going to need the
+build dependencies for numpy, which will be compiled as a part of getting
+the dependencies for the website. Go and install them all.
+
+Example:
+On Ubuntu, installing all required tools and dependencies in two commands::
+
+   $ sudo apt-get install python-virtualenv python-pip mercurial bzr subversion git sqlite3
+   $ sudo apt-get build-dep python-numpy
 
 Setting up the local environment
 --------------------------------
