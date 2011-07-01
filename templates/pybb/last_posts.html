@@ -6,16 +6,10 @@
 <div>
 <br />
 {% for post in posts %} 
-    <table>
-        <tr>
-            <td>
-                <a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|pybb_cut_string:21 }}</a> @<br />
-                <a href="{{ post.topic.get_absolute_url}}" title="{{ post.topic.forum.name }}">{{ post.topic.forum.name|pybb_cut_string:23 }}</a><br />
-                by {{ post.user|user_link }} at {{ post.created|custom_date:user }} 
-                <br />
-                <br />
-            </td>
-        </tr>
-    </table>
+    <a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|pybb_cut_string:21 }}</a> @<br />
+    <a href="{{ post.topic.get_absolute_url}}" title="{{ post.topic.forum.name }}">{{ post.topic.forum.name|pybb_cut_string:23 }}</a><br />
+    by {{ post.user|user_link }} at {{ post.created|custom_date:user }} 
+    <br />
+    <br />
 {% endfor %} 
-<div>
+</div>
