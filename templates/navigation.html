@@ -1,11 +1,11 @@
 {% comment %}
    vim:ft=htmldjango
 {% endcomment %}
-
+<div class="dropdown"> 
+<ul>
 <li><a href="/">Home</a></li>
-<li><a href="{% url news_index %}">News</a></li>
-<li>
-    <a href="{% url wiki_article "DownloadPage" %}">Downloads</a>
+<li class="arrow">
+    <a href="{% url wiki_article "DownloadPage" %}">▼ Downloads</a>
     <ul>
         <li><a href="{% url wiki_article "DownloadPage" %}">The Game</a></li>
         <li><a href="{% url wiki_article "WidelandsArtwork" %}">Artworks</a></li>
@@ -13,8 +13,8 @@
     </ul>
 </li>
 <li><a href="{% url wlscreens_index %}">Screenshots</a></li>
-<li>
-    <a href="{% url wiki_index %}">Wiki (Help &amp; Docu.)</a>
+<li class="arrow">
+    <a href="{% url wiki_index %}">▼ Wiki (Help &amp; Docu.)</a>
     <ul>
         <li><a href="/wiki/GameHelp">Game Help</a></li>
         <li><a href="{% url wiki_index %}">Main Page</a></li>
@@ -22,8 +22,8 @@
         <li><a href="{% url wiki_history %}">Recent changes</a></li>
     </ul>
 </li>
-<li>
-    <a href="{% url pybb_index %}">Forum</a>
+<li class="arrow">
+    <a href="{% url pybb_index %}">▼ Forum</a>
     <ul>
         <li><a href="{% url pybb_forum 1 %}">Technical Help</a></li>
         <li><a href="{% url pybb_forum 2 %}">Game suggestions</a></li>
@@ -42,8 +42,8 @@
 <li>
     <a href="{% url webchat_index %}">IRC Chat</a>
 </li>
-<li>
-    <a href="{% url wiki_article "DevelopmentPage" %}">Development</a>
+<li class="arrow">
+    <a href="{% url wiki_article "DevelopmentPage" %}">▼ Development</a>
     <ul>
         <li><a href="{% url wiki_article "DevelopmentPage" %}">Development</a></li>
         <li><a href="{% url wiki_article "DevelopersPage" %}">Developers</a></li>
@@ -53,7 +53,7 @@
         <li><a href="https://bugs.launchpad.net/widelands-website">Website Bugtracker</a></li>
     </ul>
 </li>
-        <!--
+ {% comment %}
 <li>
     <a href="{% url wlggz_main %}">Online Gaming</a>
     <ul>
@@ -65,4 +65,7 @@
         <li><a href="{% url wiki_article "InternetGaming" %}">HowTo</a></li>
     </ul>
 </li>
-        -->
+         {% endcomment %}
+        </ul>
+</div> 
+        
