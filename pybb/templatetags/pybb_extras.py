@@ -84,7 +84,7 @@ def pybb_last_posts(context, number = 5):
     check = []
     answer = []
     for post in last_posts:
-        if (post.topic_id not in check) and len(check) < 6:
+        if (post.topic_id not in check) and len(check) < 5:
             check = check + [post.topic_id]
             answer = answer + [post]
     return {
