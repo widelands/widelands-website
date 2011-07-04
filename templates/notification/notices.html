@@ -107,7 +107,8 @@
                     <td class="info_line show_center" colspan="2"><input type="submit" value="{% trans "Change" %}" /></td>
                 </tr>
             </table>
-        </form>
+            {% csrf_token %}
+	</form>
     </div>
 
 {% endblock %}

@@ -101,6 +101,7 @@
          <br/>
 			<input type="submit" value="{% trans "Save" %}" />
 		</div>
+   {% csrf_token %}
    </form> 
    
    
@@ -133,6 +134,7 @@
          <div class="submit">
             <input type="submit" value="{% trans "Upload Image" %}" />
          </div>
+         {% csrf_token %}
       </form>
    
    {% endif%}

@@ -38,6 +38,7 @@
         <div class="info_line">
             <input type="submit" value="{% trans "Save" %}" />
         </div>
+        {% csrf_token %}
     </form>
 </div>
 {% endblock %}
