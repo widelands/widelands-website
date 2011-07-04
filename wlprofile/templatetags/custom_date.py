@@ -132,4 +132,31 @@ def custom_date( date, user ):
         return do_custom_date( user.get_profile().time_display, date, user.get_profile().time_zone )
     except ObjectDoesNotExist:
         return django_date("j F Y", date)
+
 custom_date.is_safe = False
+
+@register.filter
+def minutes(date):
+    today = datetime.today()
+    seconds = int((today - date).total_seconds())
+    sign = ''
+    if seconds < 0:
+        sign = '-'
+    seconds = abs(seconds)
+    minutes = seconds / 60
+    hours = minutes / 60
+    if hours == 0 and minutes <= 1:
+        return sign + '1 minute'
+    elif hours == 0:
+        return sign + '%d minutes' % (minutes)
+    elif hours == 1:
+        return sign + '1 hour'
+    else:
+        return sign + '%d hours' % (hours)
+    
+@register.simple_tag    
+def current_time(user):
+    time = datetime.today()
+    time = custom_date(time, user);
+    return time
+
