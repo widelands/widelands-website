@@ -20,6 +20,7 @@ Delete post - {{ block.super }}
         <div class="info_line">
             <input type="submit" value="{% trans "Yes, I am sure." %}" />
         </div>
+        {% csrf_token %}
     </form>
 </div>
 {% endblock %}
