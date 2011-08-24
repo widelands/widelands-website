@@ -6,7 +6,6 @@
          $('form').disableOnSubmit();
    });
 </script>
-{{ block.super }}
 {% endblock %}
     <form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
         <div class="preview-box" style="display: none">
@@ -34,7 +33,8 @@
             <input type="submit" class="button_send" value="" />
             <input class="preview-button button_preview" type="button" value="" />
         </div>
-    </form>
+        {% csrf_token %}
+        </form>
 <script type="text/javascript">
 $(function() {
     $('.post-form .preview-button').click(function() {

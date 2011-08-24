@@ -19,7 +19,8 @@
             <input id="id_incl_maps" type="hidden" name="incl_maps" value="1" />
             <input id="id_incl_help" type="hidden" name="incl_help" value="1" />
             <input id="id_incl_forum" type="hidden" name="incl_forum" value="1" />
-         </form>
+         {% csrf_token %}
+	 </form>
       </div>
 
         <!-- Donation Box -->
@@ -70,7 +71,8 @@
 
             <center><input type="submit" value="login" /></center>
             <input type="hidden" name="next" value="{{ request.path }}" />
-         </form>
+            {% csrf_token %} 
+	 </form>
          <center>
             <a href="/accounts/password/reset/">Lost password?</a><br/><br/>
             <a href="/accounts/register">Register now!</a><br/>
@@ -95,7 +97,8 @@
             </table>
                <input type="submit" value="Vote" />
                <input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
-            </form>
+               {% csrf_token %}
+	    </form>
          {% endfor %}
          <br/>
             <a href="{% url wlpoll_archive %}">Archive</a>

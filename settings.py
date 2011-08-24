@@ -62,6 +62,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware', # Remove this, when load gets to high
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
@@ -187,6 +188,9 @@ INSTALLED_APPS = (
     # TODO: only temporary for webdesign stuff
     'django.contrib.webdesign',
 
+    # Thirdparty apps, but need preload
+    'tracking',
+
     # Our own apps
     'widelands.mainpage',
     'widelands.online_help',
@@ -213,7 +217,6 @@ INSTALLED_APPS = (
     'pagination',
     'tagging',
     'notification',
-    'tracking',
     'djangoratings',
     'sphinxdoc',
 )

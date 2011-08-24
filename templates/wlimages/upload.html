@@ -7,5 +7,6 @@
 <form  enctype="multipart/form-data" action="/images/upload/" method="POST">
 {{ upload_form.as_p }}
 <input type="submit" value="Submit" />
+{% csrf_token %}
 </form>
 {% endblock %}

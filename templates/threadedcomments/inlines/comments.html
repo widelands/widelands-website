@@ -53,7 +53,8 @@
                     </td>
                 </tr>
             </table>
-        </form>
+            {% csrf_token %}
+	</form>
     {% else %}
         <h3 class="title">Comments</h3>
         <div class="info_line errormessage show_center">

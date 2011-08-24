@@ -26,6 +26,7 @@ Compose - {{ block.super }}
         <div class="info_line show_center">
             <input type="submit" value="{% trans "Send" %} &raquo;"/>
         </div>
+        {% csrf_token %}
     </form>
 </div>
 
