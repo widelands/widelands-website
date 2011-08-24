@@ -49,44 +49,46 @@ def do_custom_date( format, date, timezone, now= None ):
     Returns a string formatted representation of date according to format. This accepts
     all formats that strftime also accepts, but it also accepts some new options which are dependant
     on the current date.
-        %NY(format)        (natural year) for example %NY(.%Y) will give ".2008" if this year is not 2008, else 
+        %NY(format)        (natural year) for example %NY(.%Y) will give ".2008" if this year is not 2008, else
                             an empty string
-        %ND(alternatives)  (natural day) for example %ND(%d.%m.%Y) 
+        %ND(alternatives)  (natural day) for example %ND(%d.%m.%Y)
         -> Yields today, yesterday, tomorrow or 2.12.2008
-    
+
     format      - format string as described above
     date        - datetime object to display
     timezone    - vaild timzone as int
-    now         - overwrite the value for now; only for debug reasons 
+    now         - overwrite the value for now; only for debug reasons
     """
     if now is None:
         now = datetime.now()
-    
+
     ############################
-    # Set Tinezone Information's
+    # Set Timezone Information's
     #
     # set the timezone named info
-    # FIXME: 
-    #       it is not tested if it works withe the sommer and winter time (+1h)
+    # FIXME:
+    #       it is not tested if it works withe the summer and winter time (+1h)
     if timezone > 0:
         tz_info = 'UTC+' + str(timezone)
     elif timezone < 0:
         tz_info = 'UTC' + str(timezone)
     else:
         tz_info = 'UTC'
-  
+
     # set the server timezone for tzinfo
     ForumStdTimeZone = FixedOffset(60, 'UTC+1')
-    
+
     # set the user's timezone information
     ForumUserTimeZone = FixedOffset(timezone*60, tz_info)
 
     # if there is tzinfo not set
-    if not date.tzinfo:
-        date = date.replace(tzinfo=ForumStdTimeZone)
-    
-    date = date.astimezone(ForumUserTimeZone)
-    
+    try:
+        if not date.tzinfo:
+            date = date.replace(tzinfo=ForumStdTimeZone)
+        date = date.astimezone(ForumUserTimeZone)
+    except AttributeError: # maybe this is no valid date object?
+        return format
+
     # If it's done, timezone informations are now available ;)
     ############################
 
@@ -94,7 +96,7 @@ def do_custom_date( format, date, timezone, now= None ):
         if now.year == date.year:
             return ""
         return g.group(1)
-    
+
     def _replace_nd(g):
         delta = ddate(date.year,date.month,date.day) - \
                 ddate(now.year,now.month,now.day)
@@ -113,7 +115,7 @@ def do_custom_date( format, date, timezone, now= None ):
             format = natural_day_expr.sub(_replace_nd,format)
             if oformat == format:
                 break
-        
+
         data = django_date(date,format)
     except NotImplementedError:
         return format
@@ -123,7 +125,7 @@ def do_custom_date( format, date, timezone, now= None ):
 @register.filter
 def custom_date( date, user ):
     """
-    If this user is logged in, return his representation, 
+    If this user is logged in, return his representation,
     otherwise, return a sane default
     """
     if user.is_anonymous():
@@ -153,8 +155,8 @@ def minutes(date):
         return sign + '1 hour'
     else:
         return sign + '%d hours' % (hours)
-    
-@register.simple_tag    
+
+@register.simple_tag
 def current_time(user):
     time = datetime.today()
     time = custom_date(time, user);

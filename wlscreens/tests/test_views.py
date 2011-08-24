@@ -29,8 +29,8 @@ class TestWLScreens_CategorySite_Except404(DjangoTest):
         c = Category.objects.create(name="A new Revision")
     def runTest(self):
         url = reverse('wlscreens_category', None, {"category_slug": "a-new-revision"})
-        k = self.client.get(url)
-        
+        c = self.client.get(url)
+
         self.assertEqual(c.status_code, 404 )
 
 
