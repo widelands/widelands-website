@@ -4,7 +4,15 @@ Installing the homepage
 Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
 package manager. You will also need development tools (gcc or therelike), hg
-(mercurial), bzr and git. Go and install them all.
+(mercurial), bzr, subversion and git. Finally you are going to need the
+build dependencies for numpy, which will be compiled as a part of getting
+the dependencies for the website. Go and install them all.
+
+Example:
+On Ubuntu, installing all required tools and dependencies in two commands::
+
+   $ sudo apt-get install python-virtualenv python-pip mercurial bzr subversion git sqlite3
+   $ sudo apt-get build-dep python-numpy
 
 Setting up the local environment
 --------------------------------
@@ -78,6 +86,20 @@ Some important settings
 Go to http://localhost:8000/admin. Log in with your super user and go to the
 Sites Admin. Change your site name from example.com to localhost. Now,
 everything should work out.
+
+Accessing the website from other machines
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When starting the server as described above, the website will by default
+only be available from the machine it is running on. If you wish to access
+the website from other machines you need to specify an IP-address and
+port number. Please note, however, that this server is NOT intended for
+production environments, only for development/testing.
+
+   $ ./manage.py runserver 169.254.1.0:8000
+
+See also http://docs.djangoproject.com/en/dev/ref/django-admin/#runserver-port-or-address-port
+for further details. 
 
 Contact
 =======
