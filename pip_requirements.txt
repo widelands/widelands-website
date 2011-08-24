@@ -6,7 +6,7 @@ PIL==1.1.7
 -e svn+http://django-pagination.googlecode.com/svn/trunk/#egg=pagination
 -e hg+https://django-tracking.googlecode.com/hg/#egg=tracking
 -e git://gitorious.org/python-markdown/mainline.git#egg=markdown
-BeautifulSoup
+BeautifulSoup==3.2
 -e hg+http://bitbucket.org/ubernostrum/django-registration/#egg=registration
 -e svn+http://django-tagging.googlecode.com/svn/trunk/#egg=tagging
 -e git://github.com/dcramer/django-ratings.git#egg=djangoratings

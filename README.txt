@@ -46,7 +46,7 @@ Installation via pip should work like this::
 
    $ pip -E . install -r code/widelands/pip_requirements.txt
 
-This will take a while. If no errors we should be fine. 
+This will take a while. If no errors are shown we should be fine. 
 
 Setting up the website
 ----------------------
