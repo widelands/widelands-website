@@ -11,16 +11,16 @@
 # Last Modified: $Date$
 #
 
-# Since we want to include something from one path up, 
+# Since we want to include something from one path up,
 # we append the parent path to sys.path
 import sys; sys.path.append("..")
 
-import Image as PIL 
+import Image as PIL
 from cStringIO import StringIO
 
 from django.test import TestCase
-from django.contrib.contenttypes.models import ContentType 
-from django.contrib.auth.models import User 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test.client import Client
 from django.core.urlresolvers import reverse
@@ -28,8 +28,6 @@ from django.db import IntegrityError
 
 from models import Image
 from forms import UploadImageForm
-
-import appsettings
 
 from views import upload
 
@@ -40,7 +38,7 @@ class _TestUploadingBase(TestCase):
         i = PIL.new("RGB",(4,4))
 
         i.save(sio,type)
-        
+
         return SimpleUploadedFile(name,sio.read(),content_type="image/%s" % type)
 
     def setUp(self):
@@ -53,7 +51,7 @@ class _TestUploadingBase(TestCase):
         self.t1 = self._make_new_uploaded_image("test.png");
         self.t2 = self._make_new_uploaded_image("test.png");
         self.o1 = self._make_new_uploaded_image("othername.png");
-       
+
         self.c = Client()
 
 

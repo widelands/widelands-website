@@ -34,6 +34,6 @@ class EditGGZForm(forms.ModelForm):
         return pw_base64
 
 
-    def save(self):
-        super(EditGGZForm, self).save()
+    def save(self, *args, **kwargs):
+        super(EditGGZForm, self).save(*args, **kwargs)
 

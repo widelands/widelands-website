@@ -39,13 +39,13 @@ class EditProfileForm(forms.ModelForm):
             raise forms.ValidationError('Length of signature is limited to %d' % settings.SIGNATURE_MAX_LENGTH)
         return value
 
-    def save(self):
-        super(EditProfileForm, self).save()
+    def save(self, *args, **kwargs):
+        super(EditProfileForm, self).save(*args, **kwargs)
 
         u = self.instance.user
         u.email = self.cleaned_data['email']
 
-        u.save()
+        u.save(*args, **kwargs)
 
 
 
