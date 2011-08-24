@@ -109,7 +109,7 @@
          <div class="box_content" align="center">
          {% for e in events %}
             <div class="event">
-               <a href="{{e.link}}" class="link">{{e.name}}</a><br>
+               <a href="{{e.link}}" class="link">{{e.name}}</a><br />
                <div class="date">
                {{e.start_date|date:"d M"}}
                {% ifnotequal e.start_date e.end_date %}
