@@ -47,13 +47,13 @@ class AddPostForm(forms.ModelForm):
 
 
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.forum:
 	    topic_is_new = True
             topic = Topic(forum=self.forum,
                           user=self.user,
                           name=self.cleaned_data['name'])
-            topic.save()
+            topic.save(*args, **kwargs)
         else:
             topic_is_new = False
             topic = self.topic
@@ -61,7 +61,7 @@ class AddPostForm(forms.ModelForm):
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
                     markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
-        post.save()
+        post.save(*args, **kwargs)
 
         if pybb_settings.ATTACHMENT_ENABLE:
             self.save_attachment(post, self.cleaned_data['attachment'])
@@ -93,10 +93,10 @@ class EditPostForm(forms.ModelForm):
         model = Post
         fields = ['body']
 
-    def save(self):
+    def save(self, *args, **kwargs):
         post = super(EditPostForm, self).save(commit=False)
         post.updated = datetime.now()
-        post.save()
+        post.save(*args, **kwargs)
         return post
 
 

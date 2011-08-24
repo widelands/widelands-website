@@ -60,7 +60,7 @@ class ArticleForm(forms.ModelForm):
 
         return self.cleaned_data
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # 0 - Extra data
         editor_ip = self.cleaned_data['user_ip']
         comment = self.cleaned_data['comment']
@@ -76,7 +76,7 @@ class ArticleForm(forms.ModelForm):
             new = False
 
         # 2 - Save the Article
-        article = super(ArticleForm, self).save()
+        article = super(ArticleForm, self).save(*args, **kwargs)
 
         # 3 - Set creator and group
         editor = getattr(self, 'editor', None)
@@ -86,7 +86,7 @@ class ArticleForm(forms.ModelForm):
             if editor is not None:
                 article.creator = editor
                 article.group = group
-            article.save()
+            article.save(*args, **kwargs)
 
         # 4 - Create new revision
         changeset = article.new_revision(

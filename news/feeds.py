@@ -7,7 +7,6 @@ from widelands.news.models import Post, Category
 
 
 class NewsPostsFeed(Feed):
-    _site = Site.objects.get_current()
     title = 'Widelands news posts feed'
     description = 'The news section from the widelands.org homepage'
     title_template = 'feeds/posts_title.html'
@@ -24,8 +23,7 @@ class NewsPostsFeed(Feed):
 
 
 class NewsPostsByCategory(Feed):
-    _site = Site.objects.get_current()
-    title = '%s posts category feed' % _site.name
+    title = 'Widelands.org posts category feed'
 
     def get_object(self, bits):
         if len(bits) != 1:

@@ -90,9 +90,9 @@ class Article(models.Model):
             return reverse('wiki_article', args=(self.title,))
         return self.group.get_absolute_url() + 'wiki/' + self.title
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         self.last_update = datetime.now()
-        super(Article, self).save(force_insert, force_update)
+        super(Article, self).save(*args, **kwargs)
 
     def latest_changeset(self):
         try:
@@ -248,7 +248,7 @@ class ChangeSet(models.Model):
             notification.send([self.editor], "wiki_revision_reverted",
                               {'revision': self, 'article': self.article})
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         """ Saves the article with a new revision.
         """
         if self.id is None:
@@ -257,7 +257,7 @@ class ChangeSet(models.Model):
                     article=self.article).latest().revision + 1
             except self.DoesNotExist:
                 self.revision = 1
-        super(ChangeSet, self).save(force_insert, force_update)
+        super(ChangeSet, self).save(*args, **kwargs)
 
     def display_diff(self):
         ''' Returns a HTML representation of the diff.
