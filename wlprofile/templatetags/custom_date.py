@@ -137,10 +137,15 @@ def custom_date( date, user ):
 
 custom_date.is_safe = False
 
+def total_seconds(td):
+    # Not defined in 2.6, so we redefine it.
+    return (td.microseconds + (td.seconds + td.days * 24. * 3600.) * 1000000.) / 1000000.
+
+
 @register.filter
 def minutes(date):
     today = datetime.today()
-    seconds = int((today - date).total_seconds())
+    seconds = int(total_seconds(today - date))
     sign = ''
     if seconds < 0:
         sign = '-'
