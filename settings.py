@@ -219,6 +219,7 @@ INSTALLED_APPS = (
     'notification',
     'djangoratings',
     'sphinxdoc',
+    'django_evolution',
 )
 
 try:

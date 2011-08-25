@@ -14,6 +14,7 @@ django-threadedcomments==0.5.2
 -e svn+http://django-messages.googlecode.com/svn/trunk/#egg=django_messages
 -e git://github.com/jtauber/django-notification.git#egg=notification
 django-sphinxdoc==0.3.2
+django-evolution==0.6.5
 numpy
 pydot
 ipython
