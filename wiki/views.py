@@ -14,12 +14,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.syndication.feeds import FeedDoesNotExist
 
-from wiki.forms import ArticleForm 
+from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
 from wiki.feeds import (RssArticleHistoryFeed, AtomArticleHistoryFeed,
                         RssHistoryFeed, AtomHistoryFeed)
-from wiki.utils import get_ct 
-from django.contrib.auth.decorators import login_required 
+from wiki.utils import get_ct
+from django.contrib.auth.decorators import login_required
 
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
@@ -260,8 +260,8 @@ def edit_article(request, title,
 
         form = ArticleFormClass(request.POST, instance=article)
 
+        form.cache_old_content()
         if form.is_valid():
-
             if request.user.is_authenticated():
                 form.editor = request.user
                 if article is None:
@@ -307,7 +307,7 @@ def edit_article(request, title,
     if not article:
         template_params = {'form': form, "new_article": True }
     else:
-        template_params = {'form': form, "new_article": False, 
+        template_params = {'form': form, "new_article": False,
             "content_type": ContentType.objects.get_for_model(Article).pk, "object_id": article.pk,
             "images": article.all_images(),
             "article": article,
@@ -534,7 +534,7 @@ def observe_article(request, title,
         return HttpResponseForbidden()
 
     article = get_object_or_404(article_qs, **article_args)
-    
+
     if not notification.is_observing(article, request.user):
         notification.observe(article, request.user,
            'wiki_observed_article_changed')
@@ -585,8 +585,8 @@ def stop_observing_article(request, title,
 
 def article_preview( request ):
     """
-    This is a AJAX function that previews the body of the 
-    article as it is currently displayed. 
+    This is a AJAX function that previews the body of the
+    article as it is currently displayed.
 
     This function is actually pretty simple, it just
     runs the function through the view template and returns
@@ -597,13 +597,13 @@ def article_preview( request ):
 
 def article_diff( request ):
     """
-    This is a AJAX function that diffs the body of the 
-    article as it is currently displayed with the current version 
+    This is a AJAX function that diffs the body of the
+    article as it is currently displayed with the current version
     of the article
     """
     current_article = get_object_or_404(Article, pk=int(request.POST["article"]))
     content = request.POST["body"]
-    
+
     diffs = dmp.diff_main(current_article.content, content)
 
     return HttpResponse(dmp.diff_prettyHtml(diffs), mimetype="text/html")

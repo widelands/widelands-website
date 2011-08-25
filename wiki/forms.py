@@ -60,20 +60,20 @@ class ArticleForm(forms.ModelForm):
 
         return self.cleaned_data
 
+    def cache_old_content(self):
+        if self.instance.id is None:
+            self.old_title = self.old_content = self.old_markup = ''
+            self.is_new = True
+        else:
+            self.old_title = self.instance.title
+            self.old_content = self.instance.content
+            self.old_markup = self.instance.markup
+            self.is_new = False
+
     def save(self, *args, **kwargs):
         # 0 - Extra data
         editor_ip = self.cleaned_data['user_ip']
         comment = self.cleaned_data['comment']
-
-        # 1 - Get the old stuff before saving
-        if self.instance.id is None:
-            old_title = old_content = old_markup = ''
-            new = True
-        else:
-            old_title = self.instance.title
-            old_content = self.instance.content
-            old_markup = self.instance.markup
-            new = False
 
         # 2 - Save the Article
         article = super(ArticleForm, self).save(*args, **kwargs)
@@ -81,7 +81,7 @@ class ArticleForm(forms.ModelForm):
         # 3 - Set creator and group
         editor = getattr(self, 'editor', None)
         group = getattr(self, 'group', None)
-        if new:
+        if self.is_new:
             article.creator_ip = editor_ip
             if editor is not None:
                 article.creator = editor
@@ -90,7 +90,7 @@ class ArticleForm(forms.ModelForm):
 
         # 4 - Create new revision
         changeset = article.new_revision(
-            old_content, old_title, old_markup,
+            self.old_content, self.old_title, self.old_markup,
             comment, editor_ip, editor)
 
         return article, changeset
