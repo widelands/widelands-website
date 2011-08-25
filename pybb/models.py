@@ -16,7 +16,7 @@ from pybb import settings as pybb_settings
 
 from django.conf import settings
 if settings.USE_SPHINX:
-    from djangosphinx import SphinxSearch
+    from djangosphinx.models import SphinxSearch
 
 try:
     from notification import models as notification

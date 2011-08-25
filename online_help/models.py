@@ -2,7 +2,7 @@ from django.db import models
 
 import settings
 if settings.USE_SPHINX:
-    from djangosphinx import SphinxSearch
+    from djangosphinx.models import SphinxSearch
 
 class Tribe(models.Model):
     name = models.CharField(max_length=100)

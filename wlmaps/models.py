@@ -8,7 +8,7 @@ import datetime
 
 import settings
 if settings.USE_SPHINX:
-    from djangosphinx import SphinxSearch
+    from djangosphinx.models import SphinxSearch
 
 from djangoratings.fields import AnonymousRatingField
 

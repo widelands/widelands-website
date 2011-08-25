@@ -17,7 +17,7 @@ from tagging.models import Tag
 
 import settings
 if settings.USE_SPHINX:
-    from djangosphinx import SphinxSearch
+    from djangosphinx.models import SphinxSearch
 
 from wlimages.models import Image
 

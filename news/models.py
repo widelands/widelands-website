@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 
 import settings
 if settings.USE_SPHINX:
-    from djangosphinx import SphinxSearch
+    from djangosphinx.models import SphinxSearch
 
 import tagging
 
