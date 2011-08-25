@@ -10,7 +10,7 @@ import settings
 if settings.USE_SPHINX:
     from djangosphinx import SphinxSearch
 
-from djangoratings import AnonymousRatingField
+from djangoratings.fields import AnonymousRatingField
 
 class MapManager(models.Manager):
     def create(self,**kwargs):

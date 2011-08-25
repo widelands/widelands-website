@@ -1,7 +1,7 @@
 from datetime import datetime
 from mainpage.templatetags.wl_markdown import do_wl_markdown as Markdown
 import os.path
-import sha
+import hashlib
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -324,7 +324,7 @@ class Attachment(models.Model):
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
         if not self.hash:
-            self.hash = sha.new(str(self.id) + settings.SECRET_KEY).hexdigest()
+            self.hash = hashlib.sha1(str(self.id) + settings.SECRET_KEY).hexdigest()
         super(Attachment, self).save(*args, **kwargs)
 
     def __unicode__(self):
