@@ -12,7 +12,7 @@ BeautifulSoup==3.2
 -e git://github.com/dcramer/django-ratings.git#egg=djangoratings
 django-threadedcomments==0.5.2
 -e svn+http://django-messages.googlecode.com/svn/trunk/#egg=django_messages
--e git://github.com/jtauber/django-notification.git#egg=notification
+-e git://github.com/jtauber/django-notification.git@555b506a3e225d476d17939d8b43f853fd0226ec#egg=notification
 django-sphinxdoc==0.3.2
 South==0.7.3
 numpy
