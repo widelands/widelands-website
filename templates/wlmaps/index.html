@@ -88,7 +88,7 @@ $().ready(function() {
     </div>
 
     <div class="box_content">
-        <form class="upload_form" enctype="multipart/form-data" action="{% url wlmaps_upload %}" method="post">
+        <form class="upload_form" enctype="multipart/form-data" action="{% url wlmaps_upload %}" method="post">{% csrf_token %}
             <label for="id_mapfile">Select map:</label>
             <input type="file" id="id_mapfile" name="mapfile"/><br />
             <label for="id_comment">Upload comment:</label><br />

@@ -43,7 +43,7 @@ class Map(models.Model):
     uploader = models.ForeignKey(User)
     nr_downloads = models.PositiveIntegerField( verbose_name ="Download count", default = 0)
 
-    rating = AnonymousRatingField(range=10)
+    rating = AnonymousRatingField(range=10, can_change_vote = True)
 
     if settings.USE_SPHINX:
         search          = SphinxSearch(
