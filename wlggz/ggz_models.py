@@ -28,7 +28,7 @@ class GGZMatches(models.Model):
     date = models.IntegerField()
     game = models.TextField()
     winner = models.CharField(max_length=256)
-    winner_user = ForeignKey(User, to_field='username', db_column='winner', related_name='wlggz_matchwins')
+    winner_user = ForeignKey(User, to_field='username', db_column='winner_id', related_name='wlggz_matchwins')
     savegame = models.TextField(blank=True)
 
     def winner_as_userlink(self):
