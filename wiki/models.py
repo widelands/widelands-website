@@ -119,12 +119,6 @@ class Article(models.Model):
             old_markup=old_markup,
             content_diff=content_diff)
 
-        if None not in (notification, self.creator):
-            if editor is None:
-                editor = editor_ip
-            notification.send([self.creator], "wiki_article_edited",
-                              {'article': self, 'user': editor})
-
         return cs
 
     def revert_to(self, revision, editor_ip, editor=None):
