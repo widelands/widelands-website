@@ -78,12 +78,17 @@ def pybb_pagination(context, label):
             'label': label,
             }
 import time
-
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
 def pybb_last_posts(context, number = 5):
-    last_posts = Post.objects.raw('SELECT id, MAX(created) FROM pybb_post GROUP BY "topic_id" ORDER BY "created" DESC LIMIT 5;')
+    last_posts = Post.objects.order_by('-created').select_related()[:25]
+    check = []
+    answer = []
+    for post in last_posts:
+        if (post.topic_id not in check) and len(check) < 5:
+            check = check + [post.topic_id]
+            answer = answer + [post]
     return {
-        'posts': last_posts,
+        'posts': answer,
         'user': context['user'],
 	}
 
