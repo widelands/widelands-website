@@ -12,8 +12,8 @@ function show_reply_form(comment_id, url, person_name) {
     '<form method="POST" action="' + url + '?next={{object.get_absolute_url}}">',
     '<div class="comment_post">',  '<div class="comment text"> <span class=errorclass">{{ form.comment.errors }}</span>{{ form.comment }}',  
     '</div> <input type="hidden" name="markup" value="1" />',
-              '<input type="submit" value="Submit Comment" />',
-    '</div>', '</form>', '</div>').join(''));
+        '<input type="submit" value="Submit Comment" />',
+        '</div>', "{% csrf_token %}", '</form>', '</div>').join(''));
     to_add.css("display", "none");
     comment_reply.after(to_add);
     to_add.slideDown(function() {
