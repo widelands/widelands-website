@@ -27,8 +27,7 @@ class GGZMatches(models.Model):
     id = models.IntegerField(primary_key=True)
     date = models.IntegerField()
     game = models.TextField()
-    winner = models.CharField(max_length=256)
-    winner_user = ForeignKey(User, to_field='username', db_column='winner_id', related_name='wlggz_matchwins')
+    winner_user = ForeignKey(User, to_field='username', db_column='winner', related_name='wlggz_matchwins')
     savegame = models.TextField(blank=True)
 
     def winner_as_userlink(self):
@@ -49,7 +48,6 @@ class GGZMatchplayers(models.Model):
     id = models.IntegerField(primary_key=True)
     match = ForeignKey(GGZMatches, to_field='id', db_column='match', related_name='wlggz_matchplayers')
     handle_user = ForeignKey(User, to_field='username', db_column='handle', related_name='wlggz_matches')
-    handle = models.CharField(max_length=256)
     playertype = models.CharField(max_length=768)
     result = models.CharField(max_length=10)
     points = models.IntegerField()
@@ -103,7 +101,6 @@ class GGZPermissions(models.Model):
 class GGZStats(models.Model):
     id = models.IntegerField(primary_key=True)
     handle_user = OneToOneField(User, to_field='username', related_name='wlggzstats', db_column='handle') 
-    handle = models.CharField(max_length=768, blank=True)
     game = models.TextField()
     wins = models.IntegerField()
     losses = models.IntegerField()
