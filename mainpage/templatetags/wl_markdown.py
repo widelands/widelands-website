@@ -159,26 +159,17 @@ def do_wl_markdown( value, *args, **keyw ):
         # went over it General consensus is to avoid replacing anything in
         # links [blah](blkf)
         if custom:
+            # Replace bzr revisions
+            rv = _insert_revision( text )
+            # Replace smileys
+            rv = _insert_smileys( rv )
+
             for name, (pattern,replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):
                     continue
 
-                # Replace bzr revisions
-                rv = _insert_revision( text )
-                # Replace smileys
-                rv = _insert_smileys( rv )
-
-                rv = pattern.sub( replacement, rv )
-                if rv:
-                    # We can't do a simple text substitution, because we
-                    # need this parsed for further processing
-                    # Hmpf, this code didn't work, so we DID text substitution
-                    # and then reparsedj
-                    # ns = BeautifulSoup(rv)
-                    # text.replaceWith(BeautifulSoup(rv))
-                    text.replaceWith(rv)
-                    # Only one replacement allowed!
-                    break
+                rv = pattern.sub(replacement, rv)
+            text.replaceWith(rv)
 
     # This call slows the whole function down...
     # unicode->reparsing.

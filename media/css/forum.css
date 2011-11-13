@@ -40,14 +40,6 @@
    height: auto;
 }
 
-.post .top {
-    vertical-align: top;
-}
-.post .top .signature .line {
-    color: #D0DFFF;
-    font-weight: bolder;
-}
-
 /* 
  * Post
  */
@@ -56,6 +48,11 @@
    margin: 0px;
    padding-bottom: 2px;
 }
+.post p {
+    margin: 8px 0px 8px;
+    padding: 0px;
+}
+
 .post .at {
    text-align: right;
    font-size: 90%;
@@ -94,6 +91,14 @@
     width: 100%;
     padding: 2px;
 }
+.post .top {
+    vertical-align: top;
+}
+.post .top .signature .line {
+    color: #D0DFFF;
+    font-weight: bolder;
+}
+
 
 /*
  * Compose
