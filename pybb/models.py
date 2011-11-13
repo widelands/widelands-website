@@ -1,5 +1,5 @@
 from datetime import datetime
-from mainpage.templatetags.wl_markdown import do_wl_markdown as Markdown
+from mainpage.templatetags.wl_markdown import do_wl_markdown
 import os.path
 import hashlib
 
@@ -166,7 +166,7 @@ class RenderableItem(models.Model):
         if self.markup == 'bbcode':
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':
-            self.body_html = unicode(Markdown(self.body, safe_mode='escape'))
+            self.body_html = unicode(do_wl_markdown(self.body, safe_mode='escape', wikiwords=False))
         else:
             raise Exception('Invalid markup property: %s' % self.markup)
 

@@ -1,5 +1,5 @@
 import math
-from mainpage.templatetags.wl_markdown import do_wl_markdown as Markdown
+from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb.markups import mypostmarkup 
 
 from django.shortcuts import get_object_or_404
@@ -359,7 +359,7 @@ def post_ajax_preview(request):
     if markup == 'bbcode':
         html = mypostmarkup.markup(content, auto_urls=False)
     elif markup == 'markdown':
-        html = unicode(Markdown(content, safe_mode='escape'))
+        html = unicode(do_wl_markdown(content, safe_mode='escape', wikiwords=False))
 
 
     html = urlize(html)

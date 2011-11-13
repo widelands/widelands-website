@@ -121,16 +121,16 @@ def _classify_link( tag ):
 
     return None
 
-custom_filters = [
+custom_filters = {
     # Wikiwordification
     # Match a wiki page link LikeThis. All !WikiWords (with a !
     # in front) are ignored
-    (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m:
+    "wikiwords": (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m:
         m.group(2) if m.group(1) == '!' else
             u"""<a href="/wiki/%(match)s">%(match)s</a>""" %
             {"match": m.group(2) }),
 
-]
+}
 
 def do_wl_markdown( value, *args, **keyw ):
     # Do Preescaping for markdown, so that some things stay intact
@@ -159,8 +159,8 @@ def do_wl_markdown( value, *args, **keyw ):
         # went over it General consensus is to avoid replacing anything in
         # links [blah](blkf)
         if custom:
-            for pattern,replacement in custom_filters:
-                if not len(text.strip()):
+            for name, (pattern,replacement) in custom_filters.iteritems():
+                if not len(text.strip()) or not keyw.get(name, True):
                     continue
 
                 # Replace bzr revisions
