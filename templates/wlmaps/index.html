@@ -72,7 +72,10 @@ $().ready(function() {
             <td>{{ o.world_name|title }}</td>
             <td>At {{ o.pub_date|custom_date:user }} by {{ o.uploader.username }}</td>
             <td>{{ o.nr_downloads }} times</td>
-            <td><a href="{{ o.get_absolute_url }}">Click here</a></td>
+            <td>
+               <p><a href="{{ o.get_absolute_url }}">Details</a></p>
+               <p><a href="{% url wlmaps_download o.slug %}">Direct Download</a></p>
+            </td>
         </tr>
         {% endfor %}
     </table>
