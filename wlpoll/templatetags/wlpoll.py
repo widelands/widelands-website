@@ -20,7 +20,9 @@ class DisplayPollNode(template.Node):
 
         choices = p.choices.all()
 
-        data = ',\n'.join("[ '%s', %i ]" % (c.choice.replace("'", "\\'"), c.votes) for c in choices)
+        _esc = lambda s: s.replace("'", "\\'")
+
+        data = ',\n'.join("[ '%s', %i ]" % (_esc(c.choice), "\\'"), c.votes) for c in choices)
 
         s = r"""
         <script type="text/javascript">
@@ -51,7 +53,7 @@ class DisplayPollNode(template.Node):
        </script>
 
         <div id="chartContainer" style="width: 100%%; height: 400px"></div>
-        """ % { "name": p.name, "data": data }
+        """ % { "name": _esc(p.name), "data": data }
 
         return s
 
