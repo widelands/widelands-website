@@ -22,7 +22,7 @@ class DisplayPollNode(template.Node):
 
         _esc = lambda s: s.replace("'", "\\'")
 
-        data = ',\n'.join("[ '%s', %i ]" % (_esc(c.choice), "\\'"), c.votes) for c in choices)
+        data = ',\n'.join("[ '%s', %i ]" % (_esc(c.choice), c.votes) for c in choices)
 
         s = r"""
         <script type="text/javascript">
