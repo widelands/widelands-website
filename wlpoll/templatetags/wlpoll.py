@@ -20,7 +20,7 @@ class DisplayPollNode(template.Node):
 
         choices = p.choices.all()
 
-        data = ',\n'.join("[ '%s', %i ]" % (c.choice, c.votes) for c in choices)
+        data = ',\n'.join("[ '%s', %i ]" % (c.choice.replace("'", "\\'"), c.votes) for c in choices)
 
         s = r"""
         <script type="text/javascript">
