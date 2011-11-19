@@ -133,7 +133,17 @@ div.box_content {
     background-image: url('../img/Menubackground.png');
 }
 
+div.box_content .sub_content {
+    margin-bottom: 15px;
+}
+
 .box_content p {
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 4px;
+}
+
+.box_content h4 {
     margin: 0px;
     padding: 0px;
     padding-bottom: 4px;

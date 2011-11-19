@@ -70,29 +70,40 @@
          {% endif %}
          <!-- Current polls if any -->
          {% get_open_polls as polls %}
-         {% if polls.count %}
-         <h3 class="box_title">Polls</h3>
-         <div class="box_content" align="center">
-         {% for p in polls %}
-         <form method="post" action="{% url wlpoll_vote p.id %}">
-            <h4>{{p.name}}</h4>
-            <table class="poll_vote">
-               {% for c in p.choices.all %}
-               <tr>
-                  <td><input type="radio" name="choice_id" value="{{ c.id }}" /></td>
-                  <td>{{ c.choice }}</td>
-               </tr>
-               {% endfor %}
-            </table>
-               <input type="submit" value="Vote" />
+         {% if polls %}
+         <center>
+            <h3 class="box_title">Polls</h3>
+            <div class="box_content" align="center">
+            {% for p in polls %}
+            <div class="sub_content">
+               <h4>{{p.name}}</h4>
+            {% if not user.is_anonymous %}
+               {% if p.user_has_voted %}
+                  <p>You already voted on this!</p>
+               {% else %}
+               <form method="post" action="{% url wlpoll_vote p.id %}">
+                  <table class="poll_vote">
+                     {% for c in p.choices.all %}
+                     <tr>
+                        <td><input type="radio" name="choice_id" value="{{ c.id }}" /></td>
+                        <td>{{ c.choice }}</td>
+                     </tr>
+                     {% endfor %}
+                  </table>
+                     <input type="submit" value="Vote" />
+                     {% csrf_token %}
+               </form>
+               {% endif %}
+            {% else %}
+               <p>Log in to vote!</p>
+            {% endif %}
                <input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
-               {% csrf_token %}
-	    </form>
-         {% endfor %}
-         <br/>
+            </div>
+            {% endfor %}
             <a href="{% url wlpoll_archive %}">Archive</a>
-         </div>
-         {%endif %}
+            </div>
+         </center>
+         {% endif %}
 
          <!-- Future Events if any -->
          {% get_future_events as events %}

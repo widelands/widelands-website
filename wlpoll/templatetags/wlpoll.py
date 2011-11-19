@@ -65,7 +65,6 @@ def do_display_poll( parser, token):
 
     return DisplayPollNode(poll_var)
 
-
 class GetOpenPolls(template.Node):
     def __init__(self, varname):
         self._vn = varname
@@ -74,7 +73,12 @@ class GetOpenPolls(template.Node):
         """
         Only has side effects
         """
-        context[self._vn] = Poll.objects.open()
+        user = context['user']
+        rv = []
+        for p in Poll.objects.open():
+            p.user_has_voted = False if user.is_anonymous() else p.has_user_voted(user)
+            rv.append(p)
+        context[self._vn] = rv
         return ""
 
 def do_get_open_polls( parser, token ):

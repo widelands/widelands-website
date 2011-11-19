@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 class PollManager(models.Manager):
@@ -15,6 +16,9 @@ class Poll(models.Model):
 
     def total_votes(self):
         return self.choices.all().aggregate(models.Sum("votes"))["votes__sum"]
+
+    def has_user_voted(self, u):
+        return u.poll_votes.filter(poll=self).count() > 0
 
     def is_closed(self):
         if self.closed_date is None:
@@ -35,3 +39,11 @@ class Choice(models.Model):
 
     def __unicode__(self):
         return u"%i:%s" % (self.votes,self.choice)
+
+class Vote(models.Model):
+    user = models.ForeignKey(User, related_name="poll_votes")
+    poll = models.ForeignKey(Poll)
+    choice = models.ForeignKey(Choice)
+    date_voted = models.DateTimeField("voted at", default = datetime.datetime.now)
+
+
