@@ -11,7 +11,7 @@ the dependencies for the website. Go and install them all.
 Example:
 On Ubuntu, installing all required tools and dependencies in two commands::
 
-   $ sudo apt-get install python-virtualenv python-pip mercurial bzr subversion git-core sqlite3
+   $ sudo apt-get install python-dev python-virtualenv python-pip mercurial bzr subversion git-core sqlite3
    $ sudo apt-get build-dep python-numpy
 
 Setting up the local environment
