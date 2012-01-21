@@ -29,7 +29,7 @@ Now, we create our environment and download the website::
    $ cd wlwebsite
    $ mkdir code
    $ cd code
-   $ bzr get lp:widelands-website widelands
+   $ bzr branch lp:widelands-website widelands
 
 All fine and good. Now we have to install all the third party modules the
 website needs. We use pip for that. But first, we have to change into our
