@@ -1,5 +1,6 @@
-from twisted.trial import unittest
+from twisted.internet import task
 from twisted.test import proto_helpers
+from twisted.trial import unittest
 
 from wlmetaserver import MetaServer, MSConnection, make_packet
 from wlms.db.flatfile import FlatFileDatabase
@@ -9,10 +10,18 @@ class _Base(object):
     def setUp(self):
         db = FlatFileDatabase("SirVer\t123456\tSUPERUSER\n" + "otto\tottoiscool\tREGISTERED\n")
         self.ms = MetaServer(db)
-        self._cons = [ self.ms.buildProtocol(('127.0.0.1', 0)) for i in range(2) ]
-        self._trs = [ proto_helpers.StringTransport() for i in range(2) ]
+        self.clock = task.Clock()
+        self._cons = [ self.ms.buildProtocol(('127.0.0.1', 0)) for i in range(10) ]
+        self._trs = [ proto_helpers.StringTransport() for i in range(10) ]
         for c,tr in zip(self._cons, self._trs):
+            c.callLater = self.clock.callLater
             c.makeConnection(tr)
+
+    def tearDown(self):
+        for idx,c in enumerate(self._cons):
+            p = self._recv(idx)
+            if p:
+                raise RuntimeError("unexpected packet from client %i: %r" % (idx, p))
 
     def _recv(self, client):
         d = self._trs[client].value()
@@ -94,12 +103,13 @@ class TestLogin(_Base, unittest.TestCase):
     def test_nonanon_login_onewasalreadythere(self):
         # Login client 0
         self._send(0, "LOGIN", 0, "SirVer", "build-17", 1, "123456")
+        self._recv(0)
+
         # Login client 0
         self._send(1, "LOGIN", 0, "SirVer", "build-17", 1, "123456")
         p1, = self._recv(1)
 
         self.assertEqual(p1, ['ERROR', 'LOGIN', 'ALREADY_LOGGED_IN'])
-
 
     def test_nonanon_login_twousers_password(self):
         self._send(0, "LOGIN", 0, "SirVer", "build-17", 1, "123456")
@@ -122,8 +132,97 @@ class TestLogin(_Base, unittest.TestCase):
         self._send(0, "LOGIN", 0, "SirVer", "build-17", 1, "12345")
         p, = self._recv(0)
         self.assertEqual(p, ['ERROR', 'LOGIN', 'WRONG_PASSWORD'])
-
 # End: Test Login  }}}
+# Test Relogin  {{{
+class TestRelogin_Anon(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._send(2, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(3, "LOGIN", 0, "SirVer", "build-17", "true", "123456")
+        self._recv(0)
+        self._recv(2)
+        self._recv(3)
+
+    def test_relogin_ping_and_reply(self):
+        self._send(1, "RELOGIN", 0, "bert", "build-17", "false")
+        p1, = self._recv(0) # Should have gotten a ping request
+        self.assertEqual(p1, ["PING"])
+
+        self._send(0, "PONG")
+        self.assertFalse(self._recv(0))
+
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "CONNECTION_STILL_ALIVE"])
+
+    def test_relogin_ping_and_noreply(self):
+        self._send(1, "RELOGIN", 0, "bert", "build-17", "false")
+        p1, = self._recv(0)
+        self.assertEqual(p1, ["PING"])
+
+        self.clock.advance(6)
+
+        # Connection was terminated for old user
+        p1, = self._recv(0)
+        self.assertEqual(p1, ["DISCONNECT", "TIMEOUT"])
+
+        # Relogin accepted
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["RELOGIN"])
+
+    def test_relogin_notloggedin(self):
+        self._send(1, "RELOGIN", 0, "iamnotbert", "build-17", "false")
+        p1, = self._recv(1)
+
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "NOT_LOGGED_IN"])
+        self.assertFalse(self._recv(0))
+
+    def test_relogin_wronginformation_wrong_proto(self):
+        self._send(1, "RELOGIN", 1, "bert", "build-17", "false")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "WRONG_INFORMATION"])
+        self.assertFalse(self._recv(0))
+
+    def test_relogin_wronginformation_wrong_buildid(self):
+        self._send(1, "RELOGIN", 0, "bert", "uild-17", "false")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "WRONG_INFORMATION"])
+        self.assertFalse(self._recv(0))
+    def test_relogin_wronginformation_wrong_loggedin(self):
+        self._send(1, "RELOGIN", 0, "bert", "build-17", "true")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "WRONG_INFORMATION"])
+        self.assertFalse(self._recv(0))
+    def test_relogin_wronginformation_wrong_loggedin_nonanon(self):
+        self._send(1, "RELOGIN", 0, "otto", "build-17", "false")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "WRONG_INFORMATION"])
+        self.assertFalse(self._recv(0))
+    def test_relogin_wronginformation_wrong_passwordl(self):
+        self._send(1, "RELOGIN", 0, "otto", "build-17", "true", "12345")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "RELOGIN", "WRONG_INFORMATION"])
+
+        self.assertFalse(self._recv(0))
+    def test_relogin_loggedin_allcorrect(self):
+        self._send(1, "RELOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        p1, = self._recv(2)
+        self.assertEqual(p1, ["PING"])
+
+        self.clock.advance(6)
+
+        # Connection was terminated for old user
+        p1, = self._recv(2)
+        self.assertEqual(p1, ["DISCONNECT", "TIMEOUT"])
+
+        # Relogin accepted
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["RELOGIN"])
+
+    # TODO: different information passed in
+    # TODO: when no response -> accept and replace
+
+# End: Test Relogin  }}}
 # TestLogin  {{{
 class TestChat(_Base, unittest.TestCase):
     def setUp(self):

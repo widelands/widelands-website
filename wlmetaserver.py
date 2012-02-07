@@ -68,21 +68,21 @@ def _unpack(codes, p):
 def make_packet(*args):
     pstr = ''.join(str(x) + '\x00' for x in args)
     size = len(pstr) + 2
-    print "size: %r" % (size)
-    print "Sending: %r" % (args,)
     return chr(size >> 8) + chr(size & 0xff) + pstr
 
 class MSConnection(Protocol):
     _ALLOWED_PACKAGES = {
-        "HANDSHAKE": set(("LOGIN","DISCONNECT")),
-        "LOBBY": set(("DISCONNECT", "CHAT", "CLIENTS")),
+        "HANDSHAKE": set(("LOGIN","DISCONNECT", "RELOGIN")),
+        "LOBBY": set(("DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG")),
     }
+    callLater = reactor.callLater
 
     def __init__(self, factory):
         self._login_time = time.time()
         self._factory = factory
         self._name = None
         self._state = "HANDSHAKE"
+        self._last_pong = self._login_time
 
         self._d = ""
 
@@ -113,10 +113,8 @@ class MSConnection(Protocol):
             packet = self._read_packet()
 
             if packet is not None:
-                print "Received: %r" % (packet)
                 try:
                     cmd = _string(packet)
-                    print "packet: %r" % (packet)
                     if cmd in self._ALLOWED_PACKAGES[self._state]:
                         func = getattr(self, "_handle_%s" % cmd)
                         try:
@@ -140,7 +138,7 @@ class MSConnection(Protocol):
     def send(self, *args):
         self.transport.write(make_packet(*args))
 
-    def _handle_LOGIN(self, p):
+    def _handle_LOGIN(self, p, cmdname = "LOGIN"):
         self._protocol_version, name, self._build_id, is_registered = _unpack("issb", p)
         if is_registered:
             rv = self._factory.db.check_user(name, _string(p))
@@ -167,6 +165,42 @@ class MSConnection(Protocol):
 
         self._factory.connected(self)
 
+    def _handle_PONG(self, p):
+        self._last_pong = time.time()
+
+        if self._name in self._factory.users_wanting_to_relogin:
+            # No, you can't relogin. Sorry
+            pself, new, defered = self._factory.users_wanting_to_relogin.pop(self._name)
+            assert(pself is self)
+            new.send("ERROR", "RELOGIN", "CONNECTION_STILL_ALIVE")
+            defered.cancel()
+
+    def _handle_RELOGIN(self, p):
+        pv, name, build_id, is_registered = _unpack("issb", p)
+        if name not in self._factory.users:
+            raise MSError("NOT_LOGGED_IN")
+
+        u = self._factory.users[name]
+        if (u._protocol_version != pv or u._build_id != build_id):
+            raise MSError("WRONG_INFORMATION")
+        if (is_registered and u._permissions == "UNREGISTERED" or
+            (not is_registered and u._permissions == "REGISTERED")):
+            raise MSError("WRONG_INFORMATION")
+
+        if is_registered and not self._factory.db.check_user(name, _string(p)):
+            raise MSError("WRONG_INFORMATION")
+
+        u.send("PING")
+
+        def _try_relogin():
+            del self._factory.users_wanting_to_relogin[u._name]
+            u.send("DISCONNECT", "TIMEOUT")
+            u.transport.loseConnection()
+            self._factory.users[self._name] = self
+            self.send("RELOGIN")
+        defered = self.callLater(5, _try_relogin)
+        self._factory.users_wanting_to_relogin[u._name] = (u, self, defered)
+
     def _handle_CLIENTS(self, p):
         args = ["CLIENTS", len(self._factory.users)]
         for u in sorted(self._factory.users.values()):
@@ -186,6 +220,7 @@ class MSConnection(Protocol):
 
     def _handle_DISCONNECT(self, p):
         reason = _string(p)  # TODO: do somethinwith the reason
+        self.transport.loseConnection()
         self._factory.disconnected(self)
 
 
@@ -193,6 +228,7 @@ class MSConnection(Protocol):
 class MetaServer(Factory):
     def __init__(self, db):
         self.users = {}
+        self.users_wanting_to_relogin = {}
         self.db = db
 
     def buildProtocol(self, addr):
