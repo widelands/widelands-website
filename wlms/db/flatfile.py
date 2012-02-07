@@ -14,7 +14,7 @@ class FlatFileDatabase(object):
             line = line.strip()
             if not line: continue
             elems = line.split("\t")
-            self._users[elems[0]] = elems[1], int(elems[2])
+            self._users[elems[0]] = elems[1], elems[2]
 
     def check_user(self, user, password):
         if not user in self._users:

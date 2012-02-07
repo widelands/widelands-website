@@ -13,8 +13,8 @@ from wlms.db.flatfile import FlatFileDatabase
 
 # TODO: relogin
 # TODO: MOTD
-# TODO: time
 # TODO: PING, PONG
+# TODO: GAME STUFF
 #
 # TODO: peter fragen warum das integers sind
 # TODO: peter neue replys:
@@ -22,10 +22,10 @@ from wlms.db.flatfile import FlatFileDatabase
 
 # TODO: coole idee GAME_NOT_CONNECTABLE
 
-INTERNET_CLIENT_UNREGISTERED = 0
-INTERNET_CLIENT_REGISTERED   = 1
-INTERNET_CLIENT_SUPERUSER    = 2
-INTERNET_CLIENT_BOT          = 3
+INTERNET_CLIENT_UNREGISTERED = "UNREGISTERED"
+INTERNET_CLIENT_REGISTERED   = "REGISTERED"
+INTERNET_CLIENT_SUPERUSER    = "SUPERUSER"
+INTERNET_CLIENT_BOT          = "BOT"
 
 # import os
 # os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
@@ -128,7 +128,7 @@ class MSConnection(Protocol):
             self._name = name
             rv = self._factory.db.check_user(self._name, _string(p))
             if rv is False:
-                self.send("REJECTED", "WRONG_PASSWORD")
+                self.send("ERROR", "LOGIN" ,"WRONG_PASSWORD")
                 self.transport.loseConnection()
                 return
             self._permissions = rv
@@ -142,12 +142,12 @@ class MSConnection(Protocol):
                 n += 1
             self._permissions = INTERNET_CLIENT_UNREGISTERED
 
-        self.send("LOGIN", self._name, "Welcome", self._permissions)
+        self.send("LOGIN", self._name, self._permissions)
         self._state = "LOBBY"
+        self.send("TIME", int(time.time()))
 
         # TODO: Peter wg lexical cast: http://www.boost.org/doc/libs/1_40_0/libs/conversion/lexical_cast.htm
         # TODO: find out what the state of this user is
-        # TODO: make welcome message configurable
 
         self._login_time = time.time()
         self._factory.connected(self)
