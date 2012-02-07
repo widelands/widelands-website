@@ -15,8 +15,10 @@ from wlms.db.flatfile import FlatFileDatabase
 # TODO: MOTD
 # TODO: PING, PONG
 # TODO: GAME STUFF
-#
-# TODO: peter fragen warum das integers sind
+
+# TODO: check chat messages for richtext tags and deny them if they include them. Only systemmessages like
+#       the motd may contain them.
+
 # TODO: peter neue replys:
     # ERROR NO_SUCH_USER username
 
@@ -125,21 +127,29 @@ class MSConnection(Protocol):
         name = _string(p)
         self._build_id = _string(p)
         if _bool(p): # Is a user with a login?
-            self._name = name
-            rv = self._factory.db.check_user(self._name, _string(p))
+            tempname = name
+            rv = self._factory.db.check_user(tempname, _string(p))
             if rv is False:
                 self.send("ERROR", "LOGIN" ,"WRONG_PASSWORD")
                 self.transport.loseConnection()
                 return
+            while tempname in self._factory.users:
+                self.send("ERROR", "LOGIN", "ALREADY_LOGGED_IN")
+                self.transport.loseConnection()
+                return
+            # now it's okay to set self._name as no other client is logged in with that name
+            self._name = tempname
             self._permissions = rv
         else:
             # Find a name that is not yet in use : TODO: in a function of its own
-            self._name = name
+            tempname = name
             n = 1
-            while self._name in self._factory.users:
+            while tempname in self._factory.users or self._factory.db.user_exists(tempname) is True:
                 print "self._factory.users: %r" % (self._factory.users)
-                self._name = name + str(n)
+                tempname = name + str(n)
                 n += 1
+            # now it's okay to set self._name as no other client is logged in with that name
+            self._name = tempname
             self._permissions = INTERNET_CLIENT_UNREGISTERED
 
         self.send("LOGIN", self._name, self._permissions)
@@ -157,7 +167,7 @@ class MSConnection(Protocol):
         for u in self._factory.users.values():
             # TODO: send game in third place
             # TODO: Peter: points?
-            args.extend((u._name, u._build_id, '', self._permissions, "nopoints"))
+            args.extend((u._name, u._build_id, '', u._permissions, "nopoints"))
         self.send(*args)
     def _handle_CHAT(self, p):
         msg = _string(p)
