@@ -19,16 +19,6 @@ from wlms.db.flatfile import FlatFileDatabase
 # TODO: check chat messages for richtext tags and deny them if they include them. Only systemmessages like
 #       the motd may contain them.
 
-# TODO: peter neue replys:
-    # ERROR NO_SUCH_USER username
-
-# TODO: coole idee GAME_NOT_CONNECTABLE
-
-INTERNET_CLIENT_UNREGISTERED = "UNREGISTERED"
-INTERNET_CLIENT_REGISTERED   = "REGISTERED"
-INTERNET_CLIENT_SUPERUSER    = "SUPERUSER"
-INTERNET_CLIENT_BOT          = "BOT"
-
 # import os
 # os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 # import sys
@@ -36,22 +26,44 @@ INTERNET_CLIENT_BOT          = "BOT"
 # from django.contrib.auth.models import User
 # from wlggz.models import GGZAuth
 
+class MSError(Exception):
+    def __init__(self, *args):
+        self.args = args
+class MSCriticalError(Exception):
+    def __init__(self, *args):
+        self.args = args
+class MSGarbageError(MSCriticalError):
+    def __init__(self, *args):
+        MSCriticalError.__init__(self, "GARBAGE_RECEIVED", *args)
+
 # TODO: peek is not used
 def _string(l, peek = False):
     if l:
         return l.pop(0) if not peek else l[0]
-    return ''
+    raise MSGarbageError("Wanted a string but got no arguments left")
+
 def _int(l, *args, **kwargs):
     s = _string(l, *args, **kwargs)
     try:
         return int(s)
     except ValueError:
-        return 0
+        raise MSGarbageError("Invalid integer: %r" % s)
+
 def _bool(l, *args, **kwargs):
     s = _string(l, *args, **kwargs)
     if s == "1" or s.lower() == "true":
         return True
-    return False
+    elif s == "0" or s.lower() == "false":
+        return False
+    raise MSGarbageError("Invalid bool: %r" % s)
+
+__CODES2FUNC = {
+    "i": _int,
+    "s": _string,
+    "b": _bool,
+}
+def _unpack(codes, p):
+    return [ __CODES2FUNC[c](p) for c in codes ]
 
 def make_packet(*args):
     pstr = ''.join(str(x) + '\x00' for x in args)
@@ -60,24 +72,18 @@ def make_packet(*args):
     print "Sending: %r" % (args,)
     return chr(size >> 8) + chr(size & 0xff) + pstr
 
-
 class MSConnection(Protocol):
     _ALLOWED_PACKAGES = {
         "HANDSHAKE": set(("LOGIN","DISCONNECT")),
         "LOBBY": set(("DISCONNECT", "CHAT", "CLIENTS")),
     }
 
-    _GGZPERMS2PERMS = {
-          7: INTERNET_CLIENT_REGISTERED,
-        127: INTERNET_CLIENT_SUPERUSER,
-    }
     def __init__(self, factory):
         self._login_time = time.time()
         self._factory = factory
         self._name = None
         self._state = "HANDSHAKE"
 
-        self._expect_data = 0
         self._d = ""
 
     def __lt__(self, o):
@@ -108,77 +114,76 @@ class MSConnection(Protocol):
 
             if packet is not None:
                 print "Received: %r" % (packet)
-                cmd = _string(packet)
-                print "packet: %r" % (packet)
-                if cmd in self._ALLOWED_PACKAGES[self._state]:
-                    func = getattr(self, "_handle_%s" % cmd)
-                    func(packet)
-                else: # Garbage sended? Kick this one
-                    # TODO: explain why and write test
+                try:
+                    cmd = _string(packet)
+                    print "packet: %r" % (packet)
+                    if cmd in self._ALLOWED_PACKAGES[self._state]:
+                        func = getattr(self, "_handle_%s" % cmd)
+                        try:
+                            func(packet)
+                        except MSGarbageError as e:
+                            e.args = (cmd,) + e.args[1:]
+                            raise e
+                        except MSError as e:
+                            e.args = (cmd,) + e.args
+                            raise e
+                    else:
+                        raise MSGarbageError("Invalid or forbidden command: '%s'" % cmd)
+                except MSCriticalError as e:
+                    self.send("ERROR", *e.args)
                     self.transport.loseConnection()
                     return
+                except MSError as e:
+                    self.send("ERROR", *e.args)
+
 
     def send(self, *args):
         self.transport.write(make_packet(*args))
 
     def _handle_LOGIN(self, p):
-        print "p: %r" % (p,)
-        self._protocol_version = _int(p)
-        name = _string(p)
-        self._build_id = _string(p)
-        if _bool(p): # Is a user with a login?
-            tempname = name
-            rv = self._factory.db.check_user(tempname, _string(p))
+        self._protocol_version, name, self._build_id, is_registered = _unpack("issb", p)
+        if is_registered:
+            rv = self._factory.db.check_user(name, _string(p))
             if rv is False:
-                self.send("ERROR", "LOGIN" ,"WRONG_PASSWORD")
-                self.transport.loseConnection()
-                return
-            while tempname in self._factory.users:
-                self.send("ERROR", "LOGIN", "ALREADY_LOGGED_IN")
-                self.transport.loseConnection()
-                return
-            # now it's okay to set self._name as no other client is logged in with that name
-            self._name = tempname
+                raise MSError("WRONG_PASSWORD")
+            if name in self._factory.users:
+                raise MSError("ALREADY_LOGGED_IN")
+            self._name = name
             self._permissions = rv
         else:
-            # Find a name that is not yet in use : TODO: in a function of its own
-            tempname = name
+            # Find a name that is not yet in use
+            temp = name
             n = 1
-            while tempname in self._factory.users or self._factory.db.user_exists(tempname) is True:
-                print "self._factory.users: %r" % (self._factory.users)
-                tempname = name + str(n)
+            while temp in self._factory.users or self._factory.db.user_exists(temp):
+                temp = name + str(n)
                 n += 1
-            # now it's okay to set self._name as no other client is logged in with that name
-            self._name = tempname
-            self._permissions = INTERNET_CLIENT_UNREGISTERED
+            self._name = temp
+            self._permissions = "UNREGISTERED"
 
         self.send("LOGIN", self._name, self._permissions)
         self._state = "LOBBY"
+        self._login_time = time.time()
         self.send("TIME", int(time.time()))
 
-        # TODO: Peter wg lexical cast: http://www.boost.org/doc/libs/1_40_0/libs/conversion/lexical_cast.htm
-        # TODO: find out what the state of this user is
-
-        self._login_time = time.time()
         self._factory.connected(self)
 
     def _handle_CLIENTS(self, p):
         args = ["CLIENTS", len(self._factory.users)]
-        for u in self._factory.users.values():
+        for u in sorted(self._factory.users.values()):
             # TODO: send game in third place
-            # TODO: Peter: points?
-            args.extend((u._name, u._build_id, '', u._permissions, "nopoints"))
+            args.extend((u._name, u._build_id, '', u._permissions, ''))
         self.send(*args)
+
     def _handle_CHAT(self, p):
-        msg = _string(p)
-        receipient = _string(p)
-        if not receipient: # Public Message
-            self._factory.broadcast("CHAT", self._name, msg, "false", "false")
+        msg, recipient = _unpack("ss", p)
+        if not recipient: # Public Message
+            self._factory.broadcast("CHAT", self._name, msg, "false", "false") # TODO: warum zwei flags?
         else:
-            if receipient in self._factory.users:
-                self._factory.users[receipient].send("CHAT", self._name, msg, "true", "false")
+            if recipient in self._factory.users:
+                self._factory.users[recipient].send("CHAT", self._name, msg, "true", "false")
             else:
-                self.send("ERROR", "CHAT", "NO_SUCH_USER", receipient)
+                self.send("ERROR", "CHAT", "NO_SUCH_USER", recipient)
+
     def _handle_DISCONNECT(self, p):
         reason = _string(p)  # TODO: do somethinwith the reason
         self._factory.disconnected(self)

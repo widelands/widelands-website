@@ -1,3 +1,7 @@
+_GGZPERMS2PERMS = {
+      7: "REGISTERED",
+    127: "SUPERUSER",
+}
 # TODO
             try:
                 djuser = User.objects.get(username=self._name)

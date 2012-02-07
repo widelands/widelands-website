@@ -25,7 +25,5 @@ class FlatFileDatabase(object):
         return False
 
     def user_exists(self, user):
-        if not user in self._users:
-            return False
-        return True
+        return user in self._users
 
