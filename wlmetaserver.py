@@ -166,7 +166,7 @@ class MSConnection(Protocol):
             self._factory.broadcast("CHAT", self._name, msg, "false", "false")
         else:
             if receipient in self._factory.users:
-                self._factory[receipient].send("CHAT", self._name, msg, "true", "false")
+                self._factory.users[receipient].send("CHAT", self._name, msg, "true", "false")
             else:
                 self.send("ERROR", "CHAT", "NO_SUCH_USER", receipient)
     def _handle_DISCONNECT(self, p):

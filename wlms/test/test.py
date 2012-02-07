@@ -84,5 +84,27 @@ class TestLogin(_Base, unittest.TestCase):
         p, = self._recv(0)
         self.assertEqual(p, ['REJECTED', 'WRONG_PASSWORD']) # TODO: wozu rejected. error reicht doch
 
-    # End: Test Login  }}}
+# End: Test Login  }}}
+# TestLogin  {{{
+class TestChat(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._send(1, "LOGIN", 1, "ernie", "build-17", "false")
+        self._recv(0)
+        self._recv(1)
+
+    def test_public_chat(self):
+        self._send(0, "CHAT", "hello there", "")
+        p0, = self._recv(0)
+        p1, = self._recv(1)
+        self.assertEqual(p0,p1)
+        self.assertEqual(p1, ["CHAT", "bert", "hello there", "false", "false"])
+
+    def test_private_chat(self):
+        self._send(0, "CHAT", "hello there", "ernie")
+        self.assertEqual([], self._recv(0))
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["CHAT", "bert", "hello there", "true", "false"])
+# End: TestLogin  }}}
 
