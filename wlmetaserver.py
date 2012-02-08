@@ -90,8 +90,8 @@ class Game(object):
         self.buildid = buildid
 
     @property
-    def connectable(self):
-        return len(self.players) == self.max_players
+    def connectable(self): # TODO check connectability
+        return len(self.players) < self.max_players
 
 
 class MSConnection(Protocol):
@@ -239,7 +239,7 @@ class MSConnection(Protocol):
     def _handle_CHAT(self, p):
         msg, recipient = _unpack("ss", p)
         if not recipient: # Public Message
-            self._factory.broadcast("CHAT", self._name, msg, "false", "false") # TODO: warum zwei flags?
+            self._factory.broadcast("CHAT", self._name, msg, "false", "false") # flag1: private, flag2: systemmessage
         else:
             if recipient in self._factory.users:
                 self._factory.users[recipient].send("CHAT", self._name, msg, "true", "false")
@@ -257,12 +257,14 @@ class MSConnection(Protocol):
         self._state = "INGAME"
         self._factory.broadcast("CLIENTS_UPDATE")
 
+        self.send("GAME_OPEN")
+
     def _handle_GAMES(self, p):
-        p = [ len(self._factory.games) ]
-        for game in self._factory.games:
-            con = "connectable" if game.connectable else "not connectable"
-            p.extend((game.name, game.buildid, con))
-        self.send(p)
+        args = ["GAMES", len(self._factory.games)]
+        for game in sorted(self._factory.games.values()):
+            con = "true" if game.connectable else "false"
+            args.extend((game.name, game.buildid, con))
+        self.send(*args)
 
     def _handle_GAME_CONNECT(self, p):
         name, = _unpack("s", p)
