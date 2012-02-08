@@ -11,10 +11,11 @@ import time
 
 from wlms.db.flatfile import FlatFileDatabase
 
-# TODO: relogin
 # TODO: MOTD
-# TODO: PING, PONG
+# TODO: PING regularly when no data came around
 # TODO: GAME STUFF
+# TODO: logging
+# TODO: partial packet parsing
 
 # TODO: check chat messages for richtext tags and deny them if they include them. Only systemmessages like
 #       the motd may contain them.
@@ -70,10 +71,39 @@ def make_packet(*args):
     size = len(pstr) + 2
     return chr(size >> 8) + chr(size & 0xff) + pstr
 
+class Game(object):
+    __slots__ = ("host", "max_players", "name", "buildid", "players",)
+
+    def __init__(self, host, name, max_players, buildid):
+        """
+        Representing a currently running game.
+
+        :host: The name of the hosting player
+        :max_players: Number of players the game can hold
+        :players: a set of the player names currently in the game.
+            Includes the host
+        """
+        self.host = host
+        self.max_players = max_players
+        self.players = set((host,))
+        self.name = name
+        self.buildid = buildid
+
+    @property
+    def connectable(self):
+        return len(self.players) == self.max_players
+
+
 class MSConnection(Protocol):
     _ALLOWED_PACKAGES = {
         "HANDSHAKE": set(("LOGIN","DISCONNECT", "RELOGIN")),
-        "LOBBY": set(("DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG")),
+        "LOBBY": set((
+            "DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG",
+            "GAME_OPEN", "GAME_CONNECT", "GAMES"
+        )),
+        "INGAME": set((
+            "DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG", "GAMES"
+        )),
     }
     callLater = reactor.callLater
 
@@ -82,7 +112,7 @@ class MSConnection(Protocol):
         self._factory = factory
         self._name = None
         self._state = "HANDSHAKE"
-        self._last_pong = self._login_time
+        self._game = ""
 
         self._d = ""
 
@@ -113,6 +143,7 @@ class MSConnection(Protocol):
             packet = self._read_packet()
 
             if packet is not None:
+                print "RECV: %r" % (packet)
                 try:
                     cmd = _string(packet)
                     if cmd in self._ALLOWED_PACKAGES[self._state]:
@@ -139,7 +170,7 @@ class MSConnection(Protocol):
         self.transport.write(make_packet(*args))
 
     def _handle_LOGIN(self, p, cmdname = "LOGIN"):
-        self._protocol_version, name, self._build_id, is_registered = _unpack("issb", p)
+        self._protocol_version, name, self._buildid, is_registered = _unpack("issb", p)
         if is_registered:
             rv = self._factory.db.check_user(name, _string(p))
             if rv is False:
@@ -166,8 +197,6 @@ class MSConnection(Protocol):
         self._factory.connected(self)
 
     def _handle_PONG(self, p):
-        self._last_pong = time.time()
-
         if self._name in self._factory.users_wanting_to_relogin:
             # No, you can't relogin. Sorry
             pself, new, defered = self._factory.users_wanting_to_relogin.pop(self._name)
@@ -181,7 +210,7 @@ class MSConnection(Protocol):
             raise MSError("NOT_LOGGED_IN")
 
         u = self._factory.users[name]
-        if (u._protocol_version != pv or u._build_id != build_id):
+        if (u._protocol_version != pv or u._buildid != build_id):
             raise MSError("WRONG_INFORMATION")
         if (is_registered and u._permissions == "UNREGISTERED" or
             (not is_registered and u._permissions == "REGISTERED")):
@@ -204,8 +233,7 @@ class MSConnection(Protocol):
     def _handle_CLIENTS(self, p):
         args = ["CLIENTS", len(self._factory.users)]
         for u in sorted(self._factory.users.values()):
-            # TODO: send game in third place
-            args.extend((u._name, u._build_id, '', u._permissions, ''))
+            args.extend((u._name, u._buildid, u._game, u._permissions, ''))
         self.send(*args)
 
     def _handle_CHAT(self, p):
@@ -218,6 +246,38 @@ class MSConnection(Protocol):
             else:
                 self.send("ERROR", "CHAT", "NO_SUCH_USER", recipient)
 
+    def _handle_GAME_OPEN(self, p):
+        name, max_players = _unpack("si", p)
+
+        game = Game(self._name, name, max_players, self._buildid)
+        self._factory.games[name] = game
+        self._factory.broadcast("GAMES_UPDATE")
+
+        self._game = name
+        self._state = "INGAME"
+        self._factory.broadcast("CLIENTS_UPDATE")
+
+    def _handle_GAMES(self, p):
+        p = [ len(self._factory.games) ]
+        for game in self._factory.games:
+            con = "connectable" if game.connectable else "not connectable"
+            p.extend((game.name, game.buildid, con))
+        self.send(p)
+
+    def _handle_GAME_CONNECT(self, p):
+        name, = _unpack("s", p)
+
+        if name not in self._factory.games:
+            raise MSError("UNKNOWN_GAME")
+        game = self._factory.games[name]
+        game.players.add(self._name)
+
+        # TODO: send ip address and a reply
+
+        self._game = game.name
+        self._state = "INGAME"
+        self._factory.broadcast("CLIENTS_UPDATE")
+
     def _handle_DISCONNECT(self, p):
         reason = _string(p)  # TODO: do somethinwith the reason
         self.transport.loseConnection()
@@ -228,11 +288,13 @@ class MSConnection(Protocol):
 class MetaServer(Factory):
     def __init__(self, db):
         self.users = {}
+        self.games = {}
         self.users_wanting_to_relogin = {}
         self.db = db
 
     def buildProtocol(self, addr):
         return MSConnection(self)
+
 
     def disconnected(self, con):
         if con._name in self.users:
@@ -240,12 +302,12 @@ class MetaServer(Factory):
         self.broadcast("CLIENTS_UPDATE")
 
     def connected(self, con):
-        print "Has connected: con._name: %r" % (con._name)
         self.users[con._name] = con
         self.broadcast("CLIENTS_UPDATE")
 
     def broadcast(self, *args):
         """Send a message to all connected clients"""
+        print "SEND: %r" % (args)
         for con in self.users.values():
             con.send(*args)
 

@@ -34,6 +34,14 @@ class _Base(object):
             d = d[size:]
         return rv
 
+    def _mult_receive(self, clients):
+        """Make sure everybody received the same data,
+        return this data once"""
+        ps = [ self._recv(c) for c in clients ]
+        for idx,p in enumerate(ps[1:], 1):
+            self.assertEqual(ps[idx-1], ps[idx])
+        return ps[0]
+
     def _send(self, client, *args, **kwargs):
         c = self._cons[client]
         c.dataReceived(make_packet(*args))
@@ -57,8 +65,8 @@ class TestGarbage(_Base, unittest.TestCase):
         self.assertEqual(p1, ['ERROR', 'LOGIN', "Invalid integer: 'hi'"])
 # End: Send Garbage  }}}
 
+# Test Login  {{{
 class TestLogin(_Base, unittest.TestCase):
-    # Test Login  {{{
     def test_loginanon(self):
         self._send(0, "LOGIN", 0, "testuser", "build-17", "false")
         p1,p2,p3 = list(self._recv(0))
@@ -218,12 +226,8 @@ class TestRelogin_Anon(_Base, unittest.TestCase):
         # Relogin accepted
         p1, = self._recv(1)
         self.assertEqual(p1, ["RELOGIN"])
-
-    # TODO: different information passed in
-    # TODO: when no response -> accept and replace
-
 # End: Test Relogin  }}}
-# TestLogin  {{{
+# Test Chat  {{{
 class TestChat(_Base, unittest.TestCase):
     def setUp(self):
         _Base.setUp(self)
@@ -244,5 +248,56 @@ class TestChat(_Base, unittest.TestCase):
         self.assertEqual([], self._recv(0))
         p1, = self._recv(1)
         self.assertEqual(p1, ["CHAT", "bert", "hello there", "true", "false"])
-# End: TestLogin  }}}
+# End: Test Chat  }}}
+# Test Game Creation/Joining  {{{
+class TestChat(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-16", "false")
+        self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(2, "LOGIN", 0, "SirVer", "build-18", "true", "123456")
+        self._recv(0)
+        self._recv(1)
+        self._recv(2)
+
+    def test_create_game(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        p1,p2 = self._mult_receive(range(3))
+
+        self.assertEqual(p1, ["GAMES_UPDATE"])
+        self.assertEqual(p2, ["CLIENTS_UPDATE"])
+
+        self._send(1, "CLIENTS")
+        p, = self._recv(1)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+    def test_join_game(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        p1,p2 = self._mult_receive(range(3))
+
+        self._send(1, "GAME_CONNECT", "my cool game")
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+
+        # TODO: we should receive something
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "my cool game", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+
+
+# TODO: game is full -> can't join
+# TODO: joining non existing game
+# End: Test Game Creation/Joining  }}}
+
+
 
