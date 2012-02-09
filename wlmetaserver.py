@@ -138,32 +138,31 @@ class MSConnection(Protocol):
     def dataReceived(self, data):
         self._d += data
 
-        packet = 1
-        while packet:
+        while True:
             packet = self._read_packet()
+            if packet is None:
+                break
 
-            if packet is not None:
-                print "RECV: %r" % (packet)
-                try:
-                    cmd = _string(packet)
-                    if cmd in self._ALLOWED_PACKAGES[self._state]:
-                        func = getattr(self, "_handle_%s" % cmd)
-                        try:
-                            func(packet)
-                        except MSGarbageError as e:
-                            e.args = (cmd,) + e.args[1:]
-                            raise e
-                        except MSError as e:
-                            e.args = (cmd,) + e.args
-                            raise e
-                    else:
-                        raise MSGarbageError("Invalid or forbidden command: '%s'" % cmd)
-                except MSCriticalError as e:
-                    self.send("ERROR", *e.args)
-                    self.transport.loseConnection()
-                    return
-                except MSError as e:
-                    self.send("ERROR", *e.args)
+            try:
+                cmd = _string(packet)
+                if cmd in self._ALLOWED_PACKAGES[self._state]:
+                    func = getattr(self, "_handle_%s" % cmd)
+                    try:
+                        func(packet)
+                    except MSGarbageError as e:
+                        e.args = (cmd,) + e.args[1:]
+                        raise e
+                    except MSError as e:
+                        e.args = (cmd,) + e.args
+                        raise e
+                else:
+                    raise MSGarbageError("Invalid or forbidden command: '%s'" % cmd)
+            except MSCriticalError as e:
+                self.send("ERROR", *e.args)
+                self.transport.loseConnection()
+                return
+            except MSError as e:
+                self.send("ERROR", *e.args)
 
 
     def send(self, *args):
@@ -239,7 +238,7 @@ class MSConnection(Protocol):
     def _handle_CHAT(self, p):
         msg, recipient = _unpack("ss", p)
         if not recipient: # Public Message
-            self._factory.broadcast("CHAT", self._name, msg, "false", "false") # flag1: private, flag2: systemmessage
+            self._factory.broadcast("CHAT", self._name, msg, "false", "false") # TODO: warum kein string? "private" "system" gibt doch keine private + system oder? flag1: private, flag2: systemmessage
         else:
             if recipient in self._factory.users:
                 self._factory.users[recipient].send("CHAT", self._name, msg, "true", "false")
@@ -309,7 +308,6 @@ class MetaServer(Factory):
 
     def broadcast(self, *args):
         """Send a message to all connected clients"""
-        print "SEND: %r" % (args)
         for con in self.users.values():
             con.send(*args)
 

@@ -47,8 +47,8 @@ class _Base(object):
         c.dataReceived(make_packet(*args))
 # End: Helper classes  }}}
 
-# Send Garbage  {{{
-class TestGarbage(_Base, unittest.TestCase):
+# Sending Basics  {{{
+class TestBasics(_Base, unittest.TestCase):
     def test_sending_absolute_garbage_too_short(self):
         self._cons[0].dataReceived("\xff")
         self.assertFalse(self._recv(0))
@@ -63,7 +63,28 @@ class TestGarbage(_Base, unittest.TestCase):
         self._send(0, "LOGIN", "hi")
         p1, = self._recv(0)
         self.assertEqual(p1, ['ERROR', 'LOGIN', "Invalid integer: 'hi'"])
-# End: Send Garbage  }}}
+
+    def test_sendtwopacketsinone(self):
+        self._send(0, "LOGIN", 0, "testuser", "build-17", "false")
+        self._recv(0)
+        self._cons[0].dataReceived("\x00\x0aCLIENTS\x00"*2)
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1, ['CLIENTS', '1', 'testuser', 'build-17', '', 'UNREGISTERED', ''])
+
+    def test_fragmented_packages(self):
+        self._send(0, "LOGIN", 0, "testuser", "build-17", "false")
+        self._recv(0)
+
+        self._cons[0].dataReceived("\x00\x0aCLI")
+        self._cons[0].dataReceived("ENTS\x00\x00\x0a")
+        p1, = self._recv(0)
+        self._cons[0].dataReceived("CLIENTS\x00\x00\x08")
+        p2, = self._recv(0)
+        self.assertEqual(p1, p2)
+
+        self.assertEqual(p1, ['CLIENTS', '1', 'testuser', 'build-17', '', 'UNREGISTERED', ''])
+# End: Sending Basics  }}}
 
 # Test Login  {{{
 class TestLogin(_Base, unittest.TestCase):
@@ -262,10 +283,14 @@ class TestChat(_Base, unittest.TestCase):
 
     def test_create_game(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
-        p1,p2 = self._mult_receive(range(3))
+        b1,b2 = self._mult_receive(range(1,3))
+        p1,p2,p3 = self._recv(0)
 
+        self.assertEqual(b1, ["GAMES_UPDATE"])
         self.assertEqual(p1, ["GAMES_UPDATE"])
-        self.assertEqual(p2, ["CLIENTS_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+        self.assertEqual(p3, ["GAME_OPEN"])
 
         self._send(1, "CLIENTS")
         p, = self._recv(1)
@@ -278,7 +303,8 @@ class TestChat(_Base, unittest.TestCase):
 
     def test_join_game(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
-        p1,p2 = self._mult_receive(range(3))
+        self._recv(0)
+        p1,p2 = self._mult_receive([1,2])
 
         self._send(1, "GAME_CONNECT", "my cool game")
         p1, = self._mult_receive(range(3))
