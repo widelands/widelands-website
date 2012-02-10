@@ -2,7 +2,8 @@ from twisted.internet import task
 from twisted.test import proto_helpers
 from twisted.trial import unittest
 
-from wlmetaserver import MetaServer, MSConnection, make_packet
+from wlms import MetaServer
+from wlms.utils import make_packet
 from wlms.db.flatfile import FlatFileDatabase
 
 # Helper classes  {{{
