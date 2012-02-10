@@ -3,6 +3,14 @@ _GGZPERMS2PERMS = {
     127: "SUPERUSER",
 }
 # TODO
+# import os
+# os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
+# import sys
+# sys.path.append("..")
+# from django.contrib.auth.models import User
+# from wlggz.models import GGZAuth
+
+#
             try:
                 djuser = User.objects.get(username=self._name)
                 perm = GGZAuth.objects.get(user=djuser)

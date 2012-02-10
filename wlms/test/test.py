@@ -6,13 +6,18 @@ from wlmetaserver import MetaServer, MSConnection, make_packet
 from wlms.db.flatfile import FlatFileDatabase
 
 # Helper classes  {{{
+class ClientStringTransport(proto_helpers.StringTransport):
+    def __init__(self, ip):
+        self.client = [ip]
+        proto_helpers.StringTransport.__init__(self)
+
 class _Base(object):
     def setUp(self):
         db = FlatFileDatabase("SirVer\t123456\tSUPERUSER\n" + "otto\tottoiscool\tREGISTERED\n")
         self.ms = MetaServer(db)
         self.clock = task.Clock()
         self._cons = [ self.ms.buildProtocol(('127.0.0.1', 0)) for i in range(10) ]
-        self._trs = [ proto_helpers.StringTransport() for i in range(10) ]
+        self._trs = [ ClientStringTransport("192.168.0.%i" % i) for i in range(10) ]
         for c,tr in zip(self._cons, self._trs):
             c.callLater = self.clock.callLater
             c.makeConnection(tr)
@@ -58,7 +63,7 @@ class TestBasics(_Base, unittest.TestCase):
     def test_sending_nonexisting_packet(self):
         self._send(0, "BLUMBAQUATSCH")
         p1, = self._recv(0)
-        self.assertEqual(p1, ['ERROR', 'GARBAGE_RECEIVED', "Invalid or forbidden command: 'BLUMBAQUATSCH'"])
+        self.assertEqual(p1, ['ERROR', 'GARBAGE_RECEIVED', "INVALID_CMD"])
     def test_sending_toolittle_arguments_packet(self):
         self._send(0, "LOGIN", "hi")
         p1, = self._recv(0)
@@ -94,6 +99,11 @@ class TestLogin(_Base, unittest.TestCase):
         self.assertEqual(p1, ['LOGIN', 'testuser', "UNREGISTERED"])
         self.assertEqual(p2[0], 'TIME')
         self.assertEqual(p3, ['CLIENTS_UPDATE'])
+
+    def test_loginanon_unknown_protocol(self):
+        self._send(0, "LOGIN", 10, "testuser", "build-17", "false")
+        p1, = self._recv(0)
+        self.assertEqual(p1, ['ERROR', 'LOGIN', "UNSUPPORTED_PROTOCOL"])
 
     def test_loginanon_withknownusername(self):
         self._send(0, "LOGIN", 0, "SirVer", "build-17", "false")
@@ -162,6 +172,46 @@ class TestLogin(_Base, unittest.TestCase):
         p, = self._recv(0)
         self.assertEqual(p, ['ERROR', 'LOGIN', 'WRONG_PASSWORD'])
 # End: Test Login  }}}
+# TestMotd  {{{
+class TestMotd(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(2, "LOGIN", 0, "SirVer", "build-17", "true", "123456")
+        self._recv(0)
+        self._recv(1)
+        self._recv(2)
+
+    def test_setting_motd(self):
+        self._send(2, "MOTD", "Schnulz is cool!")
+
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["CHAT", "", "Schnulz is cool!", "false", "true"])
+
+    def test_login_with_motd_set(self):
+        self._send(2, "MOTD", "Schnulz is cool!")
+        p1, = self._mult_receive(range(3))
+
+        self._send(4, "LOGIN", 0, "fasel", "build-18", "false")
+        p1,p2,p3,p4 = self._recv(4)
+
+        self.assertEqual(p1, ['LOGIN', 'fasel', "UNREGISTERED"])
+        self.assertEqual(p2[0], 'TIME')
+        self.assertEqual(p3, ['CLIENTS_UPDATE'])
+        self.assertEqual(p4, ["CHAT", "", "Schnulz is cool!", "false", "true"])
+
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+
+
+    def test_setting_motd_forbidden(self):
+        self._send(1, "MOTD", "Schnulz is cool!")
+        self._send(0, "MOTD", "Schnulz is cool!")
+
+        p1, = self._mult_receive([0,1])
+        self.assertEqual(p1, ["ERROR", "MOTD", "DEFICIENT_PERMISSION"])
+# End: TestMotd  }}}
 # Test Relogin  {{{
 class TestRelogin_Anon(_Base, unittest.TestCase):
     def setUp(self):
@@ -253,7 +303,7 @@ class TestChat(_Base, unittest.TestCase):
     def setUp(self):
         _Base.setUp(self)
         self._send(0, "LOGIN", 0, "bert", "build-17", "false")
-        self._send(1, "LOGIN", 1, "ernie", "build-17", "false")
+        self._send(1, "LOGIN", 0, "ernie", "build-17", "false")
         self._recv(0)
         self._recv(1)
 
@@ -271,7 +321,7 @@ class TestChat(_Base, unittest.TestCase):
         self.assertEqual(p1, ["CHAT", "bert", "hello there", "true", "false"])
 # End: Test Chat  }}}
 # Test Game Creation/Joining  {{{
-class TestChat(_Base, unittest.TestCase):
+class TestGameCreation(_Base, unittest.TestCase):
     def setUp(self):
         _Base.setUp(self)
         self._send(0, "LOGIN", 0, "bert", "build-16", "false")
@@ -301,16 +351,43 @@ class TestChat(_Base, unittest.TestCase):
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
 
+    def test_create_game_twice(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        b1,b2 = self._mult_receive(range(1,3))
+        p1,p2,p3 = self._recv(0)
+
+        self.assertEqual(b1, ["GAMES_UPDATE"])
+        self.assertEqual(p1, ["GAMES_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+        self.assertEqual(p3, ["GAME_OPEN"])
+
+        self._send(1, "GAME_OPEN", "my cool game", 12)
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "GAME_EXISTS"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
     def test_join_game(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
         self._recv(0)
         p1,p2 = self._mult_receive([1,2])
 
         self._send(1, "GAME_CONNECT", "my cool game")
-        p1, = self._mult_receive(range(3))
+        p1,p2 = self._recv(1)
+        self.assertEqual(p1, ["GAME_CONNECT", "192.168.0.0"])
+        self.assertEqual(p2, ["CLIENTS_UPDATE"])
+
+        p1, = self._mult_receive([0,2])
         self.assertEqual(p1, ["CLIENTS_UPDATE"])
 
-        # TODO: we should receive something
         self._send(2, "CLIENTS")
         p, = self._recv(2)
         self.assertEqual(p, ["CLIENTS", "3",
@@ -319,10 +396,97 @@ class TestChat(_Base, unittest.TestCase):
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
 
+    def test_join_full_game(self):
+        self._send(0, "GAME_OPEN", "my cool game", 1)
+        self._recv(0)
+        p1,p2 = self._mult_receive([1,2])
+
+        self._send(1, "GAME_CONNECT", "my cool game")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "GAME_CONNECT", "GAME_FULL"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+    def test_non_existing_Game(self):
+        self._send(1, "GAME_CONNECT", "my cool game")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "GAME_CONNECT", "NO_SUCH_GAME"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
 
 
-# TODO: game is full -> can't join
-# TODO: joining non existing game
+class TestGameLeaving(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-16", "false")
+        self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(2, "LOGIN", 0, "SirVer", "build-18", "true", "123456")
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        self._send(1, "GAME_CONNECT", "my cool game")
+        self._recv(0)
+        self._recv(1)
+        self._recv(2)
+
+    def test_leave_game_nothost(self):
+        self._send(1, "GAME_DISCONNECT")
+        p1,p2 = self._recv(1)
+        self.assertEqual(p1, ["GAME_DISCONNECT"])
+        self.assertEqual(p2, ["CLIENTS_UPDATE"])
+
+        p1, = self._mult_receive([0,2])
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+    def test_leave_game_host(self):
+        self._send(0, "GAME_DISCONNECT")
+        p1,p2,p3 = self._recv(0)
+        self.assertEqual(p1, ["GAME_DISCONNECT"])
+        self.assertEqual(p2, ["CLIENTS_UPDATE"])
+        self.assertEqual(p3, ["GAMES_UPDATE"])
+
+        p1,p2 = self._mult_receive([1,2])
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "", "UNREGISTERED", "",
+            "otto", "build-17", "my cool game", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+    def test_leave_not_in_game(self):
+        self._send(2, "GAME_DISCONNECT")
+        p1,= self._recv(2)
+        self.assertEqual(p1, ["ERROR", "GARBAGE_RECEIVED", "INVALID_CMD"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "my cool game", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
 # End: Test Game Creation/Joining  }}}
 
 
