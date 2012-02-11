@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from collections import namedtuple
-
 class FlatFileDatabase(object):
     def __init__(self, text):
         """

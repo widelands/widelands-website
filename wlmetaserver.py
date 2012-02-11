@@ -2,16 +2,12 @@
 # encoding: utf-8
 
 from optparse import OptionParser
+import logging
 
 from twisted.internet import reactor
 
 from wlms import MetaServer
-from wlms.db.flatfile import FlatFileDatabase
-
-# TODO: PING regularly when no data came around
 # TODO: GAME_START / GAME_END
-
-import logging
 
 def parse_args():
     parser = OptionParser()
@@ -37,9 +33,14 @@ def parse_args():
 def main():
     o, args = parse_args()
 
-    if not o.dbfile:
-        raise RuntimeError("Need a flat file as database for the moment!")
-    db = FlatFileDatabase(open(o.dbfile, "r").read())
+    if o.dbfile:
+        logging.info("Using flat file database.")
+        from wlms.db.flatfile import FlatFileDatabase
+        db = FlatFileDatabase(open(o.dbfile, "r").read())
+    else:
+        logging.info("Using django database with settings.py.")
+        from wlms.db.djangobridge import DjangoDatabaseBridge
+        db = DjangoDatabaseBridge()
 
     logging.info("Now accepting connections")
     reactor.listenTCP(o.port, MetaServer(db))
