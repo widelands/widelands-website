@@ -1,4 +1,5 @@
 from twisted.internet import task
+from twisted.internet.protocol import connectionDone
 from twisted.test import proto_helpers
 from twisted.trial import unittest
 
@@ -21,6 +22,7 @@ class _Base(object):
         self._trs = [ ClientStringTransport("192.168.0.%i" % i) for i in range(10) ]
         for c,tr in zip(self._cons, self._trs):
             c.callLater = self.clock.callLater
+            c.seconds = self.clock.seconds
             c.makeConnection(tr)
 
     def tearDown(self):
@@ -28,6 +30,9 @@ class _Base(object):
             p = self._recv(idx)
             if p:
                 raise RuntimeError("unexpected packet from client %i: %r" % (idx, p))
+        for c in self._cons:
+            c.transport.loseConnection()
+            c.connectionLost(connectionDone)
 
     def _recv(self, client):
         d = self._trs[client].value()
@@ -38,6 +43,7 @@ class _Base(object):
             self.assertTrue(size <= len(d))
             rv.append(d[2:size][:-1].split("\x00"))
             d = d[size:]
+        self.clock.advance(1e-5)
         return rv
 
     def _mult_receive(self, clients):
@@ -51,6 +57,7 @@ class _Base(object):
     def _send(self, client, *args, **kwargs):
         c = self._cons[client]
         c.dataReceived(make_packet(*args))
+        self.clock.advance(1e-5)
 # End: Helper classes  }}}
 
 # Sending Basics  {{{
@@ -91,6 +98,47 @@ class TestBasics(_Base, unittest.TestCase):
 
         self.assertEqual(p1, ['CLIENTS', '1', 'testuser', 'build-17', '', 'UNREGISTERED', ''])
 # End: Sending Basics  }}}
+# Test Regular Pinging {{{
+class TestRegularPinging(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._recv(0)
+
+    def test_regular_cycle(self):
+        self.clock.advance(15) # Don't speak for 15 seconds
+        p1, = self._recv(0)  # Expect a ping packet
+        self.assertEqual(p1, ["PING"])
+        self._send(0, "PONG")
+
+        self.clock.advance(15)
+        p1, = self._recv(0)  # Expect a ping packet
+        self.assertEqual(p1, ["PING"])
+        self._send(0, "PONG")
+
+    def test_stay_quiet(self):
+        self.clock.advance(10.5)
+        p1, = self._recv(0)  # Expect a ping packet
+        self.assertEqual(p1, ["PING"])
+        self.clock.advance(10.5)
+        p1, = self._recv(0)  # Expect a timout packet
+        self.assertEqual(p1, ["DISCONNECT", "TIMEOUT"])
+
+    def test_delay_ping_by_regular_packet(self):
+        self.clock.advance(9.9)
+        self._send(0, "CHAT", "hello there", "")
+        p1, = self._recv(0)
+        self.assertEqual(p1, ["CHAT", 'bert', 'hello there', 'false', 'false'])
+
+        self.clock.advance(9.9)
+        self._send(0, "CHAT", "hello there", "")
+        p1, = self._recv(0)
+        self.assertEqual(p1, ["CHAT", 'bert', 'hello there', 'false', 'false'])
+
+        self.clock.advance(10.1)
+        p1, = self._recv(0)  # Expect a ping packet
+        self.assertEqual(p1, ["PING"])
+# End: Test Regular Pinging }}}
 
 # Test Login  {{{
 class TestLogin(_Base, unittest.TestCase):

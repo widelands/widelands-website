@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import logging
-import time
 import re
 
 from twisted.internet.protocol import Protocol
@@ -14,7 +13,7 @@ from wlms.errors import MSCriticalError, MSError, MSGarbageError
 class Game(object):
     __slots__ = ("host", "max_players", "name", "buildid", "players", "_opening_time")
 
-    def __init__(self, host, name, max_players, buildid):
+    def __init__(self, opening_time, host, name, max_players, buildid):
         """
         Representing a currently running game.
 
@@ -29,7 +28,7 @@ class Game(object):
         self.name = name
         self.buildid = buildid
 
-        self._opening_time = time.time()
+        self._opening_time = opening_time
 
     def __lt__(self, o):
         return self._opening_time < o._opening_time
@@ -55,11 +54,16 @@ class MSProtocol(Protocol):
             "GAME_DISCONNECT", "MOTD",
         )),
     }
+    PING_WHEN_SILENT_FOR = 10
     callLater = reactor.callLater
+    seconds = reactor.seconds
+
     _RT_SANATIZE = re.compile(r"<rt", re.I | re.M)
 
     def __init__(self, ms):
-        self._login_time = time.time()
+        self._login_time = self.seconds()
+        self._pinger = None
+        self._have_sended_ping = False
         self._ms = ms
         self._name = None
         self._state = "HANDSHAKE"
@@ -72,10 +76,17 @@ class MSProtocol(Protocol):
 
     def connectionLost(self, reason):
         logging.info("%r disconnected: %s", self._name, reason.getErrorMessage())
+        if self._pinger:
+            self._pinger.cancel()
+            self._pinger = None
         self._ms.disconnected(self)
 
     def dataReceived(self, data):
         self._d += data
+
+        if self._pinger:
+            self._pinger.reset(self.PING_WHEN_SILENT_FOR)
+            self._have_sended_ping = False
 
         while True:
             packet = self._read_packet()
@@ -122,6 +133,15 @@ class MSProtocol(Protocol):
 
         return packet_data[:-1].split('\x00')
 
+    def _ping_or_kill(self):
+        if not self._have_sended_ping:
+            self.send("PING")
+            self._have_sended_ping = True
+        else:
+            self.send("DISCONNECT", "TIMEOUT")
+            self.transport.loseConnection()
+        self._pinger = self.callLater(self.PING_WHEN_SILENT_FOR, self._ping_or_kill)
+
     def _handle_LOGIN(self, p, cmdname = "LOGIN"):
         self._protocol_version, name, self._buildid, is_registered = p.unpack("issb")
 
@@ -148,8 +168,10 @@ class MSProtocol(Protocol):
 
         self.send("LOGIN", self._name, self._permissions)
         self._state = "LOBBY"
-        self._login_time = time.time()
-        self.send("TIME", int(time.time()))
+        self._login_time = self.seconds()
+        self._pinger = self.callLater(self.PING_WHEN_SILENT_FOR, self._ping_or_kill)
+
+        self.send("TIME", int(self.seconds()))
 
         logging.info("%r has logged in as %s", self._name, self._permissions)
         self._ms.connected(self)
@@ -211,9 +233,7 @@ class MSProtocol(Protocol):
         msg, recipient = p.unpack("ss")
 
         # Sanitize the msg: remove <rt and replace via ''
-        print "msg: %r" % (msg)
         msg = self._RT_SANATIZE.sub('', msg)
-        print "msg: %r" % (msg)
 
         if not recipient: # Public Message
             self._ms.broadcast("CHAT", self._name, msg, "false", "false")
@@ -229,7 +249,7 @@ class MSProtocol(Protocol):
         if name in self._ms.games:
             raise MSError("GAME_EXISTS")
 
-        game = Game(self._name, name, max_players, self._buildid)
+        game = Game(self.seconds(), self._name, name, max_players, self._buildid)
         self._ms.games[name] = game
         self._ms.broadcast("GAMES_UPDATE")
 
@@ -288,7 +308,6 @@ class MSProtocol(Protocol):
         reason = p.string()
         logging.info("%r left: %s", self._name, reason)
         self.transport.loseConnection()
-        self._ms.disconnected(self)
     # End: Private Functions }}}
 
 
