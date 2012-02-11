@@ -13,9 +13,6 @@ from wlms.db.flatfile import FlatFileDatabase
 
 import logging
 
-# TODO: check chat messages for richtext tags and deny them if they include them. Only systemmessages like
-#       the motd may contain them.
-
 def parse_args():
     parser = OptionParser()
     parser.add_option("-d", "--dbfile", default="",

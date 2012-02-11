@@ -3,6 +3,7 @@
 
 import logging
 import time
+import re
 
 from twisted.internet.protocol import Protocol
 from twisted.internet import reactor
@@ -55,6 +56,7 @@ class MSProtocol(Protocol):
         )),
     }
     callLater = reactor.callLater
+    _RT_SANATIZE = re.compile(r"<rt", re.I | re.M)
 
     def __init__(self, ms):
         self._login_time = time.time()
@@ -97,6 +99,7 @@ class MSProtocol(Protocol):
                     raise MSGarbageError("INVALID_CMD")
             except MSCriticalError as e:
                 self.send("ERROR", *e.args)
+                logging.warning("Terminating connection to %r: %s", self._name, e.args)
                 self.transport.loseConnection()
                 return
             except MSError as e:
@@ -206,6 +209,12 @@ class MSProtocol(Protocol):
 
     def _handle_CHAT(self, p):
         msg, recipient = p.unpack("ss")
+
+        # Sanitize the msg: remove <rt and replace via ''
+        print "msg: %r" % (msg)
+        msg = self._RT_SANATIZE.sub('', msg)
+        print "msg: %r" % (msg)
+
         if not recipient: # Public Message
             self._ms.broadcast("CHAT", self._name, msg, "false", "false")
         else:
