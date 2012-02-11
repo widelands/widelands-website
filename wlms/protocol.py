@@ -177,7 +177,7 @@ class MSProtocol(Protocol):
         self._ms.connected(self)
 
         if self._ms.motd:
-            self.send("CHAT", '', self._ms.motd, "false", "true")
+            self.send("CHAT", '', self._ms.motd, "system")
 
 
     def _handle_MOTD(self, p):
@@ -186,7 +186,7 @@ class MSProtocol(Protocol):
             logging.warning("%r tried setting MOTD with permission %s. Denied.", self._name, self._permissions)
             raise MSError("DEFICIENT_PERMISSION")
         self._ms.motd = motd
-        self._ms.broadcast("CHAT", '', self._ms.motd, "false", "true")
+        self._ms.broadcast("CHAT", '', self._ms.motd, "system")
 
 
     def _handle_PONG(self, p):
@@ -236,10 +236,10 @@ class MSProtocol(Protocol):
         msg = self._RT_SANATIZE.sub('', msg)
 
         if not recipient: # Public Message
-            self._ms.broadcast("CHAT", self._name, msg, "false", "false")
+            self._ms.broadcast("CHAT", self._name, msg, "public")
         else:
             if recipient in self._ms.users:
-                self._ms.users[recipient].send("CHAT", self._name, msg, "true", "false")
+                self._ms.users[recipient].send("CHAT", self._name, msg, "private")
             else:
                 self.send("ERROR", "CHAT", "NO_SUCH_USER", recipient)
 
@@ -298,7 +298,6 @@ class MSProtocol(Protocol):
             logging.info("%r has left the game %r", self._name, game.name)
 
         self._game = ""
-        self.send("GAME_DISCONNECT")
         self._state = "LOBBY"
         self._ms.broadcast("CLIENTS_UPDATE")
         if send_games_update:
