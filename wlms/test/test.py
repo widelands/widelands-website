@@ -364,7 +364,7 @@ class TestChat(_Base, unittest.TestCase):
     def test_sanitize_public_chat(self):
         self._send(0, "CHAT", "hello <rt>there</rt>\nhow<rtdoyoudo", "")
         p0, = self._mult_receive([0,1])
-        self.assertEqual(p0, ["CHAT", "bert", "hello >there</rt>\nhowdoyoudo", "public"])
+        self.assertEqual(p0, ["CHAT", "bert", "hello &lt;rt>there&lt;/rt>\nhow&lt;rtdoyoudo", "public"])
 
     def test_private_chat(self):
         self._send(0, "CHAT", "hello there", "ernie")
@@ -376,7 +376,7 @@ class TestChat(_Base, unittest.TestCase):
         self._send(0, "CHAT", "hello <rt>there</rt>\nhow<rtdoyoudo", "ernie")
         self.assertEqual([], self._recv(0))
         p1, = self._recv(1)
-        self.assertEqual(p1, ["CHAT", "bert", "hello >there</rt>\nhowdoyoudo", "private"])
+        self.assertEqual(p1, ["CHAT", "bert", "hello &lt;rt>there&lt;/rt>\nhow&lt;rtdoyoudo", "private"])
 
 # End: Test Chat  }}}
 # Test Game Creation/Joining  {{{

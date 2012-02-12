@@ -58,8 +58,6 @@ class MSProtocol(Protocol):
     callLater = reactor.callLater
     seconds = reactor.seconds
 
-    _RT_SANATIZE = re.compile(r"<rt", re.I | re.M)
-
     def __init__(self, ms):
         self._login_time = self.seconds()
         self._pinger = None
@@ -233,8 +231,8 @@ class MSProtocol(Protocol):
     def _handle_CHAT(self, p):
         msg, recipient = p.unpack("ss")
 
-        # Sanitize the msg: remove <rt and replace via ''
-        msg = self._RT_SANATIZE.sub('', msg)
+        # Sanitize the msg: remove < and replace via '&lt;'
+        msg = msg.replace("<", "&lt;")
 
         if not recipient: # Public Message
             self._ms.broadcast("CHAT", self._name, msg, "public")
