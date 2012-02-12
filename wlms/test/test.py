@@ -128,12 +128,12 @@ class TestRegularPinging(_Base, unittest.TestCase):
         self.clock.advance(9.9)
         self._send(0, "CHAT", "hello there", "")
         p1, = self._recv(0)
-        self.assertEqual(p1, ["CHAT", 'bert', 'hello there', 'false', 'false'])
+        self.assertEqual(p1, ["CHAT", 'bert', 'hello there', 'public'])
 
         self.clock.advance(9.9)
         self._send(0, "CHAT", "hello there", "")
         p1, = self._recv(0)
-        self.assertEqual(p1, ["CHAT", 'bert', 'hello there', 'false', 'false'])
+        self.assertEqual(p1, ["CHAT", 'bert', 'hello there', 'public'])
 
         self.clock.advance(10.1)
         p1, = self._recv(0)  # Expect a ping packet
@@ -236,7 +236,7 @@ class TestMotd(_Base, unittest.TestCase):
         self._send(2, "MOTD", "Schnulz is cool!")
 
         p1, = self._mult_receive(range(3))
-        self.assertEqual(p1, ["CHAT", "", "Schnulz is cool!", "false", "true"])
+        self.assertEqual(p1, ["CHAT", "", "Schnulz is cool!", "system"])
 
     def test_login_with_motd_set(self):
         self._send(2, "MOTD", "Schnulz is cool!")
@@ -248,7 +248,7 @@ class TestMotd(_Base, unittest.TestCase):
         self.assertEqual(p1, ['LOGIN', 'fasel', "UNREGISTERED"])
         self.assertEqual(p2[0], 'TIME')
         self.assertEqual(p3, ['CLIENTS_UPDATE'])
-        self.assertEqual(p4, ["CHAT", "", "Schnulz is cool!", "false", "true"])
+        self.assertEqual(p4, ["CHAT", "", "Schnulz is cool!", "system"])
 
         p1, = self._mult_receive(range(3))
         self.assertEqual(p1, ["CLIENTS_UPDATE"])
@@ -359,24 +359,24 @@ class TestChat(_Base, unittest.TestCase):
     def test_public_chat(self):
         self._send(0, "CHAT", "hello there", "")
         p0, = self._mult_receive([0,1])
-        self.assertEqual(p0, ["CHAT", "bert", "hello there", "false", "false"])
+        self.assertEqual(p0, ["CHAT", "bert", "hello there", "public"])
 
     def test_sanitize_public_chat(self):
         self._send(0, "CHAT", "hello <rt>there</rt>\nhow<rtdoyoudo", "")
         p0, = self._mult_receive([0,1])
-        self.assertEqual(p0, ["CHAT", "bert", "hello >there</rt>\nhowdoyoudo", "false", "false"])
+        self.assertEqual(p0, ["CHAT", "bert", "hello >there</rt>\nhowdoyoudo", "public"])
 
     def test_private_chat(self):
         self._send(0, "CHAT", "hello there", "ernie")
         self.assertEqual([], self._recv(0))
         p1, = self._recv(1)
-        self.assertEqual(p1, ["CHAT", "bert", "hello there", "true", "false"])
+        self.assertEqual(p1, ["CHAT", "bert", "hello there", "private"])
 
     def test_sanitize_private_chat(self):
         self._send(0, "CHAT", "hello <rt>there</rt>\nhow<rtdoyoudo", "ernie")
         self.assertEqual([], self._recv(0))
         p1, = self._recv(1)
-        self.assertEqual(p1, ["CHAT", "bert", "hello >there</rt>\nhowdoyoudo", "true", "false"])
+        self.assertEqual(p1, ["CHAT", "bert", "hello >there</rt>\nhowdoyoudo", "private"])
 
 # End: Test Chat  }}}
 # Test Game Creation/Joining  {{{
@@ -500,9 +500,8 @@ class TestGameLeaving(_Base, unittest.TestCase):
 
     def test_leave_game_nothost(self):
         self._send(1, "GAME_DISCONNECT")
-        p1,p2 = self._recv(1)
-        self.assertEqual(p1, ["GAME_DISCONNECT"])
-        self.assertEqual(p2, ["CLIENTS_UPDATE"])
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
 
         p1, = self._mult_receive([0,2])
         self.assertEqual(p1, ["CLIENTS_UPDATE"])
@@ -517,10 +516,9 @@ class TestGameLeaving(_Base, unittest.TestCase):
 
     def test_leave_game_host(self):
         self._send(0, "GAME_DISCONNECT")
-        p1,p2,p3 = self._recv(0)
-        self.assertEqual(p1, ["GAME_DISCONNECT"])
-        self.assertEqual(p2, ["CLIENTS_UPDATE"])
-        self.assertEqual(p3, ["GAMES_UPDATE"])
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
 
         p1,p2 = self._mult_receive([1,2])
         self.assertEqual(p1, ["CLIENTS_UPDATE"])

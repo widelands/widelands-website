@@ -92,6 +92,7 @@ class MSProtocol(Protocol):
             packet = self._read_packet()
             if packet is None:
                 break
+            logging.debug("Packet from %s: %s", self._name, packet)
             packet = Packet(packet)
 
             try:
