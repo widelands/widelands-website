@@ -52,19 +52,12 @@ import time
 NETCMD_METASERVER_PING = "\x00\x03@"
 class GamePing(Protocol):
 
-    def __init__(self, client_protocol, timeout):
+    def __init__(self, fac, client_protocol, timeout):
         self._client_protocol = client_protocol
         self._noreplycall = self._client_protocol.callLater(
-            timeout, self.no_reply
+            timeout, fac.no_reply
         )
-
-    def no_reply(self):
-        game = self._client_protocol._ms.games[self._client_protocol._game]
-        if game.state == "ping_pending": # Game is valid. Let's go
-            self._client_protocol.send("ERROR", "GAME_OPEN", "TIMEOUT")
-            logging.info("Game Pong for %s not recived. Game is over!", game.name)
-        del self._client_protocol._ms.games[game.name]
-        self._client_protocol._ms.broadcast("GAMES_UPDATE")
+        self._fac = fac
 
     def connectionMade(self):
         self.transport.write(NETCMD_METASERVER_PING)
@@ -72,7 +65,7 @@ class GamePing(Protocol):
     def dataReceived(self, data):
         self._noreplycall.cancel()
         if data != NETCMD_METASERVER_PING:
-            self.no_reply()
+            self._fac.no_reply()
             return
 
         game = self._client_protocol._ms.games[self._client_protocol._game]
@@ -94,12 +87,19 @@ class GamePingFactory(ClientFactory):
         self._client_protocol = client_protocol
         self._timeout = timeout
 
+    def no_reply(self):
+        game = self._client_protocol._ms.games[self._client_protocol._game]
+        if game.state == "ping_pending": # Game is valid. Let's go
+            self._client_protocol.send("ERROR", "GAME_OPEN", "TIMEOUT")
+            logging.info("Game Pong for %s not recived. Game is over!", game.name)
+        del self._client_protocol._ms.games[game.name]
+        self._client_protocol._ms.broadcast("GAMES_UPDATE")
+
     def clientConnectionFailed(self, connector, reason):
-        print "Connection failed - goodbye!"
-        reactor.stop()
+        self.no_reply()
 
     def buildProtocol(self, addr):
-        return GamePing(self._client_protocol, self._timeout)
+        return GamePing(self, self._client_protocol, self._timeout)
 
 def _create_game_pinger(pc, timeout):
     reactor.connectTCP(pc.transport.client[0], 7396, GamePingFactory(pc, timeout))
