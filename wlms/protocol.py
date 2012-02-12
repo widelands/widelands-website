@@ -109,11 +109,11 @@ class MSProtocol(Protocol):
         "HANDSHAKE": set(("LOGIN","DISCONNECT", "RELOGIN")),
         "LOBBY": set((
             "DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG", "GAME_OPEN",
-            "GAME_CONNECT", "GAMES", "MOTD",
+            "GAME_CONNECT", "GAMES", "MOTD", "ANNOUNCEMENT",
         )),
         "INGAME": set((
             "DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG", "GAMES",
-            "GAME_DISCONNECT", "MOTD", "GAME_START"
+            "GAME_DISCONNECT", "MOTD", "ANNOUNCEMENT", "GAME_START"
         )),
     }
     PING_WHEN_SILENT_FOR = 10
@@ -251,6 +251,13 @@ class MSProtocol(Protocol):
             raise MSError("DEFICIENT_PERMISSION")
         self._ms.motd = motd
         self._ms.broadcast("CHAT", '', self._ms.motd, "system")
+
+    def _handle_ANNOUNCEMENT(self, p):
+        msg = p.string()
+        if self._permissions != "SUPERUSER":
+            logging.warning("%r tried to send an announcement with permission %s. Denied.", self._name, self._permissions)
+            raise MSError("DEFICIENT_PERMISSION")
+        self._ms.broadcast("CHAT", '', msg, "system")
 
 
     def _handle_PONG(self, p):
