@@ -4,14 +4,15 @@
 import logging
 import re
 
-from twisted.internet.protocol import Protocol
 from twisted.internet import reactor
+from twisted.internet.endpoints import TCP4ClientEndpoint
+from twisted.internet.protocol import Protocol, ClientFactory
 
-from wlms.utils import make_packet, Packet
 from wlms.errors import MSCriticalError, MSError, MSGarbageError
+from wlms.utils import make_packet, Packet
 
 class Game(object):
-    __slots__ = ("host", "max_players", "name", "buildid", "players", "_opening_time")
+    __slots__ = ("host", "max_players", "name", "buildid", "players", "_opening_time", "state")
 
     def __init__(self, opening_time, host, name, max_players, buildid):
         """
@@ -28,19 +29,80 @@ class Game(object):
         self.name = name
         self.buildid = buildid
 
+        self.state = "ping_pending"
         self._opening_time = opening_time
 
     def __lt__(self, o):
         return self._opening_time < o._opening_time
 
+    def start(self):
+        self.state = "running"
+
     @property
-    def connectable(self): # TODO check connectability
+    def connectable(self):
+        if self.state != "accepting_connections":
+            return False
         return not self.full
 
     @property
     def full(self):
         return len(self.players) >= self.max_players
 
+import time
+NETCMD_METASERVER_PING = "\x00\x03@"
+class GamePing(Protocol):
+
+    def __init__(self, client_protocol, timeout):
+        self._client_protocol = client_protocol
+        self._noreplycall = self._client_protocol.callLater(
+            timeout, self.no_reply
+        )
+
+    def no_reply(self):
+        game = self._client_protocol._ms.games[self._client_protocol._game]
+        if game.state == "ping_pending": # Game is valid. Let's go
+            self._client_protocol.send("ERROR", "GAME_OPEN", "TIMEOUT")
+            logging.info("Game Pong for %s not recived. Game is over!", game.name)
+        del self._client_protocol._ms.games[game.name]
+        self._client_protocol._ms.broadcast("GAMES_UPDATE")
+
+    def connectionMade(self):
+        self.transport.write(NETCMD_METASERVER_PING)
+
+    def dataReceived(self, data):
+        self._noreplycall.cancel()
+        if data != NETCMD_METASERVER_PING:
+            self.no_reply()
+            return
+
+        game = self._client_protocol._ms.games[self._client_protocol._game]
+        if game.state == "ping_pending": # Game is valid. Let's go
+            game.state = "accepting_connections"
+            self._client_protocol.send("GAME_OPEN")
+            self._client_protocol._ms.broadcast("GAMES_UPDATE")
+            logging.info("Game Pong for %s received. Game is connectable!", game.name)
+
+        self._client_protocol.callLater(
+            self._client_protocol.GAME_PING_PAUSE,
+            self._client_protocol.create_game_pinger,
+            self._client_protocol,
+            self._client_protocol.GAME_PING_PAUSE,
+        )
+
+class GamePingFactory(ClientFactory):
+    def __init__(self, client_protocol, timeout):
+        self._client_protocol = client_protocol
+        self._timeout = timeout
+
+    def clientConnectionFailed(self, connector, reason):
+        print "Connection failed - goodbye!"
+        reactor.stop()
+
+    def buildProtocol(self, addr):
+        return GamePing(self._client_protocol, self._timeout)
+
+def _create_game_pinger(pc, timeout):
+    reactor.connectTCP(pc.transport.client[0], 7396, GamePingFactory(pc, timeout))
 
 class MSProtocol(Protocol):
     _ALLOWED_PACKAGES = {
@@ -51,12 +113,15 @@ class MSProtocol(Protocol):
         )),
         "INGAME": set((
             "DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG", "GAMES",
-            "GAME_DISCONNECT", "MOTD",
+            "GAME_DISCONNECT", "MOTD", "GAME_START"
         )),
     }
     PING_WHEN_SILENT_FOR = 10
+    GAME_PING_TIME_FOR_FIRST_REPLY = 10
+    GAME_PING_PAUSE = 120
     callLater = reactor.callLater
     seconds = reactor.seconds
+    create_game_pinger = staticmethod(_create_game_pinger)
 
     def __init__(self, ms):
         self._login_time = self.seconds()
@@ -115,10 +180,10 @@ class MSProtocol(Protocol):
             except MSError as e:
                 self.send("ERROR", *e.args)
 
-    # Private Functions {{{
     def send(self, *args):
         self.transport.write(make_packet(*args))
 
+    # Private Functions {{{
     def _read_packet(self):
         if len(self._d) < 2: # Length there?
             return
@@ -256,8 +321,9 @@ class MSProtocol(Protocol):
         self._state = "INGAME"
         self._ms.broadcast("CLIENTS_UPDATE")
 
-        self.send("GAME_OPEN")
-        logging.info("%r has opened a new game called %r", self._name, game.name)
+        self.create_game_pinger(self, self.GAME_PING_TIME_FOR_FIRST_REPLY)
+
+        logging.info("%r has opened a new game called %r. Waiting for game pong.", self._name, game.name)
 
     def _handle_GAMES(self, p):
         args = ["GAMES", len(self._ms.games)]
@@ -300,6 +366,17 @@ class MSProtocol(Protocol):
         self._state = "LOBBY"
         self._ms.broadcast("CLIENTS_UPDATE")
         if send_games_update:
+            self._ms.broadcast("GAMES_UPDATE")
+
+    def _handle_GAME_START(self, p):
+        if self._game in self._ms.games:
+            game = self._ms.games[self._game]
+            if game.host != self._name:
+                raise MSError("DEFICIENT_PERMISSION")
+                return
+
+            game.start()
+            self.send("GAME_START")
             self._ms.broadcast("GAMES_UPDATE")
 
     def _handle_DISCONNECT(self, p):

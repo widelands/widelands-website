@@ -4,6 +4,7 @@ from twisted.test import proto_helpers
 from twisted.trial import unittest
 
 from wlms import MetaServer
+from wlms.protocol import GamePingFactory, NETCMD_METASERVER_PING
 from wlms.utils import make_packet
 from wlms.db.flatfile import FlatFileDatabase
 
@@ -18,11 +19,23 @@ class _Base(object):
         db = FlatFileDatabase("SirVer\t123456\tSUPERUSER\n" + "otto\tottoiscool\tREGISTERED\n")
         self.ms = MetaServer(db)
         self.clock = task.Clock()
-        self._cons = [ self.ms.buildProtocol(('127.0.0.1', 0)) for i in range(10) ]
+        self._cons = [ self.ms.buildProtocol(None) for i in range(10) ]
         self._trs = [ ClientStringTransport("192.168.0.%i" % i) for i in range(10) ]
+        self._gptr = None
+        self._gpc = None
+
+        def create_game_pinger(gc, timeout):
+            p = GamePingFactory(gc, timeout).buildProtocol(None)
+            tr = ClientStringTransport("GamePinger")
+            p.makeConnection(tr)
+            self._gptr = tr
+            self._gpc = p
+
         for c,tr in zip(self._cons, self._trs):
             c.callLater = self.clock.callLater
             c.seconds = self.clock.seconds
+            c.create_game_pinger = create_game_pinger
+
             c.makeConnection(tr)
 
     def tearDown(self):
@@ -390,16 +403,11 @@ class TestGameCreation(_Base, unittest.TestCase):
         self._recv(1)
         self._recv(2)
 
-    def test_create_game(self):
+    def test_create_game_and_ping_reply(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
-        b1,b2 = self._mult_receive(range(1,3))
-        p1,p2,p3 = self._recv(0)
-
+        b1,b2 = self._mult_receive(range(3))
         self.assertEqual(b1, ["GAMES_UPDATE"])
-        self.assertEqual(p1, ["GAMES_UPDATE"])
         self.assertEqual(b2, ["CLIENTS_UPDATE"])
-        self.assertEqual(b2, ["CLIENTS_UPDATE"])
-        self.assertEqual(p3, ["GAME_OPEN"])
 
         self._send(1, "CLIENTS")
         p, = self._recv(1)
@@ -410,16 +418,56 @@ class TestGameCreation(_Base, unittest.TestCase):
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
 
-    def test_create_game_twice(self):
-        self._send(0, "GAME_OPEN", "my cool game", 8)
-        b1,b2 = self._mult_receive(range(1,3))
-        p1,p2,p3 = self._recv(0)
+        data = self._gptr.value(); self._gptr.clear()
+        self.assertEqual(data, NETCMD_METASERVER_PING)
+        self._gpc.dataReceived(NETCMD_METASERVER_PING)
 
-        self.assertEqual(b1, ["GAMES_UPDATE"])
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, ["GAME_OPEN"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
+        p1, = self._mult_receive([1,2])
         self.assertEqual(p1, ["GAMES_UPDATE"])
-        self.assertEqual(b2, ["CLIENTS_UPDATE"])
-        self.assertEqual(b2, ["CLIENTS_UPDATE"])
-        self.assertEqual(p3, ["GAME_OPEN"])
+
+        self._send(1, "CLIENTS")
+        p, = self._recv(1)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+    def test_create_game_twice_pre_ping(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        b1,b2 = self._mult_receive(range(3))
+
+        self._send(1, "GAME_OPEN", "my cool game", 12)
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "GAME_EXISTS"])
+
+        data = self._gptr.value(); self._gptr.clear()
+        self.assertEqual(data, NETCMD_METASERVER_PING)
+        self._gpc.dataReceived(NETCMD_METASERVER_PING)
+        self._recv(0)
+        self._mult_receive([1,2])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+    def test_create_game_twice_post_ping(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        b1,b2 = self._mult_receive(range(3))
+
+        data = self._gptr.value(); self._gptr.clear()
+        self.assertEqual(data, NETCMD_METASERVER_PING)
+        self._gpc.dataReceived(NETCMD_METASERVER_PING)
+        self._recv(0)
+        self._mult_receive([1,2])
 
         self._send(1, "GAME_OPEN", "my cool game", 12)
         p1, = self._recv(1)
@@ -433,6 +481,86 @@ class TestGameCreation(_Base, unittest.TestCase):
             "otto", "build-17", "", "REGISTERED", "",
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
+
+    def test_create_game_and_no_first_ping_reply(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        b1,b2 = self._mult_receive(range(3))
+        self.assertEqual(b1, ["GAMES_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+
+        self.clock.advance(15)
+        p1,p2,p3 = self._recv(0)
+        self.assertEqual(p1, ["PING"])
+        self.assertEqual(p2, ["ERROR", "GAME_OPEN", "TIMEOUT"])
+        self.assertEqual(p3, ["GAMES_UPDATE"])
+
+        p1, p2 = self._mult_receive([1,2])
+        self.assertEqual(p1, ["PING"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+        self._send(2, "GAMES")
+        p, = self._recv(2)
+        self.assertEqual(p, ["GAMES", "0"])
+
+    def test_create_game_and_no_second_ping_reply(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        b1,b2 = self._mult_receive(range(3))
+        self.assertEqual(b1, ["GAMES_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+
+        data = self._gptr.value(); self._gptr.clear()
+        self.assertEqual(data, NETCMD_METASERVER_PING)
+        self._gpc.dataReceived(NETCMD_METASERVER_PING)
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, ["GAME_OPEN"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
+        p1, = self._mult_receive([1,2])
+        self.assertEqual(p1, ["GAMES_UPDATE"])
+
+        self.clock.advance(119)
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["PING"])
+        for i in range(3): self._send(i, "PONG")
+
+        data = self._gptr.value(); self._gptr.clear()
+        self.assertEqual(data, '')
+
+        self.clock.advance(2)
+        data = self._gptr.value(); self._gptr.clear()
+        self.assertEqual(data, NETCMD_METASERVER_PING)
+
+        # Now, do not answer ping
+        self.clock.advance(118)
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["PING"])
+        for i in range(3): self._send(i, "PONG")
+
+        self.clock.advance(3)
+
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["GAMES_UPDATE"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+        self._send(2, "GAMES")
+        p, = self._recv(2)
+        self.assertEqual(p, ["GAMES", "0"])
 
     def test_join_game(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
@@ -485,6 +613,38 @@ class TestGameCreation(_Base, unittest.TestCase):
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
 
+class TestGameStarting(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-16", "false")
+        self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(2, "LOGIN", 0, "SirVer", "build-18", "true", "123456")
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        self._send(1, "GAME_CONNECT", "my cool game")
+        self._recv(0)
+        self._recv(1)
+        self._recv(2)
+
+    def test_start_game_without_being_in_one(self):
+        self._send(2, "GAME_START")
+        p1, = self._recv(2)
+
+        self.assertEqual(p1, ["ERROR", "GARBAGE_RECEIVED", "INVALID_CMD"])
+
+    def test_start_game_not_host(self):
+        self._send(1, "GAME_START")
+        p1, = self._recv(1)
+
+        self.assertEqual(p1, ["ERROR", "GAME_START", "DEFICIENT_PERMISSION"])
+
+    def test_start_game(self):
+        self._send(0, "GAME_START")
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, ["GAME_START"])
+
+        p1, = self._mult_receive([1,2])
+        self.assertEqual(p1, p2)
+        self.assertEqual(p2, ["GAMES_UPDATE"])
 
 class TestGameLeaving(_Base, unittest.TestCase):
     def setUp(self):

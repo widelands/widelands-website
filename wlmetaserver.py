@@ -7,7 +7,6 @@ import logging
 from twisted.internet import reactor
 
 from wlms import MetaServer
-# TODO: GAME_START / GAME_END
 
 def parse_args():
     parser = OptionParser()
