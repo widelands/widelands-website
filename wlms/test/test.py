@@ -274,6 +274,30 @@ class TestMotd(_Base, unittest.TestCase):
         p1, = self._mult_receive([0,1])
         self.assertEqual(p1, ["ERROR", "MOTD", "DEFICIENT_PERMISSION"])
 # End: TestMotd  }}}
+# TestAnnouncement  {{{
+class TestAnnouncement(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(2, "LOGIN", 0, "SirVer", "build-17", "true", "123456")
+        self._recv(0)
+        self._recv(1)
+        self._recv(2)
+
+    def test_setting_announcement(self):
+        self._send(2, "ANNOUNCEMENT", "Schnulz is cool!")
+
+        p1, = self._mult_receive(range(3))
+        self.assertEqual(p1, ["CHAT", "", "Schnulz is cool!", "system"])
+
+    def test_setting_announcement_forbidden(self):
+        self._send(1, "ANNOUNCEMENT", "Schnulz is cool!")
+        self._send(0, "ANNOUNCEMENT", "Schnulz is cool!")
+
+        p1, = self._mult_receive([0,1])
+        self.assertEqual(p1, ["ERROR", "ANNOUNCEMENT", "DEFICIENT_PERMISSION"])
+# End: TestAnnouncement  }}}
 # Test Relogin  {{{
 class TestRelogin_Anon(_Base, unittest.TestCase):
     def setUp(self):
