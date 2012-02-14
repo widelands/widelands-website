@@ -108,7 +108,7 @@ class GamePingFactory(ClientFactory):
         return GamePing(self, self._client_protocol, self._timeout)
 
 def _create_game_pinger(pc, timeout):
-    reactor.connectTCP(pc.transport.client[0], 7396, GamePingFactory(pc, timeout))
+    reactor.connectTCP(pc.transport.client[0], 7396, GamePingFactory(pc, timeout), pc.GAME_PING_TIME_FOR_FIRST_REPLY)
 
 class MSProtocol(Protocol):
     _ALLOWED_PACKAGES = {
@@ -123,7 +123,7 @@ class MSProtocol(Protocol):
         )),
     }
     PING_WHEN_SILENT_FOR = 10
-    GAME_PING_TIME_FOR_FIRST_REPLY = 10
+    GAME_PING_TIME_FOR_FIRST_REPLY = 5
     GAME_PING_PAUSE = 120
     callLater = reactor.callLater
     seconds = reactor.seconds

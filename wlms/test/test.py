@@ -541,14 +541,12 @@ class TestGameCreation(_Base, unittest.TestCase):
         self.assertEqual(b1, ["GAMES_UPDATE"])
         self.assertEqual(b2, ["CLIENTS_UPDATE"])
 
-        self.clock.advance(15)
-        p1,p2,p3 = self._recv(0)
-        self.assertEqual(p1, ["PING"])
-        self.assertEqual(p2, ["ERROR", "GAME_OPEN", "TIMEOUT"])
-        self.assertEqual(p3, ["GAMES_UPDATE"])
+        self.clock.advance(6)
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "TIMEOUT"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
 
-        p1, p2 = self._mult_receive([1,2])
-        self.assertEqual(p1, ["PING"])
+        p1, = self._mult_receive([1,2])
         self.assertEqual(p2, ["GAMES_UPDATE"])
 
         self._send(2, "CLIENTS")
