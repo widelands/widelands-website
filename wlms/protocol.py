@@ -140,6 +140,14 @@ class MSProtocol(Protocol):
 
         self._d = ""
 
+    def _copy_attr(self, o):
+        self._login_time = o._login_time
+        self._ms = o._ms
+        self._name = o._name
+        self._state = o._state
+        self._game = o._game
+
+
     def __lt__(self, o):
         return self._login_time < o._login_time
 
@@ -297,6 +305,7 @@ class MSProtocol(Protocol):
             del self._ms.users_wanting_to_relogin[u._name]
             u.send("DISCONNECT", "TIMEOUT")
             u.transport.loseConnection()
+            self._copy_attr(u)
             self._ms.users[self._name] = self
             self.send("RELOGIN")
         defered = self.callLater(5, _try_relogin)
