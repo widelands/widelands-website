@@ -68,7 +68,13 @@ class GamePing(Protocol):
             self._fac.no_reply()
             return
 
-        game = self._client_protocol._ms.games[self._client_protocol._game]
+        game = self._client_protocol._ms.games.get(self._client_protocol._game, None)
+        # This could be a game ping for a game that has been ended and a new
+        # one has already started. If we know nothing about the game, ignore
+        # this silently.
+        if game is None:
+            return
+
         if game.state == "ping_pending": # Game is valid. Let's go
             game.state = "accepting_connections"
             self._client_protocol.send("GAME_OPEN")

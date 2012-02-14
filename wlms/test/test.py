@@ -416,6 +416,7 @@ class TestChat(_Base, unittest.TestCase):
         self.assertEqual(p1, ["CHAT", "bert", "hello &lt;rt>there&lt;/rt>\nhow&lt;rtdoyoudo", "private"])
 
 # End: Test Chat  }}}
+#
 # Test Game Creation/Joining  {{{
 class TestGameCreation(_Base, unittest.TestCase):
     def setUp(self):
@@ -636,7 +637,8 @@ class TestGameCreation(_Base, unittest.TestCase):
             "otto", "build-17", "", "REGISTERED", "",
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
-
+# End: Test Game Creation/Joining  }}}
+# Test Game Starting  {{{
 class TestGameStarting(_Base, unittest.TestCase):
     def setUp(self):
         _Base.setUp(self)
@@ -669,7 +671,8 @@ class TestGameStarting(_Base, unittest.TestCase):
         p1, = self._mult_receive([1,2])
         self.assertEqual(p1, p2)
         self.assertEqual(p2, ["GAMES_UPDATE"])
-
+# End: Game Starting  }}}
+# Test Game Leaving  {{{
 class TestGameLeaving(_Base, unittest.TestCase):
     def setUp(self):
         _Base.setUp(self)
@@ -728,7 +731,7 @@ class TestGameLeaving(_Base, unittest.TestCase):
             "otto", "build-17", "my cool game", "REGISTERED", "",
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
-# End: Test Game Creation/Joining  }}}
+# End: Game Leaving  }}}
 
 
 
