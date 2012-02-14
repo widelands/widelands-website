@@ -289,9 +289,11 @@ class MSProtocol(Protocol):
         if is_registered and not self._ms.db.check_user(name, p.string()):
             raise MSError("WRONG_INFORMATION")
 
+        logging.info("%s wants to relogin. Pinging old connection.", name)
         u.send("PING")
 
         def _try_relogin():
+            logging.info("User %s has not answered relogin ping. Kicking and replacing!", u._name)
             del self._ms.users_wanting_to_relogin[u._name]
             u.send("DISCONNECT", "TIMEOUT")
             u.transport.loseConnection()
