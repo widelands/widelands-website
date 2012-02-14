@@ -25,7 +25,8 @@ class _Base(object):
         self._gpc = None
 
         def create_game_pinger(gc, timeout):
-            p = GamePingFactory(gc, timeout).buildProtocol(None)
+            self._gpfac = GamePingFactory(gc, timeout)
+            p = self._gpfac.buildProtocol(None)
             tr = ClientStringTransport("GamePinger")
             p.makeConnection(tr)
             self._gptr = tr
@@ -461,6 +462,33 @@ class TestGameCreation(_Base, unittest.TestCase):
             "otto", "build-17", "", "REGISTERED", "",
             "SirVer", "build-18", "", "SUPERUSER", ""
         ])
+
+    def test_create_game_no_connection_to_game(self):
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        b1,b2 = self._mult_receive(range(3))
+        self.assertEqual(b1, ["GAMES_UPDATE"])
+        self.assertEqual(b2, ["CLIENTS_UPDATE"])
+
+        self._gpfac.clientConnectionFailed(None, None)
+        p1,p2 = self._recv(0)
+        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "TIMEOUT"])
+        self.assertEqual(p2, ["GAMES_UPDATE"])
+
+        p1, = self._mult_receive([1,2])
+        self.assertEqual(p1, ["GAMES_UPDATE"])
+
+        self._send(2, "CLIENTS")
+        p, = self._recv(2)
+
+        self.assertEqual(p, ["CLIENTS", "3",
+            "bert", "build-16", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "", "REGISTERED", "",
+            "SirVer", "build-18", "", "SUPERUSER", ""
+        ])
+
+        self._send(2, "GAMES")
+        p, = self._recv(2)
+        self.assertEqual(p, ["GAMES", "0"])
 
     def test_create_game_twice_pre_ping(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
