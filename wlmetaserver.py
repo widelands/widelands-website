@@ -15,7 +15,7 @@ def parse_args():
     parser.add_option("-p", "--port", type=int, default=7395,
         help="Listen on this port")
     parser.add_option("-l", "--log", type=str, default="warning",
-        help="level of logging. Can be debug, info, warning, error, critical. [%default]")
+            help="level of logging. Can be debug, info, warning, error, critical. Warning: if you set this do debug, password might appear in the logfile. [%default]")
     parser.add_option("-f", "--logfile", type=str, default=None,
         help="Logfile to use. Otherwise, logging goes to the console.")
 
