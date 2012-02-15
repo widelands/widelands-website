@@ -611,7 +611,7 @@ class TestGameCreation(_Base, unittest.TestCase):
 
         self._send(2, "GAMES")
         p, = self._recv(2)
-        self.assertEqual(p, ["GAMES", "1", "my cool game", "build-16", "false"])
+        self.assertEqual(p, ["GAMES", "0"])
 
     def test_join_game(self):
         self._send(0, "GAME_OPEN", "my cool game", 8)
