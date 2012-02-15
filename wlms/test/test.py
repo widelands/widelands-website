@@ -136,7 +136,7 @@ class TestRegularPinging(_Base, unittest.TestCase):
         self.assertEqual(p1, ["PING"])
         self.clock.advance(10.5)
         p1, = self._recv(0)  # Expect a timout packet
-        self.assertEqual(p1, ["DISCONNECT", "TIMEOUT"])
+        self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
 
     def test_delay_ping_by_regular_packet(self):
         self.clock.advance(9.9)
@@ -330,7 +330,7 @@ class TestRelogin_Anon(_Base, unittest.TestCase):
 
         # Connection was terminated for old user
         p1, = self._recv(0)
-        self.assertEqual(p1, ["DISCONNECT", "TIMEOUT"])
+        self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
 
         # Relogin accepted
         p1, = self._recv(1)
@@ -379,7 +379,7 @@ class TestRelogin_Anon(_Base, unittest.TestCase):
 
         # Connection was terminated for old user
         p1, = self._recv(2)
-        self.assertEqual(p1, ["DISCONNECT", "TIMEOUT"])
+        self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
 
         # Relogin accepted
         p1, = self._recv(1)
@@ -471,7 +471,7 @@ class TestGameCreation(_Base, unittest.TestCase):
 
         self._gpfac.clientConnectionFailed(None, None)
         p1,p2 = self._recv(0)
-        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "TIMEOUT"])
+        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "GAME_TIMEOUT"])
         self.assertEqual(p2, ["GAMES_UPDATE"])
 
         p1, = self._mult_receive([1,2])
@@ -543,7 +543,7 @@ class TestGameCreation(_Base, unittest.TestCase):
 
         self.clock.advance(6)
         p1,p2 = self._recv(0)
-        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "TIMEOUT"])
+        self.assertEqual(p1, ["ERROR", "GAME_OPEN", "GAME_TIMEOUT"])
         self.assertEqual(p2, ["GAMES_UPDATE"])
 
         p1, = self._mult_receive([1,2])

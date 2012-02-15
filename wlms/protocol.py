@@ -96,7 +96,7 @@ class GamePingFactory(ClientFactory):
     def no_reply(self):
         game = self._client_protocol._ms.games[self._client_protocol._game]
         if game.state == "ping_pending": # Game is valid. Let's go
-            self._client_protocol.send("ERROR", "GAME_OPEN", "TIMEOUT")
+            self._client_protocol.send("ERROR", "GAME_OPEN", "GAME_TIMEOUT")
             logging.info("Game Pong for %s not received. Game is unreachable after opening!", game.name)
         else:
             logging.info("Game Pong for %s not received. Game is no longer reachable!", game.name)
@@ -218,7 +218,7 @@ class MSProtocol(Protocol):
             self.send("PING")
             self._have_sended_ping = True
         else:
-            self.send("DISCONNECT", "TIMEOUT")
+            self.send("DISCONNECT", "CLIENT_TIMEOUT")
             self.transport.loseConnection()
         self._pinger = self.callLater(self.PING_WHEN_SILENT_FOR, self._ping_or_kill)
 
@@ -305,7 +305,7 @@ class MSProtocol(Protocol):
         def _try_relogin():
             logging.info("User %s has not answered relogin ping. Kicking and replacing!", u._name)
             del self._ms.users_wanting_to_relogin[u._name]
-            u.send("DISCONNECT", "TIMEOUT")
+            u.send("DISCONNECT", "CLIENT_TIMEOUT")
             u.transport.loseConnection()
             self._copy_attr(u)
             self._ms.users[self._name] = self
