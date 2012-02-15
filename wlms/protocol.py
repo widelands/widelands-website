@@ -97,8 +97,10 @@ class GamePingFactory(ClientFactory):
         game = self._client_protocol._ms.games[self._client_protocol._game]
         if game.state == "ping_pending": # Game is valid. Let's go
             self._client_protocol.send("ERROR", "GAME_OPEN", "TIMEOUT")
-            logging.info("Game Pong for %s not recived. Game is over!", game.name)
-        del self._client_protocol._ms.games[game.name]
+            logging.info("Game Pong for %s not received. Game is unreachable after opening!", game.name)
+        else:
+            logging.info("Game Pong for %s not received. Game is no longer reachable!", game.name)
+        game.state = "unreachable"
         self._client_protocol._ms.broadcast("GAMES_UPDATE")
 
     def clientConnectionFailed(self, connector, reason):
