@@ -384,6 +384,53 @@ class TestRelogin_Anon(_Base, unittest.TestCase):
         # Relogin accepted
         p1, = self._recv(1)
         self.assertEqual(p1, ["RELOGIN"])
+
+class TestReloginWhileInGame(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._send(2, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self._send(0, "GAME_OPEN", "my cool game", 8)
+        self._send(2, "GAME_CONNECT", "my cool game")
+        self._gpc.dataReceived(NETCMD_METASERVER_PING)
+        self._recv(0)
+        self._recv(2)
+
+    def test_relogin_ping_and_noreply(self):
+        self.clock.advance(10)
+        p1, = self._mult_receive([0,2])
+        self.assertEqual(p1, ["PING"])
+        self._send(2, "PONG")
+
+        self.clock.advance(10)
+        p1, = self._recv(2)
+        self._send(2, "PONG")
+
+        # Connection was terminated for old user
+        p1, = self._recv(0)
+        self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
+        self._cons[0].connectionLost(connectionDone)
+
+        self._send(1, "RELOGIN", 0, "bert", "build-17", "false")
+
+        # Relogin accepted
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["RELOGIN"])
+        p1, = self._recv(2)
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+
+        # Some garbage might have reached zero
+        self._recv(0)
+
+        self._send(1, "CLIENTS")
+        p1, = self._recv(1)
+        self.assertEqual(p1, ["CLIENTS", '2',
+            "bert", "build-17", "my cool game", "UNREGISTERED", "",
+            "otto", "build-17", "my cool game", "REGISTERED", "",
+        ])
+
+
+
 # End: Test Relogin  }}}
 # Test Chat  {{{
 class TestChat(_Base, unittest.TestCase):

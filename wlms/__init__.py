@@ -18,15 +18,6 @@ class MetaServer(Factory):
     def buildProtocol(self, addr):
         return MSProtocol(self)
 
-    def disconnected(self, con):
-        if con._name in self.users:
-            del self.users[con._name]
-        self.broadcast("CLIENTS_UPDATE")
-
-    def connected(self, con):
-        self.users[con._name] = con
-        self.broadcast("CLIENTS_UPDATE")
-
     def broadcast(self, *args):
         """Send a message to all connected clients"""
         for con in self.users.values():
