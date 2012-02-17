@@ -8,6 +8,9 @@ from wlms.protocol import GamePingFactory, NETCMD_METASERVER_PING
 from wlms.utils import make_packet
 from wlms.db.flatfile import FlatFileDatabase
 
+import logging
+logging.basicConfig(level=logging.CRITICAL)
+
 # Helper classes  {{{
 class ClientStringTransport(proto_helpers.StringTransport):
     def __init__(self, ip):

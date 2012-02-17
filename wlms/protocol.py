@@ -235,6 +235,7 @@ class MSProtocol(Protocol):
     def _forget_me(self): # We have been disconnected for a long time, finally forget me
         if self._cleaner:
             self._cleaner.cancel()
+            self._cleaner = None
         del self._ms.users[self._name]
 
     def _handle_LOGIN(self, p, cmdname = "LOGIN"):
@@ -331,7 +332,6 @@ class MSProtocol(Protocol):
             self.send("RELOGIN")
 
         logging.info("%s wants to relogin.", name)
-        print "u._recently_disconnected: %r" % (u._recently_disconnected)
         if u._recently_disconnected:
             _try_relogin()
         else:
