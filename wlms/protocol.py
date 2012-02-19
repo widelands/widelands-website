@@ -166,7 +166,7 @@ class MSProtocol(Protocol):
         if self._pinger:
             self._pinger.cancel()
             self._pinger = None
-        self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me)
+        self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me, True)
         self._recently_disconnected = True
         self._ms.broadcast("CLIENTS_UPDATE")
 
@@ -232,10 +232,10 @@ class MSProtocol(Protocol):
             self.transport.loseConnection()
         self._pinger = self.callLater(self.PING_WHEN_SILENT_FOR, self._ping_or_disconnect)
 
-    def _forget_me(self): # We have been disconnected for a long time, finally forget me
-        if self._cleaner:
+    def _forget_me(self, from_cleaner = False): # We have been disconnected for a long time, finally forget me
+        if not from_cleaner and self._cleaner:
             self._cleaner.cancel()
-            self._cleaner = None
+        self._cleaner = None
         del self._ms.users[self._name]
 
     def _handle_LOGIN(self, p, cmdname = "LOGIN"):
