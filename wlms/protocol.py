@@ -161,14 +161,22 @@ class MSProtocol(Protocol):
     def __lt__(self, o):
         return self._login_time < o._login_time
 
+    @property
+    def active(self):
+        return not self._recently_disconnected
+
     def connectionLost(self, reason):
         logging.info("%r disconnected: %s", self._name, reason.getErrorMessage())
         if self._pinger:
             self._pinger.cancel()
             self._pinger = None
-        self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me, True)
-        self._recently_disconnected = True
-        self._ms.broadcast("CLIENTS_UPDATE")
+        if self._state != "DISCONNECTED":
+            self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me, True)
+            self._recently_disconnected = True
+        else:
+            self._forget_me()
+            self._ms.broadcast("CLIENTS_UPDATE")
+
 
     def dataReceived(self, data):
         self._d += data
@@ -181,7 +189,7 @@ class MSProtocol(Protocol):
             packet = self._read_packet()
             if packet is None:
                 break
-            logging.debug("Packet from %s: %s", self._name, packet)
+            logging.debug("<- %s: %s", self._name, packet)
             packet = Packet(packet)
 
             try:
@@ -207,6 +215,7 @@ class MSProtocol(Protocol):
                 self.send("ERROR", *e.args)
 
     def send(self, *args):
+        logging.debug("-> %s: %s", self._name, args)
         self.transport.write(make_packet(*args))
 
     # Private Functions {{{
@@ -436,6 +445,7 @@ class MSProtocol(Protocol):
     def _handle_DISCONNECT(self, p):
         reason = p.string()
         logging.info("%r left: %s", self._name, reason)
+        self._state = "DISCONNECTED"
         self.transport.loseConnection()
     # End: Private Functions }}}
 

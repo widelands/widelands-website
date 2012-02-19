@@ -21,6 +21,7 @@ class MetaServer(Factory):
     def broadcast(self, *args):
         """Send a message to all connected clients"""
         for con in self.users.values():
+            if not con.active:
+                continue
             con.send(*args)
-
 

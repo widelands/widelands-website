@@ -413,14 +413,15 @@ class TestReloginWhileInGame(_Base, unittest.TestCase):
         p1, = self._recv(0)
         self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
         self._cons[0].connectionLost(connectionDone)
+        self.assertEqual([], self._mult_receive([1,2]))
 
         self._send(1, "RELOGIN", 0, "bert", "build-17", "false")
 
         # Relogin accepted
         p1, = self._recv(1)
         self.assertEqual(p1, ["RELOGIN"])
-        p1, = self._recv(2)
-        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+        # p1, = self._recv(2)
+        # self.assertEqual(p1, ["CLIENTS_UPDATE"])
 
         # Some garbage might have reached zero
         self._recv(0)
@@ -431,7 +432,6 @@ class TestReloginWhileInGame(_Base, unittest.TestCase):
             "bert", "build-17", "my cool game", "UNREGISTERED", "",
             "otto", "build-17", "my cool game", "REGISTERED", "",
         ])
-
 
 
 # End: Test Relogin  }}}
