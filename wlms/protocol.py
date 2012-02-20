@@ -245,7 +245,8 @@ class MSProtocol(Protocol):
         if not from_cleaner and self._cleaner:
             self._cleaner.cancel()
         self._cleaner = None
-        del self._ms.users[self._name]
+        if self._name in self._ms.users:
+            del self._ms.users[self._name]
 
     def _handle_LOGIN(self, p, cmdname = "LOGIN"):
         self._protocol_version, name, self._buildid, is_registered = p.unpack("issb")
