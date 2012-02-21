@@ -350,7 +350,12 @@ class MSProtocol(Protocol):
             self._ms.users_wanting_to_relogin[u._name] = (u, self, defered)
 
     def _handle_CLIENTS(self, p):
-        args = ["CLIENTS", len(self._ms.users)]
+        args = ["CLIENTS"]
+        tempnumber = 0
+        for u in sorted(self._ms.users.values()):
+            if not u._recently_disconnected:
+                tempnumber = tempnumber + 1
+        args.extend(str(tempnumber))
         for u in sorted(self._ms.users.values()):
             if u._recently_disconnected:
                 continue
