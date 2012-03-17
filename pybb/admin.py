@@ -21,13 +21,13 @@ class ForumAdmin(admin.ModelAdmin):
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields': ('position', 'description', 'post_count', 'moderators')
+                'fields': ('position', 'description', 'moderators')
                 }
             ),
         )
     
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ['name', 'forum', 'created', 'head', 'post_count']
+    list_display = ['name', 'forum', 'created', 'head']
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'
@@ -39,7 +39,7 @@ class TopicAdmin(admin.ModelAdmin):
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields': (('views', 'post_count'), ('sticky', 'closed'), 'subscribers')
+                'fields': (('views',), ('sticky', 'closed'), 'subscribers')
                 }
          ),
         )

@@ -64,7 +64,6 @@ class Forum(models.Model):
     description = models.TextField(_('Description'), blank=True, default='')
     moderators = models.ManyToManyField(User, blank=True, null=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
-    post_count = models.IntegerField(_('Post count'), blank=True, default=0)
 
     class Meta:
         ordering = ['position']
@@ -85,6 +84,10 @@ class Forum(models.Model):
         return Post.objects.filter(topic__forum=self).select_related()
 
     @property
+    def post_count(self):
+        return Post.objects.filter(topic__forum=self).count()
+
+    @property
     def last_post(self):
         posts = self.posts.order_by('-created').select_related()
         try:
@@ -103,7 +106,6 @@ class Topic(models.Model):
     sticky = models.BooleanField(_('Sticky'), blank=True, default=False)
     closed = models.BooleanField(_('Closed'), blank=True, default=False)
     subscribers = models.ManyToManyField(User, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)
-    post_count = models.IntegerField(_('Post count'), blank=True, default=0)
 
     # Django sphinx
     if settings.USE_SPHINX:
@@ -129,6 +131,10 @@ class Topic(models.Model):
     def last_post(self):
         return self.posts.all().order_by('-created').select_related()[0]
 
+    @property
+    def post_count(self):
+        return Post.objects.filter(topic=self).count()
+
     def get_absolute_url(self):
         return reverse('pybb_topic', args=[self.id])
 
@@ -138,7 +144,6 @@ class Topic(models.Model):
             self.created = datetime.now()
         super(Topic, self).save(*args, **kwargs)
 
-      
     def update_read(self, user):
         read, new = Read.objects.get_or_create(user=user, topic=self)
         if not new:
@@ -222,10 +227,8 @@ class Post(RenderableItem):
 
         if new:
             self.topic.updated = datetime.now()
-            self.topic.post_count += 1
             self.topic.save()
             self.topic.forum.updated = self.topic.updated
-            self.topic.forum.post_count += 1
             self.topic.forum.save()
 
         super(Post, self).save(*args, **kwargs)
@@ -240,9 +243,7 @@ class Post(RenderableItem):
         head_post_id = self.topic.posts.order_by('created')[0].id
         super(Post, self).delete(*args, **kwargs)
 
-        self.topic.post_count -= 1
         self.topic.save()
-        self.topic.forum.post_count -= 1
         self.topic.forum.save()
 
         if self_id == head_post_id:

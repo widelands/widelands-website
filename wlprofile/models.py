@@ -53,14 +53,14 @@ class Profile(models.Model):
     def post_count(self):
         """
         Return the nr of posts the user has. This uses djangos filter feature
-        will therefore hit the database. This should maybe be reworked when the 
+        will therefore hit the database. This should maybe be reworked when the
         database grows to not be always calculated.
         """
         return Post.objects.filter(user=self.user).count()
-  
+
     def user_status(self):
         nump = self.post_count()
-       
+
         if nump < 6:
             return { "text":"Just found this site", "image":"rang_1.png" }
         elif nump < 50:
