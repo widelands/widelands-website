@@ -94,6 +94,9 @@ class GamePingFactory(ClientFactory):
         self._timeout = timeout
 
     def no_reply(self):
+        if self._client_protocol._game not in self._client_protocol._ms.games:
+            return
+
         game = self._client_protocol._ms.games[self._client_protocol._game]
         if game.state == "ping_pending": # Game is valid. Let's go
             self._client_protocol.send("ERROR", "GAME_OPEN", "GAME_TIMEOUT")
@@ -173,6 +176,16 @@ class MSProtocol(Protocol):
             self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me, True)
             self._recently_disconnected = True
             self._ms.broadcast("CLIENTS_UPDATE")
+
+            # Remove games when there are only stale players in it
+            if self._game and self._game in self._ms.games:
+                game = self._ms.games[self._game]
+
+                if all((pn not in self._ms.users or not self._ms.users[pn].active) for pn in game.players):
+                    # All players are no longer remembered or disconnected.
+                    del self._ms.games[self._game]
+                    self._ms.broadcast("GAMES_UPDATE")
+
         else:
             self._forget_me()
 
