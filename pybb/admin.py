@@ -25,7 +25,7 @@ class ForumAdmin(admin.ModelAdmin):
                 }
             ),
         )
-    
+
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'forum', 'created', 'head']
     list_per_page = 20

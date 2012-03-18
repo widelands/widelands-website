@@ -12,10 +12,10 @@ import logging
 logging.basicConfig(level=logging.CRITICAL)
 
 # Helper classes  {{{
-class ClientStringTransport(proto_helpers.StringTransport):
+class ClientStringTransport(proto_helpers.StringTransportWithDisconnection):
     def __init__(self, ip):
         self.client = [ip]
-        proto_helpers.StringTransport.__init__(self)
+        proto_helpers.StringTransportWithDisconnection.__init__(self)
 
 class _Base(object):
     def setUp(self):
@@ -39,7 +39,7 @@ class _Base(object):
             c.callLater = self.clock.callLater
             c.seconds = self.clock.seconds
             c.create_game_pinger = create_game_pinger
-
+            tr.protocol = c
             c.makeConnection(tr)
 
     def tearDown(self):
@@ -49,7 +49,6 @@ class _Base(object):
                 raise RuntimeError("unexpected packet from client %i: %r" % (idx, p))
         for c in self._cons:
             c.transport.loseConnection()
-            c.connectionLost(connectionDone)
 
     def _recv(self, client):
         d = self._trs[client].value()
@@ -334,6 +333,8 @@ class TestRelogin_Anon(_Base, unittest.TestCase):
         # Connection was terminated for old user
         p1, = self._recv(0)
         self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
+        p1, = self._mult_receive([2,3])
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
 
         # Relogin accepted
         p1, = self._recv(1)
@@ -383,6 +384,8 @@ class TestRelogin_Anon(_Base, unittest.TestCase):
         # Connection was terminated for old user
         p1, = self._recv(2)
         self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
+        p1, = self._mult_receive([0,3])
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
 
         # Relogin accepted
         p1, = self._recv(1)
@@ -400,31 +403,28 @@ class TestReloginWhileInGame(_Base, unittest.TestCase):
         self._recv(2)
 
     def test_relogin_ping_and_noreply(self):
-        self.clock.advance(10)
+        self.clock.advance(15)
         p1, = self._mult_receive([0,2])
         self.assertEqual(p1, ["PING"])
         self._send(2, "PONG")
 
-        self.clock.advance(10)
-        p1, = self._recv(2)
+        self.clock.advance(15)
+        p1, p2 = self._recv(2)
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+        self.assertEqual(p2, ["PING"])
         self._send(2, "PONG")
 
         # Connection was terminated for old user
         p1, = self._recv(0)
         self.assertEqual(p1, ["DISCONNECT", "CLIENT_TIMEOUT"])
-        self._cons[0].connectionLost(connectionDone)
-        self.assertEqual([], self._mult_receive([1,2]))
 
         self._send(1, "RELOGIN", 0, "bert", "build-17", "false")
 
         # Relogin accepted
         p1, = self._recv(1)
         self.assertEqual(p1, ["RELOGIN"])
-        # p1, = self._recv(2)
-        # self.assertEqual(p1, ["CLIENTS_UPDATE"])
-
-        # Some garbage might have reached zero
-        self._recv(0)
+        p1, = self._recv(2)
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
 
         self._send(1, "CLIENTS")
         p1, = self._recv(1)
@@ -733,6 +733,9 @@ class TestGameStarting(_Base, unittest.TestCase):
 
         self.assertEqual(p1, ["ERROR", "GARBAGE_RECEIVED", "INVALID_CMD"])
 
+        p1, = self._mult_receive([0,1])
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+
     def test_start_game_not_host(self):
         self._send(1, "GAME_START")
         p1, = self._recv(1)
@@ -800,12 +803,14 @@ class TestGameLeaving(_Base, unittest.TestCase):
         p1,= self._recv(2)
         self.assertEqual(p1, ["ERROR", "GARBAGE_RECEIVED", "INVALID_CMD"])
 
+        p1, = self._mult_receive([0,1])
+        self.assertEqual(p1, ["CLIENTS_UPDATE"])
+
         self._send(2, "CLIENTS")
         p, = self._recv(2)
-        self.assertEqual(p, ["CLIENTS", "3",
+        self.assertEqual(p, ["CLIENTS", "2",
             "bert", "build-16", "my cool game", "UNREGISTERED", "",
             "otto", "build-17", "my cool game", "REGISTERED", "",
-            "SirVer", "build-18", "", "SUPERUSER", ""
         ])
 # End: Game Leaving  }}}
 

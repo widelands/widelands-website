@@ -11,9 +11,10 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from wlms.errors import MSCriticalError, MSError, MSGarbageError
 from wlms.utils import make_packet, Packet
 
-class Game(object):
-    __slots__ = ("host", "max_players", "name", "buildid", "players", "_opening_time", "state")
+# TODO Neues Spiel auf gleicher ip -> altes spiel zu ende
+# TODO spiel ohne gute spieler -> weg
 
+class Game(object):
     def __init__(self, opening_time, host, name, max_players, buildid):
         """
         Representing a currently running game.
@@ -51,7 +52,6 @@ class Game(object):
 import time
 NETCMD_METASERVER_PING = "\x00\x03@"
 class GamePing(Protocol):
-
     def __init__(self, fac, client_protocol, timeout):
         self._client_protocol = client_protocol
         self._noreplycall = self._client_protocol.callLater(
@@ -157,7 +157,6 @@ class MSProtocol(Protocol):
         self._buildid = o._buildid
         self._permissions = o._permissions
 
-
     def __lt__(self, o):
         return self._login_time < o._login_time
 
@@ -166,17 +165,16 @@ class MSProtocol(Protocol):
         return not self._recently_disconnected
 
     def connectionLost(self, reason):
-        logging.info("%r disconnected: %s", self._name, reason.getErrorMessage())
+        logging.info("%r disconnected: %s", self._name, reason)
         if self._pinger:
             self._pinger.cancel()
             self._pinger = None
         if self._state != "DISCONNECTED":
             self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me, True)
             self._recently_disconnected = True
+            self._ms.broadcast("CLIENTS_UPDATE")
         else:
             self._forget_me()
-            self._ms.broadcast("CLIENTS_UPDATE")
-
 
     def dataReceived(self, data):
         self._d += data
@@ -236,12 +234,16 @@ class MSProtocol(Protocol):
         if not self._have_sended_ping:
             self.send("PING")
             self._have_sended_ping = True
+            self._pinger = self.callLater(self.PING_WHEN_SILENT_FOR, self._ping_or_disconnect)
         else:
             self.send("DISCONNECT", "CLIENT_TIMEOUT")
+            self._pinger = None
             self.transport.loseConnection()
-        self._pinger = self.callLater(self.PING_WHEN_SILENT_FOR, self._ping_or_disconnect)
 
     def _forget_me(self, from_cleaner = False): # We have been disconnected for a long time, finally forget me
+        """
+        Remove this client from the list of users we remember.
+        """
         if not from_cleaner and self._cleaner:
             self._cleaner.cancel()
         self._cleaner = None
@@ -333,11 +335,15 @@ class MSProtocol(Protocol):
         def _try_relogin():
             logging.info("User %s has not answered relogin ping. Kicking and replacing!", u._name)
             self._ms.users_wanting_to_relogin.pop(u._name, None)
+            send_clients_update = True
             if not u._recently_disconnected:
                 u.send("DISCONNECT", "CLIENT_TIMEOUT")
                 u.transport.loseConnection()
+                send_clients_update = False # Already done by loseConnection
             u._forget_me()
             self._copy_attr(u)
+            if send_clients_update:
+                self._ms.broadcast("CLIENTS_UPDATE")
             self._ms.users[self._name] = self
             self.send("RELOGIN")
 
