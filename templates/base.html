@@ -1,126 +1,63 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 {% comment %}
  vim:ft=htmldjango:
  
  This file is extended by all other files which are not
  included here
 {% endcomment %}
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
-  <head>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-    <title>{% block title %}Widelands.org{% endblock %}</title> 
-    <link href="/wlmedia/favicon.ico" rel="SHORTCUT ICON" />
+		<title>{% block title %}Widelands.org{% endblock %}</title> 
+		<link href="/wlmedia/favicon.ico" rel="SHORTCUT ICON" />
 
-    <!--  CSS --> 
-    <link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/base.css" />
-    <link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/navigation.css" />
+		<!--  CSS --> 
+		<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/base.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="/wlmedia/css/navigation.css" />
+		<!--[if lt IE 9]>
+		<link rel="stylesheet" type="text/css" href="base_ielt9.css" />
+		<![endif]-->
+		<!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="base_ielt8.css" />
+		<![endif]-->
 
-    <!-- Javascript Bread & Butter Scripts -->
-    <script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
-    <script type="text/javascript" src="/wlmedia/js/jquery_csrf_ajax.js"></script>
-    {% block extra_head %}{% endblock %}
-  </head>
+		<!-- Javascript Bread & Butter Scripts -->
+		<script type="text/javascript" src="/wlmedia/js/jquery.js"></script>
+		<script type="text/javascript" src="/wlmedia/js/jquery_csrf_ajax.js"></script>
+		<script type="text/javascript" src="scripts.js"></script>
+		{% block extra_head %}{% endblock %}
+	</head>
 
-  <body>
+	<body>
+		<div id="wrapper">
+			<div id="header">
+				<div class="loginBox posRight">
+					{% include "login_box.html" %}
+				</div>
+				<a href="{% url mainpage %}"><img src="/wlmedia/img/Logo.png" class="posLeft" alt="Widelands Logo" /></a>
+			</div>
+			<div id="topmenu">
+				<!-- Navigation -->
+				{% include "navigation.html" %}
+			</div>
+			<div id="main" class="clear">
+				<div id="rightColumn" class="posRight">
+					{% include "right_boxes.html" %}
+				</div>
+				<div id="content">
+					{% block content %}
+						No Content here!
+					{% endblock %}
+				</div>
+			</div>
+			<div class="clear"></div>
 
-    <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+		<!-- Footer -->
+		{% include "footer.html" %}
 
-      <tr>   
-        <td>
-
-          <!-- Header Bar -->
-          <div id="headerbanner">
-            <a href="{% url mainpage %}"><img src="/wlmedia/img/Logo.png" alt="Logo" align="middle" /></a>
-          </div>
-          <!-- Navigation -->
-            {% include "navigation.html" %}
-        </td>
-      </tr>
-
-      {% comment %}
-      <!-- Main Page starts here -->
-      <!-- 
-         The decision here was between this table madness or a CSS + JS hack (resize
-         divisions after page load). Both solutions are ugly, but I prefer tables to JS hacks.
-         Can't wait for CSS3.
-      -->
-      {% endcomment %}
-
-      <tr>
-        <td>
-
-          {% comment %}
-          <!-- 
-             Top Tables are not used by current theme, they
-             might be in a future one though 
-          -->
-
-          <table border="0" cellpadding="0" cellspacing="0">
-             <tr>
-                <td id="table_topleft"></td>
-                <td id="table_topright"></td>
-             </tr>
-          </table>
-          {% endcomment %}
-
-          <!-- Table with Menus and Content -->
-          <table border="0" cellpadding="0" cellspacing="0" >
-            <tr>
-               {% comment %}
-               <!-- Left Column -->
-               <td id="leftcolumn">
-                  <div id="leftcontent">
-                  {% include "left_boxes.html" %}
-                  </div>
-
-               </td>
-               {% endcomment %}
-
-               <!-- Center Column/Content -->
-               <td id="content" style="overflow: hidden;">
-                 <!-- ################### CONTENT STARTS HERE ################### -->       
-                 {% block content %}
-                  No Content here!
-                 {% endblock %}
-                 <!-- ###################  CONTENT ENDS HERE  ################### -->       
-               </td>
-             
-               <!-- Right Column -->
-               <td id="rightcolumn">
-                  <div id="rightcontent">
-                    {% include "right_boxes.html" %}
-                  </div>
-               </td>
-            </tr>
-          </table>
-
-        </td>
-      </tr>
-
-
-      {% comment %}
-      <tr>
-        <td>
-          <!-- Footer -->
-          {% include "footer.html" %}
-
-          <!-- Bottom Table -->
-          <table border="0" cellpadding="0" cellspacing="0" id="table_bottom">
-             <tr>
-                <td id="table_bottomleft">
-                </td>
-                <td id="table_bottomright">
-                </td>
-             </tr>
-          </table>
-        </td>
-      </tr>
-      {% endcomment %}
-
-    </table>
-
-  </body>
+		</div>
+	</body>
 </html>
 

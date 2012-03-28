@@ -1,60 +1,107 @@
-div.dropdown {
-	width: auto;
-	min-width: 920px;
+/* Top Menu */
+
+div.searchBox {
 	height: 20px;
-	text-align: left;
-	position:relative;
-	z-index:2;
+	padding: 15px;
 }
 
-div.dropdown ul {
-	padding: 0;
-	margin: 0;
-    background-image: url(../img/Navbar.png);
-    background-repeat: repeat-x;
+div.searchBoxInner {
+	border: 1px solid black;
+	width: 150px;
+	padding: 0px 10px 0px 10px;
+	height: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	background-image: url("../img/but1.png");
 }
 
-div.dropdown li{
-	list-style: none;
+input.searchField {
+	margin: 0px;
+	border: none;
+	background: none;
+	width: 150px;
+	outline: none;
+	color: #ffffff;
+}
+
+div#topmenu {
 	position: relative;
-	white-space: nowrap;
+	z-index: 5;
+	top: -30px;
+	clear: both;
+	height: 50px;
+	background-image: url("../img/wood.png");
+	border: 1px solid #222222;
+	box-shadow: black 2px 2px 2px 2px;
 }
 
-div.dropdown a {
-    display: block;
-    text-decoration: none;
-    padding: 3px 20px;
+ul.menu {
+	margin: 0px;
+	padding: 0px;
 }
 
-div.dropdown > ul > li{
-	display: inline-block;
+ul.menu li {
+	list-style-type: none;
+	float: left;
+	position: relative;
 }
 
-div.dropdown li ul {
-/* Positions and hides submenus. */
+ul.menu  li a {
+	display: block;
+	width: 120px;
+	height: 50px;
+	line-height: 50px;
+	float: left;
+	border-right: 1px solid #222222;
+	text-align: center;
+	vertical-align: middle;
+	color: #ffffff;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+ul.menu li a:hover {
+	box-shadow: black 0px 0px 10px 0px inset;
+}
+
+ul.menu li a.active {
+	box-shadow: black 0px 0px 10px 0px inset;
+	background-image: url("../img/black50.png");
+}
+
+ul.menu li ul {
+	display: none;
 	position: absolute;
-	top: 19px;
-	visibility: hidden;
-	border: 1px solid rgb(12,12,12);
-    background-image: url(../img/background-4A4A4A.png);
-    background-repeat: repeat;
+	top: 50px;
+	left: -1px;
+	background-image: url("../img/wood.png");
+	padding: 0px;
+	border: 1px solid #222222;
+	box-shadow: black 2px 2px 2px 2px;
 }
 
-div.dropdown li li {
-	 border-bottom: 1px solid rgb(54,54,54);
+ul.menu li:hover ul {
+	display: block;
 }
 
-div.dropdown li:hover > ul {
-	visibility: visible;
+ul.menu li ul li {
+	clear: both;
+	border-top: 1px solid #222222;
 }
 
-div.arrow-down {
-	position: relative;
-	top: -12px;
-	left: +20px;
-	width: 0;
-	height: 0;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	border-top: 5px solid #D0DFFF;
+ul.menu li ul li a {
+	display: block;
+	width: 250px;
+	height: 20px;
+	line-height: 20px;
+	padding: 4px;
+	text-align: left;
+	font-size: 12px;
+	border: none;
+}
+
+ul.menu li ul li:first-child {
+	border: none;
 }

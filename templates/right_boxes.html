@@ -8,68 +8,32 @@
 {% load i18n %}
 {% load wlprofile wlpoll wlevents%}
 {% load pybb_extras secure_login %}
+{% load online_users %}
 
-      <!-- Search Box -->
-      <h3 class="box_title">Search</h3>
-      <div class="box_content" align="center">
-         <form method="post" action="/search/">
-            <input id="id_search" type="text" name="search" maxlength="200" />
-            <input id="id_incl_wiki" type="hidden" name="incl_wiki" value="1" />
-            <input id="id_incl_news" type="hidden" name="incl_news" value="1" />
-            <input id="id_incl_maps" type="hidden" name="incl_maps" value="1" />
-            <input id="id_incl_help" type="hidden" name="incl_help" value="1" />
-            <input id="id_incl_forum" type="hidden" name="incl_forum" value="1" />
-         {% csrf_token %}
-	 </form>
-      </div>
 
-        <!-- Donation Box -->
-
-         <h3 class="box_title">Donation</h3>
-         <div class="box_content" align="center">
-            Help us to pay our Server!<br/>(: Consider a donation :) <br/><br/>
-         <div>
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-            <input type="hidden" name="cmd" value="_s-xclick" />
-            <input type="hidden" name="lc" value="GB">
-            <input type="hidden" name="hosted_button_id" value="JH5R7YHSVRMRG" />
-            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-            <img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
-            </form>
-         </div>
-         </div>
-
-         <!-- Login Block / User informations -->
-         {% if user.is_authenticated %}
-         <h3 class="box_title">Account</h3>
-         <div class="box_content"> 
-            <p align="center">
-            Welcome <b>{{ user|user_link }}</b>,<br />
-            you've <a href="{% url messages_inbox %}">{% inbox_count %}</a> new messages
-            </p>
-            <ul>
-                <li>
-                    <a href="{% url profile_edit %}">Edit Profile</a>
-                </li>
-                <li>
-                    <a href="{% url notification_notices %} ">Notifications</a>
-                </li>
-                <li>
-                    <a href="/accounts/logout/next={{ request.path }}">Logout</a>
-                </li>
-            </ul>
-         </div>
-         {% else %}
-         <h3 class="box_title">Login</h3>
-         <div class="box_content"> 
-         <center>
-            <a href="/accounts/login/?next={{ request.path }}">Click here to login</a><br/><br/>
-            <a href="/accounts/password/reset/">Lost password?</a><br/>
-            <a href="/accounts/register">Register now!</a><br/>
-         </center>
-         </div>
-         {% endif %}
-         <!-- Current polls if any -->
+<!-- Donation Box -->
+<div class="columnModule">
+	<h3>Donation</h3>
+	<div class="columnModuleBox center">
+		<p>
+		Help us to pay our server!
+		<br />
+		(: Consider a donation :)
+		</p>
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick" />
+			<input type="hidden" name="lc" value="GB" />
+			<input type="hidden" name="hosted_button_id" value="JH5R7YHSVRMRG" />
+			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+			<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
+		</form>
+		<br /><br />
+	</div>
+</div>
+					
+					
+					<!-- TODO: design that -->
+					<!-- Current polls if any -->
          {% get_open_polls as polls %}
          {% if polls %}
          <center>
@@ -105,31 +69,32 @@
             </div>
          </center>
          {% endif %}
+		 
+		 
+<!-- Future Events if any -->
+{% get_future_events as events %}
+{% if events.count %}         
+<div class="columnModule">
+	<h3>Important Dates</h3>
+	<div class="columnModuleBox">
+		<ul>
+			{% for e in events %}
+				<li>
+				{{e.start_date|date:"d M"}}
+				{% ifnotequal e.start_date e.end_date %}
+					 - {{e.end_date|date:"d M"}}
+				{% endifnotequal %}
+				- <a href="{{e.link}}">{{e.name}}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endif %}
 
-         <!-- Future Events if any -->
-         {% get_future_events as events %}
-         {% if events.count %}
-         <h3 class="box_title">Important Dates</h3>
-         <div class="box_content" align="center">
-         {% for e in events %}
-            <div class="event">
-               <a href="{{e.link}}" class="link">{{e.name}}</a><br />
-               <div class="date">
-               {{e.start_date|date:"d M"}}
-               {% ifnotequal e.start_date e.end_date %}
-                  - {{e.end_date|date:"d M"}}
-               {% endifnotequal %}
-               </div>
-            </div>
-         {% endfor %}
-         </div>
-         {% endif %}
 
-         <!-- Logged in users -->
-         {%load online_users %}
-         {% online_users 10 %}
-         <h3 class="box_title">Most recently posted</h3>
-         <div class="box_content">
-	 {% pybb_last_posts %}
-         </div>
+<!-- Logged in users -->
+{% online_users 10 %}
 
+
+<!-- Latest Post -->
+{% pybb_last_posts %}
