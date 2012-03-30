@@ -18,7 +18,7 @@
 {% block content %}
 <h1>Welcome to Widelands.org</h1>
 <div class="blogEntry" style="min-height: 300px;">
-	<img class="landing posRight" src="{{MEDIA_URL}}/img/friends_clr.png" alt="Welcome to Widelands.org" />
+	<img class="landing posRight" src="{{MEDIA_URL}}/img/welcome.png" alt="Welcome!" />
 	<p>
 	<a href="{% url wiki_article "Description" %}">Widelands</a> is an <a href="{% url wiki_article "TheWidelandsProject" %}">open source</a> real-time strategy game with a singleplayer campaign as well as a multiplayer mode. If you knew Settlers&nbsp;I&nbsp;&amp;&nbsp;II&#8482; (&copy;&nbsp;Bluebyte), then you already have a rough idea what Widelands is all about because it is heavily inspired by those two games. For more information read the full <a href="{% url wiki_article "Description" %}">description</a> and look at some <a href="{% url wlscreens_index %}">screenshots</a>.
 	</p>
@@ -35,9 +35,9 @@
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
 	<h1>News</h1>
-    {% for object in latest_posts_list %}
-        {% include "news/inlines/post_detail.html" %} 
-    {% endfor %}
+	{% for object in latest_posts_list %}
+		{% include "news/inlines/post_detail.html" %} 
+	{% endfor %}
 	<div class="center"><p><a class="invertedColor" href="{% url news_index %}">News archive</a></p></div>
 {% endif %}
 

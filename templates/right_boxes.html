@@ -24,53 +24,58 @@
 			<input type="hidden" name="cmd" value="_s-xclick" />
 			<input type="hidden" name="lc" value="GB" />
 			<input type="hidden" name="hosted_button_id" value="JH5R7YHSVRMRG" />
-			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+			<input type="image" class="donate" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
 			<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
 		</form>
 		<br /><br />
 	</div>
 </div>
-					
-					
-					<!-- TODO: design that -->
-					<!-- Current polls if any -->
-         {% get_open_polls as polls %}
-         {% if polls %}
-         <center>
-            <h3 class="box_title">Polls</h3>
-            <div class="box_content" align="center">
-            {% for p in polls %}
-            <div class="sub_content">
-               <h4>{{p.name}}</h4>
-            {% if not user.is_anonymous %}
-               {% if p.user_has_voted %}
-                  <p>You already voted on this!</p>
-               {% else %}
-               <form method="post" action="{% url wlpoll_vote p.id %}">
-                  <table class="poll_vote">
-                     {% for c in p.choices.all %}
-                     <tr>
-                        <td><input type="radio" name="choice_id" value="{{ c.id }}" /></td>
-                        <td>{{ c.choice }}</td>
-                     </tr>
-                     {% endfor %}
-                  </table>
-                     <input type="submit" value="Vote" />
-                     {% csrf_token %}
-               </form>
-               {% endif %}
-            {% else %}
-               <p>Log in to vote!</p>
-            {% endif %}
-               <input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
-            </div>
-            {% endfor %}
-            <a href="{% url wlpoll_archive %}">Archive</a>
-            </div>
-         </center>
-         {% endif %}
-		 
-		 
+
+
+<!-- TODO: design that -->
+<!-- Current polls if any -->
+{% get_open_polls as polls %}
+{% if polls %}
+<div class="columnModule">
+	<h3>Polls</h3>
+	<div class="columnModuleBox">
+	{% for p in polls %}
+		<h4>{{p.name}}</h4>
+		{% if not user.is_anonymous %}
+			{% if p.user_has_voted %}
+				<p>You already voted on this!</p>
+				<div class="center">
+					<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+				</div>
+			{% else %}
+				<form method="post" action="{% url wlpoll_vote p.id %}">
+					<ul class="poll">
+					{% for c in p.choices.all %}
+						<li><input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" /><label for="{{ c.id }}">{{ c.choice }}</label></li>
+					{% endfor %}
+					</ul>
+					<div class="center">
+						<input type="submit" value="Vote" />
+						<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+					</div>
+					{% csrf_token %}
+				</form>
+			{% endif %}
+		{% else %}
+			<p>Log in to vote!</p>
+			<div class="center">
+				<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+			</div>
+		{% endif %}
+	{% endfor %}
+		<div class="center">
+			<p><a href="{% url wlpoll_archive %}">Archive</a></p>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+
 <!-- Future Events if any -->
 {% get_future_events as events %}
 {% if events.count %}         

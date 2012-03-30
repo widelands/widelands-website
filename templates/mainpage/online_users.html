@@ -1,16 +1,18 @@
 {% load wlprofile %}
 
-					<div class="columnModule">
-						<h3>Currently Online</h3>
-						<div class="columnModuleBox">
-							{% if users %}
-							<ul class="player">
-								{% for user in users %}
-								<li><a href="{% url profile_view user %}">{{user.username}}</a></li>
-								{% endfor %}
-							</ul>
-							{% else %}
-							<p>Currently nobody is online.</p>
-							{% endif %}
-						</div>
-					</div>
+{% if users %}
+<div class="columnModule">
+	<h3>Currently Online</h3>
+	<div class="columnModuleBox">
+		{% if users %}
+		<ul class="player">
+			{% for user in users %}
+			<li><a href="{% url profile_view user %}">{{user.username}}</a></li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p>Currently nobody is online.</p>
+		{% endif %}
+	</div>
+</div>
+{% endif %}

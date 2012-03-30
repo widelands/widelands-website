@@ -9,42 +9,23 @@
 {% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
 
 {% block content %}
-<br />
-<div class="poll">
-   <h3 class="title">{{ object.name }}</h3>
-   <div class="info_line"> 
-      <span class="post_date">Posted on {{ object.pub_date|custom_date:user }}</span> 
-   </div>
-   <div class="content">
-      <div class="poll_plot">
-      {% display_poll object %}
-      </div>
-   </div>
+	{% if perms.news %}
+	<div class="small posRight">
+		{% if perms.news.poll_can_add %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
+		{% if perms.news.poll_can_edit %}| <a href="/admin/wlpoll/poll/{{object.id}}/" class="invertedColor">Edit</a>{% endif %}
+		{% if perms.news.poll_can_delete %}| <a href="/admin/wlpoll/poll/{{object.id}}/delete/" class="invertedColor">Delete</a>{% endif %}
+	</div>
+	{% endif %}
+	<h1>Poll: {{ object.name }}</h1>
+	<div class="blogEntry">
+		{% display_poll object %}
+		<hr />
+		{% get_comment_count for object as ccount %}
+		<span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments, {{object.total_votes}} votes</a></span>
+		<span class="small posRight">Posted on {{ object.pub_date|custom_date:user }}</span>
+	</div>
 
-   <table class="bottom_line" width="100%">
-      <tr>
-      {% get_comment_count for object as ccount %}
-      <td class="comments">
-         <a href="{{ object.get_absolute_url }}">{{ ccount }} comments, {{object.total_votes}} votes</a>
-      </td>
-      
-      <td class="admin">
-      {% if perms.news %}
-      {% if perms.news.poll_can_add %}<a href="/admin/wlpoll/poll/add/">Add New Poll</a>{% endif %}
-      {% if perms.news.poll_can_edit %}| <a href="/admin/wlpoll/poll/{{object.id}}/">Edit</a>{% endif %}
-      {% if perms.news.poll_can_delete %}| <a href="/admin/wlpoll/poll/{{object.id}}/delete/">Delete</a>{% endif %}
-      {% endif %}
-      </td>
-
-      <!-- Third column for the style -->
-      <td>
-      </td>
-  </tr>
-  </table>
-</div>
-      
-
-    <!-- Comments below -->
-    <h3>Comments on this Poll:</h3>
-    {% include "threadedcomments/inlines/comments.html" %}
+	<!-- Comments below -->
+	<h3>Comments on this Poll:</h3>
+	{% include "threadedcomments/inlines/comments.html" %}
 {% endblock %}

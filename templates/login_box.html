@@ -1,23 +1,27 @@
 {% load inbox wlprofile %}
 
-<!-- Login Block / User informations -->
+<!-- Login form / User information -->
 {% if user.is_authenticated %}
 <div class="small posLeft">
 	Welcome {{ user|user_link }},<br/>
-	you have <a href="{% url messages_inbox %}">0 new messages</a>
+	you have <a href="{% url messages_inbox %}">0 new messages</a>.
 </div>
-<div class="small posRight">
+<div class="right small posRight">
 	<ul>
+		<li><a href="{% url messages_inbox %}">Messages</a></li>
 		<li><a href="{% url notification_notices %}">Notifications</a></li>
 		<li><a href="{% url profile_edit %}">Edit Profile</a></li>
 		<li><a href="/accounts/logout/next={{ request.path }}">Logout</a></li>
 	</ul>
 </div>
 {% else %}
-<!-- TODO: login form here -->
-<div class="center">
-	<a href="/accounts/login/?next={{ request.path }}">Click here to login</a><br/><br/>
-	<a href="/accounts/password/reset/">Lost password?</a><br/>
-	<a href="/accounts/register">Register now!</a><br/>
-</div>
+<h4>Login</h4>
+<form method="post" action="https://{{ request.META.HTTP_HOST }}/accounts/login/">
+	<input id="id_username" type="text" name="username" maxlength="30" placeholder="Username" />
+	<input id="id_password" type="password" name="password" />
+	<button type="submit">login</button>
+	<input type="hidden" name="next" value="{{ request.path }}" />
+	{% csrf_token %}
+</form>
+<div class="small center"><a href="/accounts/password/reset/">Lost password?</a> | <a href="/accounts/register">Register now!</a></div>
 {% endif %}

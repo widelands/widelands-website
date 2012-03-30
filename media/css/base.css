@@ -1,6 +1,7 @@
 /* Common */
 
 body {
+	background-color: #e9c78a;
 	background-image: url("../img/parchment.png");
 	font-family: Tahoma;
 	font-size: 14px;
@@ -34,9 +35,31 @@ form {
 	display: inline;
 }
 
+input {
+	margin-bottom: 5px;
+	padding: 0px 10px;
+	border: 1px solid black;
+	height: 20px;
+	border-radius: 10px;
+	background: none;
+	background-image: url("../img/black50.png");
+	outline: none;
+	color: #ffffff;
+}
+
+input.radio {
+	background: none;
+	border: none;
+	vertical-align: middle;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	color: #007700;
 	margin-top: 0px;
+}
+
+svg {
+	text-shadow: none;
 }
 
 .posLeft {
@@ -83,6 +106,7 @@ div#content {
 }
 
 div#footer {
+	background-color: #695536;
 	background-image: url("../img/wood.png");
 	padding: 15px;
 	margin-top: 20px;
@@ -110,6 +134,7 @@ div.loginBox {
 	width: 320px;
 	height: 90px;
 	border: 1px solid black;
+	background-color: #332f29;
 	background-image: url("../img/but1.png");
 	-moz-border-radius: 15px;
 	-webkit-border-radius: 15px;
@@ -121,18 +146,35 @@ div.loginBox {
 	box-shadow: black 2px 2px 2px 2px;
 }
 
-div.loginBox div {
+div.loginBox div.right{
 	width: 120px;
-}
-
-div.loginBox div:first-child {
-	width: 200px;
 }
 
 div.loginBox ul {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
+}
+
+div.loginBox h4 {
+	margin-bottom: 5px;
+}
+
+div.loginBox input {
+	width: 100px;
+}
+
+div.loginBox button {
+	margin: 0px;
+	padding: 0px;
+	border: 1px solid black;
+	width: 60px;
+	height: 20px;
+	border-radius: 10px;
+	background: none;
+	background-image: url("../img/black50.png");
+	outline: none;
+	color: #ffffff;
 }
 
 /* Right Column */
@@ -152,10 +194,31 @@ div.columnModule h3 {
 div.columnModuleBox {
 	width: 220px;
 	margin-bottom: 20px;
+	background-color: #695536;
 	background-image: url("../img/wood.png");
 	border: 1px solid black;
 	box-shadow: black 2px 2px 2px 2px;
 }
+
+div.columnModuleBox h4 {
+	color: #ffffee;
+	padding: 8px;
+	padding-bottom: 0px;
+	margin: 0px;
+}
+
+div.columnModuleBox ul.poll {
+	padding: 8px;
+	list-style-type: disc;
+	border: none;
+}
+
+div.columnModuleBox ul.poll li {
+	padding: 0px;
+	border: none;
+	height: 20px;
+}
+
 div.columnModuleBox p {
 	margin: 0px;
 	padding: 8px;
@@ -189,6 +252,11 @@ div.columnModuleBox ul li:first-child {
 	border-top: none;
 }
 
+input.donate {
+	border: none;
+	background: none;
+}
+
 /* News Posts */
 
 img.landing {
@@ -197,6 +265,7 @@ img.landing {
 }
 
 div.blogEntry {
+	background-color: #332f29;
 	background-image: url("../img/but1.png");
 	-moz-border-radius: 15px;
 	-webkit-border-radius: 15px;

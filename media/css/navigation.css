@@ -14,6 +14,7 @@ div.searchBoxInner {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	-khtml-border-radius: 10px;
+	background-color: #332f29;
 	background-image: url("../img/but1.png");
 }
 
@@ -24,6 +25,7 @@ input.searchField {
 	width: 150px;
 	outline: none;
 	color: #ffffff;
+	padding: 0px;
 }
 
 div#topmenu {
@@ -32,6 +34,7 @@ div#topmenu {
 	top: -30px;
 	clear: both;
 	height: 50px;
+	background-color: #695536;
 	background-image: url("../img/wood.png");
 	border: 1px solid #222222;
 	box-shadow: black 2px 2px 2px 2px;
@@ -76,6 +79,7 @@ ul.menu li ul {
 	position: absolute;
 	top: 50px;
 	left: -1px;
+	background-color: #695536;
 	background-image: url("../img/wood.png");
 	padding: 0px;
 	border: 1px solid #222222;
