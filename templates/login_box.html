@@ -17,8 +17,8 @@
 {% else %}
 <h4>Login</h4>
 <form method="post" action="https://{{ request.META.HTTP_HOST }}/accounts/login/">
-	<input id="id_username" type="text" name="username" maxlength="30" placeholder="Username" />
-	<input id="id_password" type="password" name="password" />
+	<input id="id_login_username" type="text" name="username" maxlength="30" placeholder="Username" />
+	<input id="id_login_password" type="password" name="password" />
 	<button type="submit">login</button>
 	<input type="hidden" name="next" value="{{ request.path }}" />
 	{% csrf_token %}

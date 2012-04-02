@@ -7,169 +7,34 @@
 
 {% block extra_head %}
 {{ block.super }}
-
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jqModal.js"></script>
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/modal_windows.css" />
-
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.lightbox-0.5.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/jquery.lightbox-0.5.css" />
 <script type="text/javascript">
 // {{{ Javascript Stuff 
-var image_w = 0;
-// if initial_show is true, the resize_dialog function
-// will not animate the resize. This is set by the hide and show
-// function of our dialog
-var initial_show = true;
-var current_size = "";
-
-function determine_image_size() {
-   // We decide by the client width which size we are going // to show
-   cw = document.body.clientWidth;
-   ch = document.body.clientHeight;
-   
-   margin = 12;
-   if( (cw-80) > 1024) {
-      w = 1024;
-   } else if( (cw-80) > (800) ) {
-      w = 800;
-   } else {
-      w = 640;
-   }
-   
-   return w;
-}
-
-function resize_dialog() {
-   if(image_w == 0) {
-      image_w = determine_image_size();
-   }
-   cw = document.body.clientWidth;
-   
-   img = $(".image_display");
-
-   if( current_size == image_w ) {
-      return;
-   }
-
-   // reposition and resize the dialog
-   dw = image_w+margin;
-   x = (cw/2)-(dw/2);
-
-   dialog = $("#dialog");
-   if(initial_show) {
-      dialog.css("width",dw + "px");
-      dialog.css("left",x + "px");
-      dialog.css("top",(document.body.scrollTop + 5) + "px");
-      
-      img.attr("width",w);
-   } else {
-      img.fadeOut( 250, 
-         function() {
-            dialog.animate( {
-               left: x+"px",
-               top: (document.body.scrollTop+5)+"px",
-               width: dw +"px",
-               }, 500, function() {
-                  img.attr("width",w);
-
-                  img.fadeIn(250);
-               });
-      });
-   }
-   
-   current_size = w;
-}
-
-$().ready(function() {
-
-      // dialog
-      $('#dialog').jqm( {
-          onShow: function(h) {
-          /* Enter image address */
-          h.w.css('opacity',1.00).fadeIn(); 
-          initial_show = false;
-        },
-          onHide: function(h) {
-          h.w.fadeOut('slow');
-          h.o.fadeOut('slow',
-             function() { if(h.o) h.o.remove(); })
-          initial_show = true;
-         }
-      });
-      $('.image_display').click( function() {
-         $('#dialog').jqmHide();
-      });
-
-      // Links
-      $(".displayimage a.imagelink").click( function() {
-         // Set the image
-         src = $(this).attr("href");
-         img = $(".image_display");
-         img.attr("src",src);
-         
-         // Set the image comment
-         comment = $($(this).parent().find(".comment")).html();
-         $(".image_comment").html(comment);
-
-         // Set the image title
-         title = $(this).attr("name");
-         $("h3.screenshot_title").html(title);
-         
-         resize_dialog();
-
-         $('#dialog').jqmShow();
-
-         return false;
-      });
-
-      // Resize links
-      $('a.sizelink').click( function() {
-            size = $(this).html().split("x");
-            w = parseInt(size[0]);
-            
-            image_w = w;
-            resize_dialog();
-      });
-
-});
+	$(function() {
+		$('.screenshot_list a').lightBox();
+	});
 // }}}
 </script>
 {% endblock %}
 
 {% block content %}
-<!-- Image Dialog --> 
-<div class="jqmDialog" id="dialog">
-   <img src="{{ MEDIA_URL }}/img/close_icon.png" alt="close" class="jqmClose" />
+<h1>Screenshots</h1>
 
-    <div class="box_title">
-        <h3 class="box_title screenshot_title"></h3>
-    </div>
-
-    <div class="box_content">
-      <div class="sizes">
-         <a class="sizelink" href="#">1024 x 768</a>
-         | <a class="sizelink" href="#">800 x 600</a>
-         | <a class="sizelink" href="#">640 x 480</a>
-      </div>
-
-      <img class="image_display" src="#" />
-
-      <div class="image_comment"></div>
-    </div>
-</div>
-
-<!-- True content -->
 {% for c in categories %}
-
-<h1 class="category">{{ c.name }}</h1>
-
-<ul class="screenshot_list">
-{% for s in c.screenshots.all %}
-<li class="displayimage">
-<div><a class="imagelink" name="{{s.name}}" href="{{ s.screenshot.url }}"><img src="{{ s.thumbnail.url }}" /></a><br/>
-<span class="name">{{ s.name }}</span>
-<div class="comment" style="display: none;">{{ s.comment|wl_markdown }}</div></div>
-</li>
-{% endfor %}
-</ul>
-
+<div class="blogEntry">
+	<h2>{{ c.name }}</h2>
+	<ul class="screenshot_list">
+	{% for s in c.screenshots.all %}
+		<li>
+			<a href="{{ s.screenshot.url }}" title="{{ s.name }}: {{ s.comment }}">
+				<img src="{{ s.thumbnail.url }}" alt="" />
+			</a>
+			<br />
+			<span>{{ s.name }}</span>
+		</li>
+	{% endfor %}
+	</ul>
+</div>
 {% endfor %}
 {% endblock %}

@@ -62,6 +62,11 @@ svg {
 	text-shadow: none;
 }
 
+td {
+	vertical-align: top;
+	line-height: 20px;
+}
+
 .posLeft {
 	float: left
 }
@@ -84,6 +89,14 @@ svg {
 
 .placeholder {
   color: #aaa !important;
+}
+
+.errormessage {
+	color: #ff0000;
+}
+
+.noshadow {
+	text-shadow: none;
 }
 
 /* Base */

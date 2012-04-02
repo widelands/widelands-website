@@ -43,7 +43,7 @@
 		<h4>{{p.name}}</h4>
 		{% if not user.is_anonymous %}
 			{% if p.user_has_voted %}
-				<p>You already voted on this!</p>
+				<p class="small">You already voted on this!</p>
 				<div class="center">
 					<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
 				</div>
@@ -62,7 +62,7 @@
 				</form>
 			{% endif %}
 		{% else %}
-			<p>Log in to vote!</p>
+			<p class="small">Log in to vote!</p>
 			<div class="center">
 				<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
 			</div>
