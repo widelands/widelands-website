@@ -231,23 +231,19 @@ class TestLogin(_Base, unittest.TestCase):
         self._send(0, "LOGIN", 0, "SirVer", "build-17", 1, "12345")
         self.expect(0, ['ERROR', 'LOGIN', 'WRONG_PASSWORD'])
 # End: Test Login  }}}
-# # Test Disconnect  {{{
-# TODO
-# class TestDisconnect(_Base, unittest.TestCase):
-#     def setUp(self):
-#         _Base.setUp(self)
-#         self._send(0, "LOGIN", 0, "bert", "build-17", "false")
-#         self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
-#         self._recv(0)
-#         self._recv(2)
+# Test Disconnect  {{{
+class TestDisconnect(_Base, unittest.TestCase):
+    def setUp(self):
+        _Base.setUp(self)
+        self._send(0, "LOGIN", 0, "bert", "build-17", "false")
+        self._send(1, "LOGIN", 0, "otto", "build-17", "true", "ottoiscool")
+        self.discard_packets([0,1])
 
-#     def test_regular_disconnect(self):
-#         self._send(0, "DISCONNECT", "Gotta fly now!")
+    def test_regular_disconnect(self):
+        self._send(0, "DISCONNECT", "Gotta fly now!")
+        self.expect(1, ["CLIENTS_UPDATE"])
 
-#         p1, = self._recv(0)
-#         self.assertEqual(p1, ["CLIENT_TIMEOUT"])
-
-# # End: Test Disconnect  }}}
+# End: Test Disconnect  }}}
 # TestMotd  {{{
 class TestMotd(_Base, unittest.TestCase):
     def setUp(self):

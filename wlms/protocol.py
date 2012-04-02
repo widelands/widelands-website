@@ -472,6 +472,8 @@ class MSProtocol(Protocol):
         logging.info("%r left: %s", self._name, reason)
         self._state = "DISCONNECTED"
         self.transport.loseConnection()
+
+        self._ms.broadcast("CLIENTS_UPDATE")
     # End: Private Functions }}}
 
 
