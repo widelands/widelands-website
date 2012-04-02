@@ -11,9 +11,6 @@ from twisted.internet.protocol import Protocol, ClientFactory
 from wlms.errors import MSCriticalError, MSError, MSGarbageError
 from wlms.utils import make_packet, Packet
 
-# TODO Neues Spiel auf gleicher ip -> altes spiel zu ende
-# TODO spiel ohne gute spieler -> weg
-
 class Game(object):
     def __init__(self, opening_time, host, name, max_players, buildid):
         """
@@ -119,6 +116,7 @@ def _create_game_pinger(pc, timeout):
 class MSProtocol(Protocol):
     _ALLOWED_PACKAGES = {
         "handshake": set(("LOGIN","DISCONNECT", "RELOGIN")),
+        "disconnected": set(("LOGIN","DISCONNECT", "RELOGIN")),
         "lobby": set((
             "DISCONNECT", "CHAT", "CLIENTS", "RELOGIN", "PONG", "GAME_OPEN",
             "GAME_CONNECT", "GAMES", "MOTD", "ANNOUNCEMENT",
@@ -172,7 +170,7 @@ class MSProtocol(Protocol):
         if self._pinger:
             self._pinger.cancel()
             self._pinger = None
-        if self._state != "DISCONNECTED":
+        if self._state != "disconnected":
             self._cleaner = self.callLater(self.REMEMBER_CLIENT_FOR, self._forget_me, True)
             self._recently_disconnected = True
             self._ms.broadcast("CLIENTS_UPDATE")
@@ -470,7 +468,7 @@ class MSProtocol(Protocol):
     def _handle_DISCONNECT(self, p):
         reason = p.string()
         logging.info("%r left: %s", self._name, reason)
-        self._state = "DISCONNECTED"
+        self._state = "disconnected"
         self.transport.loseConnection()
 
         self._ms.broadcast("CLIENTS_UPDATE")
