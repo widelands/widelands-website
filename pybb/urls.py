@@ -11,7 +11,7 @@ feeds = {
 urlpatterns = patterns('',
     # Misc
     url('^$', views.index, name='pybb_index'),
-    # url('^category/(?P<category_id>\d+)/$', views.show_category, name='pybb_category'),
+    url('^category/(?P<category_id>\d+)/$', views.show_category, name='pybb_category'),
     url('^forum/(?P<forum_id>\d+)/$', views.show_forum, name='pybb_forum'),
     url('^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
         {'feed_dict': feeds}, name='pybb_feed'),

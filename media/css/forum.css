@@ -1,108 +1,91 @@
-
-.index_category, .index_forum {
-    margin-bottom: 20px;
-    border-left: 0px;
-    border-right: 0px;
+.forum {
+	border: none; 
+	border-collapse: collapse;
+	width: 100%;
 }
 
-.list_overview {
-    display: block;
-    font-weight: bold;
-    padding: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    background: url('../img/background-444.png');
+.forum tr {
+	border: 1px solid black;
 }
 
-.title {
-    display: block;
-    font-weight: bold;
-    padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 1px;
-    background: url('../img/background-444.png');
+.forum thead tr {
+	border: none;
 }
 
-.author {
-   text-align: center;
+.forum td {
+	vertical-align: middle;
+	padding: 8px;
 }
 
-/*
- * POSTS
- */
-.posts {
-   padding: 0px;
-   margin: 0px;
-}
-.posts th {
-   margin-top: 0px;
-   margin-bottom: 0px;
-   height: auto;
+.even {
+	background-image: url("../img/black20.png");
 }
 
-/* 
- * Post
- */
-.post {
-   background-color: rgb(20%,20%,20%); 
-   margin: 0px;
-   padding-bottom: 2px;
+.odd {
+	background-image: url("../img/black50.png");
 }
+
+.forumIcon {
+	width: 50px;
+}
+
+.forumTitle {
+	width: 40%;
+}
+
+.forumCount {
+	width: 120px;
+}
+
+.lastPost {
+	text-align: right;
+}
+
+.forum .author {
+	width: 140px;
+	text-align: center;
+	border-right: 1px solid black;
+	vertical-align: top;
+}
+
+.forum .post {
+	vertical-align: top;
+}
+
+.authorStats {
+	text-align: left;
+	font-size: 10px;
+	line-height: 12px;
+}
+
+tr.spacer {
+	height: 10px;
+	border: none;
+}
+
 .post p {
-    margin: 8px 0px 8px;
-    padding: 0px;
+	margin: 0px;
+	margin-bottom: 8px;
+	padding: 0px;
 }
 
-.post .at {
-   text-align: right;
-   font-size: 90%;
-}
-.post .userinfo {
-   font-size: 90%;
-   vertical-align: top;
-}
-.post .odd {
-   margin: 0px;
-   padding: 0px;
-}
-.post table {
-   border-collapse: collapse;
-}
-.post td {
-   border: 1px solid rgb(20%,20%,20%); 
-}
 .post blockquote {
-   background: rgb(51, 51, 51);
-   border: 0px inset rgb(0, 0, 128);
-   font-family: 'Courier New', Courier, monospace;
-   padding: 0px 6px 6px 6px;
-   margin: 2px;
-   margin-left: 10px;
-}
-.post .tools {
-   vertical-align: bottom;
-}
-.first_post {
-   padding-bottom: 20px;
-   border: 1px solid rgb(100,100,100);
-   margin-bottom: 20px;
-}
-.post .avatar {
-    width: 100%;
-    padding: 2px;
-}
-.post .top {
-    vertical-align: top;
-}
-.post .top .signature .line {
-    color: #D0DFFF;
-    font-weight: bolder;
+	background-image: url("../forum/img/quote.png");
+	background-repeat: no-repeat;
+	background-position: 4px 4px;
+	border: 1px solid black;
+	padding: 4px;
+	padding-left: 28px;
+	margin: 4px;
 }
 
+.preview-box .content {
+	background-image: url("../img/black50.png");
+	border: 1px solid black;
+	padding: 4px;
+	width: 98%;
+}
 
-/*
- * Compose
- */
 .post-form #id_subject {
     width: 40%;
 }
@@ -111,14 +94,16 @@
 }
 .post-form #id_body {
    width: 98%;
+   max-width: 98%;
    height: 150px;
 }
-.post .bold  {
-    font-weight: bold;
+
+a.permalink {
+	width: 16px;
+	height: 20px;
+	background-image: url("../forum/img/permalink.png");
 }
-.post .underline {
-    text-decoration: underline;
-}
-.post .italic {
-    font-style: italic;
+
+a.permalink:hover {
+	background-image: url("../forum/img/permalink_hover.png");
 }

@@ -35,16 +35,30 @@ form {
 	display: inline;
 }
 
-input {
+input, button, textarea {
 	margin-bottom: 5px;
-	padding: 0px 10px;
+	padding: 2px 10px;
 	border: 1px solid black;
-	height: 20px;
 	border-radius: 10px;
 	background: none;
 	background-image: url("../img/black50.png");
 	outline: none;
 	color: #ffffff;
+	text-shadow: #000000 1px 1px 0px;
+	vertical-align: middle;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+textarea {
+	font-weight: normal;
+	font-size: 14px;
+}
+
+input:hover, button:hover, textarea:hover {
+	background-image: url("../img/black20.png");
 }
 
 input.radio {
@@ -56,6 +70,7 @@ input.radio {
 h1, h2, h3, h4, h5, h6 {
 	color: #007700;
 	margin-top: 0px;
+	font-weight: normal;
 }
 
 svg {
@@ -83,6 +98,21 @@ td {
 	text-align: center;
 }
 
+.middle {
+	vertical-align: middle;
+}
+
+.green {
+	color: #007700;
+}
+
+.green a {
+	color: #007700;
+}
+
+.green a:hover {
+	color: #ffffee;
+}
 .small {
 	font-size: 12px;
 }

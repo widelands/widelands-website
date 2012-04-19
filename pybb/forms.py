@@ -18,7 +18,8 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['body', 'markup',]
+        #fields = ['body', 'markup',] # don't use markup, doesn't work
+        fields = ['body',]
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -27,7 +28,10 @@ class AddPostForm(forms.ModelForm):
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
-        self.fields.keyOrder = ['name', 'body', 'markup', 'attachment']
+        self.fields.keyOrder = ['name', 
+                                'body', 
+                                #'markup', 
+                                'attachment']
 
         if self.topic:
             self.fields['name'].widget = forms.HiddenInput()
@@ -59,7 +63,7 @@ class AddPostForm(forms.ModelForm):
             topic = self.topic
 
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
-                    markup=self.cleaned_data['markup'],
+                    #markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
         post.save(*args, **kwargs)
 

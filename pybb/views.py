@@ -31,17 +31,7 @@ def index_ctx(request):
              'last_posts': Post.objects.order_by('-created').select_related()[:pybb_settings.QUICK_POSTS_NUMBER],
              }
 
-    cats = {}
-    forums = {}
-
-    for forum in Forum.objects.all().select_related():
-        cat = cats.setdefault(forum.category.id,
-            {'cat': forum.category, 'forums': []})
-        cat['forums'].append(forum)
-        forums[forum.id] = forum
-
-    cmpdef = lambda a, b: cmp(a['cat'].position, b['cat'].position)
-    cats = sorted(cats.values(), cmpdef)
+    cats = Category.objects.all().select_related()
 
     return {'cats': cats,
             'quick': quick,

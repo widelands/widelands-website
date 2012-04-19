@@ -1,0 +1,19 @@
+{% extends 'pybb/base.html' %}
+{% load pybb_extras %}
+
+{% block content %}
+<h1>Category: {{category.name}}</h1>
+
+<div class="blogEntry">
+	<a href="{% url pybb_index %}">Forums</a> &#187; {{category.name}}
+	<br /><br />
+	{% include 'pybb/inlines/display_category.html' %}
+</div>
+
+<div class="center green">
+	<img src="{{MEDIA_URL}}/forum/img/folder_new_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" class="middle" />
+	= Unread posts
+	<img src="{{MEDIA_URL}}/forum/img/folder_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" class="middle" /> 
+	= No unread posts
+</div>
+{% endblock %}

@@ -29,7 +29,7 @@ TIME_ZONE = 'Europe/Berlin'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'de'
+LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
@@ -131,27 +131,51 @@ SMILEY_DIR = MEDIA_URL + "img/smileys/"
 # Keep this list ordered by length of smileys
 SMILEYS = [
     ("O:-)", "face-angel.png"),
+    ("O:)", "face-angel.png"),
+    (":-/", "face-confused.png"),
+    (":/", "face-confused.png"),
+    ("B-)", "face-cool.png"),
+    ("B)", "face-cool.png"),
     (":'-(", "face-crying.png"),
+    (":'(", "face-crying.png"),
     ("&gt;:-)", "face-devilish.png"), # Hack around markdown replacement. see also SMILEY_PREESCAPING
-    (":(|)", "face-monkey.png"),
-    (":-D", "face-grin.png"),
     ("8-)", "face-glasses.png"),
-    (":-x", "face-kiss.png"),
-    (":-|", "face-plain.png"),
-    (":-(", "face-sad.png"),
-    (":))", "face-smile-big.png"),
-    (":-)", "face-smile.png"),
-    (":-O", "face-surprise.png"),
-    (";-)", "face-wink.png"),
+    #("8)", "face-glasses.png"), # Might occur unwanted
+    (":-D", "face-grin.png"),
     (":D", "face-grin.png"),
+    (":-x", "face-kiss.png"),
+    (":x", "face-kiss.png"),
+    (":-*", "face-kiss.png"),
+    (":*", "face-kiss.png"),
+    (":-((", "face-mad.png"),
+    (":((", "face-mad.png"),
+    (":-||", "face-mad.png"),
+    (":||", "face-mad.png"),
+    (":(|)", "face-monkey.png"),
+    (":-|", "face-plain.png"),
+    (":|", "face-plain.png"),
+    (":-(", "face-sad.png"),
     (":(", "face-sad.png"),
+    (":-O", "face-shock.png"),
+    (":O", "face-shock.png"),
+    (":-)", "face-smile.png"),
     (":)", "face-smile.png"),
-    (":O", "face-surprise.png"),
+    (":-))", "face-smile-big.png"),
+    (":))", "face-smile-big.png"),
+    (":-o", "face-surprise.png"),
+    (":o", "face-surprise.png"),
+    (":-P", "face-tongue.png"),
+    (":P", "face-tongue.png"),
+    (":-S", "face-upset.png"),
+    (":S", "face-upset.png"),
+    (";-)", "face-wink.png"),
     (";)", "face-wink.png"),
 ]
 # This needs to be done to keep some stuff hidden from markdown
 SMILEY_PREESCAPING = [
     (">:-)", "\>:-)"),
+    (":-*", ":-\*"),
+    (":*", ":\*"),
 ]
 
 ###############################

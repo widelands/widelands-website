@@ -2,25 +2,24 @@
 {% load i18n %}
 
 {% block title %}
-Delete post - {{ block.super }}
+{% trans "Delete Post" %} - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-{% include "django_messages/inlines/navigation.html" %}
-<br />
-<br />
-<div class="box_item_model fixed_site border">
-    <h3 class="title">{% trans "Are you sure you want to delete this message?" %}</h3>
-    <div class="even">
-        <p class="post-preview">
-    {{ post.body_html|safe }}
-        </p>
-    </div>
-    <form method="post">
-        <div class="info_line">
-            <input type="submit" value="{% trans "Yes, I am sure." %}" />
-        </div>
-        {% csrf_token %}
-    </form>
+<h1>{% trans "Delete Post" %}</h1>
+<div class="blogEntry">
+	<h3>{% trans "Are you sure you want to delete this message?" %}</h3>
+	<div class="preview-box">
+		<div class="content post">
+		{{ post.body_html|safe }}
+		</div>
+	</div>
+	<form method="post">
+		<div class="info_line">
+			<input type="submit" value="{% trans "Yes, I am sure." %}" />
+			<input type="button" value="{% trans "Cancel" %}" onclick="history.back();" />
+		</div>
+		{% csrf_token %}
+	</form>
 </div>
 {% endblock %}
