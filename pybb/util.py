@@ -170,11 +170,11 @@ def quote_text(text, user, markup):
     """
     Quote message using selected markup.
     """
-    text = user.username + " wrote:\n" + text
+    text = "*" + user.username + " wrote:*\n\n" + text
 
     # if markup == 'markdown':
     if markup == 'markdown':
-        return '>'+text.replace('\n','\n>').replace('\r','\n>') + '\n'
+        return '>'+text.replace('\r','').replace('\n','\n>') + '\n'
     elif markup == 'bbcode':
         return '[quote]\n%s\n[/quote]\n' % text
     else:

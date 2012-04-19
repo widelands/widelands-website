@@ -151,7 +151,7 @@ def add_post_ctx(request, forum_id, topic_id):
         quote = ''
     else:
         post = get_object_or_404(Post, pk=quote_id)
-        quote = quote_text(post.body_text, post.user, "markdown")
+        quote = quote_text(post.body, post.user, "markdown")
 
     ip = request.META.get('REMOTE_ADDR', '')
     form = build_form(AddPostForm, request, topic=topic, forum=forum,
@@ -160,7 +160,7 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save();
-	if not topic:
+        if not topic:
             post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
 
