@@ -61,7 +61,7 @@
 			</td>
 			<td class="lastPost">
 				{%if topic.last_post %}
-				{{ topic.last_post.user|user_link }}<br />
+				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>

@@ -66,7 +66,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     # 'simplestats.middleware.RegexLoggingMiddleware',
-    'django.middleware.gzip.GZipMiddleware', # Remove this, when load gets to high
+    'django.middleware.gzip.GZipMiddleware', # Remove this, when load gets to high or attachments are enabled
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,8 +118,9 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-PYBB_ATTACHMENT_ENABLE = False
+PYBB_ATTACHMENT_ENABLE = False # disable gzip middleware when enabling attachments
 PYBB_DEFAULT_MARKUP = 'markdown'
+PYBB_FREEZE_FIRST_POST = False
 
 ##############################################
 # Link classification and other Markup stuff #

@@ -18,8 +18,7 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        #fields = ['body', 'markup',] # don't use markup, doesn't work
-        fields = ['body',]
+        fields = ['body', 'markup',]
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -30,7 +29,7 @@ class AddPostForm(forms.ModelForm):
 
         self.fields.keyOrder = ['name', 
                                 'body', 
-                                #'markup', 
+                                'markup', 
                                 'attachment']
 
         if self.topic:
@@ -53,7 +52,7 @@ class AddPostForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         if self.forum:
-	    topic_is_new = True
+            topic_is_new = True
             topic = Topic(forum=self.forum,
                           user=self.user,
                           name=self.cleaned_data['name'])
@@ -63,7 +62,7 @@ class AddPostForm(forms.ModelForm):
             topic = self.topic
 
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
-                    #markup=self.cleaned_data['markup'],
+                    markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
         post.save(*args, **kwargs)
 
@@ -95,7 +94,7 @@ class AddPostForm(forms.ModelForm):
 class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['body']
+        fields = ['body', 'markup']
 
     def save(self, *args, **kwargs):
         post = super(EditPostForm, self).save(commit=False)
