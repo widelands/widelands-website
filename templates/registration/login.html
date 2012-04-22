@@ -15,7 +15,7 @@ Login - {{ block.super }}
 		Please try again.
 	</p>
 {% endif %}
-	<form method="post" action="https://{{ request.META.HTTP_HOST }}/accounts/login/">
+	<form method="post" action="http{% if request.is_secure %}s{% endif %}://{{ request.META.HTTP_HOST }}/accounts/login/" id="login_form">
 		<table>
 			<tr>
 				<td>

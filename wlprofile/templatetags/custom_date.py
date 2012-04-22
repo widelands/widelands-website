@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
+from settings import DEFAULT_TIME_ZONE, DEFAULT_TIME_DISPLAY
 
 register = template.Library()
 
@@ -128,12 +129,12 @@ def custom_date( date, user ):
     If this user is logged in, return his representation,
     otherwise, return a sane default
     """
-    if user.is_anonymous():
-        return django_date("j F Y", date)
+    if not user.is_authenticated():
+        return do_custom_date( DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE) )
     try:
         return do_custom_date( user.get_profile().time_display, date, user.get_profile().time_zone )
     except ObjectDoesNotExist:
-        return django_date("j F Y", date)
+        return do_custom_date( DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE) )
 
 custom_date.is_safe = False
 

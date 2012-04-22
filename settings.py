@@ -103,12 +103,14 @@ ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
 # Wiki configuration #
 ######################
 WIKI_LOCK_DURATION = 30
+WIKI_URL_RE = r'[:\-\w ]+'
 
 ######################
 # User configuration #
 ######################
 AUTH_PROFILE_MODULE = 'wlprofile.Profile'
 DEFAULT_TIME_ZONE = 3
+DEFAULT_TIME_DISPLAY = r"%ND(m-d-y), H:i"
 DEFAULT_MARKUP ="markdown"
 SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
