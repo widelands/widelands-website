@@ -29,16 +29,17 @@
 
 <script type="text/javascript">
 $("#login_box").submit( function(data) {
-	var frameName = ("login_frame"+(new Date()).getTime());
-	var frameSrc = "http://{{ request.META.HTTP_HOST }}/accounts/login/?next="+window.location.pathname;
-	var loginFrame = $("<iframe name=\""+frameName+"\" src=\""+frameSrc+"\" />");
+	var frameName = "login_frame" + (new Date()).getTime();
+	var frameSrc = "http://{{ request.META.HTTP_HOST }}/accounts/login/?next="
+					+ window.location.pathname + window.location.search + window.location.hash;
+	var loginFrame = $("<iframe name=\"" + frameName + "\" src=\"" + frameSrc + "\" />");
 
-	$("#login_box input[type='submit']").attr("disabled","disabled")
+	$("#login_box input[type='submit']").attr("disabled", "disabled")
 	loginFrame.css("display", "none");
 	loginFrame.load(function(data){
 		// get required fields
-		my_user_field = $(window.frames[ frameName ].document.getElementById( "id_username" ));
-		my_pass_field = $(window.frames[ frameName ].document.getElementById( "id_password" ));
+		my_user_field = $(window.frames[ frameName ].document.getElementById("id_username"));
+		my_pass_field = $(window.frames[ frameName ].document.getElementById("id_password"));
 		parent_user_field = $("#id_login_username");
 		parent_pass_field = $("#id_login_password");
 		submitted_field = $("#submitted");
@@ -49,7 +50,7 @@ $("#login_box").submit( function(data) {
 			my_pass_field.val(parent_pass_field.val());
 			// submit form to parent
 			submitted_field.val("true");
-			login_form = $(window.frames[ frameName ].document.getElementById( "login_form" ));
+			login_form = $(window.frames[ frameName ].document.getElementById("login_form"));
 			login_form.attr('target', "_parent");
 			login_form.submit();
 		}

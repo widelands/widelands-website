@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.views.generic.simple import redirect_to
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
@@ -280,7 +280,8 @@ def edit_article(request, title,
                           {'title': new_article.title,
                            'group_slug': group_slug})
 
-            return redirect_to(request, url)
+            #return redirect_to(request, url)
+            return redirect("wiki_article", title=new_article.title)
 
     elif request.method == 'GET':
         user_ip = get_real_ip(request)

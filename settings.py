@@ -104,6 +104,7 @@ ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
 ######################
 WIKI_LOCK_DURATION = 30
 WIKI_URL_RE = r'[:\-\w ]+'
+WIKI_WORD_RE = r'[:\-\w ]+'
 
 ######################
 # User configuration #

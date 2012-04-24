@@ -7,14 +7,31 @@
 
 {% block extra_head %}
 {{ block.super }}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.lightbox-0.5.js"></script>
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/jquery.lightbox-0.5.css" />
+<!-- Add fancyBox with button helper -->
+<link rel="stylesheet" href="{{ MEDIA_URL }}/fancybox/jquery.fancybox.css?v=2.0.6" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ MEDIA_URL }}/fancybox/jquery.fancybox.pack.js?v=2.0.6"></script>
+<link rel="stylesheet" href="{{ MEDIA_URL }}/fancybox/helpers/jquery.fancybox-buttons.css?v=1.0.2" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ MEDIA_URL }}/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.2"></script>
+<link rel="stylesheet" href="{{ MEDIA_URL }}/fancybox/helpers/jquery.fancybox-thumbs.css?v=2.0.6" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ MEDIA_URL }}/fancybox/helpers/jquery.fancybox-thumbs.js?v=2.0.6"></script>
 <script type="text/javascript">
-// {{{ Javascript Stuff 
-	$(function() {
-		$('.screenshot_list a').lightBox();
+	$(document).ready(function() {
+		$(".fancybox").fancybox({
+			openEffect : 'elastic',
+			closeEffect : 'elastic',
+			closeBtn : false,
+			helpers : {
+				title : {
+					type : 'outside'
+				},
+				buttons : {},
+				thumbs	: {
+					width	: 50,
+					height	: 50
+				}
+			}
+		});
 	});
-// }}}
 </script>
 {% endblock %}
 
@@ -27,7 +44,7 @@
 	<ul class="screenshot_list">
 	{% for s in c.screenshots.all %}
 		<li>
-			<a href="{{ s.screenshot.url }}" title="{{ s.name }}: {{ s.comment }}">
+			<a class="fancybox" rel="{{ c.slug }}" href="{{ s.screenshot.url }}" title="{{ s.name }}: {{ s.comment }}">
 				<img src="{{ s.thumbnail.url }}" alt="" />
 			</a>
 			<br />

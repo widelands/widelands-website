@@ -9,29 +9,29 @@
 			<li><a href="{% url wlpoll_archive %}">Poll Archive</a></li>
 		</ul>
 	</li>
-	<li><a href="{% url wiki_article "GeneralInfo" %}">The Game</a>
+	<li><a href="{% url wiki_article "Description" %}">The Game</a>
 		<ul>
 			<li><a href="{% url wiki_article "Description" %}">Description</a></li>
-			<li><a href="{% url wiki_article "DownloadPage" %}">Download</a></li>
+			<li><a href="{% url wiki_article "Download" %}">Download</a></li>
 			<li><a href="{% url wlscreens_index %}">Screenshots</a></li>
-			<li><a href="{% url wiki_article "WidelandsArtwork" %}">Artwork</a></li>
+			<li><a href="{% url wiki_article "Artwork" %}">Artwork</a></li>
 			<li><a href="{% url wlmaps_index %}">Maps</a></li>
-			<li><a href="/changelog">Changelog</a></li>
-			<li><a href="/developers">Developers</a></li>
+			<li><a href="{% url changelog %}">Changelog</a></li>
+			<li><a href="{% url developers %}">Developers</a></li>
 		</ul>
 	</li>
 	<li><a href="{% url wiki_index %}">Wiki</a>
 		<ul>
-			<li><a href="{% url wiki_article "GameManual" %}">Game Manual</a></li>
-			<li><a href="{% url wiki_article "CreatingGameContent" %}">Creating Game Content</a></li>
-			<li><a href="{% url wiki_article "TheWidelandsProject" %}">The Widelands Project</a></li>
+			<li><a href="{% url wiki_article "Game Manual" %}">Game Manual</a></li>
+			<li><a href="{% url wiki_article "Creating Game Content" %}">Creating Game Content</a></li>
+			<li><a href="{% url wiki_article "The Widelands Project" %}">The Widelands Project</a></li>
 		</ul>
 	</li>
 	<li><a href="{% url pybb_index %}">Forums</a>
 		<ul>
 			<li><a href="{% url pybb_forum 1 %}">Technical Help</a></li>
-			<li><a href="{% url pybb_forum 2 %}">Game suggestions</a></li>
-			<li><a href="{% url pybb_forum 3 %}">Playing widelands</a></li>
+			<li><a href="{% url pybb_forum 2 %}">Game Suggestions</a></li>
+			<li><a href="{% url pybb_forum 3 %}">Playing Widelands</a></li>
 			<li><a href="{% url pybb_forum 4 %}">Editor Forum</a></li>
 			<li><a href="{% url pybb_forum 5 %}">[Deutsch] - Spielerforum</a></li>
 			<li><a href="{% url pybb_forum 6 %}">[Español] - Foro de jugadores</a></li>
@@ -44,14 +44,12 @@
 		</ul>
 	</li>
 	<li><a href="{% url webchat_index %}">Chat</a></li>
-	<li><a href="{% url wiki_article "DevelopmentPage" %}">Development</a>
+	<li><a href="{% url wiki_article "Development" %}">Development</a>
 		<ul>
-			<li><a href="{% url wiki_article "WannaHelp" %}">Wanna Help?</a></li>
-			<li><a href="{% url wiki_article "DevelopmentPage" %}">Development</a></li>
-			<li><a href="/developers">Developers</a></li>
-			<li><a href="{% url wiki_article "MailLists" %}">Mailing Lists</a></li>
+			<li><a href="{% url wiki_article "Contribute" %}">Contribute</a></li>
+			<li><a href="{% url developers %}">Developers</a></li>
 			<li><a href="https://bugs.launchpad.net/widelands">Widelands Bugtracker</a></li>
-			<li><a href="https://bugs.launchpad.net/widelands">Website Bugtracker</a></li>
+			<li><a href="https://bugs.launchpad.net/widelands-website">Website Bugtracker</a></li>
 		</ul>
 	</li>
 </ul>
