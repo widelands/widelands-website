@@ -4,170 +4,60 @@
 {% endcomment %}
 
 {% load custom_date %}
-
-{% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/modal_windows.css" />
-{{ block.super }}
-
-{% endblock %}
-
-{% block title %}{{ block.super }}{% endblock %}
+{% load wlprofile %}
+{% load wlmaps_extra %}
+{% load pybb_extras %}
 
 {% block content %}
-<script src="{{ MEDIA_URL}}/js/jqModal.js" type="text/javascript"></script>
-<script type="text/javascript">
-$().ready(function() {
-  $('#upload_map_dialog')
-    .jqDrag('.jqDrag')
-    .jqm({
-      trigger:'#umdTrigger',
-      overlay: 50,
-      overlayClass: 'modalOverlay',
-      onShow: function(h) {
-          /* calculate correct position on screen */
-          o = h.w 
-          if(o.css("top") == "0px") {
-              cw = document.body.clientWidth;
-              ch = document.body.clientHeight;
-
-              top = document.body.scrollTop + (ch-o.height())/2;
-              left = (cw-o.width())/2;
-
-              o.css("top",top+"px").css("left",left+"px");
-          }
-          /* callback executed when a trigger click. Show notice */
-          o.css('opacity',1).slideDown(); 
-      },
-      });
-});
-</script>    
-
-<div id="map_list">
-    <div align="right">
-        <a href="#" id="umdTrigger">Upload a new map</a>
-    </div>
-
-    <h1>Widelands maps</h1>
-    
-    <table cellspacing="1" width="100%">
-        <tr align="center">
-            <th width="">&nbsp;</th>
-            <th width="" nowrap="nowrap" align="left">Name</th>
-            <th width="" nowrap="nowrap">Author</th>
-            <th width="" nowrap="nowrap">Max Players</th>
-            <th width="" nowrap="nowrap">Size</th>
-            <th width="" nowrap="nowrap">World</th>
-            <th width="" nowrap="nowrap">Uploaded</th>
-            <th width="" nowrap="nowrap">Downloaded</th>
-            <th width="" nowrap="nowrap">Details</th>
-        </tr>
-
-        {% for o in object_list %}
-        <tr class="{% cycle "odd" "even" %}">
-            <td><a href="{{ o.get_absolute_url }}"><img src="{{ MEDIA_URL }}{{ o.minimap.url }}" alt="{{ o.name }}"/></a></td>
-            <td><a href="{{ o.get_absolute_url }}">{{ o.name }}</a></td>
-            <td>{{ o.author }}</td>
-            <td>{{ o.nr_players }}</td>
-            <td>{{ o.w }} x {{ o.h }}</td>
-            <td>{{ o.world_name|title }}</td>
-            <td>At {{ o.pub_date|custom_date:user }} by {{ o.uploader.username }}</td>
-            <td>{{ o.nr_downloads }} times</td>
-            <td>
-               <p><a href="{{ o.get_absolute_url }}">Details</a></p>
-               <p><a href="{% url wlmaps_download o.slug %}">Direct Download</a></p>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-
+{% if user.is_authenticated %}
+<a href="{% url wlmaps_upload %}" class="posRight invertedColor">Upload a new map</a>
+{% endif %}
+<h1>Maps</h1>
+<div class="blogEntry">
+	{% pybb_pagination _('Maps') %}
+	<br /><br />
+	<table class="forum">
+		{% for map in maps %}
+		<tr class="{% cycle "odd" "even" %}">
+			<td><a href="{{ map.get_absolute_url }}"><img class="minimap" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" /></a></td>
+			<td>
+				<h3><a class="invertedColor" href="{{ map.get_absolute_url }}">{{ map.name }}</a></h3>
+				<table>
+					<tr>
+						<td class="prop">Author:</td><td>{{ map.author }}</td>
+						<td class="spacer"></td>
+						<td class="prop">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
+					</tr>
+					<tr>
+						<td class="prop">World:</td><td>{{ map.world_name|title }}</td>
+						<td class="spacer"></td>
+						<td class="prop">Max. Players:</td><td>{{ map.nr_players }}</td>
+					</tr>
+					<tr>
+						<td class="prop">Rating:</td>
+						<td colspan="4">{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)</td>
+					</tr>
+					<tr>
+						<td class="prop">Upload:</td>
+						<td colspan="4">by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}</td>
+					</tr>
+					<tr>
+						<td class="prop">Downloads:</td><td>{{ map.nr_downloads }}</td>
+						<td class="spacer"></td>
+						<td colspan="2">
+							<button onclick="window.location.href='{% url wlmaps_download map.slug %}';">
+								<img src="{{MEDIA_URL}}/img/download.png" alt ="" class="middle" />
+								<span class="middle">Direct Download</span>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<br />
+	{% pybb_pagination _('Maps') %}
+	<br />
 </div>
-
-<!-- Modal upload box -->
-<div id="upload_map_dialog" class="jqmDialog">
-    <img src="{{ MEDIA_URL }}/img/close_icon.png" alt="close" class="jqmClose" />
-
-    <div class="box_title jqDrag">
-        <h3 class="box_title">Upload a new map</h3>
-    </div>
-
-    <div class="box_content">
-        <form class="upload_form" enctype="multipart/form-data" action="{% url wlmaps_upload %}" method="post">{% csrf_token %}
-            <label for="id_mapfile">Select map:</label>
-            <input type="file" id="id_mapfile" name="mapfile"/><br />
-            <label for="id_comment">Upload comment:</label><br />
-            <textarea id="id_comment" rows="10" name="comment" style="width: 100%"></textarea>
-            <br/>
-
-            <!--<input class="upload_button" type="button" value="Upload" />-->
-            <input type="submit" value="Upload" />
-            <input class="cancel_button" type="button" value="Cancel" />
-        </form>
-
-        <div class="progress_indicator"></div>
-    </div>
-
-</div>
-
-<script type="text/javascript">
-$(function() {
-    /* Bind cancel button */
-    $('.upload_form .cancel_button').click( function() {
-        $('#upload_map_dialog').jqmHide();
-    });
-
-    /* On submit, create a hidden iframe, use this as target for
-       our submit, extract the result and then delete it */
-    jQuery(".upload_form").submit( function(data) {
-            var submittingForm = jQuery( this );
-            var frameName = ("upload"+(new Date()).getTime());
-            var uploadFrame = jQuery("<iframe name=\""+frameName+"\" />");
-
-            // Disable the submit and cancel until a unsuccesfull reply 
-            // was returned
-            $(".upload_form input[type='submit']").attr("disabled","disabled")
-            $(".upload_form input[type='button']").attr("disabled","disabled")
-            
-            o = $('#upload_map_dialog .progress_indicator')
-            o.html("<h3>Uploading...</h3> <div>Uploading your map. Please wait...</div>");
-            uploadFrame.css("display", "none");
-            uploadFrame.load(function(data){
-                // get the result
-                fbody = jQuery(window.frames[ frameName ].document.getElementsByTagName( "body" )[ 0 ]);
-                
-                // Safari does beautification of the returned text (with pre tags)
-                // so we extract the data using a regular expression
-                json_data = eval('(' +  /\{.*\}/.exec(fbody.html())[0] + ')') ;
-                
-                //submit is complete here, check the result
-                o = $('#upload_map_dialog .progress_indicator')
-                if(json_data["success_code"] == 0) {
-                o.html('<h3>Success!</h3><br /> Your map has been added! Will reload page in 5s');
-                setTimeout(function(){
-                    $('#upload_map_dialog').jqmHide();
-                    window.location.reload(); 
-                },500);
-                
-                } else {
-                o.html('<h3>An error occured:</h3><br /> <div class="errormessage">' + json_data["success_code"] + ': ' + json_data["error_msg"] + '</div>');
-                
-                // Enable the submit and cancel because the user might want to 
-                // try it again
-                $(".upload_form input[type='submit']").removeAttr("disabled")
-                $(".upload_form input[type='button']").removeAttr("disabled")
-                }
-                
-                // make sure the iframe is removed again
-                setTimeout(function(){
-                    uploadFrame.remove();},100);
-
-                return false;
-                });
-            jQuery('body:first').append(uploadFrame);
-            
-            submittingForm.attr('target', frameName);
-        });
-});
-</script>
-
-
 {% endblock %}

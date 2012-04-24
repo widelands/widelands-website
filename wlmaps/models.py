@@ -12,17 +12,6 @@ if settings.USE_SPHINX:
 
 from djangoratings.fields import AnonymousRatingField
 
-class MapManager(models.Manager):
-    def create(self,**kwargs):
-        if 'slug' not in kwargs:
-            name = kwargs['name']
-            slug = slugify(name)
-            m = super(MapManager,self).create(slug=slug, **kwargs)
-        else:
-            m = super(MapManager,self).create(**kwargs)
-
-        return m
-
 
 class Map(models.Model):
     name = models.CharField( max_length = 255, unique = True )
@@ -33,15 +22,15 @@ class Map(models.Model):
     nr_players = models.PositiveIntegerField( verbose_name = 'Max Players')
 
     descr = models.TextField( verbose_name = "Description" )
-    minimap = models.ImageField( upload_to ="/wlmaps/minimaps/" )
-    file = models.FileField( upload_to ="/wlmaps/maps/" )
+    minimap = models.ImageField( verbose_name = "Minimap", upload_to = settings.MEDIA_ROOT + "/wlmaps/minimaps/" )
+    file = models.FileField( verbose_name = "Mapfile", upload_to = settings.MEDIA_ROOT + "/wlmaps/maps/" )
 
     world_name = models.CharField( max_length = 50  )
 
     pub_date = models.DateTimeField( default = datetime.datetime.now )
-    uploader_comment = models.TextField( )
+    uploader_comment = models.TextField( verbose_name = "Uploader comment", blank = True )
     uploader = models.ForeignKey(User)
-    nr_downloads = models.PositiveIntegerField( verbose_name ="Download count", default = 0)
+    nr_downloads = models.PositiveIntegerField( verbose_name = "Download count", default = 0)
 
     rating = AnonymousRatingField(range=10, can_change_vote = True)
 
@@ -50,6 +39,7 @@ class Map(models.Model):
             weights = {
                 'name': 100,
                 'author': 60,
+                'uploader_comment': 40,
                 }
         )
 
@@ -57,11 +47,16 @@ class Map(models.Model):
         ordering  = ('-pub_date',)
         get_latest_by = 'pub_date'
 
-    objects = MapManager()
-
     @models.permalink
     def get_absolute_url( self ):
         return ("wlmaps_view", None, {"map_slug": self.slug } )
 
     def __unicode__(self):
         return u'%s by %s' % (self.name, self.author)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        map = super(Map, self).save(*args, **kwargs)
+        return map

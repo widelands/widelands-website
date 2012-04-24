@@ -3,9 +3,13 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+{% load custom_date %}
+{% load wlmaps_extra %}
+{% load wlprofile %}
+
+
 {% block extra_head %}
 {{ block.super }}
-
 {% if not user.is_anonymous %}
 <script src="{{ MEDIA_URL}}/js/jquery.sexy-vote.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -16,52 +20,79 @@ $(function() {
         maxScore: 10,
         messages: ["","","","","","","","","",""],
         fn: function(e, score) {
-            $.post("{% url wlmaps_rate object.slug %}",{ vote: score });
+            $.post("{% url wlmaps_rate map.slug %}",{ vote: score });
             }
         });
 });
 </script>
 {% endif %}
-
 {% endblock %}
 
-{% load custom_date %}
-{% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
+{% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
 {% block content %}
-<div class="map_details">
-   
-   <h1>{{ object.name }}</h1>
-   Votes: {{ object.rating.votes }}, Average: {{ average_rating }}
-   {% if not user.is_anonymous %}
-   <span id="vote"></span>
-   {% else %}
-   (Login to vote)
-   {% endif %}
-   <span class="author">by {{ object.author }}</span>
-   <span class="uploader">uploaded by {{ object.uploader.username }} at {{ object.pub_date|custom_date:user }}</span>
+<h1>Map: {{ map.name }}</h1>
+<div class="blogEntry">
+	<a href="{% url wlmaps_index %}">Maps</a> &#187; 
+	{{ map.name }}
+	<br /><br />
+	<img class="posLeft map" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" />
 
-   <span class="dimensions">{{ object.w }}x{{ object.h }}</span>, <span class="world">{{ object.world_name|title }}</span>, <span class="nr_players"> maximum of {{ object.nr_players }} players.</span>
-   <br/>
-   <img src="{{ MEDIA_URL }}{{ object.minimap.url }}" alt="{{ object.name }}" />
-
-   <div class="map_description">
-      {{ object.descr }}
-   </div>
-
-   <h3>Comment by uploader:</h3>
-   <div class="uploader_comment">
-      {{ object.uploader_comment }}
-   </div>
-   
-   <span class="nr_downloads">{{ object.nr_downloads }} times</span><br />
-
-   <a href="{% url wlmaps_download object.slug %}">Download</a>
-
-   <!-- Comments below -->
-   <h3>Comments on this Map:</h3>
-   {% include "threadedcomments/inlines/comments.html" %}
-
+	<div style="display: inline-block;">
+		<h3>Description:</h3>
+		<p>{{ map.descr }}</p>
+	</div>
+	<br />
+	<div style="display: inline-block;">
+		<h3>Comment by uploader:</h3>
+		<p>{{ map.uploader_comment }}</p>
+	</div>
+	<br />
+	<div style="display: inline-block;">
+		<h3>Basic Information:</h3>
+		<table>
+			<tr>
+				<td class="prop">Author:</td><td>{{ map.author }}</td>
+			</tr>
+			<tr>
+				<td class="prop">World:</td><td>{{ map.world_name|title }}</td>
+			</tr>
+			<tr>
+				<td class="prop">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
+			</tr>
+			<tr>
+				<td class="prop">Max. Players:</td><td>{{ map.nr_players }}</td>
+			</tr>
+			<tr>
+				<td class="prop">Downloads:</td><td>{{ map.nr_downloads }}</td>
+			<tr>
+			<tr>
+				<td class="prop">Rating:</td>
+				<td>
+					{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)
+					{% if not user.is_anonymous %}
+					<span id="vote"></span>
+					{% else %}
+					- Login to vote
+					{% endif %}
+				</td>
+			</tr>
+				<td class="prop">Upload:</td><td>by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}</td>
+			</tr>
+		</table>
+	</div>
+	<br /><br />
+	<button onclick="window.location.href='{% url wlmaps_download map.slug %}';">
+		<img src="{{MEDIA_URL}}/img/download.png" alt ="" class="middle" />
+		<span class="middle">Download this map</span>
+	</button>
+	<div style="clear: left;"></div>
 </div>
 
+<div class="blogEntry">
+	<h3>Comments on this Map:</h3>
+	{% with map as object %}
+		{% include "threadedcomments/inlines/comments.html" %}
+	{% endwith %}
+</div>
 {% endblock %}

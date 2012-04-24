@@ -211,6 +211,11 @@ BZR_URL = r"http://bazaar.launchpad.net/%%7Ewidelands-dev/widelands/trunk/revisi
 ###############
 THUMBNAIL_SIZE = ( 160, 160 )
 
+########
+# Maps #
+########
+MAPS_PER_PAGE = 10
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
