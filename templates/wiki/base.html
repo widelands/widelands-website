@@ -5,7 +5,8 @@ Wiki - {{ block.super }}
 {% endblock %}
 
 {% block extra_head %}
+{{ block.super}}
 <link rel="alternate" type="application/rss+xml" title="Wiki History (RSS)" href="{% url wiki_history_feed "rss" %}" />
 <link rel="alternate" type="application/atom+xml" title="Wiki History (Atom)" href="{% url wiki_history_feed "atom" %}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/wiki.css" />{{ block.super}}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/wiki.css" />
 {% endblock %}

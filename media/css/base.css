@@ -20,11 +20,11 @@ a {
 }
 
 a:hover {
-	color: #007700;
+	color: #181;
 }
 
 a.invertedColor {
-	color: #007700;
+	color: #181;
 }
 
 a.invertedColor:hover {
@@ -68,7 +68,7 @@ input.radio {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: #007700;
+	color: #181;
 	margin-top: 0px;
 	font-weight: normal;
 }
@@ -103,11 +103,11 @@ td {
 }
 
 .green {
-	color: #007700;
+	color: #181;
 }
 
 .green a {
-	color: #007700;
+	color: #181;
 }
 
 .green a:hover {
@@ -329,6 +329,8 @@ div.blogEntry img.title {
 
 div.blogEntry p {
 	text-align: justify;
+	margin: 0px;
+	margin-bottom: 10px;
 }
 
 div.blogEntry hr {

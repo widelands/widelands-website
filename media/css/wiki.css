@@ -1,96 +1,55 @@
-/**************************/
-/* General Style elements */
-/**************************/
-.wiki_article h1 {
-    font-size: 2.5em;
-    margin: 10px 0px;
-}
-.wiki_article h2 {
-    font-size: 2em;
-    margin: 25px 3px 10px;
-    line-height: 70%;
-}
-.wiki_article h3 {
-    font-size: 1.4em;
-    margin: 5px 5px;
-}
-.wiki_article h4 {
-    font-size: 1.30em;
-    margin: 5px 10px;
-    text-decoration: underline;
-}
-.wiki_article h5 {
-    font-size: 1.2em;
-    margin: 5px 10px;
-    text-decoration: underline;
-    font-style: italic;
-}
-.wiki_article h6 {
-    font-size: 1.1em; 
-    margin: 5px 10px;
-    font-style: italic;
+.toc {
+	border: 1px solid black;
+	display: inline-block;
+	padding: 8px;
+	background-image: url("../img/black50.png");
 }
 
-.wiki_article h1:first-letter,.wiki_article h2:first-letter,.wiki_article h3:first-letter {
-     vertical-align: baseline;
-	 color: #7070FF;
-	 font-size: 180%;
-	 font-family: Cretino, "Bitstream Vera Serif", serif;
-	 font-weight: bold;
+.toc ul {
+	margin: 0px;
+	padding-left: 20px;
 }
-.wiki_article h3:first-letter {
-    color: rgb(156,156,86);
-}
-
-.wiki_article p {
-    margin: 7px 10px; 
-}
-
 
 /***********/
 /* History */
 /***********/
 .history_list {
-    width: 100%;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.history_list  td {
+	border: 1px solid black;
+	padding: 4px;
+}
+
+.history_list th {
+	border: 1px solid black;
+	background-image: url("../img/black50.png");
+	padding: 4px;
 }
 
 /******************/
 /* Edit Wiki Page */
 /******************/
 #edit_wiki_page_form {
-    width: 100%;
+	width: 100%;
 }
+
 #edit_wiki_page_form th {
-    background: None;
-    margin-top: 15px;
-    width: auto;
+	text-align: left;
 }
+
 #edit_wiki_page_form #id_title,#id_comment {
-    width: 100%;
+	width: 98%;
 }
-    
+
 #id_content {
-   width: 100%;
-   height: 400px;
+	width: 98%;
+	height: 400px;
 }
+
 #id_summary {
-   width: 100%;
-   height: 100px;
+	width: 98%;
+	height: 100px;
 }
-
-/*************/
-/* Changeset */
-/*************/
-
-.changeset_content {
-	line-height: 120%;
-	border: 0px;
-	padding: 2px;
-	padding-top: 5px;
-	padding-left: 15px;
-	background-color: #3F3F3F;
-	background: url(../img/background-3F3F3F.png);
-}
-
-
-

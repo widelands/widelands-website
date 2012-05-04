@@ -6,7 +6,6 @@
 {{ article.title }} - {{block.super}}
 {% endblock %}
 
-
 {% block extra_head %}
 <link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }} (RSS)" href="{% url wiki_article_history_feed article.title "rss" %}" />
 <link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }} (Atom)" href="{% url wiki_article_history_feed article.title "atom" %}" />
@@ -14,30 +13,32 @@
 {% endblock %}
 
 {% block content %}
-   <div class="wiki_article">
-       <div align="right">
-        {% if article.id %}
-            <a href="{% url wiki_edit article.title %}">{% trans "Edit this article" %}</a>
-            |
-            <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
-            {% if can_observe %}
-               | 
-               {% if is_observing %} 
-                  <a href="{% url wiki_stop_observing article.title %}">{% trans "Stop observing" %}</a>
-               {% else %}
-                  <a href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
-               {% endif %}
-            {% endif %}
-        {% else %}
-            <a href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
-        {% endif %}
-       </div>
-        {% if not article.id %}
-            <p>{% trans "This article does not exist." %}
-            <a href="{% url wiki_edit article.title %}">{% trans "Create it now?" %}</a></p>
-        {% endif %}
-        
-        {% render_content article %}
-    </div>
+<div class="posRight">
+	{% if article.id %}
+		<a class="invertedColor" href="{% url wiki_edit article.title %}">{% trans "Edit this article" %}</a>
+		|
+		<a class="invertedColor" href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
+		{% if can_observe %}
+			| 
+			{% if is_observing %} 
+			<a class="invertedColor" href="{% url wiki_stop_observing article.title %}">{% trans "Stop observing" %}</a>
+			{% else %}
+			<a class="invertedColor" href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
+			{% endif %}
+		{% endif %}
+	{% else %}
+		<a href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
+	{% endif %}
+</div>
+<h1>{{ article.title }}</h1>
+<div class="blogEntry">
+	{% if not article.id %}
+		<p>
+			{% trans "This article does not exist." %}
+			<a href="{% url wiki_edit article.title %}">{% trans "Create it now?" %}</a>
+		</p>
+	{% endif %}
+	{% render_content article %}
+</div>
 {% endblock %}
 
