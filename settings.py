@@ -137,7 +137,7 @@ SMILEYS = [
     ("O:-)", "face-angel.png"),
     ("O:)", "face-angel.png"),
     (":-/", "face-confused.png"),
-    (":/", "face-confused.png"),
+    #(":/", "face-confused.png"),
     ("B-)", "face-cool.png"),
     ("B)", "face-cool.png"),
     (":'-(", "face-crying.png"),

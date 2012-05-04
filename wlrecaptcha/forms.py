@@ -38,11 +38,11 @@ class RecaptchaWidget(Widget):
 </script>
 ''' % self.options
         return '''%(options)s<script type="text/javascript"
-   src="http://api.recaptcha.net/challenge?k=%(public_key)s">
+   src="https://www.google.com/recaptcha/api/challenge?k=%(public_key)s">
 </script>
 
 <noscript>
-   <iframe src="http://api.recaptcha.net/noscript?k=%(public_key)s"
+   <iframe src="https://www.google.com/recaptcha/api/noscript?k=%(public_key)s"
        height="300" width="500" frameborder="0"></iframe><br />
    <textarea name="recaptcha_challenge_field" rows="3" cols="40">
    </textarea>
