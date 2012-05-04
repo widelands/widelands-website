@@ -3,10 +3,11 @@
 	display: inline-block;
 	padding: 8px;
 	background-image: url("../img/black50.png");
+	font-size: 12px;
 }
 
 .toc ul {
-	margin: 0px;
+	margin: 2px 0px;
 	padding-left: 20px;
 }
 
