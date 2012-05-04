@@ -17,14 +17,6 @@
 	padding: 8px;
 }
 
-.even {
-	background-image: url("../img/black20.png");
-}
-
-.odd {
-	background-image: url("../img/black50.png");
-}
-
 .forumIcon {
 	width: 50px;
 }

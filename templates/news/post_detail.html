@@ -4,29 +4,29 @@
 {% load threadedcommentstags %}
 {% load news %}
 
-{% block title %}{{ object.title }} - {{ block.super }} {% endblock %}
-{% block body_class %}{{ block.super }} post_detail{% endblock %}
-{% block body_id %}post_{{ object.id }}{% endblock %}
+{% block title %}{{ object.title }} - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/news.css" />{{ block.super }}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/comments.css" />{{ block.super }}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/news.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/comments.css" />
 {% endblock %}
 
 {% block content %}
-    <h2>{{ object.title }}</h2>
-    <p class="other_posts">
-    {% if object.get_previous_by_publish %}
-    <a class="previous" href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{ object.get_previous_post }}</a>
-    {% endif %}
-    {% if object.get_next_by_publish %}
-    | <a class="next" href="{{ object.get_next_post.get_absolute_url }}">{{ object.get_next_post }} &raquo;</a> 
-    {% endif %}
-    </p>
+<h1>{{ object.title }}</h1>
+{% if object.get_previous_by_publish %}
+<a class="invertedColor" href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{ object.get_previous_post }}</a>
+{% endif %}
+|
+{% if object.get_next_by_publish %}
+<a class="invertedColor" href="{{ object.get_next_post.get_absolute_url }}">{{ object.get_next_post }} &raquo;</a> 
+{% endif %}
+<br /><br />
 
-    {% include "news/inlines/post_detail.html" %}
-    
-    <!-- Comments below -->
-    <h3>Comments on this Post:</h3>
-    {% include "threadedcomments/inlines/comments.html" %}
+{% include "news/inlines/post_detail.html" %}
+
+<div class="blogEntry">
+	<h3>Comments on this Post:</h3>
+	{% include "threadedcomments/inlines/comments.html" %}
+</div>
 {% endblock %}

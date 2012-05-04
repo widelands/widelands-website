@@ -117,6 +117,14 @@ td {
 	font-size: 12px;
 }
 
+.even {
+	background-image: url("../img/black20.png");
+}
+
+.odd {
+	background-image: url("../img/black50.png");
+}
+
 .placeholder {
   color: #aaa !important;
 }
@@ -335,7 +343,7 @@ div.blogEntry p {
 
 div.blogEntry hr {
 	height: 1px;
-	background: #555555;
+	background: #998;
 	border: none;
 	clear: left;
 }

@@ -5,65 +5,53 @@
 {% load wlprofile %}
 {% load threadedcommentstags %}
 
-    {% get_threaded_comment_form as form %}
-    {% include "threadedcomments/inlines/reply_to.js" %}
-  
-    {% get_threaded_comment_tree for object as tree %}
-    {% for comment in tree %}
-        {% if comment.user.wlprofile.avatar %}
-        <div style="margin-left: {{ comment.depth }}em; min-height: 80px;" class="comment {% cycle "odd" "even" %}"> 
-            <span class="avatar" style="margin: 2px; margin-right: 10px; float: left;">
-                <a href="{% url profile_view comment.user %}">
-                <img src="{{ comment.user.wlprofile.avatar.url }}" />
-                </a>
-            </span>
-        {% else %}
-        <div style="margin-left: {{ comment.depth }}em;" class="comment {% cycle "odd" "even" %}">
-        {% endif %}
-            <p class="author">{{ comment.user|user_link }} said:</p>
-            {% auto_transform_markup comment %}
-            {% if user.is_authenticated %}
-            <p><a id="c{{ comment.id }}" href="javascript:show_reply_form('c{{ comment.id }}','{% get_comment_url object comment %}','{{ comment.user.username }}')">Reply</a></p>
-            {% endif %}
-        </div>
-    {% endfor %}
-    <br />
+	{% get_threaded_comment_form as form %}
+	{% include "threadedcomments/inlines/reply_to.js" %}
+
+	{% get_threaded_comment_tree for object as tree %}
+	{% for comment in tree %}
+		<div id="c{{ comment.id }}" class="comment {% cycle "odd" "even" %}" style="margin-left: {{ comment.depth }}cm;">
+			<table>
+				<tr>
+					<td class="author" rowspan="2">
+						<a href="{% url profile_view comment.user %}">
+							<img style="width: 50px; height: 50px;" src="{{ comment.user.wlprofile.avatar.url }}" />
+						</a>
+						<br />
+						<span class="small">{{ comment.user|user_link }}</span>
+					</td>
+					<td class="text">
+						{% auto_transform_markup comment %}
+					</td>
+				</tr>
+				<tr>
+					<td class="reply_link small">
+						{% if user.is_authenticated %}
+						<a href="javascript:show_reply_form('c{{ comment.id }}','{% get_comment_url object comment %}', {{ comment.depth }})">Reply</a>
+						{% endif %}
+					</td>
+				</tr>
+			</table>
+		</div>
+	{% endfor %}
+
 	<br />
-	<div class="box_item_model fixed_site border">
-    {% if user.is_authenticated %}
-        <h3 class="title">Reply to Original:</h3>
-        <form method="POST" action="{% get_comment_url object %}?next={{object.get_absolute_url}}">
-            <div class="content">
-                <table class="text full_site">
-                    <tr>
-                        <td width="99%">
-                            <span class="errormessage">{{ form.comment.errors }}</span>
-                            {{ form.comment }}
-                        </td>
-                        <td width="1%"></td>
-                    </tr>
-                </table>
-            </div>
-            <table class="info_line full_site">
-                <tr>
-                    <td class="show_center">
-                        <input type="hidden" name="markup" value="1" />
-                        <input type="hidden" value="next" value="{{ object.get_absolute_url }}" />
-                        <input type="submit" value="Submit Comment" />
-                    </td>
-                </tr>
-            </table>
-            {% csrf_token %}
+
+	<h3 class="title">Reply to Original:</h3>
+	{% if user.is_authenticated %}        
+	<form method="POST" action="{% get_comment_url object %}?next={{object.get_absolute_url}}">
+		<span class="errormessage">{{ form.comment.errors }}</span>
+		{{ form.comment }}
+		<br />
+		<input type="hidden" name="markup" value="1" />
+		<input type="hidden" value="next" value="{{ object.get_absolute_url }}" />
+		<input type="submit" value="Submit Comment" />
+		{% csrf_token %}
 	</form>
-    {% else %}
-        <h3 class="title">Comments</h3>
-        <div class="info_line errormessage show_center">
-            <br /> 
-            !!! Log in to post comments !!!
-            <br /> 
-            <br /> 
-        </div>
-    {% endif %}
-    </div>
+	{% else %}
+	<p>
+		<a href="{% url auth_login %}?next={{ request.path }}">Log in</a> to post comments!
+	</p>
+	{% endif %}
 
 
