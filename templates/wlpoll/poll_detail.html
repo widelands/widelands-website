@@ -25,7 +25,8 @@
 		<span class="small posRight">Posted on {{ object.pub_date|custom_date:user }}</span>
 	</div>
 
-	<!-- Comments below -->
-	<h3>Comments on this Poll:</h3>
-	{% include "threadedcomments/inlines/comments.html" %}
+	<div class="blogEntry">
+		<h3>Comments on this Poll:</h3>
+		{% include "threadedcomments/inlines/comments.html" %}
+	</div>
 {% endblock %}

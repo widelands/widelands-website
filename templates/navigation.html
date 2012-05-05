@@ -2,6 +2,15 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+<script type="text/javascript">
+	/* Enable dropdown menus on touch devices */
+	$(document).ready(function(){
+		$(".menu li").live("touchstart", function() {
+			$(this).next("ul").css("display", "block");
+		});
+	});
+</script>
+
 <ul class="menu posLeft">
 	<li><a href="/">Home</a>
 		<ul>

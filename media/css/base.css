@@ -210,6 +210,7 @@ div.loginBox ul {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
+	line-height: 18px;
 }
 
 div.loginBox h4 {

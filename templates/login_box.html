@@ -22,12 +22,12 @@
 	<input id="id_login_password" type="password" name="password" />
 	<input type="hidden" id="submitted" value="false" />
 	<button type="submit">login</button>
-	<input type="hidden" name="next" value="{{ request.path }}" />
+	<input type="hidden" name="next" value="{{ request.path|iriencode }}" />
 	{% csrf_token %}
 </form>
 {% endcomment %}
 <div class="small center">
-	<a href="{% url auth_login %}">Click here to login</a><br /><br />
+	<a href="{% url auth_login %}?next={{ request.path|iriencode }}">Click here to login</a><br />
 	<a href="/accounts/password/reset/">Lost password?</a> | <a href="/accounts/register">Register now!</a>
 </div>
 {% endif %}
