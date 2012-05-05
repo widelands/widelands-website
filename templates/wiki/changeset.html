@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="posRight">
+<div class="posRight small">
 	<a href="{% url wiki_article article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
 	| <a href="{% url wiki_article_history article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
 </div>

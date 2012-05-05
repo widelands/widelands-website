@@ -1,13 +1,14 @@
 .toc {
 	border: 1px solid black;
 	display: inline-block;
-	padding: 8px;
+	padding: 0px 8px;
 	background-image: url("../img/black50.png");
 	font-size: 12px;
+	margin-bottom: 20px;
+	line-height: 18px;
 }
 
 .toc ul {
-	margin: 2px 0px;
 	padding-left: 20px;
 }
 

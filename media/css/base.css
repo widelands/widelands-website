@@ -5,6 +5,7 @@ body {
 	background-image: url("../img/parchment.png");
 	font-family: Tahoma;
 	font-size: 14px;
+	line-height: 20px;
 	color: #ffffee;
 	text-shadow: #000000 1px 1px 0px;
 }
@@ -100,6 +101,10 @@ td {
 
 .middle {
 	vertical-align: middle;
+}
+
+.grey {
+	color: #998;
 }
 
 .green {

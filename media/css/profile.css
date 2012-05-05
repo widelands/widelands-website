@@ -1,11 +1,3 @@
-.profile_poster { 
-    font-size: 90%;
-}
-.profile_post_date { 
-    font-size: 90%;
-}
-.profile_image img {
-   float: right;   
-   padding: 0px;
-   margin-left: 20px;
+td {
+	padding: 4px;
 }

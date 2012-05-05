@@ -13,15 +13,13 @@ import settings
 import re
 
 class EditProfileForm(forms.ModelForm):
-    delete_avatar = forms.BooleanField(initial=False,required=False)
     email = forms.EmailField(required=True)
 
     class Meta:
         model = Profile
-        fields = ['site', 'jabber', 'icq', 'msn', 'aim', 'yahoo',
-                  'location', 'signature', 'time_zone', "time_display",
-                  'avatar', 'delete_avatar', 'show_signatures', "email",
-                  ]
+        fields = ['avatar', 'site', 'location', 'jabber', 'icq', 'msn',
+                  'aim', 'yahoo', 'signature', 'email', 'show_signatures',
+                  'time_zone', 'time_display', ]
 
 
     def __init__(self, *args, **kwargs):

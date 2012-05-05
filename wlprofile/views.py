@@ -39,9 +39,6 @@ def edit(request):
         form = EditProfileForm(request.POST,
                     instance=instance, files = request.FILES)
         if form.is_valid():
-            if form.cleaned_data["delete_avatar"]:
-                instance.avatar.delete()
-
             form.save()
 
             return HttpResponseRedirect(reverse(view))

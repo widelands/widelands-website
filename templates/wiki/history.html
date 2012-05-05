@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="posRight">
+<div class="posRight small">
 	<a href="{% url wiki_article article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
 	| <a href="{% url wiki_article_history_feed title=article.title,feedtype="atom" %}"  class="invertedColor">Atom Feed</a>
 </div>

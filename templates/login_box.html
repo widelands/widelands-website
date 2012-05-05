@@ -16,6 +16,7 @@
 </div>
 {% else %}
 <h4>Login</h4>
+{% comment %}
 <form method="post" action="https://{{ request.META.HTTP_HOST }}/accounts/login/" id="login_box">
 	<input id="id_login_username" type="text" name="username" maxlength="30" placeholder="Username" />
 	<input id="id_login_password" type="password" name="password" />
@@ -24,9 +25,14 @@
 	<input type="hidden" name="next" value="{{ request.path }}" />
 	{% csrf_token %}
 </form>
-<div class="small center"><a href="/accounts/password/reset/">Lost password?</a> | <a href="/accounts/register">Register now!</a></div>
+{% endcomment %}
+<div class="small center">
+	<a href="{% url auth_login %}">Click here to login</a><br /><br />
+	<a href="/accounts/password/reset/">Lost password?</a> | <a href="/accounts/register">Register now!</a>
+</div>
 {% endif %}
-
+{% comment %}
+{# Login via iframe does not work between http and https #}
 <script type="text/javascript">
 $("#login_box").submit( function(data) {
 	var frameName = "login_frame" + (new Date()).getTime();
@@ -59,3 +65,4 @@ $("#login_box").submit( function(data) {
 	return false;
 });
 </script>
+{% endcomment %}
