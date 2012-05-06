@@ -1,74 +1,40 @@
-
-
-h1 {
-    display: block;
-    font-weight: bold;
-    padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 1px;
-    background: url('../img/background-444.png');
-}
-
-/*
- * MESSAGES
- */
-.messages {
-    margin-bottom: 20px;
-    width: 100%;
-}
-.messages {
-   padding: 0px;
-   margin: 0px;
-}
 .messages th {
-   margin-top: 4px;
-   margin-bottom: 2px;
+	border: 1px solid black;
+	font-size: 12px;
+	text-align: left;
+	font-weight: normal;
+	background-image: url("../img/black50.png");
+	padding: 4px;
 }
 
-/* 
- * Post
- */
-.message {
-   background-color: rgb(20%,20%,20%); 
-   margin: 0px;
-   padding-bottom: 2px;
-   border-top: 0px;
-}
-.message .odd {
-   margin: 0px;
-   padding: 0px;
-}
-.message_display {
-  background: url('../img/background-3f3f3f.png');
-  padding-bottom: 1px;
-}
-.message_display .content {
-   background: url('../img/background-222.png');
-   font-family: 'Courier New', Courier, monospace;
-   padding: 10px;
-   margin: 10px;
+.messages {
+	width: 100%;
+	border-collapse: collapse;
 }
 
-/*
- * Compose
- */
-#id_recipient {
-    width: 40%;
-}
-#id_subject {
-    width: 40%;
-}
-#id_body {
-   width: 98%;
-   height: 200px;
+.messages td {
+	padding: 4px;
 }
 
-/*
- * MessageBox style
- */
+th.msg_menu {
+	width: 130px;
+	vertical-align: top;
+}
 
-.message_image img {
-   float: right;   
-   padding: 0px;
-   margin-left: 20px;
+td.msg_box {
+	padding-top: 0px;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.messages ul {
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+.messages textarea {
+	width: 100%;
 }

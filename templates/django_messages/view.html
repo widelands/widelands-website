@@ -1,57 +1,37 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
 {% load custom_date %}
+{% load wlprofile %}
 
 {% block title %}
-Message - {{ block.super }}
+View - {{ block.super }}
 {% endblock %}
 
-{% block content %}
-{% include "django_messages/inlines/navigation.html" %} 
-<br />
-<br />
-<div class="message_item">
-	<h3 class="title">{% trans "View Message" %}</h3>
-	<div class="content">
-		<table class="text" width="100%" cellspacing="1">
-			<tr>
-				<td width="80" class="odd">{% trans "Subject" %}:</td>
-				<td width="120" class="odd">{{ message.subject }}</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td class="even">{% trans "Sender" %}:</td>
-				<td class="even">{{ message.sender }}</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td class="odd">{% trans "Date" %}:</td>
-				<td class="odd">{{ message.sent_at|custom_date:user }}</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td class="even">{% trans "Recipient" %}:</td>
-				<td class="even">{{ message.recipient }}</td>
-				<td></td>
-			</tr>
-			<tr> 
-				<td colspan="3" class="odd">
-					<div class="message_display content message">
-						{{ message.body|urlize|linebreaksbr }}
-					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<table class="bottom_line" width="100%">
+{% block msg_title %}{{ message.subject }}{% endblock %}
+
+{% block msg_content %}
+	<table class="messages">
 		<tr>
-			<td class="admin">
-				{% ifequal message.recipient user %}
-					<a href="{% url messages_reply message.id %}">{% trans "Reply" %}</a>&nbsp;|
-				{% endifequal %}
-				<a href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
+			<td class="grey">{% trans "Subject" %}:</td>
+			<td>{{ message.subject }}</td>
+			<td class="grey">{% trans "Date" %}:</td>
+			<td>{{ message.sent_at|custom_date:user }}</td>
+		</tr>
+		<tr>
+			<td class="grey">{% trans "Sender" %}:</td>
+			<td>{{ message.sender|user_link }}</td>
+			<td class="grey">{% trans "Recipient" %}:</td>
+			<td>{{ message.recipient|user_link }}</td>
+		<tr> 
+			<td colspan="4">
+				<hr />
+				{{ message.body|urlize|linebreaksbr }}
+				<hr />
 			</td>
 		</tr>
 	</table>
-</div>
+	{% ifequal message.recipient user %}
+		<button type="button" onclick="location.href='{% url messages_reply message.id %}';">{% trans "Reply" %}</button>
+	{% endifequal %}
+	<button type="button" onclick="location.href='{% url messages_delete message.id %}';">{% trans "Delete" %}</button>
 {% endblock %}

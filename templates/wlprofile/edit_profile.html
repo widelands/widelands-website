@@ -12,12 +12,6 @@
 <div class="blogEntry">
 	<form method="post" enctype="multipart/form-data" action=".">
 		<table>
-		{% if profile_form.errors %}
-			<tr>
-				<td class="errormessage" colspan="3">{{ profile_form.errors }}</td>
-			</tr>
-		{% endif %}
-
 		{% for field in profile_form %}
 			<tr>
 				<td class="grey">
