@@ -62,7 +62,7 @@
 				</form>
 			{% endif %}
 		{% else %}
-			<p class="small">Log in to vote!</p>
+			<p class="small"><a href="{% url auth_login %}?next={{ request.path|iriencode }}">Log in</a> to vote!</p>
 			<div class="center">
 				<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
 			</div>

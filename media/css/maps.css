@@ -21,3 +21,7 @@ img.map {
 p {
 	vertical-align: top;
 }
+
+textarea {
+	width: 97%;
+}

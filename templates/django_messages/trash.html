@@ -33,12 +33,9 @@ Trash - {{ block.super }}
 				</td>
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
-					{% comment %}
-					{# Deleting deleted messages doesn't make sense. #}
-					<a href="{% url django_messages.views.delete message.id %}">
-						<img src="{{ MEDIA_URL }}/img/delete.png" alt="delete" title="delete" />
+					<a href="{% url django_messages.views.undelete message.id %}">
+						<img src="{{ MEDIA_URL }}/img/undelete.png" alt="undelete" title="undelete" />
 					</a>
-					{% endcomment %}
 				</td>
 			</tr>
 		{% endfor %}

@@ -11,7 +11,7 @@
 		<li><a href="{% url messages_inbox %}">Messages</a></li>
 		<li><a href="{% url notification_notices %}">Notifications</a></li>
 		<li><a href="{% url profile_edit %}">Edit Profile</a></li>
-		<li><a href="/accounts/logout/next={{ request.path|iriencode }}">Logout</a></li>
+		<li><a href="{% url auth_logout %}?next={{ request.path|iriencode }}">Logout</a></li>
 	</ul>
 </div>
 {% else %}
@@ -28,7 +28,7 @@
 {% endcomment %}
 <div class="small center">
 	<a href="{% url auth_login %}?next={{ request.path|iriencode }}">Click here to login</a><br />
-	<a href="/accounts/password/reset/">Lost password?</a> | <a href="/accounts/register">Register now!</a>
+	<a href="{% url auth_password_reset %}">Lost password?</a> | <a href="{% url registration_register %}">Register now!</a>
 </div>
 {% endif %}
 {% comment %}

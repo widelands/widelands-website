@@ -6,16 +6,16 @@
 {% load custom_date %}
 {% load wlprofile %}
 {% load wlmaps_extra %}
-{% load pybb_extras %}
+{% load threadedcommentstags %}
+{% load pagination_tags %}
 
 {% block content %}
-{% if user.is_authenticated %}
 <a href="{% url wlmaps_upload %}" class="posRight invertedColor small">Upload a new map</a>
-{% endif %}
 <h1>Maps</h1>
 <div class="blogEntry">
-	{% pybb_pagination _('Maps') %}
-	<br /><br />
+	{% autopaginate maps maps_per_page %}
+	{% paginate %}
+	<br />
 	<table class="forum">
 		{% for map in maps %}
 		<tr class="{% cycle "odd" "even" %}">
@@ -24,25 +24,28 @@
 				<h3><a class="invertedColor" href="{{ map.get_absolute_url }}">{{ map.name }}</a></h3>
 				<table>
 					<tr>
-						<td class="prop">Author:</td><td>{{ map.author }}</td>
+						<td class="grey">Author:</td><td>{{ map.author }}</td>
 						<td class="spacer"></td>
-						<td class="prop">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
+						<td class="grey">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
 					</tr>
 					<tr>
-						<td class="prop">World:</td><td>{{ map.world_name|title }}</td>
+						<td class="grey">World:</td><td>{{ map.world_name|title }}</td>
 						<td class="spacer"></td>
-						<td class="prop">Max. Players:</td><td>{{ map.nr_players }}</td>
+						<td class="grey">Max. Players:</td><td>{{ map.nr_players }}</td>
 					</tr>
 					<tr>
-						<td class="prop">Rating:</td>
-						<td colspan="4">{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)</td>
+						<td class="grey">Rating:</td>
+						<td colspan="">{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)</td>
+						<td class="spacer"></td>
+						{% get_comment_count for map as ccount %}
+						<td class="grey">Comments:</td><td>{{ ccount }}</td>
 					</tr>
 					<tr>
-						<td class="prop">Upload:</td>
+						<td class="grey">Upload:</td>
 						<td colspan="4">by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}</td>
 					</tr>
 					<tr>
-						<td class="prop">Downloads:</td><td>{{ map.nr_downloads }}</td>
+						<td class="grey">Downloads:</td><td>{{ map.nr_downloads }}</td>
 						<td class="spacer"></td>
 						<td colspan="2">
 							<button onclick="window.location.href='{% url wlmaps_download map.slug %}';">
@@ -57,7 +60,6 @@
 		{% endfor %}
 	</table>
 	<br />
-	{% pybb_pagination _('Maps') %}
-	<br />
+	{% paginate %}
 </div>
 {% endblock %}

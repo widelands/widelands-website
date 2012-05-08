@@ -8,14 +8,13 @@ Registration - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-
 <h1>Registration</h1>
 <div class="blogEntry">
-	<form action="https://{{ request.META.HTTP_HOST }}/accounts/register/" method="POST">
+	<form action="." method="POST">
 		<table>
 			<tr>
-				<td class="show_right">Username:</td>
-				<td class="show_left">
+				<td class="grey">Username:</td>
+				<td>
 					{{ registration_form.username }}
 {% for error in registration_form.username.errors %}
 					<span class="errormessage">{{ error }}</span>
@@ -23,8 +22,8 @@ Registration - {{ block.super }}
 				</td>
 			</tr>
 			<tr>
-				<td class="show_right">Email:</td>
-				<td class="show_left">
+				<td class="grey">Email:</td>
+				<td>
 					{{ registration_form.email }}
 {% for error in registration_form.email.errors %}
 					<span class="errormessage">{{ error }}</span>
@@ -32,8 +31,8 @@ Registration - {{ block.super }}
 				</td>
 			</tr>
 			<tr>
-				<td class="show_right">Password:</td>
-				<td class="show_left">
+				<td class="grey">Password:</td>
+				<td>
 					{{ registration_form.password1 }}
 {% for error in registration_form.password1.errors %}
 					<span class="errormessage">{{ error }}</span>
@@ -41,8 +40,8 @@ Registration - {{ block.super }}
 				</td>
 			</tr>
 			<tr>
-				<td class="show_right">Password (again):</td>
-				<td class="show_left">
+				<td class="grey">Password (again):</td>
+				<td>
 					{{ registration_form.password2 }}
  {% for error in registration_form.password2.errors %}
 					<span class="errormessage">{{ error }}</span>
@@ -50,21 +49,16 @@ Registration - {{ block.super }}
 				</td>
 			</tr>
 			<tr>
-				<td class="show_right">Prove that <br />you're no spambot:</td>
-				<td class="show_left">
+				<td class="grey">Prove that <br />you're no spambot:</td>
+				<td>
 					<div class="noshadow">{{ registration_form.captcha|safe }}</div>
  {% for error in registration_form.captcha.errors %}
 					<span class="errormessage">{{error }}</span>
  {% endfor %}
 				</td>
 			</tr>
-			<tr>
-				<td class="show_right">&nbsp;</td>
-				<td class="show_left">
-					<input type="submit" value="Register" />
-				</td>
-			</tr>
 		</table>
+		<input type="submit" value="Register" />
         {% csrf_token %}
 	</form>
 </div>

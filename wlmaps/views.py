@@ -10,7 +10,6 @@ from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpRespon
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 import models
-from pybb.util import paginate
 from settings import MAPS_PER_PAGE
 
 import os
@@ -22,12 +21,9 @@ import zipfile
 #########
 def index( request ):
     maps = models.Map.objects.all()
-    page, paginator = paginate(maps, request, MAPS_PER_PAGE,
-                               total_count=maps.count())
     return render_to_response("wlmaps/index.html",
-                { "maps": page.object_list, 
-                  "page": page,
-                  "paginator": paginator,
+                { "maps": maps, 
+                  "maps_per_page": MAPS_PER_PAGE,
                 },
                 context_instance = RequestContext(request))
 

@@ -142,6 +142,10 @@ td {
 	text-shadow: none;
 }
 
+.italic {
+	font-style: italic;
+}
+
 /* Base */
 
 div#wrapper {

@@ -6,6 +6,7 @@
 {% load custom_date %}
 {% load wlmaps_extra %}
 {% load wlprofile %}
+{% load threadedcommentstags %}
 
 {% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
@@ -65,6 +66,10 @@ $(function() {
 			</tr>
 			<tr>
 				<td class="grey">Downloads:</td><td>{{ map.nr_downloads }}</td>
+			</tr>
+			<tr>
+				{% get_comment_count for map as ccount %}
+				<td class="grey">Comments:</td><td>{{ ccount }}</td>
 			</tr>
 			<tr>
 				<td class="grey">Rating:</td>
