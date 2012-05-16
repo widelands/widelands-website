@@ -1,14 +1,18 @@
-{% extends 'base.html' %}
+{% extends 'sphinxdoc/base.html' %}
 
-{% block title %}{{ block.super }} » Documentation Overview{% endblock %}
+{% block title %}Overview - {{ block.super }}{% endblock %}
 
 {% block content %}
-<div>
-    <h2 class="pagetitle">Documentation Overview</h2>
-    <ul>
-    {% for app in app_list %}
-        <li><a href="{{ app.get_absolute_url }}">{{ app.name }}</a></li>
-    {% endfor %}
-    </ul>
+<h1>Documentation Overview</h1>
+<div class="blogEntry">
+	<a href="/docs/">Documentation</a> 
+
+	<br />
+
+	<ul>
+	{% for app in app_list %}
+		<li><a href="{{ app.get_absolute_url }}">{{ app.name }}</a></li>
+	{% endfor %}
+	</ul>
 </div>
 {% endblock content %}

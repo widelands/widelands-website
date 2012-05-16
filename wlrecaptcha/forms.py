@@ -43,7 +43,7 @@ class RecaptchaWidget(Widget):
 
 <noscript>
    <iframe src="https://www.google.com/recaptcha/api/noscript?k=%(public_key)s"
-       height="300" width="500" frameborder="0"></iframe><br />
+       style="height: 300px; width: 500px; border: none;"></iframe><br />
    <textarea name="recaptcha_challenge_field" rows="3" cols="40">
    </textarea>
    <input type="hidden" name="recaptcha_response_field" 

@@ -16,7 +16,7 @@ import settings
 import re
 
 class EditGGZForm(forms.ModelForm):
-    password = forms.CharField(label=_(u'GGZ password'), widget = forms.PasswordInput(render_value = False), required=True)
+    password = forms.CharField(label=_(u'Online Gaming Password'), widget = forms.PasswordInput(render_value = False), required=True)
 
     class Meta:
         model = GGZAuth

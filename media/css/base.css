@@ -3,7 +3,7 @@
 body {
 	background-color: #e9c78a;
 	background-image: url("../img/parchment.png");
-	font-family: Tahoma;
+	font-family: sans-serif;
 	font-size: 14px;
 	line-height: 20px;
 	color: #ffffee;
@@ -136,6 +136,10 @@ td {
 
 .errormessage {
 	color: #ff0000;
+}
+
+.errormessage ul {
+	margin: 0px;
 }
 
 .noshadow {

@@ -1,44 +1,26 @@
-{% extends "wlggz/base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 
+{% block title %}
+{% trans "Set Online Gaming Password" %} - {{ block.super }}
+{% endblock %}
+
 {% block content %}
-{% include "django_messages/inlines/navigation.html" %}
-<br />
-<br />
-<div class="box_item_model fixed_site border">
-    <h3 class="title">{% trans "Set GGZ password" %}</h3>
-    <form method="post" enctype="multipart/form-data">
-        <div class="content">
-            <table cellspacing="1" class="text full_site">
-            {% if profile_form.errors %}
-                <tr>
-                    <td class="even" colspan="2">{{ profile_form.errors }}</td>
-                </tr>
-            {% endif %}
-            {% for field in ggz_form %}
-                <tr>
-                {% if field.errors %}
-                    <td colspan="2" class="{% cycle "odd" "even" %}">
-                        <div class="errormessage">{{ field.errors }}</div>
-                    </td>
-                </tr>
-                <tr>
-                {% endif %}
-                    <td class="{% cycle "odd" "even" %}">{{ field.label_tag }}:</td>
-                    <td class="{% cycle "odd" "even" %}">{{ field }}                 
-                    {% ifequal field.name "time_display" %}
-                        <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
-                    {% endifequal %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </table>
-        </div>
-        <div class="info_line">
-            <input type="submit" value="{% trans "Save" %}" />
-        </div>
-        {% csrf_token %}
-    </form>
+<h1>{% trans "Set Online Gaming Password" %}</h1>
+<div class="blogEntry">    
+	<form method="post" enctype="multipart/form-data" action=".">
+		<table>
+		{% for field in ggz_form %}
+			<tr>
+				<td class="grey">{{ field.label_tag }}:</td>
+				<td>{{ field }}</td>
+				<td class="errormessage">{{ field.errors }}</td>
+			</tr>
+		{% endfor %}
+		</table>
+		<input type="submit" value="{% trans "Save" %}" />
+		{% csrf_token %}
+	</form>
 </div>
 {% endblock %}
