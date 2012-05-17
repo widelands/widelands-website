@@ -79,6 +79,7 @@ class Building(models.Model):
             ('M', 'medium'),
             ('B', 'big'),
             ('I', 'mine'),
+            ('P', 'port'),
     )
     TYPES = (
             ('P', 'productionsite'),

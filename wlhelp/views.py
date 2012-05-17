@@ -9,32 +9,32 @@ import os
 def ware_details( request, tribe, ware ):
     w = get_object_or_404(Ware,tribe__name=tribe,name=ware)
 
-    return render_to_response('ware_details.html', 
+    return render_to_response('wlhelp/ware_details.html', 
         context_instance=RequestContext(request, 
         { "ware": w}))
 
 def building_details( request, tribe, building ):
     b = get_object_or_404(Building,tribe__name=tribe,name=building)
 
-    return render_to_response('building_details.html', 
+    return render_to_response('wlhelp/building_details.html', 
         context_instance=RequestContext(request, 
         { "building": b }))
 
 def worker_details( request, tribe, worker ):
     w = get_object_or_404(Worker,tribe__name=tribe,name=worker)
 
-    return render_to_response('worker_details.html', 
+    return render_to_response('wlhelp/worker_details.html', 
         context_instance=RequestContext(request, 
         { "worker": w }))
 
 def workers(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
-    return render_to_response('workers.html', context_instance=RequestContext(request, 
+    return render_to_response('wlhelp/workers.html', context_instance=RequestContext(request, 
         { "workers": Worker.objects.filter(tribe=t) }))
 
 def wares(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
-    return render_to_response('wares.html', context_instance=RequestContext(request, 
+    return render_to_response('wlhelp/wares.html', context_instance=RequestContext(request, 
         { "wares": Ware.objects.filter(tribe=t) }))
 
 def buildings(request, tribe="barbarians"):
@@ -67,7 +67,9 @@ def buildings(request, tribe="barbarians"):
     buildings["mine"] = mine.filter(enhanced_from=None)
     buildings["mine_enhanced"] = mine.exclude(enhanced_from=None)
 
-    return render_to_response('buildings.html', context_instance=RequestContext(request, 
+    # TODO: Add ports
+
+    return render_to_response('wlhelp/buildings.html', context_instance=RequestContext(request, 
         { "buildings": buildings }))
 
 

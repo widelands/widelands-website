@@ -81,7 +81,7 @@ class TribeParser(object):
         shutil.rmtree(tdir)
 
     def _delete_old_media_dir(self):
-        sdir = os.path.join(MEDIA_ROOT, "online_help", self._tribe.name)
+        sdir = os.path.join(MEDIA_ROOT, "wlhelp", self._tribe.name)
         if os.path.exists(sdir):
             shutil.rmtree(sdir)
 
@@ -93,7 +93,7 @@ class TribeParser(object):
         name            - name of the item (coal, iron...)
         fname           - file name of the picture
         """
-        dn = "%s/online_help/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
+        dn = "%s/wlhelp/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
         try:
             os.makedirs(dn)
         except OSError, o:

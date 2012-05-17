@@ -8,6 +8,7 @@ from widelands.mainpage.views import mainpage
 
 from widelands.news.feeds import NewsPostsFeed
 from widelands.wiki.feeds import RssHistoryFeed
+from django.views.generic.simple import redirect_to
 
 feeds = {
     'news': NewsPostsFeed,
@@ -41,7 +42,8 @@ urlpatterns = patterns('',
     url(r'^$', mainpage, name="mainpage"),
     url(r'^changelog/$', "mainpage.views.changelog", name="changelog"),
     url(r'^developers/$', "mainpage.views.developers", name="developers"),
-    url(r'^help/', include("online_help.urls")),
+    url(r'^help/(?P<path>.*)', redirect_to, { "url": "/encyclopedia/%(path)s", "permanent": True }), # to not break old links
+    url(r'^encyclopedia/', include("wlhelp.urls")),
     url(r'^webchat/', include("wlwebchat.urls")),
     url(r'^images/', include("wlimages.urls")),
     url(r'^profile/', include("wlprofile.urls")),

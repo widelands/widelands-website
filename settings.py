@@ -233,7 +233,7 @@ INSTALLED_APPS = (
 
     # Our own apps
     'widelands.mainpage',
-    'widelands.online_help',
+    'widelands.wlhelp',
     'widelands.wlimages',
     'widelands.wlwebchat',
     'widelands.wlrecaptcha',
