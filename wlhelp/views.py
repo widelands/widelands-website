@@ -6,6 +6,20 @@ from .models import Worker, Ware, Building, Tribe
 from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
 import os
 
+def index( request ):
+    tribes = Tribe.objects.all().order_by("displayname")
+
+    return render_to_response('wlhelp/index.html',
+        context_instance=RequestContext(request,
+        { "tribes": tribes }))
+
+def tribe_details( request, tribe ):
+    t = get_object_or_404(Tribe, name=tribe)
+
+    return render_to_response('wlhelp/tribe_details.html',
+        context_instance=RequestContext(request,
+        { "tribe": t }))
+
 def ware_details( request, tribe, ware ):
     w = get_object_or_404(Ware,tribe__name=tribe,name=ware)
 
@@ -30,12 +44,12 @@ def worker_details( request, tribe, worker ):
 def workers(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
     return render_to_response('wlhelp/workers.html', context_instance=RequestContext(request, 
-        { "workers": Worker.objects.filter(tribe=t) }))
+        { "workers": Worker.objects.filter(tribe=t).order_by("displayname") }))
 
 def wares(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
     return render_to_response('wlhelp/wares.html', context_instance=RequestContext(request, 
-        { "wares": Ware.objects.filter(tribe=t) }))
+        { "wares": Ware.objects.filter(tribe=t).order_by("displayname") }))
 
 def buildings(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
@@ -43,7 +57,7 @@ def buildings(request, tribe="barbarians"):
     # Request all the objects
     buildings = {}
 
-    buildings["headquarters"] = Building.objects.get(tribe=t,name="headquarters") 
+    buildings["headquarters"] = Building.objects.filter(tribe=t,name="headquarters").order_by("displayname")
     
     all = Building.objects.filter(tribe=t).exclude(name="headquarters")
     
@@ -62,14 +76,17 @@ def buildings(request, tribe="barbarians"):
     buildings["big"] = big.filter(enhanced_from=None)
     buildings["big_enhanced"] = big.exclude(enhanced_from=None)
     
-    # Now, all mines buildings
+    # Now, all mines
     mine = all.filter(size="I",tribe=t).order_by("displayname")
     buildings["mine"] = mine.filter(enhanced_from=None)
     buildings["mine_enhanced"] = mine.exclude(enhanced_from=None)
 
-    # TODO: Add ports
+    # Now, all ports
+    port = all.filter(size="P",tribe=t).order_by("displayname")
+    buildings["port"] = port.filter(enhanced_from=None)
+    buildings["port_enhanced"] = port.exclude(enhanced_from=None)
 
     return render_to_response('wlhelp/buildings.html', context_instance=RequestContext(request, 
-        { "buildings": buildings }))
+        { "buildings": buildings, "tribe": t }))
 
 

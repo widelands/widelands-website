@@ -7,6 +7,8 @@ if settings.USE_SPHINX:
 class Tribe(models.Model):
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
+    descr = models.TextField()
+    icon_url = models.CharField( max_length=256 )
 
 
 class Worker(models.Model):
@@ -67,6 +69,8 @@ class BuildingManager(models.Manager):
         return self.all().filter(size="B")
     def mine(self):
         return self.all().filter(size="I")
+    def port(self):
+        return self.all().filter(size="P")
 
 
         # return self.build_wares.count()
@@ -157,7 +161,7 @@ class Building(models.Model):
 
     def produces(self):
         return (self.output_wares.all().count() != 0)
-    def get_outputs(self):
+    def get_ware_outputs(self):
         return self.output_wares.all()
     def trains(self):
         return (self.output_workers.all().count() != 0)

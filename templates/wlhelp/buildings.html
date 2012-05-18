@@ -1,92 +1,94 @@
-{% extends "base.html" %}
+﻿{% extends "wlhelp/base.html" %}
 {% comment %}
    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content %}
-
-<h1>Buildings</h1>
-
-<!-- HQ -->
-<h1>Headquarters</h1>
-{% with buildings.headquarters as b %}
-  <table class="building" width="100%" cellspacing="1">
-    {% include "inlines/display_building.html" %}
-{% endwith %}
-  </table>
-
-<!-- Small buildings -->
-{% if buildings.small.count %}
-<h1>Small buildings</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.small %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-{% if buildings.small_enhanced.count %}
-<h1>Small enhanced buildings</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.small_enhanced %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-
-<!-- Medium buildings -->
-{% if buildings.medium.count %}
-<h1>Medium buildings</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.medium %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-{% if buildings.medium_enhanced.count %}
-<h1>Medium enhanced buildings</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.medium_enhanced %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-
-<!-- Big buildings -->
-{% if buildings.big.count %}
-<h1>Big buildings</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.big %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-{% if buildings.big_enhanced.count %}
-<h1>Big enhanced buildings</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.big_enhanced %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-
-<!-- Mines -->
-{% if buildings.mine.count %}
-<h1>Mines</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.mine %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-{% if buildings.mine_enhanced.count %}
-<h1>Enhanced Mines</h1>
-  <table class="building" width="100%" cellspacing="1">
-    {% for b in buildings.mine_enhanced %}
-    {% include "inlines/display_building.html" %}
-    {% endfor %}
-  </table>
-{% endif %}
-
-
+{% block title %}
+Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
+{% block content %}
+<h1>{{ tribe.displayname }}: Buildings</h1>
+<div class="blogEntry">
+<a href="{% url wlhelp_index %}">Encyclopedia</a> &#187;
+<a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a> &#187;
+Buildings
+<br /><br />
+{# Headquarters #}
+	<h2>Headquarters</h2>
+	{% with buildings.headquarters as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+
+{# Small buildings #}
+{% if buildings.small.count %}
+	<h2>Small Buildings</h2>
+	{% with buildings.small as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+{% if buildings.small_enhanced.count %}
+	<h2>Small Enhanced Buildings</h2>
+	{% with buildings.small_enhanced as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+
+{# Medium buildings #}
+{% if buildings.medium.count %}
+	<h2>Medium Buildings</h2>
+	{% with buildings.medium as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+{% if buildings.medium_enhanced.count %}
+	<h2>Medium Enhanced Buildings</h2>
+	{% with buildings.medium_enhanced as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+
+{# Big buildings #}
+{% if buildings.big.count %}
+	<h2>Big Buildings</h2>
+	{% with buildings.big as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+{% if buildings.big_enhanced.count %}
+	<h2>Big Enhanced Buildings</h2>
+	{% with buildings.big_enhanced as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+
+{# Mines #}
+{% if buildings.mine.count %}
+	<h2>Mines</h2>
+	{% with buildings.mine as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+{% if buildings.mine_enhanced.count %}
+	<h2>Enhanced Mines</h2>
+	{% with buildings.mine_enhanced as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+
+{# Ports #}
+{% if buildings.port.count %}
+	<h2>Ports</h2>
+	{% with buildings.port as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+{% if buildings.port_enhanced.count %}
+	<h2>Enhanced Ports</h2>
+	{% with buildings.port_enhanced as buildings %}
+		{% include "wlhelp/inlines/display_buildings.html" %}
+	{% endwith %}
+{% endif %}
+
+</div>
+{% endblock %}

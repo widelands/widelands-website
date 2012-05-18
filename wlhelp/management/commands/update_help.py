@@ -50,12 +50,24 @@ class TribeParser(object):
         self._tribe = Tribe(name)
         # Generate the Tribe
         self._to = TribeModel.objects.get_or_create(name=name.lower())[0]
-        self._to.displayname = normalize_name(self._tribe.name)
+        self._to.displayname = normalize_name(self._tribe._conf.getstring("tribe", "name"))
+        self._to.descr = normalize_name(self._tribe._conf.getstring("tribe", "descr"))
+        # copy icon
+        dn = "%s/wlhelp/img/%s/" % (MEDIA_ROOT,self._to.name)
+        try:
+            os.makedirs(dn)
+        except OSError, o:
+            if o.errno != 17:
+                raise
+        new_name = path.join(dn, "icon.png")
+        file = os.path.join(self._tribe._tdir,self._tribe._conf.getstring("tribe", "icon"))
+        shutil.copy(file, new_name )
+        self._to.icon_url = "%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
         self._to.save()
 
     def parse( self ):
         """Put all data into the database"""
-        self._delete_old_media_dir()
+        #self._delete_old_media_dir() why delete it? We can simply overwrite data
         self._parse_workers()
         self._parse_wares()
         self._parse_buildings()
@@ -81,7 +93,7 @@ class TribeParser(object):
         shutil.rmtree(tdir)
 
     def _delete_old_media_dir(self):
-        sdir = os.path.join(MEDIA_ROOT, "wlhelp", self._tribe.name)
+        sdir = os.path.join(MEDIA_ROOT, "wlhelp/img", self._to.name)
         if os.path.exists(sdir):
             shutil.rmtree(sdir)
 
