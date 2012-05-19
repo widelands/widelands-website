@@ -1,4 +1,4 @@
-﻿{% extends "wlhelp/base.html" %}
+{% extends "wlhelp/base.html" %}
 {% comment %}
    vim:ft=htmldjango
 {% endcomment %}
@@ -10,10 +10,11 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% block content %}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">
-<a href="{% url wlhelp_index %}">Encyclopedia</a> &#187;
-<a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a> &#187;
-Buildings
-<br /><br />
+	<a href="{% url wlhelp_index %}">Encyclopedia</a> &#187;
+	<a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a> &#187;
+	Buildings
+	<br /><br />
+
 {# Headquarters #}
 	<h2>Headquarters</h2>
 	{% with buildings.headquarters as buildings %}

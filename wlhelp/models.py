@@ -9,6 +9,8 @@ class Tribe(models.Model):
     displayname = models.CharField(max_length=100)
     descr = models.TextField()
     icon_url = models.CharField( max_length=256 )
+    network_pdf_url = models.CharField( max_length=256 )
+    network_gif_url = models.CharField( max_length=256 )
 
 
 class Worker(models.Model):

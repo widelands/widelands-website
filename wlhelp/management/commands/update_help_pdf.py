@@ -8,6 +8,8 @@ import shutil
 from os import path
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_graph
+from wlhelp.models import Tribe
+from glob import glob
 
 class Command(BaseCommand):
     help =\
@@ -35,5 +37,13 @@ class Command(BaseCommand):
 
             shutil.copy(pdffile, targetdir)
             shutil.copy(giffile, targetdir)
+
+            tribe = Tribe.objects.get(name=tribename)
+            if tribe:
+                tribe.network_pdf_url = path.normpath("%s/%s/%s" % (MEDIA_URL, targetdir[len(MEDIA_ROOT):], tribename + ".pdf"))
+                tribe.network_gif_url = path.normpath("%s/%s/%s" % (MEDIA_URL, targetdir[len(MEDIA_ROOT):], tribename + ".gif"))
+                tribe.save()
+            else:
+                print "Could not set tribe urls"
 
             shutil.rmtree(gdir)

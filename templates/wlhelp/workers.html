@@ -1,21 +1,37 @@
-{% extends "base.html" %}
+{% extends "wlhelp/base.html" %}
 {% comment %}
    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content %}
-
-<!-- Workers -->
-<h1>Workers</h1>
-<table class="ware" width="100%" cellspacing="1">
-   <tr>
-      <th width="48px">Image</th>
-      <th width="96px">Name</th>
-      <th             >Description</th>
-   </tr>
-{% for worker in workers %}
-{% include "wlhelp/inlines/display_worker.html" %}
-{% endfor %}
-</table>
+{% block title %}
+Workers - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
+{% block content %}
+<h1>{{ tribe.displayname }}: Workers</h1>
+<div class="blogEntry">
+	<a href="{% url wlhelp_index %}">Encyclopedia</a> &#187;
+	<a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a> &#187;
+	Workers
+	<br /><br />
+
+	<table class="help">
+		<tr>
+			<th>Image</th>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+	{% for worker in workers %}
+		<tr class="{% cycle "odd" "even" %}">
+			<td>
+				<a href="{% url wlhelp_worker_details tribe.name worker.name %}">
+					<img src="{{ worker.image_url }}"  alt="{{ worker.name }}" />
+				</a>
+			</td>
+			<td><a id="{{ worker.name }}" href="{% url wlhelp_worker_details tribe.name worker.name %}">{{ worker.displayname }}</a></td>
+			<td>{{ worker.help }}</td> 
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}

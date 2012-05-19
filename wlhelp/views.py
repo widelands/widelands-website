@@ -22,34 +22,39 @@ def tribe_details( request, tribe ):
 
 def ware_details( request, tribe, ware ):
     w = get_object_or_404(Ware,tribe__name=tribe,name=ware)
+    t = Tribe.objects.get(name=tribe)
 
     return render_to_response('wlhelp/ware_details.html', 
         context_instance=RequestContext(request, 
-        { "ware": w}))
+        { "ware": w, "tribe": t }))
 
 def building_details( request, tribe, building ):
     b = get_object_or_404(Building,tribe__name=tribe,name=building)
+    t = Tribe.objects.get(name=tribe)
 
     return render_to_response('wlhelp/building_details.html', 
         context_instance=RequestContext(request, 
-        { "building": b }))
+        { "building": b, "tribe": t }))
 
 def worker_details( request, tribe, worker ):
     w = get_object_or_404(Worker,tribe__name=tribe,name=worker)
+    t = Tribe.objects.get(name=tribe)
 
     return render_to_response('wlhelp/worker_details.html', 
         context_instance=RequestContext(request, 
-        { "worker": w }))
+        { "worker": w, "tribe": t }))
 
 def workers(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
     return render_to_response('wlhelp/workers.html', context_instance=RequestContext(request, 
-        { "workers": Worker.objects.filter(tribe=t).order_by("displayname") }))
+        { "workers": Worker.objects.filter(tribe=t).order_by("displayname"),
+          "tribe": t }))
 
 def wares(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)
     return render_to_response('wlhelp/wares.html', context_instance=RequestContext(request, 
-        { "wares": Ware.objects.filter(tribe=t).order_by("displayname") }))
+        { "wares": Ware.objects.filter(tribe=t).order_by("displayname"),
+          "tribe": t }))
 
 def buildings(request, tribe="barbarians"):
     t = get_object_or_404(Tribe,name=tribe)

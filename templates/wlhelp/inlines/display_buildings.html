@@ -1,6 +1,6 @@
 <table class="help">
 	<tr>
-		<th></th>
+		<th>Image</th>
 		<th>Description</th>
 		<th>Build cost</th>
 		<th>Produces</th>
@@ -9,7 +9,7 @@
 {% for b in buildings %}
 	<tr class="{% cycle "odd" "even" %}">
 		<td>
-			<a href="{% url wlhelp_building_details b.tribe.name b.name %}" title="{{ b.displayname }}" name="{{ b.name }}">
+			<a href="{% url wlhelp_building_details b.tribe.name b.name %}" title="{{ b.displayname }}" id="{{ b.name }}">
 				{{ b.displayname|title }}
 				<br />
 				<img alt="{{b.displayname}}" src="{{ b.image_url }}" />

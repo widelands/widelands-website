@@ -60,9 +60,9 @@ class TribeParser(object):
             if o.errno != 17:
                 raise
         new_name = path.join(dn, "icon.png")
-        file = os.path.join(self._tribe._tdir,self._tribe._conf.getstring("tribe", "icon"))
+        file = path.join(self._tribe._tdir,self._tribe._conf.getstring("tribe", "icon"))
         shutil.copy(file, new_name )
-        self._to.icon_url = "%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
+        self._to.icon_url = path.normpath("%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):]))
         self._to.save()
 
     def parse( self ):
