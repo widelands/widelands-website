@@ -1,30 +1,38 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
+{% load custom_date %}
+{% load wlprofile %}
 
 {% block title %}
 Outbox - {{ block.super }}
 {% endblock %}
 
-{% block content %} 
-{% include "django_messages/inlines/navigation.html" %}
-<br />
-<br />
-<div class="box_item_model border">
-<h3 class="title">{% trans "Sent Messages" %}</h3>
-<table class="messages" cellspacing="1"> 
-    <thead>
-        <tr>
-            <td>{% trans "Recipient" %}</td>
-            <td>{% trans "Subject" %}</td>
-            <td>{% trans "Sent" %}</td>
-            <td>{% trans "Action" %}</td>
-        </tr>
-    </thead>
-    <tbody>
-   {% for message in message_list %} 
-   {% include "django_messages/inlines/message_row.html" %}
-   {% endfor %}
-    </tbody>
-</table>
-</div>
+{% block msg_title %}Outbox{% endblock %}
+{% block msg_content %} 
+	<table class="messages">
+		<thead>
+			<tr>
+				<th>{% trans "Recipient" %}</th>
+				<th>{% trans "Subject" %}</th>
+				<th>{% trans "Received" %}</th>
+				<th>{% trans "Action" %}</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for message in message_list %} 
+			<tr>
+				<td>{{ message.recipient|user_link }}</td>
+				<td>
+					<a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
+				</td>
+				<td>{{ message.sent_at|custom_date:user }}</td>
+				<td>
+					<a href="{% url django_messages.views.delete message.id %}">
+						<img src="{{ MEDIA_URL }}/img/delete.png" alt="delete" title="delete" />
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
 {% endblock %}

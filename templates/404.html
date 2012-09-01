@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 
-{% block content %} 
-<h1>Not found...</h1>
-
-<p>
-The document you requested was not found....<br/>
-You went astray somewhere....
-</p>
+{% block title %}
+Not found - {{ block.super}}
 {% endblock %}
 
+{% block content %} 
+<h1>Not found...</h1>
+<div class="blogEntry">
+	<p>
+		The document you requested was not found....<br />
+		You went astray somewhere....
+	</p>
+</div>
+{% endblock %}

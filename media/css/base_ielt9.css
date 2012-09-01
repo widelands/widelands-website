@@ -1,0 +1,9 @@
+ul.menu li a:hover {
+	background-image: url("../img/black50.png");
+}
+
+div.loginBox button {
+	margin: 1px 0px 5px 5px;
+	vertical-align: top;
+	height: 22px;
+}

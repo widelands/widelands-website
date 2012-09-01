@@ -29,7 +29,7 @@ TIME_ZONE = 'Europe/Berlin'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'de'
+LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
@@ -66,7 +66,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     # 'simplestats.middleware.RegexLoggingMiddleware',
-    'django.middleware.gzip.GZipMiddleware', # Remove this, when load gets to high
+    'django.middleware.gzip.GZipMiddleware', # Remove this, when load gets to high or attachments are enabled
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -103,12 +103,15 @@ ACCOUNT_ACTIVATION_DAYS=2 # Days an activation token keeps active
 # Wiki configuration #
 ######################
 WIKI_LOCK_DURATION = 30
+WIKI_URL_RE = r'[:\-\w ]+'
+WIKI_WORD_RE = r'[:\-\w ]+'
 
 ######################
 # User configuration #
 ######################
 AUTH_PROFILE_MODULE = 'wlprofile.Profile'
 DEFAULT_TIME_ZONE = 3
+DEFAULT_TIME_DISPLAY = r"%ND(m-d-y), H:i"
 DEFAULT_MARKUP ="markdown"
 SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
@@ -118,8 +121,9 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-PYBB_ATTACHMENT_ENABLE = False
+PYBB_ATTACHMENT_ENABLE = False # disable gzip middleware when enabling attachments
 PYBB_DEFAULT_MARKUP = 'markdown'
+PYBB_FREEZE_FIRST_POST = False
 
 ##############################################
 # Link classification and other Markup stuff #
@@ -131,27 +135,51 @@ SMILEY_DIR = MEDIA_URL + "img/smileys/"
 # Keep this list ordered by length of smileys
 SMILEYS = [
     ("O:-)", "face-angel.png"),
+    ("O:)", "face-angel.png"),
+    (":-/", "face-confused.png"),
+    #(":/", "face-confused.png"),
+    ("B-)", "face-cool.png"),
+    ("B)", "face-cool.png"),
     (":'-(", "face-crying.png"),
+    (":'(", "face-crying.png"),
     ("&gt;:-)", "face-devilish.png"), # Hack around markdown replacement. see also SMILEY_PREESCAPING
-    (":(|)", "face-monkey.png"),
-    (":-D", "face-grin.png"),
     ("8-)", "face-glasses.png"),
-    (":-x", "face-kiss.png"),
-    (":-|", "face-plain.png"),
-    (":-(", "face-sad.png"),
-    (":))", "face-smile-big.png"),
-    (":-)", "face-smile.png"),
-    (":-O", "face-surprise.png"),
-    (";-)", "face-wink.png"),
+    #("8)", "face-glasses.png"), # Might occur unwanted
+    (":-D", "face-grin.png"),
     (":D", "face-grin.png"),
+    (":-x", "face-kiss.png"),
+    (":x", "face-kiss.png"),
+    (":-*", "face-kiss.png"),
+    (":*", "face-kiss.png"),
+    (":-((", "face-mad.png"),
+    (":((", "face-mad.png"),
+    (":-||", "face-mad.png"),
+    (":||", "face-mad.png"),
+    (":(|)", "face-monkey.png"),
+    (":-|", "face-plain.png"),
+    (":|", "face-plain.png"),
+    (":-(", "face-sad.png"),
     (":(", "face-sad.png"),
+    (":-O", "face-shock.png"),
+    (":O", "face-shock.png"),
+    (":-)", "face-smile.png"),
     (":)", "face-smile.png"),
-    (":O", "face-surprise.png"),
+    (":-))", "face-smile-big.png"),
+    (":))", "face-smile-big.png"),
+    (":-o", "face-surprise.png"),
+    (":o", "face-surprise.png"),
+    (":-P", "face-tongue.png"),
+    (":P", "face-tongue.png"),
+    (":-S", "face-upset.png"),
+    (":S", "face-upset.png"),
+    (";-)", "face-wink.png"),
     (";)", "face-wink.png"),
 ]
 # This needs to be done to keep some stuff hidden from markdown
 SMILEY_PREESCAPING = [
     (">:-)", "\>:-)"),
+    (":-*", ":-\*"),
+    #(":*", ":\*"),
 ]
 
 ###############################
@@ -183,6 +211,11 @@ BZR_URL = r"http://bazaar.launchpad.net/%%7Ewidelands-dev/widelands/trunk/revisi
 ###############
 THUMBNAIL_SIZE = ( 160, 160 )
 
+########
+# Maps #
+########
+MAPS_PER_PAGE = 10
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -200,7 +233,7 @@ INSTALLED_APPS = (
 
     # Our own apps
     'widelands.mainpage',
-    'widelands.online_help',
+    'widelands.wlhelp',
     'widelands.wlimages',
     'widelands.wlwebchat',
     'widelands.wlrecaptcha',

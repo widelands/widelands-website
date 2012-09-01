@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}
+Encyclopedia - {{ block.super }}
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/help.css" />
+{{ block.super}}
+{% endblock %}

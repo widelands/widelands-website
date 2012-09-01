@@ -1,12 +1,30 @@
-.notice_poster { 
-    font-size: 90%;
+.notifications {
+	width: 100%;
+	border-collapse: collapse;
 }
-.notice_post_date { 
-    font-size: 90%;
+
+.notifications td {
+	border: 1px solid black;
+	padding: 4px;
+	vertical-align: middle;
 }
-.notice_unseen_notice {
-    font-style: italic;
+
+.notifications th {
+	border: none;
+	padding: 4px;
+	padding-top: 20px;
+	text-align: left;
+	font-weight: normal;
 }
-.notice_type {
-    font-weight: bold;
+
+.notifications .type {
+	width: 20%;
+}
+
+.notifications .text{
+	width: 60%;
+}
+
+.notifications .date {
+	width: 20%;
 }

@@ -1,0 +1,25 @@
+table.help {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+table.help tr {
+	
+}
+
+table.help th {
+	padding: 4px;
+	font-weight: normal;
+	font-size: 12px;
+	text-align: left;
+}
+
+table.help td {
+	padding: 4px;
+	border: 1px solid black;
+}
+
+img.icon {
+	margin: 0px 10px 10px 0px;
+}

@@ -6,8 +6,8 @@ from ConfigParser import NoSectionError, NoOptionError
 import conf
 from itertools import chain
 import os.path as p
-from glob import glob
 import re
+from string import replace
 try:
     from settings import WIDELANDS_SVN_DIR
     basedir = WIDELANDS_SVN_DIR
@@ -75,7 +75,7 @@ class Building(BaseDescr):
     @property
     def image(self):
         glob_pat = self._conf.getstring("idle", "pics")
-        return p.abspath(glob(p.join(self._tdir,self.name,glob_pat))[0])
+        return p.abspath(p.join(self._tdir,self.name,replace(glob_pat,'?','0')))
 
     @property
     def buildcost(self):
@@ -93,7 +93,7 @@ class ProductionSite(Building):
     @property
     def outputs(self):
         self_produced = set(sorted(
-            i.strip() for i in re.findall(r'produce\s*=(\w+)',
+            i.strip() for i in re.findall(r'produce\s*=\s*(\w+)',
                 open(self._conf_file).read())
         ))
         if not len(self_produced):
@@ -147,28 +147,28 @@ class Tribe(object):
     def __init__(self, name, bdir = basedir):
         self.name = name
 
-        tdir = p.join(bdir, "tribes", name)
+        self._tdir = p.join(bdir, "tribes", name)
 
-        self._conf = WidelandsConfigParser(p.join(tdir, "conf"))
+        self._conf = WidelandsConfigParser(p.join(self._tdir, "conf"))
 
-        self.wares = dict( (k,Ware(self, k, v, tdir)) for k,v in
+        self.wares = dict( (k,Ware(self, k, v, self._tdir)) for k,v in
             self._conf.items("ware types"))
         self.workers = dict(chain(
-            ((k,Worker(self, k, v, tdir)) for k,v in
+            ((k,Worker(self, k, v, self._tdir)) for k,v in
                 self._conf.items("worker types")),
-            ((k,Worker(self, k, v, tdir)) for k,v in
+            ((k,Worker(self, k, v, self._tdir)) for k,v in
                 self._conf.items("carrier types")),
         ))
 
 
         self.buildings = dict(chain(
-            ((k,ProductionSite(self, k, v, tdir)) for k,v in \
+            ((k,ProductionSite(self, k, v, self._tdir)) for k,v in \
                 self._conf.items("productionsite types")),
-            ((k,MilitarySite(self, k, v, tdir)) for k,v in \
+            ((k,MilitarySite(self, k, v, self._tdir)) for k,v in \
                 self._conf.items("militarysite types")),
-            ((k,Warehouse(self, k, v, tdir)) for k,v in \
+            ((k,Warehouse(self, k, v, self._tdir)) for k,v in \
                 self._conf.items("warehouse types")),
-            ((k,TrainingSite(self, k, v, tdir)) for k,v in \
+            ((k,TrainingSite(self, k, v, self._tdir)) for k,v in \
                 self._conf.items("trainingsite types")),
         ))
 

@@ -2,36 +2,35 @@
 {% load custom_date %}
 {% load news %}
 {% load pagination_tags %}
+{% load markup %}
 
-
-{% block title %}Post archive for {{ year }}{% endblock %}
-{% block body_class %}{{ block.super }} post_archive_year{% endblock %}
+{% block title %}{{ year }} - {{ block.super }}{% endblock %}
 
 {% block content %}
-  {% load markup %}
-{% include "django_messages/inlines/navigation.html" %}
-<br />
-<br />
-<div class="muttis_liebling">
-    <div class="box_item_model even show_center">
-        <a href="/news/">News Archiv</a>
-    {% for month in date_list %}
-        | <a href="{% url news_index %}{{ year }}/{{ month|date:"m" }}/">{{ month|date:"F" }}</a>
-    {% endfor %}
-    <br />
-    {% autopaginate object_list 10 %}
-    {% paginate %}
-    </div>
-    <br />
-    {% for object in object_list %}
-        {% include "news/inlines/post_detail.html" %}
-        <br />
-    {% endfor %}
-    {% if page_obj.has_other_pages %}
-    <div class="box_item_model even show_center">
-    {% paginate %}
-    </div>
-    {% endif %}
 
+<h1>News Archive</h1>
+<a href="{% url news_index %}" class="invertedColor">News Archiv</a> &#187; 
+<a href="{% url news_index %}{{ year }}" class="invertedColor">{{ year }}</a>: 
+{% for month in date_list %}
+	<a href="{% url news_index %}{{ year }}/{{ month|date:"m" }}/" class="invertedColor">{{ month|date:"F" }}</a>
+	{% if not forloop.last %} | {% endif %}
+{% endfor %}
+<br />
+
+<div class="center">
+{% autopaginate object_list 10 %}
+{% paginate %}
 </div>
+<br />
+
+{% for object in object_list %}
+	{% include "news/inlines/post_detail.html" %}
+{% endfor %}
+{% if page_obj.has_other_pages %}
+
+<div class="center">
+{% paginate %}
+</div>
+{% endif %}
+
 {% endblock %}

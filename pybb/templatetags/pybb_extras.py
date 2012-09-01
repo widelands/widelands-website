@@ -90,7 +90,7 @@ def pybb_last_posts(context, number = 5):
     return {
         'posts': answer,
         'user': context['user'],
-	}
+        }
 
 @register.simple_tag
 def pybb_link(object, anchor=u''):

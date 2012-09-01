@@ -2,27 +2,28 @@
 {% load i18n %}
 
 {% block title %}
-Changes in {{ article_title }} - {{ block.super }}
+{% trans "Changes in" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-   <div align="right">
-         <a href="{% url wiki_article article.title %}">{% trans "Back to article" %}</a>
-         |
-         <a href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
-   </div>
-	<h1> <a href="{% url wiki_article article_title %}"> {{ article_title }} </a> </h1>
-    {% if changeset.old_title %}
-        <h2> {{ changeset.old_title }} </h2>
-    {% endif %}
-    {% if changeset.comment %}
-    <div class="comment">
-    <p>Editor comment:<br />
-    {{changeset.comment}}</p>
-    </div>
-    {%endif %}
-    <h3>Revision differences</h3>
-    <div class="changeset_content">
-    {{ changeset.display_diff|safe }}
-    </div>
+<div class="posRight small">
+	<a href="{% url wiki_article article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
+	| <a href="{% url wiki_article_history article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
+</div>
+<h1>{% trans "Changes in" %} {{ article.title }}</h1>
+
+<div class="blogEntry">
+	{% if changeset.old_title %}
+		<h3>{% trans "Old title" %}</h3>
+		<p>{{ changeset.old_title }}</p>
+		<br />
+	{% endif %}
+	{% if changeset.comment %}
+		<h3>Editor comment</h3>
+		<p>{{changeset.comment}}</p>
+		<br />
+	{%endif %}
+	<h3>Revision differences</h3>
+	{{ changeset.display_diff|safe }}
+</div>
 {% endblock %}

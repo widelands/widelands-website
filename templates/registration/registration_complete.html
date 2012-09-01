@@ -4,21 +4,13 @@ vim:ft=htmldjango:
 {% endcomment %}
 
 {% block title %}
-{{ block.super }} - Registration complete
+Registration - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-{% include "django_messages/inlines/navigation.html" %}
-
-<br />
-<br />
-<div class="box_item_model fixed_site border">
-    <h3 class="title">Registration</h3>
-    <div class="info_line">
-        <br />
-        <div class="show_center errormessage">
-            Thank you for signing up. An email with the activation code has been send to your inbox. 
-        </div>
-    </div>
-</div>
+<h1>Registration</h1>
+<div class="blogEntry">
+	<p>
+		Thank you for signing up. An email with the activation code has been send to your inbox. 
+	</p>
 {% endblock %}

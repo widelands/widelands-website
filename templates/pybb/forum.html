@@ -1,6 +1,9 @@
 {% extends 'pybb/base.html' %}
 {% load pybb_extras %}
 {% load i18n %}
+{% load humanize %}
+{% load wlprofile %}
+{% load custom_date %}
 
 {% block title %}
 {{ forum.name }} - {{ block.super }}
@@ -8,84 +11,78 @@
 
 {% block extra_head %}
 <link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url pybb_feed "posts" %}{{forum.id}}/"  />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url pybb_feed "topics"%}{{forum.id}}/" />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url pybb_feed "topics" %}{{forum.id}}/" />
 {{ block.super }}
 {% endblock %}
 
 {% block content %}
-{% include "django_messages/inlines/navigation.html" %}
-<br />
-<br />
-<div class="box_item_model">
-    <div class="forum-list">
-        <span class="title"><a href="/forum/">Forum</a> &rArr; {{ forum }}</span>
-        <br /> 
-        <div class="index_forum">
-            <table width="100%">
-                <tr>
-                    <td>
-                        {% pybb_pagination _('Topics') %}
-                    </td>
-                    <td>
-                        <div class="controls">
-                            <a href="{% url pybb_add_topic forum.id %}">
-                                <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" style="float:right" />
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <table cellspacing="1" width="100%">
-                <tr align="center">
-                    <th width="5%">&nbsp;</th>
-                    <th width="40%" nowrap="nowrap" align="left">Topic</th>
-                    <th             nowrap="nowrap">Creator</th>
-                    <th             nowrap="nowrap">At</th>
-                    <th             nowrap="nowrap">Posts</th>
-                    <th             nowrap="nowrap">Views</th>
-                    <th width="20%" nowrap="nowrap">Last Post</th>
-                </tr>
+<h1>Forum: {{ forum }}</h1>
 
-                {# List all forums #}
-                {% for topic in topics %}
-                {% include "pybb/inlines/topic_row.html" %}
-                {% endfor %}
-            </table>
-            <table width="100%">
-                <tr>
-                    <td>
-                        {% pybb_pagination _('Topics') %}
-                    </td>
-                    <td>
-                        <div class="controls">
-                            <a href="{% url pybb_add_topic forum.id %}">
-                                <img src="{{MEDIA_URL}}/forum/img/en/new_topic.png" height="25" alt ="{% trans "New Topic" %}" style="float:right"/>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </table>     
-        </div>        
-        
-        <table class="legend">
-            <tr>
-                <td>
-                    <img src="{{MEDIA_URL}}/forum/img/folder_new.png" style=":" alt="" align="middle" />
-                </td>
-                <td>= Unread posts</td>
-                <td>
-                    <img src="{{MEDIA_URL}}/forum/img/folder.png" style="" alt="" align="middle" /> 
-                </td>
-                <td>= No unread posts</td>
-                <td>
-            </tr>
-        </table>
-    </div>
+<div class="blogEntry">
+	<a href="{% url pybb_index %}">Forums</a> &#187; 
+	{% pybb_link forum.category %} &#187; 
+	{{ forum }}
+	<br /><br />
+	<button class="posRight" onclick="window.location.href='{% url pybb_add_topic forum.id %}';">
+		<img src="{{MEDIA_URL}}/forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
+		<span class="middle">{% trans "New Topic" %}</span>
+	</button>
+	{% pybb_pagination _('Topics') %}
+	<br /><br />
+
+	<table class="forum">
+		<thead>
+			<tr>
+				<td class="forumIcon"></td>
+				<td class="forumTitle small">Title</td>
+				<td class="forumCount"></td>
+				<td class="lastPost small">Last Post by</td>
+			</tr>
+		</thead>
+		<tbody>
+	{% for topic in topics %}
+		<tr class="{% cycle 'odd' 'even' %}">
+			<td class="forumIcon center">
+				{% if topic|pybb_has_unreads:user %}
+				<img src="{{ MEDIA_URL }}/forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
+				{% else %}
+				<img src="{{ MEDIA_URL }}/forum/img/doc_big_work.png" style="margin: 0px;" alt="" class="middle" />
+				{% endif %}
+			</td>
+			<td class="forumTitle">
+				{% if topic.sticky %}<img src="{{MEDIA_URL}}/forum/img/sticky.png" alt="Sticky" title="Sticky" />{% endif %}
+				{% if topic.closed %}<img src="{{MEDIA_URL}}/forum/img/closed.png" alt="Closed" title="Closed" />{% endif %}
+				<a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a><br />
+				<span class="small">Created by {{ topic.user|user_link }} on {{ topic.created|custom_date:user }}</span>
+			</td>
+			<td class="forumCount center small" style="width: 120px;">
+				Posts: {{ topic.post_count }}<br/>
+				Views: {{ topic.views }}
+			</td>
+			<td class="lastPost">
+				{%if topic.last_post %}
+				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
+				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+		</tbody>
+	</table>
+
+	<br />
+	<button class="posRight" onclick="window.location.href='{% url pybb_add_topic forum.id %}';">
+		<img src="{{MEDIA_URL}}/forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
+		<span class="middle">{% trans "New Topic" %}</span>
+	</button>
+	{% pybb_pagination _('Topics') %}
+	<br />
+</div>
+
+<div class="center green">
+	<img src="{{MEDIA_URL}}/forum/img/doc_big_work_star.png" alt="" class="middle" />
+	= Unread posts
+	<img src="{{MEDIA_URL}}/forum/img/doc_big_work.png" alt="" class="middle" /> 
+	= No unread posts
 </div>
 {% endblock %}
-
-{% comment %}
-<div class="crumbs">
-    <a href="{% url pybb_index %}">{% trans "Root" %}</a> / {% pybb_link forum.category %} / {% pybb_link forum %}
-</div>
-{% endcomment %}

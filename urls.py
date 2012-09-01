@@ -8,6 +8,7 @@ from widelands.mainpage.views import mainpage
 
 from widelands.news.feeds import NewsPostsFeed
 from widelands.wiki.feeds import RssHistoryFeed
+from django.views.generic.simple import redirect_to
 
 feeds = {
     'news': NewsPostsFeed,
@@ -20,9 +21,8 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     # Django builtin / Registration
-    (r'^accounts/logout/(next=(?P<next_page>.*))?$', 'django.contrib.auth.views.logout'),
-url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    url(r'^accounts/changepw/$', 'django.contrib.auth.views.password_change', name="auth_change_password"),
+    # overwrite registration with own implementation
+    url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
     (r'^accounts/', include('registration.backends.default.urls')),
     (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
@@ -42,7 +42,8 @@ url (r'^accounts/register/$', 'mainpage.views.register', name='registration_regi
     url(r'^$', mainpage, name="mainpage"),
     url(r'^changelog/$', "mainpage.views.changelog", name="changelog"),
     url(r'^developers/$', "mainpage.views.developers", name="developers"),
-    url(r'^help/', include("online_help.urls")),
+    url(r'^help/(?P<path>.*)', redirect_to, { "url": "/encyclopedia/%(path)s", "permanent": True }), # to not break old links
+    url(r'^encyclopedia/', include("wlhelp.urls")),
     url(r'^webchat/', include("wlwebchat.urls")),
     url(r'^images/', include("wlimages.urls")),
     url(r'^profile/', include("wlprofile.urls")),

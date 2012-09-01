@@ -45,12 +45,17 @@ class ExtendedImageField(models.ImageField):
 
     
     def save_form_data(self, instance, data):
-        if data and self.width and self.height:
-            if instance.avatar:
-                instance.avatar.delete()
-
-            content = self.resize_image(data.read(), width=self.width, height=self.height)
-            data = SimpleUploadedFile(instance.user.username + ".png", content, data.content_type)
+        if data is not None and data != self.default:
+            if not data:
+                data = self.default
+                if instance.avatar != self.default:
+                        instance.avatar.delete()
+            else:
+                if hasattr(data, 'read') and self.width and self.height:
+                    content = self.resize_image(data.read(), width=self.width, height=self.height)
+                    data = SimpleUploadedFile(instance.user.username + ".png", content, "image/png")
+                    if instance.avatar != self.default:
+                        instance.avatar.delete()
             super(ExtendedImageField, self).save_form_data(instance, data)
 
 

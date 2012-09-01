@@ -10,7 +10,7 @@ from forms import SearchForm
 from wiki.models import Article
 from pybb.models import Post, Topic
 from news.models import Post as NewsPost
-from online_help.models import Building, Ware
+from wlhelp.models import Building, Ware
 from wlmaps.models import Map 
 
 class DummyEmptyQueryset(object):

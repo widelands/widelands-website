@@ -101,6 +101,21 @@ production environments, only for development/testing.
 See also http://docs.djangoproject.com/en/dev/ref/django-admin/#runserver-port-or-address-port
 for further details. 
 
+Setting up the online help / encyclopedia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You will need graphviz to generate the graphs for the online help. On Ubunutu run:
+
+   $ sudo apt-get install graphviz
+
+To generate the online help database switch to your local environment and run:
+
+   $ ./manage.py update_help
+
+After that you can create the overview pdf files with
+
+   $ ./manage.py update_help_pdf
+
 Contact
 =======
 

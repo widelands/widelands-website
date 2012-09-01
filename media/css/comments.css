@@ -2,28 +2,33 @@
  * Comment
  */
 .comment {
-    margin: 0px;
-    padding-bottom: 2px;
-    /*
-     * border: 1px solid rgb(20%,20%,20%);
-     */
-    border-top: 0px;
-    width: 100%;
+	border: 1px solid black;
+	padding: 8px;
+	margin-bottom: 5px;
 }
-.comment p {
-    margin: 0px;
-    margin-bottom: 4px;
+
+.comment table {
+	border-collapse: collapse;
+	width: 100%;
 }
-.comment .at {
-   text-align: right;
-   font-size: 90%;
-}
+
 .comment .author {
-   font-size: 110%;
-   font-style: italic;
-   vertical-align: top;
-   margin-bottom: 5px;
+	padding-right: 8px;
+	text-align: center;
+	border-right: 1px solid #998;
+	height: 100%;
 }
-.text textarea {
-    width: 100%;
+
+.comment .text {
+	padding-left: 8px;
+	width: 100%;
+}
+
+textarea {
+	width: 97%;
+}
+
+.comment .reply_link {
+	vertical-align: bottom;
+	text-align: right;
 }

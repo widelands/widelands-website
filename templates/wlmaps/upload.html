@@ -1,0 +1,21 @@
+{% extends "wlmaps/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block title %}Upload - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>Map Upload</h1>
+<div class="blogEntry">
+	<a href="{% url wlmaps_index %}">Maps</a> &#187; Upload
+	<br /><br />
+	<form enctype="multipart/form-data" action="{% url wlmaps_upload %}" method="post">
+		{{ form.file.label_tag }}: {{ form.file }}<br />
+		{{ form.uploader_comment.label_tag }}:<br />
+		{{ form.uploader_comment }}
+		{% csrf_token %}<br />
+		<input type="submit" value="Upload" />
+	</form>
+</div>
+{% endblock %}

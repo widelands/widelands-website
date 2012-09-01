@@ -1,0 +1,22 @@
+{% extends "wlhelp/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block title %}
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+<h1>Encyclopedia</h1>
+<div class="blogEntry">
+Encyclopedia &#187; Index
+<br /><br />
+<p>This is a list of all tribes in Widelands:</p>
+<ul>
+{% for tribe in tribes %}
+	<li><a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a></li>
+{% endfor %}
+</ul>
+</div>
+{% endblock %}

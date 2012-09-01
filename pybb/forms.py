@@ -27,7 +27,10 @@ class AddPostForm(forms.ModelForm):
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
-        self.fields.keyOrder = ['name', 'body', 'markup', 'attachment']
+        self.fields.keyOrder = ['name', 
+                                'body', 
+                                'markup', 
+                                'attachment']
 
         if self.topic:
             self.fields['name'].widget = forms.HiddenInput()
@@ -49,7 +52,7 @@ class AddPostForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         if self.forum:
-	    topic_is_new = True
+            topic_is_new = True
             topic = Topic(forum=self.forum,
                           user=self.user,
                           name=self.cleaned_data['name'])
@@ -91,7 +94,7 @@ class AddPostForm(forms.ModelForm):
 class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['body']
+        fields = ['body', 'markup']
 
     def save(self, *args, **kwargs):
         post = super(EditPostForm, self).save(commit=False)

@@ -1,75 +1,79 @@
 {% comment %}
    vim:ft=htmldjango
 {% endcomment %}
-<div class="dropdown"> 
-<ul>
-<li><a href="/">Home</a></li>
-<li>
-    <a href="{% url wiki_article "DownloadPage" %}">&emsp;&ensp;Downloads</a>
-    <div class="arrow-down"></div>
-    <ul>
-        <li><a href="{% url wiki_article "DownloadPage" %}">The Game</a></li>
-        <li><a href="{% url wiki_article "WidelandsArtwork" %}">Artworks</a></li>
-        <li><a href="{% url wlmaps_index %}">Maps</a></li>
-    </ul>
-</li>
-<li><a href="{% url wlscreens_index %}">Screenshots</a></li>
-<li>
-    <a href="{% url wiki_index %}">&emsp;&ensp;Wiki (Help &amp; Docu.)</a>
-    <div class="arrow-down"></div>
-    <ul>
-        <li><a href="/wiki/GameHelp">Game Help</a></li>
-        <li><a href="{% url wiki_index %}">Main Page</a></li>
-        <li><a href="{% url wiki_list %}">All articles</a></li>
-        <li><a href="{% url wiki_history %}">Recent changes</a></li>
-    </ul>
-</li>
-<li>
-    <a href="{% url pybb_index %}">&emsp;&ensp;Forum</a>
-    <div class="arrow-down"></div>
-    <ul>
-        <li><a href="{% url pybb_forum 1 %}">Technical Help</a></li>
-        <li><a href="{% url pybb_forum 2 %}">Game suggestions</a></li>
-        <li><a href="{% url pybb_forum 3 %}">Playing widelands</a></li>
-        <li><a href="{% url pybb_forum 4 %}">Editor Forum</a></li>
-        <li><a href="{% url pybb_forum 5 %}">[Deutsch] - Spielerforum</a></li>
-        <li><a href="{% url pybb_forum 6 %}">[Español] - Foro de jugadores</a></li>
-        <li><a href="{% url pybb_forum 7 %}">[Française] - Forum de joueurs</a></li>
-        <li><a href="{% url pybb_forum 13 %}">[English] - Player Forum</a></li>
-        <li><a href="{% url pybb_forum 9 %}">Graphic Development</a></li>
-        <li><a href="{% url pybb_forum 10 %}">Sound &amp; Music Development</a></li>
-        <li><a href="{% url pybb_forum 11 %}">Homepage</a></li>
-        <li><a href="{% url pybb_forum 12 %}">Translations &amp; Internationalization</a></li>
-    </ul>
-</li>
-<li>
-    <a href="{% url webchat_index %}">IRC Chat</a>
-</li>
-<li>
-    <a href="{% url wiki_article "DevelopmentPage" %}">&emsp;&ensp;Development</a>
-    <div class="arrow-down"></div>
-    <ul>
-        <li><a href="{% url wiki_article "DevelopmentPage" %}">Development</a></li>
-        <li><a href="{% url wiki_article "DevelopersPage" %}">Developers</a></li>
-        <li><a href="{% url wiki_article "MailLists" %}">Mailing Lists</a></li>
-        <li><a href="{% url wiki_article "WannaHelp" %}">Wanna help?</a></li>
-        <li><a href="https://bugs.launchpad.net/widelands">Widelands Bugtracker</a></li>
-        <li><a href="https://bugs.launchpad.net/widelands-website">Website Bugtracker</a></li>
-    </ul>
-</li>
- {% comment %}
-<li>
-    <a href="{% url wlggz_main %}">Online Gaming</a>
-    <ul>
-        <li><a href="{% url wlggz_ranking %}">GGZ Ranking</a></li>
-        <li><a href="{% url wlggz_matches %}">GGZ Matches</a></li>
-        {% if user.is_authenticated %}
-        <li><a href="{% url wlggz_userstats %}">GGZ Status</a></li>
-        {% endif %}
-        <li><a href="{% url wiki_article "InternetGaming" %}">HowTo</a></li>
-    </ul>
-</li>
-         {% endcomment %}
-        </ul>
-</div> 
-        
+
+<script type="text/javascript">
+	/* Enable dropdown menus on touch devices */
+	$(document).ready(function(){
+		$(".menu li").live("touchstart", function() {
+			$(this).next("ul").css("display", "block");
+		});
+	});
+</script>
+
+<ul class="menu posLeft">
+	<li><a href="/">Home</a>
+		<ul>
+			<li><a href="{% url news_index %}">News Archive</a></li>
+			<li><a href="{% url wlpoll_archive %}">Poll Archive</a></li>
+		</ul>
+	</li>
+	<li><a href="{% url wiki_article "Description" %}">The Game</a>
+		<ul>
+			<li><a href="{% url wiki_article "Description" %}">Description</a></li>
+			<li><a href="{% url wiki_article "Download" %}">Download</a></li>
+			<li><a href="{% url wlscreens_index %}">Screenshots</a></li>
+			<li><a href="{% url wiki_article "Artwork" %}">Artwork</a></li>
+			<li><a href="{% url wlmaps_index %}">Maps</a></li>
+			<li><a href="{% url wlhelp_index %}">Encyclopedia</a></li>
+			<li><a href="{% url changelog %}">Changelog</a></li>
+			<li><a href="{% url developers %}">Widelands Development Team</a></li>
+		</ul>
+	</li>
+	<li><a href="{% url wiki_index %}">Wiki</a>
+		<ul>
+			<li><a href="{% url wiki_article "Game Manual" %}">Game Manual</a></li>
+			<li><a href="{% url wiki_article "Creating Game Content" %}">Creating Game Content</a></li>
+			<li><a href="{% url wiki_article "The Widelands Project" %}">The Widelands Project</a></li>
+		</ul>
+	</li>
+	<li><a href="{% url pybb_index %}">Forums</a>
+		<ul>
+			<li><a href="{% url pybb_forum 1 %}">Technical Help</a></li>
+			<li><a href="{% url pybb_forum 2 %}">Game Suggestions</a></li>
+			<li><a href="{% url pybb_forum 3 %}">Playing Widelands</a></li>
+			<li><a href="{% url pybb_forum 4 %}">Editor Forum</a></li>
+			<li><a href="{% url pybb_forum 5 %}">[Deutsch] - Spielerforum</a></li>
+			<li><a href="{% url pybb_forum 6 %}">[Español] - Foro de jugadores</a></li>
+			<li><a href="{% url pybb_forum 7 %}">[Française] - Forum de joueurs</a></li>
+			<li><a href="{% url pybb_forum 13 %}">[English] - Player Forum</a></li>
+			<li><a href="{% url pybb_forum 9 %}">Graphic Development</a></li>
+			<li><a href="{% url pybb_forum 10 %}">Sound &amp; Music Development</a></li>
+			<li><a href="{% url pybb_forum 11 %}">Homepage</a></li>
+			<li><a href="{% url pybb_forum 12 %}">Translations &amp; Internationalization</a></li>
+		</ul>
+	</li>
+	<li><a href="{% url webchat_index %}">Chat</a></li>
+	<li><a href="{% url wiki_article "Development" %}">Development</a>
+		<ul>
+			<li><a href="{% url wiki_article "Contribute" %}">Contribute</a></li>
+			<li><a href="{% url developers %}">Widelands Development Team</a></li>
+			<li><a href="/docs/" target="_blank">Documentation</a></li>
+			<li><a href="https://bugs.launchpad.net/widelands" target="_blank">Widelands Bugtracker</a></li>
+			<li><a href="https://bugs.launchpad.net/widelands-website" target="_blank">Website Bugtracker</a></li>
+		</ul>
+	</li>
+</ul>
+<div class="searchBox posRight">
+	<form method="post" action="/search/">
+		<div class="searchBoxInner">
+			<input id="id_nav_search" type="text" name="search" class="searchField placeholder" placeholder="Search..." maxlength="200" />
+			<input id="id_nav_incl_wiki" type="hidden" name="incl_wiki" value="1" />
+			<input id="id_nav_incl_news" type="hidden" name="incl_news" value="1" />
+			<input id="id_nav_incl_maps" type="hidden" name="incl_maps" value="1" />
+			<input id="id_nav_incl_help" type="hidden" name="incl_help" value="1" />
+			<input id="id_nav_incl_forum" type="hidden" name="incl_forum" value="1" />
+			{% csrf_token %}
+		</div>
+	</form>
+</div>

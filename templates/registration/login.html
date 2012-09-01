@@ -1,56 +1,43 @@
 {% extends "registration/base.html" %}
 
 {% block title %}
-{{ block.super }} - Login
+Login - {{ block.super }}
 {% endblock %}
 
 {% block content %}
-{% include "django_messages/inlines/navigation.html" %}
-<br />
-<br />
-<div class="box_item_model fixed_site border">
-    <h3 class="title">Login</h3>
+
+<h1>Login</h1>
+<div class="blogEntry">
 {% if form.errors %}
-    <div class="info_line show_center errormessage">
-        <br />
-        Your username and password didn't match.
-        <br />
-        Please try again.
-        <br />
-        <br />
-    </div>
+	<p class="errormessage">
+		Your username and password didn't match.
+		<br />
+		Please try again.
+	</p>
 {% endif %}
-    <div class="info_line show_center">
-        <br />
-        <form method="post" action=".">
-            <table>
-                <tr>
-                    <td>
-                        {{ form.username.label_tag }}: 
-                    </td>
-                    <td>
-                        {{ form.username }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{ form.password.label_tag }}: 
-                    </td>
-                    <td>
-                        {{ form.password }}
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td class="show_right">
-                        <input type="submit" value="login" />
-                        <input type="hidden" name="next" value="{{ next }}" />
-                    </td>
-                </tr>
-            </table>
-           {% csrf_token %}
-        </form>
-        <br />
-    </div>
+	<form method="post" action="." id="login_form">
+		<table>
+			<tr>
+				<td class="grey">
+					{{ form.username.label_tag }}: 
+				</td>
+				<td>
+					{{ form.username }}
+				</td>
+			</tr>
+			<tr>
+				<td class="grey">
+					{{ form.password.label_tag }}: 
+				</td>
+				<td>
+					{{ form.password }}
+				</td>
+			</tr>
+		</table>
+		{% csrf_token %}
+		<input type="submit" value="login" />
+		<input type="hidden" name="next" value="{{ next }}" />
+	</form>
+	<p><a href="{% url auth_password_reset %}">Lost password?</a> | <a href="{% url registration_register %}">Register now!</a></p>
 </div>
 {% endblock %}

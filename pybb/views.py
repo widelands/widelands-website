@@ -31,17 +31,7 @@ def index_ctx(request):
              'last_posts': Post.objects.order_by('-created').select_related()[:pybb_settings.QUICK_POSTS_NUMBER],
              }
 
-    cats = {}
-    forums = {}
-
-    for forum in Forum.objects.all().select_related():
-        cat = cats.setdefault(forum.category.id,
-            {'cat': forum.category, 'forums': []})
-        cat['forums'].append(forum)
-        forums[forum.id] = forum
-
-    cmpdef = lambda a, b: cmp(a['cat'].position, b['cat'].position)
-    cats = sorted(cats.values(), cmpdef)
+    cats = Category.objects.all().select_related()
 
     return {'cats': cats,
             'quick': quick,
@@ -161,7 +151,7 @@ def add_post_ctx(request, forum_id, topic_id):
         quote = ''
     else:
         post = get_object_or_404(Post, pk=quote_id)
-        quote = quote_text(post.body_text, post.user, "markdown")
+        quote = quote_text(post.body, post.user, "markdown")
 
     ip = request.META.get('REMOTE_ADDR', '')
     form = build_form(AddPostForm, request, topic=topic, forum=forum,
@@ -170,7 +160,7 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save();
-	if not topic:
+        if not topic:
             post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
 
@@ -348,7 +338,7 @@ def show_attachment(request, hash):
 @ajax
 def post_ajax_preview(request):
     content = request.POST.get('content')
-    markup = "markdown"
+    markup = request.POST.get('markup')
 
     if not markup in dict(MARKUP_CHOICES).keys():
         return {'error': 'Invalid markup'}

@@ -1,26 +1,27 @@
-
-#map_list {
-    padding: 5px;
+img.minimap {
+	max-height: 250px;
 }
 
-h1 {
-    display: block;
-    font-weight: bold;
-    padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 1px;
-    background: url('../img/background-444.png');
+img.map {
+	margin: 0px 10px 10px 0px;
 }
 
-.map_details .author {
-    display: block;
-}
-.map_details .uploader {
-    display: block;
-    margin-bottom: 10px; 
+.forum table td {
+	padding: 2px;
 }
 
-/* Modified css for jqModal */
-div.jqmDialog {
-    width: 480px;
+.forum td {
+	vertical-align: top;
+}
+
+.forum .spacer {
+	width: 15px;
+}
+
+p {
+	vertical-align: top;
+}
+
+textarea {
+	width: 97%;
 }

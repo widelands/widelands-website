@@ -5,118 +5,124 @@
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}/css/search.css" />
-{{ block.super}}{% endblock %}
+{{ block.super}}
+{% endblock %}
 
 {% block content %}
-<div class="search">
-   <h1>Search</h1>
+<h1>Search</h1>
+<div class="blogEntry">
+	<p>
+		The search only matches complete words. Case is ignored. 
+	</p>
 
-   <p>
-   The search only matches complete words. Case is ignored. 
-   </p>
+	<form method="post" action=".">
+		{% for error in search_form.search.errors %}
+		<p class="errormessage">{{ error }}</p>
+		{% endfor %}
+		<label for="id_search" class="grey">Search:</label> {{ search_form.search }}
+		<input type="submit" value="Search" />
+		<br />
+		<label for="id_incl_wiki">Wiki</label> {{ search_form.incl_wiki }} 
+		<label for="id_incl_wiki">Encyclopedia</label> {{ search_form.incl_help }} 
+		<label for="id_incl_forum">Forum</label> {{ search_form.incl_forum }} 
+		<label for="id_incl_wiki">Maps</label> {{ search_form.incl_maps }} 
+		<label for="id_incl_news">News</label> {{ search_form.incl_news }} 
+		{% csrf_token %}
+	</form>
 
-   <div class="form">
-   <form method="post" action="">
-      <p>{{ search_form.search.errors }}<label for="id_search">Search:</label>
-      {{ search_form.search }}</p>
-      <label for="id_incl_wiki">Online Help</label> {{ search_form.incl_help }} 
-      <label for="id_incl_wiki">Wiki</label> {{ search_form.incl_wiki }} 
-      <label for="id_incl_forum">Forum</label> {{ search_form.incl_forum }} 
-      <label for="id_incl_wiki">Maps</label> {{ search_form.incl_maps }} 
-      <label for="id_incl_news">News</label> {{ search_form.incl_news }} 
-
-      <input type="submit" value="Search" />
-   {% csrf_token %}
-   </form>
-   </div>
-</div>
-
-   <div class="results">
 {% if post %}
+<h2>Results</h2>
 
-<h1>Your results</h1>
-
+{# Wiki #}
 {% if wiki_results.count %}
-   <h2>Wiki results</h2>
-   <ul>
-   {% for r in wiki_results %}
-   <li class="wiki"><a href="{{r.get_absolute_url}}">{{r.title}}</a>
-   </li>
-   {% endfor %}
-   </ul>
+	<h3>Wiki</h3>
+	<ul>
+	{% for r in wiki_results %}
+		<li><a href="{{r.get_absolute_url}}">{{r.title}}</a></li>
+	{% endfor %}
+	</ul>
 {% endif %}
 
-{# Online help #}
+{# Encylcopedia #}
 {% if help_hits %}
-    <h2>Help results</h2>
-     
-    {% if help_results_buildings.count %}
-    <ul>
-    {% for b in help_results_buildings %}
-    <li class="building"><a href="{% url help_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }}: {{b.displayname}}</a></li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    
-    {% if help_results_wares.count %}
-    <ul>
-    {% for w in help_results_wares %}
-    <li class="ware"><a href="{% url help_ware_details w.tribe.name w.name %}">{{ w.tribe.displayname }}: {{w.displayname}}</a></li>
-    {% endfor %}
-    </ul>
-    {% endif %}
+	<h3>Encyclopedia</h3>
+	{% if help_results_buildings.count %}
+	<h4>Buildings</h4>
+	<ul>
+	{% for b in help_results_buildings %}
+		<li><a href="{% url help_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }} &raquo; {{b.displayname}}</a></li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	{% if help_results_wares.count %}
+	<h4>Wares</h4>
+	<ul>
+	{% for w in help_results_wares %}
+		<li><a href="{% url help_ware_details w.tribe.name w.name %}">{{ w.tribe.displayname }} &raquo; {{w.displayname}}</a></li>
+	{% endfor %}
+	</ul>
+	{% endif %}
 {%endif %}
 
 {# Forum #}
 {% if forum_hits %}
-   <h2>Forum results</h2>
-   {% if forum_results_topic.count %}
-   <h3>Topics</h3>
-   <ul>
-   {% for r in forum_results_topic %}
-   <li class="topic"><a href="{{r.forum.get_absolute_url}}">{{r.forum.name}}</a>
-   &raquo; <a href="{{r.get_absolute_url}}">{{r.name}}</a></li>
-   {% endfor %}
-   </ul>
-   {%endif %}
+	<h3>Forum</h3>
+	{% if forum_results_topic.count %}
+	<h4>Topics</h4>
+	<ul>
+	{% for r in forum_results_topic %}
+		<li>
+			<a href="{{r.forum.get_absolute_url}}">{{r.forum.name}}</a>
+			&raquo; <a href="{{r.get_absolute_url}}">{{r.name}}</a>
+			, <span class="small">{{ r.created|custom_date:user }}</span>
+		</li>
+	{% endfor %}
+	</ul>
+	{%endif %}
 
-   {% if forum_results_post.count %}
-   <h3>Posts</h3>
-   <ul>
-   {% for r in forum_results_post %}
-   <li class="post"><a href="{{r.topic.forum.get_absolute_url}}">{{r.topic.forum.name}}</a>
-   &raquo; <a href="{{r.topic.get_absolute_url}}">{{r.topic.name}}</a> &raquo; <a href="{{r.get_absolute_url}}">Post by {{r.user.username}}</a>, <span class="posted">{{ r.created|custom_date:user }}</span></li>
-   {% endfor %}
-   </ul>
-   {% endif %}
+	{% if forum_results_post.count %}
+	<h4>Posts</h4>
+	<ul>
+	{% for r in forum_results_post %}
+		<li>
+			<a href="{{r.topic.forum.get_absolute_url}}">{{r.topic.forum.name}}</a>
+			&raquo; <a href="{{r.topic.get_absolute_url}}">{{r.topic.name}}</a> 
+			&raquo; <a href="{{r.get_absolute_url}}">Post by {{r.user.username}}</a>
+			, <span class="small">{{ r.created|custom_date:user }}</span>
+		</li>
+	{% endfor %}
+	</ul>
+	{% endif %}
 {% endif %}
 
 {# Maps #}
 {% if map_results.count %}
-   <h2>Map results</h2>
-   <ul>
-   {% for m in map_results %}
-   <li class="map"><a href="{{m.get_absolute_url}}">{{ m.name }}</a> by
-   <span class="author">{{ m.author }}</span>, 
-   <span class="posted">{{ m.pub_date|custom_date:user }}</span></li>
-   {% endfor %}
-   </ul>
+	<h3>Maps</h3>
+	<ul>
+	{% for m in map_results %}
+		<li>
+			<a href="{{m.get_absolute_url}}">{{ m.name }}</a> by {{ m.author }}
+			, <span class="small">{{ m.pub_date|custom_date:user }}</span>
+		</li>
+	{% endfor %}
+	</ul>
 {% endif %}
-
 
 {# News #}
 {% if news_results.count %}
-   <h2>News results</h2>
-   <ul>
-   {% for r in news_results %}
-   <li class="news"><a href="{{r.get_absolute_url}}">{{ r.title }}</a>, 
-   <span class="posted">{{ r.publish|custom_date:user }}</span></li>
-   {% endfor %}
-   </ul>
+	<h3>News results</h3>
+	<ul>
+	{% for r in news_results %}
+		<li>
+			<a href="{{r.get_absolute_url}}">{{ r.title }}</a>
+			, <span class="small">{{ r.publish|custom_date:user }}</span>
+		</li>
+	{% endfor %}
+	</ul>
 {% endif %}
 
 {% endif %}
-   </div>
 
+</div>
 {% endblock %}
-

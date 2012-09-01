@@ -2,42 +2,50 @@
     vim:ft=htmldjango:
 {% endcomment %}
 {% load threadedcommentstags %}
+{% load wlprofile %}
 
 <script type="text/javascript">
-<!--
-function show_reply_form(comment_id, url, person_name) {
-    var comment_reply = $('#' + comment_id);
-    var to_add = $( new Array(
-    '<div class="response"><p>Reply to ' + person_name + ':</p>',
-    '<form method="POST" action="' + url + '?next={{object.get_absolute_url}}">',
-    '<div class="comment_post">',  '<div class="comment text"> <span class=errorclass">{{ form.comment.errors }}</span>{{ form.comment }}',  
-    '</div> <input type="hidden" name="markup" value="1" />',
-        '<input type="submit" value="Submit Comment" />',
-        '</div>', "{% csrf_token %}", '</form>', '</div>').join(''));
-    to_add.css("display", "none");
-    comment_reply.after(to_add);
-    to_add.slideDown(function() {
-        comment_reply.replaceWith(new Array('<a id="',
-        comment_id,'" href="javascript:hide_reply_form(\'',
-        comment_id, '\',\'', url, '\',\'', person_name,
-        '\')">Stop Replying</a>').join(''));
-    });
+function show_reply_form(comment_id, url, depth) {
+	var comment = $('#' + comment_id);
+	var reply_link = $('#' + comment_id + " .reply_link");
+	var reply_form = $('<div class="comment odd response" style="margin-left: ' + (depth+1) +'cm;">'
+			+ '<table>'
+				+ '<tr>'
+					+ '<td class="author">'
+						+ '<a href="{% url profile_view user %}">'
+							+ '<img style="width: 50px; height: 50px;" src="{{ user.wlprofile.avatar.url }}" />'
+						+ '</a>'
+						+ '<br />'
+						+ '<span class="small">{{ user|user_link }}</span>'
+					+ '</td>'
+					+ '<td class="text">'
+						+ '<form method="POST" action="' + url + '?next={{object.get_absolute_url}}">'
+							+ '<span class="errormessage">{{ form.comment.errors }}</span>'
+							+ '{{ form.comment }}'
+							+ '<br />'
+							+ '<input type="hidden" name="markup" value="1" />'
+							+ '<input type="submit" value="Submit Comment" />'
+							+ '<button type="button" onclick="javascript:hide_reply_form(\''+comment_id+'\', \''+url+'\', '+depth+')">Cancel</button>'
+							+ "{% csrf_token %}"
+							+ '</form>'
+					+ '</td>'
+				+ '</tr>'
+			+ '</table>'
+		+ '</div>');
+	reply_form.css("display", "none");
+	comment.after(reply_form);
+	reply_link.html('<a href="javascript:hide_reply_form(\''+comment_id+'\', \''+url+'\', '+depth+')">Stop Replying</a>');
+	reply_form.slideDown(function() {});
+}
 
-    check_posting();
+function hide_reply_form(comment_id, url, depth) {
+	var comment = $('#' + comment_id);
+	var reply_link = $('#' + comment_id + " .reply_link");
+	reply_link.html('<a href="javascript:show_reply_form(\''+comment_id+'\', \''+url+'\', '+depth+')">Reply</a>');
+	comment.next('.response').slideUp(function() {
+		comment.next('.response').remove();
+	});
 }
-function hide_reply_form(comment_id, url, person_name) {
-    var comment_reply = $('#' + comment_id);
-    comment_reply.next().slideUp(function (){
-        comment_reply.next('.response').remove();
-        comment_reply.replaceWith(new Array('<a id="',
-        comment_id,'" href="javascript:show_reply_form(\'',
-        comment_id, '\',\'', url, '\',\'', person_name,
-        '\')">Reply</a>').join(''));
-    });
-    
-   check_posting();
-}
--->
 </script>
 
 

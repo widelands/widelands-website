@@ -1,22 +1,43 @@
 {% comment %}
    vim:ft=htmldjango:
 
-   How to display a Forum list in the index page
+   How to display a Forum list
 {% endcomment %}
-<div class="box_item_model index_category">
-    <h3 class="title">{{category.cat}} </h3>
-    <table class="full_site" cellspacing="1">
-        <tr class="show_center" cellspacing="0">
-            <td width="5%" class="info_line show_left">&nbsp;</td>
-            <td width="57%" nowrap="nowrap" class="info_line show_left">Forum</td>
-            <td width="9%" nowrap="nowrap" class="info_line show_left">Topics</td>
-            <td width="9%" nowrap="nowrap" class="info_line show_left">Posts</td>
-            <td width="20%" nowrap="nowrap" class="info_line show_left">Last Post</td>
-        </tr>
-        {# List all forums #}
-        {% for forum in category.forums %}
-        {% include 'pybb/inlines/forum_row.html' %}
-        {% endfor %}
-    </table>
-</div>
 
+{% load humanize %}
+{% load pybb_extras %}
+{% load wlprofile %}
+{% load custom_date %}
+
+<table class="forum">
+	{# List all forums #}
+	{% for forum in category.forums.all %}
+	<tr class="{% cycle 'odd' 'even' %}">
+		<td class="forumIcon center">
+		{% if forum|pybb_has_unreads:user %}
+			<img src="{{ MEDIA_URL }}/forum/img/folder_big_work_star.png" style="width: 48px; height:48px; margin: 0px;" alt="" />
+		{% else %}
+			<img src="{{ MEDIA_URL }}/forum/img/folder_big_work.png" style="width: 48px; height:48px; margin: 0px;" alt="" />
+		{% endif %}
+		</td>
+		<td class="forumTitle">
+			<a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+			<br />
+			<span class="small">{{ forum.description }}</span>
+		</td>
+		<td class="forumCount center small" style="width: 120px;">
+			Topics: {{ forum.topics.count }}<br/>
+			Posts: {{ forum.posts.count }}
+		</td>
+		<td class="lastPost">
+		{%if forum.last_post %}
+			<a href="{{forum.last_post.get_absolute_url}}">{{ forum.last_post.topic.name }}</a><br />
+			<span class="small">by {{ forum.last_post.user|user_link }}<br />
+			on {{ forum.last_post.created|custom_date:user}}</span>
+		{% else %}
+			&nbsp;
+		{% endif %}
+		</td>
+	</tr>
+	{% endfor %}
+</table>

@@ -6,130 +6,100 @@
 {% endcomment %}
 {% load inbox %}
 {% load i18n %}
-{% load wlprofile wlpoll wlevents%}
+{% load wlprofile wlpoll wlevents %}
 {% load pybb_extras secure_login %}
+{% load online_users %}
 
-      <!-- Search Box -->
-      <h3 class="box_title">Search</h3>
-      <div class="box_content" align="center">
-         <form method="post" action="/search/">
-            <input id="id_search" type="text" name="search" maxlength="200" />
-            <input id="id_incl_wiki" type="hidden" name="incl_wiki" value="1" />
-            <input id="id_incl_news" type="hidden" name="incl_news" value="1" />
-            <input id="id_incl_maps" type="hidden" name="incl_maps" value="1" />
-            <input id="id_incl_help" type="hidden" name="incl_help" value="1" />
-            <input id="id_incl_forum" type="hidden" name="incl_forum" value="1" />
-         {% csrf_token %}
-	 </form>
-      </div>
 
-        <!-- Donation Box -->
+<!-- Donation Box -->
+<div class="columnModule">
+	<h3>Donation</h3>
+	<div class="columnModuleBox center">
+		<p>
+		Help us to pay our server!
+		<br />
+		(: Consider a donation :)
+		</p>
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick" />
+			<input type="hidden" name="lc" value="GB" />
+			<input type="hidden" name="hosted_button_id" value="JH5R7YHSVRMRG" />
+			<input type="image" class="donate" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+			<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
+		</form>
+		<br /><br />
+	</div>
+</div>
 
-         <h3 class="box_title">Donation</h3>
-         <div class="box_content" align="center">
-            Help us to pay our Server!<br/>(: Consider a donation :) <br/><br/>
-         <div>
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-            <input type="hidden" name="cmd" value="_s-xclick" />
-            <input type="hidden" name="lc" value="GB">
-            <input type="hidden" name="hosted_button_id" value="JH5R7YHSVRMRG" />
-            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-            <img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
-            </form>
-         </div>
-         </div>
 
-         <!-- Login Block / User informations -->
-         {% if user.is_authenticated %}
-         <h3 class="box_title">Account</h3>
-         <div class="box_content"> 
-            <p align="center">
-            Welcome <b>{{ user|user_link }}</b>,<br />
-            you've <a href="{% url messages_inbox %}">{% inbox_count %}</a> new messages
-            </p>
-            <ul>
-                <li>
-                    <a href="{% url profile_edit %}">Edit Profile</a>
-                </li>
-                <li>
-                    <a href="{% url notification_notices %} ">Notifications</a>
-                </li>
-                <li>
-                    <a href="/accounts/logout/next={{ request.path }}">Logout</a>
-                </li>
-            </ul>
-         </div>
-         {% else %}
-         <h3 class="box_title">Login</h3>
-         <div class="box_content"> 
-         <center>
-            <a href="/accounts/login/?next={{ request.path }}">Click here to login</a><br/><br/>
-            <a href="/accounts/password/reset/">Lost password?</a><br/>
-            <a href="/accounts/register">Register now!</a><br/>
-         </center>
-         </div>
-         {% endif %}
-         <!-- Current polls if any -->
-         {% get_open_polls as polls %}
-         {% if polls %}
-         <center>
-            <h3 class="box_title">Polls</h3>
-            <div class="box_content" align="center">
-            {% for p in polls %}
-            <div class="sub_content">
-               <h4>{{p.name}}</h4>
-            {% if not user.is_anonymous %}
-               {% if p.user_has_voted %}
-                  <p>You already voted on this!</p>
-               {% else %}
-               <form method="post" action="{% url wlpoll_vote p.id %}">
-                  <table class="poll_vote">
-                     {% for c in p.choices.all %}
-                     <tr>
-                        <td><input type="radio" name="choice_id" value="{{ c.id }}" /></td>
-                        <td>{{ c.choice }}</td>
-                     </tr>
-                     {% endfor %}
-                  </table>
-                     <input type="submit" value="Vote" />
-                     {% csrf_token %}
-               </form>
-               {% endif %}
-            {% else %}
-               <p>Log in to vote!</p>
-            {% endif %}
-               <input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
-            </div>
-            {% endfor %}
-            <a href="{% url wlpoll_archive %}">Archive</a>
-            </div>
-         </center>
-         {% endif %}
+<!-- TODO: design that -->
+<!-- Current polls if any -->
+{% get_open_polls as polls %}
+{% if polls %}
+<div class="columnModule">
+	<h3>Polls</h3>
+	<div class="columnModuleBox">
+	{% for p in polls %}
+		<h4>{{p.name}}</h4>
+		{% if not user.is_anonymous %}
+			{% if p.user_has_voted %}
+				<p class="small">You already voted on this!</p>
+				<div class="center">
+					<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+				</div>
+			{% else %}
+				<form method="post" action="{% url wlpoll_vote p.id %}">
+					<ul class="poll">
+					{% for c in p.choices.all %}
+						<li><input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" /><label for="{{ c.id }}">{{ c.choice }}</label></li>
+					{% endfor %}
+					</ul>
+					<div class="center">
+						<input type="submit" value="Vote" />
+						<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+					</div>
+					{% csrf_token %}
+				</form>
+			{% endif %}
+		{% else %}
+			<p class="small"><a href="{% url auth_login %}?next={{ request.path|iriencode }}">Log in</a> to vote!</p>
+			<div class="center">
+				<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+			</div>
+		{% endif %}
+	{% endfor %}
+		<div class="center">
+			<p><a href="{% url wlpoll_archive %}">Archive</a></p>
+		</div>
+	</div>
+</div>
+{% endif %}
 
-         <!-- Future Events if any -->
-         {% get_future_events as events %}
-         {% if events.count %}
-         <h3 class="box_title">Important Dates</h3>
-         <div class="box_content" align="center">
-         {% for e in events %}
-            <div class="event">
-               <a href="{{e.link}}" class="link">{{e.name}}</a><br />
-               <div class="date">
-               {{e.start_date|date:"d M"}}
-               {% ifnotequal e.start_date e.end_date %}
-                  - {{e.end_date|date:"d M"}}
-               {% endifnotequal %}
-               </div>
-            </div>
-         {% endfor %}
-         </div>
-         {% endif %}
 
-         <!-- Logged in users -->
-         {%load online_users %}
-         {% online_users 10 %}
-         <h3 class="box_title">Most recently posted</h3>
-         <div class="box_content">
-	 {% pybb_last_posts %}
-         </div>
+<!-- Future Events if any -->
+{% get_future_events as events %}
+{% if events.count %}         
+<div class="columnModule">
+	<h3>Important Dates</h3>
+	<div class="columnModuleBox">
+		<ul>
+			{% for e in events %}
+				<li>
+				{{e.start_date|date:"d M"}}
+				{% ifnotequal e.start_date e.end_date %}
+					 - {{e.end_date|date:"d M"}}
+				{% endifnotequal %}
+				- <a href="{{e.link}}">{{e.name}}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endif %}
 
+
+<!-- Logged in users -->
+{% online_users 10 %}
+
+
+<!-- Latest Post -->
+{% pybb_last_posts %}
