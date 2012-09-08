@@ -14,10 +14,12 @@
 			<table>
 				<tr>
 					<td class="author" rowspan="2">
+						{% if comment.user.wlprofile.avatar %}
 						<a href="{% url profile_view comment.user %}">
 							<img style="width: 50px; height: 50px;" src="{{ comment.user.wlprofile.avatar.url }}" />
 						</a>
 						<br />
+						{% endif %}
 						<span class="small">{{ comment.user|user_link }}</span>
 					</td>
 					<td class="text">
