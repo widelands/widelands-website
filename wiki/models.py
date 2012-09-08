@@ -274,6 +274,7 @@ class ChangeSet(models.Model):
             old_content = dmp.patch_apply(patches, old_content)[0]
 
         diffs = dmp.diff_main(old_content, next_rev_content)
+        dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
 
 if notification is not None:

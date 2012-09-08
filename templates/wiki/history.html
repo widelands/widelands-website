@@ -53,6 +53,7 @@
 		</tbody>
 		</table>
 		<input type="submit" value="{% trans "Revert" %}" />
+		{% csrf_token %}
 	</form>
 </div>
 {% endblock %}

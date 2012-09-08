@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, render_to_response, redirect
-from django.views.generic.simple import redirect_to
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.syndication.feeds import FeedDoesNotExist
@@ -275,13 +274,7 @@ def edit_article(request, title,
 
             new_article, changeset = form.save()
 
-            url = get_url('wiki_article', group,
-                          [new_article.title],
-                          {'title': new_article.title,
-                           'group_slug': group_slug})
-
-            #return redirect_to(request, url)
-            return redirect("wiki_article", title=new_article.title)
+            return redirect(new_article)
 
     elif request.method == 'GET':
         user_ip = get_real_ip(request)
@@ -464,11 +457,7 @@ def revert_to_revision(request, title,
             request.user.message_set.create(
                 message=u"The article was reverted successfully.")
 
-        url = get_url('wiki_article_history', group,
-                      [title], {'title': title,
-                                'group_slug': group_slug})
-
-        return redirect_to(request, url)
+        return redirect(article)
 
     return HttpResponseNotAllowed(['POST'])
 
@@ -540,11 +529,7 @@ def observe_article(request, title,
         notification.observe(article, request.user,
            'wiki_observed_article_changed')
 
-    url = get_url('wiki_article', group,
-                  [article.title], {'title': article.title,
-                                    'group_slug': group_slug})
-
-    return redirect_to(request, url)
+    return redirect(article)
 
     return HttpResponseNotAllowed(['POST'])
 
@@ -578,11 +563,7 @@ def stop_observing_article(request, title,
     if notification.is_observing(article, request.user):
         notification.stop_observing(article, request.user)
 
-    url = get_url('wiki_article', group,
-                  [article.title], {'title': article.title,
-                                    'group_slug': group_slug})
-
-    return redirect_to(request, url)
+    return redirect(article)
 
 def article_preview( request ):
     """
@@ -606,6 +587,7 @@ def article_diff( request ):
     content = request.POST["body"]
 
     diffs = dmp.diff_main(current_article.content, content)
+    dmp.diff_cleanupSemantic(diffs)
 
     return HttpResponse(dmp.diff_prettyHtml(diffs), mimetype="text/html")
 
