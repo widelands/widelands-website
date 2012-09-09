@@ -142,7 +142,7 @@ td {
 	margin: 0px;
 }
 
-.noshadow {
+.noshadow, .noshadow input {
 	text-shadow: none;
 }
 

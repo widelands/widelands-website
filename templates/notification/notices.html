@@ -21,13 +21,13 @@
 	{% regroup notices by added.date as notices_by_date %}
 	{% for date in notices_by_date %}
 		<br />
-		<h3>{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}</h3>
+		<h3>{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|title }}</h3>
 		<table class="notifications">
 		{% for notice in date.list %}
 			<tr class="{% cycle "odd" "even" %} {% if notice.is_unseen %}italic{% endif %}">
 				<td class="type"><a href="{% url notification_notice notice.pk %} ">{% trans notice.notice_type.display %}</a></td>
 				<td class="text">{{ notice.message|safe }}</td>
-				<td class="date">{{ notice.added }}</td>
+				<td class="date">{{ notice.added|custom_date:user }}</td>
 			</tr>
 		{% endfor %}
 		</table>

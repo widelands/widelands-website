@@ -26,9 +26,19 @@
 }
 
 .history_list th {
-	border: 1px solid black;
-	background-image: url("../img/black50.png");
 	padding: 4px;
+}
+
+.history_list .comment {
+	width: 50%;
+}
+
+.history_list .article, .history_list .at {
+	width: 15%;
+}
+
+.history_list .action, .history_list .user {
+	width: 10%;
 }
 
 /******************/

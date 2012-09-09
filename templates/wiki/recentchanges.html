@@ -1,5 +1,6 @@
 {% extends 'wiki/base.html' %}
-{% load i18n %}
+
+{% load humanize i18n %}
 {% load pagination_tags %}
 {% load custom_date %}
 
@@ -8,38 +9,45 @@
 {% endblock %}
 
 {% block content %}
-<h2>{% trans "Recent Changes" %}</h2>
+<h1>Wiki: {% trans "Recent Changes" %}</h1>
+<div class="blogEntry">
 {% autopaginate changes %}
-<table class="history_list" >
-    <tr>
-	  <th>{% trans "Action" %}</th>
-	  <th>{% trans "Article" %}</th>
-	  <th>{% trans "At" %}</th>
-	  <th>{% trans "User" %}</th>
-	  <th width="50%">{% trans "Comment" %}</th>
-    </tr>
-{% for change in changes %}
-    {% ifchanged change.modified.date %}
-        <tr>
-            <td colspan="5">{{change.modified|custom_date:user|title }}</td>
-        </tr>
-    {% endifchanged %}
-    <tr class="{% cycle 'odd' 'even' %}">
-        <td >
-            {% if change.old_title %} 
-                <a href="{% url wiki_changeset change.article.title,change.revision %}"> M </a>
-            {% else %} 
-                A 
-            {% endif %}
-        </td>
-        <td><a href="{% url wiki_article change.article.title %}">
-            {{ change.article.title }}</a>
-        </td>
-        <td>{{ change.modified|custom_date:user|title }}</td>
-        <td>{{ change.editor }}</td>
-        <td>{{ change.comment }}</td>
-    </tr>
-{% endfor %}
-</table>
 {% paginate %}
+<br />
+{% for change in changes %}
+	{% ifchanged change.modified.date %}
+		{% if not forloop.first %}
+		</table>
+		<br />
+		{% endif %}
+		<h3>{{ change.modified|naturalday:_("MONTH_DAY_FORMAT")|title }}</h3>
+		<table class="history_list">
+			<tr>
+				<th class="action">{% trans "Action" %}</th>
+				<th class="article">{% trans "Article" %}</th>
+				<th class="at">{% trans "At" %}</th>
+				<th class="user">{% trans "User" %}</th>
+				<th class="comment">{% trans "Comment" %}</th>
+			</tr>
+	{% endifchanged %}
+	<tr class="{% cycle 'odd' 'even' %}">
+		<td>
+			{% if change.old_title %} 
+				<a href="{% url wiki_changeset change.article.title,change.revision %}">Modified</a>
+			{% else %} 
+				<a href="{% url wiki_article change.article.title %}">Added</a>
+			{% endif %}
+		</td>
+		<td>
+			<a href="{% url wiki_article change.article.title %}">{{ change.article.title }}</a>
+		</td>
+		<td>{{ change.modified|custom_date:user }}</td>
+		<td>{{ change.editor }}</td>
+		<td>{{ change.comment }}</td>
+	</tr>
+{% endfor %}
+	</table>
+	<br />
+{% paginate %}
+</div>
 {% endblock %}

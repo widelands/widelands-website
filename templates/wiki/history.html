@@ -28,8 +28,8 @@
 		<tbody>
 			{% for change in changes %}
 			<tr class="{% cycle 'odd' 'even' %}">
-				<td><a href="{{ change.get_absolute_url }}">
-					{{ change.modified|custom_date:user }}</a>
+				<td>
+					<a href="{{ change.get_absolute_url }}">{{ change.modified|custom_date:user }}</a>
 				</td>
 				<td>
 				{% if change.is_anonymous_change %}
@@ -52,6 +52,7 @@
 			{% endfor %}
 		</tbody>
 		</table>
+		<br />
 		<input type="submit" value="{% trans "Revert" %}" />
 		{% csrf_token %}
 	</form>
