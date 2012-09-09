@@ -317,6 +317,16 @@ div.columnModuleBox ul li:first-child {
 	border-top: none;
 }
 
+div.columnModuleBox ul.socialMediaList {
+	height: 55px;
+}
+
+div.columnModuleBox ul.socialMediaList li {
+	float: left;
+	border: none;
+	padding: 9px;
+}
+
 input.donate {
 	border: none;
 	background: none;
