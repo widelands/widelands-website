@@ -27,7 +27,7 @@
 			{% endif %}
 		{% endif %}
 	{% else %}
-		<a href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
+		<a class="invertedColor" href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
 	{% endif %}
 </div>
 <h1>{{ article.title }}</h1>
@@ -36,6 +36,16 @@
 		<p>
 			{% trans "This article does not exist." %}
 			<a href="{% url wiki_edit article.title %}">{% trans "Create it now?" %}</a>
+		</p>
+	{% endif %}
+	{% if redirected_from %}
+		<p class="small">
+			({% trans "Redirected from" %} {{ redirected_from }})
+		</p>
+	{% endif %}
+	{% if revision %}
+		<p class="small">
+			({% trans "Viewing revision " %} {{ revision }})
 		</p>
 	{% endif %}
 	{% render_content article %}

@@ -41,6 +41,11 @@
 	width: 10%;
 }
 
+.history_list .small_column {
+	width: 40px;
+	text-align: center;
+}
+
 /******************/
 /* Edit Wiki Page */
 /******************/

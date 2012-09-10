@@ -127,6 +127,12 @@ class Article(models.Model):
         changeset = self.changeset_set.get(revision=revision)
         changeset.reapply(editor_ip, editor)
 
+    def compare(self, from_revision, to_revision):
+        """ Compares to revisions of this article.
+        """
+        changeset = self.changeset_set.get(revision=to_revision)
+        return changeset.compare_to(from_revision)
+
 
     def __unicode__(self):
         return self.title
@@ -274,6 +280,24 @@ class ChangeSet(models.Model):
             old_content = dmp.patch_apply(patches, old_content)[0]
 
         diffs = dmp.diff_main(old_content, next_rev_content)
+        dmp.diff_cleanupSemantic(diffs)
+        return dmp.diff_prettyHtml(diffs)
+
+    def get_content(self):
+        """ Returns the content of this revision.
+        """
+        content = self.article.content
+        newer_changesets = ChangeSet.objects.filter(article=self.article, revision__gt=self.revision).order_by('-revision')
+        for changeset in newer_changesets:
+            patches = dmp.patch_fromText(changeset.content_diff)
+            content = dmp.patch_apply(patches, content)[0]
+        return content
+        
+    def compare_to(self, revision_from):
+        other_content = u""
+        if revision_from > 0:
+            other_content = ChangeSet.objects.filter(article=self.article, revision=revision_from)[0].get_content()
+        diffs = dmp.diff_main(other_content, self.get_content())
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
 

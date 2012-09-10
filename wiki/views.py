@@ -166,7 +166,7 @@ def article_list(request,
     return HttpResponseNotAllowed(['GET'])
 
 
-def view_article(request, title,
+def view_article(request, title, revision=None,
                  ArticleClass=Article, # to create an unsaved instance
                  group_slug=None, group_slug_field=None, group_qs=None,
                  article_qs=ALL_ARTICLES,
@@ -192,17 +192,29 @@ def view_article(request, title,
         if not allow_read:
             return HttpResponseForbidden()
 
+        is_observing = False
+        redirected_from = None
         try:
             article = article_qs.get(**article_args)
             if notification is not None:
                 is_observing = notification.is_observing(article, request.user)
-            else:
-                is_observing = False
         except ArticleClass.DoesNotExist:
-            article = ArticleClass(**article_args)
-            is_observing = False
+            try:
+                # try to find an article that once had this title
+                article = ChangeSet.objects.filter(old_title=title).order_by('-revision')[0].article
+                redirected_from = title
+                #if article is not None:
+                #    return redirect(article, permanent=True)
+            except IndexError: 
+                article = ArticleClass(**article_args)
+
+        if revision is not None:
+            changeset = get_object_or_404(article.changeset_set, revision=revision)
+            article.content = changeset.get_content()
 
         template_params = {'article': article,
+                           'revision': revision,
+                           'redirected_from': redirected_from,
                            'allow_write': allow_write}
 
         if notification is not None:
@@ -318,6 +330,7 @@ def edit_article(request, title,
 
 
 def view_changeset(request, title, revision,
+                   revision_from=None,
                    group_slug=None, group_slug_field=None, group_qs=None,
                    article_qs=ALL_ARTICLES,
                    changes_qs=ALL_CHANGES,
@@ -354,10 +367,14 @@ def view_changeset(request, title, revision,
             return HttpResponseForbidden()
 
         article = article_qs.get(**article_args)
+        
+        if revision_from is None:
+            revision_from = int(revision) - 1
 
         template_params = {'article': article,
                            'article_title': article.title,
                            'changeset': changeset,
+                           'differences': changeset.compare_to(revision_from),
                            'allow_write': allow_write}
 
         if group_slug is not None:
@@ -398,8 +415,9 @@ def article_history(request, title,
             return HttpResponseForbidden()
 
         article = get_object_or_404(article_qs, **article_args)
-        changes = article.changeset_set.filter(
-            reverted=False).order_by('-revision')
+        #changes = article.changeset_set.filter(
+        #    reverted=False).order_by('-revision')
+        changes = article.changeset_set.all().order_by('-revision')
 
         template_params = {'article': article,
                            'changes': changes,

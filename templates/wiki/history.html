@@ -1,6 +1,6 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
-{% load custom_date %}
+{% load custom_date wlprofile %}
 
 
 {% block title %}
@@ -8,6 +8,50 @@
 {% endblock %}
 
 {% block content %}
+{% if changes|length > 1 %}
+<script type="text/javascript">
+	function check() {
+		$revisions = $('input:radio[name=revision]');
+		if ($revisions.is(':checked') === false) {
+			alert('{% trans "No revision selected." %}');
+			return false;
+		}
+		return true;
+	}
+
+	function selectedFrom(from) {
+		for (i = 1; i <= {{ changes|length }}; i++) {
+			$("#id_to_" + i).css("display", i <= from ? "none" : "block");
+		}
+	}
+
+	function selectedTo(to) {
+		for (i = 1; i <= {{ changes|length }}; i++) {
+			$("#id_from_" + i).css("display", i < to ? "block" : "none");
+		}
+	}
+
+	$(function() {
+		var $to = $('input:radio[name=to]');
+		if ($to.is(':checked') === false) {
+			$to.filter('[value={{ changes|length }}]').attr('checked', true);
+			selectedTo({{ changes|length }});
+		} else {
+			selectedTo($('input:radio[name=to]:checked').val());
+		}
+
+		var $from = $('input:radio[name=from]');
+		var from_revision = {{ changes|length }} - 1;
+		if ($from.is(':checked') === false) {
+			$from.filter('[value='+from_revision+']').attr('checked', true);
+			selectedFrom(from_revision);
+		} else {
+			selectedFrom($('input:radio[name=from]:checked').val());
+		}
+	});
+</script>
+{% endif %}
+
 <div class="posRight small">
 	<a href="{% url wiki_article article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
 	| <a href="{% url wiki_article_history_feed title=article.title,feedtype="atom" %}"  class="invertedColor">Atom Feed</a>
@@ -15,45 +59,61 @@
 <h1>{% trans "Article History of" %} {{ article.title }}</h1>
 
 <div class="blogEntry">
-	<form action="{% url wiki_revert_to_revision article.title %}" method="post">
+	<form action="{% url wiki_revert_to_revision article.title %}" method="post" onsubmit="return check(this);">
 		<table class="history_list">
 		<thead>
 			<tr>
+				<th>#</th>
+				{% if changes|length > 1 %}
+				<th colspan="2">{% trans "Compare" %}</th>
+				{% endif %}
+				<th>{% trans "Revert" %}</th>
 				<th>{% trans "At" %}</th>
 				<th>{% trans "User" %}</th>
 				<th>{% trans "Comment" %}</th>
-				<th>{% trans "Revert" %}</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for change in changes %}
 			<tr class="{% cycle 'odd' 'even' %}">
+				<td class="small_column">
+					<a href="{{ change.get_absolute_url }}">{{ change.revision }}</a>
+				</td>
+				{% if changes|length > 1 %}
+				<td class="small_column">
+					<input class="radio" id="id_from_{{ change.revision }}" name="from" type="radio" value="{{ change.revision }}" onclick="selectedFrom({{ change.revision }});" />
+				</td>
+				<td class="small_column">
+					<input class="radio" id="id_to_{{ change.revision }}" name="to" type="radio" value="{{ change.revision }}" onclick="selectedTo({{ change.revision }});" />
+				</td>
+				{% endif %}
+				<td class="small_column">
+					{% if not forloop.first %}
+						 <input class="radio" id="id_revision" name="revision" type="radio" value="{{ change.revision }}" />
+					{% endif %}
+				</td>
 				<td>
-					<a href="{{ change.get_absolute_url }}">{{ change.modified|custom_date:user }}</a>
+					{{ change.modified|custom_date:user }}
 				</td>
 				<td>
 				{% if change.is_anonymous_change %}
 					{{ change.editor_ip }}
 				{% else %}
-					<a href="{% url wiki_article change.editor %}">{{ change.editor }}</a>
+					{{ change.editor|user_link }}
 				{% endif %}
 				</td>
-				<td>
-					{% if change.comment %}<i>'{{ change.comment}}'</i> {% endif %}
-				</td>
-				<td>
-					{% if forloop.first %}
-						{% trans "Current revision" %}
-					{% else %}
-						 <input id="id_revision" name="revision" type="radio" value="{{ change.revision }}" />
-					{% endif %}
+				<td class="italic">
+					{% if change.comment %}'{{ change.comment }}'{% endif %}
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 		</table>
 		<br />
-		<input type="submit" value="{% trans "Revert" %}" />
+		<input type="submit" value="{% trans "Revert to selected revision" %}" />
+		{% if changes|length > 1 %}
+		<input type="button" value="{% trans "Compare selected revisions" %}" onclick="location.pathname='/wiki/history/{{ article.title|urlencode }}/changeset/'+$('input:radio[name=from]:checked').val()+'/'+$('input:radio[name=to]:checked').val()+'/';" />
+		{% endif %}
 		{% csrf_token %}
 	</form>
 </div>

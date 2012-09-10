@@ -13,7 +13,7 @@
 <h1>{% trans "Changes in" %} {{ article.title }}</h1>
 
 <div class="blogEntry">
-	{% if changeset.old_title %}
+	{% if changeset.old_title != article.title %}
 		<h3>{% trans "Old title" %}</h3>
 		<p>{{ changeset.old_title }}</p>
 		<br />
@@ -22,8 +22,8 @@
 		<h3>Editor comment</h3>
 		<p>{{changeset.comment}}</p>
 		<br />
-	{%endif %}
+	{% endif %}
 	<h3>Revision differences</h3>
-	{{ changeset.display_diff|safe }}
+	{{ differences|safe }}
 </div>
 {% endblock %}
