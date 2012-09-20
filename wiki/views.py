@@ -367,14 +367,20 @@ def view_changeset(request, title, revision,
             return HttpResponseForbidden()
 
         article = article_qs.get(**article_args)
-        
+
         if revision_from is None:
             revision_from = int(revision) - 1
+
+        from_value = None
+        if int(revision) is not int(revision_from)+1:
+            from_value = revision_from
 
         template_params = {'article': article,
                            'article_title': article.title,
                            'changeset': changeset,
                            'differences': changeset.compare_to(revision_from),
+                           'from': from_value,
+                           'to': revision,
                            'allow_write': allow_write}
 
         if group_slug is not None:
