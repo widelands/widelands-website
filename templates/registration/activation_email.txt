@@ -1,7 +1,7 @@
 Hi,
 
-You (or someone else) requested an account on widelands.org. If this weren't you, 
-please ignore this email. It this were you, please click on the link provided below
+You (or someone else) requested an account on {{ site }}. If this wasn't you, 
+please ignore this email. If this was you, please click on the link provided below
 
 http://{{ site }}{% url registration_activate activation_key %}
 
@@ -9,5 +9,5 @@ http://{{ site }}{% url registration_activate activation_key %}
 This link will be valid for {{ expiration_days }} days...
 
 Greetings,
-The Widelands development team
+The Widelands Development Team
 
