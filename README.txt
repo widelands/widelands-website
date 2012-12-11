@@ -44,7 +44,7 @@ PIL and numpy; you can also try to migrate them over from your global site dir
 or add your global site dir to your PYTHONPATH. 
 Installation via pip should work like this::
 
-   $ pip -E . install -r code/widelands/pip_requirements.txt
+   $ pip install -r code/widelands/pip_requirements.txt
 
 This will take a while. If no errors are shown we should be fine. 
 
@@ -73,7 +73,13 @@ Now, let's try if everything works out::
 
    $ ./manage.py syncdb
 
-You will need to enter a superuser name and account. Now, let's run the page::
+You will need to enter a superuser name and account.
+After setting up the database, pybb and djangoratings will not be synced.
+To migrate these, run::
+
+   $ ./manage.py migrate
+
+Now, let's run the page::
 
    $ ./manage.py runserver
 
@@ -104,7 +110,7 @@ for further details.
 Setting up the online help / encyclopedia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You will need graphviz to generate the graphs for the online help. On Ubunutu run:
+You will need graphviz to generate the graphs for the online help. On Ubuntu run:
 
    $ sudo apt-get install graphviz
 
