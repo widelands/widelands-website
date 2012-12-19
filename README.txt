@@ -23,20 +23,21 @@ Go to the directory you want to install the homepage to, then run::
 
 This will make sure that your virtual environment is not tainted with python
 packages from your global site packages. Very important!
-Now, we create our environment and download the website::
+Now, we create and activate our environment:: 
 
    $ virtualenv --no-site-packages wlwebsite
    $ cd wlwebsite
+   $ source bin/activate
+
+Next, we download the website source code::
+
    $ mkdir code
    $ cd code
    $ bzr branch lp:widelands-website widelands
+   $ cd widelands
 
 All fine and good. Now we have to install all the third party modules the
-website needs. We use pip for that. But first, we have to change into our
-local environment::
-
-   $ cd .. # Now, we are in the root dir of our environemnt
-   $ source bin/activate
+website needs. We use pip for that.
 
 Installation of the third party libraries should be easy, given you have
 development tools installed and in your path. The two difficult packages are
@@ -44,16 +45,12 @@ PIL and numpy; you can also try to migrate them over from your global site dir
 or add your global site dir to your PYTHONPATH. 
 Installation via pip should work like this::
 
-   $ pip install -r code/widelands/pip_requirements.txt
+   $ pip install -r pip_requirements.txt
 
 This will take a while. If no errors are shown we should be fine. 
 
 Setting up the website
 ----------------------
-
-Go back into the widelands bzr directory::
-
-   $ cd code/widelands
 
 Setting your local paths
 ^^^^^^^^^^^^^^^^^^^^^^^^
