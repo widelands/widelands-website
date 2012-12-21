@@ -2,6 +2,7 @@
 /local_urls.py
 /dev.db
 .svn
+/.bzr-repo
 
 wiki/media
 wiki/templates
