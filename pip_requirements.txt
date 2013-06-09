@@ -3,11 +3,12 @@ wsgiref==0.1.2
 -e git://github.com/dcramer/django-sphinx.git#egg=djangosphinx
 docutils==0.7
 PIL==1.1.7
+pyparsing==1.5.6
 -e svn+http://django-pagination.googlecode.com/svn/trunk/#egg=pagination
 -e hg+https://django-tracking.googlecode.com/hg/#egg=tracking
 -e git://gitorious.org/python-markdown/mainline.git#egg=markdown
 BeautifulSoup==3.2
--e hg+http://bitbucket.org/ubernostrum/django-registration/#egg=registration
+-e hg+http://bitbucket.org/ubernostrum/django-registration/@1086c6a#egg=registration
 -e svn+http://django-tagging.googlecode.com/svn/trunk/#egg=tagging
 -e git://github.com/dcramer/django-ratings.git#egg=djangoratings
 django-threadedcomments==0.5.2
