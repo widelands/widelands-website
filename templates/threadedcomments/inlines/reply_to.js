@@ -12,9 +12,11 @@ function show_reply_form(comment_id, url, depth) {
 			+ '<table>'
 				+ '<tr>'
 					+ '<td class="author">'
+                {% if post.user.wlprofile.avatar %}
 						+ '<a href="{% url profile_view user %}">'
 							+ '<img style="width: 50px; height: 50px;" src="{{ user.wlprofile.avatar.url }}" />'
 						+ '</a>'
+                {% endif %}
 						+ '<br />'
 						+ '<span class="small">{{ user|user_link }}</span>'
 					+ '</td>'
