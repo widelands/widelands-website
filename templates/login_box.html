@@ -36,7 +36,7 @@
 <script type="text/javascript">
 $("#login_box").submit( function(data) {
 	var frameName = "login_frame" + (new Date()).getTime();
-	var frameSrc = "http://{{ request.META.HTTP_HOST }}/accounts/login/?next="
+	var frameSrc = "https://{{ request.META.HTTP_HOST }}/accounts/login/?next="
 					+ window.location.pathname + window.location.search + window.location.hash;
 	var loginFrame = $("<iframe name=\"" + frameName + "\" src=\"" + frameSrc + "\" />");
 
