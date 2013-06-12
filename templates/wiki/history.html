@@ -19,29 +19,31 @@
 		return true;
 	}
 
+	{% with first=changes|first %}
 	function selectedFrom(from) {
-		for (i = 1; i <= {{ changes|length }}; i++) {
-			$("#id_to_" + i).css("display", i <= from ? "none" : "block");
+		for (i = 1; i <= {{ first.revision }}; i++) {
+			$("#id_to_" + i).css("display", i <= from ? "none" : "inline");
 		}
 	}
 
 	function selectedTo(to) {
-		for (i = 1; i <= {{ changes|length }}; i++) {
-			$("#id_from_" + i).css("display", i < to ? "block" : "none");
+		for (i = 1; i <= {{ first.revision }}; i++) {
+			$("#id_from_" + i).css("display", i < to ? "inline" : "none");
 		}
 	}
 
 	$(function() {
 		var $to = $('input:radio[name=to]');
+		var to_revision = {{ first.revision }};
 		if ($to.is(':checked') === false) {
-			$to.filter('[value={{ changes|length }}]').attr('checked', true);
-			selectedTo({{ changes|length }});
+			$to.filter('[value='+to_revision+']').attr('checked', true);
+			selectedTo(to_revision);
 		} else {
 			selectedTo($('input:radio[name=to]:checked').val());
 		}
 
 		var $from = $('input:radio[name=from]');
-		var from_revision = {{ changes|length }} - 1;
+		var from_revision = {{ first.revision }} - 1;
 		if ($from.is(':checked') === false) {
 			$from.filter('[value='+from_revision+']').attr('checked', true);
 			selectedFrom(from_revision);
@@ -49,6 +51,7 @@
 			selectedFrom($('input:radio[name=from]:checked').val());
 		}
 	});
+	{% endwith %}
 </script>
 {% endif %}
 
