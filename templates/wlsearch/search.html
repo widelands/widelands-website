@@ -44,22 +44,22 @@
 {% endif %}
 
 {# Encylcopedia #}
-{% if help_hits %}
+{% if wlhelp_hits %}
 	<h3>Encyclopedia</h3>
-	{% if help_results_buildings.count %}
+	{% if wlhelp_results_buildings.count %}
 	<h4>Buildings</h4>
 	<ul>
-	{% for b in help_results_buildings %}
-		<li><a href="{% url help_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }} &raquo; {{b.displayname}}</a></li>
+	{% for b in wlhelp_results_buildings %}
+		<li><a href="{% url wlhelp_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }} &raquo; {{b.displayname}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}
 
-	{% if help_results_wares.count %}
+	{% if wlhelp_results_wares.count %}
 	<h4>Wares</h4>
 	<ul>
-	{% for w in help_results_wares %}
-		<li><a href="{% url help_ware_details w.tribe.name w.name %}">{{ w.tribe.displayname }} &raquo; {{w.displayname}}</a></li>
+	{% for w in wlhelp_results_wares %}
+		<li><a href="{% url wlhelp_ware_details w.tribe.name w.name %}">{{ w.tribe.displayname }} &raquo; {{w.displayname}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}

@@ -11,7 +11,7 @@ from wiki.models import Article
 from pybb.models import Post, Topic
 from news.models import Post as NewsPost
 from wlhelp.models import Building, Ware
-from wlmaps.models import Map 
+from wlmaps.models import Map
 
 class DummyEmptyQueryset(object):
     """
@@ -25,7 +25,7 @@ class DummyEmptyQueryset(object):
 def search(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
-         
+
         if form.is_valid():
             query = form.cleaned_data["search"]
             do_wiki = form.cleaned_data["incl_wiki"]
@@ -33,14 +33,14 @@ def search(request):
             do_news = form.cleaned_data["incl_news"]
             do_help = form.cleaned_data["incl_help"]
             do_maps = form.cleaned_data["incl_maps"]
-            
+
             # Help
-            help_wares = Ware.search.query(query) if do_help else DummyEmptyQueryset()
-            help_buildings = Building.search.query(query) if do_help else DummyEmptyQueryset()
-        
+            wlhelp_wares = Ware.search.query(query) if do_help else DummyEmptyQueryset()
+            wlhelp_buildings = Building.search.query(query) if do_help else DummyEmptyQueryset()
+
             # Maps
             map_results = Map.search.query(query) if do_maps else DummyEmptyQueryset()
-            
+
             # Wiki
             wiki_results = Article.search.query(query) if do_wiki else DummyEmptyQueryset()
 
@@ -50,13 +50,13 @@ def search(request):
 
             # News
             news_results = NewsPost.search.query(query) if do_news else DummyEmptyQueryset()
-            
+
             template_params = {
                 "wiki_results": wiki_results,
 
-                "help_hits": help_wares.count() + help_buildings.count(),
-                "help_results_wares": help_wares,
-                "help_results_buildings": help_buildings,
+                "wlhelp_hits": wlhelp_wares.count() + wlhelp_buildings.count(),
+                "wlhelp_results_wares": wlhelp_wares,
+                "wlhelp_results_buildings": wlhelp_buildings,
 
                 "forum_hits": forum_results_post.count() + forum_results_topic.count(),
                 "forum_results_topic": forum_results_topic,
