@@ -296,7 +296,7 @@ class ChangeSet(models.Model):
     def compare_to(self, revision_from):
         other_content = u""
         if revision_from > 0:
-            other_content = ChangeSet.objects.filter(article=self.article, revision=revision_from)[0].get_content()
+            other_content = ChangeSet.objects.filter(article=self.article, revision__lte=revision_from).order_by("-revision")[0].get_content()
         diffs = dmp.diff_main(other_content, self.get_content())
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
