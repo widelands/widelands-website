@@ -2,7 +2,7 @@
 
 
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -22,7 +22,7 @@ def view(request, user = None):
         profile = request.user.wlprofile
     else:
         profile = User.objects.get( username = user ).wlprofile
-    
+
     template_params = {
         "profile": profile,
     }

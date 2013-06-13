@@ -2,7 +2,7 @@
 
 
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -20,7 +20,7 @@ def view_overview(request):
                               context_instance=RequestContext(request))
 
 def view_matches(request):
-    
+
     try:
         matches = ggz_models.GGZMatches.objects.order_by('-date')[:10]
     except ggz_models.GGZMatches.DoesNotExist:
@@ -48,7 +48,7 @@ def view(request, user = None):
             u = request.user
         else:
             u = User.objects.get( username = user )
-        
+
         template_params["profile"] = u.wlprofile
     except User.DoesNotExist:
         u = None
@@ -103,7 +103,7 @@ def change_password(request):
         if form.is_valid():
             form.save()
 
-            return HttpResponseRedirect(reverse(view))
+            return HttpResponseRedirect(reverse("profile_edit"))
     else:
         form = EditGGZForm(instance=instance)
 
