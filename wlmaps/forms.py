@@ -1,7 +1,7 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 
-import Image
+from PIL import Image
 from cStringIO import StringIO
 
 from django import forms
@@ -17,7 +17,6 @@ class UploadMapForm(ModelForm):
     class Meta:
         model = Map
         fields = ['file', 'uploader_comment']
-
 
     def clean(self):
         cleaned_data = super(UploadMapForm, self).clean()

@@ -50,6 +50,6 @@ def upload(request,content_type,object_id, next="/"):
         form = UploadImageForm() # An unbound form
 
     return render_to_response('wlimages/upload.html', {
-        'upload_form': form, 
+        'upload_form': form,
     }, context_instance=RequestContext(request))
 

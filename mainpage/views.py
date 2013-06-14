@@ -33,10 +33,9 @@ def register(request):
     else:
         form = RegistrationWithCaptchaForm(remote_ip)
 
-    context = RequestContext(request)
     return render_to_response("registration/registration_form.html",
                               { 'registration_form': form },
-                              context_instance=context)
+                              context_instance=RequestContext(request))
 
 def developers(request):
     """

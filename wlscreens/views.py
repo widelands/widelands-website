@@ -7,8 +7,8 @@ from django.http import Http404
 
 def index( request ):
     c = Category.objects.all()
-    
-    return render_to_response( "wlscreens/index.html", 
+
+    return render_to_response( "wlscreens/index.html",
                 { "categories": c, },
                 RequestContext(request) )
 

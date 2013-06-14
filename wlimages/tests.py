@@ -15,7 +15,7 @@
 # we append the parent path to sys.path
 import sys; sys.path.append("..")
 
-import Image as PIL
+import PIL
 from cStringIO import StringIO
 
 from django.test import TestCase
@@ -35,7 +35,7 @@ class _TestUploadingBase(TestCase):
     @staticmethod
     def _make_new_uploaded_image(name,type="bmp"):
         sio = StringIO()
-        i = PIL.new("RGB",(4,4))
+        i = PIL.Image.new("RGB",(4,4))
 
         i.save(sio,type)
 

@@ -73,12 +73,13 @@ class GetOpenPolls(template.Node):
         """
         Only has side effects
         """
-        user = context['user']
-        rv = []
-        for p in Poll.objects.open():
-            p.user_has_voted = False if user.is_anonymous() else p.has_user_voted(user)
-            rv.append(p)
-        context[self._vn] = rv
+        if "user" in context:
+            user = context['user']
+            rv = []
+            for p in Poll.objects.open():
+                p.user_has_voted = False if user.is_anonymous() else p.has_user_voted(user)
+                rv.append(p)
+            context[self._vn] = rv
         return ""
 
 def do_get_open_polls( parser, token ):

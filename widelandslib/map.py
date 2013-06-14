@@ -2,14 +2,14 @@
 # encoding: utf-8
 #
 
+from PIL import Image
+from cStringIO import StringIO
 from conf import WidelandsConfigParser as Cp, NoOptionError, NoSectionError
 from numpy import fromstring, array, empty, gradient
-import struct
-import os
 import numpy
+import os
+import struct
 import zipfile
-from cStringIO import StringIO
-import Image
 
 class Terrain(object):
     def __init__( self, name, id ):

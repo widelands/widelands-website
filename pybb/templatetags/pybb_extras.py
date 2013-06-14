@@ -8,7 +8,7 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.template import RequestContext
-from django.template.defaultfilters import stringfilter 
+from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_unicode
 from django.db import settings
 from django.utils.html import escape
@@ -89,7 +89,6 @@ def pybb_last_posts(context, number = 5):
             answer = answer + [post]
     return {
         'posts': answer,
-        'user': context['user'],
         }
 
 @register.simple_tag
@@ -98,7 +97,7 @@ def pybb_link(object, anchor=u''):
     Return A tag with link to object.
     """
 
-    url = hasattr(object,'get_absolute_url') and object.get_absolute_url() or None   
+    url = hasattr(object,'get_absolute_url') and object.get_absolute_url() or None
     anchor = anchor or smart_unicode(object)
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
 
@@ -111,10 +110,10 @@ def pybb_has_unreads(topic, user):
 
     now = datetime.now()
     delta = timedelta(seconds=pybb_settings.READ_TIMEOUT)
-    
+
     def _is_topic_read(topic,user):
         if (now - delta > topic.updated):
-            return True 
+            return True
         else:
             if hasattr(topic, '_read'):
                 read = topic._read
@@ -230,7 +229,7 @@ def pybb_render_post(post, mode='html'):
         mode - "html" or "text". Control which field to use ``body_html`` or ``body_text``
 
     Currently following tags are supported:
-    
+
         @@@AUTOJOIN-(SECONDS)@@@ - autojoin message
 
     """
@@ -269,7 +268,7 @@ def pybb_trim_string(value, arg):
     1. w:10         -> Auf 10 Worte beschraenken
     2. z:250        -> Auf 250 Zeichen beschraenken
     3. w:10-z:250   -> Auf 10 Worte und 250 Zeichen beschraenken
-    
+
     Beim spaeteren drueber nachdenken ist das mit den Worten eig. egal und
     koennte wieder entfernt werden, aber vllt findet ja einer noch einen nutzen
     dafuer ;)

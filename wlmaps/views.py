@@ -22,7 +22,7 @@ import zipfile
 def index( request ):
     maps = models.Map.objects.all()
     return render_to_response("wlmaps/index.html",
-                { "maps": maps, 
+                { "maps": maps,
                   "maps_per_page": MAPS_PER_PAGE,
                 },
                 context_instance = RequestContext(request))
@@ -101,14 +101,13 @@ def upload( request ):
     if request.method == 'POST':
         form = UploadMapForm(request.POST, request.FILES)
         if form.is_valid():
-            map = form.save(commit = False)
+            map = form.save(commit=False)
             map.uploader = request.user
             map.save()
             return HttpResponseRedirect(map.get_absolute_url())
-
     else:
         form = UploadMapForm()
-    
+
     context = { 'form': form, }
     return render_to_response( "wlmaps/upload.html",
                               context,

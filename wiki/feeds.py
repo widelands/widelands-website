@@ -22,17 +22,17 @@ class RssHistoryFeed(Feed):
     description = 'Recent changes in wiki'
 
     def __init__(self, request,
-                 group_slug=None, group_slug_field=None, group_qs=None, 
-                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES, 
-                 extra_context=None, 
-                 title_template = u'feeds/history_title.html', 
-                 description_template = u'feeds/history_description.html', 
+                 group_slug=None, group_slug_field=None, group_qs=None,
+                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
+                 extra_context=None,
+                 title_template = u'feeds/history_title.html',
+                 description_template = u'feeds/history_description.html',
                  *args, **kw):
 
         if  group_slug is not None:
-            group = get_object_or_404(group_qs, 
+            group = get_object_or_404(group_qs,
                                       **{group_slug_field : group_slug})
-            self.changes_qs = changes_qs.filter(article__content_type=get_ct(group), 
+            self.changes_qs = changes_qs.filter(article__content_type=get_ct(group),
                                                 article__object_id=group.id)
         else:
             self.changes_qs = changes_qs
@@ -43,7 +43,7 @@ class RssHistoryFeed(Feed):
 
     def items(self):
         return self.changes_qs.order_by('-modified')[:30]
-        
+
     def item_pubdate(self, item):
         """
         Return the item's pubdate. It's this modified date
@@ -101,7 +101,7 @@ class AtomHistoryFeed(RssHistoryFeed):
 class RssArticleHistoryFeed(Feed):
 
     feed_type = Rss201rev2Feed
-    def __init__(self, title, request, 
+    def __init__(self, title, request,
                 group_slug=None, group_slug_field=None, group_qs=None,
                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
                 extra_context=None,
@@ -149,11 +149,11 @@ class AtomArticleHistoryFeed(RssArticleHistoryFeed):
     feed_type = Atom1Feed
 
     def get_object(self, bits):
-        # We work around a bug here which is likely in atomformat.py; 
+        # We work around a bug here which is likely in atomformat.py;
         # when the Article doesn't exist this throws an Exception. We
         # will care for this by first checking for the Article
         get_object_or_404(Article,title=bits[0])
-        
+
         return self.article_qs.get(title = bits[0])
 
 

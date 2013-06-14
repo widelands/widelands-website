@@ -7,7 +7,7 @@ from StringIO import StringIO
 import logging
 
 from django.db.models import OneToOneField
-from django.db.models.fields.related import SingleRelatedObjectDescriptor 
+from django.db.models.fields.related import SingleRelatedObjectDescriptor
 from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -43,7 +43,7 @@ class ExtendedImageField(models.ImageField):
         self.height = kwargs.pop('height', None)
         super(ExtendedImageField, self).__init__(*args, **kwargs)
 
-    
+
     def save_form_data(self, instance, data):
         if data and self.width and self.height:
             if instance.avatar:
@@ -58,16 +58,12 @@ class ExtendedImageField(models.ImageField):
         """
         Resize image to fit it into (width, height) box.
         """
-
-        try:
-            import Image
-        except ImportError:
-            from PIL import Image
+        import Image
 
         image = Image.open(StringIO(rawdata))
         try:
             oldw, oldh = image.size
-            
+
             if oldw > width or oldh > height:
                 if oldw >= oldh:
                     x = int(round((oldw - oldh) / 2.0))

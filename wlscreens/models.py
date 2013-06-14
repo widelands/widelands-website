@@ -1,7 +1,7 @@
 from django.db import models
 
 from django.template.defaultfilters import slugify
-import Image
+from PIL import Image
 from cStringIO import StringIO
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.files.storage import FileSystemStorage
