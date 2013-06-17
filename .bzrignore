@@ -1,16 +1,13 @@
 /local_settings.py
 /local_urls.py
 /dev.db
-.svn
 /.bzr-repo
 
-wiki/media
-wiki/templates
-.DS_Store
-
+# Uploaded images.
+/media/forum/img/en
 /media/news
-/media/online_help
+/media/wlhelp/
 /media/wlimages
-/media/wlprofile
 /media/wlmaps/
+/media/wlprofile/avatars
 /media/wlscreens/
