@@ -14,6 +14,8 @@ BeautifulSoup==3.2
 django-threadedcomments==0.5.2
 -e svn+http://django-messages.googlecode.com/svn/trunk/#egg=django_messages
 -e git://github.com/jtauber/django-notification.git@3f023adf0ce2eafcee744904e2c358792f253721#egg=notification
+# Sphinx and sphinxdoc need to match - choose from a similar time.
+sphinx==0.6.5
 django-sphinxdoc==0.3.2
 South==0.7.3
 numpy
