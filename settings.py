@@ -92,6 +92,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     'django.core.context_processors.request',
+    'widelands.mainpage.context_processors.settings_for_templates',
 )
 
 ############################
@@ -262,6 +263,8 @@ INSTALLED_APPS = (
     'sphinxdoc',
     'south',
 )
+
+USE_GOOGLE_ANALYTICS=False
 
 try:
     from local_settings import *
