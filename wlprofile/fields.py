@@ -63,7 +63,7 @@ class ExtendedImageField(models.ImageField):
         """
         Resize image to fit it into (width, height) box.
         """
-        import Image
+        from PIL import Image
 
         image = Image.open(StringIO(rawdata))
         try:
