@@ -3,6 +3,7 @@
 from django.forms import *
 import settings
 import httplib, urllib
+from django.utils.encoding import smart_unicode
 
 # Code was taken from http://smileychris.tactful.co.nz/static/uploads/recaptcha.py
 # Thanks for implementing!
@@ -33,7 +34,7 @@ class RecaptchaWidget(Widget):
     def render(self, name, value, attrs=None):
         args = dict(public_key=settings.RECAPTCHA_PUBLIC_KEY)
         if self.options:
-            args['options'] = '''<script type="text/javascript">
+            args['options'] = u'''<script type="text/javascript">
    var RecaptchaOptions = %r;
 </script>
 ''' % self.options
@@ -46,13 +47,12 @@ class RecaptchaWidget(Widget):
        style="height: 300px; width: 500px; border: none;"></iframe><br />
    <textarea name="recaptcha_challenge_field" rows="3" cols="40">
    </textarea>
-   <input type="hidden" name="recaptcha_response_field" 
-       value="manual_challenge">
+   <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
 </noscript>''' % args
 
     def value_from_datadict(self, data, files, name):
-        challenge = data.get('recaptcha_challenge_field')
-        response = data.get('recaptcha_response_field')
+        challenge = smart_unicode(data.get('recaptcha_challenge_field'))
+        response = smart_unicode(data.get('recaptcha_response_field'))
         return (challenge, response)
 
     def id_for_label(self, id_):
@@ -65,7 +65,7 @@ class RecaptchaField(Field):
     def __init__(self, remote_ip, *args, **kwargs):
         self.remote_ip = remote_ip
         super(RecaptchaField, self).__init__(*args, **kwargs)
-    
+
     def clean(self, value):
         value = super(RecaptchaField, self).clean(value)
         challenge, response = value
@@ -107,8 +107,8 @@ def validate_recaptcha(remote_ip, challenge, response):
     if challenge:
         params = urllib.urlencode(dict(privatekey=settings.RECAPTCHA_PRIVATE_KEY,
                                        remoteip=remote_ip,
-                                       challenge=challenge,
-                                       response=response))
+                                       challenge=challenge.encode("utf-8"),
+                                       response=response.encode("utf-8")))
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
         conn = httplib.HTTPConnection("api-verify.recaptcha.net")
         conn.request("POST", "/verify", params, headers)
