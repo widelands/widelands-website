@@ -30,6 +30,8 @@ class WidelandsConfigParser(SafeConfigParser):
         except AttributeError:
             string = open(fn, "r").read()
 
+        string = string.replace('%', "%%")
+
         try:
             self.readfp(cStringIO.StringIO(string))
         except MissingSectionHeaderError:
