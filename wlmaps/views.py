@@ -60,26 +60,16 @@ def download( request, map_slug ):
     """
     m = get_object_or_404( models.Map, slug = map_slug )
 
-    file = open(m.file.path,"rb")
+    file = open(m.file.path, "rb")
     data = file.read()
-
-    # We have to find the correct filename, widelands is quite
-    # buggy. The Filename must be the same as the directory
-    # packed in the zip.
-    file.seek(0)
-    zf = zipfile.ZipFile(file)
-    probable_filenames = filter( len, [ i.filename.split('/')[0] for i in zf.filelist ])
-    if not len(probable_filenames):
-        probable_filename = os.path.basename("%s.wmf" % m.name)
-    else:
-        probable_filename = probable_filenames[0]
+    filename = os.path.basename("%s.wmf" % m.name)
 
     # Remember that this has been downloaded
     m.nr_downloads += 1
     m.save()
 
     response =  HttpResponse( data, mimetype = "application/octet-stream")
-    response['Content-Disposition'] = 'attachment; filename="%s"' % probable_filename
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     return response
 
