@@ -13,6 +13,9 @@
 <a href="{% url wlmaps_upload %}" class="posRight invertedColor small">Upload a new map</a>
 <h1>Maps</h1>
 <div class="blogEntry">
+	<p>
+	The map files have to be placed in the Widelands map directory to be found by the game. Check the <a href="/wiki/Technical%20FAQ/#where_are_my_maps_and_savegames_stored">Technical FAQ</a> to find the map directory.
+	</p>
 	{% autopaginate maps maps_per_page %}
 	{% paginate %}
 	<br />
