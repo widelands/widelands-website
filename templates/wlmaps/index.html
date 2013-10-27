@@ -51,10 +51,10 @@
 						<td class="grey">Downloads:</td><td>{{ map.nr_downloads }}</td>
 						<td class="spacer"></td>
 						<td colspan="2">
-							<button onclick="window.location.href='{% url wlmaps_download map.slug %}';">
+							<a class="button" href="{% url wlmaps_download map.slug %}">
 								<img src="{{MEDIA_URL}}/img/download.png" alt ="" class="middle" />
 								<span class="middle">Direct Download</span>
-							</button>
+							</a>
 						</td>
 					</tr>
 				</table>
