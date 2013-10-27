@@ -36,6 +36,10 @@ form {
 	display: inline;
 }
 
+pre {
+	white-space: pre-wrap;
+}
+
 input, button, textarea, .button {
 	display: inline-block;
 	margin-bottom: 5px;
