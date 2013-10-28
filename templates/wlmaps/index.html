@@ -38,7 +38,7 @@
 					</tr>
 					<tr>
 						<td class="grey">Rating:</td>
-						<td colspan="">{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)</td>
+						<td>{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)</td>
 						<td class="spacer"></td>
 						{% get_comment_count for map as ccount %}
 						<td class="grey">Comments:</td><td>{{ ccount }}</td>
