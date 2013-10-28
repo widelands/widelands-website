@@ -27,44 +27,44 @@
 	<div class="posRight">
 	{% if moderator %}
 		{% if topic.sticky %}
-		<button onclick="window.location.href='{% url pybb_unstick_topic topic.id %}';">
+		<a class="button" href="{% url pybb_unstick_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/unstick.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Unstick Topic" %}</span>
-		</button>
+		</a>
 		{% else %}
-		<button onclick="window.location.href='{% url pybb_stick_topic topic.id %}';">
+		<a class="button" href="{% url pybb_stick_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/sticky.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Stick Topic" %}</span>
-		</button>
+		</a>
 		{% endif %}
 		{% if topic.closed %}
-		<button onclick="window.location.href='{% url pybb_open_topic topic.id %}';">
+		<a class="button" href="{% url pybb_open_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/open.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Open Topic" %}</span>
-		</button>
+		</a>
 		{% else %}
-		<button onclick="window.location.href='{% url pybb_close_topic topic.id %}';">
+		<a class="button" href="{% url pybb_close_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/closed.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Close Topic" %}</span>
-		</button>
+		</a>
 		{% endif %}
 	{% endif %}
 	{% if user.is_authenticated %}
 		{% if subscribed %}
-		<button onclick="window.location.href='{% url pybb_delete_subscription topic.id %}?from_topic';">
+		<a class="button" href="{% url pybb_delete_subscription topic.id %}?from_topic">
 			<img src="{{MEDIA_URL}}/forum/img/unsubscribe.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Unsubscribe" %}</span>
-		</button>
+		</a>
 		{% else %}
-		<button onclick="window.location.href='{% url pybb_add_subscription topic.id %}';">
+		<a class="button" href="{% url pybb_add_subscription topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/subscribe.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Subscribe" %}</span>
-		</button>
+		</a>
 		{% endif %}
-		<button onclick="window.location.href='{% url pybb_add_post topic.id %}';">
+		<a class="button" href="{% url pybb_add_post topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/send.png" alt ="" class="middle" />
 			<span class="middle">{% trans "New Reply" %}</span>
-		</button>
+		</a>
 	{% endif %}
 	</div>
 	{% pybb_pagination _('Posts') %}
@@ -217,25 +217,25 @@
 					{% endif %}
 				{% endif %}
 
-				<button onclick="window.location.href='#top';" class="posRight">
+				<a class="button posRight" href="#top">
 					<img src="{{MEDIA_URL}}/forum/img/top.png" alt ="" class="middle" />
 					<span class="middle">{% trans "Top" %}</span>
-				</button>
+				</a>
 
-				<button onclick="window.location.href='{% url pybb_add_post topic.id %}?quote_id={{ post.id }}';">
+				<a class="button" href="{% url pybb_add_post topic.id %}?quote_id={{ post.id }}">
 					<img src="{{MEDIA_URL}}/forum/img/quote.png" alt ="" class="middle" />
 					<span class="middle">{% trans "Quote" %}</span>
-				</button>
+				</a>
 				{% if moderator or post|pybb_posted_by:user %}
-					<button onclick="window.location.href='{% url pybb_edit_post post.id %}';">
+					<a class="button" href="{% url pybb_edit_post post.id %}">
 						<img src="{{MEDIA_URL}}/forum/img/edit.png" alt ="" class="middle" />
 						<span class="middle">{% trans "Edit" %}</span>
-					</button>
+					</a>
 					{% if moderator or post|pybb_equal_to:last_post %}
-					<button onclick="window.location.href='{% url pybb_delete_post post.id %}';">
+					<a class="button" href="{% url pybb_delete_post post.id %}">
 						<img src="{{MEDIA_URL}}/forum/img/delete.png" alt ="" class="middle" />
 						<span class="middle">{% trans "Delete" %}</span>
-					</button>
+					</a>
 					{% endif %}
 				{% endif %}
 			</td>
@@ -251,44 +251,44 @@
 	<div class="posRight">
 	{% if moderator %}
 		{% if topic.sticky %}
-		<button onclick="window.location.href='{% url pybb_unstick_topic topic.id %}';">
+		<a class="button" href="{% url pybb_unstick_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/unstick.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Unstick Topic" %}</span>
-		</button>
+		</a>
 		{% else %}
-		<button onclick="window.location.href='{% url pybb_stick_topic topic.id %}';">
+		<a class="button" href="{% url pybb_stick_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/sticky.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Stick Topic" %}</span>
-		</button>
+		</a>
 		{% endif %}
 		{% if topic.closed %}
-		<button onclick="window.location.href='{% url pybb_open_topic topic.id %}';">
+		<a class="button" href="{% url pybb_open_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/open.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Open Topic" %}</span>
-		</button>
+		</a>
 		{% else %}
-		<button onclick="window.location.href='{% url pybb_close_topic topic.id %}';">
+		<a class="button" href="{% url pybb_close_topic topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/closed.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Close Topic" %}</span>
-		</button>
+		</a>
 		{% endif %}
 	{% endif %}
 	{% if user.is_authenticated %}
 		{% if subscribed %}
-		<button onclick="window.location.href='{% url pybb_delete_subscription topic.id %}?from_topic';">
+		<a class="button" href="{% url pybb_delete_subscription topic.id %}?from_topic">
 			<img src="{{MEDIA_URL}}/forum/img/unsubscribe.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Unsubscribe" %}</span>
-		</button>
+		</a>
 		{% else %}
-		<button onclick="window.location.href='{% url pybb_add_subscription topic.id %}';">
+		<a class="button" href="{% url pybb_add_subscription topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/subscribe.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Subscribe" %}</span>
-		</button>
+		</a>
 		{% endif %}
-		<button onclick="window.location.href='{% url pybb_add_post topic.id %}';">
+		<a class="button" href="{% url pybb_add_post topic.id %}">
 			<img src="{{MEDIA_URL}}/forum/img/send.png" alt ="" class="middle" />
 			<span class="middle">{% trans "New Reply" %}</span>
-		</button>
+		</a>
 	{% endif %}
 	</div>
 	{% pybb_pagination _('Posts') %}

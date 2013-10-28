@@ -39,12 +39,12 @@
 		{% pybb_link post.topic.forum.category %} &#187; 
 		<a href="{{ post.topic.forum.get_absolute_url }}">{{ post.topic.forum.name }}</a> &#187;
 		{{ post.topic }}
-
+		<br /><br />
 		<div class="preview-box" style="display: none">
-			<br />
 			{% trans "Preview" %}:<br />
 			<div class="content post">
 			</div>
+			<br />
 		</div>
 
 		{{ form.as_p }}

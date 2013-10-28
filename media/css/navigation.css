@@ -31,13 +31,18 @@ input.searchField {
 div#topmenu {
 	position: relative;
 	z-index: 5;
-	top: -30px;
+	top: -8px;
 	clear: both;
 	height: 50px;
+	margin-bottom: 22px;
 	background-color: #695536;
 	background-image: url("../img/wood.png");
-	border: 1px solid #222222;
-	box-shadow: black 2px 2px 2px 2px;
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border-radius: 4px 0px 4px 0px;
+	-moz-border-radius: 4px 0px 4px 0px;
+	-webkit-border-radius: 4px 0px 4px 0px;
+	-khtml-border-radius: 4px 0px 4px 0px;
 }
 
 ul.menu {
@@ -57,7 +62,7 @@ ul.menu  li a {
 	height: 50px;
 	line-height: 50px;
 	float: left;
-	border-right: 1px solid #222222;
+	border-right: 1px solid black;
 	text-align: center;
 	vertical-align: middle;
 	color: #ffffff;
@@ -66,7 +71,7 @@ ul.menu  li a {
 }
 
 ul.menu li a:hover {
-	box-shadow: black 0px 0px 10px 0px inset;
+	background-image: url("../img/black20.png");
 }
 
 ul.menu li a.active {
@@ -82,8 +87,12 @@ ul.menu li ul {
 	background-color: #695536;
 	background-image: url("../img/wood.png");
 	padding: 0px;
-	border: 1px solid #222222;
-	box-shadow: black 2px 2px 2px 2px;
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border-radius: 0px 0px 4px 4px;
+	-moz-border-radius: 0px 0px 4px 4px;
+	-webkit-border-radius: 0px 0px 4px 4px;
+	-khtml-border-radius: 0px 0px 4px 4px;	
 }
 
 ul.menu li:hover ul {
@@ -92,12 +101,12 @@ ul.menu li:hover ul {
 
 ul.menu li ul li {
 	clear: both;
-	border-top: 1px solid #222222;
+	border-top: 1px solid black;
 }
 
 ul.menu li ul li a {
 	display: block;
-	width: 250px;
+	width: 255px;
 	height: 20px;
 	line-height: 20px;
 	padding: 4px;

@@ -88,10 +88,10 @@ $(function() {
 		</table>
 	</div>
 	<br /><br />
-	<button onclick="window.location.href='{% url wlmaps_download map.slug %}';">
+	<a class="button" href="{% url wlmaps_download map.slug %}">
 		<img src="{{MEDIA_URL}}/img/download.png" alt ="" class="middle" />
 		<span class="middle">Download this map</span>
-	</button>
+	</a>
 	<div style="clear: left;"></div>
 </div>
 

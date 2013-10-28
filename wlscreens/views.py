@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.http import Http404
 
 def index( request ):
-    c = Category.objects.all()
+    c = Category.objects.order_by("-name")
 
     return render_to_response( "wlscreens/index.html",
                 { "categories": c, },

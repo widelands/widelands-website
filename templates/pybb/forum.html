@@ -23,10 +23,10 @@
 	{% pybb_link forum.category %} &#187; 
 	{{ forum }}
 	<br /><br />
-	<button class="posRight" onclick="window.location.href='{% url pybb_add_topic forum.id %}';">
+	<a class="button posRight" href="{% url pybb_add_topic forum.id %}">
 		<img src="{{MEDIA_URL}}/forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
-	</button>
+	</a>
 	{% pybb_pagination _('Topics') %}
 	<br /><br />
 
@@ -71,10 +71,10 @@
 	</table>
 
 	<br />
-	<button class="posRight" onclick="window.location.href='{% url pybb_add_topic forum.id %}';">
+	<a class="button posRight" href="{% url pybb_add_topic forum.id %}">
 		<img src="{{MEDIA_URL}}/forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
-	</button>
+	</a>
 	{% pybb_pagination _('Topics') %}
 	<br />
 </div>
