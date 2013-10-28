@@ -8,7 +8,7 @@ from pybb.models import Post, Topic, Forum
 
 class PybbFeed(Feed):
     feed_type = Atom1Feed
-   
+
     def title(self,obj):
         if obj == self.all_objects:
             return self.all_title
@@ -20,18 +20,18 @@ class PybbFeed(Feed):
             return self.all_description
         else:
             return self.one_description % obj.name
-    
+
     def items(self, obj):
         if obj == self.all_objects:
             return obj.order_by('-created')[:15]
-        else: 
+        else:
             return self.items_for_object(obj)
 
     def link(self, obj):
         if obj == self.all_objects:
             return reverse('pybb_index')
         return "/ewfwevw%s" % reverse('pybb_forum', args=(obj.pk,))
-   
+
     def get_object(self,bits):
         """
         Implement getting feeds for a specific subforum
@@ -39,10 +39,13 @@ class PybbFeed(Feed):
         if len(bits) == 0:
             return self.all_objects
         if len(bits) == 1:
-            forum =  Forum.objects.get(pk=int(bits[0]))
-            return forum
+            try:
+                forum=Forum.objects.get(pk=int(bits[0]))
+                return forum
+            except ValueError:
+                pass
         raise ObjectDoesNotExist
-    
+
     ##########################
     # Individual items below #
     ##########################
@@ -63,9 +66,9 @@ class LastPosts(PybbFeed):
     one_description = _('Latest topics on forum %s')
     title_template = 'pybb/feeds/posts_title.html'
     description_template = 'pybb/feeds/posts_description.html'
-    
-    all_objects = Post.objects 
-    
+
+    all_objects = Post.objects
+
     def items_for_object(self,obj):
         return Post.objects.filter( topic__forum = obj ).order_by('-created')[:15]
 
@@ -84,9 +87,9 @@ class LastTopics(PybbFeed):
     one_description = _('Latest topics on forum %s')
     title_template = 'pybb/feeds/topics_title.html'
     description_template = 'pybb/feeds/topics_description.html'
-    
-    all_objects = Topic.objects 
-    
+
+    all_objects = Topic.objects
+
     def items_for_object(self,obj):
         return Topic.objects.filter( forum = obj ).order_by('-created')[:15]
 
