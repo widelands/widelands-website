@@ -362,6 +362,10 @@ div.blogEntry {
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 }
 
+div.blogEntry img {
+	max-width: 100%;
+}
+
 div.blogEntry img.title {
 	width: 150px;
 	margin-right: 20px;
