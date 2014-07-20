@@ -1,16 +1,17 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 
-from PIL import Image
-from cStringIO import StringIO
+import json
+from subprocess import check_call, CalledProcessError
 
 from django import forms
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
 
 from wlmaps.models import Map
-from widelandslib.map import WidelandsMap, WlMapLibraryException
 
 
 class UploadMapForm(ModelForm):
@@ -26,35 +27,33 @@ class UploadMapForm(ModelForm):
             # no clean file => abort
             return cleaned_data
 
-        mapdata = file.read()
-        wlmap = WidelandsMap()
+        name = MEDIA_ROOT + "wlmaps/maps/" + file.name
+        default_storage.save(name, ContentFile(file.read()))
         try:
-            wlmap.load(StringIO(mapdata))
-        except WlMapLibraryException:
-            raise forms.ValidationError("The map file is invalid.")
+            # call map info tool to generate minimap and json info file
+            check_call(["wl_map_info", name])
+            # TODO(shevonar): delete file because it will be saved again when the model is saved. File should not be saved twice
+            default_storage.delete(name)
+        except CalledProcessError:
+            self._errors["file"] = self.error_class(["The map file could not be processed."])
+            del cleaned_data["file"]
+            return cleaned_data
 
-        if Map.objects.filter(name = wlmap.name):
-            raise forms.ValidationError("Map with the same name already exists.")
-
-        cleaned_data['file'].name = "%s/wlmaps/maps/%s.wmf" % (MEDIA_ROOT, wlmap.name)
-
-        # Create the minimap
-        minimap = wlmap.make_minimap(WIDELANDS_SVN_DIR)
-        minimap_path = "%s/wlmaps/minimaps/%s.png" % (MEDIA_ROOT, wlmap.name)
-        minimap_url = "/wlmaps/minimaps/%s.png" % wlmap.name
-        minimap_image = Image.fromarray(minimap)
-        minimap_image.save(minimap_path)
-        # TODO: handle filesystem errors
+        mapinfo = json.load(open(name + ".json"))
 
         # Add information to the map
-        self.instance.name = wlmap.name
-        self.instance.author = wlmap.author
-        self.instance.w = wlmap.w
-        self.instance.h = wlmap.h
-        self.instance.nr_players = wlmap.nr_players
-        self.instance.descr = wlmap.descr
-        self.instance.minimap = minimap_url
-        self.instance.world_name = wlmap.world_name
+        self.instance.name = mapinfo["name"]
+        self.instance.author = mapinfo["author"]
+        self.instance.w = mapinfo["width"]
+        self.instance.h = mapinfo["height"]
+        self.instance.nr_players = mapinfo["nr_players"]
+        self.instance.descr = mapinfo["description"]
+        #self.instance.minimap = mapinfo["minimap"] # this is an absolute path and cannot be used.
+        self.instance.minimap = "/wlmaps/maps/" + file.name + ".png"
+        self.instance.world_name = mapinfo["world_name"]
+
+        # the json file is no longer needed
+        default_storage.delete(name + ".json")
 
         return cleaned_data
 
