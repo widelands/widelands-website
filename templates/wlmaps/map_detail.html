@@ -34,7 +34,7 @@ $(function() {
 {% block content %}
 <h1>Map: {{ map.name }}</h1>
 <div class="blogEntry">
-	<a href="{% url wlmaps_index %}">Maps</a> &#187; 
+	<a href="{% url wlmaps_index %}">Maps</a> &#187;
 	{{ map.name }}
 	<br /><br />
 	<img class="posLeft map" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" />
@@ -56,7 +56,13 @@ $(function() {
 				<td class="grey">Author:</td><td>{{ map.author }}</td>
 			</tr>
 			<tr>
-				<td class="grey">World:</td><td>{{ map.world_name|title }}</td>
+				<td class="grey">World:</td><td>
+				{% if map.world_name %}
+				{{ map.world_name|title }}
+				{% else %}
+				One World
+				{% endif %}
+				</td>
 			</tr>
 			<tr>
 				<td class="grey">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
@@ -87,7 +93,11 @@ $(function() {
 			</tr>
 		</table>
 	</div>
-	<br /><br />
+	<br />
+	{% if not map.world_name %}
+	<strong>This map requires a version of Widelands newer than build18!</strong><br />
+	{% endif %}
+	<br />
 	<a class="button" href="{% url wlmaps_download map.slug %}">
 		<img src="{{MEDIA_URL}}/img/download.png" alt ="" class="middle" />
 		<span class="middle">Download this map</span>
