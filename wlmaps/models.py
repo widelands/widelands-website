@@ -35,7 +35,7 @@ class Map(models.Model):
     rating = AnonymousRatingField(range=10, can_change_vote = True)
 
     if settings.USE_SPHINX:
-        search          = SphinxSearch(
+        search = SphinxSearch(
             weights = {
                 'name': 100,
                 'author': 60,
@@ -44,7 +44,7 @@ class Map(models.Model):
         )
 
     class Meta:
-        ordering  = ('-pub_date',)
+        ordering = ('-pub_date',)
         get_latest_by = 'pub_date'
 
     @models.permalink

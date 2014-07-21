@@ -9,8 +9,7 @@ from django.forms import ModelForm
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
-from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
-
+from settings import MEDIA_ROOT
 from wlmaps.models import Map
 
 
@@ -53,9 +52,9 @@ class UploadMapForm(ModelForm):
         self.instance.h = mapinfo["height"]
         self.instance.nr_players = mapinfo["nr_players"]
         self.instance.descr = mapinfo["description"]
-        #self.instance.minimap = mapinfo["minimap"] # this is an absolute path and cannot be used.
-        self.instance.minimap = "/wlmaps/maps/" + file.name + ".png"
         self.instance.world_name = mapinfo["world_name"]
+        # mapinfo["minimap"] is an absolute path and cannot be used.
+        self.instance.minimap = "/wlmaps/maps/" + file.name + ".png"
 
         # the json file is no longer needed
         default_storage.delete(name + ".json")
@@ -65,6 +64,6 @@ class UploadMapForm(ModelForm):
 
     def save(self, *args, **kwargs):
         map = super(UploadMapForm, self).save(*args, **kwargs)
-        if not kwargs['commit'] == False:
+        if kwargs['commit']:
             map.save()
         return map
