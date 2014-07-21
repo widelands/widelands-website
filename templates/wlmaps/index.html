@@ -32,7 +32,14 @@
 						<td class="grey">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
 					</tr>
 					<tr>
-						<td class="grey">World:</td><td>{{ map.world_name|title }}</td>
+						<td class="grey">World:</td>
+						<td>
+						{% if map.world_name %}
+						{{ map.world_name|title }}
+						{% else %}
+						One World
+						{% endif %}
+						</td>
 						<td class="spacer"></td>
 						<td class="grey">Max. Players:</td><td>{{ map.nr_players }}</td>
 					</tr>
@@ -47,6 +54,11 @@
 						<td class="grey">Upload:</td>
 						<td colspan="4">by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}</td>
 					</tr>
+					{% if not map.world_name %}
+					<tr>
+						<td colspan="5"><strong>This map requires a version of Widelands newer than build18!</strong></td>
+					</tr>
+					{% endif %}
 					<tr>
 						<td class="grey">Downloads:</td><td>{{ map.nr_downloads }}</td>
 						<td class="spacer"></td>
