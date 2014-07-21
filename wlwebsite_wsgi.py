@@ -24,5 +24,8 @@ sys.path.append(os.path.join(code_directory, "widelands"))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'widelands.settings'
 
+if os.path.exists('/usr/games'):
+    os.environ['PATH'] += ':/usr/games'
+
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
