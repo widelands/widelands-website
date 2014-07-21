@@ -41,6 +41,11 @@ class UploadMapForm(ModelForm):
 
         mapinfo = json.load(open(name + ".json"))
 
+        if Map.objects.filter(name = mapinfo["name"]):
+            self._errors["file"] = self.error_class(["A map with the same name already exists."])
+            del cleaned_data["file"]
+            return cleaned_data
+
         # Add information to the map
         self.instance.name = mapinfo["name"]
         self.instance.author = mapinfo["author"]
