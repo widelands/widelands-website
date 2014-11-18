@@ -70,3 +70,23 @@
 	width: 98%;
 	height: 100px;
 }
+
+
+/**********/
+/* Tables */
+/**********/
+
+table {
+    border-collapse: collapse;
+}
+
+td{
+    background-image: url('../img/black20.png');
+    border: 1px solid black;
+}
+
+th {
+    background-image: url('../img/wood.png');
+    border: 1px solid #000;
+    padding: 0px 5px;
+}
