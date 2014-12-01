@@ -1,5 +1,6 @@
 {% extends "wiki/base.html" %}
 {% load i18n %}
+{% load custom_date wlprofile %}
 
 {% block title %}Wiki Index - {{ block.super }}{% endblock %}
 
@@ -7,11 +8,25 @@
 <h1>Wiki: Index</h1>
 <div class="blogEntry">
 	{% if articles %}
-		<ul>
+		<p> There are {{ articles|length }} articles in this wiki:</p>
+		<table>
+		<thead>
+			<tr>
+				<th>{% trans "Page" %}</th>
+				<th>{% trans "Summary" %}</th>
+				<th>{% trans "Last update" %}</th>
+			</tr>
+		</thead>
+		<tbody>
 			{% for article in articles %}
-				<li><a href="{% url wiki_article article.title %}">{{ article.title }}</a></li>
+			<tr>
+				<td><a href="{% url wiki_article article.title %}">{{ article.title }}</a></td>
+				<td>{{ article.summary }}</td>
+				<td>{{ article.last_update|custom_date:user }}</td>
+			</tr>
 			{% endfor %}
-		</ul>
+		</tbody>
+		</table>
 	{% else %}
         <p><a href="{% url wiki_edit "NewArticle" %}">{% trans "Create a new article" %}</a>.</p>
 	{% endif %}
