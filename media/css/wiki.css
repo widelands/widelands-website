@@ -4,8 +4,10 @@
 	padding: 0px 8px;
 	background-image: url("../img/black50.png");
 	font-size: 12px;
-	margin-bottom: 20px;
+	margin: 0em 0em 1em 1em;
 	line-height: 18px;
+	float: right;
+	max-width: 20em;
 }
 
 .toc ul {
