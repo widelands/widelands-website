@@ -54,8 +54,6 @@ class ExtendedImageField(models.ImageField):
                 if hasattr(data, 'read') and self.width and self.height:
                     content = self.resize_image(data.read(), width=self.width, height=self.height)
                     data = SimpleUploadedFile(instance.user.username + ".png", content, "image/png")
-                    if instance.avatar != self.default:
-                        instance.avatar.delete()
             super(ExtendedImageField, self).save_form_data(instance, data)
 
 
