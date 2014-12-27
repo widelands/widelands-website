@@ -1,4 +1,9 @@
-/* Common */
+/*++++++++++++++++++*/
+/*      Common      */
+/*------------------*/
+/*  Effects to all  */
+/* part of website  */
+/*++++++++++++++++++*/
 
 body {
 	background-color: #e9c78a;
@@ -10,18 +15,46 @@ body {
 	text-shadow: #000000 1px 1px 0px;
 }
 
+/*+++++++++++++++++++++++++*/
+/* Links and special links */
+/*+++++++++++++++++++++++++*/
+
 a img {
 	border: none;
 }
 
 a {
 	text-decoration: none;
-	color: #ffffee;
+	color: rgba(254, 234, 138, 1);
 	font-weight: bold;
+}
+
+.blogEntry a {
+	font-weight: normal;
+}
+
+a:visited {
+  color: #C8BE93;
+}
+
+a.missingLink {
+	color: yellow;
+}
+
+a.externalLink:after {
+	content: " "url("../img/replied.png");
 }
 
 a:hover {
 	color: #181;
+}
+
+/* We put this after a:hover  */
+/* to prevend the hover style */
+/* for this link              */
+
+a.wrongLink {
+	color: rgb(255, 117, 0);
 }
 
 a.invertedColor {

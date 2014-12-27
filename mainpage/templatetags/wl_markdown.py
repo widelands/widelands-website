@@ -102,22 +102,28 @@ def _classify_link( tag ):
                 external = False
                 break
         if external:
-            return "external"
+            return { 'class': "externalLink", 'title': "This link refers to outer space" }
+    
+    if "/profile/" in (tag["href"]):
+        return { 'class': "userLink", 'title': "This link refers to a userpage" }
+       
 
-    if check_for_missing_wikipages and href.startswith("/wiki"):
+    if check_for_missing_wikipages and href.startswith("/wiki/"):
+        
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
         pn = tag["href"][6:].split('/',1)[0]
-
+        
         if not len(pn): # Wiki root link is not a page
-            return None
-
+            return { 'class': "wrongLink", 'title': "This Link misses an articlename"}
+            
         # Wiki special pages are also not counted
         if pn in ["list","search","history","feeds","observe","edit" ]:
-            return None
-
+            return { 'class': "specialLink" }
+        
+        # article missing (or misspelled)
         if Article.objects.filter(title=pn).count() == 0:
-            return "missing"
+            return { 'class': "missingLink", 'title': "This Link is misspelled or missing. Click to create it anyway." }
 
     return None
 
@@ -178,11 +184,13 @@ def do_wl_markdown( value, *args, **keyw ):
     soup = BeautifulSoup(unicode(soup)) # What a waste of cycles :(
 
     # We have to go over this to classify links
+    
     for tag in soup.findAll("a"):
         rv = _classify_link(tag)
         if rv:
-            tag["class"] = rv
-
+            for attribute in rv.iterkeys():
+                tag[attribute] = rv.get(attribute)
+    
     return unicode(soup)
 
 
