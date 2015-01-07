@@ -174,7 +174,8 @@ def quote_text(text, user, markup):
 
     # if markup == 'markdown':
     if markup == 'markdown':
-        return '>'+text.replace('\r','').replace('\n','\n>') + '\n'
+        #Adding a space after ">" will kepp some things stay in tact
+        return '> '+text.replace('\r','').replace('\n','\n> ') + '\n'
     elif markup == 'bbcode':
         return '[quote]\n%s\n[/quote]\n' % text
     else:

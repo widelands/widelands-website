@@ -139,14 +139,18 @@ SMILEYS = [
     ("O:-)", "face-angel.png"),
     ("O:)", "face-angel.png"),
     (":-/", "face-confused.png"),
-    #(":/", "face-confused.png"),
+    (":/", "face-confused.png"),
     ("B-)", "face-cool.png"),
     ("B)", "face-cool.png"),
     (":'-(", "face-crying.png"),
     (":'(", "face-crying.png"),
+    (":-))", "face-smile-big.png"),
+    (":))", "face-smile-big.png"),
+    (":-)", "face-smile.png"),
+    (":)", "face-smile.png"),
     ("&gt;:-)", "face-devilish.png"), # Hack around markdown replacement. see also SMILEY_PREESCAPING
     ("8-)", "face-glasses.png"),
-    #("8)", "face-glasses.png"), # Might occur unwanted
+    ("8)", "face-glasses.png"), # Might occur unwanted (why?)
     (":-D", "face-grin.png"),
     (":D", "face-grin.png"),
     (":-x", "face-kiss.png"),
@@ -164,10 +168,6 @@ SMILEYS = [
     (":(", "face-sad.png"),
     (":-O", "face-shock.png"),
     (":O", "face-shock.png"),
-    (":-)", "face-smile.png"),
-    (":)", "face-smile.png"),
-    (":-))", "face-smile-big.png"),
-    (":))", "face-smile-big.png"),
     (":-o", "face-surprise.png"),
     (":o", "face-surprise.png"),
     (":-P", "face-tongue.png"),
@@ -180,7 +180,7 @@ SMILEYS = [
 # This needs to be done to keep some stuff hidden from markdown
 SMILEY_PREESCAPING = [
     (">:-)", "\>:-)"),
-    (":-*", ":-\*"),
+    #(":-*", ":-\*"),
     #(":*", ":\*"),
 ]
 
