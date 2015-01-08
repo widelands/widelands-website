@@ -159,8 +159,6 @@ def do_wl_markdown( value, *args, **keyw ):
         # well, empty soup. Return it
         return unicode(soup)
 
-    #ctag = soup.contents[0]
-
     for text in soup.findAll(text=True):
         # Do not replace inside a link
         if text.parent.name == "a":
@@ -175,7 +173,6 @@ def do_wl_markdown( value, *args, **keyw ):
             # Replace smileys; only outside "code-tags"
             if not text.parent.name == "code":
                 rv = _insert_smileys( rv )
-                #b
 
             for name, (pattern,replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):
@@ -189,7 +186,7 @@ def do_wl_markdown( value, *args, **keyw ):
     # The function goes from .5 ms to 1.5ms on my system
     # Well, for our site with it's little traffic it's maybe not so important...
     soup = BeautifulSoup(unicode(soup)) # What a waste of cycles :(
-    #b
+
     # We have to go over this to classify links
     
     for tag in soup.findAll("a"):

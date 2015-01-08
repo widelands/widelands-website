@@ -150,7 +150,7 @@ SMILEYS = [
     (":)", "face-smile.png"),
     ("&gt;:-)", "face-devilish.png"), # Hack around markdown replacement. see also SMILEY_PREESCAPING
     ("8-)", "face-glasses.png"),
-    ("8)", "face-glasses.png"), # Might occur unwanted (why?)
+    ("8)", "face-glasses.png"),
     (":-D", "face-grin.png"),
     (":D", "face-grin.png"),
     (":-x", "face-kiss.png"),
@@ -179,9 +179,7 @@ SMILEYS = [
 ]
 # This needs to be done to keep some stuff hidden from markdown
 SMILEY_PREESCAPING = [
-    (">:-)", "\>:-)"),
-    #(":-*", ":-\*"),
-    #(":*", ":\*"),
+    (">:-)", "\>:-)")
 ]
 
 ###############################
