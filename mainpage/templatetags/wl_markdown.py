@@ -55,12 +55,16 @@ register = template.Library()
 def _insert_smileys( text ):
     """
     This searches for smiley symbols in the current text
-    and replaces them with the correct images
+    and replaces them with the correct images.
+    Only replacing if smiley symbols aren't in a word (e.g. http://....)
     """
+    words = text.split(" ")
     for sc,img in SMILEYS:
-        text = text.replace(sc,"<img src='%s%s' alt='%s' />" % ( SMILEY_DIR, img, img ))
-
+        if sc in words:
+            words[words.index(sc)] = "<img src='%s%s' alt='%s' />" % ( SMILEY_DIR, img, img )
+    text = " ".join(words)
     return text
+
 def _insert_smiley_preescaping( text ):
     """
     This searches for smiley symbols in the current text
@@ -140,6 +144,7 @@ custom_filters = {
 
 def do_wl_markdown( value, *args, **keyw ):
     # Do Preescaping for markdown, so that some things stay intact
+    # This is currently only needed for this smiley ">:-)"
     value = _insert_smiley_preescaping( value )
 
     custom = keyw.pop('custom', True)
@@ -154,8 +159,6 @@ def do_wl_markdown( value, *args, **keyw ):
         # well, empty soup. Return it
         return unicode(soup)
 
-    ctag = soup.contents[0]
-
     for text in soup.findAll(text=True):
         # Do not replace inside a link
         if text.parent.name == "a":
@@ -167,8 +170,9 @@ def do_wl_markdown( value, *args, **keyw ):
         if custom:
             # Replace bzr revisions
             rv = _insert_revision( text )
-            # Replace smileys
-            rv = _insert_smileys( rv )
+            # Replace smileys; only outside "code-tags"
+            if not text.parent.name == "code":
+                rv = _insert_smileys( rv )
 
             for name, (pattern,replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):

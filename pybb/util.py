@@ -174,7 +174,9 @@ def quote_text(text, user, markup):
 
     # if markup == 'markdown':
     if markup == 'markdown':
-        return '>'+text.replace('\r','').replace('\n','\n>') + '\n'
+        # Inserting a space after ">" will not change the generated HTML,
+        # but it will unbreak certain constructs like '>:-))'.
+        return '> '+text.replace('\r','').replace('\n','\n> ') + '\n'
     elif markup == 'bbcode':
         return '[quote]\n%s\n[/quote]\n' % text
     else:

@@ -69,8 +69,25 @@ form {
 	display: inline;
 }
 
+/**************/
+/* Codeblocks */
+/**************/
+
 pre {
 	white-space: pre-wrap;
+	background-image: url("../img/black50.png");
+	padding: 5px 10px;
+	margin: 5px 10px;
+	display: inline-block;
+	border: 1px solid black;
+}
+
+code {
+	background-image: url("../img/black50.png");
+}
+/*No double background*/
+pre > code {
+	background-image: none;
 }
 
 input, button, textarea, .button {
@@ -122,7 +139,7 @@ td {
 }
 
 .posLeft {
-	float: left
+	float: left;
 }
 
 .posRight {
@@ -199,10 +216,6 @@ div#wrapper {
 	margin: 0px 20px;
 }
 
-div#header {
-
-}
-
 div #main {
 	min-height: 500px;
 }
@@ -225,7 +238,9 @@ div#footer {
 	border-radius: 4px;
 }
 
+/**********/
 /* Header */
+/**********/
 
 div#header  img{
 	position: relative;
@@ -280,7 +295,9 @@ div.loginBox button {
 	color: #ffffff;
 }
 
+/****************/
 /* Right Column */
+/****************/
 
 div#rightColumn {
 	width: 220px;
@@ -418,3 +435,4 @@ div.blogEntry hr {
 	border: none;
 	clear: left;
 }
+
