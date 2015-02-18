@@ -37,8 +37,8 @@ class ImageManager(models.Manager):
         im = self.create(content_type=content_type, object_id=object_id, 
                     user=user,revision=1,name=name, editor_ip = ip)
 
-        path = "%s/wlimages/%s" % (MEDIA_ROOT,image.name)
-        url = "%s/wlimages/%s" % (MEDIA_URL,image.name)
+        path = "%swlimages/%s" % (MEDIA_ROOT,image.name)
+        url = "%swlimages/%s" % (MEDIA_URL,image.name)
 
         destination = open(path,"wb")
         for chunk in image.chunks():

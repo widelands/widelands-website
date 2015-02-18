@@ -24,7 +24,7 @@
 	{{ forum }}
 	<br /><br />
 	<a class="button posRight" href="{% url pybb_add_topic forum.id %}">
-		<img src="{{MEDIA_URL}}/forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
+		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
 	{% pybb_pagination _('Topics') %}
@@ -44,14 +44,14 @@
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
-				<img src="{{ MEDIA_URL }}/forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
+				<img src="{{ MEDIA_URL }}forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
 				{% else %}
-				<img src="{{ MEDIA_URL }}/forum/img/doc_big_work.png" style="margin: 0px;" alt="" class="middle" />
+				<img src="{{ MEDIA_URL }}forum/img/doc_big_work.png" style="margin: 0px;" alt="" class="middle" />
 				{% endif %}
 			</td>
 			<td class="forumTitle">
-				{% if topic.sticky %}<img src="{{MEDIA_URL}}/forum/img/sticky.png" alt="Sticky" title="Sticky" />{% endif %}
-				{% if topic.closed %}<img src="{{MEDIA_URL}}/forum/img/closed.png" alt="Closed" title="Closed" />{% endif %}
+				{% if topic.sticky %}<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt="Sticky" title="Sticky" />{% endif %}
+				{% if topic.closed %}<img src="{{ MEDIA_URL }}forum/img/closed.png" alt="Closed" title="Closed" />{% endif %}
 				<a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a><br />
 				<span class="small">Created by {{ topic.user|user_link }} on {{ topic.created|custom_date:user }}</span>
 			</td>
@@ -72,7 +72,7 @@
 
 	<br />
 	<a class="button posRight" href="{% url pybb_add_topic forum.id %}">
-		<img src="{{MEDIA_URL}}/forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
+		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
 	{% pybb_pagination _('Topics') %}
@@ -80,9 +80,9 @@
 </div>
 
 <div class="center green">
-	<img src="{{MEDIA_URL}}/forum/img/doc_big_work_star.png" alt="" class="middle" />
+	<img src="{{ MEDIA_URL }}forum/img/doc_big_work_star.png" alt="" class="middle" />
 	= Unread posts
-	<img src="{{MEDIA_URL}}/forum/img/doc_big_work.png" alt="" class="middle" /> 
+	<img src="{{ MEDIA_URL }}forum/img/doc_big_work.png" alt="" class="middle" /> 
 	= No unread posts
 </div>
 {% endblock %}

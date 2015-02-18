@@ -28,7 +28,7 @@ Outbox - {{ block.super }}
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
 					<a href="{% url django_messages.views.delete message.id %}">
-						<img src="{{ MEDIA_URL }}/img/delete.png" alt="delete" title="delete" />
+						<img src="{{ MEDIA_URL }}img/delete.png" alt="delete" title="delete" />
 					</a>
 				</td>
 			</tr>

@@ -14,16 +14,16 @@
       <meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y" />
 
 		<title>{% block title %}Widelands.org{% endblock %}</title> 
-		<link href="{{MEDIA_URL}}/favicon.ico" rel="SHORTCUT ICON" />
+		<link href="{{ MEDIA_URL }}favicon.ico" rel="SHORTCUT ICON" />
 
 		<!--  CSS --> 
-		<link rel="stylesheet" type="text/css" media="all" href="{{MEDIA_URL}}/css/base.css" />
-		<link rel="stylesheet" type="text/css" media="all" href="{{MEDIA_URL}}/css/navigation.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/base.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/navigation.css" />
 		<!--[if lt IE 9]>
-		<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/base_ielt9.css" />
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base_ielt9.css" />
 		<![endif]-->
 		<!--[if lt IE 8]>
-		<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}/css/base_ielt8.css" />
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base_ielt8.css" />
 		<![endif]-->
 
 		{% if USE_GOOGLE_ANALYTICS %}
@@ -39,9 +39,9 @@
 		{% endif %}
 
 		<!-- Javascript Bread & Butter Scripts -->
-		<script type="text/javascript" src="{{MEDIA_URL}}/js/jquery.js"></script>
-		<script type="text/javascript" src="{{MEDIA_URL}}/js/jquery_csrf_ajax.js"></script>
-		<script type="text/javascript" src="{{MEDIA_URL}}/js/scripts.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery_csrf_ajax.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}js/scripts.js"></script>
 		{% block extra_head %}{% endblock %}
 	</head>
 
@@ -52,7 +52,7 @@
 				<div class="loginBox posRight">
 					{% include "login_box.html" %}
 				</div>
-				<a href="{% url mainpage %}"><img src="{{MEDIA_URL}}/img/Logo.png" class="posLeft" alt="Widelands Logo" /></a>
+				<a href="{% url mainpage %}"><img src="{{ MEDIA_URL }}img/Logo.png" class="posLeft" alt="Widelands Logo" /></a>
 			</div>
 			<div id="topmenu">
 				<!-- Navigation -->

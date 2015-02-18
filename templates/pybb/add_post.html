@@ -17,7 +17,7 @@
 
 {% block extra_head %}
 {{ block.super }}
-<script type="text/javascript" src="{{MEDIA_URL}}/js/disableOnSubmit.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/disableOnSubmit.js"></script>
 <script type="text/javascript">
 	$(function() {
 		$('form').disableOnSubmit();
@@ -74,11 +74,11 @@
 		{{ form.as_p }}
 		{% csrf_token %}
 		<button type="submit">
-			<img src="{{MEDIA_URL}}/forum/img/send.png" alt ="" class="middle" />
+			<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Send" %}</span>
 		</button>
 		<button type="button" class="preview-button">
-			<img src="{{MEDIA_URL}}/forum/img/preview.png" alt ="" class="middle" />
+			<img src="{{ MEDIA_URL }}forum/img/preview.png" alt ="" class="middle" />
 			<span class="middle">{% trans "Preview" %}</span>
 		</button>
 	</div>

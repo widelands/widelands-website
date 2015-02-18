@@ -27,14 +27,14 @@ Trash - {{ block.super }}
 				<td>{{ message.recipient|user_link }}</td>
 				<td>
 					{% if message.replied %}
-						<img src="{{ MEDIA_URL }}/img/replied.png" alt="replied" title="replied" />
+						<img src="{{ MEDIA_URL }}img/replied.png" alt="replied" title="replied" />
 					{% endif %}
 					<a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
 				</td>
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
 					<a href="{% url django_messages.views.undelete message.id %}">
-						<img src="{{ MEDIA_URL }}/img/undelete.png" alt="undelete" title="undelete" />
+						<img src="{{ MEDIA_URL }}img/undelete.png" alt="undelete" title="undelete" />
 					</a>
 				</td>
 			</tr>
