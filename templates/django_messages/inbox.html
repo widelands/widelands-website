@@ -25,14 +25,14 @@ Inbox - {{ block.super }}
 				<td>{{ message.sender|user_link }}</td>
 				<td>
 					{% if message.replied %}
-						<img src="{{ MEDIA_URL }}/img/replied.png" alt="replied" title="replied" />
+						<img src="{{ MEDIA_URL }}img/replied.png" alt="replied" title="replied" />
 					{% endif %}
 					<a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
 				</td>
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
 					<a href="{% url django_messages.views.delete message.id %}">
-						<img src="{{ MEDIA_URL }}/img/delete.png" alt="delete" title="delete" />
+						<img src="{{ MEDIA_URL }}img/delete.png" alt="delete" title="delete" />
 					</a>
 				</td>
 			</tr>
