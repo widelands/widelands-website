@@ -1,4 +1,4 @@
-Django==1.3.1
+Django==1.3.7
 wsgiref==0.1.2
 -e git://github.com/kerin/django-sphinx.git/@1c5ef8abcf86f9a9458f763ceb9e5d882247ea37#egg=djangosphinx
 docutils==0.7
