@@ -1,3 +1,14 @@
+/*++++++++++++++++++*/
+/*   Forum pages    */
+/*------------------*/
+/*  Effects to all  */
+/*   forum pages    */
+/*++++++++++++++++++*/
+
+/********************/
+/* Base Forum table */
+/********************/
+
 .forum {
 	border: none; 
 	border-collapse: collapse;
@@ -17,6 +28,10 @@
 	padding: 8px;
 }
 
+/********************/
+/* Forums overviews */
+/********************/
+
 .forumIcon {
 	width: 50px;
 }
@@ -33,14 +48,23 @@
 	text-align: right;
 }
 
+/******************/
+/* Topic specific */
+/******************/
+
+tr.spacer {
+	height: 10px;
+	border: none;
+}
+
+/******************/
+/* Author colummn */
+/******************/
+
 .forum .author {
 	width: 140px;
 	text-align: center;
 	border-right: 1px solid black;
-	vertical-align: top;
-}
-
-.forum .post {
 	vertical-align: top;
 }
 
@@ -50,15 +74,26 @@
 	line-height: 12px;
 }
 
-tr.spacer {
-	height: 10px;
-	border: none;
+/*****************/
+/*  Post colummn */
+/*****************/
+
+a.permalink {
+	width: 16px;
+	height: 20px;
+	background-image: url("../forum/img/permalink.png");
 }
 
-.post p {
-	margin: 0px;
-	margin-bottom: 8px;
-	padding: 0px;
+a.permalink:hover {
+	background-image: url("../forum/img/permalink_hover.png");
+}
+
+.forum .post {
+	vertical-align: top;
+}
+
+div.blogEntry .post p {
+	margin-bottom: 4px;
 }
 
 .post blockquote {
@@ -71,6 +106,26 @@ tr.spacer {
 	margin: 4px;
 }
 
+.post table {
+	margin-bottom: 1em;
+	border-collapse: collapse;
+}
+
+.post th {
+	padding: 0 1em 0 1em;
+	border: 1px solid black;
+}
+
+.post td {
+	padding: 0 1em 0 1em;
+	border: 1px solid black;
+}
+
+/*****************/
+/* Edit/add Post */
+/*   related     */
+/*****************/
+
 .preview-box .content {
 	background-image: url("../img/black50.png");
 	border: 1px solid black;
@@ -78,24 +133,8 @@ tr.spacer {
 	width: 98%;
 }
 
-.post-form #id_subject {
-    width: 40%;
-}
-.post-form #id_name {
-    width: 40%;
-}
 .post-form #id_body {
    width: 98%;
    max-width: 98%;
    height: 150px;
-}
-
-a.permalink {
-	width: 16px;
-	height: 20px;
-	background-image: url("../forum/img/permalink.png");
-}
-
-a.permalink:hover {
-	background-image: url("../forum/img/permalink_hover.png");
 }
