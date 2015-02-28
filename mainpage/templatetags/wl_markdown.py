@@ -27,7 +27,7 @@ from BeautifulSoup import BeautifulSoup
 # will check for internal wikipages links in all internal
 # links starting with /wiki/
 try:
-    from widelands.wiki.models import Article
+    from widelands.wiki.models import Article, ChangeSet
     check_for_missing_wikipages = True
 except ImportError:
     check_for_missing_wikipages = False
@@ -124,6 +124,20 @@ def _classify_link( tag ):
         # Wiki special pages are also not counted
         if pn in ["list","search","history","feeds","observe","edit" ]:
             return { 'class': "specialLink" }
+        
+        # Check for a redirect
+        try:
+            # try to get the article id; if this fails an IndexError is raised
+            a_id = ChangeSet.objects.filter( old_title=pn ).values_list('article_id')[0]
+            
+            # get actual title of article
+            act_t = Article.objects.get( id=a_id[0] ).title
+            if pn != act_t:
+                return { 'title': "This is a redirect and points to \"" + act_t + "\"" }
+            else:
+                return None
+        except IndexError:
+            pass
         
         # article missing (or misspelled)
         if Article.objects.filter(title=pn).count() == 0:
