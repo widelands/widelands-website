@@ -1,7 +1,10 @@
-{% load i18n %}{% blocktrans with topic.get_absolute_url as topic_url %} A new forum post was added under topic "{{ topic }}" by "{{ user }}".
+{% load i18n %}A new forum post was added under topic "{{ topic }}":
 
-http://{{ current_site }}{{ topic_url }}
-{% endblocktrans %}
-{{ topic }}:
+"{{ user }}" wrotes:
 
 {{ post.body_text }}
+{% blocktrans with post.get_absolute_url as post_url and topic.get_absolute_url as topic_url %} 
+–––––––––––
+Link to post: http://{{ current_site }}{{ post_url }}
+Link to topic: http://{{ current_site }}{{ topic_url }}
+{% endblocktrans %}
