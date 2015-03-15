@@ -42,7 +42,7 @@ def developers(request):
     This reads out the authors file in the SVN directory, and returns it
     as a wl_markdown_object. This replaces the wiki developers list
     """
-    data = open(WIDELANDS_SVN_DIR, "r").readlines()[4:]
+    data = open(WIDELANDS_SVN_DIR + "txts/developers", "r").readlines()[4:]
     newdata = []
     for line in data:
         line = line.strip('"_ \n\r').rstrip('" _ \n\r')
