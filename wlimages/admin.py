@@ -15,11 +15,11 @@ from models import Image
 
 class ImageAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('content_type', 'object_id')}),
-        (_('Content'), {'fields': ('user', 'image', 'revision', 'name')}),
-        (_('Meta'), {'fields': ('date_submitted', 'editor_ip')}),
+        (None, {'fields': ( ('image', 'name'), 'date_submitted', 'url','revision')}),
+        (_('Upload data:'), { 'fields': ( 'user', 'editor_ip')}),
+        (_('Content object:'), { 'fields': ( 'content_type', 'object_id' )}),
     )
-    list_display = ('user', 'date_submitted', 'content_type', 'get_content_object', '__unicode__')
+    list_display = ( '__unicode__', 'date_submitted', 'content_type', 'user')
     list_filter = ('date_submitted',)
     date_hierarchy = 'date_submitted'
     search_fields = ('image', 'user__username')
