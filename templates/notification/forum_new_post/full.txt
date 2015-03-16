@@ -1,6 +1,6 @@
-{% load i18n %}A new forum post was added under topic "{{ topic }}":
+{% load i18n %}A new forum post was added to the topic "{{ topic }}":
 
-"{{ user }}" wrotes:
+"{{ user }}" wrote:
 
 {{ post.body_text }}
 {% blocktrans with post.get_absolute_url as post_url and topic.get_absolute_url as topic_url %} 
