@@ -60,7 +60,7 @@ class Image(models.Model):
     """
     # Generic Foreign Key Fields
     content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField(_('object ID'))
+    object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey()
     
     name = models.CharField(max_length=100)
@@ -79,7 +79,7 @@ class Image(models.Model):
     objects = ImageManager()
    
     def __unicode__(self):
-        return "Image:%s" % self.name
+        return self.name
 
     def get_content_object(self):
         """
