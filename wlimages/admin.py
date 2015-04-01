@@ -13,6 +13,14 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from models import Image
 
+# A function to correct the image paths to a relative path
+# This function could be removed if all old image paths are modified
+# to "wlimages/name_of_image.extension"
+def correct_image_path(modeladmin, request, queryset):
+    for obj in queryset:
+        obj.image = "wlimages/%s" % (obj.name)
+        obj.save()
+
 class ImageAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ( ('image', 'name'), 'date_submitted', 'url','revision')}),
@@ -23,5 +31,6 @@ class ImageAdmin(admin.ModelAdmin):
     list_filter = ('date_submitted',)
     date_hierarchy = 'date_submitted'
     search_fields = ('image', 'user__username')
+    actions = [correct_image_path]
 
 admin.site.register(Image, ImageAdmin)
