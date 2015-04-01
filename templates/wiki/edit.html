@@ -95,25 +95,40 @@
 	{% else %}
 		{% if images.count %}
 		Images attached to this article:
-		<table width="100%">
+		
+		{% for img in images %}
+		<table width="100%" class="images">
 		<thead>
 			<tr>
-				<th>Image Title</th>
-				<th>Image</th>
-				<th>Code to include</th>
+				<th class="first-column" style="text-align: right;">Name:</th>
+				<th>{{ img.name}}</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for img in images %}
 			<tr>
-				<td>{{ img.name }}</td>
-				<td><img src="{{ img.url }}"></td>
-				<td>![{{img.name}}]({{ img.url }})</td>
+				<td>
+					<span>Properties:</span><br />
+					<span class="grey">Width:</span><br />
+					{{ img.image.width }} px<br />
+					<span class="grey">Height:</span><br />
+					{{ img.image.height }} px<br />
+					<span class="grey">Filesize:</span><br />
+					{{ img.image.size|filesizeformat }}
+				<td  style="vertical-align: middle; text-align: center;"><img src="{{ img.url }}"></td>
 			</tr>
-			{% endfor %}
+			<tr>
+				<td class="grey" style="text-align: right;">Code to use in article:</td>
+				{% if img.image.width > 700 %}
+					<td style="text-align: center;">[![{{img.name}}]({{ img.url }})]({{ img.url }})</td>
+				{% else %}
+					<td style="text-align: center;">![{{img.name}}]({{ img.url }})</td>
+				{% endif %}
+			</tr>
+		
 		</tbody>
 		</table>
-		{%endif%}
+		{% endfor %}
+		{% endif %}
 
 		{% get_upload_form as iform %}
 		<form enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/{{request.path|iriencode}}" method="POST">

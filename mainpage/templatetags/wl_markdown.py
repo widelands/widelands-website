@@ -145,6 +145,17 @@ def _classify_link( tag ):
 
     return None
 
+def _clickable_image( tag ):
+    # is external link?
+    if tag["src"].startswith("http"):
+    # is allways a link?
+        if tag.parent.name != 'a':
+            # add link to image
+            text = "<a href=" + tag["src"] +"><img src=" + tag["src"] + "></a>"
+            return text
+    return None
+
+
 custom_filters = {
     # Wikiwordification
     # Match a wiki page link LikeThis. All !WikiWords (with a !
@@ -202,13 +213,19 @@ def do_wl_markdown( value, *args, **keyw ):
     soup = BeautifulSoup(unicode(soup)) # What a waste of cycles :(
 
     # We have to go over this to classify links
-    
     for tag in soup.findAll("a"):
         rv = _classify_link(tag)
         if rv:
             for attribute in rv.iterkeys():
                 tag[attribute] = rv.get(attribute)
-    
+
+    # All external images gets clickable
+    # This applies only in forum
+    for tag in soup.findAll("img"):
+        link = _clickable_image(tag)
+        if link:
+            tag.replaceWith(link)
+
     return unicode(soup)
 
 

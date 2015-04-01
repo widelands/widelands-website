@@ -73,6 +73,18 @@
 	height: 100px;
 }
 
+table.images {
+	table-layout: fixed;
+}
+
+table.images .first-column {
+	width: 7em;
+}
+
+table.images td {
+	padding: 4px;
+}
+
 /***********/
 /* Headers */
 /***********/
