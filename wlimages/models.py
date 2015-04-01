@@ -44,7 +44,7 @@ class ImageManager(models.Manager):
         for chunk in image.chunks():
             destination.write(chunk)
 
-        im.image = path
+        im.image = "wlimages/%s" % (name)
         im.url = url
 
         im.save()
@@ -72,7 +72,7 @@ class Image(models.Model):
     
     # Date Fields
     date_submitted = models.DateTimeField(_('date/time submitted'), default = datetime.now)
-    image = models.ImageField(upload_to="images/")
+    image = models.ImageField(upload_to="wlimages/")
     url = models.CharField(max_length=250)
 
 
