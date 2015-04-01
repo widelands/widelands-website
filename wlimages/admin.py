@@ -18,7 +18,10 @@ from models import Image
 # to "wlimages/name_of_image.extension"
 def correct_image_path(modeladmin, request, queryset):
     for obj in queryset:
-        obj.image = "wlimages/%s" % (obj.name)
+        # use original value of image because of CaSes
+        path = unicode(obj.image)
+        f_name =  path.rpartition("/")[2]
+        obj.image = "wlimages/%s" % (f_name)
         obj.save()
 
 class ImageAdmin(admin.ModelAdmin):
