@@ -48,43 +48,53 @@ def developers(request):
     
     # Get locale and translator names from each .json file and 
     # store them in one list.
-    path = os.path.normpath(WIDELANDS_SVN_DIR + "txts/translators")
-    transl_files = os.listdir(path)
-    
+    txt = ""
+    transl_files = []
     transl_list = []
-    for fname in transl_files:
-        if fname.endswith(".json"):
-            f = open(path + "/" + fname,"r")
-            json_data = json.load(f)["locale-translators"]
-            f.close()
-            if json_data["translator-list"] != "translator-credits":
-                transl_list.append(json_data)
-            
+    path = os.path.normpath(WIDELANDS_SVN_DIR + "txts/translators/")
+    try:
+        transl_files = os.listdir(path)
+        if transl_files:
+            for fname in transl_files:
+                if fname.endswith(".json"):
+                    with open(path + "/" + fname,"r") as f:
+                        json_data = json.load(f)["locale-translators"]
+    
+                    if json_data["translator-list"] != "translator-credits":
+                            transl_list.append(json_data)
+        else:
+            txt = "No files for translators found!"
+    except OSError:
+        txt = txt + "Couldn't find translators directory!"
+
+               
     # Get other developers, put in the translators list
     # at given position and prepaire all for wl_markdown
-    f = open(WIDELANDS_SVN_DIR + "txts/developers.json", "r")
-    json_data = json.load(f)["developers"]
-    f.close()
+    try:
+        f = open(WIDELANDS_SVN_DIR + "txts/developers.json", "r")
+        json_data = json.load(f)["developers"]
+        f.close()
     
-    txt = ""
-    for head in json_data:
-        # Add first header
-        txt = txt + "##" + head["heading"] + "\n"
-        # Inserting Translators
-        if head["heading"] == "Translators":
-            for values in (transl_list):
-                # Add subheader for locale
-                txt = txt + "### " + values["your-language-name"] + "\n"
-                # Prepaire the names for wl_markdown
-                txt = txt + "* " + values["translator-list"].replace('\n', '\n* ') + "\n"
-                
-        # Add a subheader or/and the member(s)
-        for entry in head["entries"]:
-            if "subheading" in entry.keys():
-                txt = txt + "###" + entry["subheading"] + "\n"
-            if "members" in entry.keys():
-                for name in entry["members"]:
-                    txt = txt + "* " + name + "\n"
+        for head in json_data:
+            # Add first header
+            txt = txt + "##" + head["heading"] + "\n"
+            # Inserting Translators
+            if head["heading"] == "Translators":
+                for values in (transl_list):
+                    # Add subheader for locale
+                    txt = txt + "### " + values["your-language-name"] + "\n"
+                    # Prepaire the names for wl_markdown
+                    txt = txt + "* " + values["translator-list"].replace('\n', '\n* ') + "\n"
+                    
+            # Add a subheader or/and the member(s)
+            for entry in head["entries"]:
+                if "subheading" in entry.keys():
+                    txt = txt + "###" + entry["subheading"] + "\n"
+                if "members" in entry.keys():
+                    for name in entry["members"]:
+                        txt = txt + "* " + name + "\n"
+    except IOError:
+        txt = txt + "Couldn't find developer file!"
                     
     txt = do_wl_markdown(txt,custom=False)
 
