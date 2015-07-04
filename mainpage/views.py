@@ -5,6 +5,9 @@ from templatetags.wl_markdown import do_wl_markdown
 
 import sys
 import re
+import json
+import os
+import os.path
 
 def mainpage(request):
     return render_to_response('mainpage.html',
@@ -39,37 +42,61 @@ def register(request):
 
 def developers(request):
     """
-    This reads out the authors file in the SVN directory, and returns it
+    This reads out some json files in the SVN directory, and returns it
     as a wl_markdown_object. This replaces the wiki developers list
     """
-    data = open(WIDELANDS_SVN_DIR + "txts/developers", "r").readlines()[4:]
-    newdata = []
-    for line in data:
-        line = line.strip('"_ \n\r').rstrip('" _ \n\r')
-        newdata.append(line)
+    
+    # Get locale and translator names from each .json file and 
+    # store them in one list.
+    txt = ""
+    transl_files = []
+    transl_list = []
+    path = os.path.normpath(WIDELANDS_SVN_DIR + "txts/translators/")
+    try:
+        transl_files = os.listdir(path)
+        if transl_files:
+            for fname in transl_files:
+                if fname.endswith(".json"):
+                    with open(path + "/" + fname,"r") as f:
+                        json_data = json.load(f)["locale-translators"]
+    
+                    if json_data["translator-list"] != "translator-credits":
+                            transl_list.append(json_data)
+        else:
+            txt = "No files for translators found!"
+    except OSError:
+        txt = txt + "Couldn't find translators directory!"
 
-    txt = ''.join(newdata)
-    txt,_ = re.subn(r'<\/?rt.*?>', "", txt)
-    txt,_ = re.subn(r'<br.*?>', "", txt)
-    b = { "24": "\n\n## ",
-          "18": "\n\n### ",
-          "14": "\n\n#### ",
-          "12": "- ",
-        }
-    e = { "24": "\n\n",
-          "18": "\n",
-          "14": "\n",
-          "12": "\n",
-        }
-    txt,_ = re.subn(r'<p * font-size=(\d+).*?>(.*?)</p>',
-            lambda m: "%s%s%s" %
-                    (b[m.group(1)], m.group(2), e[m.group(1)]), txt)
-    txt,_ = re.subn(r'<p.*?>(.*?)</p>',
-            lambda m: ("- %s\n" % m.group(1) if len(m.group(1).strip()) else "")
-                    , txt)
-
-    txt = do_wl_markdown(txt.decode('utf-8'),custom=False)
-
+               
+    # Get other developers, put in the translators list
+    # at given position and prepaire all for wl_markdown
+    try:
+        f = open(WIDELANDS_SVN_DIR + "txts/developers.json", "r")
+        json_data = json.load(f)["developers"]
+        f.close()
+    
+        for head in json_data:
+            # Add first header
+            txt = txt + "##" + head["heading"] + "\n"
+            # Inserting Translators
+            if head["heading"] == "Translators":
+                for values in (transl_list):
+                    # Add subheader for locale
+                    txt = txt + "### " + values["your-language-name"] + "\n"
+                    # Prepaire the names for wl_markdown
+                    txt = txt + "* " + values["translator-list"].replace('\n', '\n* ') + "\n"
+                    
+            # Add a subheader or/and the member(s)
+            for entry in head["entries"]:
+                if "subheading" in entry.keys():
+                    txt = txt + "###" + entry["subheading"] + "\n"
+                if "members" in entry.keys():
+                    for name in entry["members"]:
+                        txt = txt + "* " + name + "\n"
+    except IOError:
+        txt = txt + "Couldn't find developer file!"
+                    
+    txt = do_wl_markdown(txt,custom=False)
 
     return render_to_response("mainpage/developers.html",
                               {"developers": txt},
