@@ -1,3 +1,7 @@
+table.maps {
+	border-collapse: collapse;
+}
+
 img.minimap {
 	max-height: 250px;
 }
@@ -6,15 +10,16 @@ img.map {
 	margin: 0px 10px 10px 0px;
 }
 
-.forum table td {
+.maps table td{
 	padding: 2px;
 }
 
-.forum td {
+.maps td {
 	vertical-align: top;
+	padding: 8px;
 }
 
-.forum .spacer {
+.maps .spacer {
 	width: 15px;
 }
 

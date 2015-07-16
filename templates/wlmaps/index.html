@@ -19,10 +19,10 @@
 	{% autopaginate maps maps_per_page %}
 	{% paginate %}
 	<br />
-	<table class="forum">
+	<table class="maps">
 		{% for map in maps %}
 		<tr class="{% cycle "odd" "even" %}">
-			<td><a href="{{ map.get_absolute_url }}"><img class="minimap" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" /></a></td>
+			<td class="first-column"><a href="{{ map.get_absolute_url }}"><img class="minimap" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" /></a></td>
 			<td>
 				<h3><a class="invertedColor" href="{{ map.get_absolute_url }}">{{ map.name }}</a></h3>
 				<table>
