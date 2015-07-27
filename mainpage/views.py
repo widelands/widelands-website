@@ -2,9 +2,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from settings import WIDELANDS_SVN_DIR
 from templatetags.wl_markdown import do_wl_markdown
-
+from operator import itemgetter
 import sys
-import re
 import json
 import os
 import os.path
@@ -51,38 +50,52 @@ def developers(request):
     txt = ""
     transl_files = []
     transl_list = []
-    path = os.path.normpath(WIDELANDS_SVN_DIR + "txts/translators/")
+    path = os.path.normpath(WIDELANDS_SVN_DIR + "i18n/locales/")
     try:
         transl_files = os.listdir(path)
         if transl_files:
             for fname in transl_files:
-                if fname.endswith(".json"):
+                if fname.endswith(".json") :
                     with open(path + "/" + fname,"r") as f:
-                        json_data = json.load(f)["locale-translators"]
-    
-                    if json_data["translator-list"] != "translator-credits":
+                        json_data = json.load(f)
+                    
+                    try:
+                        if json_data["translator-list"] != "translator-credits":
                             transl_list.append(json_data)
+                    except KeyError:
+                        transl_list = ["KeyError"]
+                        
+            # Check for the other key we need
+            for d in transl_list:
+                if not "your-language-name-in-english" in d:
+                    transl_list = ["KeyError"]
+            
+            # No KeyError -> Sort the list
+            if "KeyError" in transl_list:
+                txt = "Some Translator key is wrong, please contact the Developers. \n"
+            else:
+                transl_list.sort( key=itemgetter("your-language-name-in-english"))
+
         else:
-            txt = "No files for translators found!"
+            txt = "No files for translators found!\n"
     except OSError:
-        txt = txt + "Couldn't find translators directory!"
+        txt = txt + "Couldn't find translators directory!\n"
 
                
     # Get other developers, put in the translators list
     # at given position and prepaire all for wl_markdown
     try:
-        f = open(WIDELANDS_SVN_DIR + "txts/developers.json", "r")
-        json_data = json.load(f)["developers"]
-        f.close()
-    
+        with open(WIDELANDS_SVN_DIR + "txts/developers.json", "r") as f:
+            json_data = json.load(f)["developers"]
+
         for head in json_data:
             # Add first header
             txt = txt + "##" + head["heading"] + "\n"
-            # Inserting Translators
-            if head["heading"] == "Translators":
+            # Inserting Translators if there was no error
+            if head["heading"] == "Translators" and "KeyError" not in transl_list:
                 for values in (transl_list):
                     # Add subheader for locale
-                    txt = txt + "### " + values["your-language-name"] + "\n"
+                    txt = txt + "### " + values["your-language-name-in-english"] + "\n"
                     # Prepaire the names for wl_markdown
                     txt = txt + "* " + values["translator-list"].replace('\n', '\n* ') + "\n"
                     
