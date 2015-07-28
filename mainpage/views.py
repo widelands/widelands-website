@@ -58,23 +58,21 @@ def developers(request):
                 if fname.endswith(".json"):
                     with open(path + "/" + fname,"r") as f:
                         json_data = json.load(f)
-                    
                     try:
-                        if json_data["translator-list"] != "translator-credits":
+                        if json_data['translator-list'] != "translator-credits":
+                            if not 'your-language-name-in-english' in json_data:
+                                transl_list = ["KeyError"]
+                                break
                             transl_list.append(json_data)
                     except KeyError:
                         transl_list = ["KeyError"]
+                        break
                         
-            # Check for the other key we need
-            for d in transl_list:
-                if not "your-language-name-in-english" in d:
-                    transl_list = ["KeyError"]
-            
             # No KeyError -> Sort the list
-            if "KeyError" in transl_list:
+            if 'KeyError' in transl_list:
                 txt = "Some Translator key is wrong, please contact the Developers.\n"
             else:
-                transl_list.sort(key=itemgetter("your-language-name-in-english"))
+                transl_list.sort(key=itemgetter('your-language-name-in-english'))
 
         else:
             txt = "No files for translators found!\n"
@@ -86,25 +84,25 @@ def developers(request):
     # at given position and prepare all for wl_markdown
     try:
         with open(WIDELANDS_SVN_DIR + "txts/developers.json", "r") as f:
-            json_data = json.load(f)["developers"]
+            json_data = json.load(f)['developers']
 
         for head in json_data:
             # Add first header
-            txt = txt + "##" + head["heading"] + "\n"
+            txt = txt + "##" + head['heading'] + "\n"
             # Inserting Translators if there was no error
-            if head["heading"] == "Translators" and "KeyError" not in transl_list:
+            if head['heading'] == 'Translators' and 'KeyError' not in transl_list:
                 for values in (transl_list):
                     # Add subheader for locale
                     txt = txt + "### " + values["your-language-name-in-english"] + "\n"
                     # Prepaire the names for wl_markdown
-                    txt = txt + "* " + values["translator-list"].replace('\n', '\n* ') + "\n"
+                    txt = txt + "* " + values['translator-list'].replace('\n', '\n* ') + "\n"
                     
             # Add a subheader or/and the member(s)
-            for entry in head["entries"]:
-                if "subheading" in entry.keys():
-                    txt = txt + "###" + entry["subheading"] + "\n"
-                if "members" in entry.keys():
-                    for name in entry["members"]:
+            for entry in head['entries']:
+                if 'subheading' in entry.keys():
+                    txt = txt + "###" + entry['subheading'] + "\n"
+                if 'members' in entry.keys():
+                    for name in entry['members']:
                         txt = txt + "* " + name + "\n"
     except IOError:
         txt = txt + "Couldn't find developer file!"
