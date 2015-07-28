@@ -55,7 +55,7 @@ def developers(request):
         transl_files = os.listdir(path)
         if transl_files:
             for fname in transl_files:
-                if fname.endswith(".json") :
+                if fname.endswith(".json"):
                     with open(path + "/" + fname,"r") as f:
                         json_data = json.load(f)
                     
@@ -72,9 +72,9 @@ def developers(request):
             
             # No KeyError -> Sort the list
             if "KeyError" in transl_list:
-                txt = "Some Translator key is wrong, please contact the Developers. \n"
+                txt = "Some Translator key is wrong, please contact the Developers.\n"
             else:
-                transl_list.sort( key=itemgetter("your-language-name-in-english"))
+                transl_list.sort(key=itemgetter("your-language-name-in-english"))
 
         else:
             txt = "No files for translators found!\n"
@@ -83,7 +83,7 @@ def developers(request):
 
                
     # Get other developers, put in the translators list
-    # at given position and prepaire all for wl_markdown
+    # at given position and prepare all for wl_markdown
     try:
         with open(WIDELANDS_SVN_DIR + "txts/developers.json", "r") as f:
             json_data = json.load(f)["developers"]
