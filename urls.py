@@ -42,6 +42,8 @@ urlpatterns = patterns('',
     url(r'^$', mainpage, name="mainpage"),
     url(r'^changelog/$', "mainpage.views.changelog", name="changelog"),
     url(r'^developers/$', "mainpage.views.developers", name="developers"),
+    url(r'^legal_notice/$', "mainpage.views.legal_notice", name="legal_notice"),
+    url(r'^legal_notice_thanks/$', "mainpage.views.legal_notice_thanks", name="legal_notice_thanks"),
     url(r'^help/(?P<path>.*)', redirect_to, { "url": "/encyclopedia/%(path)s", "permanent": True }), # to not break old links
     url(r'^encyclopedia/', include("wlhelp.urls")),
     url(r'^webchat/', include("wlwebchat.urls")),

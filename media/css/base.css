@@ -194,7 +194,7 @@ a.small {
 }
 
 .errormessage {
-	color: #ff0000;
+	color: #ff6b3c;
 }
 
 .errormessage ul {
@@ -227,7 +227,7 @@ div#content {
 div#footer {
 	background-color: #695536;
 	background-image: url("../img/wood.png");
-	padding: 15px;
+	padding: 10px;
 	margin-top: 20px;
 	text-align: center;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);

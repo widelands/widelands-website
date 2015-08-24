@@ -264,6 +264,12 @@ INSTALLED_APPS = (
 
 USE_GOOGLE_ANALYTICS=False
 
+###############################
+## Recipient(s) for the form ##
+##   on legal notice page    ##
+###############################
+INQUIRY_RECIPIENTS = ('somal@arcor.de',)
+
 try:
     from local_settings import *
 except ImportError:
