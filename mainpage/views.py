@@ -19,20 +19,26 @@ def mainpage(request):
                               context_instance=RequestContext(request))
 
 def legal_notice(request):
-    """The legal notice page to fullfill law"""
+    """The legal notice page to fullfill law."""
+    
     if request.method == 'POST': 
         form = ContactForm(request.POST) 
         if form.is_valid():
             name = form.cleaned_data['forename'] +  ' ' + form.cleaned_data['surname']
             subject =  'An inquiry over the webpage'
-            message = 'From: ' + name + '\n'
-            message = message + 'EMail: ' +  form.cleaned_data['email'] + '\n'
-            message = message + 'Inquiry:\n'
-            message += form.cleaned_data['inquiry']
+            message = '\n'.join(['From: ' + name,
+                                'EMail: ' + form.cleaned_data['email'],
+                                'Inquiry:',
+                                form.cleaned_data['inquiry']])
             sender = 'legal_note@widelands.org'
             
+            ## get email addresses which are in a tuple of ('name','email'),
+            recipients = []
+            for recipient in INQUIRY_RECIPIENTS:
+                recipients.append(recipient[1])
+            
             send_mail(subject, message, sender,
-                INQUIRY_RECIPIENTS, fail_silently=False)
+                recipients, fail_silently=False)
             return HttpResponseRedirect('/legal_notice_thanks/') # Redirect after POST
 
     else:
