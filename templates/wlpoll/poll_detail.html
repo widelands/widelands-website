@@ -10,7 +10,7 @@
 
 {% block content %}
 	{% if perms.wlpoll %}
-	<div class="small posRight">
+	<div class="small posRight shaded">
 		{% if perms.wlpoll.poll_can_add %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
 		{% if perms.wlpoll.poll_can_edit %}| <a href="/admin/wlpoll/poll/{{object.id}}/" class="invertedColor">Edit</a>{% endif %}
 		{% if perms.wlpoll.poll_can_delete %}| <a href="/admin/wlpoll/poll/{{object.id}}/delete/" class="invertedColor">Delete</a>{% endif %}
