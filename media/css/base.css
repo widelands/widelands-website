@@ -84,7 +84,7 @@ pre {
 
 code {
 	background-image: url("../img/black50.png");
-	font-size: 1em;
+	font-size: 14px;
 }
 /*No double background*/
 pre > code {
