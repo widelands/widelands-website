@@ -58,13 +58,12 @@ ul.menu li {
 
 ul.menu  li a {
 	display: block;
-	width: 120px;
+	width: 8.5em;
 	height: 50px;
 	line-height: 3.5em;
 	float: left;
 	border-right: 1px solid black;
 	text-align: center;
-	vertical-align: middle;
 	color: #ffffff;
 	text-transform: uppercase;
 	font-weight: normal;
@@ -106,7 +105,7 @@ ul.menu li ul li {
 
 ul.menu li ul li a {
 	display: block;
-	width: 255px;
+	width: 21.5em;
 	height: 20px;
 	line-height: 1.7em;
 	padding: 4px;
