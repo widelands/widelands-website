@@ -9,10 +9,10 @@ body {
 	background-color: #e9c78a;
 	background-image: url("../img/parchment.png");
 	font-family: sans-serif;
-	font-size: 14px;
-	line-height: 20px;
+	font-size: 0.88em;
+	line-height: 1.4em;
 	color: #ffffee;
-	text-shadow: #000000 1px 1px 0px;
+    text-shadow: 1px 1px 0px #000000;
 }
 
 /*+++++++++++++++++++++++++*/
@@ -84,6 +84,7 @@ pre {
 
 code {
 	background-image: url("../img/black50.png");
+	font-size: 14px;
 }
 /*No double background*/
 pre > code {
@@ -100,17 +101,16 @@ input, button, textarea, .button {
 	background-image: url("../img/black50.png");
 	outline: none;
 	color: #ffffff;
-	text-shadow: #000000 1px 1px 0px;
 	vertical-align: middle;
 	cursor: pointer;
 	font-family: inherit;
-	font-size: 12px;
+	font-size: 0.85em;
 	font-weight: bold;
 }
 
 textarea {
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 0.9em;
 }
 
 input:hover, button:hover, textarea:hover {
@@ -129,13 +129,18 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
 }
 
+/* different margin for headers where text could be written */
+div.blogEntry h1, h2, h3, h4, h5, h6 {
+	margin: 0.8em 0em 0.5em 0em;
+}
+
 svg {
 	text-shadow: none;
 }
 
 td {
 	vertical-align: top;
-	line-height: 20px;
+	line-height: 1.4em;
 }
 
 .posLeft {
@@ -174,7 +179,7 @@ td {
 	color: #ffffee;
 }
 .small {
-	font-size: 12px;
+	font-size: 0.83em;
 }
 
 a.small {
@@ -271,11 +276,12 @@ div.loginBox ul {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
-	line-height: 18px;
+	line-height: 1.5em;
 }
 
 div.loginBox h4 {
 	margin-bottom: 5px;
+	margin-top: 0px;
 }
 
 div.loginBox input {
@@ -325,6 +331,7 @@ div.columnModuleBox {
 	border-radius: 4px;
 }
 
+
 div.columnModuleBox h4 {
 	color: #ffffee;
 	padding: 8px;
@@ -370,7 +377,7 @@ div.columnModuleBox ul li {
 	display: block;
 	padding: 8px;
 	border-top: 1px solid black;
-	font-size: 12px;
+	font-size: 0.8em;
 }
 
 div.columnModuleBox ul li:first-child {

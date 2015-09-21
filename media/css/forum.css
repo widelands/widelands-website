@@ -54,7 +54,7 @@
 /******************/
 
 tr.spacer {
-	height: 10px;
+	height: 1em;
 	border: none;
 }
 
@@ -71,8 +71,8 @@ tr.spacer {
 
 .authorStats {
 	text-align: left;
-	font-size: 10px;
-	line-height: 12px;
+	font-size: 0.7em;
+	line-height: 1.1em;
 }
 
 /*****************/
@@ -94,7 +94,7 @@ a.permalink:hover {
 }
 
 div.blogEntry .post p {
-	margin-bottom: 4px;
+	margin-bottom: 0.5em;
 }
 
 .post blockquote {
@@ -114,12 +114,12 @@ div.blogEntry .post p {
 
 .post th {
 	padding: 0 1em 0 1em;
-	border: 1px solid black;
+	border: 1px solid #474444;
 }
 
 .post td {
 	padding: 0 1em 0 1em;
-	border: 1px solid black;
+	border: 1px solid #474444;
 }
 
 /*****************/

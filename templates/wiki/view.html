@@ -26,8 +26,6 @@
 			<a class="invertedColor" href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
 			{% endif %}
 		{% endif %}
-	{% else %}
-		<a class="invertedColor" href="{% url wiki_edit article.title %}">{% trans "Create this article" %}</a>
 	{% endif %}
 </div>
 <h1>{{ article.title }}</h1>

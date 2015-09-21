@@ -62,6 +62,18 @@ directly, but you might want to edit the bd variable in local_settings.py::
 
    $ ln -s local_urls.py.sample local_urls.py
    $ ln -s local_settings.py.sample local_settings.py
+   
+There has to be some corrections to get into the admin pages:
+
+Either copy the folders "media" and "templates"
+
+   from: ~/wlwebsite/django/contrib/admin
+   to:   ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/
+   
+or create symlinks:
+
+   $ ln -s ~/wlwebsite/django/contrib/admin/templates/ ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/templates
+   $ ln -s ~/wlwebsite/django/contrib/admin/media/ ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/media
 
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
