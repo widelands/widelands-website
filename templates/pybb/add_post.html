@@ -2,6 +2,8 @@
 {% load pybb_extras %}
 {% load i18n %}
 
+{# This template is used to add posts or topics in a separate view #}
+
 {% block title %}
 {% if forum %}
 	{% trans "New Topic" %}
@@ -15,33 +17,8 @@
  - {{ block.super }}
 {% endblock %}
 
-{% block extra_head %}
-{{ block.super }}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/disableOnSubmit.js"></script>
-<script type="text/javascript">
-	$(function() {
-		$('form').disableOnSubmit();
-		$('.post-form .preview-button').click(function() {
-			var raw_content = $.trim($('.post-form #id_body').val());
-			var markup = $('.post-form #id_markup').val();
-
-			args = {'content': raw_content, 'markup': markup}
-			$.post('{% url pybb_post_ajax_preview %}', args, function(data) {
-				if (data.error) {
-					alert(data.error);
-				} else {
-					$('.preview-box .content').html(data.content);
-					$('.preview-box').show();
-				}
-			}, 'json');
-		});
-	});
-</script>
-{% endblock %}
-
 {% block content %}
-<form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
-	<h1>
+<h1>
 	{% if forum %}
 		{% trans "New Topic" %}
 	{% else %}
@@ -51,9 +28,10 @@
 			{% trans "New Reply" %}
 		{% endif %}
 	{% endif %}
-	</h1>
-	<div class="blogEntry">
-		<a href="{% url pybb_index %}">Forums</a> &#187;
+</h1>
+
+<div class="blogEntry">
+	<a href="{% url pybb_index %}">Forums</a> &#187;
 	{% if forum %}
 		<a href="{{ forum.category.get_absolute_url }}">{{ forum.category.name }}</a> &#187;
 		{{ forum }}
@@ -62,25 +40,10 @@
 		<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
 		{{ topic }} 
 	{% endif %}
+	<br /><br />
+		
+	{% include "pybb/post_form.html" %}
+	
+</div>
 
-		<br /><br />
-		<div class="preview-box" style="display: none">
-			{% trans "Preview" %}:<br />
-			<div class="content post">
-			</div>
-			<br />
-		</div>
-
-		{{ form.as_p }}
-		{% csrf_token %}
-		<button type="submit">
-			<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Send" %}</span>
-		</button>
-		<button type="button" class="preview-button">
-			<img src="{{ MEDIA_URL }}forum/img/preview.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Preview" %}</span>
-		</button>
-	</div>
-</form>
 {% endblock %}
