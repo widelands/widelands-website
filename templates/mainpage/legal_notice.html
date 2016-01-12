@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load wl_markdown %}
+
+{% block title %}Legal notice {{ block.super }}{% endblock %}
+
+{% block content %}
+
+<h1>Legal notice</h1>
+
+<div class="blogEntry">
+	<p>The website <a href="https://wl.widelands.org">widelands.org</a> is a privately owned page to exchange knowledge and experience about the free, open source game Widelands. There are no financial goal or interest.</p>
+
+	<h2>Project lead</h2>
+	<ul>
+		<li>Holger Rapp</li>
+	</ul>
+
+	<h2>Contact</h2>
+   <p>There are several possibilities to get in contact. For questions about the game or the contents of the website please take a look at our <a href=/wiki/ContactPage>Contact page</a> or post in the <a href=/forum>forums</a>. Use the one of the following methods if you do not want to make an account:</p>
+
+	<ul>
+	<li>E-Mail Holger Rapp: sirver(at)gmx.de</li>
+	<li>Contact form:
+
+	<form action="/legal_notice/" method="post">{% csrf_token %}
+	{% if form.errors %}
+	<p class="errormessage" style="text-align: left;">Please fill out all fields!</p>
+   {% endif %}
+	<table>
+		<tr>
+			<td><label for="id_forename">First name: </label></td>
+			<td><input id="id_forename" type="text" name="forename" maxlength="80" required></td>
+		</tr>
+		<tr>
+			<td><label for="id_surname">Last name: </label></td>
+			<td><input id="id_surname" type="text" name="surname" maxlength="80" required></td>
+		</tr>
+		<tr>
+			<td><label for="id_email">Email:</label></td>
+			<td><input type="text" name="email" id="id_email" required></td>
+		</tr>
+		<tr>
+			<td><label for="id_inquiry">Inquiry: </label></td>
+			<td><textarea id="id_inquiry" rows="10" cols="40" name="inquiry" required></textarea></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Submit"></td>
+		</tr>
+	</table>
+	</form>
+	</li>
+	</ul>
+</div>
+{% endblock %}
