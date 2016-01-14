@@ -102,11 +102,11 @@ def do_custom_date( format, date, timezone, now= None ):
         delta = ddate(date.year,date.month,date.day) - \
                 ddate(now.year,now.month,now.day)
         if delta.days == 0:
-            return _(ur'\t\o\d\a\y')
+            return _(ur'\T\o\d\a\y')
         elif delta.days == 1:
-            return _(ur'\t\o\m\o\r\r\o\w')
+            return _(ur'\T\o\m\o\r\r\o\w')
         elif delta.days == -1:
-            return _(ur'\y\e\s\t\e\r\d\a\y')
+            return _(ur'\Y\e\s\t\e\r\d\a\y')
         else:
             return g.group(1)
     try:

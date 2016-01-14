@@ -113,7 +113,7 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 AUTH_PROFILE_MODULE = 'wlprofile.Profile'
 DEFAULT_TIME_ZONE = 3
-DEFAULT_TIME_DISPLAY = r"%ND(m-d-y), H:i"
+DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i" #According to ISO 8601
 DEFAULT_MARKUP ="markdown"
 SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
