@@ -117,14 +117,24 @@
 				<td  style="vertical-align: middle; text-align: center;"><img src="{{ img.url }}"></td>
 			</tr>
 			<tr>
-				<td class="grey" style="text-align: right;">Code to use in article:</td>
+				<td class="grey">Code to use in article:</td>
+				{# Show only one code snippet if the image is greater than 700px #}
 				{% if img.image.width > 700 %}
-					<td style="text-align: center;">[![{{img.name}}]({{ img.url }})]({{ img.url }})</td>
+				<td style="text-align: center;">[![{{img.name}}]({{ img.url }})]({{ img.url }})</td>
+
+				{# otherwise give all options #}
 				{% else %}
 					<td style="text-align: center;">![{{img.name}}]({{ img.url }})</td>
-				{% endif %}
 			</tr>
-		
+				<tr>
+					<td class="grey">Right aligned:</td>
+					<td style="text-align: center;">![{{img.name}}]({{ img.url }}){: .right}</td>
+				</tr>
+				<tr>
+					<td class="grey">Left aligned:</td>
+					<td style="text-align: center;">![{{img.name}}]({{ img.url }}){: .left}</td>
+				</tr>
+				{% endif %}
 		</tbody>
 		</table>
 		{% endfor %}

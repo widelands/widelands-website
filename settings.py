@@ -113,7 +113,7 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 AUTH_PROFILE_MODULE = 'wlprofile.Profile'
 DEFAULT_TIME_ZONE = 3
-DEFAULT_TIME_DISPLAY = r"%ND(m-d-y), H:i"
+DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i" #According to ISO 8601
 DEFAULT_MARKUP ="markdown"
 SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
@@ -263,6 +263,15 @@ INSTALLED_APPS = (
 )
 
 USE_GOOGLE_ANALYTICS=False
+
+##############################################
+## Recipient(s) who get an email if someone ##
+##       uses the on legal notice page      ##
+## Use allways the form ('name', 'Email')   ##
+##############################################
+INQUIRY_RECIPIENTS = (
+   ('franku','somal@arcor.de'),
+)
 
 try:
     from local_settings import *

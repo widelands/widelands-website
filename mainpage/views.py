@@ -1,8 +1,13 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from settings import WIDELANDS_SVN_DIR
+from settings import WIDELANDS_SVN_DIR, INQUIRY_RECIPIENTS
 from templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
+from django.core.mail import send_mail
+from mainpage.forms import ContactForm
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 import sys
 import json
 import os
@@ -13,11 +18,41 @@ def mainpage(request):
     return render_to_response('mainpage.html',
                               context_instance=RequestContext(request))
 
+def legal_notice(request):
+    """The legal notice page to fullfill law."""
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['forename'] +  ' ' + form.cleaned_data['surname']
+            subject =  'An inquiry over the webpage'
+            message = '\n'.join(['From: ' + name,
+                                'EMail: ' + form.cleaned_data['email'],
+                                'Inquiry:',
+                                form.cleaned_data['inquiry']])
+            sender = 'legal_note@widelands.org'
+
+            ## get email addresses which are in a tuple of ('name','email'),
+            recipients = []
+            for recipient in INQUIRY_RECIPIENTS:
+                recipients.append(recipient[1])
+
+            send_mail(subject, message, sender,
+                recipients, fail_silently=False)
+            return HttpResponseRedirect('/legal_notice_thanks/') # Redirect after POST
+
+    else:
+        form = ContactForm() # An unbound form
+
+    return render(request, 'mainpage/legal_notice.html', {
+        'form': form,
+        })
+
+def legal_notice_thanks(request):
+    return render(request, 'mainpage/legal_notice_thanks.html')
+
 
 from forms import RegistrationWithCaptchaForm
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-
 from registration.backends.default import DefaultBackend
 
 
