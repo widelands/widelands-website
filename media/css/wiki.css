@@ -118,3 +118,22 @@ th {
     border: 1px solid #000;
     padding: 0px 5px;
 }
+
+/*********************/
+/* Image positioning */
+/*********************/
+
+img.right {
+	float: right;
+	padding-left: 1em;
+}
+
+img.left {
+	float: left;
+	padding-right: 1em;
+}
+
+img.center {
+	display: block;
+	margin: auto;
+}
