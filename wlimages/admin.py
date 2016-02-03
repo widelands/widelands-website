@@ -14,14 +14,14 @@ from django.utils.translation import ugettext_lazy as _
 from models import Image
 
 class ImageAdmin(admin.ModelAdmin):
-    fieldsets = (
-        (None, {'fields': ( ('image', 'name'), 'date_submitted', 'url','revision')}),
-        (_('Upload data:'), { 'fields': ( 'user', 'editor_ip')}),
-        (_('Content object:'), { 'fields': ( 'content_type', 'object_id' )}),
-    )
     list_display = ( '__unicode__', 'date_submitted', 'content_type', 'user')
     list_filter = ('date_submitted',)
     date_hierarchy = 'date_submitted'
     search_fields = ('image', 'user__username')
+    fieldsets = (
+        (None, {'fields': ( ('image', 'name'), 'date_submitted', 'url','revision')}),
+        (_('Upload data:'), { 'fields': ( 'user', 'editor_ip')}),
+        (_('Content object:'), { 'fields': ( 'content_type', 'object_id')}),
+    )
 
 admin.site.register(Image, ImageAdmin)
