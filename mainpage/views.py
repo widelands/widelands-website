@@ -91,7 +91,7 @@ def developers(request):
     txt = ''
     transl_files = []
     transl_list = []
-    path = os.path.normpath(WIDELANDS_SVN_DIR + 'i18n/locales/')
+    path = os.path.normpath(WIDELANDS_SVN_DIR + 'data/i18n/locales/')
     try:
         transl_files = os.listdir(path)
         if transl_files:
@@ -124,7 +124,7 @@ def developers(request):
     # Get other developers, put in the translators list
     # at given position and prepare all for wl_markdown
     try:
-        with open(WIDELANDS_SVN_DIR + 'txts/developers.json', 'r') as f:
+        with open(WIDELANDS_SVN_DIR + 'data/txts/developers.json', 'r') as f:
             json_data = json.load(f)['developers']
 
         for head in json_data:
