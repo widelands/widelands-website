@@ -8,15 +8,24 @@
 {% block content %}
 <h1>Map Upload</h1>
 <div class="blogEntry">
-	<a href="{% url wlmaps_index %}">Maps</a> &#187; Upload
-	<br /><br />
+	<div class="breadCrumb">
+		<a href="{% url wlmaps_index %}">Maps</a> &#187; Upload
+	</div>
 	<form enctype="multipart/form-data" action="{% url wlmaps_upload %}" method="post">
 		{{ form.file.label_tag }}: {{ form.file }}<br />
 		{% if form.file.errors %}
 			<span class="errormessage">{{ form.file.errors }}</span><br />
 		{% endif %}
-		{{ form.uploader_comment.label_tag }}:<br />
+		<div>
+		{{ form.uploader_comment.label_tag }}:
+			<span class="posRight">
+				<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
+					<img src="{{ MEDIA_URL }}img/menu_help.png" alt="Help on Syntax" class="middle">
+					Help on Syntax
+				</a>
+			</span>
 		{{ form.uploader_comment }}
+		</div>
 		{% if form.uploader_comment.errors %}
 			<span class="errormessage">{{ form.uploader_comment.errors }}</span><br />
 		{% endif %}

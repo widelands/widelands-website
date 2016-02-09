@@ -3,6 +3,5 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-    url(r'^wlmaps/', include("wlmaps.urls")),
-)
-
+                       url(r'^wlmaps/', include('wlmaps.urls')),
+                       )

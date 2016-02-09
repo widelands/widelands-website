@@ -7,6 +7,7 @@
 {% load wlmaps_extra %}
 {% load wlprofile %}
 {% load threadedcommentstags %}
+{% load wl_markdown %}
 
 {% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
@@ -34,22 +35,33 @@ $(function() {
 {% block content %}
 <h1>Map: {{ map.name }}</h1>
 <div class="blogEntry">
-	<a href="{% url wlmaps_index %}">Maps</a> &#187;
-	{{ map.name }}
-	<br /><br />
-	<img class="posLeft map" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" />
-
-	<div style="display: inline-block;">
+	<div>
+		<a href="{% url wlmaps_index %}">Maps</a> &#187; {{ map.name }}
+	</div>
+		<img class="posLeft map" style="float: left" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" />
+	<div style="display: inline-block">
 		<h3>Description:</h3>
-		<p>{{ map.descr }}</p>
+		<p>{{ map.descr|wl_markdown:"remove" }}</p>
 	</div>
-	<br />
-	<div style="display: inline-block;">
+	{% if map.hint %}
+	<div>
+		<h3>Hint:</h3>
+		<p>{{ map.hint|wl_markdown:"remove" }}</p>
+	</div>
+	{% endif %}
+
+	<div style="clear: left">
 		<h3>Comment by uploader:</h3>
-		<p>{{ map.uploader_comment }}</p>
+		<div>{{ map.uploader_comment|wl_markdown:"remove" }}</div>
+		{% if user == map.uploader or admin %}
+			<a class="button posRight" href="{% url wlmaps_edit_comment map.slug %}">
+				<img alt="Edit" title="Edit your comment" class="middle" src="{{ MEDIA_URL }}forum/img/edit.png">
+				<span class="middle">Edit</span>
+			</a>
+		{% endif %}
 	</div>
-	<br />
-	<div style="display: inline-block;">
+
+	<div style="display: inline-block" >
 		<h3>Basic Information:</h3>
 		<table>
 			<tr>
@@ -93,17 +105,20 @@ $(function() {
 				<td class="grey">Upload:</td><td>by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}</td>
 			</tr>
 		</table>
+		
+		{% if not map.world_name %}
+		<div>
+			<strong>This map requires a version of Widelands newer than build18!</strong>
+		</div>
+		{% endif %}
 	</div>
-	<br />
-	{% if not map.world_name %}
-	<strong>This map requires a version of Widelands newer than build18!</strong><br />
-	{% endif %}
-	<br />
-	<a class="button" href="{% url wlmaps_download map.slug %}">
+	
+	<div>
+	<a class="button posRight" href="{% url wlmaps_download map.slug %}">
 		<img src="{{ MEDIA_URL }}img/download.png" alt ="" class="middle" />
 		<span class="middle">Download this map</span>
 	</a>
-	<div style="clear: left;"></div>
+	</div>
 </div>
 
 <div class="blogEntry">

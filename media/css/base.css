@@ -49,6 +49,10 @@ a:hover {
 	color: #181;
 }
 
+.breadCrumb{
+	margin-bottom: 10px;
+}
+
 /* We put this after a:hover  */
 /* to prevend the hover style */
 /* for this link              */
