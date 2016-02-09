@@ -56,9 +56,8 @@ class UploadMapForm(ModelForm):
         self.instance.h = mapinfo['height']
         self.instance.nr_players = mapinfo['nr_players']
         self.instance.descr = mapinfo['description']
-        # Some old maps didn't have a hint-tag and wl_map_info didn't
-        # apply it to the json file automatically
-        if self.instance.hint:
+        # I one wants to upload an old map without hint-tag we ommit this
+        if 'hint' in mapinfo:
             self.instance.hint = mapinfo['hint']
 
         self.instance.world_name = mapinfo['world_name']
