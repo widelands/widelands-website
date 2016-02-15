@@ -50,26 +50,20 @@ class UploadMapForm(ModelForm):
             return cleaned_data
 
         # Add information to the map
-        try:
-            self.instance.name = mapinfo['name']
-            self.instance.author = mapinfo['author']
-            self.instance.w = mapinfo['width']
-            self.instance.h = mapinfo['height']
-            self.instance.nr_players = mapinfo['nr_players']
-            self.instance.descr = mapinfo['description']
-            self.instance.hint = mapinfo['hint']
-    
-            self.instance.world_name = mapinfo['world_name']
-            # mapinfo["minimap"] is an absolute path and cannot be used.
-            self.instance.minimap = '/wlmaps/maps/' + file.name + '.png'
-    
-            # the json file is no longer needed
-            default_storage.delete(name + '.json')
-        except KeyError:
-            self._errors['file'] = self.error_class(
-                ['A KeyError is occured. Please ask in the forum for help.'])
-            del cleaned_data['file']
-            return cleaned_data
+        self.instance.name = mapinfo['name']
+        self.instance.author = mapinfo['author']
+        self.instance.w = mapinfo['width']
+        self.instance.h = mapinfo['height']
+        self.instance.nr_players = mapinfo['nr_players']
+        self.instance.descr = mapinfo['description']
+        self.instance.hint = mapinfo['hint']
+
+        self.instance.world_name = mapinfo['world_name']
+        # mapinfo["minimap"] is an absolute path and cannot be used.
+        self.instance.minimap = '/wlmaps/maps/' + file.name + '.png'
+
+        # the json file is no longer needed
+        default_storage.delete(name + '.json')
         
         return cleaned_data
 
