@@ -14,33 +14,38 @@ from djangoratings.fields import AnonymousRatingField
 
 
 class Map(models.Model):
-    name = models.CharField( max_length = 255, unique = True )
+    name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True)
-    author = models.CharField( max_length = 255 )
-    w = models.PositiveIntegerField( verbose_name = 'Width')
-    h = models.PositiveIntegerField( verbose_name = 'Height')
-    nr_players = models.PositiveIntegerField( verbose_name = 'Max Players')
+    author = models.CharField(max_length=255)
+    w = models.PositiveIntegerField(verbose_name='Width')
+    h = models.PositiveIntegerField(verbose_name='Height')
+    nr_players = models.PositiveIntegerField(verbose_name='Max Players')
 
-    descr = models.TextField( verbose_name = "Description" )
-    minimap = models.ImageField( verbose_name = "Minimap", upload_to = settings.MEDIA_ROOT + "/wlmaps/minimaps/" )
-    file = models.FileField( verbose_name = "Mapfile", upload_to = settings.MEDIA_ROOT + "/wlmaps/maps/" )
+    descr = models.TextField(verbose_name='Description')
+    hint = models.TextField(verbose_name='Hint')
+    minimap = models.ImageField(
+        verbose_name='Minimap', upload_to=settings.MEDIA_ROOT + '/wlmaps/minimaps/')
+    file = models.FileField(verbose_name='Mapfile',
+                            upload_to=settings.MEDIA_ROOT + '/wlmaps/maps/')
 
-    world_name = models.CharField( max_length = 50  )
+    world_name = models.CharField(max_length=50)
 
-    pub_date = models.DateTimeField( default = datetime.datetime.now )
-    uploader_comment = models.TextField( verbose_name = "Uploader comment", blank = True )
+    pub_date = models.DateTimeField(default=datetime.datetime.now)
+    uploader_comment = models.TextField(
+        verbose_name='Uploader comment', blank=True)
     uploader = models.ForeignKey(User)
-    nr_downloads = models.PositiveIntegerField( verbose_name = "Download count", default = 0)
+    nr_downloads = models.PositiveIntegerField(
+        verbose_name='Download count', default=0)
 
-    rating = AnonymousRatingField(range=10, can_change_vote = True)
+    rating = AnonymousRatingField(range=10, can_change_vote=True)
 
     if settings.USE_SPHINX:
         search = SphinxSearch(
-            weights = {
+            weights={
                 'name': 100,
                 'author': 60,
                 'uploader_comment': 40,
-                }
+            }
         )
 
     class Meta:
@@ -48,8 +53,8 @@ class Map(models.Model):
         get_latest_by = 'pub_date'
 
     @models.permalink
-    def get_absolute_url( self ):
-        return ("wlmaps_view", None, {"map_slug": self.slug } )
+    def get_absolute_url(self):
+        return ('wlmaps_view', None, {'map_slug': self.slug})
 
     def __unicode__(self):
         return u'%s by %s' % (self.name, self.author)
