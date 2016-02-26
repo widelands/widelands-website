@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 from django.contrib.auth.models import User
 from tagging.fields import TagField
-from widelands.news.managers import PublicManager
+from news.managers import PublicManager
 from django.core.urlresolvers import reverse
 
 import settings

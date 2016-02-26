@@ -53,7 +53,7 @@ def legal_notice_thanks(request):
 
 
 from forms import RegistrationWithCaptchaForm
-from registration.backends.default import DefaultBackend
+#from registration.backends.default import DefaultBackend
 
 
 def register(request):

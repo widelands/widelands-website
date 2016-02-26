@@ -11,10 +11,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
    'default': {
-      'ENGINE': 'django.db.backends.sqlite3',
-      'NAME': 'dev.db',
-      'USER': '',      # Not used with sqlite3.
-      'PASSWORD': '',  # Not used with sqlite3.
+      'ENGINE': 'django.db.backends.mysql',
+      'NAME': 'wl_django_alpha',
+      'USER': 'widelands',      # Not used with sqlite3.
+      'PASSWORD': 'widelands',  # Not used with sqlite3.
       'HOST': '',      # Set to empty string for localhost. Not used with sqlite3.
       'PORT': '',      # Set to empty string for default. Not used with sqlite3.
    }
@@ -72,11 +72,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    'tracking.middleware.VisitorTrackingMiddleware',
-    'tracking.middleware.VisitorCleanUpMiddleware',
+#    'tracking.middleware.VisitorTrackingMiddleware',
+#    'tracking.middleware.VisitorCleanUpMiddleware',
 )
 
-ROOT_URLCONF = 'widelands.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -222,32 +222,35 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'django.contrib.markup',
+#    'django.contrib.markup',
     'django.contrib.humanize',
+    'django_comments',
 
     # TODO: only temporary for webdesign stuff
     'django.contrib.webdesign',
 
     # Thirdparty apps, but need preload
-    'tracking',
+#    'tracking',
 
     # Our own apps
-    'widelands.mainpage',
-    'widelands.wlhelp',
-    'widelands.wlimages',
-    'widelands.wlwebchat',
-    'widelands.wlrecaptcha',
-    'widelands.wlprofile',
-    'widelands.wlsearch',
-    'widelands.wlpoll',
-    'widelands.wlevents',
-    'widelands.wlmaps',
-    'widelands.wlscreens',
-    'widelands.wlggz',
+    'wiki.templatetags.restructuredtext',
+    'mainpage',
+#    'widelands.wlhelp',
+    'wlimages',
+    'wlwebchat',
+    'wlrecaptcha',
+    'wlprofile',
+    'wlsearch',
+    'wlpoll',
+    'wlevents',
+    'wlmaps',
+    'wlscreens',
+    'wlggz',
 
     # Modified 3rd party apps
-    'widelands.wiki', # This is based on wikiapp, but has some local modifications
-    'widelands.news', # This is based on simple-blog, but has some local modifications
+    'wiki', # This is based on wikiapp, but has some local modifications
+    'news', # This is based on simple-blog, but has some local modifications
+#    'news.managers',
     'pybb', # Feature enriched version of pybb
 
     # Thirdparty apps
@@ -257,9 +260,9 @@ INSTALLED_APPS = (
     'pagination',
     'tagging',
     'notification',
-    'djangoratings',
+#    'djangoratings', #No longer maintained
     'sphinxdoc',
-    'south',
+#    'south', Not longer supprted
 )
 
 USE_GOOGLE_ANALYTICS=False
@@ -282,3 +285,4 @@ if USE_SPHINX:
     INSTALLED_APPS += (
         'djangosphinx',
     )
+

@@ -62,7 +62,7 @@ class Forum(models.Model):
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
     description = models.TextField(_('Description'), blank=True, default='')
-    moderators = models.ManyToManyField(User, blank=True, null=True, verbose_name=_('Moderators'))
+    moderators = models.ManyToManyField(User, blank=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
 
     class Meta:
@@ -193,7 +193,7 @@ class Post(RenderableItem):
     body = models.TextField(_('Message'))
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
-    user_ip = models.IPAddressField(_('User IP'), blank=True, default='')
+    user_ip = models.GenericIPAddressField(_('User IP'), default='')
 
     # Django sphinx
     if settings.USE_SPHINX:

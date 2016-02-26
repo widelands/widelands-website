@@ -21,7 +21,7 @@ class Profile(models.Model):
     user = AutoOneToOneField(User, related_name='wlprofile', verbose_name=_('User'))
 
     # Web related fields.
-    site = models.URLField(_('Website'), verify_exists=False, blank=True, default='')
+    site = models.URLField(_('Website'), blank=True, default='')
     jabber = models.CharField(_('Jabber'), max_length=80, blank=True, default='')
     icq = models.CharField(_('ICQ'), max_length=12, blank=True, default='')
     msn = models.CharField(_('MSN'), max_length=80, blank=True, default='')

@@ -1,20 +1,20 @@
-from datetime import datetime
 import os.path
 import random
-from BeautifulSoup import BeautifulSoup
 import traceback
+import json
 
+from BeautifulSoup import BeautifulSoup
+from datetime import datetime
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.utils.functional import Promise
-from django.utils.translation import force_unicode, check_for_language
-from django.utils.simplejson import JSONEncoder
+from django.utils.translation import check_for_language
+from django.utils.encoding import force_unicode
 from django import forms
 from django.template.defaultfilters import urlize as django_urlize
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
-
 from pybb import settings as pybb_settings
 
 
@@ -106,7 +106,7 @@ def ajax(func):
     return wrapper
 
 
-class LazyJSONEncoder(JSONEncoder):
+class LazyJSONEncoder(json.JSONEncoder):
     """
     This fing need to save django from crashing.
     """

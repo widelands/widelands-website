@@ -13,7 +13,9 @@ On Ubuntu, installing all required tools and dependencies in two commands::
 
    $ sudo apt-get install python-dev python-virtualenv python-pip mercurial bzr subversion git-core sqlite3
    $ sudo apt-get build-dep python-numpy
-
+   #This is Pillow on Ubuntu ("python-Pillow" an archlinux)
+   $ sudo apt-get install python-imaging
+   
 Setting up the local environment
 --------------------------------
 

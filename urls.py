@@ -1,13 +1,13 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-from widelands.mainpage.views import mainpage
+from mainpage.views import mainpage
 
-from widelands.news.feeds import NewsPostsFeed
-from widelands.wiki.feeds import RssHistoryFeed
+from news.feeds import NewsPostsFeed
+from wiki.feeds import RssHistoryFeed
 from django.views.generic.simple import redirect_to
 
 feeds = {
@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     # Django builtin / Registration
     # overwrite registration with own implementation
     url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    (r'^accounts/', include('registration.backends.default.urls')),
+    (r'^accounts/', include('registration.simple.hmac..urls')),
     (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
     # 3rd party, unmodified

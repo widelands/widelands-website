@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 
 from tagging.fields import TagField
 from tagging.models import Tag
@@ -58,16 +58,16 @@ class Article(models.Model):
                               null=True, blank=True)
     creator = models.ForeignKey(User, verbose_name=_('Article Creator'),
                                 null=True)
-    creator_ip = models.IPAddressField(_("IP Address of the Article Creator"),
+    creator_ip = models.GenericIPAddressField(_("IP Address of the Article Creator"),
                                        blank=True, null=True)
     created_at = models.DateTimeField(default=datetime.now)
     last_update = models.DateTimeField(blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
-    group = generic.GenericForeignKey('content_type', 'object_id')
+    group = GenericForeignKey('content_type', 'object_id')
 
-    images = generic.GenericRelation(Image)
+    images = GenericRelation(Image)
 
     tags = TagField()
 
@@ -163,7 +163,7 @@ class ChangeSet(models.Model):
     # Editor identification -- logged or anonymous
     editor = models.ForeignKey(User, verbose_name=_(u'Editor'),
                                null=True)
-    editor_ip = models.IPAddressField(_(u"IP Address of the Editor"))
+    editor_ip = models.GenericIPAddressField(_(u"IP Address of the Editor"))
 
     # Revision number, starting from 1
     revision = models.IntegerField(_(u"Revision Number"))
@@ -301,5 +301,5 @@ class ChangeSet(models.Model):
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
 
-if notification is not None:
-    signals.post_save.connect(notification.handle_observations, sender=Article)
+#if notification is not None:
+#    signals.post_save.connect(notification.handle_observations, sender=Article)
