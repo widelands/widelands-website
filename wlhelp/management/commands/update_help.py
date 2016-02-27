@@ -75,7 +75,7 @@ class TribeParser(object):
         """Put all data into the database"""
         #self._delete_old_media_dir() why delete it? We can simply overwrite data
         self._parse_workers(tribename)
-        #NOCOM self._parse_wares()
+        self._parse_wares(tribename)
         #NOCOM self._parse_buildings()
 
     def graph( self ):
@@ -161,19 +161,19 @@ class TribeParser(object):
 
             workero.save()
 
-    def _parse_wares( self ):
+    def _parse_wares( self, tribename ):
         print "  parsing wares"
 
         # NOCOM redundant
         base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
         json_directory = os.path.normpath(base_directory + "/map_object_info")
 
-        wares_file = open(os.path.normpath(json_directory + "/" + self._tribe.name + "_wares.json"), "r")
+        wares_file = open(os.path.normpath(json_directory + "/" + tribename + "_wares.json"), "r")
         waresinfo = json.load(wares_file)
 
         for ware in waresinfo['wares']:
             print "    " + ware['name']
-            nn = self._copy_picture(ware['icon'], ware['name'], "menu.png")
+            nn = self._copy_picture(os.path.normpath(base_directory + "/" + ware['icon']), ware['name'], "menu.png")
 
             w = WareModel.objects.get_or_create( tribe = self._to, name = ware['name'] )[0]
             w.displayname = ware['descname']
