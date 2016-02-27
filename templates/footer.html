@@ -6,7 +6,9 @@
  (which contains nothing at the moment)
 {% endcomment %}
 
+{% load url from future %}
+
 <div id="footer">
 	Copyright &copy; 2009 - 2016 By the Widelands Development Team</br>
-	<a class="small" href="{% url legal_notice %}">Legal notice (contact)</a>
+	<a class="small" href="{% url 'legal_notice' %}">Legal notice (contact)</a>
 </div>

@@ -3,7 +3,7 @@
 #
 
 from models import Poll
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 import views
 
 info_dict = {

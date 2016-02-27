@@ -1,4 +1,5 @@
 {% load wlprofile %}
+{% load url from future %}
 
 <!-- Login form / User information -->
 {% if user.is_authenticated %}
@@ -27,8 +28,8 @@
 </form>
 {% endcomment %}
 <div class="small center">
-	<a href="{% url auth_login %}?next={{ request.path|iriencode }}">Click here to login</a><br />
-	<a href="{% url auth_password_reset %}">Lost password?</a> | <a href="{% url registration_register %}">Register now!</a>
+	<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Click here to login</a><br />
+	<a href="{% url 'auth_password_reset' %}">Lost password?</a> | <a href="{% url 'registration_register' %}">Register now!</a>
 </div>
 {% endif %}
 {% comment %}

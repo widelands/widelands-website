@@ -1,5 +1,5 @@
-from django.conf.urls.defaults import *
-from widelands.news import views as news_views
+from django.conf.urls import *
+from news import views as news_views
 
 
 urlpatterns = patterns('',

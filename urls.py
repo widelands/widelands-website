@@ -8,7 +8,7 @@ from mainpage.views import mainpage
 
 from news.feeds import NewsPostsFeed
 from wiki.feeds import RssHistoryFeed
-from django.views.generic.simple import redirect_to
+#from django.views.generic.simple import redirect_to
 
 feeds = {
     'news': NewsPostsFeed,
@@ -23,20 +23,20 @@ urlpatterns = patterns('',
     # Django builtin / Registration
     # overwrite registration with own implementation
     url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    (r'^accounts/', include('registration.simple.hmac..urls')),
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    (r'^accounts/', include('registration.backends.hmac.urls')),
+    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.Feed', {'feed_dict': feeds}),
 
     # 3rd party, unmodified
-    (r'^notification/', include('notification.urls')),
+#    (r'^notification/', include('notification.urls')),
     # (r'^stats/', include('simplestats.urls')),
-    (r'^messages/', include('django_messages.urls')),
-    (r'^threadedcomments/', include('threadedcomments.urls')),
-    (r'^docs/', include('sphinxdoc.urls')),
+#    (r'^messages/', include('django_messages.urls')),
+#    (r'^threadedcomments/', include('threadedcomments.urls')),
+#    (r'^docs/', include('sphinxdoc.urls')),
 
     # 3rd party, modified for widelands
-    (r'^wiki/', include('wiki.urls')),
-    (r'^news/', include('news.urls')),
-    (r'^forum/', include('pybb.urls')),
+#    (r'^wiki/', include('wiki.urls')),
+#    (r'^news/', include('news.urls')),
+#    (r'^forum/', include('pybb.urls')),
 
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
@@ -44,16 +44,16 @@ urlpatterns = patterns('',
     url(r'^developers/$', "mainpage.views.developers", name="developers"),
     url(r'^legal_notice/$', "mainpage.views.legal_notice", name="legal_notice"),
     url(r'^legal_notice_thanks/$', "mainpage.views.legal_notice_thanks", name="legal_notice_thanks"),
-    url(r'^help/(?P<path>.*)', redirect_to, { "url": "/encyclopedia/%(path)s", "permanent": True }), # to not break old links
-    url(r'^encyclopedia/', include("wlhelp.urls")),
-    url(r'^webchat/', include("wlwebchat.urls")),
-    url(r'^images/', include("wlimages.urls")),
+#    url(r'^help/(?P<path>.*)', redirect_to, { "url": "/encyclopedia/%(path)s", "permanent": True }), # to not break old links
+#    url(r'^encyclopedia/', include("wlhelp.urls")),
+#    url(r'^webchat/', include("wlwebchat.urls")),
+#    url(r'^images/', include("wlimages.urls")),
     url(r'^profile/', include("wlprofile.urls")),
-    url(r'^search/', include("wlsearch.urls")),
-    url(r'^poll/', include("wlpoll.urls")),
-    url(r'^maps/', include("wlmaps.urls")),
-    url(r'^screenshots/', include("wlscreens.urls")),
-    url(r'^ggz/', include("wlggz.urls")),
+#    url(r'^search/', include("wlsearch.urls")),
+#    url(r'^poll/', include("wlpoll.urls")),
+#   url(r'^maps/', include("wlmaps.urls")),
+#    url(r'^screenshots/', include("wlscreens.urls")),
+#    url(r'^ggz/', include("wlggz.urls")),
 )
 
 try:

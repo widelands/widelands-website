@@ -11,10 +11,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
    'default': {
-      'ENGINE': 'django.db.backends.mysql',
-      'NAME': 'wl_django_alpha',
-      'USER': 'widelands',      # Not used with sqlite3.
-      'PASSWORD': 'widelands',  # Not used with sqlite3.
+      'ENGINE': 'django.db.backends.sqlite3',
+      'NAME': 'dev.db',
+      'USER': '',      # Not used with sqlite3.
+      'PASSWORD': '',  # Not used with sqlite3.
       'HOST': '',      # Set to empty string for localhost. Not used with sqlite3.
       'PORT': '',      # Set to empty string for default. Not used with sqlite3.
    }
@@ -74,6 +74,8 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
 #    'tracking.middleware.VisitorTrackingMiddleware',
 #    'tracking.middleware.VisitorCleanUpMiddleware',
+#    'django.contrib.sessions.middleware.SessionMiddleware',
+#    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -87,12 +89,12 @@ TEMPLATE_DIRS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
-    "django_messages.context_processors.inbox",
+#    "django_messages.context_processors.inbox",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     'django.core.context_processors.request',
-    'widelands.mainpage.context_processors.settings_for_templates',
+#    'widelands.mainpage.context_processors.settings_for_templates',
 )
 
 ############################
@@ -225,6 +227,7 @@ INSTALLED_APPS = (
 #    'django.contrib.markup',
     'django.contrib.humanize',
     'django_comments',
+#    'django.contrib.messages',
 
     # TODO: only temporary for webdesign stuff
     'django.contrib.webdesign',
@@ -255,13 +258,13 @@ INSTALLED_APPS = (
 
     # Thirdparty apps
     'threadedcomments',
-    'django_messages',
+ #   'django_messages',
     'registration', # User registration (per Email validation)
     'pagination',
     'tagging',
     'notification',
 #    'djangoratings', #No longer maintained
-    'sphinxdoc',
+#    'sphinxdoc',
 #    'south', Not longer supprted
 )
 

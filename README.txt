@@ -9,12 +9,10 @@ build dependencies for numpy, which will be compiled as a part of getting
 the dependencies for the website. Go and install them all.
 
 Example:
-On Ubuntu, installing all required tools and dependencies in two commands::
+On Ubuntu, installing all required tools and dependencies in two commands:
 
    $ sudo apt-get install python-dev python-virtualenv python-pip mercurial bzr subversion git-core sqlite3
    $ sudo apt-get build-dep python-numpy
-   #This is Pillow on Ubuntu ("python-Pillow" an archlinux)
-   $ sudo apt-get install python-imaging
    
 Setting up the local environment
 --------------------------------
@@ -27,15 +25,15 @@ This will make sure that your virtual environment is not tainted with python
 packages from your global site packages. Very important!
 Now, we create and activate our environment:: 
 
-   $ virtualenv --no-site-packages wlwebsite
-   $ cd wlwebsite
+   $ virtualenv wl_django1_8
+   $ cd wl_django1_8
    $ source bin/activate
 
 Next, we download the website source code::
 
    $ mkdir code
    $ cd code
-   $ bzr branch lp:widelands-website widelands
+   $ bzr branch lp:~widelands-dev/widelands-website/django1_8 widelands
    $ cd widelands
 
 All fine and good. Now we have to install all the third party modules the

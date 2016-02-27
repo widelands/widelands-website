@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from django.http import HttpResponseRedirect
 from wiki import views, models
 from wiki.templatetags.wiki import WIKI_URL_RE

@@ -19,5 +19,14 @@ django-ratings is currently used only in wlmaps. We could either adjust django r
 django-tracking requires django.contrib.geoip which 
 requires Python GeoIP 1.3.2. Django.contrib.geoip gets deprecated in Dajngo 1.9 in favour of django.contrib.gis.geoip2, which supports IPv6 and the GeoLite2 database format.
 
+#Pillow
+The maintainers recommend installing this as a distribution package. For Ubuntu:
+
+apt-get install python-imaging
+
+See http://pillow.readthedocs.org/en/3.1.x/installation.html#linux-installation
+
+To get access in a virtual environment the environment has to be created with --system-site-packages option.
+
 # Others
 Trouble with notifications in /wiki/models.py

@@ -1,9 +1,9 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import Http404
-from django.views.generic import date_based, list_detail
+#from django.views.generic import date_based, list_detail
 from django.db.models import Q
-from widelands.news.models import *
+from news.models import *
 
 import datetime
 import re

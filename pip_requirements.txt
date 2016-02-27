@@ -1,26 +1,15 @@
+BeautifulSoup==3.2.0
 Django==1.8
-#wsgiref==0.1.2
-#-e git://github.com/kerin/django-sphinx.git/@1c5ef8abcf86f9a9458f763ceb9e5d882247ea37#egg=djangosphinx
-docutils==0.12
-Pillow
-pyparsing
-django-pagination
-# django-tracking requires django.contrib.geoip which 
-# requires Python GeoIP 1.3.2:
-#-e hg+https://django-tracking.googlecode.com/hg/#egg=tracking
-Markdown==2.6.2
-BeautifulSoup==3.2
-django-registration==0.8
--e svn+http://django-tagging.googlecode.com/svn/trunk/#egg=tagging
--e git://github.com/dcramer/django-ratings.git#egg=djangoratings
-django-threadedcomments==0.5.2
--e svn+http://django-messages.googlecode.com/svn/trunk/#egg=django_messages
--e git://github.com/jtauber/django-notification.git@3f023adf0ce2eafcee744904e2c358792f253721#egg=notification
-# Sphinx and sphinxdoc need to match - choose from a similar time.
-sphinx==0.6.5
-django-sphinxdoc==0.3.2
-South==0.7.3
+django-contrib-comments==1.6.2
+-e git://github.com/jtauber/django-notification.git@3f023adf0ce2eafcee744904e2c358792f253721#egg=django_notification
+django-pagination==1.0.7
+-e git://github.com/dcramer/django-ratings.git@4d00dedc920a4e32d650dc12d5f480c51fc6216c#egg=django_ratings
+django-registration==2.0.4
+django-tagging==0.4.1
+django-threadedcomments==1.0.1
 gunicorn==0.17.4
-numpy
-pydot
-#ipython
+Markdown==2.6.2
+numpy==1.10.4
+pydot==1.0.2
+South==0.7.3
+wheel==0.29.0

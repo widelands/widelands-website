@@ -9,7 +9,7 @@
 # Last Modified: $Date$
 #
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 import views
 
 urlpatterns = patterns('',

@@ -1,6 +1,6 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from models import Map
 from views import *
 
