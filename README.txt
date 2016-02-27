@@ -23,7 +23,7 @@ Go to the directory you want to install the homepage to, then run::
 
 This will make sure that your virtual environment is not tainted with python
 packages from your global site packages. Very important!
-Now, we create and activate our environment:: 
+Now, we create and activate our environment. This installation depends on python2.7, so you must may use a special virtualenv-command: 
 
    $ virtualenv wl_django1_8
    $ cd wl_django1_8
