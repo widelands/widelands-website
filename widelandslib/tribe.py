@@ -147,30 +147,30 @@ class Tribe(object):
     def __init__(self, name, bdir = basedir):
         self.name = name
 
-        self._tdir = p.join(bdir, "tribes", name)
+        # NOCOM self._tdir = p.join(bdir, "tribes", name)
 
-        self._conf = WidelandsConfigParser(p.join(self._tdir, "conf"))
+        # NOCOM self._conf = WidelandsConfigParser(p.join(self._tdir, "conf"))
 
-        self.wares = dict( (k,Ware(self, k, v, self._tdir)) for k,v in
-            self._conf.items("ware types"))
-        self.workers = dict(chain(
-            ((k,Worker(self, k, v, self._tdir)) for k,v in
-                self._conf.items("worker types")),
-            ((k,Worker(self, k, v, self._tdir)) for k,v in
-                self._conf.items("carrier types")),
-        ))
+        # NOCOM self.wares = dict( (k,Ware(self, k, v, self._tdir)) for k,v in
+        # NOCOM     self._conf.items("ware types"))
+        # NOCOM self.workers = dict(chain(
+        # NOCOM     ((k,Worker(self, k, v, self._tdir)) for k,v in
+        # NOCOM         self._conf.items("worker types")),
+        # NOCOM     ((k,Worker(self, k, v, self._tdir)) for k,v in
+        # NOCOM         self._conf.items("carrier types")),
+        # NOCOM ))
 
 
-        self.buildings = dict(chain(
-            ((k,ProductionSite(self, k, v, self._tdir)) for k,v in \
-                self._conf.items("productionsite types")),
-            ((k,MilitarySite(self, k, v, self._tdir)) for k,v in \
-                self._conf.items("militarysite types")),
-            ((k,Warehouse(self, k, v, self._tdir)) for k,v in \
-                self._conf.items("warehouse types")),
-            ((k,TrainingSite(self, k, v, self._tdir)) for k,v in \
-                self._conf.items("trainingsite types")),
-        ))
+        # NOCOM self.buildings = dict(chain(
+        # NOCOM     ((k,ProductionSite(self, k, v, self._tdir)) for k,v in \
+        # NOCOM         self._conf.items("productionsite types")),
+        # NOCOM     ((k,MilitarySite(self, k, v, self._tdir)) for k,v in \
+        # NOCOM         self._conf.items("militarysite types")),
+        # NOCOM     ((k,Warehouse(self, k, v, self._tdir)) for k,v in \
+        # NOCOM         self._conf.items("warehouse types")),
+        # NOCOM     ((k,TrainingSite(self, k, v, self._tdir)) for k,v in \
+        # NOCOM         self._conf.items("trainingsite types")),
+        # NOCOM ))
 
     def __str__(self):
         return "Tribe(%s)" % self.name

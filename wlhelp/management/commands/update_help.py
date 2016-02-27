@@ -18,7 +18,7 @@ from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 
-from ConfigParser import ConfigParser, MissingSectionHeaderError
+from ConfigParser import ConfigParser, MissingSectionHeaderError # NOCOM
 from glob import glob
 import os
 from os import path
@@ -26,6 +26,7 @@ import shutil
 from cStringIO import StringIO
 import re
 from itertools import chain
+import json
 
 from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
 
@@ -45,32 +46,37 @@ class TribeParser(object):
         Parses the definitions for one tribe and generates the models
 
         name - name of the tribe
-        conf - path to the tribe/conf file
         """
-        self._tribe = Tribe(name)
+        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
+        json_directory = os.path.normpath(base_directory + "/map_object_info")
+
+        tribeinfo_file = open(os.path.normpath(json_directory + "/tribe_" + name + ".json"), "r")
+        tribeinfo = json.load(tribeinfo_file)
+
+        self._tribe = Tribe(tribeinfo) # NOCOM do the Tribe object
         # Generate the Tribe
         self._to = TribeModel.objects.get_or_create(name=name.lower())[0]
-        self._to.displayname = normalize_name(self._tribe._conf.getstring("tribe", "name"))
-        self._to.descr = normalize_name(self._tribe._conf.getstring("tribe", "descr"))
+        self._to.displayname = tribeinfo['descname']
+        self._to.descr = tribeinfo['tooltip']
         # copy icon
-        dn = "%s/wlhelp/img/%s/" % (MEDIA_ROOT,self._to.name)
+        dn = "%s/wlhelp/img/%s/" % (MEDIA_ROOT, tribeinfo['name'])
         try:
             os.makedirs(dn)
         except OSError, o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, "icon.png")
-        file = path.join(self._tribe._tdir,self._tribe._conf.getstring("tribe", "icon"))
+        file = os.path.normpath(base_directory + "/" + tribeinfo['icon'])
         shutil.copy(file, new_name )
         self._to.icon_url = path.normpath("%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):]))
         self._to.save()
 
-    def parse( self ):
+    def parse( self, tribename ):
         """Put all data into the database"""
         #self._delete_old_media_dir() why delete it? We can simply overwrite data
-        self._parse_workers()
-        self._parse_wares()
-        self._parse_buildings()
+        self._parse_workers(tribename)
+        #NOCOM self._parse_wares()
+        #NOCOM self._parse_buildings()
 
     def graph( self ):
         """Make all graphs"""
@@ -89,7 +95,7 @@ class TribeParser(object):
                 except Exception, e:
                     print "Exception while handling", cls, "of", self._tribe.name, ":", inst.name
                     print type(e), e, repr(e)
-        
+
         shutil.rmtree(tdir)
 
     def _delete_old_media_dir(self):
@@ -116,52 +122,65 @@ class TribeParser(object):
 
         return "%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
 
-    def _parse_workers( self ):
+    def _parse_workers( self, tribename ):
         """Put the workers into the database"""
         print "  parsing workers"
-        for worker in self._tribe.workers.values():
-            print "    " + worker.name
-            nn = self._copy_picture(worker.image, worker.name, "menu.png")
 
-            workero = WorkerModel.objects.get_or_create( tribe = self._to, name = worker.name )[0]
-            workero.displayname = normalize_name(worker.descname)
+        # NOCOM redundant
+        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
+        json_directory = os.path.normpath(base_directory + "/map_object_info")
+
+        # NOCOM workers_file = open(os.path.normpath(json_directory + "/" + self._tribe.name + "_workers.json"), "r")
+        workers_file = open(os.path.normpath(json_directory + "/" + tribename + "_workers.json"), "r")
+        workersinfo = json.load(workers_file)
+
+        for worker in workersinfo['workers']:
+            print "    " + worker['name']
+            nn = self._copy_picture(os.path.normpath(base_directory + "/" + worker['icon']), worker['name'], "menu.png")
+
+            workero = WorkerModel.objects.get_or_create( tribe = self._to, name = worker['name'] )[0]
+            workero.displayname = worker['descname']
             workero.image_url = nn
 
-            # See if there is help available
-            if worker._conf.has_option("global","help"):
-                helpstr = normalize_name(worker._conf.get("global","help"))
-                workero.help = helpstr
+            # Help
+            workero.help = worker['helptext']
 
-            # Check for experience
-            if worker._conf.has_option("global","experience"):
-                experience = normalize_name(worker._conf.get("global","experience"))
-                workero.exp = experience
+            # Check for experience NOCOM
+            #if worker._conf.has_option("global","experience"):
+            #    experience = normalize_name(worker._conf.get("global","experience"))
+            #    workero.exp = experience
 
             # See what the worker becomes
-            try:
-                enname = worker.becomes
-                workero.becomes = WorkerModel.objects.get_or_create(
-                        name=enname, tribe = self._to)[0]
-            except:
-                pass
+            if 'becomes' in worker:
+                try:
+                    enname = worker.becomes
+                    workero.becomes = WorkerModel.objects.get_or_create(
+                            name=worker['becomes']['name'], tribe = self._to)[0]
+                except:
+                    pass
 
             workero.save()
 
     def _parse_wares( self ):
         print "  parsing wares"
-        for ware in self._tribe.wares.values():
-            print "    " + ware.name
-            nn = self._copy_picture(ware.image, ware.name, "menu.png")
 
-            w = WareModel.objects.get_or_create( tribe = self._to, name = ware.name )[0]
-            w.displayname = normalize_name(ware.descname)
+        # NOCOM redundant
+        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
+        json_directory = os.path.normpath(base_directory + "/map_object_info")
+
+        wares_file = open(os.path.normpath(json_directory + "/" + self._tribe.name + "_wares.json"), "r")
+        waresinfo = json.load(wares_file)
+
+        for ware in waresinfo['wares']:
+            print "    " + ware['name']
+            nn = self._copy_picture(ware['icon'], ware['name'], "menu.png")
+
+            w = WareModel.objects.get_or_create( tribe = self._to, name = ware['name'] )[0]
+            w.displayname = ware['descname']
             w.image_url = nn
 
-
-            # See if there is help available
-            if ware._conf.has_option("global","help"):
-                helpstr = normalize_name(ware._conf.get("global","help"))
-                w.help = helpstr
+            # Help
+            w.help = ware['helptext']
 
             w.save()
 
@@ -173,10 +192,18 @@ class TribeParser(object):
 
         enhancement_hier = []
         print "  parsing buildings"
-        for building in self._tribe.buildings.values():
-            print "    " + building.name
-            b = BuildingModel.objects.get_or_create( tribe = self._to, name = building.name )[0]
-            b.displayname = normalize_name(building.descname)
+
+        # NOCOM redundant
+        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
+        json_directory = os.path.normpath(base_directory + "/map_object_info")
+
+        buildings_file = open(os.path.normpath(json_directory + "/" + self._tribe.name + "_buildings.json"), "r")
+        buildingsinfo = json.load(buildings_file)
+
+        for building in buildingsinfo['buildings']:
+            print "    " + building['name']
+            b = BuildingModel.objects.get_or_create( tribe = self._to, name = building['name'] )[0]
+            b.displayname = building['descname']
             b.type = building.btype
 
             # Get the building size
@@ -231,15 +258,15 @@ class Command(BaseCommand):
     help =\
     '''Reparses the conf files in a current checkout. '''
 
-    def handle(self, directory = WIDELANDS_SVN_DIR, **kwargs):
+    def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info"), **kwargs):
 
-        tribes = [d for d in glob("%s/tribes/*" % directory)
-                    if os.path.isdir(d)]
+        source_file = open(os.path.normpath(directory + "/tribes.json"), "r")
+        tribesinfo = json.load(source_file)
 
-        for t in tribes:
-            tribename = os.path.basename(t)
+        for t in tribesinfo['tribes']:
+            tribename = t['name']
             print "updating help for tribe ", tribename
             p = TribeParser(tribename)
 
-            p.parse()
-            p.graph()
+            p.parse(tribename)
+            # NOCOM p.graph()

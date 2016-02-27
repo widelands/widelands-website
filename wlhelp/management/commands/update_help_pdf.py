@@ -10,19 +10,20 @@ from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_graph
 from wlhelp.models import Tribe
 from glob import glob
+import json
 
 class Command(BaseCommand):
     help =\
     """Update the overview pdfs of all tribes in a current checkout"""
 
-    def handle(self, directory = WIDELANDS_SVN_DIR, **kwargs):
-        tribes = [d for d in glob("%s/tribes/*" % directory)
-                    if os.path.isdir(d)]
+    def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info"), **kwargs):
+        source_file = open(os.path.normpath(directory + "/tribes.json"), "r")
+        tribesinfo = json.load(source_file)
 
         print "updating pdf files for all tribes"
 
-        for t in tribes:
-            tribename = os.path.basename(t)
+        for t in tribesinfo['tribes']:
+            tribename = t['name']
             print "  updating pdf file for tribe ", tribename
             gdir = make_graph(tribename)
             pdffile = path.join(gdir, tribename + ".pdf")
