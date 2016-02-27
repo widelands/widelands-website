@@ -71,12 +71,18 @@ class TribeParser(object):
         self._to.icon_url = path.normpath("%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):]))
         self._to.save()
 
-    def parse( self, tribename ):
+    def parse( self, tribename, base_directory, json_directory ):
         """Put all data into the database"""
         #self._delete_old_media_dir() Activate this line only when we need to clean house
-        self._parse_workers(tribename)
-        self._parse_wares(tribename)
-        self._parse_buildings(tribename)
+
+        wares_file = open(os.path.normpath(json_directory + "/" + tribename + "_wares.json"), "r")
+        self._parse_wares(base_directory, json.load(wares_file))
+
+        workers_file = open(os.path.normpath(json_directory + "/" + tribename + "_workers.json"), "r")
+        self._parse_workers(base_directory, json.load(workers_file))
+
+        buildings_file = open(os.path.normpath(json_directory + "/" + tribename + "_buildings.json"), "r")
+        self._parse_buildings(base_directory, json.load(buildings_file))
 
     def graph( self ):
         """Make all graphs"""
@@ -122,16 +128,9 @@ class TribeParser(object):
 
         return "%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
 
-    def _parse_workers( self, tribename ):
+    def _parse_workers( self, base_directory, workersinfo ):
         """Put the workers into the database"""
         print "  parsing workers"
-
-        # NOCOM redundant
-        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
-        json_directory = os.path.normpath(base_directory + "/map_object_info")
-
-        workers_file = open(os.path.normpath(json_directory + "/" + tribename + "_workers.json"), "r")
-        workersinfo = json.load(workers_file)
 
         for worker in workersinfo['workers']:
             print "    " + worker['name']
@@ -144,10 +143,9 @@ class TribeParser(object):
             # Help
             workero.help = worker['helptext']
 
-            # Check for experience NOCOM
-            #if worker._conf.has_option("global","experience"):
-            #    experience = normalize_name(worker._conf.get("global","experience"))
-            #    workero.exp = experience
+            # Check for experience
+            if 'experience' in worker:
+                workero.exp = worker['experience']
 
             # See what the worker becomes
             if 'becomes' in worker:
@@ -160,15 +158,8 @@ class TribeParser(object):
 
             workero.save()
 
-    def _parse_wares( self, tribename ):
+    def _parse_wares( self, base_directory, waresinfo ):
         print "  parsing wares"
-
-        # NOCOM redundant
-        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
-        json_directory = os.path.normpath(base_directory + "/map_object_info")
-
-        wares_file = open(os.path.normpath(json_directory + "/" + tribename + "_wares.json"), "r")
-        waresinfo = json.load(wares_file)
 
         for ware in waresinfo['wares']:
             print "    " + ware['name']
@@ -183,7 +174,7 @@ class TribeParser(object):
 
             w.save()
 
-    def _parse_buildings( self, tribename ):
+    def _parse_buildings( self, base_directory, buildingsinfo ):
         def objects_with_counts(objtype, json_):
 				element_set = {}
 				for element in json_:
@@ -194,13 +185,6 @@ class TribeParser(object):
 
         enhancement_hierarchy = []
         print "  parsing buildings"
-
-        # NOCOM redundant
-        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
-        json_directory = os.path.normpath(base_directory + "/map_object_info")
-
-        buildings_file = open(os.path.normpath(json_directory + "/" + tribename + "_buildings.json"), "r")
-        buildingsinfo = json.load(buildings_file)
 
         for building in buildingsinfo['buildings']:
 				print "    " + building['name']
@@ -255,9 +239,11 @@ class Command(BaseCommand):
     help =\
     '''Reparses the json files in a current checkout. '''
 
-    def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info"), **kwargs):
+    def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data"), **kwargs):
 
-        source_file = open(os.path.normpath(directory + "/tribes.json"), "r")
+        json_directory = os.path.normpath(directory + "/map_object_info")
+
+        source_file = open(os.path.normpath(json_directory + "/tribes.json"), "r")
         tribesinfo = json.load(source_file)
 
         for t in tribesinfo['tribes']:
@@ -265,5 +251,5 @@ class Command(BaseCommand):
             print "updating help for tribe ", tribename
             p = TribeParser(tribename)
 
-            p.parse(tribename)
+            p.parse(tribename, directory, json_directory)
             # NOCOM p.graph()
