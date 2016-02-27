@@ -1,15 +1,16 @@
-BeautifulSoup==3.2.0
+beautifulsoup4
+Pillow
 Django==1.8
-django-contrib-comments==1.6.2
+django-contrib-comments
 -e git://github.com/jtauber/django-notification.git@3f023adf0ce2eafcee744904e2c358792f253721#egg=django_notification
-django-pagination==1.0.7
+django-pagination
 -e git://github.com/dcramer/django-ratings.git@4d00dedc920a4e32d650dc12d5f480c51fc6216c#egg=django_ratings
-django-registration==2.0.4
-django-tagging==0.4.1
-django-threadedcomments==1.0.1
-gunicorn==0.17.4
-Markdown==2.6.2
-numpy==1.10.4
-pydot==1.0.2
-South==0.7.3
-wheel==0.29.0
+django-registration
+django-tagging
+django-threadedcomments
+gunicorn
+Markdown
+#Following packagages needs verifying if needed:
+numpy
+pydot
+South
