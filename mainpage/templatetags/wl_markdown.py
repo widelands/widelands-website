@@ -21,7 +21,7 @@ if markdown.version_info[0] < 2:
 from markdown import markdown
 import re
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 # If we can import a Wiki module with Articles, we
 # will check for internal wikipages links in all internal

@@ -124,7 +124,7 @@ def get_links(value):
     """
     try:
         try:
-            from BeautifulSoup import BeautifulSoup
+            from bs4 import BeautifulSoup
         except ImportError:
             from beautifulsoup import BeautifulSoup
         soup = BeautifulSoup(value)
