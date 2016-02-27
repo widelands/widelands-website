@@ -73,10 +73,10 @@ class TribeParser(object):
 
     def parse( self, tribename ):
         """Put all data into the database"""
-        #self._delete_old_media_dir() why delete it? We can simply overwrite data
+        #self._delete_old_media_dir() Activate this line only when we need to clean house
         self._parse_workers(tribename)
         self._parse_wares(tribename)
-        #NOCOM self._parse_buildings()
+        self._parse_buildings(tribename)
 
     def graph( self ):
         """Make all graphs"""
@@ -130,7 +130,6 @@ class TribeParser(object):
         base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
         json_directory = os.path.normpath(base_directory + "/map_object_info")
 
-        # NOCOM workers_file = open(os.path.normpath(json_directory + "/" + self._tribe.name + "_workers.json"), "r")
         workers_file = open(os.path.normpath(json_directory + "/" + tribename + "_workers.json"), "r")
         workersinfo = json.load(workers_file)
 
@@ -184,79 +183,77 @@ class TribeParser(object):
 
             w.save()
 
-    def _parse_buildings( self ):
-        def objects_with_counts(objtype, set_):
-            counts = ' '.join(set_.values())
-            objects = [objtype.objects.get_or_create(name = w, tribe = self._to)[0] for w in set_.keys()]
-            return counts, objects
+    def _parse_buildings( self, tribename ):
+        def objects_with_counts(objtype, json_):
+				element_set = {}
+				for element in json_:
+					element_set[element['name']] = str(element['amount'])
+				counts = ' '.join(element_set.values())
+				objects = [objtype.objects.get_or_create(name = w, tribe = self._to)[0] for w in element_set.keys()]
+				return counts, objects
 
-        enhancement_hier = []
+        enhancement_hierarchy = []
         print "  parsing buildings"
 
         # NOCOM redundant
         base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
         json_directory = os.path.normpath(base_directory + "/map_object_info")
 
-        buildings_file = open(os.path.normpath(json_directory + "/" + self._tribe.name + "_buildings.json"), "r")
+        buildings_file = open(os.path.normpath(json_directory + "/" + tribename + "_buildings.json"), "r")
         buildingsinfo = json.load(buildings_file)
 
         for building in buildingsinfo['buildings']:
-            print "    " + building['name']
-            b = BuildingModel.objects.get_or_create( tribe = self._to, name = building['name'] )[0]
-            b.displayname = building['descname']
-            b.type = building.btype
+				print "    " + building['name']
+				b = BuildingModel.objects.get_or_create( tribe = self._to, name = building['name'] )[0]
+				b.displayname = building['descname']
+				b.type = building['type']
 
-            # Get the building size
-            size = building.size
-            res, = [ k for k,v in BuildingModel.SIZES if v == size ]
+				# Get the building size
+				size = building['size']
+				res, = [ k for k,v in BuildingModel.SIZES if v == size ]
+				b.size = res
 
-            b.size = res
+				nn = self._copy_picture(os.path.normpath(base_directory + "/" + building['icon']), building['name'], "menu.png")
+				b.image_url = nn
 
-            nn = self._copy_picture(building.image, building.name, "menu.png" )
-            b.image_url = nn
+				# Buildcost if we have any
+				if 'buildcost' in building:
+					b.build_costs, b.build_wares = objects_with_counts(WareModel, building['buildcost'])
 
-            # Try to figure out buildcost
-            b.build_costs, b.build_wares = objects_with_counts(WareModel, building.buildcost)
+				# Try to figure out who works there
+				if 'workers' in building:
+					b.workers_count, b.workers_types  = objects_with_counts(WorkerModel, building['workers'])
 
-            # Try to figure out who works there
-            if isinstance(building, ProductionSite):
-                b.workers_count, b.workers_types = objects_with_counts(WorkerModel, building.workers)
+				# Try to figure out if this is an enhanced building
+				if 'enhanced' in building:
+					enhancement_hierarchy.append((b, building['enhanced']))
 
-            # Try to figure out if this is an enhanced building
-            if building.enhancement:
-                enhancement_hier.append((b, building.enhancement))
+				b.help = building['helptext']
 
-            if building._conf.has_option("global","help"):
-                b.help = normalize_name(building._conf.get("global","help"))
-            else:
-                try:
-                    b.help = [worker.help for worker in b.workers_types.all()][0]
-                except IndexError:
-                    print "could not find a help string for %s (%s) anywhere!" % (b.name, self._tribe.name)
+				# Input wares
+				if 'stored_wares' in building:
+					b.store_count, b.store_wares = objects_with_counts(WareModel, building['stored_wares'])
 
-            # See if there is any inputs field around
-            if isinstance(building, ProductionSite):
-                b.store_count, b.store_wares = objects_with_counts(WareModel, building.inputs)
+				# Output wares
+				if 'produced_wares' in building:
+					b.output_wares = [WareModel.objects.get_or_create(name = w, tribe = self._to)[0] for w in building['produced_wares']]
 
-                b.output_wares = [WareModel.objects.get_or_create(name = w, tribe = self._to)[0] for w in building.outputs]
+				# Output workers
+				if 'produced_workers' in building:
+					b.output_workers = [WorkerModel.objects.get_or_create(name = w, tribe = self._to)[0] for w in building['produced_workers']]
 
-            try:
-                b.output_workers = [Worker.objects.get_or_create(name = w, tribe = self._to)[0] for w in building.recruits]
-            except AttributeError:
-                pass
+				b.save()
 
-            b.save()
-
-        for b, tgt in enhancement_hier:
-            try:
-                b.enhancement = BuildingModel.objects.get(name = tgt, tribe = self._to)
-            except Exception, e:
-                raise
-            b.save()
+        for b, tgt in enhancement_hierarchy:
+				try:
+					b.enhancement = BuildingModel.objects.get(name = tgt, tribe = self._to)
+				except Exception, e:
+					raise
+				b.save()
 
 class Command(BaseCommand):
     help =\
-    '''Reparses the conf files in a current checkout. '''
+    '''Reparses the json files in a current checkout. '''
 
     def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info"), **kwargs):
 

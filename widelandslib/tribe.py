@@ -125,11 +125,11 @@ class Warehouse(Building):
     pass
 
 class TrainingSite(ProductionSite):
-    btype = "trainings site"
+    btype = "trainingsite"
     pass
 
 class MilitarySite(Building):
-    btype = "military site"
+    btype = "militarysite"
     @property
     def conquers(self):
         return self._conf.get("global", "conquers")

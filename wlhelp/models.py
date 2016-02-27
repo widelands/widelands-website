@@ -73,6 +73,8 @@ class BuildingManager(models.Manager):
         return self.all().filter(size="I")
     def port(self):
         return self.all().filter(size="P")
+    def headquarters(self):
+        return self.all().filter(size="H")
 
 
         # return self.build_wares.count()
@@ -86,16 +88,17 @@ class Building(models.Model):
             ('B', 'big'),
             ('I', 'mine'),
             ('P', 'port'),
+            ('H', 'headquarters'),
     )
     TYPES = (
             ('P', 'productionsite'),
             ('W', 'warehouse'),
-            ('M', 'military site'),
-            ('T', 'trainings site'),
+            ('M', 'militarysite'),
+            ('T', 'trainingsite')
     )
-    
+
     objects = BuildingManager()
-    
+
     if settings.USE_SPHINX:
         search          = SphinxSearch(
             weights = {

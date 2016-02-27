@@ -62,36 +62,33 @@ def buildings(request, tribe="barbarians"):
     # Request all the objects
     buildings = {}
 
-    buildings["headquarters"] = Building.objects.filter(tribe=t,name="headquarters").order_by("displayname")
-
-    all = Building.objects.filter(tribe=t).exclude(name="headquarters")
+    # All headquarters
+    buildings["headquarters"] = Building.objects.filter(size="H",tribe=t).order_by("displayname")
 
     # Now, all small buildings
-    small = all.filter(size="S",tribe=t).order_by("displayname")
+    small = Building.objects.filter(size="S",tribe=t).order_by("displayname")
     buildings["small"] = small.filter(enhanced_from=None)
     buildings["small_enhanced"] = small.exclude(enhanced_from=None)
 
     # Now, all medium buildings
-    medium = all.filter(size="M",tribe=t).order_by("displayname")
+    medium = Building.objects.filter(size="M",tribe=t).order_by("displayname")
     buildings["medium"] = medium.filter(enhanced_from=None)
     buildings["medium_enhanced"] = medium.exclude(enhanced_from=None)
 
     # Now, all big buildings
-    big = all.filter(size="B",tribe=t).order_by("displayname")
+    big = Building.objects.filter(size="B",tribe=t).order_by("displayname")
     buildings["big"] = big.filter(enhanced_from=None)
     buildings["big_enhanced"] = big.exclude(enhanced_from=None)
 
     # Now, all mines
-    mine = all.filter(size="I",tribe=t).order_by("displayname")
+    mine = Building.objects.filter(size="I",tribe=t).order_by("displayname")
     buildings["mine"] = mine.filter(enhanced_from=None)
     buildings["mine_enhanced"] = mine.exclude(enhanced_from=None)
 
     # Now, all ports
-    port = all.filter(size="P",tribe=t).order_by("displayname")
+    port = Building.objects.filter(size="P",tribe=t).order_by("displayname")
     buildings["port"] = port.filter(enhanced_from=None)
     buildings["port_enhanced"] = port.exclude(enhanced_from=None)
 
     return render_to_response('wlhelp/buildings.html', context_instance=RequestContext(request,
         { "buildings": buildings, "tribe": t }))
-
-
