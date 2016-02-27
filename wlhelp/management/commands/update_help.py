@@ -73,7 +73,7 @@ class TribeParser(object):
 
     def parse( self, tribename, base_directory, json_directory ):
         """Put all data into the database"""
-        #self._delete_old_media_dir() Activate this line only when we need to clean house
+        # self._delete_old_data(tribename) # Activate this line only when we really need to clean house.
 
         wares_file = open(os.path.normpath(json_directory + "/" + tribename + "_wares.json"), "r")
         self._parse_wares(base_directory, json.load(wares_file))
@@ -104,10 +104,25 @@ class TribeParser(object):
 
         shutil.rmtree(tdir)
 
-    def _delete_old_media_dir(self):
-        sdir = os.path.join(MEDIA_ROOT, "wlhelp/img", self._to.name)
-        if os.path.exists(sdir):
-            shutil.rmtree(sdir)
+    def _delete_old_data(self, tribename):
+		 """Clean house, e.g. when we have renamed a map object"""
+
+		 print("Deleting old media files...");
+		 sdir = os.path.join(MEDIA_ROOT, "wlhelp/img", self._to.name)
+		 if os.path.exists(sdir):
+			shutil.rmtree(sdir)
+
+		 t = TribeModel.objects.get(name=tribename)
+		 print("Deleting old wares...");
+		 wares = WareModel.objects.filter(tribe=t)
+		 for ware in WareModel.objects.filter(tribe=t):
+			ware.delete()
+		 print("Deleting old workers...");
+		 for worker in WorkerModel.objects.filter(tribe=t):
+			worker.delete()
+		 print("Deleting old buildings...");
+		 for building in BuildingModel.objects.filter(tribe=t):
+			building.delete()
 
     def _copy_picture( self, file, name, fname ):
         """
