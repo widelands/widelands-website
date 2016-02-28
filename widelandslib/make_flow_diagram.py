@@ -168,7 +168,14 @@ def add_worker(g, w, as_recruit=False):
 def make_graph(tribe_name):
     global tdir
     tdir = mkdtemp(prefix="widelands-help")
-    t = Tribe(tribe_name)
+
+    base_directory = path.normpath(WIDELANDS_SVN_DIR + "/data")
+    json_directory = path.normpath(base_directory + "/map_object_info")
+
+    tribeinfo_file = open(path.normpath(json_directory + "/tribe_" + tribe_name + ".json"), "r")
+    tribeinfo = json.load(tribeinfo_file)
+
+    t = Tribe(tribeinfo, json_directory)
 
     g = CleanedDot(concentrate="false", style="filled", bgcolor="white",
                 overlap="false", splines="true", rankdir="LR")
@@ -185,7 +192,7 @@ def make_graph(tribe_name):
 
     g.write_pdf(path.join(tdir, "%s.pdf" % tribe_name))
 
-    g.set_size("6")
+    g.set_size("32")
     g.write_gif(path.join(tdir, "%s.gif" % tribe_name))
 
     rtdir, tdir = tdir, ""
