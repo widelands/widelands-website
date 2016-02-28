@@ -22,6 +22,7 @@ from os import makedirs, path
 import shutil
 import re
 import json
+import subprocess
 
 from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
 
@@ -62,7 +63,7 @@ class TribeParser(object):
 
     def parse( self, tribename, base_directory, json_directory ):
         """Put all data into the database"""
-        self._delete_old_data(tribename) # NOCOM Activate this line only when we really need to clean house.
+        self._delete_old_data(tribename) # You can deactivate this line if you don't need to clean house.
 
         wares_file = open(os.path.normpath(json_directory + "/" + tribename + "_wares.json"), "r")
         self._parse_wares(base_directory, json.load(wares_file))
@@ -240,24 +241,39 @@ class TribeParser(object):
 
 class Command(BaseCommand):
     help =\
-    '''Reparses the json files in a current checkout. '''
+    '''Regenerates and parses the json files in a current checkout. '''
 
     def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data"), **kwargs):
 
-        json_directory = os.path.normpath(directory + "/map_object_info")
+        # First, we make sure that JSON files have been generated.
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        is_json_valid = False
+        os.chdir(WIDELANDS_SVN_DIR)
+        try:
+            subprocess.check_call(
+                [os.path.normpath(WIDELANDS_SVN_DIR + "/build/src/logic/wl_map_object_info")])
+        except:
+            print("Error: Unable to execute 'wl_map_object_info' for generating the JSON files.")
 
-        source_file = open(os.path.normpath(json_directory + "/tribes.json"), "r")
-        tribesinfo = json.load(source_file)
+        # Now we validate that they are indeed JSON files (syntax check only)
+        try:
+            subprocess.check_call(
+                [os.path.normpath(WIDELANDS_SVN_DIR + "/utils/validate_json.py")])
+            is_json_valid = True
+        except:
+            print("Error: JSON files are not valid.")
 
-        for t in tribesinfo['tribes']:
-            tribename = t['name']
-            print "updating help for tribe ", tribename
-            p = TribeParser(tribename)
-            p.parse(tribename, directory, json_directory)
-            p.graph()
+        os.chdir(current_dir)
 
-        # NOCOM test with only 1 tribe to speed thing up.
-        #tribename = tribesinfo['tribes'][0]['name']
-        #p = TribeParser(tribename)
-        #p.parse(tribename, directory, json_directory)
-        #p.graph()
+        # We regenerate the encyclopedia only if the JSON files passed the syntax check
+        if is_json_valid:
+			  json_directory = os.path.normpath(directory + "/map_object_info")
+			  source_file = open(os.path.normpath(json_directory + "/tribes.json"), "r")
+			  tribesinfo = json.load(source_file)
+
+			  for t in tribesinfo['tribes']:
+			      tribename = t['name']
+			      print "updating help for tribe ", tribename
+			      p = TribeParser(tribename)
+			      p.parse(tribename, directory, json_directory)
+			      p.graph()
