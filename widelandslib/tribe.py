@@ -32,17 +32,9 @@ class Ware(BaseDescr):
 
 class Worker(BaseDescr):
     @property
-    def outputs(self):
-        rv = set(sorted(
-            i.strip() for i in re.findall(r'\d+=\s*createitem\s*(\w+)',
-                open(self._conf_file).read())
-        ))
-        return rv
-
-    @property
     def becomes(self):
 		 if 'becomes' in self._json:
-			return self._json['becomes']
+			return self._json['becomes']['name']
 		 else:
 			return None
 
