@@ -157,24 +157,21 @@ class Tribe(object):
         waresinfo = json.load(wares_file)
         self.wares = dict()
         for ware in waresinfo['wares']:
-			  # NOCOM print("Adding ware: " + ware['name'] + " " + ware['descname'])
-			  descname = ware['descname'].encode('ascii', 'ignore')
-			  #print(" -- " + descname)
+			  descname = ware['descname'].encode('ascii', 'xmlcharrefreplace')
 			  self.wares[ware['name']] = Ware(self, ware['name'], descname, self._tdir, ware)
 
         workers_file = open(p.normpath(json_directory + "/" + self.name + "_workers.json"), "r")
         workersinfo = json.load(workers_file)
         self.workers = dict()
         for worker in workersinfo['workers']:
-			  descname = worker['descname'].encode('ascii', 'ignore')
+			  descname = worker['descname'].encode('ascii', 'xmlcharrefreplace')
 			  self.workers[worker['name']] = Worker(self, worker['name'], descname, self._tdir, worker)
 
         buildings_file = open(p.normpath(json_directory + "/" + self.name + "_buildings.json"), "r")
         buildingsinfo = json.load(buildings_file)
         self.buildings = dict()
         for building in buildingsinfo['buildings']:
-			  descname = building['descname'].encode('ascii', 'ignore')
-			  #descname = building['descname']
+			  descname = building['descname'].encode('ascii', 'xmlcharrefreplace')
 			  self.buildings[building['name']] = Building(self, building['name'], descname, self._tdir, building)
 
     def __str__(self):
