@@ -37,6 +37,8 @@ class TribeParser(object):
 
         name - name of the tribe
         """
+        self._delete_old_media_dir(name) # You can deactivate this line if you don't need to clean house.
+
         base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
         json_directory = os.path.normpath(base_directory + "/map_object_info")
 
@@ -94,13 +96,16 @@ class TribeParser(object):
 
         shutil.rmtree(tdir)
 
-    def _delete_old_data(self, tribename):
+    def _delete_old_media_dir(self, tribename):
 		 """Clean house, e.g. when we have renamed a map object"""
 
 		 print("Deleting old media files...");
-		 sdir = os.path.join(MEDIA_ROOT, "wlhelp/img", self._to.name)
+		 sdir = os.path.join(MEDIA_ROOT, "wlhelp/img", tribename)
 		 if os.path.exists(sdir):
-			shutil.rmtree(sdir)
+			 shutil.rmtree(sdir)
+
+    def _delete_old_data(self, tribename):
+		 """Clean house, e.g. when we have renamed a map object"""
 
 		 t = TribeModel.objects.get(name=tribename)
 		 print("Deleting old wares...");
