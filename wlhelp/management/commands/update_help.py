@@ -217,7 +217,7 @@ class TribeParser(object):
 				if 'workers' in building:
 					b.workers_count, b.workers_types  = objects_with_counts(WorkerModel, building['workers'])
 
-				# Try to figure out if this is an enhanced building
+				# Try to figure out if this building can be enhanced
 				if 'enhancement' in building:
 					enhancement_hierarchy.append((b, building['enhancement']))
 

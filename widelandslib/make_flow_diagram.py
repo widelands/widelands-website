@@ -169,9 +169,7 @@ def make_graph(tribe_name):
     global tdir
     tdir = mkdtemp(prefix="widelands-help")
 
-    base_directory = path.normpath(WIDELANDS_SVN_DIR + "/data")
-    json_directory = path.normpath(base_directory + "/map_object_info")
-
+    json_directory = path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info")
     tribeinfo_file = open(path.normpath(json_directory + "/tribe_" + tribe_name + ".json"), "r")
     tribeinfo = json.load(tribeinfo_file)
 
@@ -266,7 +264,6 @@ def make_worker_graph(t, worker_name):
 
     try: makedirs(path.join(tdir, "help/%s/workers/%s/" % (t.name, w.name)))
     except OSError: pass
-    dot_path = path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name))
     g.write(path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name)))
 
 def make_ware_graph(t, ware_name):
