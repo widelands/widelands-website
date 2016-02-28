@@ -47,7 +47,7 @@ class TribeParser(object):
         tribeinfo_file = open(os.path.normpath(json_directory + "/tribe_" + name + ".json"), "r")
         tribeinfo = json.load(tribeinfo_file)
 
-        self._tribe = Tribe(tribeinfo, base_directory, json_directory) # NOCOM do the Tribe object
+        self._tribe = Tribe(tribeinfo, json_directory)
         # Generate the Tribe
         self._to = TribeModel.objects.get_or_create(name=name.lower())[0]
         self._to.displayname = tribeinfo['descname']

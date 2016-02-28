@@ -16,17 +16,15 @@ except:
     basedir = p.join(p.dirname(__file__), p.pardir, p.pardir)
 
 class BaseDescr(object):
-    def __init__(self, tribe, name, descname, tdir, json):
+    def __init__(self, tribe, name, descname, json):
         self.tribe = tribe
-        self._tdir = tdir
         self._json = json
-
         self.name = name
         self.descname = descname
 
     @property
     def image(self):
-        return p.abspath(p.join(self._tdir,self._json['icon']))
+        return p.abspath(p.join(WIDELANDS_SVN_DIR, "data", self._json['icon']))
 
 class Ware(BaseDescr):
     def __str__(self):
@@ -147,24 +145,22 @@ class MilitarySite(Building):
 
 
 class Tribe(object):
-    def __init__(self, tribeinfo, base_directory, json_directory):
+    def __init__(self, tribeinfo, json_directory):
         self.name = tribeinfo['name']
-
-        self._tdir = base_directory
 
         wares_file = open(p.normpath(json_directory + "/" + self.name + "_wares.json"), "r")
         waresinfo = json.load(wares_file)
         self.wares = dict()
         for ware in waresinfo['wares']:
 			  descname = ware['descname'].encode('ascii', 'xmlcharrefreplace')
-			  self.wares[ware['name']] = Ware(self, ware['name'], descname, self._tdir, ware)
+			  self.wares[ware['name']] = Ware(self, ware['name'], descname, ware)
 
         workers_file = open(p.normpath(json_directory + "/" + self.name + "_workers.json"), "r")
         workersinfo = json.load(workers_file)
         self.workers = dict()
         for worker in workersinfo['workers']:
 			  descname = worker['descname'].encode('ascii', 'xmlcharrefreplace')
-			  self.workers[worker['name']] = Worker(self, worker['name'], descname, self._tdir, worker)
+			  self.workers[worker['name']] = Worker(self, worker['name'], descname, worker)
 
         buildings_file = open(p.normpath(json_directory + "/" + self.name + "_buildings.json"), "r")
         buildingsinfo = json.load(buildings_file)
@@ -172,15 +168,15 @@ class Tribe(object):
         for building in buildingsinfo['buildings']:
 			  descname = building['descname'].encode('ascii', 'xmlcharrefreplace')
 			  if building['type'] == "productionsite":
-				  self.buildings[building['name']] = ProductionSite(self, building['name'], descname, self._tdir, building)
+				  self.buildings[building['name']] = ProductionSite(self, building['name'], descname, building)
 			  elif building['type'] == "warehouse":
-				  self.buildings[building['name']] = Warehouse(self, building['name'], descname, self._tdir, building)
+				  self.buildings[building['name']] = Warehouse(self, building['name'], descname, building)
 			  elif building['type'] == "trainingsite":
-				  self.buildings[building['name']] = TrainingSite(self, building['name'], descname, self._tdir, building)
+				  self.buildings[building['name']] = TrainingSite(self, building['name'], descname, building)
 			  elif building['type'] == "militarysite":
-				  self.buildings[building['name']] = MilitarySite(self, building['name'], descname, self._tdir, building)
+				  self.buildings[building['name']] = MilitarySite(self, building['name'], descname, building)
 			  else:
-				  self.buildings[building['name']] = Building(self, building['name'], descname, self._tdir, building)
+				  self.buildings[building['name']] = Building(self, building['name'], descname, building)
 
     def __str__(self):
         return "Tribe(%s)" % self.name
