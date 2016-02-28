@@ -67,7 +67,7 @@ class TribeParser(object):
 
     def parse( self, tribename, base_directory, json_directory ):
         """Put all data into the database"""
-        # self._delete_old_data(tribename) # Activate this line only when we really need to clean house.
+        self._delete_old_data(tribename) # NOCOM Activate this line only when we really need to clean house.
 
         wares_file = open(os.path.normpath(json_directory + "/" + tribename + "_wares.json"), "r")
         self._parse_wares(base_directory, json.load(wares_file))
@@ -217,8 +217,8 @@ class TribeParser(object):
 					b.workers_count, b.workers_types  = objects_with_counts(WorkerModel, building['workers'])
 
 				# Try to figure out if this is an enhanced building
-				if 'enhanced' in building:
-					enhancement_hierarchy.append((b, building['enhanced']))
+				if 'enhancement' in building:
+					enhancement_hierarchy.append((b, building['enhancement']))
 
 				b.help = building['helptext']
 
@@ -264,4 +264,5 @@ class Command(BaseCommand):
         # NOCOM test with only 1 tribe to speed thing up.
         tribename = tribesinfo['tribes'][0]['name']
         p = TribeParser(tribename)
+        p.parse(tribename, directory, json_directory)
         p.graph()

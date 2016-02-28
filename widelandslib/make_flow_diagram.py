@@ -57,6 +57,7 @@ class CleanedDot(d.Dot):
 
 def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=None, link_workers=True, limit_recruits=None):
     # Add the nice node
+    # NOCOM enhanced workers are missing
     workers = ""
     if isinstance(b, (ProductionSite,)):
         workers = r"""<table border="0px" cellspacing="0">"""
