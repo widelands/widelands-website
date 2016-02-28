@@ -1,13 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from conf import WidelandsConfigParser
-from ConfigParser import NoSectionError, NoOptionError
-import conf
-from itertools import chain
 import os.path as p
-import re
-from string import replace
 import json
 try:
     from settings import WIDELANDS_SVN_DIR

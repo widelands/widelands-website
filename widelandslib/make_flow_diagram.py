@@ -4,7 +4,6 @@
 import pydot as d
 
 from widelandslib.tribe import *
-#from pudb import set_trace; set_trace()
 
 from os import makedirs, path
 import subprocess
@@ -15,12 +14,12 @@ tdir = ""
 ##############################
 # To Do Make_Flow_Diagram.py #
 ##############################
-# i'd like to add things like: forester resores trunk or: gamekeeper restores meat
+# i'd like to add things like: forester resores log or: gamekeeper restores meat
 #
 # also, a building called construction site where alle the building material can point at would be nice
 #
 # how to tell the viewer, how many and wich ressources turn to others via buildings,
-# e.g. 6 trunks to 1 coal with the atlanteans, maybe on the edges?
+# e.g. 6 logs to 1 coal with the atlanteans, maybe on the edges?
 
 #############################
 # Work around bugs in pydot #
@@ -57,7 +56,6 @@ class CleanedDot(d.Dot):
 
 def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=None, link_workers=True, limit_recruits=None):
     # Add the nice node
-    # NOCOM enhanced workers are missing
     workers = ""
     if isinstance(b, (ProductionSite,)):
         workers = r"""<table border="0px" cellspacing="0">"""
@@ -225,9 +223,7 @@ def make_building_graph(t, building_name):
 
     try: makedirs(path.join(tdir, "help/%s/buildings/%s/" % (t.name, building_name)))
     except: pass
-    dot_path = path.join(tdir, "help/%s/buildings/%s/source.dot" % (t.name, building_name))
-    # NOCOM print("Dot path: " + dot_path)
-    g.write(dot_path)
+    g.write(path.join(tdir, "help/%s/buildings/%s/source.dot" % (t.name, building_name)))
 
 def make_worker_graph(t, worker_name):
     if isinstance(t, basestring):
@@ -264,10 +260,7 @@ def make_worker_graph(t, worker_name):
     try: makedirs(path.join(tdir, "help/%s/workers/%s/" % (t.name, w.name)))
     except OSError: pass
     dot_path = path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name))
-    #print("Dot path: " + dot_path)
-    g.write(dot_path)
-    # NOCOM try: g.write(dot_path)
-    #except: print("ERROR - Unable to write " + dot_path)
+    g.write(path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name)))
 
 def make_ware_graph(t, ware_name):
     if isinstance(t, basestring):
@@ -284,11 +277,7 @@ def make_ware_graph(t, ware_name):
 
     try: makedirs(path.join(tdir, "help/%s/wares/%s/" % (t.name, ware_name)))
     except OSError: pass
-    dot_path = path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name))
-    #print("Dot path: " + dot_path)
-    g.write(dot_path)
-    # NOCOM try: g.write(dot_path)
-    # NOCOM except: print("ERROR - Unable to write " + dot_path)
+    g.write(path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name)))
 
 def process_dotfile(directory):
     subprocess.Popen(("dot -Tpng -o %s/menu.png -Tcmapx -o %s/map.map %s/source.dot" % (directory, directory, directory)).split(" ")).wait()

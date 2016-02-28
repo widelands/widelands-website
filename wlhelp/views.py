@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from .models import Worker, Ware, Building, Tribe
 
 from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
-import os
 
 def index( request ):
     tribes = Tribe.objects.all().order_by("displayname")

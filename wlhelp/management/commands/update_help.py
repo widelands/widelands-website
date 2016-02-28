@@ -16,16 +16,11 @@ from ...models import Building as BuildingModel
 
 from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
-from optparse import make_option
 
-from ConfigParser import ConfigParser, MissingSectionHeaderError # NOCOM
-from glob import glob
 import os
-from os import path
+from os import makedirs, path
 import shutil
-from cStringIO import StringIO
 import re
-from itertools import chain
 import json
 
 from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
@@ -258,11 +253,11 @@ class Command(BaseCommand):
             tribename = t['name']
             print "updating help for tribe ", tribename
             p = TribeParser(tribename)
+            p.parse(tribename, directory, json_directory)
+            p.graph()
 
-            # NOCOM p.parse(tribename, directory, json_directory)
-            #p.graph()
         # NOCOM test with only 1 tribe to speed thing up.
-        tribename = tribesinfo['tribes'][0]['name']
-        p = TribeParser(tribename)
-        p.parse(tribename, directory, json_directory)
-        p.graph()
+        #tribename = tribesinfo['tribes'][0]['name']
+        #p = TribeParser(tribename)
+        #p.parse(tribename, directory, json_directory)
+        #p.graph()
