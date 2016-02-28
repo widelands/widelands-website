@@ -8,6 +8,7 @@ from itertools import chain
 import os.path as p
 import re
 from string import replace
+import json
 try:
     from settings import WIDELANDS_SVN_DIR
     basedir = WIDELANDS_SVN_DIR
@@ -15,18 +16,17 @@ except:
     basedir = p.join(p.dirname(__file__), p.pardir, p.pardir)
 
 class BaseDescr(object):
-    def __init__(self, tribe, name, descname, tdir):
+    def __init__(self, tribe, name, descname, tdir, json):
         self.tribe = tribe
         self._tdir = tdir
-        self._conf_file = p.join(tdir, name, "conf")
-        self._conf = WidelandsConfigParser(p.join(tdir,name,"conf"))
+        self._json = json
 
         self.name = name
         self.descname = descname
 
     @property
     def image(self):
-        return p.abspath(p.join(self._tdir,self.name,"menu.png"))
+        return p.abspath(p.join(self._tdir,self._json['icon']))
 
 class Ware(BaseDescr):
     def __str__(self):
@@ -43,10 +43,10 @@ class Worker(BaseDescr):
 
     @property
     def becomes(self):
-        try:
-            return self._conf.get("global", "becomes")
-        except NoOptionError:
-            return None
+		 if 'becomes' in self._json:
+			return self._json['becomes']
+		 else:
+			return None
 
     def __str__(self):
         return "Worker(%s)" % self.name
@@ -54,71 +54,75 @@ class Worker(BaseDescr):
 class Building(BaseDescr):
     @property
     def enhanced_building(self):
-        return self._conf.getboolean("global", "enhanced_building", False)
+		 if 'enhanced' in self._json:
+			return True
+		 else:
+			return False
 
     @property
     def base_building(self):
-        if not self.enhanced_building:
-            return None
-        bases = [b for b in self.tribe.buildings.values() if b.enhancement == self.name]
-        if len(bases) == 0 and self.enhanced_building:
-            raise Exception("Building %s has no bases in tribe %s" % (self.name, self.tribe.name))
-        if len(bases) > 1:
-            raise Exception("Building %s seems to have more than one base in tribe %s." % (self.name, self.tribe.name))
-        return bases[0]
+		 return None
+       # NOCOM if not self.enhanced_building:
+       # NOCOM            return None
+       # NOCOM        bases = [b for b in self.tribe.buildings.values() if b.enhancement == self.name]
+       # NOCOM        if len(bases) == 0 and self.enhanced_building:
+       # NOCOM            raise Exception("Building %s has no bases in tribe %s" % (self.name, self.tribe.name))
+       # NOCOM        if len(bases) > 1:
+       # NOCOM            raise Exception("Building %s seems to have more than one base in tribe %s." % (self.name, self.tribe.name))
+       # NOCOM        return bases[0]
 
     @property
     def enhancement(self):
-        rv = self._conf.getstring("global", "enhancement", "none")
-        return rv if rv != "none" else None
-
-    @property
-    def image(self):
-        glob_pat = self._conf.getstring("idle", "pics")
-        return p.abspath(p.join(self._tdir,self.name,replace(glob_pat,'?','0')))
+		 if 'enhanced' in self._json:
+			return self._json['enhanced']
+		 else:
+			return None
 
     @property
     def buildcost(self):
-        try:
-            return dict(self._conf.items("buildcost"))
-        except NoSectionError:
-            return {}
+		 result = dict()
+		 if 'buildcost' in self._json:
+			for buildcost in self._json['buildcost']:
+			  result[buildcost['name']] = buildcost['amount']
+		 return result
 
     @property
     def size(self):
-        return self._conf.getstring("global", "size")
+        return self._json['size']
 
 class ProductionSite(Building):
     btype = "productionsite"
     @property
     def outputs(self):
-        self_produced = set(sorted(
-            i.strip() for i in re.findall(r'produce\s*=\s*(\w+)',
-                open(self._conf_file).read())
-        ))
-        if not len(self_produced):
-            rv = reduce(lambda a,b: a | b, [ self.tribe.workers[w].outputs
-                    for w in self.workers ], set())
-            return rv
-        return self_produced
+		 result = dict()
+		 if 'produced_wares' in self._json:
+			for ware in self._json['produced_wares']:
+			  result[ware['name']] = ware['amount']
+		 return result
 
     @property
     def inputs(self):
-        try:
-            return dict( (k, v) for k,v in self._conf.items("inputs") )
-        except conf.NoSectionError:
-            return dict()
+		 result = dict()
+		 if 'stored_wares' in self._json:
+			for ware in self._json['stored_wares']:
+			  result[ware['name']] = ware['amount']
+		 return result
 
     @property
     def workers(self):
-        return dict( (k, v) for k,v in self._conf.items("working positions") )
+		 result = dict()
+		 if 'workers' in self._json:
+			for worker in self._json['workers']:
+			  result[worker['name']] = worker['amount']
+		 return result
 
     @property
     def recruits(self):
-        recs = set([])
-        for prog,_ in self._conf.items("programs"):
-            recs |= set([name for type, name in self._conf.items(prog) if type == "recruit"])
-        return recs
+		 result = set()
+		 if 'produced_workers' in self._json:
+			for worker in self._json['produced_workers']:
+			  result.add(worker['name'])
+		 return result
 
 class Warehouse(Building):
     btype = "warehouse"
@@ -144,35 +148,34 @@ class MilitarySite(Building):
 
 
 class Tribe(object):
-    def __init__(self, name, bdir = basedir):
-        self.name = name
+    def __init__(self, tribeinfo, base_directory, json_directory):
+        self.name = tribeinfo['name']
 
-        # NOCOM self._tdir = p.join(bdir, "tribes", name)
+        self._tdir = base_directory
 
-        # NOCOM self._conf = WidelandsConfigParser(p.join(self._tdir, "conf"))
+        wares_file = open(p.normpath(json_directory + "/" + self.name + "_wares.json"), "r")
+        waresinfo = json.load(wares_file)
+        self.wares = dict()
+        for ware in waresinfo['wares']:
+			  # NOCOM print("Adding ware: " + ware['name'] + " " + ware['descname'])
+			  descname = ware['descname'].encode('ascii', 'ignore')
+			  #print(" -- " + descname)
+			  self.wares[ware['name']] = Ware(self, ware['name'], descname, self._tdir, ware)
 
-        # NOCOM self.wares = dict( (k,Ware(self, k, v, self._tdir)) for k,v in
-        # NOCOM     self._conf.items("ware types"))
-        # NOCOM self.workers = dict(chain(
-        # NOCOM     ((k,Worker(self, k, v, self._tdir)) for k,v in
-        # NOCOM         self._conf.items("worker types")),
-        # NOCOM     ((k,Worker(self, k, v, self._tdir)) for k,v in
-        # NOCOM         self._conf.items("carrier types")),
-        # NOCOM ))
+        workers_file = open(p.normpath(json_directory + "/" + self.name + "_workers.json"), "r")
+        workersinfo = json.load(workers_file)
+        self.workers = dict()
+        for worker in workersinfo['workers']:
+			  descname = worker['descname'].encode('ascii', 'ignore')
+			  self.workers[worker['name']] = Worker(self, worker['name'], descname, self._tdir, worker)
 
-
-        # NOCOM self.buildings = dict(chain(
-        # NOCOM     ((k,ProductionSite(self, k, v, self._tdir)) for k,v in \
-        # NOCOM         self._conf.items("productionsite types")),
-        # NOCOM     ((k,MilitarySite(self, k, v, self._tdir)) for k,v in \
-        # NOCOM         self._conf.items("militarysite types")),
-        # NOCOM     ((k,Warehouse(self, k, v, self._tdir)) for k,v in \
-        # NOCOM         self._conf.items("warehouse types")),
-        # NOCOM     ((k,TrainingSite(self, k, v, self._tdir)) for k,v in \
-        # NOCOM         self._conf.items("trainingsite types")),
-        # NOCOM ))
+        buildings_file = open(p.normpath(json_directory + "/" + self.name + "_buildings.json"), "r")
+        buildingsinfo = json.load(buildings_file)
+        self.buildings = dict()
+        for building in buildingsinfo['buildings']:
+			  descname = building['descname'].encode('ascii', 'ignore')
+			  #descname = building['descname']
+			  self.buildings[building['name']] = Building(self, building['name'], descname, self._tdir, building)
 
     def __str__(self):
         return "Tribe(%s)" % self.name
-
-

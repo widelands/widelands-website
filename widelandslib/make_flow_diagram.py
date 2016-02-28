@@ -123,7 +123,7 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 
 
     if isinstance(b, (ProductionSite,)):
-        # for worker,c in b.workers: 
+        # for worker,c in b.workers:
         #     g.add_edge(Edge(worker, name, color="orange"))
 
         for output in b.outputs:
@@ -224,7 +224,9 @@ def make_building_graph(t, building_name):
 
     try: makedirs(path.join(tdir, "help/%s/buildings/%s/" % (t.name, building_name)))
     except: pass
-    g.write(path.join(tdir, "help/%s/buildings/%s/source.dot" % (t.name, building_name)))
+    dot_path = path.join(tdir, "help/%s/buildings/%s/source.dot" % (t.name, building_name))
+    # NOCOM print("Dot path: " + dot_path)
+    g.write(dot_path)
 
 def make_worker_graph(t, worker_name):
     if isinstance(t, basestring):
@@ -235,8 +237,8 @@ def make_worker_graph(t, worker_name):
     g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
-    buildings = [bld for bld in t.buildings.values() if 
-            isinstance(bld, ProductionSite) and 
+    buildings = [bld for bld in t.buildings.values() if
+            isinstance(bld, ProductionSite) and
               (w.name in bld.workers or w.name in bld.recruits)]
 
     for bld in buildings:
@@ -260,7 +262,11 @@ def make_worker_graph(t, worker_name):
 
     try: makedirs(path.join(tdir, "help/%s/workers/%s/" % (t.name, w.name)))
     except OSError: pass
-    g.write(path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name)))
+    dot_path = path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name))
+    #print("Dot path: " + dot_path)
+    g.write(dot_path)
+    # NOCOM try: g.write(dot_path)
+    #except: print("ERROR - Unable to write " + dot_path)
 
 def make_ware_graph(t, ware_name):
     if isinstance(t, basestring):
@@ -277,12 +283,16 @@ def make_ware_graph(t, ware_name):
 
     try: makedirs(path.join(tdir, "help/%s/wares/%s/" % (t.name, ware_name)))
     except OSError: pass
-    g.write(path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name)))
+    dot_path = path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name))
+    #print("Dot path: " + dot_path)
+    g.write(dot_path)
+    # NOCOM try: g.write(dot_path)
+    # NOCOM except: print("ERROR - Unable to write " + dot_path)
 
 def process_dotfile(directory):
-    subprocess.Popen(("dot -Tpng -o %s/image.png -Tcmapx -o %s/map.map %s/source.dot" % (directory, directory, directory)).split(" ")).wait()
+    subprocess.Popen(("dot -Tpng -o %s/menu.png -Tcmapx -o %s/map.map %s/source.dot" % (directory, directory, directory)).split(" ")).wait()
     #with open(directory,"w") as html:
-    #    html.write(r"""<IMG SRC="image.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
+    #    html.write(r"""<IMG SRC="menu.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
 
 def make_all_subgraphs(t):
     global tdir
@@ -291,19 +301,19 @@ def make_all_subgraphs(t):
         t = Tribe(t)
     print "making all subgraphs for tribe", t.name, "in", tdir
 
-    print "  making workers"
-
-    for w in t.workers:
-        print "    " + w
-        make_worker_graph(t, w)
-        process_dotfile(path.join(tdir, "help/%s/workers/%s/" % (t.name, w)))
-
     print "  making wares"
 
     for w in t.wares:
         print "    " + w
         make_ware_graph(t, w)
         process_dotfile(path.join(tdir, "help/%s/wares/%s/" % (t.name, w)))
+
+    print "  making workers"
+
+    for w in t.workers:
+        print "    " + w
+        make_worker_graph(t, w)
+        process_dotfile(path.join(tdir, "help/%s/workers/%s/" % (t.name, w)))
 
     print "  making buildings"
 

@@ -33,12 +33,6 @@ from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_all_subgraphs
 
-def normalize_name( s ):
-    """
-    Strips _ from the name endings
-    """
-    return s.strip('_')
-
 class TribeParser(object):
     map_mouseover_pattern = re.compile(r'(?P<beginning>.*href="../../(?P<type>[^/]+)s/(?P<name>[^/]+)/".*")&lt;TABLE&gt;(?P<rest>.*)')
     def __init__(self, name):
@@ -53,7 +47,7 @@ class TribeParser(object):
         tribeinfo_file = open(os.path.normpath(json_directory + "/tribe_" + name + ".json"), "r")
         tribeinfo = json.load(tribeinfo_file)
 
-        self._tribe = Tribe(tribeinfo) # NOCOM do the Tribe object
+        self._tribe = Tribe(tribeinfo, base_directory, json_directory) # NOCOM do the Tribe object
         # Generate the Tribe
         self._to = TribeModel.objects.get_or_create(name=name.lower())[0]
         self._to.displayname = tribeinfo['descname']
@@ -93,7 +87,7 @@ class TribeParser(object):
             for inst in obj.objects.all().filter(tribe=self._to):
                 try:
                     fpath = path.join(tdir,"help/%s/%s/%s/" % (self._tribe.name, cls, inst.name))
-                    url = self._copy_picture(path.join(fpath, "image.png"), inst.name, "graph.png")
+                    url = self._copy_picture(path.join(fpath, "menu.png"), inst.name, "graph.png")
                     inst.graph_url = url
                     inst.imagemap = open(path.join(fpath, "map.map")).read()
                     inst.imagemap = self.map_mouseover_pattern.sub(r"\1Show the \2 \3\4", inst.imagemap)
@@ -114,7 +108,6 @@ class TribeParser(object):
 
 		 t = TribeModel.objects.get(name=tribename)
 		 print("Deleting old wares...");
-		 wares = WareModel.objects.filter(tribe=t)
 		 for ware in WareModel.objects.filter(tribe=t):
 			ware.delete()
 		 print("Deleting old workers...");
@@ -266,5 +259,9 @@ class Command(BaseCommand):
             print "updating help for tribe ", tribename
             p = TribeParser(tribename)
 
-            p.parse(tribename, directory, json_directory)
-            # NOCOM p.graph()
+            # NOCOM p.parse(tribename, directory, json_directory)
+            #p.graph()
+        # NOCOM test with only 1 tribe to speed thing up.
+        tribename = tribesinfo['tribes'][0]['name']
+        p = TribeParser(tribename)
+        p.graph()
