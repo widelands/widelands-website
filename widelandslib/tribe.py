@@ -61,20 +61,19 @@ class Building(BaseDescr):
 
     @property
     def base_building(self):
-		 return None
-       # NOCOM if not self.enhanced_building:
-       # NOCOM            return None
-       # NOCOM        bases = [b for b in self.tribe.buildings.values() if b.enhancement == self.name]
-       # NOCOM        if len(bases) == 0 and self.enhanced_building:
-       # NOCOM            raise Exception("Building %s has no bases in tribe %s" % (self.name, self.tribe.name))
-       # NOCOM        if len(bases) > 1:
-       # NOCOM            raise Exception("Building %s seems to have more than one base in tribe %s." % (self.name, self.tribe.name))
-       # NOCOM        return bases[0]
+       if not self.enhanced_building:
+           return None
+       bases = [b for b in self.tribe.buildings.values() if b.enhancement == self.name]
+       if len(bases) == 0 and self.enhanced_building:
+           raise Exception("Building %s has no bases in tribe %s" % (self.name, self.tribe.name))
+       if len(bases) > 1:
+           raise Exception("Building %s seems to have more than one base in tribe %s." % (self.name, self.tribe.name))
+       return bases[0]
 
     @property
     def enhancement(self):
-		 if 'enhanced' in self._json:
-			return self._json['enhanced']
+		 if 'enhancement' in self._json:
+			return self._json['enhancement']
 		 else:
 			return None
 
@@ -94,10 +93,10 @@ class ProductionSite(Building):
     btype = "productionsite"
     @property
     def outputs(self):
-		 result = dict()
+		 result = set()
 		 if 'produced_wares' in self._json:
-			for ware in self._json['produced_wares']:
-			  result[ware['name']] = ware['amount']
+			for warename in self._json['produced_wares']:
+			  result.add(warename)
 		 return result
 
     @property
@@ -120,8 +119,8 @@ class ProductionSite(Building):
     def recruits(self):
 		 result = set()
 		 if 'produced_workers' in self._json:
-			for worker in self._json['produced_workers']:
-			  result.add(worker['name'])
+			for workername in self._json['produced_workers']:
+			  result.add(workername)
 		 return result
 
 class Warehouse(Building):
@@ -136,15 +135,15 @@ class MilitarySite(Building):
     btype = "militarysite"
     @property
     def conquers(self):
-        return self._conf.get("global", "conquers")
+        return self._json['conquers']
 
     @property
     def max_soldiers(self):
-        return self._conf.get("global", "max_soldiers")
+        return self._json['max_soldiers']
 
     @property
     def heal_per_second(self):
-        return self._conf.getint("global", "heal_per_second")
+        return self._json['heal_per_second']
 
 
 class Tribe(object):
@@ -172,7 +171,16 @@ class Tribe(object):
         self.buildings = dict()
         for building in buildingsinfo['buildings']:
 			  descname = building['descname'].encode('ascii', 'xmlcharrefreplace')
-			  self.buildings[building['name']] = Building(self, building['name'], descname, self._tdir, building)
+			  if building['type'] == "productionsite":
+				  self.buildings[building['name']] = ProductionSite(self, building['name'], descname, self._tdir, building)
+			  elif building['type'] == "warehouse":
+				  self.buildings[building['name']] = Warehouse(self, building['name'], descname, self._tdir, building)
+			  elif building['type'] == "trainingsite":
+				  self.buildings[building['name']] = TrainingSite(self, building['name'], descname, self._tdir, building)
+			  elif building['type'] == "militarysite":
+				  self.buildings[building['name']] = MilitarySite(self, building['name'], descname, self._tdir, building)
+			  else:
+				  self.buildings[building['name']] = Building(self, building['name'], descname, self._tdir, building)
 
     def __str__(self):
         return "Tribe(%s)" % self.name
