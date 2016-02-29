@@ -3,8 +3,9 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% load wlpoll wlprofile %}
-{% load threadedcommentstags custom_date %}
+{% load wlprofile wlpoll %}
+{% load comments %}
+{% load threadedcomments_tags custom_date %}
 
 {% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
 

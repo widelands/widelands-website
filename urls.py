@@ -18,7 +18,7 @@ feeds = {
 
 urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
-    (r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 
     # Django builtin / Registration
     # overwrite registration with own implementation
@@ -29,12 +29,12 @@ urlpatterns = patterns('',
     # 3rd party, unmodified
 #    (r'^notification/', include('notification.urls')),
     # (r'^stats/', include('simplestats.urls')),
-#    (r'^messages/', include('django_messages.urls')),
+    (r'^messages/', include('django_messages.urls')),
 #    (r'^threadedcomments/', include('threadedcomments.urls')),
 #    (r'^docs/', include('sphinxdoc.urls')),
 
     # 3rd party, modified for widelands
-#    (r'^wiki/', include('wiki.urls')),
+    (r'^wiki/', include('wiki.urls')),
 #    (r'^news/', include('news.urls')),
 #    (r'^forum/', include('pybb.urls')),
 
@@ -50,7 +50,7 @@ urlpatterns = patterns('',
 #    url(r'^images/', include("wlimages.urls")),
     url(r'^profile/', include("wlprofile.urls")),
 #    url(r'^search/', include("wlsearch.urls")),
-#    url(r'^poll/', include("wlpoll.urls")),
+    url(r'^poll/', include("wlpoll.urls")),
 #   url(r'^maps/', include("wlmaps.urls")),
 #    url(r'^screenshots/', include("wlscreens.urls")),
 #    url(r'^ggz/', include("wlggz.urls")),

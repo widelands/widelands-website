@@ -27,7 +27,7 @@ class Poll(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('wlpoll_detail', None, {'object_id': self.id})
+        return ('wlpoll_detail', (), {'pk': self.id})
 
     def __unicode__(self):
         return self.name

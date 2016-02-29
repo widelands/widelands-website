@@ -4,15 +4,18 @@
 
 from models import Poll
 from django.conf.urls import *
-import views
+from . import views
+from django.views.generic.dates import ArchiveIndexView
+#import views
 
+#delete this
 info_dict = {
     'queryset': Poll.objects.all()
 }
 
 urlpatterns = patterns('', 
-    url(r'^$', 'django.views.generic.list_detail.object_list', info_dict, name="wlpoll_archive"),
-    url(r'(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict, name="wlpoll_detail"),
-    url(r'(?P<object_id>\d+)/vote/$', views.vote, name="wlpoll_vote"),
+    url(r'^$', ArchiveIndexView.as_view(model=Poll,date_field="pub_date"), name="wlpoll_archive"),
+#    url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='wlpoll_detail'),
+#    url(r'(?P<object_id>\d+)/vote/$', views.vote, name="wlpoll_vote"),
 )
 

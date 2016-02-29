@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 
-from widelands.wlpoll.models import Choice, Poll
+#from widelands.wlpoll.models import Choice, Poll
 from django import template
 from urllib import urlencode, quote
 

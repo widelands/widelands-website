@@ -1,11 +1,10 @@
 {% load wlprofile %}
-{% load url from future %}
 
 <!-- Login form / User information -->
 {% if user.is_authenticated %}
 <div class="small posLeft">
 	Welcome {{ user|user_link }},<br/>
-   you have <a href="{% url messages_inbox %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
+   you have <a href="{% url 'messages_inbox' request.user %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
 </div>
 <div class="right small posRight">
 	<ul>

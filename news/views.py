@@ -4,6 +4,7 @@ from django.http import Http404
 #from django.views.generic import date_based, list_detail
 from django.db.models import Q
 from news.models import *
+#from django.views import generic
 
 import datetime
 import re
@@ -17,7 +18,6 @@ def post_list(request, page=0, **kwargs):
         **kwargs
     )
 post_list.__doc__ = list_detail.object_list.__doc__
-
 
 def post_archive_year(request, year, **kwargs):
     return date_based.archive_year(

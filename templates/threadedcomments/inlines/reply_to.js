@@ -1,7 +1,7 @@
 {% comment %}
     vim:ft=htmldjango:
 {% endcomment %}
-{% load threadedcommentstags %}
+{% load threadedcomments_tags %}
 {% load wlprofile %}
 
 <script type="text/javascript">

@@ -11,7 +11,8 @@ from django.http import (Http404, HttpResponseRedirect,
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.syndication.feeds import FeedDoesNotExist
+from django.contrib.syndication.views import Feed
+#from django.contrib.syndication.views.Feeds import FeedDoesNotExist
 
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp

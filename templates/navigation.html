@@ -16,8 +16,8 @@
 <ul class="menu posLeft">
 	<li><a href="/">Home</a>
 		<ul>
-			<li><a href="{#{% url news_index %}#}">News Archive</a></li>
-			<li><a href="{#{% url wlpoll_archive %}#}">Poll Archive</a></li>
+			<li><a href="{#{% url 'news_index' %}#}">News Archive</a></li>
+			<li><a href="{% url 'wlpoll_archive' %}">Poll Archive</a></li>
 		</ul>
 	</li>
 	<li><a href="{#{% url wiki_article "Description" %}#}">The Game</a>
