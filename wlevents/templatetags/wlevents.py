@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from widelands.wlevents.models import Event
+#from widelands.wlevents.models import Event
 from django import template
 from urllib import urlencode, quote
 

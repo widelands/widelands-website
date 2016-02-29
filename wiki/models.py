@@ -151,7 +151,7 @@ class ChangeSetManager(models.Manager):
 class NonRevertedChangeSetManager(ChangeSetManager):
 
     def get_default_queryset(self):
-        super(PublishedBookManager, self).get_query_set().filter(
+        super(PublishedBookManager, self).get_queryset().filter(
             reverted=False)
 
 

@@ -20,7 +20,6 @@ def mainpage(request):
 
 def legal_notice(request):
     """The legal notice page to fullfill law."""
-
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -32,10 +31,11 @@ def legal_notice(request):
                                 form.cleaned_data['inquiry']])
             sender = 'legal_note@widelands.org'
 
-            ## get email addresses which are in a tuple of ('name','email'),
+            ## get email addresses which are in form of ('name','email'),
             recipients = []
             for recipient in INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
+                print('recipeients: ', recipients)
 
             send_mail(subject, message, sender,
                 recipients, fail_silently=False)
@@ -43,9 +43,10 @@ def legal_notice(request):
 
     else:
         form = ContactForm() # An unbound form
-
+    
     return render(request, 'mainpage/legal_notice.html', {
         'form': form,
+        'inquiry_recipients': INQUIRY_RECIPIENTS,
         })
 
 def legal_notice_thanks(request):

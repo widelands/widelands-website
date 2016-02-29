@@ -65,28 +65,17 @@ directly, but you might want to edit the bd variable in local_settings.py::
    
 There has to be some corrections to get into the admin pages:
 
-Either copy the folders "media" and "templates"
-
-   from: ~/wlwebsite/django/contrib/admin
-   to:   ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/
-   
-or create symlinks:
-
-   $ ln -s ~/wlwebsite/django/contrib/admin/templates/ ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/templates
-   $ ln -s ~/wlwebsite/django/contrib/admin/media/ ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/media
-
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Now, let's try if everything works out::
+Now creating the tables in the database:
 
-   $ ./manage.py syncdb
-
-You will need to enter a superuser name and account.
-After setting up the database, pybb and djangoratings will not be synced.
-To migrate these, run::
-
+   $ ./manage.py makemigrations
    $ ./manage.py migrate
+
+Create a superuser:
+
+   $ ./manage.py createsuperuser
 
 Now, let's run the page::
 

@@ -1,8 +1,8 @@
-from django.contrib.syndication.views import FeedDoesNotExist
+from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
 #from django.contrib.syndication.feeds import Feed
-from django.contrib.syndication.views import Feed
+#from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from news.models import Post, Category
 

@@ -38,6 +38,6 @@ Login - {{ block.super }}
 		<input type="submit" value="login" />
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>
-	<p><a href="{% url auth_password_reset %}">Lost password?</a> | <a href="{% url registration_register %}">Register now!</a></p>
+	<p><a href="{% url 'auth_password_reset' %}">Lost password?</a> | <a href="{% url 'registration_register' %}">Register now!</a></p>
 </div>
 {% endblock %}

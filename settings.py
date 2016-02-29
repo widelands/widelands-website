@@ -120,7 +120,7 @@ MIDDLEWARE_CLASSES = (
     # 'simplestats.middleware.RegexLoggingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-#    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -129,7 +129,7 @@ MIDDLEWARE_CLASSES = (
 
     # Remove this, when load gets to high or attachments are enabled
     'django.middleware.gzip.GZipMiddleware',
-    #    'pagination.middleware.PaginationMiddleware',
+    'pagination.middleware.PaginationMiddleware',
     #    'tracking.middleware.VisitorTrackingMiddleware',
     #    'tracking.middleware.VisitorCleanUpMiddleware',
 )
@@ -144,7 +144,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-#                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages',
                 'django.contrib.auth.context_processors.auth',
                 'django.core.context_processors.i18n',
                 'django.core.context_processors.media',
@@ -295,9 +295,10 @@ USE_GOOGLE_ANALYTICS = False
 ##       uses the on legal notice page      ##
 ## Use allways the form ('name', 'Email')   ##
 ##############################################
-INQUIRY_RECIPIENTS = (
+INQUIRY_RECIPIENTS = [
     ('franku', 'somal@arcor.de'),
-)
+    ('bla', 'bulpp@bla.de'),
+]
 
 try:
    from local_settings import *

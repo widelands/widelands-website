@@ -2,7 +2,7 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% load url from future %}
+
 
 <script type="text/javascript">
 	/* Enable dropdown menus on touch devices */
@@ -16,7 +16,7 @@
 <ul class="menu posLeft">
 	<li><a href="/">Home</a>
 		<ul>
-			<li><a href="{#{% url 'news_index' %}#}">News Archive</a></li>
+			<li><a href="{% url 'news_index' %}">News Archive</a></li>
 			<li><a href="{% url 'wlpoll_archive' %}">Poll Archive</a></li>
 		</ul>
 	</li>

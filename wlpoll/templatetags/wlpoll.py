@@ -66,6 +66,7 @@ def do_display_poll( parser, token):
     return DisplayPollNode(poll_var)
 
 class GetOpenPolls(template.Node):
+    
     def __init__(self, varname):
         self._vn = varname
 
@@ -76,6 +77,7 @@ class GetOpenPolls(template.Node):
         if "user" in context:
             user = context['user']
             rv = []
+            print('Franky:', self)
             for p in Poll.objects.open():
                 p.user_has_voted = False if user.is_anonymous() else p.has_user_voted(user)
                 rv.append(p)

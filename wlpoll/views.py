@@ -6,18 +6,9 @@ from django.core.urlresolvers import reverse
 from models import Poll, Choice, Vote
 from django.views import generic
 
-#class ArchiveIndexView(generic.ListView):
-#    template_name = 'poll_list.html'
-#    context_object_name = 'latest_question_list'
-
-#    def get_queryset(self):
-#        """Return the last five published questions."""
-#        return Poll.objects.order_by('-pub_date')[:5]
-
-
-#class DetailView(generic.DetailView):
-#    model = Poll
-#    template_name = 'wlpoll/poll_detail.html'
+class DetailView(generic.DetailView):
+    model = Poll
+    template_name = 'wlpoll/poll_detail.html'
 
 
 #class ResultsView(generic.DetailView):

@@ -114,7 +114,7 @@ class Post(models.Model):
         return ('news_detail', None, {
             'slug': self.slug,
             'year': self.publish.year,
-            'month': self.publish.strftime('%m'),
+            'month': self.publish.strftime('%b'),
             'day': self.publish.day,
         })
     

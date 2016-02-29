@@ -5,12 +5,12 @@
  on the site
 {% endcomment %}
 
-{% comment %}
+
 {% load inbox %}
 {% load i18n %}
 {% load wlprofile wlpoll wlevents %}
-{% load pybb_extras %}
-{% load online_users %}
+{#{% load pybb_extras %}#}
+{#{% load online_users %}#}
 
 
 <!-- Donation Box -->
@@ -45,6 +45,7 @@
 	</div>
 </div>
 
+{% comment %}
 
 <!-- Current polls if any -->
 {% get_open_polls as polls %}
@@ -82,7 +83,7 @@
 		{% endif %}
 	{% endfor %}
 		<div class="center">
-			<p><a href="{% url wlpoll_archive %}">Archive</a></p>
+			<p><a href="{% url 'wlpoll_archive' %}">Archive</a></p>
 		</div>
 	</div>
 </div>
@@ -112,7 +113,6 @@
 
 <!-- Logged in users -->
 {% online_users 10 %}
-
 
 <!-- Latest Post -->
 {% pybb_last_posts %}
