@@ -10,8 +10,8 @@ Wares - {{ tribe.displayname }} - {{ block.super }}
 {% block content %}
 <h1>{{ tribe.displayname }}: Wares</h1>
 <div class="blogEntry">
-	<a href="{% url wlhelp_index %}">Encyclopedia</a> &#187;
-	<a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a> &#187;
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
+	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
 	Wares
 	<br /><br />
 
@@ -24,11 +24,11 @@ Wares - {{ tribe.displayname }} - {{ block.super }}
 	{% for ware in wares %}
 		<tr class="{% cycle "odd" "even" %}">
 			<td>
-				<a href="{% url wlhelp_ware_details tribe.name ware.name %}">
+				<a href="{% url 'wlhelp_ware_details' tribe.name ware.name %}">
 					<img src="{{ ware.image_url }}"  alt="{{ ware.name }}" />
 				</a>
 			</td>
-			<td><a id="{{ ware.name }}" href="{% url wlhelp_ware_details tribe.name ware.name %}">{{ ware.displayname }}</a></td>
+			<td><a id="{{ ware.name }}" href="{% url 'wlhelp_ware_details' tribe.name ware.name %}">{{ ware.displayname }}</a></td>
 			<td>{{ ware.help }}</td> 
 		</tr>
 	{% endfor %}

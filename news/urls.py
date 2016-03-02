@@ -1,6 +1,6 @@
 from django.conf.urls import *
 from news.models import Post
-from django.views.generic.dates import DateDetailView
+from django.views.generic.dates import DateDetailView, YearArchiveView, MonthArchiveView
 from django.views.generic import ListView
 
 urlpatterns = patterns('',
@@ -17,9 +17,13 @@ urlpatterns = patterns('',
     #      view=news_views.post_archive_month,
     #      name='news_archive_month'),
     # 
-    #  url(r'^(?P<year>\d{4})/$',
-    #      view=news_views.post_archive_year,
-    #      name='news_archive_year'),
+      url(r'^(?P<year>\d{4})/(?P<month>[-\w]+)/$',
+          MonthArchiveView.as_view(model=Post, date_field="publish"),
+          name='news_archive_month'),
+
+      url(r'^(?P<year>\d{4})/$',
+          YearArchiveView.as_view(model=Post, make_object_list=True, date_field="publish", template_name="post_archive_year.html"),
+          name='news_archive_year'),
     # 
     # # url(r'^categories/(?P<slug>[-\w]+)/$',
     # #     view=news_views.category_detail,

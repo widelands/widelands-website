@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.contrib.auth.models import User
 import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
 from settings import DEFAULT_TIME_ZONE, DEFAULT_TIME_DISPLAY
@@ -132,7 +132,8 @@ def custom_date( date, user ):
     if not user.is_authenticated():
         return do_custom_date( DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE) )
     try:
-        return do_custom_date( user.get_profile().time_display, date, user.get_profile().time_zone )
+        userprofile = User.objects.get(username=user).wlprofile        
+        return do_custom_date( userprofile.time_display, date, userprofile.time_zone )
     except ObjectDoesNotExist:
         return do_custom_date( DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE) )
 

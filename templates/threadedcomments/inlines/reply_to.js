@@ -2,7 +2,7 @@
     vim:ft=htmldjango:
 {% endcomment %}
 {% load threadedcomments_tags %}
-{% load wlprofile %}
+{% load wlprofile_extras %}
 
 <script type="text/javascript">
 function show_reply_form(comment_id, url, depth) {

@@ -1,6 +1,6 @@
 {% extends "news/base_news.html" %}
 
-{% load news %}
+{% load news_extras %}
 {% load threadedcomments_tags custom_date %}
 {% load pagination_tags %}
 
@@ -16,7 +16,7 @@
 <br />
 
 <div class="center">
-{% autopaginate object_list 10 %}
+{% autopaginate object_list 20 %}
 {% paginate %}
 </div>
 <br />

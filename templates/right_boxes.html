@@ -8,8 +8,8 @@
 
 {% load inbox %}
 {% load i18n %}
-{% load wlprofile wlpoll wlevents %}
-{#{% load pybb_extras %}#}
+{% load wlprofile_extras wlpoll_extras wlevents_extras %}
+{% load pybb_extras %}
 {#{% load online_users %}#}
 
 
@@ -45,7 +45,6 @@
 	</div>
 </div>
 
-{% comment %}
 
 <!-- Current polls if any -->
 {% get_open_polls as polls %}
@@ -59,10 +58,10 @@
 			{% if p.user_has_voted %}
 				<p class="small">You already voted on this!</p>
 				<div class="center">
-					<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+					<input type="button" value="Results" onclick="location='{% url 'wlpoll_detail' p.id %}'" />
 				</div>
 			{% else %}
-				<form method="post" action="{% url wlpoll_vote p.id %}">
+				<form method="post" action="{% url 'wlpoll_vote' p.id %}">
 					<ul class="poll">
 					{% for c in p.choices.all %}
 						<li><input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" /><label for="{{ c.id }}">{{ c.choice }}</label></li>
@@ -70,15 +69,15 @@
 					</ul>
 					<div class="center">
 						<input type="submit" value="Vote" />
-						<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+						<input type="button" value="Results" onclick="location='{% url 'wlpoll_detail' p.id %}'" />
 					</div>
 					{% csrf_token %}
 				</form>
 			{% endif %}
 		{% else %}
-			<p class="small"><a href="{% url auth_login %}?next={{ request.path|iriencode }}">Log in</a> to vote!</p>
+			<p class="small"><a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Log in</a> to vote!</p>
 			<div class="center">
-				<input type="button" value="Results" onclick="location='{% url wlpoll_detail p.id %}'" />
+				<input type="button" value="Results" onclick="location='{% url 'wlpoll_detail' p.id %}'" />
 			</div>
 		{% endif %}
 	{% endfor %}
@@ -88,7 +87,6 @@
 	</div>
 </div>
 {% endif %}
-
 
 <!-- Future Events if any -->
 {% get_future_events as events %}
@@ -110,10 +108,9 @@
 </div>
 {% endif %}
 
-
+{% comment %}
 <!-- Logged in users -->
 {% online_users 10 %}
-
+{% endcomment %}
 <!-- Latest Post -->
 {% pybb_last_posts %}
-{% endcomment %}

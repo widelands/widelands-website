@@ -60,33 +60,33 @@ SECRET_KEY = '#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu'
 
 ROOT_URLCONF = 'urls'
 
-#TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-#    '/var/www/django_projects/widelands/templates',
-#)
+#TEMPLATE_DIRS = () are now managed in TEMPLATES (Febr. 2016)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
 
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-#    'django.contrib.messages',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    #    'django.contrib.markup',
+#    'django.contrib.markup', # doesn't exist anymore
     'django.contrib.humanize',
     'django_comments',
-    # TODO: only temporary for webdesign stuff
-    'django.contrib.webdesign',
     # Thirdparty apps, but need preload
-    #    'tracking',
+#    'tracking',
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
     'mainpage',
-    #    'widelands.wlhelp',
+    'wlhelp',
     'wlimages',
     'wlwebchat',
     'wlrecaptcha',
@@ -105,12 +105,13 @@ INSTALLED_APPS = (
     'pybb',  # Feature enriched version of pybb
 
     # Thirdparty apps
+    'pinax.notifications', # Formerly notification, see next entry
+    #'notification',
     'threadedcomments',
     'django_messages',
     'registration',  # User registration (per Email validation)
     'pagination',
     'tagging',
-    'notification',
     #    'djangoratings', #No longer maintained
     #    'sphinxdoc',
     #    'south', Not longer supprted
@@ -138,8 +139,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
-#        'APP_DIRS': True,
+        'APP_DIRS': True,
         'OPTIONS': {
+            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -150,20 +152,18 @@ TEMPLATES = [
                 'django.core.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
-                'django_messages.context_processors.inbox'
+                'django_messages.context_processors.inbox',
             ],
-            'loaders': [
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader',
-            ]
         },
     },
 ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
+
+#https://pypi.python.org/pypi/django-threadedcomments v 1.0.1
+COMMENTS_APP = 'threadedcomments'
 
 ############################
 # Activation configuration #
@@ -181,7 +181,8 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 # User configuration #
 ######################
-AUTH_PROFILE_MODULE = 'wlprofile.Profile'
+AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: Must we change that?
+
 DEFAULT_TIME_ZONE = 3
 DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601
 DEFAULT_MARKUP = 'markdown'
@@ -296,9 +297,9 @@ USE_GOOGLE_ANALYTICS = False
 ## Use allways the form ('name', 'Email')   ##
 ##############################################
 INQUIRY_RECIPIENTS = [
-    ('franku', 'somal@arcor.de'),
-    ('bla', 'bulpp@bla.de'),
+    ('peter', 'peter@example.com'),
 ]
+
 
 try:
    from local_settings import *

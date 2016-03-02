@@ -1,6 +1,6 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
-{% load custom_date wlprofile %}
+{% load custom_date wlprofile_extras %}
 
 
 {% block title %}
@@ -56,13 +56,13 @@
 {% endif %}
 
 <div class="posRight small">
-	<a href="{% url wiki_article article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
-	| <a href="{% url wiki_article_history_feed title=article.title,feedtype="atom" %}"  class="invertedColor">Atom Feed</a>
+	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
+	| <a href="{% url 'wiki_article_history_feed' title=article.title feedtype="atom" %}"  class="invertedColor">Atom Feed</a>
 </div>
 <h1>{% trans "Article History of" %} {{ article.title }}</h1>
 
 <div class="blogEntry">
-	<form action="{% url wiki_revert_to_revision article.title %}" method="post" onsubmit="return check(this);">
+	<form action="{% url 'wiki_revert_to_revision' article.title %}" method="post" onsubmit="return check(this);">
 		<table class="history_list">
 		<thead>
 			<tr>

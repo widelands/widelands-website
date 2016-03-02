@@ -44,12 +44,12 @@
 	<br />
 	<br />
 	<p>
-		<a href="{% url auth_password_change %}">Change website password</a>
+		<a href="{% url 'auth_password_change' %}">Change website password</a>
 		<br />
 		You will be redirected to an encrypted connection. The website password is <strong>not</strong> transmitted in cleartext.
 	</p>
 	<p>
-		<a href="{% url wlggz_changepw %}">Change online gaming password</a>
+		<a href="{% url 'wlggz_changepw' %}">Change online gaming password</a>
 		<br />
 		<strong class="errormessage">WARNING: The online gaming password is transmitted in cleartext. Do not use your website password!</strong>
 	</p>

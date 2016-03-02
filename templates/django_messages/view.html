@@ -1,7 +1,7 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
 {% load custom_date %}
-{% load wlprofile %}
+{% load wlprofile_extras %}
 
 {% block title %}
 View - {{ block.super }}
@@ -31,7 +31,7 @@ View - {{ block.super }}
 		</tr>
 	</table>
 	{% ifequal message.recipient user %}
-		<button type="button" onclick="location.href='{% url messages_reply message.id %}';">{% trans "Reply" %}</button>
+		<button type="button" onclick="location.href='{% url 'messages_reply' message.id %}';">{% trans "Reply" %}</button>
 	{% endifequal %}
-	<button type="button" onclick="location.href='{% url messages_delete message.id %}';">{% trans "Delete" %}</button>
+	<button type="button" onclick="location.href='{% url 'messages_delete' message.id %}';">{% trans "Delete" %}</button>
 {% endblock %}

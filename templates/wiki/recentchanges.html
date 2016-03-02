@@ -33,13 +33,13 @@
 	<tr class="{% cycle 'odd' 'even' %}">
 		<td>
 			{% if change.old_title %} 
-				<a href="{% url wiki_changeset change.article.title,change.revision %}">Modified</a>
+				<a href="{% url 'wiki_changeset' change.article.title change.revision %}">Modified</a>
 			{% else %} 
-				<a href="{% url wiki_article change.article.title %}">Added</a>
+				<a href="{% url 'wiki_article' change.article.title %}">Added</a>
 			{% endif %}
 		</td>
 		<td>
-			<a href="{% url wiki_article change.article.title %}">{{ change.article.title }}</a>
+			<a href="{% url 'wiki_article' change.article.title %}">{{ change.article.title }}</a>
 		</td>
 		<td>{{ change.modified|custom_date:user }}</td>
 		<td>{{ change.editor }}</td>

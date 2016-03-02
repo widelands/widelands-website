@@ -1,32 +1,45 @@
 Update problems:
 
-# South:
-South is now integrated into django, see
-http://south.readthedocs.org/en/latest/releasenotes/1.0.html#library-migration-path
-
-An upgrading from old south migrations to django is decribed here:
-https://docs.djangoproject.com/en/1.9/topics/migrations/#upgrading-from-south
-
-Should be easy.
-
 # Django-ratings
-django-ratings is no longer maintained; see
-https://github.com/dcramer/django-ratings
-
-django-ratings is currently used only in wlmaps. We could either adjust django ratings or drop it.
+  django-ratings is no longer maintained; see
+  https://github.com/dcramer/django-ratings
+  
+  django-ratings is currently used only in wlmaps. We could either adjust django ratings or use
+  alternative: django-star-ratings (py3 ready)
 
 # Django-tracking
-django-tracking requires django.contrib.geoip which 
-requires Python GeoIP 1.3.2. Django.contrib.geoip gets deprecated in Dajngo 1.9 in favour of django.contrib.gis.geoip2, which supports IPv6 and the GeoLite2 database format.
+  The original django-tracking is disowned, see http://www.codekoala.com/posts/django-projects/
+  User bashu has adopt it, see: https://github.com/bashu/django-tracking
+  But it looks not really maintained.
+  
+  django-tracking requires django.contrib.geoip which 
+  requires Python GeoIP 1.3.2.
+  Django.contrib.geoip gets deprecated in Dajngo 1.9 in favour of
+  django.contrib.gis.geoip2, which supports IPv6 and the GeoLite2 database format.
 
-#Pillow
-The maintainers recommend installing this as a distribution package. For Ubuntu:
+# Django-notifications
+  The old project is forked and is renamed to pinax-notifications
+  Backwarts icompatible changes to the old version used by us:
+    BI: renamed Notice.user to Notice.recipient
+    BI: renamed {{ user }} context variable in notification templates to {{ recipient }}
+    BI: added nullable Notice.sender and modified send_now and queue to take an optional sender
+    BI: split settings part of notices view to its own view notice_settings
+    
+    See also Database_affected_changes.txt
 
-apt-get install python-imaging
+# User model
+  The current setting in settings.py:
+  
+  AUTH_PROFILE_MODULE = 'wlprofile.Profile'
+  
+  Has been removed in Django 1.7. I am not sure how to handle this change at the moment.
+  See also Database_affected_changes.txt
 
-See http://pillow.readthedocs.org/en/3.1.x/installation.html#linux-installation
+# Sorting of fields in Forms
+  The old 'keyOrder = ["fields"]' isn't available in Django 1.8
+  In Django 1.9 a new function 'order_keys' get's implemented.
+  Until then it is possible to order the fields in class Meta:
+  f.e.: fields = ['name','body', 'markup', 'attachment',]
 
-To get access in a virtual environment the environment has to be created with --system-site-packages option.
 
-# Others
-Trouble with notifications in /wiki/models.py
+  

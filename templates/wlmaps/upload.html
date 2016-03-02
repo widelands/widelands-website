@@ -9,9 +9,9 @@
 <h1>Map Upload</h1>
 <div class="blogEntry">
 	<div class="breadCrumb">
-		<a href="{% url wlmaps_index %}">Maps</a> &#187; Upload
+		<a href="{% url 'wlmaps_index' %}">Maps</a> &#187; Upload
 	</div>
-	<form enctype="multipart/form-data" action="{% url wlmaps_upload %}" method="post">
+	<form enctype="multipart/form-data" action="{% url 'wlmaps_upload' %}" method="post">
 		{{ form.file.label_tag }}: {{ form.file }}<br />
 		{% if form.file.errors %}
 			<span class="errormessage">{{ form.file.errors }}</span><br />

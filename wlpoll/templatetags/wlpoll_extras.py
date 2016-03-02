@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 
-#from widelands.wlpoll.models import Choice, Poll
+from wlpoll.models import Choice, Poll
 from django import template
 from urllib import urlencode, quote
 
@@ -77,7 +77,6 @@ class GetOpenPolls(template.Node):
         if "user" in context:
             user = context['user']
             rv = []
-            print('Franky:', self)
             for p in Poll.objects.open():
                 p.user_has_voted = False if user.is_anonymous() else p.has_user_voted(user)
                 rv.append(p)

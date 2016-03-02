@@ -3,7 +3,7 @@
 {% block content %} 
 <h1>Edit comment: {{ map.name }}</h1>
 <div class="blogEntry">
-    <form enctype="multipart/form-data" action="{% url wlmaps_edit_comment map.slug %}" method="post">
+    <form enctype="multipart/form-data" action="{% url 'wlmaps_edit_comment' map.slug %}" method="post">
         <div>
         {{ form.uploader_comment.label_tag }}:
 			<span class="posRight">

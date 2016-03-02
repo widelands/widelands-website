@@ -50,7 +50,7 @@
 	<h4>Buildings</h4>
 	<ul>
 	{% for b in wlhelp_results_buildings %}
-		<li><a href="{% url wlhelp_building_details b.tribe.name b.name %}">{{ b.tribe.displayname }} &raquo; {{b.displayname}}</a></li>
+		<li><a href="{% url 'wlhelp_building_details' b.tribe.name b.name %}">{{ b.tribe.displayname }} &raquo; {{b.displayname}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}
@@ -59,7 +59,7 @@
 	<h4>Wares</h4>
 	<ul>
 	{% for w in wlhelp_results_wares %}
-		<li><a href="{% url wlhelp_ware_details w.tribe.name w.name %}">{{ w.tribe.displayname }} &raquo; {{w.displayname}}</a></li>
+		<li><a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}">{{ w.tribe.displayname }} &raquo; {{w.displayname}}</a></li>
 	{% endfor %}
 	</ul>
 	{% endif %}

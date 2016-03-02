@@ -1,8 +1,8 @@
 {% extends "news/base_news.html" %}
 
-{% load wlprofile %}
+{% load wlprofile_extras %}
 {% load threadedcomments_tags %}
-{% load news %}
+{% load news_extras %}
 
 {% block title %}{{ object.title }} - {{ block.super }}{% endblock %}
 

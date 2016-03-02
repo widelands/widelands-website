@@ -31,7 +31,7 @@
 </h1>
 
 <div class="blogEntry">
-	<a href="{% url pybb_index %}">Forums</a> &#187;
+	<a href="{% url 'pybb_index' %}">Forums</a> &#187;
 	{% if forum %}
 		<a href="{{ forum.category.get_absolute_url }}">{{ forum.category.name }}</a> &#187;
 		{{ forum }}

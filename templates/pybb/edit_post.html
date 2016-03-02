@@ -12,7 +12,7 @@
 <h1>{% trans "Edit Reply" %}</h1>
 
 <div class="blogEntry">
-	<a href="{% url pybb_index %}">Forums</a> &#187;
+	<a href="{% url 'pybb_index' %}">Forums</a> &#187;
 	{% pybb_link post.topic.forum.category %} &#187; 
 	<a href="{{ post.topic.forum.get_absolute_url }}">{{ post.topic.forum.name }}</a> &#187;
 	{{ post.topic }}

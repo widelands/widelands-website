@@ -4,13 +4,13 @@
 {% endcomment %}
 
 {% load custom_date %}
-{% load wlprofile %}
+{% load wlprofile_extras %}
 {% load wlmaps_extra %}
 {% load threadedcomments_tags %}
 {% load pagination_tags %}
 
 {% block content %}
-<a href="{% url wlmaps_upload %}" class="posRight invertedColor small">Upload a new map</a>
+<a href="{% url 'wlmaps_upload' %}" class="posRight invertedColor small">Upload a new map</a>
 <h1>Maps</h1>
 <div class="blogEntry">
 	<p>
@@ -63,7 +63,7 @@
 						<td class="grey">Downloads:</td><td>{{ map.nr_downloads }}</td>
 						<td class="spacer"></td>
 						<td colspan="2">
-							<a class="button" href="{% url wlmaps_download map.slug %}">
+							<a class="button" href="{% url 'wlmaps_download' map.slug %}">
 								<img src="{{ MEDIA_URL }}img/download.png" alt ="" class="middle" />
 								<span class="middle">Direct Download</span>
 							</a>

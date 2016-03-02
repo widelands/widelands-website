@@ -1,12 +1,12 @@
 from django.template.loader import render_to_string
 from django import template
 from django.conf import settings
-from django.db import models
+from django.apps import apps
 
 import re
 
-Post = models.get_model('news', 'post')
-Category = models.get_model('news', 'category')
+Post = apps.get_model('news', 'post')
+Category = apps.get_model('news', 'category')
 
 register = template.Library()
 

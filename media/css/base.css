@@ -163,6 +163,9 @@ td {
 	text-align: center;
 }
 
+.right  {
+	text-align: right;
+}
 .middle {
 	vertical-align: middle;
 }

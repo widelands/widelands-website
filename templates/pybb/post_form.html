@@ -15,7 +15,7 @@ in different parent templates.
 			var markup = $('.post-form #id_markup').val();
 
 			args = {'content': raw_content, 'markup': markup}
-			$.post('{% url pybb_post_ajax_preview %}', args, function(data) {
+			$.post('{% url 'pybb_post_ajax_preview' %}', args, function(data) {
 				if (data.error) {
 					alert(data.error);
 				} else {

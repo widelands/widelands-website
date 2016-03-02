@@ -1,7 +1,7 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
 {% load custom_date %}
-{% load wlprofile %}
+{% load wlprofile_extras %}
 
 {% block title %}
 Outbox - {{ block.super }}
@@ -27,7 +27,7 @@ Outbox - {{ block.super }}
 				</td>
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
-					<a href="{% url django_messages.views.delete message.id %}">
+					<a href="{% url 'django_messages.views.delete' message.id %}">
 						<img src="{{ MEDIA_URL }}img/delete.png" alt="delete" title="delete" />
 					</a>
 				</td>

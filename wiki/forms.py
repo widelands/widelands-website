@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
 from wiki.models import Article
-from wiki.templatetags.wiki import WIKI_WORD_RE
+from wiki.templatetags.wiki_extras import WIKI_WORD_RE
 
 wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
 

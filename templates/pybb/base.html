@@ -8,8 +8,8 @@ Forum - {{ block.super }}
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/forum.css" />
 
-<link rel="alternate" type="application/atom+xml" title="Latest Posts on all forums" href="{% url pybb_feed "posts" %}" />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on all forums" href="{% url pybb_feed "topics" %}" />
+<link rel="alternate" type="application/atom+xml" title="Latest Posts on all forums" href="{% url 'pybb_feed' "posts" %}" />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics on all forums" href="{% url 'pybb_feed' "topics" %}" />
 
 {{ block.super}}
 {% endblock %}

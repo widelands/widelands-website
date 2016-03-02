@@ -3,14 +3,14 @@
 from django.conf.urls import *
 from django.http import HttpResponseRedirect
 from wiki import views, models
-from wiki.templatetags.wiki import WIKI_URL_RE
+from wiki.templatetags.wiki_extras import WIKI_URL_RE
 from django.views.generic import RedirectView
 
 urlpatterns = patterns('',
     # Redirects
     url(r'^ChangeLog/', RedirectView.as_view(url='/changelog/', permanent=True), name="wiki_changelog" ),
     # I wanted a true reverse, but it didn't work out 
-    url(r'^$', RedirectView.as_view(url='/wiki/Main Page'), name="wiki_index" ),
+    url(r'^$', RedirectView.as_view(url='/wiki/Main Page', permanent=True), name="wiki_index" ),
 
     url(r'^preview/$', views.article_preview, name='wiki_preview'),
     url(r'^diff/$', views.article_diff, name='wiki_preview_diff'),

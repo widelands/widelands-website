@@ -10,9 +10,9 @@
 {% block content %}
 <h1>{{ tribe.displayname }}: {{ ware.displayname }}</h1>
 <div class="blogEntry">
-	<a href="{% url wlhelp_index %}">Encyclopedia</a> &#187;
-	<a href="{% url wlhelp_tribe_details tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	<a href="{% url wlhelp_wares tribe.name %}">Wares</a> &#187;
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
+	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
+	<a href="{% url 'wlhelp_wares' tribe.name %}">Wares</a> &#187;
 	{{ ware.displayname }}
 	<br /><br />
 

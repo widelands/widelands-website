@@ -2,7 +2,7 @@
 {% load pybb_extras %}
 {% load i18n %}
 {% load humanize %}
-{% load wlprofile %}
+{% load wlprofile_extras %}
 {% load custom_date %}
 
 {% block title %}
@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url pybb_feed "posts" %}{{forum.id}}/"  />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url pybb_feed "topics" %}{{forum.id}}/" />
+<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url 'pybb_feed' "posts" %}{{forum.id}}/"  />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url 'pybb_feed' "topics" %}{{forum.id}}/" />
 {{ block.super }}
 {% endblock %}
 
@@ -19,11 +19,11 @@
 <h1>Forum: {{ forum }}</h1>
 
 <div class="blogEntry">
-	<a href="{% url pybb_index %}">Forums</a> &#187; 
+	<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
 	{% pybb_link forum.category %} &#187; 
 	{{ forum }}
 	<br /><br />
-	<a class="button posRight" href="{% url pybb_add_topic forum.id %}">
+	<a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
 		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
@@ -71,7 +71,7 @@
 	</table>
 
 	<br />
-	<a class="button posRight" href="{% url pybb_add_topic forum.id %}">
+	<a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
 		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
