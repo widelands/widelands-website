@@ -12,7 +12,7 @@
 <a href="{% url 'news_index' %}" class="invertedColor">News Archiv</a> &#187;
 <a href="{% url 'news_index' %}{{ year|date:"Y" }}" class="invertedColor">{{ year|date:"Y" }}</a>: 
 {% for month in date_list %}
-	<a href="{% url 'news_index' %}{{ year }}/{{ month|date:"m" }}/" class="invertedColor">{{ month|date:"F" }}</a>
+	<a href="{% url 'news_index' %}{{ year|date:"Y" }}/{{ month|date:"b" }}/" class="invertedColor">{{ month|date:"F" }}</a>
 	{% if not forloop.last %} | {% endif %}
 {% endfor %}
 <br />

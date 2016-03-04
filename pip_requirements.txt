@@ -22,7 +22,7 @@ pyflakes==1.0.0
 pyformat==0.6
 pyparsing==2.1.0
 six==1.10.0
-South==1.0.2
+#South==1.0.2
 unify==0.2
 untokenize==0.1.1
 wheel==0.29.0

@@ -21,4 +21,14 @@ This changes may affect our database:
 
 # Django-notifications
     Changing this to pinax-notification the old table do not work anymore.
-    Didn't found a solution to get pinax to work yet.
+    Because some tabels are changed it is not possible to get old data back. Restoring old notificationtypes
+    is possible if we dump the table notification_noticetype
+    $ mysqldump -u widelands -p old_db notification_noticetype > noticetype.db
+    and reload it
+    mysql -u widelands -p new_db < noticetype.db
+    After that we have to copy the contents from notification_noticetype to notifications_noticetype
+    (notice the additional s) and drop the previous reloaded table. This is possible through mysql console:
+    $ mysql -u widelands -p db_name
+    mysql> insert into notifications_noticetype select * from notification_noticetype;
+    mysql> drop table notification_noticetype;
+    Maybe there is an easier way :-)
