@@ -7,9 +7,7 @@
 
 # import re
 from django import template
-# from django.contrib.contenttypes.models import ContentType
-# from wlimages.models import , FreeThreadedComment
-from widelands.wlimages.forms import UploadImageForm
+from wlimages.forms import UploadImageForm
 
 register = template.Library()
 

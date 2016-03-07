@@ -1,25 +1,29 @@
 Update problems:
 
+##################
+   Modules/apps
+##################
+
 # Django-ratings
-  django-ratings is no longer maintained; see
-  https://github.com/dcramer/django-ratings
+   django-ratings is no longer maintained; see
+   https://github.com/dcramer/django-ratings
   
-  django-ratings is currently used only in wlmaps. We could either adjust django ratings or use
-  alternative: django-star-ratings (py3 ready)
+   django-ratings is currently used only in wlmaps. We could either adjust django ratings or use
+   alternative: django-star-ratings (py3 ready)
 
 # Django-tracking
-  The original django-tracking is disowned, see http://www.codekoala.com/posts/django-projects/
-  User bashu has adopt it, see: https://github.com/bashu/django-tracking
-  But it looks not really maintained.
+   The original django-tracking is disowned, see http://www.codekoala.com/posts/django-projects/
+   User bashu has adopt it, see: https://github.com/bashu/django-tracking
+   But it looks not really maintained.
   
-  django-tracking requires django.contrib.geoip which 
-  requires Python GeoIP 1.3.2.
-  Django.contrib.geoip gets deprecated in Dajngo 1.9 in favour of
-  django.contrib.gis.geoip2, which supports IPv6 and the GeoLite2 database format.
+   django-tracking requires django.contrib.geoip which 
+   requires Python GeoIP 1.3.2.
+   Django.contrib.geoip gets deprecated in Dajngo 1.9 in favour of
+   django.contrib.gis.geoip2, which supports IPv6 and the GeoLite2 database format.
 
 # Django-notifications
-  The old project is forked and is renamed to pinax-notifications
-  Backwarts icompatible changes to the old version used by us:
+   The old project is forked and is renamed to pinax-notifications
+   Backwarts icompatible changes to the old version used by us:
     BI: renamed Notice.user to Notice.recipient
     BI: renamed {{ user }} context variable in notification templates to {{ recipient }}
     BI: added nullable Notice.sender and modified send_now and queue to take an optional sender
@@ -27,19 +31,46 @@ Update problems:
     
     See also Database_affected_changes.txt
 
+# django.contrib.markup
+   Module is stripped out of django. There is a Pypi package for a backward-compatible quick fix:
+   https://pypi.python.org/pypi/django-markup-deprecated
+  
+   Simple replacemant for markdown filter: https://gist.github.com/defrex/6194514
+  
+# threadedcomments throws some errors at startup
+   I don't know why threadedcomments is used at all, because django-comments has the same 
+   functionality? See https://django-contrib-comments.readthedocs.org/en/latest/example.html
+   and also Database_affected_changes.txt
+  
+########################
+Settings and other stuff
+########################
+
 # User model
-  The current setting in settings.py:
+   The current setting in settings.py:
   
-  AUTH_PROFILE_MODULE = 'wlprofile.Profile'
+   AUTH_PROFILE_MODULE = 'wlprofile.Profile'
   
-  Has been removed in Django 1.7. I am not sure how to handle this change at the moment.
-  See also Database_affected_changes.txt
+   Has been removed in Django 1.7. I am not sure how to handle this change at the moment.
+   See also Database_affected_changes.txt
 
 # Sorting of fields in Forms
-  The old 'keyOrder = ["fields"]' isn't available in Django 1.8
-  In Django 1.9 a new function 'order_keys' get's implemented.
-  Until then it is possible to order the fields in class Meta:
-  f.e.: fields = ['name','body', 'markup', 'attachment',]
+   The old 'keyOrder = ["fields"]' isn't available in Django 1.8
+   In Django 1.9 a new function 'order_keys' get's implemented.
+   Until then it is possible to order the fields in class Meta:
+   f.e.: fields = ['name','body', 'markup', 'attachment',]
+
+# templatetag {% url 'name' %}in javascript does not work
+   Didn't found a solution for this. Mainly used in pybb.postform.html
+
+# Previews in general does not work
+
+# Messages ( regards to wiki )
+   The Message model (in django.contrib.auth), its related manager in the User model
+   (user.message_set), and the associated methods (user.message_set.create() and
+   user.get_and_delete_messages()), will be removed. The messages framework should be
+   used instead. The related messages variable returned by the auth context processor
+   will also be removed. Note that this means that the admin application will depend
+   on the messages context processor.
 
 
-  

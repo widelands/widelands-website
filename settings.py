@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 #    'django.contrib.markup', # doesn't exist anymore
     'django.contrib.humanize',
+    'threadedcomments',
     'django_comments',
     # Thirdparty apps, but need preload
 #    'tracking',
@@ -101,20 +102,19 @@ INSTALLED_APPS = (
     # Modified 3rd party apps
     'wiki',  # This is based on wikiapp, but has some local modifications
     'news',  # This is based on simple-blog, but has some local modifications
-    #    'news.managers',
+    'news.managers',
     'pybb',  # Feature enriched version of pybb
 
     # Thirdparty apps
     'pinax.notifications', # Formerly notification, see next entry
     #'notification',
-    'threadedcomments',
     'django_messages',
     'registration',  # User registration (per Email validation)
     'pagination',
     'tagging',
     #    'djangoratings', #No longer maintained
     #    'sphinxdoc',
-    #    'south', Not longer supprted
+    #    'south', Not longer supported
 )
 
 MIDDLEWARE_CLASSES = (

@@ -18,5 +18,5 @@
           {% if message.new %}</u>{% endif %}
       </td>
       <td>{{ message.sent_at|custom_date:user }}</td>
-      <td><a href="{% url django_messages.views.delete' message.id %}">{% trans "delete" %}</a></td>
+      <td><a href="{% url 'django_messages.views.delete' message.id %}">{% trans "delete" %}</a></td>
    </tr>

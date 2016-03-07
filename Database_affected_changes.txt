@@ -32,3 +32,7 @@ This changes may affect our database:
     mysql> insert into notifications_noticetype select * from notification_noticetype;
     mysql> drop table notification_noticetype;
     Maybe there is an easier way :-)
+
+# threadedcomments
+    Maybe we could use django-comments and port the comments to django-comments.
+    See: https://django-contrib-comments.readthedocs.org/en/latest/example.html
