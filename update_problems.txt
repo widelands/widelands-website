@@ -29,7 +29,7 @@ Update problems:
     BI: added nullable Notice.sender and modified send_now and queue to take an optional sender
     BI: split settings part of notices view to its own view notice_settings
     
-    See also Database_affected_changes.txt
+   See also Database_affected_changes.txt
 
 # django.contrib.markup
    Module is stripped out of django. There is a Pypi package for a backward-compatible quick fix:
@@ -60,7 +60,7 @@ Settings and other stuff
    Until then it is possible to order the fields in class Meta:
    f.e.: fields = ['name','body', 'markup', 'attachment',]
 
-# templatetag {% url 'name' %}in javascript does not work
+# templatetag {% url 'name' %} in javascript does not work
    Didn't found a solution for this. Mainly used in pybb.postform.html
 
 # Previews in general does not work

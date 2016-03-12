@@ -147,7 +147,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.contrib.auth.context_processors.auth',
                 'django.core.context_processors.i18n',
                 'django.core.context_processors.media',
                 'django.template.context_processors.static',
@@ -181,7 +180,9 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 # User configuration #
 ######################
-AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: Must we change that?
+#AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: Must we change that? or use this at all?
+# Don't use the following entry! It will affect the relationships from ManyToMany fields
+#AUTH_USER_MODEL = 'wlprofile.Profile'
 
 DEFAULT_TIME_ZONE = 3
 DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601
