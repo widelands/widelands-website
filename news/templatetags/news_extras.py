@@ -127,7 +127,7 @@ def get_links(value):
             from bs4 import BeautifulSoup
         except ImportError:
             from beautifulsoup import BeautifulSoup
-        soup = BeautifulSoup(value)
+        soup = BeautifulSoup(value, "html.parser")
         return soup.findAll('a')
     except ImportError:
         if settings.DEBUG:

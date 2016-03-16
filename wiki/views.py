@@ -600,7 +600,7 @@ def article_preview( request ):
     it to the caller
     """
     rv = do_wl_markdown( request.POST["body"], safe_mode="escape" )
-    return HttpResponse(rv, mimetype="text/html")
+    return HttpResponse(rv, content_type="text/html")
 
 def article_diff( request ):
     """
@@ -614,7 +614,7 @@ def article_diff( request ):
     diffs = dmp.diff_main(current_article.content, content)
     dmp.diff_cleanupSemantic(diffs)
 
-    return HttpResponse(dmp.diff_prettyHtml(diffs), mimetype="text/html")
+    return HttpResponse(dmp.diff_prettyHtml(diffs), content_type="text/html")
 
 def article_history_feed(request, feedtype, title,
                          group_slug=None, group_slug_field=None, group_qs=None,
@@ -637,7 +637,7 @@ def article_history_feed(request, feedtype, title,
     except FeedDoesNotExist:
         raise Http404
 
-    response = HttpResponse(mimetype=feedgen.mime_type)
+    response = HttpResponse(content_type=feedgen.mime_type)
     feedgen.write(response, 'utf-8')
     return response
 
@@ -663,7 +663,7 @@ def history_feed(request, feedtype,
     except FeedDoesNotExist:
         raise Http404
 
-    response = HttpResponse(mimetype=feedgen.mime_type)
+    response = HttpResponse(content_type=feedgen.mime_type)
     feedgen.write(response, 'utf-8')
     return response
 
