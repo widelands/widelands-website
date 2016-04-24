@@ -352,6 +352,5 @@ def post_ajax_preview(request):
     elif markup == 'markdown':
         html = unicode(do_wl_markdown(content, safe_mode='escape', wikiwords=False))
 
-
     html = urlize(html)
     return {'content': html}

@@ -18,7 +18,7 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        # Listing fields again to get the the right order
+        # Listing fields again to get the the right order; See also the NOCOMM
         fields = ['name','body', 'markup', 'attachment',]
 
     def __init__(self, *args, **kwargs):

@@ -32,7 +32,7 @@ def render_to(template_path):
             if not isinstance(output, dict):
                 return output
             kwargs = {'context_instance': RequestContext(request)}
-
+ 
             # NOCOMM: 'MIME_TYPE' is never in output as i can see for now.
             # But if, this should maybe 'content_type' instead
             if 'MIME_TYPE' in output:
@@ -41,6 +41,7 @@ def render_to(template_path):
                 template = output.pop('TEMPLATE')
             else:
                 template = template_path
+                
             return render_to_response(template, output, **kwargs)
         return wrapper
 
@@ -129,7 +130,7 @@ class JsonResponse(HttpResponse):
     def __init__(self, data, mimetype='application/json'):
         json_data = LazyJSONEncoder().encode(data)
         super(JsonResponse, self).__init__(
-            content=json_data, mimetype=mimetype)
+            content=json_data, content_type=mimetype)
 
         
 def build_form(Form, _request, GET=False, *args, **kwargs):
