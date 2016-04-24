@@ -60,11 +60,6 @@ Settings and other stuff
    Until then it is possible to order the fields in class Meta:
    f.e.: fields = ['name','body', 'markup', 'attachment',]
 
-# templatetag {% url 'name' %} in javascript does not work
-   Didn't found a solution for this. Mainly used in pybb.postform.html
-
-# Previews in general does not work
-
 # Messages ( regards to wiki )
    The Message model (in django.contrib.auth), its related manager in the User model
    (user.message_set), and the associated methods (user.message_set.create() and
