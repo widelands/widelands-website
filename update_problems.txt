@@ -67,5 +67,7 @@ Settings and other stuff
    used instead. The related messages variable returned by the auth context processor
    will also be removed. Note that this means that the admin application will depend
    on the messages context processor.
-
-
+   
+# Migrations
+   Added migrations to all our apps except wlscreens because it uses lambdas and
+   lambdas couldn't be handled by makemigrations.

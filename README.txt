@@ -68,9 +68,12 @@ There has to be some corrections to get into the admin pages:
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
+django_messages needs to make migrations first until it is
+solved upstream, see https://github.com/arneb/django-messages/issues/72 
+   $ ./manage.py makemigrations django_messages
+
 Now creating the tables in the database:
 
-   $ ./manage.py makemigrations
    $ ./manage.py migrate
 
 Create a superuser:

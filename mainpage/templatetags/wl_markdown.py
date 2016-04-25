@@ -72,7 +72,6 @@ def _insert_smiley_preescaping( text ):
     """
     for before,after in SMILEY_PREESCAPING:
         text = text.replace(before,after)
-
     return text
 
 
@@ -171,17 +170,13 @@ def do_wl_markdown( value, *args, **keyw ):
     # Do Preescaping for markdown, so that some things stay intact
     # This is currently only needed for this smiley ">:-)"
     value = _insert_smiley_preescaping( value )
-
     custom = keyw.pop('custom', True)
-    # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
     nvalue = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
 
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
     # BeautifoulSoup does all the heavy lifting
-    #soup = BeautifulSoup(nvalue)
     soup = BeautifulSoup(nvalue, "html.parser")
-    
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
@@ -200,14 +195,14 @@ def do_wl_markdown( value, *args, **keyw ):
             # Replace smileys; only outside "code-tags"
             if not text.parent.name == "code":
                 rv = _insert_smileys( rv )
-
             for name, (pattern,replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):
                     continue
-
+                
                 rv = pattern.sub(replacement, rv)
-            text.replaceWith(rv)
-
+            #Seems rv has to be converted to a BeautifulSoup object before assigning
+            text.replace_with(BeautifulSoup(rv))
+ 
     # This call slows the whole function down...
     # unicode->reparsing.
     # The function goes from .5 ms to 1.5ms on my system
