@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from wiki import views, models
 from wiki.templatetags.wiki_extras import WIKI_URL_RE
 from django.views.generic import RedirectView
+from wiki.feeds import RssHistoryFeed, AtomHistoryFeed, RssArticleHistoryFeed, AtomArticleHistoryFeed
 
 urlpatterns = patterns('',
     # Redirects
@@ -19,10 +20,13 @@ urlpatterns = patterns('',
 
     url(r'^history/$', views.history, name='wiki_history'),
 
-    url(r'^feeds/(?P<feedtype>\w+)/$', views.history_feed, name='wiki_history_feed'),
-
-    url(r'^(?P<title>'+ WIKI_URL_RE +r')/feeds/(?P<feedtype>\w+)/$', views.article_history_feed,
-        name='wiki_article_history_feed'),
+    url(r'^feeds/rss/$', RssHistoryFeed(), name='wiki_history_feed_rss'),
+    url(r'^feeds/atom/$', AtomHistoryFeed(), name='wiki_history_feed_atom'),
+    
+    url(r'^(?P<title>'+ WIKI_URL_RE +r')/feeds/rss/$', RssArticleHistoryFeed(),
+        name='wiki_article_history_feed_rss'),
+    url(r'^(?P<title>'+ WIKI_URL_RE +r')/feeds/atom/$', AtomArticleHistoryFeed(),
+        name='wiki_article_history_feed_atom'),
 
     url(r'^(?P<title>'+ WIKI_URL_RE +r')/$', views.view_article, name='wiki_article'),
 

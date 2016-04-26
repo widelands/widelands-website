@@ -18,31 +18,13 @@ class RssHistoryFeed(Feed):
 
     feed_type = Rss201rev2Feed
     title = 'History for all articles'
-    link = '/wiki/feeds/rss'
     description = 'Recent changes in wiki'
-
-    def __init__(self, request,
-                 group_slug=None, group_slug_field=None, group_qs=None,
-                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
-                 extra_context=None,
-                 title_template = u'feeds/history_title.html',
-                 description_template = u'feeds/history_description.html',
-                 *args, **kw):
-
-        if  group_slug is not None:
-            group = get_object_or_404(group_qs,
-                                      **{group_slug_field : group_slug})
-            self.changes_qs = changes_qs.filter(article__content_type=get_ct(group),
-                                                article__object_id=group.id)
-        else:
-            self.changes_qs = changes_qs
-
-        self.title_template = title_template
-        self.description_template = description_template
-        super(RssHistoryFeed, self).__init__('', request)
-
+    link = '/wiki/feeds/rss'
+    title_template = u'feeds/history_title.html'
+    description_template = u'feeds/history_description.html'
+    
     def items(self):
-        return self.changes_qs.order_by('-modified')[:30]
+        return ChangeSet.objects.order_by('-modified')[:30]
 
     def item_pubdate(self, item):
         """
@@ -81,7 +63,7 @@ class AtomHistoryFeed(RssHistoryFeed):
             return [{'name' : _('Anonimous')},]
         return [{'name' : item.editor.username},]
 
-    def item_links(self, item):
+    def item_link(self, item):
         return [{'href': item.get_absolute_url()}, ]
 
     def item_content(self, item):
@@ -99,44 +81,26 @@ class AtomHistoryFeed(RssHistoryFeed):
 
 
 class RssArticleHistoryFeed(Feed):
-
     feed_type = Rss201rev2Feed
-    def __init__(self, title, request,
-                group_slug=None, group_slug_field=None, group_qs=None,
-                article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
-                extra_context=None,
-                title_template = u'feeds/history_title.html',
-                description_template = u'feeds/history_description.html',
-                *args, **kw):
+    title_template = u'feeds/history_title.html'
+    description_template = u'feeds/history_description.html'
+    
+    def get_object(self, request, *args, **kwargs):
+        return Article.objects.get(title=kwargs['title'])
 
-        if  group_slug is not None:
-            group = get_object_or_404(group_qs,
-                                      **{group_slug_field : group_slug})
-            self.article_qs = article_qs.filter(content_type=get_ct(group),
-                                           object_id=group.id)
-        else:
-            self.article_qs = article_qs
+    def title(self, item):
+        return "History for: %s " % item.title
 
-        self.title_template = title_template
-        self.description_template = description_template
-        super(RssArticleHistoryFeed, self).__init__(title, request)
-
-    def get_object(self, bits):
-        return self.article_qs.get(title = bits[0])
-
-    def title(self, obj):
-        return "History for: %s " % obj.title
-
-    def link(self, obj):
-        if not obj:
+    def link(self, item):
+        if not item:
             raise FeedDoesNotExist
-        return obj.get_absolute_url()
+        return item.get_absolute_url()
 
-    def description(self, obj):
-        return "Recent changes in %s" % obj.title
+    def description(self, item):
+        return "Recent changes in %s" % item.title
 
-    def items(self, obj):
-        return ChangeSet.objects.filter(article__id__exact=obj.id).order_by('-modified')[:30]
+    def items(self, item):
+        return ChangeSet.objects.filter(article__id__exact=item.id).order_by('-modified')[:30]
 
     def item_pubdate(self, item):
         """
@@ -148,20 +112,14 @@ class RssArticleHistoryFeed(Feed):
 class AtomArticleHistoryFeed(RssArticleHistoryFeed):
     feed_type = Atom1Feed
 
-    def get_object(self, bits):
-        # We work around a bug here which is likely in atomformat.py;
-        # when the Article doesn't exist this throws an Exception. We
-        # will care for this by first checking for the Article
-        get_object_or_404(Article,title=bits[0])
+    def get_object(self, request, *args, **kwargs):
+        return Article.objects.get(title=kwargs['title'])
 
-        return self.article_qs.get(title = bits[0])
+    def feed_title(self, item):
+        return "History for: %s " % item.title
 
-
-    def feed_title(self, obj):
-        return "History for: %s " % obj.title
-
-    def feed_subtitle(self, obj):
-        return "Recent changes in %s" % obj.title
+    def feed_subtitle(self, item):
+        return "Recent changes in %s" % item.title
 
     def feed_id(self):
         return "feed_id"

@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }} (RSS)" href="{% url 'wiki_article_history_feed' article.title "rss" %}" />
-<link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }} (Atom)" href="{% url 'wiki_article_history_feed' article.title "atom" %}" />
+<link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }} (RSS)" href="{% url 'wiki_article_history_feed_rss' article.title %}" />
+<link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }} (Atom)" href="{% url 'wiki_article_history_feed_atom' article.title %}" />
 {{ block.super}}
 {% endblock %}
 

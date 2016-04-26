@@ -103,7 +103,7 @@ class Feed(object):
     
     
     def get_feed(self, extra_params=None):
-        
+        print("franku get_feed")
         if extra_params:
             try:
                 obj = self.get_object(extra_params.split('/'))

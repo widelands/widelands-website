@@ -200,8 +200,10 @@ def do_wl_markdown( value, *args, **keyw ):
                     continue
                 
                 rv = pattern.sub(replacement, rv)
-            #Seems rv has to be converted to a BeautifulSoup object before assigning
-            text.replace_with(BeautifulSoup(rv))
+            # rv has to be converted to a BeautifulSoup object to get
+            # the BeautifulSoup object text replaced with it
+            rv = BeautifulSoup(rv, "html.parser")
+            text.replace_with(rv)
  
     # This call slows the whole function down...
     # unicode->reparsing.

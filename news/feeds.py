@@ -1,8 +1,7 @@
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sites.models import Site
-#from django.contrib.syndication.feeds import Feed
-#from django.contrib.syndication.views import Feed
+from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from news.models import Post, Category
 
@@ -13,16 +12,16 @@ class NewsPostsFeed(Feed):
     title_template = 'feeds/posts_title.html'
     description_template = 'feeds/posts_description.html'
 
-    def link(self):
-        return reverse('news_index')
-
     def items(self):
         return Post.objects.published()[:10]
 
-    def item_pubdate(self, obj):
-        return obj.publish
+    def link(self):
+        return reverse('news_index')
 
+    def item_pubdate(self, item):
+        return item.publish
 
+# Currently not used
 class NewsPostsByCategory(Feed):
     title = 'Widelands.org posts category feed'
 
@@ -31,13 +30,13 @@ class NewsPostsByCategory(Feed):
             raise ObjectDoesNotExist
         return Category.objects.get(slug__exact=bits[0])
 
-    def link(self, obj):
-        if not obj:
+    def link(self, item):
+        if not item:
             raise FeedDoesNotExist
-        return obj.get_absolute_url()
+        return item.get_absolute_url()
 
-    def description(self, obj):
-        return "Posts recently categorized as %s" % obj.title
+    def description(self, item):
+        return "Posts recently categorized as %s" % item.title
 
-    def items(self, obj):
-        return obj.post_set.published()[:10]
+    def items(self, item):
+        return item.post_set.published()[:10]
