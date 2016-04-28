@@ -3,18 +3,15 @@ from django.conf.urls import *
 from pybb import views
 from pybb.feeds import LastPosts, LastTopics
 
-feeds = {
-    'posts': LastPosts,
-    'topics': LastTopics,
-}
-
 urlpatterns = patterns('',
     # Misc
     url('^$', views.index, name='pybb_index'),
     url('^category/(?P<category_id>\d+)/$', views.show_category, name='pybb_category'),
     url('^forum/(?P<forum_id>\d+)/$', views.show_forum, name='pybb_forum'),
-    url('^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.Feed',
-        {'feed_dict': feeds}, name='pybb_feed'),
+    
+    # Feeds
+    url('^feeds/topics/$', LastTopics(), name='pybb_feed_topics'),
+    url('^feeds/posts/$', LastPosts(), name='pybb_feed_posts'),
 
     # Topic
     url('^topic/(?P<topic_id>\d+)/$', views.show_topic, name='pybb_topic'),

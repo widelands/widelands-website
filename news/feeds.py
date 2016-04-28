@@ -1,13 +1,12 @@
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.sites.models import Site
-from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from news.models import Post, Category
 
-
+# Validated through http://validator.w3.org/feed/
 class NewsPostsFeed(Feed):
-    title = 'Widelands news posts feed'
+    # RSS Feed
+    title = 'Widelands news feed'
     description = 'The news section from the widelands.org homepage'
     title_template = 'feeds/posts_title.html'
     description_template = 'feeds/posts_description.html'
@@ -21,7 +20,7 @@ class NewsPostsFeed(Feed):
     def item_pubdate(self, item):
         return item.publish
 
-# Currently not used
+# Currently not used / not checked for compatibility
 class NewsPostsByCategory(Feed):
     title = 'Widelands.org posts category feed'
 

@@ -1,6 +1,5 @@
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
 
@@ -32,19 +31,8 @@ class PybbFeed(Feed):
             return reverse('pybb_index')
         return "/ewfwevw%s" % reverse('pybb_forum', args=(obj.pk,))
 
-    def get_object(self,bits):
-        """
-        Implement getting feeds for a specific subforum
-        """
-        if len(bits) == 0:
-            return self.all_objects
-        if len(bits) == 1:
-            try:
-                forum=Forum.objects.get(pk=int(bits[0]))
-                return forum
-            except ValueError:
-                pass
-        raise ObjectDoesNotExist
+    def get_object(self, request, *args, **kwargs):
+        return self.all_objects
 
     ##########################
     # Individual items below #
@@ -60,10 +48,10 @@ class PybbFeed(Feed):
 
 
 class LastPosts(PybbFeed):
-    all_title = _('Latest posts on all forums')
-    all_description = _('Latest posts on all forums')
-    one_title = _('Latest topics on forum %s')
-    one_description = _('Latest topics on forum %s')
+    all_title = 'Latest posts on all forums'
+    all_description = 'Latest posts on all forums'
+    one_title = 'Latest topics on forum %s'
+    one_description = 'Latest topics on forum %s'
     title_template = 'pybb/feeds/posts_title.html'
     description_template = 'pybb/feeds/posts_description.html'
 
@@ -81,17 +69,17 @@ class LastPosts(PybbFeed):
 
 
 class LastTopics(PybbFeed):
-    all_title = _('Latest topics on all forums')
-    all_description = _('Latest topics on all forums')
-    one_title = _('Latest topics on forum %s')
-    one_description = _('Latest topics on forum %s')
+    all_title = 'Latest topics on all forums'
+    all_description = 'Latest topics on all forums'
+    one_title = 'Latest topics on forum %s'
+    one_description = 'Latest topics on forum %s'
     title_template = 'pybb/feeds/topics_title.html'
     description_template = 'pybb/feeds/topics_description.html'
 
     all_objects = Topic.objects
 
-    def items_for_object(self,obj):
-        return Topic.objects.filter( forum = obj ).order_by('-created')[:15]
+    def items_for_object(self,item):
+        return Topic.objects.filter( forum = item ).order_by('-created')[:15]
 
     def item_author_name(self, item):
         """

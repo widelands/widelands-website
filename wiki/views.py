@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, render_to_response, redirect
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 
 from wiki.forms import ArticleForm

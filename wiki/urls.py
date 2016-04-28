@@ -20,9 +20,9 @@ urlpatterns = patterns('',
 
     url(r'^history/$', views.history, name='wiki_history'),
 
+    # Feeds
     url(r'^feeds/rss/$', RssHistoryFeed(), name='wiki_history_feed_rss'),
     url(r'^feeds/atom/$', AtomHistoryFeed(), name='wiki_history_feed_atom'),
-    
     url(r'^(?P<title>'+ WIKI_URL_RE +r')/feeds/rss/$', RssArticleHistoryFeed(),
         name='wiki_article_history_feed_rss'),
     url(r'^(?P<title>'+ WIKI_URL_RE +r')/feeds/atom/$', AtomArticleHistoryFeed(),

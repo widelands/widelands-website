@@ -7,14 +7,8 @@ admin.autodiscover()
 from mainpage.views import mainpage
 
 from news.feeds import NewsPostsFeed
-from wiki.feeds import RssHistoryFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
-feeds = {
-    'news': NewsPostsFeed,
-
-    # Wiki has it's own set of feeds
-}
 
 urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
@@ -23,24 +17,24 @@ urlpatterns = patterns('',
     # Django builtin / Registration
     # overwrite registration with own implementation
     url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    (r'^accounts/', include('registration.backends.hmac.urls')),
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.Feed', {'feed_dict': feeds}),
+    url (r'^accounts/', include('registration.backends.hmac.urls')),
+    url (r'^feeds/news/$', NewsPostsFeed()),
 
     # 3rd party, unmodified
 #    (r'^notification/', include('notification.urls')), #replaced with next
     url(r"^notifications/", include("pinax.notifications.urls")),
 
     # (r'^stats/', include('simplestats.urls')),
-    (r'^messages/', include('django_messages.urls')),
+    url (r'^messages/', include('django_messages.urls')),
 #    (r'^threadedcomments/', include('threadedcomments.urls')), #replaced with next
     url(r'^articles/comments/', include('django_comments.urls')),
     
 #    (r'^docs/', include('sphinxdoc.urls')),
 
     # 3rd party, modified for widelands
-    (r'^wiki/', include('wiki.urls')),
-    (r'^news/', include('news.urls')),
-    (r'^forum/', include('pybb.urls')),
+    url (r'^wiki/', include('wiki.urls')),
+    url (r'^news/', include('news.urls')),
+    url (r'^forum/', include('pybb.urls')),
 
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),

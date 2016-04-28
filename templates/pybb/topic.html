@@ -11,8 +11,8 @@
 {% endblock title %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ topic.forum.name }}'" href="{% url 'pybb_feed' "posts" %}{{topic.forum.id}}/"  />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ topic.forum.name }}'" href="{% url 'pybb_feed' "topics"%}{{topic.forum.id}}/" />
+<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ topic.forum.name }}'" href="{% url 'pybb_feed' %}{{topic.forum.id}}/"  />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ topic.forum.name }}'" href="{% url 'pybb_feed' %}{{topic.forum.id}}/" />
 {{ block.super }}
 {% endblock %}
 
