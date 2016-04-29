@@ -31,8 +31,19 @@ class PybbFeed(Feed):
             return reverse('pybb_index')
         return "/ewfwevw%s" % reverse('pybb_forum', args=(obj.pk,))
 
-    def get_object(self, request, *args, **kwargs):
-        return self.all_objects
+    def get_object(self,request, topic_id):
+        """
+        Implement getting feeds for a specific subforum
+        """
+        if len(topic_id) == 0:
+            return self.all_objects
+        if len(topic_id) == 1:
+            try:
+                forum=Forum.objects.get(pk=int(topic_id))
+                return forum
+            except ValueError:
+                pass
+        raise ObjectDoesNotExist
 
     ##########################
     # Individual items below #

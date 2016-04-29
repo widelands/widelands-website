@@ -10,6 +10,8 @@ urlpatterns = patterns('',
     url('^forum/(?P<forum_id>\d+)/$', views.show_forum, name='pybb_forum'),
     
     # Feeds
+    url('^feeds/topics/(?P<topic_id>\d+)/$', LastTopics(), name='pybb_feed_topics'),
+    url('^feeds/posts/(?P<topic_id>\d+)/$', LastPosts(), name='pybb_feed_posts'),
     url('^feeds/topics/$', LastTopics(), name='pybb_feed_topics'),
     url('^feeds/posts/$', LastPosts(), name='pybb_feed_posts'),
 
