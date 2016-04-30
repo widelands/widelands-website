@@ -91,7 +91,7 @@ Some important settings
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Go to http://localhost:8000/admin. Log in with your super user and go to the
-Sites Admin. Change your site name from example.com to localhost. Now,
+Sites Admin. Change your site name from example.com to localhost:8000. Now,
 everything should work out.
 
 Accessing the website from other machines

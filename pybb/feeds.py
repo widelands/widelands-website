@@ -1,8 +1,7 @@
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
-
+from django.utils.feedgenerator import Atom1Feed
 from pybb.models import Post, Topic, Forum
 
 class PybbFeed(Feed):
@@ -13,56 +12,46 @@ class PybbFeed(Feed):
             return self.all_title
         else:
             return self.one_title % obj.name
-
-    def description(self,obj):
-        if obj == self.all_objects:
-            return self.all_description
-        else:
-            return self.one_description % obj.name
-
+        
     def items(self, obj):
         if obj == self.all_objects:
             return obj.order_by('-created')[:15]
         else:
             return self.items_for_object(obj)
-
+        
     def link(self, obj):
         if obj == self.all_objects:
             return reverse('pybb_index')
+        print("franku reverse: ", reverse('pybb_forum', args=(obj.pk,)))
         return "/ewfwevw%s" % reverse('pybb_forum', args=(obj.pk,))
 
-    def get_object(self,request, topic_id):
+    def get_object(self,request, *args, **kwargs):
         """
         Implement getting feeds for a specific subforum
         """
-        if len(topic_id) == 0:
+        if not 'topic_id' in kwargs:
+            # Latest Posts/Topics on all forums
             return self.all_objects
-        if len(topic_id) == 1:
+        else:
+            # Latest Posts/Topics for specific Forum
             try:
-                forum=Forum.objects.get(pk=int(topic_id))
+                forum=Forum.objects.get(pk=int(kwargs['topic_id']))
                 return forum
             except ValueError:
                 pass
         raise ObjectDoesNotExist
-
-    ##########################
-    # Individual items below #
-    ##########################
-    def item_id(self, obj):
-        return str(obj.id)
-
-    def item_pubdate(self, obj):
+    
+    # Must be used for valid Atom feeds    
+    def item_updateddate(self, obj):
         return obj.created
+    
+    def item_link(self, item):
+        return item.get_absolute_url()
 
-    def item_links(self, item):
-        return [{'href': item.get_absolute_url()}, ]
-
-
+# Validated through http://validator.w3.org/feed/
 class LastPosts(PybbFeed):
     all_title = 'Latest posts on all forums'
-    all_description = 'Latest posts on all forums'
-    one_title = 'Latest topics on forum %s'
-    one_description = 'Latest topics on forum %s'
+    one_title = 'Latest posts on forum %s'
     title_template = 'pybb/feeds/posts_title.html'
     description_template = 'pybb/feeds/posts_description.html'
 
@@ -78,15 +67,13 @@ class LastPosts(PybbFeed):
         """
         return item.user.username
 
-
+# Validated through http://validator.w3.org/feed/
 class LastTopics(PybbFeed):
     all_title = 'Latest topics on all forums'
-    all_description = 'Latest topics on all forums'
     one_title = 'Latest topics on forum %s'
-    one_description = 'Latest topics on forum %s'
     title_template = 'pybb/feeds/topics_title.html'
     description_template = 'pybb/feeds/topics_description.html'
-
+    
     all_objects = Topic.objects
 
     def items_for_object(self,item):

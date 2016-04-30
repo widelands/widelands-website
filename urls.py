@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     # overwrite registration with own implementation
     url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
     url (r'^accounts/', include('registration.backends.hmac.urls')),
+    
+    # Feed for Mainpage
     url (r'^feeds/news/$', NewsPostsFeed()),
 
     # 3rd party, unmodified

@@ -8,8 +8,8 @@ class NewsPostsFeed(Feed):
     # RSS Feed
     title = 'Widelands news feed'
     description = 'The news section from the widelands.org homepage'
-    title_template = 'feeds/posts_title.html'
-    description_template = 'feeds/posts_description.html'
+    title_template = 'news/feeds/posts_title.html'
+    description_template = 'news/feeds/posts_description.html'
 
     def items(self):
         return Post.objects.published()[:10]
@@ -20,7 +20,7 @@ class NewsPostsFeed(Feed):
     def item_pubdate(self, item):
         return item.publish
 
-# Currently not used / not checked for compatibility
+# Currently not used / not checked for compatibility for django 1.8
 class NewsPostsByCategory(Feed):
     title = 'Widelands.org posts category feed'
 

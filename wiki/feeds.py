@@ -9,8 +9,8 @@ class RssHistoryFeed(Feed):
     title = 'History for all articles'
     description = 'Recent changes in wiki'
     link = '/wiki/feeds/rss/'
-    title_template = u'feeds/history_title.html'
-    description_template = u'feeds/history_description.html'
+    title_template = 'wiki/feeds/history_title.html'
+    description_template = 'wiki/feeds/history_description.html'
     
     def items(self):
         return ChangeSet.objects.order_by('-modified')[:30]
@@ -29,7 +29,7 @@ class RssHistoryFeed(Feed):
         if item.is_anonymous_change():
             return 'Anonymous'
         return item.editor.username
-
+    
 # Validated through http://validator.w3.org/feed/
 class AtomHistoryFeed(RssHistoryFeed):
 
@@ -43,8 +43,8 @@ class AtomHistoryFeed(RssHistoryFeed):
 # Validated through http://validator.w3.org/feed/
 class RssArticleHistoryFeed(Feed):
     feed_type = Rss201rev2Feed
-    title_template = u'feeds/history_title.html'
-    description_template = u'feeds/history_description.html'
+    title_template = u'wiki/feeds/history_title.html'
+    description_template = u'wiki/feeds/history_description.html'
 
     def get_object(self, request, *args, **kwargs):
         return Article.objects.get(title=kwargs['title'])
@@ -68,7 +68,7 @@ class RssArticleHistoryFeed(Feed):
         Returns the modified date
         """
         return item.modified
-
+    
 # Validated through http://validator.w3.org/feed/
 class AtomArticleHistoryFeed(RssArticleHistoryFeed):
     feed_type = Atom1Feed
