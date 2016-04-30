@@ -277,7 +277,8 @@ WIDELANDS_SVN_DIR = ''
 #####################
 # ChangeLog display #
 #####################
-BZR_URL = r"http://bazaar.launchpad.net/%%7Ewidelands-dev/widelands/trunk/revision/%s"
+BZR_URL = r'http://bazaar.launchpad.net/~widelands-dev/widelands/trunk/revision/%s'
+#BZR_URL = r"http://launchpad.net/widelands/trunk/revision/%s"
 
 ###############
 # Screenshots #

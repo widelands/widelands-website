@@ -21,7 +21,7 @@ if markdown.version_info[0] < 2:
 from markdown import markdown
 import re
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 
 # If we can import a Wiki module with Articles, we
 # will check for internal wikipages links in all internal
@@ -78,6 +78,7 @@ def _insert_smiley_preescaping( text ):
 revisions_re = [
     re.compile( "bzr:r(\d+)" ),
 ]
+
 def _insert_revision( text ):
     for r in revisions_re:
         text = r.sub( lambda m: """<a href="%s">r%s</a>""" % (
@@ -191,25 +192,25 @@ def do_wl_markdown( value, *args, **keyw ):
         # links [blah](blkf)
         if custom:
             # Replace bzr revisions
-            rv = _insert_revision( text )
+            rv = text #_insert_revision( text )
+
             # Replace smileys; only outside "code-tags"
             if not text.parent.name == "code":
                 rv = _insert_smileys( rv )
+            
             for name, (pattern,replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):
                     continue
                 
                 rv = pattern.sub(replacement, rv)
-            # rv has to be converted to a BeautifulSoup object to get
-            # the BeautifulSoup object text replaced with it
-            rv = BeautifulSoup(rv, "html.parser")
-            text.replace_with(rv)
+
+        text.replace_with(BeautifulSoup(rv, "html.parser"))
  
     # This call slows the whole function down...
     # unicode->reparsing.
     # The function goes from .5 ms to 1.5ms on my system
     # Well, for our site with it's little traffic it's maybe not so important...
-    #soup = BeautifulSoup(unicode(soup)) # What a waste of cycles :(
+    # What a waste of cycles :(
     soup = BeautifulSoup(unicode(soup), "html.parser")
     # We have to go over this to classify links
     for tag in soup.findAll("a"):

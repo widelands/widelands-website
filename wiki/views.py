@@ -16,7 +16,6 @@ from wiki.models import Article, ChangeSet, dmp
 
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
-
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 # Settings
@@ -70,7 +69,10 @@ def get_url(urlname, group=None, args=None, kw=None):
         url = reverse(urlname, urlconf, kwargs=kw)
         return ''.join(['/', app, url]) # @@@ harcoded: /app/.../
 
-
+# NOCOMM Franku: This Class is currently not used
+# If we want this it has to be checked for the changes
+# related to django.contrib.messages.
+# A javascript alert box is maybe a better solution
 class ArticleEditLock(object):
     """ A soft lock to edting an article.
     """
@@ -270,13 +272,14 @@ def edit_article(request, title,
 
         form.cache_old_content()
         if form.is_valid():
-            if request.user.is_authenticated():
-                form.editor = request.user
-                if article is None:
-                    user_message = u"Your article was created successfully."
-                else:
-                    user_message = u"Your article was edited successfully."
-                request.user.message_set.create(message=user_message)
+            # if request.user.is_authenticated():
+            #     form.editor = request.user
+            #     if article is None:
+            #         user_message = u"Your article was created successfully."
+            #     else:
+            #         user_message = u"Your article was edited successfully."
+            #     messages.success(request, user_message)
+                    
 
             if ((article is None) and (group_slug is not None)):
                 form.group = group
@@ -474,9 +477,9 @@ def revert_to_revision(request, title,
             article.revert_to(revision, get_real_ip(request))
 
 
-        if request.user.is_authenticated():
-            request.user.message_set.create(
-                message=u"The article was reverted successfully.")
+        # if request.user.is_authenticated():
+        #     request.user.message_set.create(
+        #         message=u"The article was reverted successfully.")
 
         return redirect(article)
 
