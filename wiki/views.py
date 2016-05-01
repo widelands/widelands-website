@@ -71,7 +71,7 @@ def get_url(urlname, group=None, args=None, kw=None):
 
 # NOCOMM Franku: This Class is currently not used
 # If we want this it has to be checked for the changes
-# related to django.contrib.messages.
+# related to django 1.8.
 # A javascript alert box is maybe a better solution
 class ArticleEditLock(object):
     """ A soft lock to edting an article.
@@ -272,6 +272,12 @@ def edit_article(request, title,
 
         form.cache_old_content()
         if form.is_valid():
+
+            # NOCOMM Franku: This has never worked as i know and is IMHO
+            # useless. This code works with django 1.8 but misses some code
+            # in template. See
+            # https://docs.djangoproject.com/en/1.8/ref/contrib/messages/#module-django.contrib.messages
+
             # if request.user.is_authenticated():
             #     form.editor = request.user
             #     if article is None:
@@ -291,10 +297,11 @@ def edit_article(request, title,
     elif request.method == 'GET':
         user_ip = get_real_ip(request)
 
-        lock = cache.get(title, None)
-        if lock is None:
-            lock = ArticleEditLock(title, request)
-        lock.create_message(request)
+        # NOCOMM FrankU: Never worked IMHO
+        # lock = cache.get(title, None)
+        # if lock is None:
+        #     lock = ArticleEditLock(title, request)
+        # lock.create_message(request)
 
         initial = {'user_ip': user_ip}
         if group_slug is not None:
@@ -476,7 +483,9 @@ def revert_to_revision(request, title,
         else:
             article.revert_to(revision, get_real_ip(request))
 
-
+        # NOCOMM Franku: This has never worked as i know and is IMHO
+        # useless. If we want this it has to be fixed for django 1.8
+        # See comment in edit_article()
         # if request.user.is_authenticated():
         #     request.user.message_set.create(
         #         message=u"The article was reverted successfully.")

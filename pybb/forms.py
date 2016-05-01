@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
 
-from pinax.notifications.models import send
+#from pinax.notifications.models import send
 
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
@@ -71,12 +71,13 @@ class AddPostForm(forms.ModelForm):
         if pybb_settings.ATTACHMENT_ENABLE:
             self.save_attachment(post, self.cleaned_data['attachment'])
 
-        if topic_is_new:
-            send(User.objects.all(), "forum_new_topic",
-                {'topic': topic, 'post':post, 'user':topic.user})
-        else:
-            send(self.topic.subscribers.all(), "forum_new_post",
-                {'post':post, 'topic':topic, 'user':post.user})
+        #NOCOMM franku: notifications do not work
+        # if topic_is_new:
+        #     send(User.objects.all(), "forum_new_topic",
+        #         {'topic': topic, 'post':post, 'user':topic.user})
+        # else:
+        #     send(self.topic.subscribers.all(), "forum_new_post",
+        #         {'post':post, 'topic':topic, 'user':post.user})
         return post
 
 
