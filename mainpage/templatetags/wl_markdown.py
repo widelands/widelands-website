@@ -21,7 +21,7 @@ if markdown.version_info[0] < 2:
 from markdown import markdown
 import re
 
-from bs4 import BeautifulSoup, NavigableString
+from BeautifulSoup import BeautifulSoup, NavigableString
 
 # If we can import a Wiki module with Articles, we
 # will check for internal wikipages links in all internal
@@ -177,7 +177,7 @@ def do_wl_markdown( value, *args, **keyw ):
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
     # BeautifoulSoup does all the heavy lifting
-    soup = BeautifulSoup(nvalue, "html.parser")
+    soup = BeautifulSoup(nvalue)
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
@@ -192,26 +192,24 @@ def do_wl_markdown( value, *args, **keyw ):
         # links [blah](blkf)
         if custom:
             # Replace bzr revisions
-            rv = text #_insert_revision( text )
-
+            rv = _insert_revision( text )
             # Replace smileys; only outside "code-tags"
             if not text.parent.name == "code":
                 rv = _insert_smileys( rv )
-            
+
             for name, (pattern,replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):
                     continue
-                
-                rv = pattern.sub(replacement, rv)
 
-        text.replace_with(BeautifulSoup(rv, "html.parser"))
+                rv = pattern.sub(replacement, rv)
+            text.replaceWith(rv)
  
     # This call slows the whole function down...
     # unicode->reparsing.
     # The function goes from .5 ms to 1.5ms on my system
     # Well, for our site with it's little traffic it's maybe not so important...
     # What a waste of cycles :(
-    soup = BeautifulSoup(unicode(soup), "html.parser")
+    soup = BeautifulSoup(unicode(soup))
     # We have to go over this to classify links
     for tag in soup.findAll("a"):
         rv = _classify_link(tag)

@@ -3,7 +3,7 @@ import random
 import traceback
 import json
 
-from bs4 import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 from datetime import datetime
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -154,7 +154,7 @@ def urlize(data):
         Do not urlize content of A and CODE tags.
         """
 
-        soup = BeautifulSoup(data, "html.parser")
+        soup = BeautifulSoup(data)
         for chunk in soup.findAll(text=True):
             islink = False
             ptr = chunk.parent
