@@ -22,14 +22,13 @@ urlpatterns = patterns('',
     # Feed for Mainpage
     url (r'^feeds/news/$', NewsPostsFeed()),
 
-    # 3rd party, unmodified
-#    (r'^notification/', include('notification.urls')), #replaced with next
-    url(r"^notifications/", include("pinax.notifications.urls")),
+    # Formerly 3rd party
+#    (r'^notification/', include('notification.urls')),
 
     # (r'^stats/', include('simplestats.urls')),
     url (r'^messages/', include('django_messages.urls')),
-#    (r'^threadedcomments/', include('threadedcomments.urls')), #replaced with next
-    url(r'^articles/comments/', include('django_comments.urls')),
+    url (r'^threadedcomments/', include('threadedcomments.urls')),
+#    url(r'^articles/comments/', include('django_comments.urls')),
     
 #    (r'^docs/', include('sphinxdoc.urls')),
 

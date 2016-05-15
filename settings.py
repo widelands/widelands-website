@@ -79,7 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 #    'django.contrib.markup', # doesn't exist anymore
     'django.contrib.humanize',
-    'threadedcomments',
     'django_comments',
     # Thirdparty apps, but need preload
 #    'tracking',
@@ -105,8 +104,9 @@ INSTALLED_APPS = (
     'news.managers',
     'pybb',  # Feature enriched version of pybb
 
-    # Thirdparty apps
-    'pinax.notifications', # Formerly notification, see next entry
+    # Formerly Thirdparty apps
+    'threadedcomments',
+#    'pinax.notifications', # Formerly notification, see next entry
     #'notification',
     'django_messages',
     'registration',  # User registration (per Email validation)
@@ -162,7 +162,7 @@ TEMPLATES = [
 STATIC_URL = '/static/'
 
 #https://pypi.python.org/pypi/django-threadedcomments v 1.0.1
-COMMENTS_APP = 'threadedcomments'
+#COMMENTS_APP = 'threadedcomments'
 
 ############################
 # Activation configuration #
@@ -205,6 +205,7 @@ PYBB_FREEZE_FIRST_POST = False
 LOCAL_DOMAINS = [
     'xoops.widelands.org'
 ]
+
 SMILEY_DIR = MEDIA_URL + 'img/smileys/'
 # Keep this list ordered by length of smileys
 SMILEYS = [

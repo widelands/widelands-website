@@ -12,7 +12,7 @@
 <div class="right small posRight">
 	<ul>
 		<li><a href="{% url 'messages_inbox' %}">Messages</a></li>
-		<li><a href="{% url 'notification_notice_settings' %}">Notifications</a></li>
+		{#<li><a href="{% url 'notification_notice_settings' %}">Notifications</a></li>#}
 		<li><a href="{% url 'profile_edit' %}">Edit Profile</a></li>
 		<li><a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a></li>
 	</ul>
