@@ -4,12 +4,9 @@
 /.bzr-repo
 
 # Uploaded images.
-/media/forum/img/en
-/media/news
-/media/wlhelp/
-/media/wlimages
-/media/wlmaps/
-/media/wlprofile/avatars
-/media/wlscreens/
-media/wlimages/building_ship.png
-media/wlimages/text_edit.png
+media/news/*
+media/wlhelp/*
+media/wlmaps/*
+media/wlprofile/avatars/*
+media/wlscreens/*
+media/wlimages/*

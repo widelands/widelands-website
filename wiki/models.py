@@ -301,5 +301,5 @@ class ChangeSet(models.Model):
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
 
-#if notification is not None:
-#    signals.post_save.connect(notification.handle_observations, sender=Article)
+if notification is not None:
+    signals.post_save.connect(notification.handle_observations, sender=Article)

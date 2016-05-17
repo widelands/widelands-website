@@ -26,23 +26,7 @@ This changes may affect our database:
     Found a solution for get_profile() but i am unsure with the AUTH_PROFILE_SETTING.
 
 # Django-notifications
-    Changing this to pinax-notification the old table do not work anymore.
-    Because some tabels are changed it is not possible to get old data back. Restoring old notificationtypes
-    is possible if we dump the table notification_noticetype
-    $ mysqldump -u widelands -p old_db notification_noticetype > noticetype.db
-    and reload it
-    
-    mysql -u widelands -p new_db < noticetype.db
-    
-    After that we have to copy the contents from notification_noticetype to notifications_noticetype
-    (notice the additional s) and drop the previous reloaded table. This is possible through mysql console:
-    
-    $ mysql -u widelands -p db_name
-    mysql> insert into notifications_noticetype select * from notification_noticetype;
-    mysql> drop table notification_noticetype;
-    
-    Maybe there is an easier way :-)
+    I have included the old used app as widelands app (including adjustments to django 1.8)
 
 # threadedcomments
-    Maybe we could use django-comments and port the comments to django-comments.
-    See: https://django-contrib-comments.readthedocs.org/en/latest/example.html
+    I have included the old used app as widelands app  (including adjustments to django 1.8)

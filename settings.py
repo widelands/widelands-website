@@ -106,8 +106,7 @@ INSTALLED_APPS = (
 
     # Formerly Thirdparty apps
     'threadedcomments',
-#    'pinax.notifications', # Formerly notification, see next entry
-    #'notification',
+    'notification',
     'django_messages',
     'registration',  # User registration (per Email validation)
     'pagination',

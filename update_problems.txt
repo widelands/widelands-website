@@ -21,27 +21,12 @@ Update problems:
    Django.contrib.geoip gets deprecated in Dajngo 1.9 in favour of
    django.contrib.gis.geoip2, which supports IPv6 and the GeoLite2 database format.
 
-# Django-notifications
-   The old project is forked and is renamed to pinax-notifications
-   Backwarts icompatible changes to the old version used by us:
-    BI: renamed Notice.user to Notice.recipient
-    BI: renamed {{ user }} context variable in notification templates to {{ recipient }}
-    BI: added nullable Notice.sender and modified send_now and queue to take an optional sender
-    BI: split settings part of notices view to its own view notice_settings
-    
-   See also Database_affected_changes.txt
-
 # django.contrib.markup
    Module is stripped out of django. There is a Pypi package for a backward-compatible quick fix:
    https://pypi.python.org/pypi/django-markup-deprecated
   
    Simple replacemant for markdown filter: https://gist.github.com/defrex/6194514
-  
-# threadedcomments throws some errors at startup
-   I don't know why threadedcomments is used at all, because django-comments has the same 
-   functionality? See https://django-contrib-comments.readthedocs.org/en/latest/example.html
-   and also Database_affected_changes.txt
-  
+    
 ########################
 Settings and other stuff
 ########################
@@ -60,14 +45,6 @@ Settings and other stuff
    Until then it is possible to order the fields in class Meta:
    f.e.: fields = ['name','body', 'markup', 'attachment',]
 
-# Messages ( regards to wiki )
-   The Message model (in django.contrib.auth), its related manager in the User model
-   (user.message_set), and the associated methods (user.message_set.create() and
-   user.get_and_delete_messages()), will be removed. The messages framework should be
-   used instead. The related messages variable returned by the auth context processor
-   will also be removed. Note that this means that the admin application will depend
-   on the messages context processor.
-   
 # Migrations
    Added migrations to all our apps except wlscreens because it uses lambdas and
    lambdas couldn't be handled by makemigrations.

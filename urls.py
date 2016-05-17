@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url (r'^feeds/news/$', NewsPostsFeed()),
 
     # Formerly 3rd party
-#    (r'^notification/', include('notification.urls')),
+    url (r'^notification/', include('notification.urls')),
 
     # (r'^stats/', include('simplestats.urls')),
     url (r'^messages/', include('django_messages.urls')),

@@ -349,8 +349,8 @@ class Attachment(models.Model):
                             self.path)
 
 
-#if notification is not None:
-#    signals.post_save.connect(notification.handle_observations, sender=Post)
+if notification is not None:
+    signals.post_save.connect(notification.handle_observations, sender=Post)
 
 from pybb import signals
 signals.setup_signals()
