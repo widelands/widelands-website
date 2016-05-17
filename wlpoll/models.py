@@ -4,8 +4,10 @@ import datetime
 
 # lambda couldn't be used in field default and for python2 it must be declared
 # in module body
+# NOCOMM franku: The lambda won't work; why not return the result?
 def closed_date_default():
-    return lambda: datetime.datetime.now() + datetime.timedelta(days=90)
+    #return lambda: datetime.datetime.now() + datetime.timedelta(days=90)
+    return datetime.datetime.now() + datetime.timedelta(days=90)
 
 class PollManager(models.Manager):
     def open(self):
