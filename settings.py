@@ -32,6 +32,7 @@ DATABASES = {
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Berlin'
+USE_TZ = False # See https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-TIME_ZONE
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -111,7 +112,7 @@ INSTALLED_APPS = (
     'registration',  # User registration (per Email validation)
     'pagination',
     'tagging',
-    #    'djangoratings', #No longer maintained
+    'djangoratings', # NOCOOM franku: No longer maintained
     #    'sphinxdoc',
     #    'south', Not longer supported
 )

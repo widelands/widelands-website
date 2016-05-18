@@ -54,6 +54,8 @@ def legal_notice_thanks(request):
 
 
 from forms import RegistrationWithCaptchaForm
+
+# NOCOMM: DefaultBackend doesn't exist anmore.
 #from registration.backends.default import DefaultBackend
 
 

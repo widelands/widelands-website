@@ -68,10 +68,6 @@ There has to be some corrections to get into the admin pages:
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-django_messages needs to make migrations first until it is
-solved upstream, see https://github.com/arneb/django-messages/issues/72 
-   $ ./manage.py makemigrations django_messages
-
 Now creating the tables in the database:
 
    $ ./manage.py migrate
@@ -105,7 +101,7 @@ production environments, only for development/testing.
 
    $ ./manage.py runserver 169.254.1.0:8000
 
-See also http://docs.djangoproject.com/en/dev/ref/django-admin/#runserver-port-or-address-port
+See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
 for further details. 
 
 Setting up the online help / encyclopedia

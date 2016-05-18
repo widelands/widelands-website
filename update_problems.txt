@@ -45,6 +45,15 @@ Settings and other stuff
    Until then it is possible to order the fields in class Meta:
    f.e.: fields = ['name','body', 'markup', 'attachment',]
 
-# Migrations
-   Added migrations to all our apps except wlscreens because it uses lambdas and
-   lambdas couldn't be handled by makemigrations.
+##########################
+ Warnings for Django 1.9
+regarding third party apps
+##########################
+/wl_django1_8/lib/python2.7/site-packages/pagination/middleware.py:7: RemovedInDjango19Warning: `request.REQUEST` is deprecated, use `request.GET` or `request.POST` instead.
+  return int(self.REQUEST['page'])
+
+/wl_django1_8/lib/python2.7/site-packages/django/core/handlers/wsgi.py:126: RemovedInDjango19Warning: `MergeDict` is deprecated, use `dict.update()` instead.
+  self._request = datastructures.MergeDict(self.POST, self.GET)
+  
+/wl_django1_8/lib/python2.7/site-packages/django_messages/urls.py:7: RemovedInDjango19Warning: Default value of 'RedirectView.permanent' will change from True to False in Django 1.9. Set an explicit value to silence this warning.
+  url(r'^$', RedirectView.as_view(url='inbox/'), name='messages_redirect'),
