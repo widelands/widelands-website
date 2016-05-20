@@ -3,6 +3,7 @@
 
 import pydot as d
 
+from settings import MEDIA_ROOT
 from widelandslib.tribe import *
 
 from os import makedirs, path
@@ -169,7 +170,7 @@ def make_graph(tribe_name):
     global tdir
     tdir = mkdtemp(prefix="widelands-help")
 
-    json_directory = path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info")
+    json_directory = path.normpath(MEDIA_ROOT + "/map_object_info")
     tribeinfo_file = open(path.normpath(json_directory + "/tribe_" + tribe_name + ".json"), "r")
     tribeinfo = json.load(tribeinfo_file)
 

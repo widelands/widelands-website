@@ -16,8 +16,8 @@ class Command(BaseCommand):
     help =\
     """Update the overview pdfs of all tribes in a current checkout"""
 
-    def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data/map_object_info"), **kwargs):
-        source_file = open(os.path.normpath(directory + "/tribes.json"), "r")
+    def handle(self, json_directory = os.path.normpath(MEDIA_ROOT + "/map_object_info"), **kwargs):
+        source_file = open(os.path.normpath(json_directory + "/tribes.json"), "r")
         tribesinfo = json.load(source_file)
 
         print "updating pdf files for all tribes"

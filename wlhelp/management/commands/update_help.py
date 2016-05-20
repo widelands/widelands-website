@@ -40,8 +40,8 @@ class TribeParser(object):
         self._delete_old_media_dir(name) # You can deactivate this line if you don't need to clean house.
 
         base_directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data")
-        json_directory = os.path.normpath(base_directory + "/map_object_info")
-
+        json_directory = os.path.normpath(MEDIA_ROOT + "/map_object_info")
+        
         tribeinfo_file = open(os.path.normpath(json_directory + "/tribe_" + name + ".json"), "r")
         tribeinfo = json.load(tribeinfo_file)
 
@@ -250,20 +250,29 @@ class Command(BaseCommand):
 
     def handle(self, directory = os.path.normpath(WIDELANDS_SVN_DIR + "/data"), **kwargs):
 
+        json_directory = os.path.normpath(MEDIA_ROOT + "/map_object_info")
+        
+        if not os.path.exists(json_directory):
+            os.makedirs(json_directory)
+
+        print("JSON files will be written to: " + json_directory)
+
         # First, we make sure that JSON files have been generated.
         current_dir = os.path.dirname(os.path.realpath(__file__))
         is_json_valid = False
         os.chdir(WIDELANDS_SVN_DIR)
         try:
-            subprocess.check_call(
-                [os.path.normpath(WIDELANDS_SVN_DIR + "/build/src/logic/wl_map_object_info")])
+            subprocess.check_call([os.path.normpath("wl_map_object_info"), json_directory])
         except:
             print("Error: Unable to execute 'wl_map_object_info' for generating the JSON files.")
 
         # Now we validate that they are indeed JSON files (syntax check only)
+        validator_script = os.path.normpath(WIDELANDS_SVN_DIR + "/utils/validate_json.py")
+        if not os.path.isfile(validator_script):
+            print("Wrong path for 'utils/validate_json.py': " + validator_script + " does not exist!");
         try:
             subprocess.check_call(
-                [os.path.normpath(WIDELANDS_SVN_DIR + "/utils/validate_json.py")])
+                [validator_script, json_directory])
             is_json_valid = True
         except:
             print("Error: JSON files are not valid.")
@@ -272,7 +281,6 @@ class Command(BaseCommand):
 
         # We regenerate the encyclopedia only if the JSON files passed the syntax check
         if is_json_valid:
-			  json_directory = os.path.normpath(directory + "/map_object_info")
 			  source_file = open(os.path.normpath(json_directory + "/tribes.json"), "r")
 			  tribesinfo = json.load(source_file)
 
