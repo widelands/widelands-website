@@ -31,8 +31,8 @@ class Command(BaseCommand):
             pdffile = path.join(gdir, tribename + '.pdf')
             giffile = path.join(gdir, tribename + '.gif')
 
-            targetdir = path.join(MEDIA_ROOT, 'wlhelp',
-                                  'network_graphs', tribename)
+            targetdir = path.normpath(path.join(MEDIA_ROOT, 'wlhelp',
+                                                'network_graphs', tribename))
 
             try:
                 os.makedirs(targetdir)

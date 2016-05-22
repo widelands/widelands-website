@@ -56,7 +56,8 @@ class TribeParser(object):
         self._to.displayname = tribeinfo['descname']
         self._to.descr = tribeinfo['tooltip']
         # copy icon
-        dn = '%s/wlhelp/img/%s/' % (MEDIA_ROOT, tribeinfo['name'])
+        dn = os.path.normpath('%s/wlhelp/img/%s/' %
+                              (MEDIA_ROOT, tribeinfo['name']))
         try:
             os.makedirs(dn)
         except OSError, o:
@@ -113,7 +114,8 @@ class TribeParser(object):
         """Clean house, e.g. when we have renamed a map object."""
 
         print('Deleting old media files...')
-        sdir = os.path.join(MEDIA_ROOT, 'wlhelp/img', tribename)
+        sdir = os.path.normpath(os.path.join(
+            MEDIA_ROOT, 'wlhelp/img', tribename))
         if os.path.exists(sdir):
             shutil.rmtree(sdir)
 
@@ -139,7 +141,8 @@ class TribeParser(object):
         fname           - file name of the picture
 
         """
-        dn = '%s/wlhelp/img/%s/%s/' % (MEDIA_ROOT, self._to.name, name)
+        dn = os.path.normpath('%s/wlhelp/img/%s/%s/' %
+                              (MEDIA_ROOT, self._to.name, name))
         try:
             os.makedirs(dn)
         except OSError, o:
