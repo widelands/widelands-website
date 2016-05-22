@@ -16,230 +16,313 @@ from ...models import Building as BuildingModel
 
 from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
-from optparse import make_option
 
-from ConfigParser import ConfigParser, MissingSectionHeaderError
-from glob import glob
 import os
-from os import path
+from os import makedirs, path
 import shutil
-from cStringIO import StringIO
 import re
-from itertools import chain
+import json
+import subprocess
 
 from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
 
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_all_subgraphs
 
-def normalize_name( s ):
-    """
-    Strips _ from the name endings
-    """
-    return s.strip('_')
 
 class TribeParser(object):
-    map_mouseover_pattern = re.compile(r'(?P<beginning>.*href="../../(?P<type>[^/]+)s/(?P<name>[^/]+)/".*")&lt;TABLE&gt;(?P<rest>.*)')
+    map_mouseover_pattern = re.compile(
+        r'(?P<beginning>.*href="../../(?P<type>[^/]+)s/(?P<name>[^/]+)/".*")&lt;TABLE&gt;(?P<rest>.*)')
+
     def __init__(self, name):
-        """
-        Parses the definitions for one tribe and generates the models
+        """Parses the definitions for one tribe and generates the models.
 
         name - name of the tribe
-        conf - path to the tribe/conf file
+
         """
-        self._tribe = Tribe(name)
+        self._delete_old_media_dir(
+            name)  # You can deactivate this line if you don't need to clean house.
+
+        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + '/data')
+        json_directory = os.path.normpath(MEDIA_ROOT + '/map_object_info')
+
+        tribeinfo_file = open(os.path.normpath(
+            json_directory + '/tribe_' + name + '.json'), 'r')
+        tribeinfo = json.load(tribeinfo_file)
+
+        self._tribe = Tribe(tribeinfo, json_directory)
         # Generate the Tribe
         self._to = TribeModel.objects.get_or_create(name=name.lower())[0]
-        self._to.displayname = normalize_name(self._tribe._conf.getstring("tribe", "name"))
-        self._to.descr = normalize_name(self._tribe._conf.getstring("tribe", "descr"))
+        self._to.displayname = tribeinfo['descname']
+        self._to.descr = tribeinfo['tooltip']
         # copy icon
-        dn = "%s/wlhelp/img/%s/" % (MEDIA_ROOT,self._to.name)
+        dn = os.path.normpath('%s/wlhelp/img/%s/' %
+                              (MEDIA_ROOT, tribeinfo['name']))
         try:
             os.makedirs(dn)
         except OSError, o:
             if o.errno != 17:
                 raise
-        new_name = path.join(dn, "icon.png")
-        file = path.join(self._tribe._tdir,self._tribe._conf.getstring("tribe", "icon"))
-        shutil.copy(file, new_name )
-        self._to.icon_url = path.normpath("%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):]))
+        new_name = path.join(dn, 'icon.png')
+        file = os.path.normpath(base_directory + '/' + tribeinfo['icon'])
+        shutil.copy(file, new_name)
+        self._to.icon_url = path.normpath(
+            '%s/%s' % (MEDIA_URL, new_name[len(MEDIA_ROOT):]))
         self._to.save()
 
-    def parse( self ):
-        """Put all data into the database"""
-        #self._delete_old_media_dir() why delete it? We can simply overwrite data
-        self._parse_workers()
-        self._parse_wares()
-        self._parse_buildings()
+    def parse(self, tribename, base_directory, json_directory):
+        """Put all data into the database."""
+        self._delete_old_data(
+            tribename)  # You can deactivate this line if you don't need to clean house.
 
-    def graph( self ):
-        """Make all graphs"""
+        wares_file = open(os.path.normpath(
+            json_directory + '/' + tribename + '_wares.json'), 'r')
+        self._parse_wares(base_directory, json.load(wares_file))
+
+        workers_file = open(os.path.normpath(
+            json_directory + '/' + tribename + '_workers.json'), 'r')
+        self._parse_workers(base_directory, json.load(workers_file))
+
+        buildings_file = open(os.path.normpath(
+            json_directory + '/' + tribename + '_buildings.json'), 'r')
+        self._parse_buildings(base_directory, json.load(buildings_file))
+
+    def graph(self):
+        """Make all graphs."""
         tdir = make_all_subgraphs(self._tribe)
-        for obj, cls in [(WorkerModel, "workers"),
-                         (BuildingModel, "buildings"),
-                         (WareModel, "wares")]:
+        for obj, cls in [(WorkerModel, 'workers'),
+                         (BuildingModel, 'buildings'),
+                         (WareModel, 'wares')]:
             for inst in obj.objects.all().filter(tribe=self._to):
                 try:
-                    fpath = path.join(tdir,"help/%s/%s/%s/" % (self._tribe.name, cls, inst.name))
-                    url = self._copy_picture(path.join(fpath, "image.png"), inst.name, "graph.png")
+                    fpath = path.join(tdir, 'help/%s/%s/%s/' %
+                                      (self._tribe.name, cls, inst.name))
+                    url = self._copy_picture(
+                        path.join(fpath, 'menu.png'), inst.name, 'graph.png')
                     inst.graph_url = url
-                    inst.imagemap = open(path.join(fpath, "map.map")).read()
-                    inst.imagemap = self.map_mouseover_pattern.sub(r"\1Show the \2 \3\4", inst.imagemap)
+                    inst.imagemap = open(path.join(fpath, 'map.map')).read()
+                    inst.imagemap = self.map_mouseover_pattern.sub(
+                        r"\1Show the \2 \3\4", inst.imagemap)
                     inst.save()
                 except Exception, e:
-                    print "Exception while handling", cls, "of", self._tribe.name, ":", inst.name
+                    print 'Exception while handling', cls, 'of', self._tribe.name, ':', inst.name
                     print type(e), e, repr(e)
-        
+
         shutil.rmtree(tdir)
 
-    def _delete_old_media_dir(self):
-        sdir = os.path.join(MEDIA_ROOT, "wlhelp/img", self._to.name)
+    def _delete_old_media_dir(self, tribename):
+        """Clean house, e.g. when we have renamed a map object."""
+
+        print('Deleting old media files...')
+        sdir = os.path.normpath(os.path.join(
+            MEDIA_ROOT, 'wlhelp/img', tribename))
         if os.path.exists(sdir):
             shutil.rmtree(sdir)
 
-    def _copy_picture( self, file, name, fname ):
-        """
-        Copy the given image into the media directory
+    def _delete_old_data(self, tribename):
+        """Clean house, e.g. when we have renamed a map object."""
+
+        t = TribeModel.objects.get(name=tribename)
+        print('Deleting old wares...')
+        for ware in WareModel.objects.filter(tribe=t):
+            ware.delete()
+        print('Deleting old workers...')
+        for worker in WorkerModel.objects.filter(tribe=t):
+            worker.delete()
+        print('Deleting old buildings...')
+        for building in BuildingModel.objects.filter(tribe=t):
+            building.delete()
+
+    def _copy_picture(self, file, name, fname):
+        """Copy the given image into the media directory.
 
         file            - original path of image
         name            - name of the item (coal, iron...)
         fname           - file name of the picture
+
         """
-        dn = "%s/wlhelp/img/%s/%s/" % (MEDIA_ROOT,self._to.name,name)
+        dn = os.path.normpath('%s/wlhelp/img/%s/%s/' %
+                              (MEDIA_ROOT, self._to.name, name))
         try:
             os.makedirs(dn)
         except OSError, o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, fname)
-        shutil.copy(file, new_name )
+        shutil.copy(file, new_name)
 
-        return "%s/%s" % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
+        return '%s%s' % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
 
-    def _parse_workers( self ):
-        """Put the workers into the database"""
-        print "  parsing workers"
-        for worker in self._tribe.workers.values():
-            print "    " + worker.name
-            nn = self._copy_picture(worker.image, worker.name, "menu.png")
+    def _parse_workers(self, base_directory, workersinfo):
+        """Put the workers into the database."""
+        print '  parsing workers'
 
-            workero = WorkerModel.objects.get_or_create( tribe = self._to, name = worker.name )[0]
-            workero.displayname = normalize_name(worker.descname)
+        for worker in workersinfo['workers']:
+            print '    ' + worker['name']
+            nn = self._copy_picture(os.path.normpath(
+                base_directory + '/' + worker['icon']), worker['name'], 'menu.png')
+
+            workero = WorkerModel.objects.get_or_create(
+                tribe=self._to, name=worker['name'])[0]
+            workero.displayname = worker['descname']
             workero.image_url = nn
 
-            # See if there is help available
-            if worker._conf.has_option("global","help"):
-                helpstr = normalize_name(worker._conf.get("global","help"))
-                workero.help = helpstr
+            # Help
+            workero.help = worker['helptext']
 
             # Check for experience
-            if worker._conf.has_option("global","experience"):
-                experience = normalize_name(worker._conf.get("global","experience"))
-                workero.exp = experience
+            if 'experience' in worker:
+                workero.exp = worker['experience']
 
             # See what the worker becomes
-            try:
-                enname = worker.becomes
-                workero.becomes = WorkerModel.objects.get_or_create(
-                        name=enname, tribe = self._to)[0]
-            except:
-                pass
+            if 'becomes' in worker:
+                try:
+                    enname = worker.becomes
+                    workero.becomes = WorkerModel.objects.get_or_create(
+                        name=worker['becomes']['name'], tribe=self._to)[0]
+                except:
+                    pass
 
             workero.save()
 
-    def _parse_wares( self ):
-        print "  parsing wares"
-        for ware in self._tribe.wares.values():
-            print "    " + ware.name
-            nn = self._copy_picture(ware.image, ware.name, "menu.png")
+    def _parse_wares(self, base_directory, waresinfo):
+        print '  parsing wares'
 
-            w = WareModel.objects.get_or_create( tribe = self._to, name = ware.name )[0]
-            w.displayname = normalize_name(ware.descname)
+        for ware in waresinfo['wares']:
+            print '    ' + ware['name']
+            nn = self._copy_picture(os.path.normpath(
+                base_directory + '/' + ware['icon']), ware['name'], 'menu.png')
+
+            w = WareModel.objects.get_or_create(
+                tribe=self._to, name=ware['name'])[0]
+            w.displayname = ware['descname']
             w.image_url = nn
 
-
-            # See if there is help available
-            if ware._conf.has_option("global","help"):
-                helpstr = normalize_name(ware._conf.get("global","help"))
-                w.help = helpstr
+            # Help
+            w.help = ware['helptext']
 
             w.save()
 
-    def _parse_buildings( self ):
-        def objects_with_counts(objtype, set_):
-            counts = ' '.join(set_.values())
-            objects = [objtype.objects.get_or_create(name = w, tribe = self._to)[0] for w in set_.keys()]
+    def _parse_buildings(self, base_directory, buildingsinfo):
+        def objects_with_counts(objtype, json_):
+            element_set = {}
+            for element in json_:
+                element_set[element['name']] = str(element['amount'])
+            counts = ' '.join(element_set.values())
+            objects = [objtype.objects.get_or_create(name=w, tribe=self._to)[
+                0] for w in element_set.keys()]
             return counts, objects
 
-        enhancement_hier = []
-        print "  parsing buildings"
-        for building in self._tribe.buildings.values():
-            print "    " + building.name
-            b = BuildingModel.objects.get_or_create( tribe = self._to, name = building.name )[0]
-            b.displayname = normalize_name(building.descname)
-            b.type = building.btype
+        enhancement_hierarchy = []
+        print '  parsing buildings'
+
+        for building in buildingsinfo['buildings']:
+            print '    ' + building['name']
+            b = BuildingModel.objects.get_or_create(
+                tribe=self._to, name=building['name'])[0]
+            b.displayname = building['descname']
+            b.type = building['type']
 
             # Get the building size
-            size = building.size
-            res, = [ k for k,v in BuildingModel.SIZES if v == size ]
-
+            size = building['size']
+            res, = [k for k, v in BuildingModel.SIZES if v == size]
             b.size = res
 
-            nn = self._copy_picture(building.image, building.name, "menu.png" )
+            nn = self._copy_picture(os.path.normpath(
+                base_directory + '/' + building['icon']), building['name'], 'menu.png')
             b.image_url = nn
 
-            # Try to figure out buildcost
-            b.build_costs, b.build_wares = objects_with_counts(WareModel, building.buildcost)
+            # Buildcost if we have any
+            if 'buildcost' in building:
+                b.build_costs, b.build_wares = objects_with_counts(
+                    WareModel, building['buildcost'])
 
             # Try to figure out who works there
-            if isinstance(building, ProductionSite):
-                b.workers_count, b.workers_types = objects_with_counts(WorkerModel, building.workers)
+            if 'workers' in building:
+                b.workers_count, b.workers_types = objects_with_counts(
+                    WorkerModel, building['workers'])
 
-            # Try to figure out if this is an enhanced building
-            if building.enhancement:
-                enhancement_hier.append((b, building.enhancement))
+            # Try to figure out if this building can be enhanced
+            if 'enhancement' in building:
+                enhancement_hierarchy.append((b, building['enhancement']))
 
-            if building._conf.has_option("global","help"):
-                b.help = normalize_name(building._conf.get("global","help"))
-            else:
-                try:
-                    b.help = [worker.help for worker in b.workers_types.all()][0]
-                except IndexError:
-                    print "could not find a help string for %s (%s) anywhere!" % (b.name, self._tribe.name)
+            b.help = building['helptext']
 
-            # See if there is any inputs field around
-            if isinstance(building, ProductionSite):
-                b.store_count, b.store_wares = objects_with_counts(WareModel, building.inputs)
+            # Input wares
+            if 'stored_wares' in building:
+                b.store_count, b.store_wares = objects_with_counts(
+                    WareModel, building['stored_wares'])
 
-                b.output_wares = [WareModel.objects.get_or_create(name = w, tribe = self._to)[0] for w in building.outputs]
+            # Output wares
+            if 'produced_wares' in building:
+                b.output_wares = [WareModel.objects.get_or_create(name=w, tribe=self._to)[
+                    0] for w in building['produced_wares']]
 
-            try:
-                b.output_workers = [Worker.objects.get_or_create(name = w, tribe = self._to)[0] for w in building.recruits]
-            except AttributeError:
-                pass
+            # Output workers
+            if 'produced_workers' in building:
+                b.output_workers = [WorkerModel.objects.get_or_create(
+                    name=w, tribe=self._to)[0] for w in building['produced_workers']]
 
             b.save()
 
-        for b, tgt in enhancement_hier:
+        for b, tgt in enhancement_hierarchy:
             try:
-                b.enhancement = BuildingModel.objects.get(name = tgt, tribe = self._to)
+                b.enhancement = BuildingModel.objects.get(
+                    name=tgt, tribe=self._to)
             except Exception, e:
                 raise
             b.save()
 
+
 class Command(BaseCommand):
     help =\
-    '''Reparses the conf files in a current checkout. '''
+        '''Regenerates and parses the json files in a current checkout. '''
 
-    def handle(self, directory = WIDELANDS_SVN_DIR, **kwargs):
+    def handle(self, directory=os.path.normpath(WIDELANDS_SVN_DIR + '/data'), **kwargs):
 
-        tribes = [d for d in glob("%s/tribes/*" % directory)
-                    if os.path.isdir(d)]
+        json_directory = os.path.normpath(MEDIA_ROOT + '/map_object_info')
 
-        for t in tribes:
-            tribename = os.path.basename(t)
-            print "updating help for tribe ", tribename
-            p = TribeParser(tribename)
+        if not os.path.exists(json_directory):
+            os.makedirs(json_directory)
 
-            p.parse()
-            p.graph()
+        print('JSON files will be written to: ' + json_directory)
+
+        # First, we make sure that JSON files have been generated.
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        is_json_valid = False
+        os.chdir(WIDELANDS_SVN_DIR)
+        try:
+            subprocess.check_call(
+                [os.path.normpath('wl_map_object_info'), json_directory])
+        except:
+            print(
+                "Error: Unable to execute 'wl_map_object_info' for generating the JSON files.")
+
+        # Now we validate that they are indeed JSON files (syntax check only)
+        validator_script = os.path.normpath(
+            WIDELANDS_SVN_DIR + '/utils/validate_json.py')
+        if not os.path.isfile(validator_script):
+            print("Wrong path for 'utils/validate_json.py': " +
+                  validator_script + ' does not exist!')
+        try:
+            subprocess.check_call(
+                [validator_script, json_directory])
+            is_json_valid = True
+        except:
+            print('Error: JSON files are not valid.')
+
+        os.chdir(current_dir)
+
+        # We regenerate the encyclopedia only if the JSON files passed the
+        # syntax check
+        if is_json_valid:
+            source_file = open(os.path.normpath(
+                json_directory + '/tribes.json'), 'r')
+            tribesinfo = json.load(source_file)
+
+            for t in tribesinfo['tribes']:
+                tribename = t['name']
+                print 'updating help for tribe ', tribename
+                p = TribeParser(tribename)
+                p.parse(tribename, directory, json_directory)
+                p.graph()

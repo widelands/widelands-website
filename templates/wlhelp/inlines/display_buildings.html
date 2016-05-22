@@ -10,7 +10,7 @@
 	<tr class="{% cycle "odd" "even" %}">
 		<td>
 			<a href="{% url wlhelp_building_details b.tribe.name b.name %}" title="{{ b.displayname }}" id="{{ b.name }}">
-				{{ b.displayname|title }}
+				{{ b.displayname }}
 				<br />
 				<img alt="{{b.displayname}}" src="{{ b.image_url }}" />
 			</a>

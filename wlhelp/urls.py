@@ -10,18 +10,25 @@
 #
 
 from django.conf.urls.defaults import *
-from views import * 
+from views import *
 
-urlpatterns= patterns('',
-    url(r'^$', index, name="wlhelp_index"),
+urlpatterns = patterns('',
+                       url(r'^$', index, name='wlhelp_index'),
 
-    # Detail pages
-    url(r'^(?P<tribe>\w+)/$', tribe_details, name="wlhelp_tribe_details"),
-    url(r'^(?P<tribe>\w+)/wares/(?P<ware>[^/]+)/$', ware_details, name="wlhelp_ware_details"),
-    url(r'^(?P<tribe>\w+)/buildings/(?P<building>[^/]+)/$', building_details, name="wlhelp_building_details"),
-    url(r'^(?P<tribe>\w+)/workers/(?P<worker>[^/]+)/$', worker_details, name="wlhelp_worker_details"),
+                       # Detail pages
+                       url(r'^(?P<tribe>\w+)/$', tribe_details,
+                           name='wlhelp_tribe_details'),
+                       url(r'^(?P<tribe>\w+)/wares/(?P<ware>[^/]+)/$',
+                           ware_details, name='wlhelp_ware_details'),
+                       url(r'^(?P<tribe>\w+)/buildings/(?P<building>[^/]+)/$',
+                           building_details, name='wlhelp_building_details'),
+                       url(r'^(?P<tribe>\w+)/workers/(?P<worker>[^/]+)/$',
+                           worker_details, name='wlhelp_worker_details'),
 
-    url(r'^(?P<tribe>\w+)/workers/$', workers, name="wlhelp_workers"),
-    url(r'^(?P<tribe>\w+)/wares/$', wares, name="wlhelp_wares"),
-    url(r'^(?P<tribe>\w+)/buildings/$', buildings, name="wlhelp_buildings"),
-)
+                       url(r'^(?P<tribe>\w+)/workers/$',
+                           workers, name='wlhelp_workers'),
+                       url(r'^(?P<tribe>\w+)/wares/$',
+                           wares, name='wlhelp_wares'),
+                       url(r'^(?P<tribe>\w+)/buildings/$',
+                           buildings, name='wlhelp_buildings'),
+                       )
