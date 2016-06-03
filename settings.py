@@ -5,7 +5,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+ '/widelands'
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -61,8 +60,6 @@ SECRET_KEY = '#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu'
 
 ROOT_URLCONF = 'urls'
 
-#TEMPLATE_DIRS = () are now managed in TEMPLATES (Febr. 2016)
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = [
@@ -81,6 +78,7 @@ INSTALLED_APPS = (
 #    'django.contrib.markup', # doesn't exist anymore
     'django.contrib.humanize',
     'django_comments',
+    'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
 #    'tracking',
 
@@ -109,7 +107,7 @@ INSTALLED_APPS = (
     'threadedcomments',
     'notification',
     'django_messages',
-    'registration',  # User registration (per Email validation)
+    #'registration',  # User registration (per Email validation)
     'pagination',
     'tagging',
     'djangoratings', # NOCOOM franku: No longer maintained
@@ -147,8 +145,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.core.context_processors.i18n',
-                'django.core.context_processors.media',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
@@ -181,8 +179,7 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 # User configuration #
 ######################
 #AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: Must we change that? or use this at all?
-# Don't use the following entry! It will affect the relationships from ManyToMany fields
-#AUTH_USER_MODEL = 'wlprofile.Profile'
+# See: https://docs.djangoproject.com/en/1.8/releases/1.5/#auth-profile-module
 
 DEFAULT_TIME_ZONE = 3
 DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601

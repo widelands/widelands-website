@@ -53,32 +53,32 @@ def legal_notice_thanks(request):
     return render(request, 'mainpage/legal_notice_thanks.html')
 
 
-from forms import RegistrationWithCaptchaForm
+# from forms import RegistrationWithCaptchaForm
 
 # NOCOMM: DefaultBackend doesn't exist anmore.
 #from registration.backends.default import DefaultBackend
-
-
-def register(request):
-    """Overwritten view from registration to include a captcha.
-
-    We only need this because the remote IP addr must be passed to the
-    form; the registration doesn't do this
-
-    """
-    remote_ip = request.META['REMOTE_ADDR']
-    if request.method == 'POST':
-        form = RegistrationWithCaptchaForm(remote_ip, data=request.POST,
-                                           files=request.FILES)
-        if form.is_valid():
-            new_user = DefaultBackend().register(request, **form.cleaned_data)
-            return HttpResponseRedirect(reverse('registration_complete'))
-    else:
-        form = RegistrationWithCaptchaForm(remote_ip)
-
-    return render_to_response('registration/registration_form.html',
-                              {'registration_form': form},
-                              context_instance=RequestContext(request))
+# from registration.backends.simple.views import RegistrationView
+# 
+# def register(request):
+#     """Overwritten view from registration to include a captcha.
+# 
+#     We only need this because the remote IP addr must be passed to the
+#     form; the registration doesn't do this
+# 
+#     """
+#     #remote_ip = request.META['REMOTE_ADDR']
+#     if request.method == 'POST':
+#         form = RegistrationWithCaptchaForm(request.POST)
+#         print("franku register", form )
+#         if form.is_valid():
+#             new_user = RegistrationView.register()
+#             return HttpResponseRedirect(reverse('registration_complete'))
+#     else:
+#         form = RegistrationWithCaptchaForm()
+# 
+#     return render_to_response('registration/registration_form.html',
+#                               {'registration_form': form},
+#                               context_instance=RequestContext(request))
 
 
 def developers(request):

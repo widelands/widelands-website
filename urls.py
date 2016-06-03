@@ -9,15 +9,20 @@ from mainpage.views import mainpage
 from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
+#from mainpage.views import RegistrationWithCaptchaForm
+from registration.backends.hmac.views import RegistrationView
+from mainpage.forms import RegistrationWithCaptchaForm
 
-urlpatterns = patterns('',
+urlpatterns = (
     # Uncomment the next line to enable the admin:
     url(r'^admin/', admin.site.urls),
 
     # Django builtin / Registration
     # overwrite registration with own implementation
-    url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    url (r'^accounts/', include('registration.backends.hmac.urls')),
+    #url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
+    url (r'^accounts/register/$', RegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
+    #url (r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
     
     # Feed for Mainpage
     url (r'^feeds/news/$', NewsPostsFeed()),

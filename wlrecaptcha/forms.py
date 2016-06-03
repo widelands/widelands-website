@@ -29,6 +29,8 @@ class RecaptchaWidget(Widget):
         if tabindex:
             options['tabindex'] = tabindex
         self.options = options
+        print("franku RecaptchaWidget init", options)
+
         super(RecaptchaWidget, self).__init__()
 
     def render(self, name, value, attrs=None):
@@ -53,6 +55,7 @@ class RecaptchaWidget(Widget):
     def value_from_datadict(self, data, files, name):
         challenge = smart_unicode(data.get('recaptcha_challenge_field'))
         response = smart_unicode(data.get('recaptcha_response_field'))
+        print("franku value_from_datadict: ", data, "\n", challenge, response)
         return (challenge, response)
 
     def id_for_label(self, id_):
@@ -63,6 +66,7 @@ class RecaptchaField(Field):
     widget = RecaptchaWidget
 
     def __init__(self, remote_ip, *args, **kwargs):
+        print("franku recaptchaField init", args, kwargs)
         self.remote_ip = remote_ip
         super(RecaptchaField, self).__init__(*args, **kwargs)
 
@@ -86,6 +90,8 @@ class RecaptchaFieldPlaceholder(Field):
     initialised.
     '''
     def __init__(self, *args, **kwargs):
+        print("franku recaptchaFieldPlaceholder", args, kwargs)
+
         self.args = args
         self.kwargs = kwargs
 
@@ -95,6 +101,7 @@ class RecaptchaBaseForm(BaseForm):
         for key, field in self.base_fields.items():
             if isinstance(field, RecaptchaFieldPlaceholder):
                 self.base_fields[key] = RecaptchaField(remote_ip, *field.args, **field.kwargs)
+        print("franku recaptchaBaseForm", BaseForm, args, kwargs)
         super(RecaptchaBaseForm, self).__init__(*args, **kwargs)
 
 
@@ -104,6 +111,7 @@ class RecaptchaForm(RecaptchaBaseForm, Form):
 
 def validate_recaptcha(remote_ip, challenge, response):
     # Request validation from recaptcha.net
+    print("franku validate recaptcha", challenge)
     if challenge:
         params = urllib.urlencode(dict(privatekey=settings.RECAPTCHA_PRIVATE_KEY,
                                        remoteip=remote_ip,
@@ -120,6 +128,7 @@ def validate_recaptcha(remote_ip, challenge, response):
         conn.close()
     # Validate based on response data
     result = data.startswith('true')
+    print("franku validate recaptcha", result)
     error_code = ''
     if not result:
         bits = data.split('\n', 2)

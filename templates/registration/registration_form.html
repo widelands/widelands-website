@@ -6,6 +6,7 @@ vim:ft=htmldjango:
 {% block title %}
 Registration - {{ block.super }}
 {% endblock %}
+{{ form.non_field_errors }} 
 
 {% block content %}
 <h1>Registration</h1>
@@ -15,8 +16,10 @@ Registration - {{ block.super }}
 			<tr>
 				<td class="grey">Username:</td>
 				<td>
-					{{ registration_form.username }}
-{% for error in registration_form.username.errors %}
+					{{ form.username }}
+
+
+{% for error in form.username.errors %}
 					<span class="errormessage">{{ error }}</span>
 {% endfor %}
 				</td>
@@ -24,8 +27,8 @@ Registration - {{ block.super }}
 			<tr>
 				<td class="grey">Email:</td>
 				<td>
-					{{ registration_form.email }}
-{% for error in registration_form.email.errors %}
+					{{ form.email }}
+{% for error in form.email.errors %}
 					<span class="errormessage">{{ error }}</span>
 {% endfor %}
 				</td>
@@ -33,17 +36,14 @@ Registration - {{ block.super }}
 			<tr>
 				<td class="grey">Password:</td>
 				<td>
-					{{ registration_form.password1 }}
-{% for error in registration_form.password1.errors %}
-					<span class="errormessage">{{ error }}</span>
-{% endfor %}
+					{{ form.password1 }}
 				</td>
 			</tr>
 			<tr>
 				<td class="grey">Password (again):</td>
 				<td>
-					{{ registration_form.password2 }}
- {% for error in registration_form.password2.errors %}
+					{{ form.password2 }}
+ {% for error in form.password2.errors %}
 					<span class="errormessage">{{ error }}</span>
  {% endfor %}
 				</td>
@@ -51,11 +51,8 @@ Registration - {{ block.super }}
 			<tr>
 				<td class="grey">Prove that <br />you're no spambot:</td>
 				<td>
-					<div class="noshadow">{{ registration_form.captcha|safe }}</div>
- {% for error in registration_form.captcha.errors %}
-					<span class="errormessage">{{error }}</span>
- {% endfor %}
-				</td>
+					<div class="noshadow">{{ form.captcha|safe }}</div>
+ 				</td>
 			</tr>
 		</table>
 		<input type="submit" value="Register" />
