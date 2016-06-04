@@ -12,9 +12,9 @@
 from django.conf.urls import *
 import views
 
-urlpatterns = patterns('',
+urlpatterns = [
    url(r'^edit/$', views.edit, name='profile_edit'),
    url(r'^(?P<user>.*)/$', views.view, name='profile_view'),
    url(r'^$', views.view, name='profile_view'),
-)
+]
 

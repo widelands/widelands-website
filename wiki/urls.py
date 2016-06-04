@@ -7,7 +7,7 @@ from wiki.templatetags.wiki_extras import WIKI_URL_RE
 from django.views.generic import RedirectView
 from wiki.feeds import RssHistoryFeed, AtomHistoryFeed, RssArticleHistoryFeed, AtomArticleHistoryFeed
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Redirects
     url(r'^ChangeLog/', RedirectView.as_view(url='/changelog/', permanent=True), name="wiki_changelog" ),
     # I wanted a true reverse, but it didn't work out 
@@ -49,5 +49,4 @@ urlpatterns = patterns('',
 
     url(r'^history/(?P<title>'+ WIKI_URL_RE +r')/revert/$', views.revert_to_revision,
         name='wiki_revert_to_revision'),
-
-)
+]

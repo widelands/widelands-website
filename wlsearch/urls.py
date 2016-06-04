@@ -12,7 +12,7 @@
 from django.conf.urls import *
 import views
 
-urlpatterns = patterns('',
+urlpatterns = [
    url(r'^$', views.search, name='search'),
-)
+]
 

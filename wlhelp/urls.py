@@ -12,7 +12,7 @@
 from django.conf.urls import *
 from views import * 
 
-urlpatterns= patterns('',
+urlpatterns = [
     url(r'^$', index, name="wlhelp_index"),
 
     # Detail pages
@@ -24,4 +24,4 @@ urlpatterns= patterns('',
     url(r'^(?P<tribe>\w+)/workers/$', workers, name="wlhelp_workers"),
     url(r'^(?P<tribe>\w+)/wares/$', wares, name="wlhelp_wares"),
     url(r'^(?P<tribe>\w+)/buildings/$', buildings, name="wlhelp_buildings"),
-)
+]

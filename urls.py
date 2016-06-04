@@ -13,7 +13,7 @@ from django.contrib.syndication.views import Feed
 from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
-urlpatterns = (
+urlpatterns = [
     # Uncomment the next line to enable the admin:
     url(r'^admin/', admin.site.urls),
 
@@ -58,7 +58,7 @@ urlpatterns = (
     url(r'^maps/', include("wlmaps.urls")),
     url(r'^screenshots/', include("wlscreens.urls")),
     url(r'^ggz/', include("wlggz.urls")),
-)
+]
 
 try:
     from local_urls import *

@@ -3,8 +3,7 @@ from news.models import Post
 from django.views.generic.dates import DateDetailView, YearArchiveView, MonthArchiveView
 from django.views.generic import ListView
 
-urlpatterns = patterns('',
- 
+urlpatterns = [ 
      url(r'^(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/(?P<slug>[-\w]+)/$',
         DateDetailView.as_view(model=Post, date_field="publish", template_name="news/post_detail.html"),
         name='news_detail'),
@@ -40,4 +39,4 @@ urlpatterns = patterns('',
      url(r'^$',
          ListView.as_view(model=Post, template_name="news/post_list.html"),
          name='news_index'),
-)
+]

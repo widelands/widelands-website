@@ -5,9 +5,8 @@
 from django.conf.urls import *
 from views import webchat
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Uncomment the next line to enable the admin:
     url(r'^$', webchat, name='webchat_index'),
-
-)
+]
 

@@ -3,7 +3,7 @@ from django.conf.urls import *
 from pybb import views
 from pybb.feeds import LastPosts, LastTopics
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Misc
     url('^$', views.index, name='pybb_index'),
     url('^category/(?P<category_id>\d+)/$', views.show_category, name='pybb_category'),
@@ -40,4 +40,4 @@ urlpatterns = patterns('',
     # Subsciption
     url('^topic/(?P<topic_id>\d+)/subscribe/$', views.add_subscription, name='pybb_add_subscription'),
     url('^topic/(?P<topic_id>\d+)/unsubscribe/$', views.delete_subscription, name='pybb_delete_subscription'),
-)
+]
