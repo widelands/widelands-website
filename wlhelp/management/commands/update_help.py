@@ -296,7 +296,8 @@ class Command(BaseCommand):
                 [os.path.normpath('wl_map_object_info'), json_directory])
         except:
             print(
-                "Error: Unable to execute 'wl_map_object_info' for generating the JSON files.")
+                "Error: Unable to execute 'wl_map_object_info' for generating the JSON files."
+                "Have you exported DISPLAY = ':1' before running update_help?")
 
         # Now we validate that they are indeed JSON files (syntax check only)
         validator_script = os.path.normpath(
