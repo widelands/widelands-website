@@ -18,6 +18,7 @@ from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
 
 import os
+import sys
 from os import makedirs, path
 import shutil
 import re
@@ -297,7 +298,8 @@ class Command(BaseCommand):
         except:
             print(
                 "Error: Unable to execute 'wl_map_object_info' for generating the JSON files."
-                "Have you exported DISPLAY = ':1' before running update_help?")
+                " Have you exported DISPLAY = ':1' before running update_help?")
+            sys.exit(1)
 
         # Now we validate that they are indeed JSON files (syntax check only)
         validator_script = os.path.normpath(
