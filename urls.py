@@ -10,7 +10,7 @@ from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
 #from mainpage.views import RegistrationWithCaptchaForm
-from registration.backends.hmac.views import RegistrationView
+from mainpage.views import OwnRegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
 urlpatterns = [
@@ -20,7 +20,7 @@ urlpatterns = [
     # Django builtin / Registration
     # overwrite registration with own implementation
     #url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    url (r'^accounts/register/$', RegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
+    url (r'^accounts/register/$', OwnRegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
     #url (r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     

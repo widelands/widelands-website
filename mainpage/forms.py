@@ -8,10 +8,8 @@ from wlprofile.models import Profile as wlprofile
 
 # Overwritten form to include a captcha
 class RegistrationWithCaptchaForm(RegistrationForm):
-    # class Meta:
-    #     model = wlprofile
-    #     fields = ('user',)
     captcha = NoReCaptchaField()
+
     
 
 class ContactForm(forms.Form):

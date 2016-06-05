@@ -29,7 +29,6 @@ class AutoOneToOneField(OneToOneField):
     """
 
     def contribute_to_related_class(self, cls, related):
-        print("franku AutoOneToOneField: ", cls, related.get_accessor_name())
         setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
         #if not cls._meta.one_to_one_field:
             #cls._meta.one_to_one_field = self

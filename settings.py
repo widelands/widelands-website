@@ -88,7 +88,7 @@ INSTALLED_APPS = (
     'wlhelp',
     'wlimages',
     'wlwebchat',
-    'wlrecaptcha',
+    #'wlrecaptcha',
     'wlprofile',
     'wlsearch',
     'wlpoll',
