@@ -80,7 +80,7 @@ INSTALLED_APPS = (
     'django_comments',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
-#    'tracking',
+    'tracking',
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
@@ -129,8 +129,8 @@ MIDDLEWARE_CLASSES = (
     # Remove this, when load gets to high or attachments are enabled
     'django.middleware.gzip.GZipMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    #    'tracking.middleware.VisitorTrackingMiddleware',
-    #    'tracking.middleware.VisitorCleanUpMiddleware',
+    'tracking.middleware.VisitorTrackingMiddleware',
+    'tracking.middleware.VisitorCleanUpMiddleware',
 )
 
 TEMPLATES = [

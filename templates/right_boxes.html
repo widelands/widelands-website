@@ -10,7 +10,7 @@
 {% load i18n %}
 {% load wlprofile_extras wlpoll_extras wlevents_extras %}
 {% load pybb_extras %}
-{#{% load online_users %}#}
+{% load online_users %}
 
 <!-- Donation Box -->
 <div class="columnModule">
@@ -107,9 +107,9 @@
 </div>
 {% endif %}
 
-{% comment %}
+
 <!-- Logged in users -->
 {% online_users 10 %}
-{% endcomment %}
+
 <!-- Latest Post -->
 {% pybb_last_posts %}
