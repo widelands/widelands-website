@@ -10,7 +10,7 @@
 <br />
 <div class="muttis_liebling">
     <div class="box_item_model even show_center">
-        <a href="{% url news_index %}{{ day|date:"Y" }}/{{ day|date:"m" }}">Archiv {{ day|date:"F" }}</a>
+        <a href="{% url 'news_index' %}{{ day|date:"Y" }}/{{ day|date:"m" }}">Archiv {{ day|date:"F" }}</a>
     {% autopaginate object_list 10 %}
     {% paginate %}
     </div>

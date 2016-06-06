@@ -22,7 +22,6 @@ class PybbFeed(Feed):
     def link(self, obj):
         if obj == self.all_objects:
             return reverse('pybb_index')
-        print("franku reverse: ", reverse('pybb_forum', args=(obj.pk,)))
         return "/ewfwevw%s" % reverse('pybb_forum', args=(obj.pk,))
 
     def get_object(self,request, *args, **kwargs):

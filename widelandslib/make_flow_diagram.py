@@ -3,8 +3,8 @@
 
 import pydot as d
 
+from settings import MEDIA_ROOT
 from widelandslib.tribe import *
-#from pudb import set_trace; set_trace()
 
 from os import makedirs, path
 import subprocess
@@ -15,12 +15,12 @@ tdir = ""
 ##############################
 # To Do Make_Flow_Diagram.py #
 ##############################
-# i'd like to add things like: forester resores trunk or: gamekeeper restores meat
+# i'd like to add things like: forester resores log or: gamekeeper restores meat
 #
 # also, a building called construction site where alle the building material can point at would be nice
 #
 # how to tell the viewer, how many and wich ressources turn to others via buildings,
-# e.g. 6 trunks to 1 coal with the atlanteans, maybe on the edges?
+# e.g. 6 logs to 1 coal with the atlanteans, maybe on the edges?
 
 #############################
 # Work around bugs in pydot #
@@ -123,7 +123,7 @@ def add_building(g, b, limit_inputs=None, limit_outputs=None, limit_buildings=No
 
 
     if isinstance(b, (ProductionSite,)):
-        # for worker,c in b.workers: 
+        # for worker,c in b.workers:
         #     g.add_edge(Edge(worker, name, color="orange"))
 
         for output in b.outputs:
@@ -169,7 +169,12 @@ def add_worker(g, w, as_recruit=False):
 def make_graph(tribe_name):
     global tdir
     tdir = mkdtemp(prefix="widelands-help")
-    t = Tribe(tribe_name)
+
+    json_directory = path.normpath(MEDIA_ROOT + "/map_object_info")
+    tribeinfo_file = open(path.normpath(json_directory + "/tribe_" + tribe_name + ".json"), "r")
+    tribeinfo = json.load(tribeinfo_file)
+
+    t = Tribe(tribeinfo, json_directory)
 
     g = CleanedDot(concentrate="false", style="filled", bgcolor="white",
                 overlap="false", splines="true", rankdir="LR")
@@ -186,7 +191,7 @@ def make_graph(tribe_name):
 
     g.write_pdf(path.join(tdir, "%s.pdf" % tribe_name))
 
-    g.set_size("6")
+    g.set_size("32")
     g.write_gif(path.join(tdir, "%s.gif" % tribe_name))
 
     rtdir, tdir = tdir, ""
@@ -235,8 +240,8 @@ def make_worker_graph(t, worker_name):
     g = CleanedDot(concentrate="false", bgcolor="transparent",
                 overlap="false", splines="true", rankdir="LR")
 
-    buildings = [bld for bld in t.buildings.values() if 
-            isinstance(bld, ProductionSite) and 
+    buildings = [bld for bld in t.buildings.values() if
+            isinstance(bld, ProductionSite) and
               (w.name in bld.workers or w.name in bld.recruits)]
 
     for bld in buildings:
@@ -280,9 +285,9 @@ def make_ware_graph(t, ware_name):
     g.write(path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name)))
 
 def process_dotfile(directory):
-    subprocess.Popen(("dot -Tpng -o %s/image.png -Tcmapx -o %s/map.map %s/source.dot" % (directory, directory, directory)).split(" ")).wait()
+    subprocess.Popen(("dot -Tpng -o %s/menu.png -Tcmapx -o %s/map.map %s/source.dot" % (directory, directory, directory)).split(" ")).wait()
     #with open(directory,"w") as html:
-    #    html.write(r"""<IMG SRC="image.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
+    #    html.write(r"""<IMG SRC="menu.png" border="0px" usemap="#G"/>""" + open(path.join(directory, "map.map")).read())
 
 def make_all_subgraphs(t):
     global tdir
@@ -291,19 +296,19 @@ def make_all_subgraphs(t):
         t = Tribe(t)
     print "making all subgraphs for tribe", t.name, "in", tdir
 
-    print "  making workers"
-
-    for w in t.workers:
-        print "    " + w
-        make_worker_graph(t, w)
-        process_dotfile(path.join(tdir, "help/%s/workers/%s/" % (t.name, w)))
-
     print "  making wares"
 
     for w in t.wares:
         print "    " + w
         make_ware_graph(t, w)
         process_dotfile(path.join(tdir, "help/%s/wares/%s/" % (t.name, w)))
+
+    print "  making workers"
+
+    for w in t.workers:
+        print "    " + w
+        make_worker_graph(t, w)
+        process_dotfile(path.join(tdir, "help/%s/workers/%s/" % (t.name, w)))
 
     print "  making buildings"
 

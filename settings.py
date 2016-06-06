@@ -75,12 +75,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-#    'django.contrib.markup', # doesn't exist anymore
     'django.contrib.humanize',
     'django_comments',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
-    'tracking',
+    'tracking', # included as wlapp
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
@@ -88,7 +87,6 @@ INSTALLED_APPS = (
     'wlhelp',
     'wlimages',
     'wlwebchat',
-    #'wlrecaptcha',
     'wlprofile',
     'wlsearch',
     'wlpoll',
@@ -103,14 +101,13 @@ INSTALLED_APPS = (
     'news.managers',
     'pybb',  # Feature enriched version of pybb
 
-    # Formerly Thirdparty apps
-    'threadedcomments',
-    'notification',
+    # Thirdparty apps
+    'threadedcomments', # included as wlapp
+    'notification', # included as wlapp
     'django_messages',
-    #'registration',  # User registration (per Email validation)
     'pagination',
     'tagging',
-    'djangoratings', # NOCOOM franku: No longer maintained
+    'djangoratings', # included as wlapp
     #    'sphinxdoc',
     #    'south', Not longer supported
 )
@@ -159,9 +156,6 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 
-#https://pypi.python.org/pypi/django-threadedcomments v 1.0.1
-#COMMENTS_APP = 'threadedcomments'
-
 ############################
 # Activation configuration #
 ############################
@@ -178,8 +172,8 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 # User configuration #
 ######################
-#AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: Must we change that? or use this at all?
-# See: https://docs.djangoproject.com/en/1.8/releases/1.5/#auth-profile-module
+#AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: This is not longer used anymore, see:
+# https://docs.djangoproject.com/en/1.8/releases/1.5/#auth-profile-module
 
 DEFAULT_TIME_ZONE = 3
 DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601
@@ -275,8 +269,10 @@ WIDELANDS_SVN_DIR = ''
 #####################
 # ChangeLog display #
 #####################
+# NOCOMM franku: This is only used in mainpage/wl_markdown/templatetags/wl_markdon.py/_insert_revision()
+# Since there is a plan to have only some prosa in the Changelog, both (this setting and the function)
+# could be removed. It didn't worked either...
 BZR_URL = r'http://bazaar.launchpad.net/~widelands-dev/widelands/trunk/revision/%s'
-#BZR_URL = r"http://launchpad.net/widelands/trunk/revision/%s"
 
 ###############
 # Screenshots #
@@ -293,7 +289,7 @@ USE_GOOGLE_ANALYTICS = False
 
 ##############################################
 ## Recipient(s) who get an email if someone ##
-##       uses the on legal notice page      ##
+##    uses the form on legal notice page    ##
 ## Use allways the form ('name', 'Email')   ##
 ##############################################
 INQUIRY_RECIPIENTS = [

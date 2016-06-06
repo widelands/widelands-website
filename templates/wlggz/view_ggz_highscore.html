@@ -22,7 +22,7 @@
         </tr>
         {% for userstat in ggzstats %}
         <tr>
-            <td class="{% cycle "odd" "even" %}"><a href="{% url wlggz_userstats userstat.handle %}">{{ userstat.handle }}</a></td>
+            <td class="{% cycle "odd" "even" %}"><a href="{% url 'wlggz_userstats' userstat.handle %}">{{ userstat.handle }}</a></td>
             <td class="{% cycle "odd" "even" %}"> {{ userstat.ranking|floatformat }} </td>
             <td class="{% cycle "odd" "even" %}"> {{ userstat.rating|floatformat }} </td>
             <td class="{% cycle "odd" "even" %}"> {{ userstat.wins|floatformat }} </td>
