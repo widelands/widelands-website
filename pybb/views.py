@@ -108,7 +108,6 @@ def show_topic_ctx(request, topic_id):
     page, paginator = paginate(posts, request, pybb_settings.TOPIC_PAGE_SIZE,
                                total_count=topic.post_count)
 
-
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))

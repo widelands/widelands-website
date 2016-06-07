@@ -14,7 +14,7 @@
 {% block content %}
     {% if perms.wlpoll %}
 	<div class="small posRight">
-		{% if perms.wlpoll.poll_can_add %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
+		{% if perms.wlpoll.add_poll %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
 	</div>
     {% endif %}
     <h1>Poll Archive</h1>
@@ -35,8 +35,8 @@
                 <td><a href="{{o.get_absolute_url}}">{{ o.name }}</a></td>
                 <td>{{ o.pub_date|custom_date:user }}</td>
                 <td>{{ o.closed_date|custom_date:user }}</td>
-                <td class="center">{{ ccount }}</td>
-                <td class="right">{{o.total_votes}}</td>
+                <td class="center">{{o.total_votes}}</td>
+                <td class="right">{{ ccount }}</td>
             </tr>
             {% endfor %}
         </table>

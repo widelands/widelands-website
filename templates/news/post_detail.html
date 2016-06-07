@@ -13,7 +13,8 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ object.title }}</h1>
+<h1>News: {{ object.title }}</h1>
+<a class="invertedColor" href="{% url 'news_index' %}">News Archive: </a>
 {% if object.get_previous_by_publish %}
 <a class="invertedColor" href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{ object.get_previous_post }}</a>
 {% endif %}
