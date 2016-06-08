@@ -11,7 +11,12 @@
 	{% if object.has_image %}
 	<a href="{{ object.get_absolute_url }}"><img class="title posLeft" src='{{MEDIA_URL}}{{ object.image|urlencode }}' alt='{{ object.image_alt }}' /></a>
 	{% endif %}
-	
+	{% if perms.news %}
+	<div class="small posRight invertedColor">
+		{% if perms.news.add_post %}<a href="/admin/news/post/add/">Add New News</a>{% endif %}
+		{% if perms.news.change_post %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
+	</div>
+    {% endif %}
 	<h2><a href="{{ object.get_absolute_url }}" class="invertedColor">{{ object.title }}</a></h2>
 	{{ object.body|wl_markdown:"safe" }}
 	<hr />
