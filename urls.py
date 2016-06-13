@@ -32,7 +32,7 @@ urlpatterns = [
     url (r'^threadedcomments/', include('threadedcomments.urls')),
 #    url(r'^articles/comments/', include('django_comments.urls')),
     
-#    (r'^docs/', include('sphinxdoc.urls')),
+    url (r'^docs/', include('sphinxdoc.urls')),
 
     # 3rd party, modified for widelands
     url (r'^wiki/', include('wiki.urls')),

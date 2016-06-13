@@ -108,7 +108,7 @@ INSTALLED_APPS = (
     'pagination',
     'tagging',
     'djangoratings', # included as wlapp
-    #    'sphinxdoc',
+    'sphinxdoc',
     #    'south', Not longer supported
 )
 
@@ -250,7 +250,7 @@ SMILEY_PREESCAPING = [
 ###############################
 # Sphinx (Search prog) Config #
 ###############################
-USE_SPHINX = False
+USE_SPHINX = True
 SPHINX_API_VERSION = 0x116
 
 ############

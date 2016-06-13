@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ block.super }} » Documentation Overview{% endblock %}
+
+{% block content %}
+<div>
+    <h2 class="pagetitle">Documentation Overview</h2>
+    <ul>
+    {% for app in app_list %}
+        <li><a href="{{ app.get_absolute_url }}">{{ app.name }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock content %}
