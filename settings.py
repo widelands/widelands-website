@@ -161,6 +161,9 @@ STATIC_URL = '/static/'
 ############################
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
+#The following are just dummy values
+NORECAPTCHA_SITE_KEY = 'dummy'
+NORECAPTCHA_SECRET_KEY = 'dummy'
 
 ######################
 # Wiki configuration #
@@ -289,7 +292,7 @@ USE_GOOGLE_ANALYTICS = False
 
 ##############################################
 ## Recipient(s) who get an email if someone ##
-##    uses the form on legal notice page    ##
+## uses the form on legal notice page       ##
 ## Use allways the form ('name', 'Email')   ##
 ##############################################
 INQUIRY_RECIPIENTS = [

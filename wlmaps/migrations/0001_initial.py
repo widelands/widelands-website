@@ -31,6 +31,8 @@ class Migration(migrations.Migration):
                 ('pub_date', models.DateTimeField(default=datetime.datetime.now)),
                 ('uploader_comment', models.TextField(verbose_name=b'Uploader comment', blank=True)),
                 ('nr_downloads', models.PositiveIntegerField(default=0, verbose_name=b'Download count')),
+                ('rating_votes', models.PositiveIntegerField(default=0, editable=False, blank=True)),
+                ('rating_score', models.IntegerField(default=0, editable=False, blank=True)),
                 ('uploader', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
