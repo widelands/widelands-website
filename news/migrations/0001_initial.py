@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified', models.DateTimeField(auto_now=True, verbose_name='modified')),
                 ('tags', tagging.fields.TagField(max_length=255, blank=True)),
-                ('author', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
                 ('categories', models.ManyToManyField(to='news.Category', blank=True)),
             ],
             options={

@@ -63,8 +63,6 @@ directly, but you might want to edit the bd variable in local_settings.py::
    $ ln -s local_urls.py.sample local_urls.py
    $ ln -s local_settings.py.sample local_settings.py
    
-There has to be some corrections to get into the admin pages:
-
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -87,8 +85,12 @@ Some important settings
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Go to http://localhost:8000/admin. Log in with your super user and go to the
-Sites Admin. Change your site name from example.com to localhost:8000. Now,
-everything should work out.
+following Tables:
+
+- Site/Sites: Change your site name from example.com to localhost:8000. 
+- Wlprofile/Profiles: Add yourself as a user
+
+Now everything should work.
 
 Accessing the website from other machines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
