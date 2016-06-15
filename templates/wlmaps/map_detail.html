@@ -41,18 +41,18 @@ $(function() {
 		<img class="posLeft map" style="float: left" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" />
 	<div>
 		<h3>Description:</h3>
-		<p>{{ map.descr|wl_markdown:"escape" }}</p>
+		<p>{{ map.descr|wl_markdown:"bleachit" }}</p>
 	</div>
 	{% if map.hint %}
 	<div style="clear: left;">
 		<h3>Hint:</h3>
-		<p>{{ map.hint|wl_markdown:"escape" }}</p>
+		<p>{{ map.hint|wl_markdown:"bleachit" }}</p>
 	</div>
 	{% endif %}
 
 	<div style="clear: left;">
 		<h3>Comment by uploader:</h3>
-		<div>{{ map.uploader_comment|wl_markdown:"remove" }}</div>
+		<div>{{ map.uploader_comment|wl_markdown:"bleachit" }}</div>
 		{% if user == map.uploader %}
 			<a class="button posLeft" href="{% url 'wlmaps_edit_comment' map.slug %}">
 				<img alt="Edit" title="Edit your comment" class="middle" src="{{ MEDIA_URL }}forum/img/edit.png">

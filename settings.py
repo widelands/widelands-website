@@ -299,6 +299,35 @@ INQUIRY_RECIPIENTS = [
     ('peter', 'peter@example.com'),
 ]
 
+##########################################
+## Allowed tags/attributes for 'bleach' ##
+##########################################
+BLEACH_ALLOWED_TAGS = [u'a',
+                       u'abbr',
+                       u'acronym',
+                       u'b',
+                       u'blockquote',
+                       u'br',
+                       u'code',
+                       u'em',
+                       u'i',
+                       u'li',
+                       u'ol',
+                       u'strong',
+                       u'ul',
+                       u'p',
+                       u'h1',
+                       u'h2',
+                       u'h3',
+                       u'h4',
+                       u'h5',
+                       u'h6',
+                       u'pre',
+                       u'code',
+                       u'img',
+                       u'div'
+]
+BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], '*': ['class']}
 
 try:
    from local_settings import *

@@ -18,7 +18,7 @@
 	</div>
     {% endif %}
 	<h2><a href="{{ object.get_absolute_url }}" class="invertedColor">{{ object.title }}</a></h2>
-	{{ object.body|wl_markdown:"safe" }}
+	{{ object.body|wl_markdown }}
 	<hr />
 	{% get_comment_count for object as ccount %}
 	<span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments</a></span>

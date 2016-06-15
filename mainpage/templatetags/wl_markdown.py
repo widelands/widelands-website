@@ -13,6 +13,7 @@ from django import template
 from django.conf import settings
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
+from settings import BLEACH_ALLOWED_TAGS, BLEACH_ALLOWED_ATTRIBUTES
 
 # Try to get a not so fully broken markdown module
 import markdown
@@ -20,6 +21,7 @@ if markdown.version_info[0] < 2:
     raise ImportError, "Markdown library to old!"
 from markdown import markdown
 import re
+import bleach
 
 from BeautifulSoup import BeautifulSoup, NavigableString
 
@@ -172,12 +174,14 @@ def do_wl_markdown( value, *args, **keyw ):
     # This is currently only needed for this smiley ">:-)"
     value = _insert_smiley_preescaping( value )
     custom = keyw.pop('custom', True)
-    nvalue = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
+    html = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
+    if 'bleachit' in args:
+        html = mark_safe(bleach.clean(html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
 
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
     # BeautifoulSoup does all the heavy lifting
-    soup = BeautifulSoup(nvalue)
+    soup = BeautifulSoup(html)
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
@@ -228,13 +232,12 @@ def do_wl_markdown( value, *args, **keyw ):
 
 
 @register.filter
-def wl_markdown(value, arg=''):
+def wl_markdown(content, arg=''):
     """
-    My own markup filter, wrapping the markup2 library, which is less bugged.
+    A Filter which decides when to 'bleach' the content.
     """
-    if arg != '':
-        return mark_safe(force_unicode(do_wl_markdown(value,safe_mode=arg)))
+    if arg == 'bleachit':
+        return mark_safe(do_wl_markdown(content, 'bleachit'))
     else:
-        return mark_safe(force_unicode(do_wl_markdown(value,)))
-wl_markdown.is_safe = True
+        return mark_safe(do_wl_markdown(content))
 
