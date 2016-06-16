@@ -103,13 +103,14 @@ INSTALLED_APPS = (
 
     # Thirdparty apps
     'threadedcomments', # included as wlapp
-    'notification', # included as wlapp
+    'notification',     # included as wlapp
     'django_messages',
-    'pagination',
+    #'pagination',
+     'linaro_django_pagination',
     'tagging',
-    'djangoratings', # included as wlapp
-    'sphinxdoc',
-    #    'south', Not longer supported
+    'djangoratings',    # included as wlapp
+    'sphinxdoc',        # included as wlapp
+    #'south',           included in django itself
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,7 +126,8 @@ MIDDLEWARE_CLASSES = (
 
     # Remove this, when load gets to high or attachments are enabled
     'django.middleware.gzip.GZipMiddleware',
-    'pagination.middleware.PaginationMiddleware',
+    #'pagination.middleware.PaginationMiddleware',
+    'linaro_django_pagination.middleware.PaginationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
     'tracking.middleware.VisitorCleanUpMiddleware',
 )
@@ -136,7 +138,6 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
-            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -161,7 +162,7 @@ STATIC_URL = '/static/'
 ############################
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
-#The following are just dummy values
+# The following are just dummy values
 NORECAPTCHA_SITE_KEY = 'dummy'
 NORECAPTCHA_SECRET_KEY = 'dummy'
 
@@ -301,7 +302,7 @@ INQUIRY_RECIPIENTS = [
 
 ##########################################
 ## Allowed tags/attributes for 'bleach' ##
-## Used for sanitizing user input.
+## Used for sanitizing user input.      ##
 ##########################################
 BLEACH_ALLOWED_TAGS = [u'a',
                        u'abbr',
