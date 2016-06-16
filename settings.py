@@ -301,32 +301,23 @@ INQUIRY_RECIPIENTS = [
 
 ##########################################
 ## Allowed tags/attributes for 'bleach' ##
+## Used for sanitizing user input.
 ##########################################
 BLEACH_ALLOWED_TAGS = [u'a',
                        u'abbr',
                        u'acronym',
-                       u'b',
                        u'blockquote',
                        u'br',
-                       u'code',
-                       u'em',
-                       u'i',
-                       u'li',
-                       u'ol',
-                       u'strong',
-                       u'ul',
-                       u'p',
-                       u'h1',
-                       u'h2',
-                       u'h3',
-                       u'h4',
-                       u'h5',
-                       u'h6',
-                       u'pre',
-                       u'code',
+                       u'em',  u'i',  u'strong', u'b',
+                       u'ul',  u'ol', u'li',
+                       u'div', u'p',
+                       u'h1',  u'h2', u'h3', u'h4', u'h5', u'h6',
+                       u'pre', u'code',
                        u'img',
-                       u'div'
+                       u'hr',
+                       u'table', u'tbody', u'thead', u'th', u'tr', u'td',
 ]
+
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], '*': ['class']}
 
 try:

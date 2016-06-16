@@ -175,6 +175,8 @@ def do_wl_markdown( value, *args, **keyw ):
     value = _insert_smiley_preescaping( value )
     custom = keyw.pop('custom', True)
     html = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
+    
+    # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
         html = mark_safe(bleach.clean(html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
 

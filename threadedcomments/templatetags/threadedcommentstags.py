@@ -6,6 +6,7 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from threadedcomments.models import ThreadedComment, FreeThreadedComment
 from threadedcomments.forms import ThreadedCommentForm, FreeThreadedCommentForm
+from mainpage.templatetags.wl_markdown import do_wl_markdown;
 
 # Regular expressions for getting rid of newlines and witespace
 inbetween = re.compile('>[ \r\n]+<')
@@ -129,6 +130,7 @@ def auto_transform_markup(comment):
     It can also output the formatted content to a context variable, if a context name is
     specified.
     """
+    #NOCOMM franku: django.contrib.markup doesn't exist anymore
     try:
         from django.utils.html import escape
         from threadedcomments.models import MARKDOWN, TEXTILE, REST, PLAINTEXT
@@ -147,7 +149,8 @@ def auto_transform_markup(comment):
             return escape(comment.comment)
     except ImportError:
         # Not marking safe, in case tag fails and users input malicious code.
-        return force_unicode(comment.comment)
+        # NOCOMM franku: bleach the comment
+        return do_wl_markdown(comment.comment, 'bleachit')
 
 def do_auto_transform_markup(parser, token):
     try:
