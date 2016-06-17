@@ -4,7 +4,8 @@ django-appconf==1.0.1
 django-contrib-comments==1.6.2
 django-messages==0.5.3
 django-nocaptcha-recaptcha==0.0.19
--e git://github.com/krallin/django-pagination.git#egg=django-pagination
+# next is a more updated version of linaro-django-pagination
+-e git://github.com/zyga/django-pagination.git#egg=django-pagination
 django-registration==2.0.4
 django-tagging==0.4.1
 docutils==0.12
@@ -26,3 +27,4 @@ untokenize==0.1.1
 #-e git://github.com/kerin/django-sphinx.git/@1c5ef8abcf86f9a9458f763ceb9e5d882247ea37#egg=djangosphinx
 -e git://github.com/kerin/django-sphinx.git#egg=django-sphinx
 bleach==1.4.3
+
