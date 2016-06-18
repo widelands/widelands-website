@@ -84,6 +84,7 @@ class Article(models.Model):
     class Meta:
         verbose_name = _(u'Article')
         verbose_name_plural = _(u'Articles')
+	app_label = 'wiki'
 
     def get_absolute_url(self):
         if self.group is None:
@@ -187,6 +188,7 @@ class ChangeSet(models.Model):
         verbose_name_plural = _(u'Change sets')
         get_latest_by  = 'modified'
         ordering = ('-revision',)
+	app_label = 'wiki'
 
     def __unicode__(self):
         return u'#%s' % self.revision

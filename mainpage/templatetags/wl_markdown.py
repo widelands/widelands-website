@@ -29,7 +29,7 @@ from BeautifulSoup import BeautifulSoup, NavigableString
 # will check for internal wikipages links in all internal
 # links starting with /wiki/
 try:
-    from widelands.wiki.models import Article, ChangeSet
+    from wiki.models import Article, ChangeSet
     check_for_missing_wikipages = True
 except ImportError:
     check_for_missing_wikipages = False
