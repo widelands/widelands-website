@@ -155,7 +155,7 @@ TEMPLATES = [
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = '/static/'
+STATIC_URL = '/media/'
 
 ############################
 # Activation configuration #
@@ -317,6 +317,7 @@ BLEACH_ALLOWED_TAGS = [u'a',
                        u'img',
                        u'hr',
                        u'table', u'tbody', u'thead', u'th', u'tr', u'td',
+		       u'sup',
 ]
 
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], '*': ['class']}
