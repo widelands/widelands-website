@@ -162,9 +162,6 @@ STATIC_URL = '/media/'
 ############################
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
-# The following are just dummy values
-NORECAPTCHA_SITE_KEY = 'dummy'
-NORECAPTCHA_SECRET_KEY = 'dummy'
 
 ######################
 # Wiki configuration #
