@@ -278,8 +278,8 @@ def edit_article(request, title,
             # in template. See
             # https://docs.djangoproject.com/en/1.8/ref/contrib/messages/#module-django.contrib.messages
 
-            # if request.user.is_authenticated():
-            #     form.editor = request.user
+            if request.user.is_authenticated():
+                 form.editor = request.user
             #     if article is None:
             #         user_message = u"Your article was created successfully."
             #     else:
