@@ -171,7 +171,7 @@ class RenderableItem(models.Model):
         if self.markup == 'bbcode':
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':
-            self.body_html = unicode(do_wl_markdown(self.body, safe_mode='escape', wikiwords=False))
+            self.body_html = unicode(do_wl_markdown(self.body, 'bleachit', wikiwords=False))
         else:
             raise Exception('Invalid markup property: %s' % self.markup)
 
@@ -182,7 +182,6 @@ class RenderableItem(models.Model):
         self.body_text = unescape(text)
 
         self.body_html = urlize(self.body_html)
-
 
 class Post(RenderableItem):
     topic = models.ForeignKey(Topic, related_name='posts', verbose_name=_('Topic'))

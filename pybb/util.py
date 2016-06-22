@@ -163,9 +163,9 @@ def urlize(data):
                     islink = True
                     break
                 ptr = ptr.parent
-
             if not islink:
-                chunk = chunk.replaceWith(django_urlize(unicode(chunk)))
+                # Using unescape to prevent conversation of f.e. &gt; to &amp;gt;
+                chunk = chunk.replaceWith(django_urlize(unicode(unescape(chunk))))
 
         return unicode(soup)
 

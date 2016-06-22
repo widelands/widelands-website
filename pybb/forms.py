@@ -66,6 +66,7 @@ class AddPostForm(forms.ModelForm):
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
                     markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
+
         post.save(*args, **kwargs)
 
         if pybb_settings.ATTACHMENT_ENABLE:
