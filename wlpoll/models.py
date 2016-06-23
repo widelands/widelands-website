@@ -11,7 +11,7 @@ def closed_date_default():
 
 class PollManager(models.Manager):
     def open(self):
-        return self.all().exclude(closed_date__lte=datetime.datetime.now)
+        return self.all().exclude(closed_date__lte=datetime.datetime.now())
 
 class Poll(models.Model):
     name = models.CharField(max_length=256)
