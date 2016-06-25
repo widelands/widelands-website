@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from settings import WIDELANDS_SVN_DIR, INQUIRY_RECIPIENTS
+from settings import USE_LOGO
 from templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
 from django.core.mail import send_mail
@@ -15,7 +16,8 @@ import os.path
 
 
 def mainpage(request):
-    return render_to_response('mainpage.html',
+    context = {'logo_name': USE_LOGO}
+    return render_to_response('mainpage.html', context,
                               context_instance=RequestContext(request))
 
 def legal_notice(request):
