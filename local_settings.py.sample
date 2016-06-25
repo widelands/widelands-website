@@ -21,6 +21,3 @@ DATABASES = {
 # The following are just dummy values, but needed defined
 NORECAPTCHA_SITE_KEY = 'dummy'
 NORECAPTCHA_SECRET_KEY = 'dummy'
-
-#The logo used on mainpage
-USE_LOGO = 'Logo_alpha.png'
