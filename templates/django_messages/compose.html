@@ -12,7 +12,7 @@ Compose - {{ block.super }}
 	<table class="messages">
 		{% for field in form %}
 		<tr>
-			<td class="grey">{{ field.label_tag }}:</td>
+			<td class="grey">{{ field.label_tag }}</td>
 			<td>{{ field }}</td>
 			<td class="errormessage">{{ field.errors }}</td>
 		</tr>

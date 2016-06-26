@@ -5,7 +5,7 @@
 <div class="blogEntry">
     <form enctype="multipart/form-data" action="{% url 'wlmaps_edit_comment' map.slug %}" method="post">
         <div>
-        {{ form.uploader_comment.label_tag }}:
+        {{ form.uploader_comment.label_tag }}
 			<span class="posRight">
 				<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
 					<img src="{{ MEDIA_URL }}img/menu_help.png" alt="Help on Syntax" class="middle">

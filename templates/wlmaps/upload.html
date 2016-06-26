@@ -12,12 +12,12 @@
 		<a href="{% url 'wlmaps_index' %}">Maps</a> &#187; Upload
 	</div>
 	<form enctype="multipart/form-data" action="{% url 'wlmaps_upload' %}" method="post">
-		{{ form.file.label_tag }}: {{ form.file }}<br />
+		{{ form.file.label_tag }} {{ form.file }}<br />
 		{% if form.file.errors %}
 			<span class="errormessage">{{ form.file.errors }}</span><br />
 		{% endif %}
 		<div>
-		{{ form.uploader_comment.label_tag }}:
+		{{ form.uploader_comment.label_tag }}
 			<span class="posRight">
 				<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
 					<img src="{{ MEDIA_URL }}img/menu_help.png" alt="Help on Syntax" class="middle">
