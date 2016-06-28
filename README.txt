@@ -25,15 +25,15 @@ This will make sure that your virtual environment is not tainted with python
 packages from your global site packages. Very important!
 Now, we create and activate our environment. This installation depends on python2.7, so you must may use a special virtualenv-command: 
 
-   $ virtualenv wl_django1_8
-   $ cd wl_django1_8
+   $ virtualenv wlwebsite
+   $ cd wlwebsite
    $ source bin/activate
 
 Next, we download the website source code::
 
    $ mkdir code
    $ cd code
-   $ bzr branch lp:~widelands-dev/widelands-website/django1_8 widelands
+   $ bzr branch lp:widelands-website widelands
    $ cd widelands
 
 All fine and good. Now we have to install all the third party modules the
