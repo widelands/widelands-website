@@ -1,34 +1,44 @@
 {% extends "news/base_news.html" %}
 
-{% load news %}
-{% load custom_date %}
+{% load news_extras %}
+{% load threadedcommentstags custom_date %}
 {% load pagination_tags %}
 
 {% block content %}
 
 <h1>News Archive</h1>
+<div>
 {% get_news_years as news_years %}
-<a href="{% url news_index %}" class="invertedColor">News Archiv</a>:
+<a href="{% url 'news_index' %}" class="invertedColor">News Archiv</a>:
 {% for muh in news_years %}
-	<a href="{% url news_index %}{{ muh.year }}" class="invertedColor">{{ muh.year }}</a>
+	<a href="{% url 'news_index' %}{{ muh.year }}" class="invertedColor">{{ muh.year }}</a>
 	{% if not forloop.last %} | {% endif %}
 {% endfor %}
-<br />
-
-<div class="center">
-{% autopaginate object_list 10 %}
-{% paginate %}
 </div>
+{% if perms.news %}
+	<div class="small posRight invertedColor">
+		{% if perms.news.add_post %}<a href="/admin/news/post/add/" class="invertedColor">Add New News</a>{% endif %}
+		{% if perms.news.change_post %}| <a href="/admin/news/post/{{object.id}}/" class="invertedColor">Edit</a>{% endif %}
+	</div>
+{% endif %}
 <br />
+<div class="blogEntry">
+	<div class="center">
+	{% autopaginate object_list 20 %}
+	{% paginate %}
+	</div>
+    <ul>
+        {% for object in object_list %}
+       	{% get_comment_count for object as ccount %}
+        <li><a href="{{object.get_absolute_url}}">{{ object.title }}</a> - <span class="small">posted at {{ object.publish|custom_date:user }}, {{ ccount }} comments</span></li>
+	    {% endfor %}
+	</ul>
 
-{% for object in object_list %}
-	{% include "news/inlines/post_detail.html" %}
-{% endfor %}
 {% if page_obj.has_other_pages %}
-
 <div class="center">
 {% paginate %}
 </div>
 {% endif %}
+</div>
 
 {% endblock %}

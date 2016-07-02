@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ block.super }} » {{ app.name }}{% for p in doc.parents %} » {{ p.title|striptags|safe }}{% endfor %} » {{ doc.title|striptags|safe }}{% endblock %}
+
+{% block content %}
+<div class="pagination-top">
+    » <a href="{{ app.get_absolute_url }}">{{ app.name }}</a>
+    {% for p in doc.parents %}
+    » <a href="{{ p.link }}">{{ p.title|safe }}</a>
+    {% endfor %}
+    » {{ doc.title|safe }}
+    {% if doc.prev or doc.next %}
+    <br /><br />
+    <span class="left">
+        {% if doc.prev %}
+          Prev: <a href="{{ doc.prev.link }}">{{ doc.prev.title|safe }}</a>
+        {% endif %}</span><span class="right">
+        {% if doc.next %}
+          Next: <a href="{{ doc.next.link }}">{{ doc.next.title|safe }}</a>
+        {% endif %}</span>
+    {% endif %}
+</div>
+
+<div class="sphinx">
+    {% block doc_body %}
+    {{ doc.body|safe }}    
+    {% endblock %}
+</div>
+
+<div class="pagination-bottom">
+    {% if doc.prev or doc.next %}
+    <span class="left">
+        {% if doc.prev %}
+          Prev: <a href="{{ doc.prev.link }}">{{ doc.prev.title|safe }}</a>
+        {% endif %}</span><span class="right">
+        {% if doc.next %}
+          Next: <a href="{{ doc.next.link }}">{{ doc.next.title|safe }}</a>
+        {% endif %}</span>
+    <br /><br />
+    {% endif %}
+    » <a href="{{ app.get_absolute_url }}">{{ app.name }} documentation</a>
+    {% for p in doc.parents %}
+    » <a href="{{ p.link }}">{{ p.title|safe }}</a>
+    {% endfor %}
+    » {{ doc.title|safe }}
+    <br /><br />
+    Last update: {{ update_date|date:"Y-m-d H:i" }} (<a href="http://www.timeanddate.com/worldclock/city.html?n=37">CET</a>)
+</div>
+{% endblock content %}
+
+{% block sidebar %}
+    {% block doc_toc %}
+<div class="box">
+    <h2>Contents</h2>
+    {{ doc.toc|safe }}
+</div>
+    {% endblock %}
+<div class="box">
+    <h2>Search</h2>
+    <em>Not yet implemented</em>
+    {# {% load docs %} #}
+    {# {% search_form %} #}
+</div>
+    {{ block.super }}
+{% endblock sidebar %}

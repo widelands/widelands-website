@@ -12,13 +12,13 @@
     <h3 class="title">{% trans "Available Links" %}</h3>
     <div class="info_line show_left">
         <br />
-        &nbsp;&nbsp;<a href="{% url wlggz_matches %}">Last matches</a><br />
-        &nbsp;&nbsp;<a href="{% url wlggz_ranking %}">GGZ ranking</a><br />
+        &nbsp;&nbsp;<a href="{% url 'wlggz_matches' %}">Last matches</a><br />
+        &nbsp;&nbsp;<a href="{% url 'wlggz_ranking' %}">GGZ ranking</a><br />
         <br />
         {% if user.is_authenticated %}
-        &nbsp;&nbsp;<a href="{% url wlggz_userstats %}">View your ggz statistics</a><br />
-        &nbsp;&nbsp;<a href="{% url wlggz_userinfo %}">About your ggz account</a><br />
-        &nbsp;&nbsp;<a href="{% url wlggz_changepw %}">Change your ggz password</a><br />
+        &nbsp;&nbsp;<a href="{% url 'wlggz_userstats' %}">View your ggz statistics</a><br />
+        &nbsp;&nbsp;<a href="{% url 'wlggz_userinfo' %}">About your ggz account</a><br />
+        &nbsp;&nbsp;<a href="{% url 'wlggz_changepw' %}">Change your ggz password</a><br />
         <br />
         {% endif %}
     </div>

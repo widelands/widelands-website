@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 
 from tagging.fields import TagField
 from tagging.models import Tag
@@ -58,16 +58,16 @@ class Article(models.Model):
                               null=True, blank=True)
     creator = models.ForeignKey(User, verbose_name=_('Article Creator'),
                                 null=True)
-    creator_ip = models.IPAddressField(_("IP Address of the Article Creator"),
+    creator_ip = models.GenericIPAddressField(_("IP Address of the Article Creator"),
                                        blank=True, null=True)
     created_at = models.DateTimeField(default=datetime.now)
     last_update = models.DateTimeField(blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
-    group = generic.GenericForeignKey('content_type', 'object_id')
+    group = GenericForeignKey('content_type', 'object_id')
 
-    images = generic.GenericRelation(Image)
+    images = GenericRelation(Image)
 
     tags = TagField()
 
@@ -84,6 +84,7 @@ class Article(models.Model):
     class Meta:
         verbose_name = _(u'Article')
         verbose_name_plural = _(u'Articles')
+	app_label = 'wiki'
 
     def get_absolute_url(self):
         if self.group is None:
@@ -151,7 +152,7 @@ class ChangeSetManager(models.Manager):
 class NonRevertedChangeSetManager(ChangeSetManager):
 
     def get_default_queryset(self):
-        super(PublishedBookManager, self).get_query_set().filter(
+        super(PublishedBookManager, self).get_queryset().filter(
             reverted=False)
 
 
@@ -163,7 +164,7 @@ class ChangeSet(models.Model):
     # Editor identification -- logged or anonymous
     editor = models.ForeignKey(User, verbose_name=_(u'Editor'),
                                null=True)
-    editor_ip = models.IPAddressField(_(u"IP Address of the Editor"))
+    editor_ip = models.GenericIPAddressField(_(u"IP Address of the Editor"))
 
     # Revision number, starting from 1
     revision = models.IntegerField(_(u"Revision Number"))
@@ -187,6 +188,7 @@ class ChangeSet(models.Model):
         verbose_name_plural = _(u'Change sets')
         get_latest_by  = 'modified'
         ordering = ('-revision',)
+	app_label = 'wiki'
 
     def __unicode__(self):
         return u'#%s' % self.revision

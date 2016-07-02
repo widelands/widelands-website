@@ -2,18 +2,25 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 
+# lambda couldn't be used in field default and for python2 it must be declared
+# in module body
+# NOCOMM franku: The lambda won't work; why not return the result?
+def closed_date_default():
+    #return lambda: datetime.datetime.now() + datetime.timedelta(days=90)
+    return datetime.datetime.now() + datetime.timedelta(days=90)
+
 class PollManager(models.Manager):
     def open(self):
-        return self.all().exclude(closed_date__lte=datetime.datetime.now)
+        return self.all().exclude(closed_date__lte=datetime.datetime.now())
 
 class Poll(models.Model):
     name = models.CharField(max_length=256)
     pub_date = models.DateTimeField("date published", default = datetime.datetime.now)
-    closed_date = models.DateTimeField("date closed", default= lambda: datetime.datetime.now() + datetime.timedelta(days=90),
-                            blank=True, null=True)
+    closed_date = models.DateTimeField("date closed", default = closed_date_default,
+                                       blank=True, null=True)
 
     objects = PollManager()
-
+        
     def total_votes(self):
         return self.choices.all().aggregate(models.Sum("votes"))["votes__sum"]
 
@@ -27,7 +34,7 @@ class Poll(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('wlpoll_detail', None, {'object_id': self.id})
+        return ('wlpoll_detail', (), {'pk': self.id})
 
     def __unicode__(self):
         return self.name

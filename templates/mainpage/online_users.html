@@ -1,4 +1,4 @@
-{% load wlprofile %}
+{% load wlprofile_extras %}
 
 {% if users %}
 <div class="columnModule">
@@ -7,7 +7,7 @@
 		{% if users %}
 		<ul class="player">
 			{% for user in users %}
-			<li><a href="{% url profile_view user %}">{{user.username}}</a></li>
+			<li><a href="{% url 'profile_view' user %}">{{user.username}}</a></li>
 			{% endfor %}
 		</ul>
 		{% else %}

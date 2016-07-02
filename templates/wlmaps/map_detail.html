@@ -5,7 +5,7 @@
 
 {% load custom_date %}
 {% load wlmaps_extra %}
-{% load wlprofile %}
+{% load wlprofile_extras %}
 {% load threadedcommentstags %}
 {% load wl_markdown %}
 
@@ -24,7 +24,7 @@ $(function() {
         maxScore: 10,
         messages: ["","","","","","","","","",""],
         fn: function(e, score) {
-            $.post("{% url wlmaps_rate map.slug %}",{ vote: score });
+            $.post("{% url 'wlmaps_rate' map.slug %}",{ vote: score });
             }
         });
 });
@@ -36,25 +36,25 @@ $(function() {
 <h1>Map: {{ map.name }}</h1>
 <div class="blogEntry" style="padding-bottom: 3em">
 	<div>
-		<a href="{% url wlmaps_index %}">Maps</a> &#187; {{ map.name }}
+		<a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}
 	</div>
 		<img class="posLeft map" style="float: left" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" />
 	<div>
 		<h3>Description:</h3>
-		<p>{{ map.descr|wl_markdown:"escape" }}</p>
+		<p>{{ map.descr|wl_markdown:"bleachit" }}</p>
 	</div>
 	{% if map.hint %}
 	<div style="clear: left;">
 		<h3>Hint:</h3>
-		<p>{{ map.hint|wl_markdown:"escape" }}</p>
+		<p>{{ map.hint|wl_markdown:"bleachit" }}</p>
 	</div>
 	{% endif %}
 
 	<div style="clear: left;">
 		<h3>Comment by uploader:</h3>
-		<div>{{ map.uploader_comment|wl_markdown:"remove" }}</div>
+		<div>{{ map.uploader_comment|wl_markdown:"bleachit" }}</div>
 		{% if user == map.uploader %}
-			<a class="button posLeft" href="{% url wlmaps_edit_comment map.slug %}">
+			<a class="button posLeft" href="{% url 'wlmaps_edit_comment' map.slug %}">
 				<img alt="Edit" title="Edit your comment" class="middle" src="{{ MEDIA_URL }}forum/img/edit.png">
 				<span class="middle">Edit</span>
 			</a>
@@ -114,7 +114,7 @@ $(function() {
 	</div>
 	
 	<div style="margin: 1em 0px 1em 0px">
-	<a class="button posLeft" href="{% url wlmaps_download map.slug %}">
+	<a class="button posLeft" href="{% url 'wlmaps_download' map.slug %}">
 		<img src="{{ MEDIA_URL }}img/download.png" alt ="" class="middle" />
 		<span class="middle">Download this map</span>
 	</a>

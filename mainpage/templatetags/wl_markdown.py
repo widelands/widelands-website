@@ -13,6 +13,7 @@ from django import template
 from django.conf import settings
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
+from settings import BLEACH_ALLOWED_TAGS, BLEACH_ALLOWED_ATTRIBUTES
 
 # Try to get a not so fully broken markdown module
 import markdown
@@ -20,14 +21,15 @@ if markdown.version_info[0] < 2:
     raise ImportError, "Markdown library to old!"
 from markdown import markdown
 import re
+import bleach
 
-from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup, NavigableString
 
 # If we can import a Wiki module with Articles, we
 # will check for internal wikipages links in all internal
 # links starting with /wiki/
 try:
-    from widelands.wiki.models import Article, ChangeSet
+    from wiki.models import Article, ChangeSet
     check_for_missing_wikipages = True
 except ImportError:
     check_for_missing_wikipages = False
@@ -72,13 +74,13 @@ def _insert_smiley_preescaping( text ):
     """
     for before,after in SMILEY_PREESCAPING:
         text = text.replace(before,after)
-
     return text
 
 
 revisions_re = [
     re.compile( "bzr:r(\d+)" ),
 ]
+
 def _insert_revision( text ):
     for r in revisions_re:
         text = r.sub( lambda m: """<a href="%s">r%s</a>""" % (
@@ -171,15 +173,17 @@ def do_wl_markdown( value, *args, **keyw ):
     # Do Preescaping for markdown, so that some things stay intact
     # This is currently only needed for this smiley ">:-)"
     value = _insert_smiley_preescaping( value )
-
     custom = keyw.pop('custom', True)
-    # nvalue = markdown(value, extras = [ "footnotes"], *args, **keyw)
-    nvalue = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
+    html = smart_str(markdown(value, extensions=["extra","toc"], *args, **keyw))
+
+    # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
+    if 'bleachit' in args:
+        html = mark_safe(bleach.clean(html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
 
     # Since we only want to do replacements outside of tags (in general) and not between
     # <a> and </a> we partition our site accordingly
     # BeautifoulSoup does all the heavy lifting
-    soup = BeautifulSoup(nvalue)
+    soup = BeautifulSoup(html)
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
@@ -205,13 +209,13 @@ def do_wl_markdown( value, *args, **keyw ):
 
                 rv = pattern.sub(replacement, rv)
             text.replaceWith(rv)
-
+ 
     # This call slows the whole function down...
     # unicode->reparsing.
     # The function goes from .5 ms to 1.5ms on my system
     # Well, for our site with it's little traffic it's maybe not so important...
-    soup = BeautifulSoup(unicode(soup)) # What a waste of cycles :(
-
+    # What a waste of cycles :(
+    soup = BeautifulSoup(unicode(soup))
     # We have to go over this to classify links
     for tag in soup.findAll("a"):
         rv = _classify_link(tag)
@@ -230,13 +234,12 @@ def do_wl_markdown( value, *args, **keyw ):
 
 
 @register.filter
-def wl_markdown(value, arg=''):
+def wl_markdown(content, arg=''):
     """
-    My own markup filter, wrapping the markup2 library, which is less bugged.
+    A Filter which decides when to 'bleach' the content.
     """
-    if arg != '':
-        return mark_safe(force_unicode(do_wl_markdown(value,safe_mode=arg)))
+    if arg == 'bleachit':
+        return mark_safe(do_wl_markdown(content, 'bleachit'))
     else:
-        return mark_safe(force_unicode(do_wl_markdown(value,)))
-wl_markdown.is_safe = True
+        return mark_safe(do_wl_markdown(content))
 

@@ -20,8 +20,13 @@
 
 	<ul>
 	<li>E-Mail Holger Rapp: sirver(at)gmx.de</li>
-	<li>Contact form:
-
+	<li>Contact form. Using this form sends E-Mails to following person(s):
+    <ul>
+        {% for name, recipient in inquiry_recipients %}
+        <li>{{ name }}: {{ recipient }} </li>
+        {% endfor %}
+    </ul>
+        
 	<form action="/legal_notice/" method="post">{% csrf_token %}
 	{% if form.errors %}
 	<p class="errormessage" style="text-align: left;">Please fill out all fields!</p>

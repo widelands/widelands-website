@@ -1,5 +1,5 @@
 
-{% load wiki %}
+{% load wiki_extras %}
 {% load avatar_tags %}
 {% load custom_date %}
 
@@ -7,7 +7,7 @@
     <td class="meta">
         <div class="avatar">{% avatar article.latest_changeset.editor 40 %}</div>
         <div class="details">
-            <a href="{% url profiles.views.profile article.latest_changeset.editor.username %}">
+            <a href="{% url 'profiles.views.profile' article.latest_changeset.editor.username %}">
                 {{ article.latest_changeset.editor }}
             </a>
         </div>

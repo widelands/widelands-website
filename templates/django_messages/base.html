@@ -15,10 +15,10 @@ Messages - {{block.super}}
 	<tr>
 	<th class="msg_menu">
 		<ul>
-			<li><a href="{% url messages_compose %}">{% trans "New Message" %}</a>
-			<li><a href="{% url messages_inbox %}">{% trans "Inbox" %}</a>
-			<li><a href="{% url messages_outbox %}">{% trans "Outbox" %}</a>
-			<li><a href="{% url messages_trash %}">{% trans "Trash" %}</a>
+			<li><a href="{% url 'messages_compose' %}">{% trans "New Message" %}</a>
+			<li><a href="{% url 'messages_inbox' %}">{% trans "Inbox" %}</a>
+			<li><a href="{% url 'messages_outbox' %}">{% trans "Outbox" %}</a>
+			<li><a href="{% url 'messages_trash' %}">{% trans "Trash" %}</a>
 		</ul>
 	</th>
 	<td class="msg_box">

@@ -1,29 +1,29 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
-{% load wiki %}
+{% load wiki_extras %}
 
 {% block title %}
 {{ article.title }} - {{block.super}}
 {% endblock %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }} (RSS)" href="{% url wiki_article_history_feed article.title "rss" %}" />
-<link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }} (Atom)" href="{% url wiki_article_history_feed article.title "atom" %}" />
+<link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }} (RSS)" href="{% url 'wiki_article_history_feed_rss' article.title %}" />
+<link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }} (Atom)" href="{% url 'wiki_article_history_feed_atom' article.title %}" />
 {{ block.super}}
 {% endblock %}
 
 {% block content %}
 <div class="posRight small">
 	{% if article.id %}
-		<a class="invertedColor" href="{% url wiki_edit article.title %}">{% trans "Edit this article" %}</a>
+		<a class="invertedColor" href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
 		|
-		<a class="invertedColor" href="{% url wiki_article_history article.title %}">{% trans "Editing history" %}</a>
+		<a class="invertedColor" href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
 		{% if can_observe %}
 			| 
 			{% if is_observing %} 
-			<a class="invertedColor" href="{% url wiki_stop_observing article.title %}">{% trans "Stop observing" %}</a>
+			<a class="invertedColor" href="{% url 'wiki_stop_observing' article.title %}">{% trans "Stop observing" %}</a>
 			{% else %}
-			<a class="invertedColor" href="{% url wiki_observe article.title %}">{% trans "Observe" %}</a>
+			<a class="invertedColor" href="{% url 'wiki_observe' article.title %}">{% trans "Observe" %}</a>
 			{% endif %}
 		{% endif %}
 	{% endif %}
@@ -33,7 +33,7 @@
 	{% if not article.id %}
 		<p>
 			{% trans "This article does not exist." %}
-			<a href="{% url wiki_edit article.title %}">{% trans "Create it now?" %}</a>
+			<a href="{% url 'wiki_edit' article.title %}">{% trans "Create it now?" %}</a>
 		</p>
 	{% endif %}
 	{% if redirected_from %}

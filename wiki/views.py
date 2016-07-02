@@ -9,17 +9,13 @@ from django.core.urlresolvers import reverse
 from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, render_to_response, redirect
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.syndication.feeds import FeedDoesNotExist
 
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
-from wiki.feeds import (RssArticleHistoryFeed, AtomArticleHistoryFeed,
-                        RssHistoryFeed, AtomHistoryFeed)
+
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
-
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 # Settings
@@ -73,7 +69,10 @@ def get_url(urlname, group=None, args=None, kw=None):
         url = reverse(urlname, urlconf, kwargs=kw)
         return ''.join(['/', app, url]) # @@@ harcoded: /app/.../
 
-
+# NOCOMM Franku: This Class is currently not used
+# If we want this it has to be checked for the changes
+# related to django 1.8.
+# A javascript alert box is maybe a better solution
 class ArticleEditLock(object):
     """ A soft lock to edting an article.
     """
@@ -273,13 +272,20 @@ def edit_article(request, title,
 
         form.cache_old_content()
         if form.is_valid():
+
+            # NOCOMM Franku: This has never worked as i know and is IMHO
+            # useless. This code works with django 1.8 but misses some code
+            # in template. See
+            # https://docs.djangoproject.com/en/1.8/ref/contrib/messages/#module-django.contrib.messages
+
             if request.user.is_authenticated():
-                form.editor = request.user
-                if article is None:
-                    user_message = u"Your article was created successfully."
-                else:
-                    user_message = u"Your article was edited successfully."
-                request.user.message_set.create(message=user_message)
+                 form.editor = request.user
+            #     if article is None:
+            #         user_message = u"Your article was created successfully."
+            #     else:
+            #         user_message = u"Your article was edited successfully."
+            #     messages.success(request, user_message)
+                    
 
             if ((article is None) and (group_slug is not None)):
                 form.group = group
@@ -291,10 +297,11 @@ def edit_article(request, title,
     elif request.method == 'GET':
         user_ip = get_real_ip(request)
 
-        lock = cache.get(title, None)
-        if lock is None:
-            lock = ArticleEditLock(title, request)
-        lock.create_message(request)
+        # NOCOMM FrankU: Never worked IMHO
+        # lock = cache.get(title, None)
+        # if lock is None:
+        #     lock = ArticleEditLock(title, request)
+        # lock.create_message(request)
 
         initial = {'user_ip': user_ip}
         if group_slug is not None:
@@ -476,10 +483,12 @@ def revert_to_revision(request, title,
         else:
             article.revert_to(revision, get_real_ip(request))
 
-
-        if request.user.is_authenticated():
-            request.user.message_set.create(
-                message=u"The article was reverted successfully.")
+        # NOCOMM Franku: This has never worked as i know and is IMHO
+        # useless. If we want this it has to be fixed for django 1.8
+        # See comment in edit_article()
+        # if request.user.is_authenticated():
+        #     request.user.message_set.create(
+        #         message=u"The article was reverted successfully.")
 
         return redirect(article)
 
@@ -598,8 +607,8 @@ def article_preview( request ):
     runs the function through the view template and returns
     it to the caller
     """
-    rv = do_wl_markdown( request.POST["body"], safe_mode="escape" )
-    return HttpResponse(rv, mimetype="text/html")
+    rv = do_wl_markdown( request.POST["body"], 'bleachit' )
+    return HttpResponse(rv, content_type="text/html")
 
 def article_diff( request ):
     """
@@ -613,56 +622,5 @@ def article_diff( request ):
     diffs = dmp.diff_main(current_article.content, content)
     dmp.diff_cleanupSemantic(diffs)
 
-    return HttpResponse(dmp.diff_prettyHtml(diffs), mimetype="text/html")
-
-def article_history_feed(request, feedtype, title,
-                         group_slug=None, group_slug_field=None, group_qs=None,
-                         article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
-                         extra_context=None,
-                         is_member=None,
-                         is_private=None,
-                         *args, **kw):
-
-    feeds = {'rss' : RssArticleHistoryFeed,
-             'atom' : AtomArticleHistoryFeed}
-    ArticleHistoryFeed = feeds.get(feedtype, RssArticleHistoryFeed)
-
-    try:
-        feedgen = ArticleHistoryFeed(title, request,
-                                     group_slug, group_slug_field, group_qs,
-                                     article_qs, changes_qs,
-                                     extra_context,
-                                     *args, **kw).get_feed(title)
-    except FeedDoesNotExist:
-        raise Http404
-
-    response = HttpResponse(mimetype=feedgen.mime_type)
-    feedgen.write(response, 'utf-8')
-    return response
-
-
-def history_feed(request, feedtype,
-                 group_slug=None, group_slug_field=None, group_qs=None,
-                 article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
-                 extra_context=None,
-                 is_member=None,
-                 is_private=None,
-                 *args, **kw):
-
-    feeds = {'rss' : RssHistoryFeed,
-             'atom' : AtomHistoryFeed}
-    HistoryFeed = feeds.get(feedtype, RssHistoryFeed)
-
-    try:
-        feedgen = HistoryFeed(request,
-                              group_slug, group_slug_field, group_qs,
-                              article_qs, changes_qs,
-                              extra_context,
-                              *args, **kw).get_feed()
-    except FeedDoesNotExist:
-        raise Http404
-
-    response = HttpResponse(mimetype=feedgen.mime_type)
-    feedgen.write(response, 'utf-8')
-    return response
+    return HttpResponse(dmp.diff_prettyHtml(diffs), content_type="text/html")
 

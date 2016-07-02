@@ -10,7 +10,7 @@
 {% block content %}
 <div class="posRight small">
 	{% ifequal user profile.user %}
-		<a class="invertedColor" href="{% url profile_edit %}">Edit Profile</a>
+		<a class="invertedColor" href="{% url 'profile_edit' %}">Edit Profile</a>
 	{% endifequal %}
 </div>
 <h1>{{ profile.user.username }}'s Profile</h1>
@@ -25,7 +25,7 @@
 			</td>
 			<td>
 			{% ifnotequal user profile.user %}
-				<button onclick="window.location.href='{% url messages_compose_to profile.user %}';">
+				<button onclick="window.location.href='{% url 'messages_compose_to' profile.user %}';">
 					<img src="{{ MEDIA_URL }}forum/img/send_pm.png" alt ="" class="middle" />
 					<span class="middle">{% trans "Send PM" %}</span>
 				</button>
@@ -84,7 +84,7 @@
 <table class="bottom_line" width="100%">
 	<tr>
 		<td>
-    			<a href="{% url wlggz_userstats profile.user %}">View GGZ Statistics of this user</a>
+    			<a href="{% url 'wlggz_userstats' profile.user %}">View GGZ Statistics of this user</a>
 		</td>
 	</tr>
 </table>

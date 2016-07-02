@@ -62,7 +62,7 @@ class Forum(models.Model):
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
     description = models.TextField(_('Description'), blank=True, default='')
-    moderators = models.ManyToManyField(User, blank=True, null=True, verbose_name=_('Moderators'))
+    moderators = models.ManyToManyField(User, blank=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
 
     class Meta:
@@ -171,7 +171,7 @@ class RenderableItem(models.Model):
         if self.markup == 'bbcode':
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':
-            self.body_html = unicode(do_wl_markdown(self.body, safe_mode='escape', wikiwords=False))
+            self.body_html = unicode(do_wl_markdown(self.body, 'bleachit', wikiwords=False))
         else:
             raise Exception('Invalid markup property: %s' % self.markup)
 
@@ -183,7 +183,6 @@ class RenderableItem(models.Model):
 
         self.body_html = urlize(self.body_html)
 
-
 class Post(RenderableItem):
     topic = models.ForeignKey(Topic, related_name='posts', verbose_name=_('Topic'))
     user = models.ForeignKey(User, related_name='posts', verbose_name=_('User'))
@@ -193,7 +192,7 @@ class Post(RenderableItem):
     body = models.TextField(_('Message'))
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
-    user_ip = models.IPAddressField(_('User IP'), blank=True, default='')
+    user_ip = models.GenericIPAddressField(_('User IP'), default='')
 
     # Django sphinx
     if settings.USE_SPHINX:
@@ -349,8 +348,8 @@ class Attachment(models.Model):
                             self.path)
 
 
-#if notification is not None:
-#    signals.post_save.connect(notification.handle_observations, sender=Post)
+if notification is not None:
+    signals.post_save.connect(notification.handle_observations, sender=Post)
 
 from pybb import signals
 signals.setup_signals()

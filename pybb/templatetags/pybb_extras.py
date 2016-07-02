@@ -10,7 +10,6 @@ from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_unicode
-from django.db import settings
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils import dateformat

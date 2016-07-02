@@ -1,0 +1,13 @@
+{% extends 'sphinxdoc/documentation.html' %}
+
+{% block doc_body %}
+    <h1>Module Index</h1>
+    <dl>
+    {% for modname, collapse, cgroup, indent, fname, synops, pform, dep in doc.modindexentries %}
+        <dt><a href="{{ fname }}"><tt class="literal xref">{{ modname }}</tt></a></dt>
+        <dd>{{ synops }}</dd>
+    {% endfor %}
+    </dl>
+    <br />
+{% endblock doc_body %}
+{% block doc_toc %}{% endblock %}

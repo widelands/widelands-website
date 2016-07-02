@@ -3,7 +3,6 @@ from django.conf import settings
 def get(key, default):
     return getattr(settings, key, default)
 
-
 TOPIC_PAGE_SIZE = get('PYBB_TOPIC_PAGE_SIZE', 10)
 FORUM_PAGE_SIZE = get('PYBB_FORUM_PAGE_SIZE', 20)
 USERS_PAGE_SIZE = get('PYBB_USERS_PAGE_SIZE', 20)

@@ -3,7 +3,8 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% load wlpoll wlprofile %}
+{% load wlprofile_extras wlpoll_extras %}
+{% load comments %}
 {% load threadedcommentstags custom_date %}
 
 {% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
@@ -11,9 +12,9 @@
 {% block content %}
 	{% if perms.wlpoll %}
 	<div class="small posRight">
-		{% if perms.wlpoll.poll_can_add %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
-		{% if perms.wlpoll.poll_can_edit %}| <a href="/admin/wlpoll/poll/{{object.id}}/" class="invertedColor">Edit</a>{% endif %}
-		{% if perms.wlpoll.poll_can_delete %}| <a href="/admin/wlpoll/poll/{{object.id}}/delete/" class="invertedColor">Delete</a>{% endif %}
+		{% if perms.wlpoll.add_poll %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
+		{% if perms.wlpoll.change_poll %}| <a href="/admin/wlpoll/poll/{{object.id}}/" class="invertedColor">Edit</a>{% endif %}
+		{% if perms.wlpoll.delete_poll %}| <a href="/admin/wlpoll/poll/{{object.id}}/delete/" class="invertedColor">Delete</a>{% endif %}
 	</div>
 	{% endif %}
 	<h1>Poll: {{ object.name }}</h1>

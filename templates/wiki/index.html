@@ -1,6 +1,6 @@
 {% extends "wiki/base.html" %}
 {% load i18n %}
-{% load custom_date wlprofile %}
+{% load custom_date wlprofile_extras %}
 
 {% block title %}Wiki Index - {{ block.super }}{% endblock %}
 
@@ -20,7 +20,7 @@
 		<tbody>
 			{% for article in articles %}
 			<tr>
-				<td><a href="{% url wiki_article article.title %}">{{ article.title }}</a></td>
+				<td><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></td>
 				<td>{{ article.summary }}</td>
 				<td>{{ article.last_update|custom_date:user }}</td>
 			</tr>
@@ -28,7 +28,7 @@
 		</tbody>
 		</table>
 	{% else %}
-        <p><a href="{% url wiki_edit "NewArticle" %}">{% trans "Create a new article" %}</a>.</p>
+        <p><a href="{% url 'wiki_edit' "NewArticle" %}">{% trans "Create a new article" %}</a>.</p>
 	{% endif %}
 </div>
 {% endblock %}

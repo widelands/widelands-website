@@ -76,6 +76,7 @@ show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
     
 def show_topic_ctx(request, topic_id):
+
     try:
         topic = Topic.objects.select_related().get(pk=topic_id)
     except Topic.DoesNotExist:
@@ -106,7 +107,6 @@ def show_topic_ctx(request, topic_id):
     posts = topic.posts.all().select_related()
     page, paginator = paginate(posts, request, pybb_settings.TOPIC_PAGE_SIZE,
                                total_count=topic.post_count)
-
 
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
@@ -349,8 +349,7 @@ def post_ajax_preview(request):
     if markup == 'bbcode':
         html = mypostmarkup.markup(content, auto_urls=False)
     elif markup == 'markdown':
-        html = unicode(do_wl_markdown(content, safe_mode='escape', wikiwords=False))
-
+        html = unicode(do_wl_markdown(content, 'bleachit', wikiwords=False))
 
     html = urlize(html)
     return {'content': html}

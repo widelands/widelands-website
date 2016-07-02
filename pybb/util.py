@@ -1,20 +1,20 @@
-from datetime import datetime
 import os.path
 import random
-from BeautifulSoup import BeautifulSoup
 import traceback
+import json
 
+from BeautifulSoup import BeautifulSoup
+from datetime import datetime
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.utils.functional import Promise
-from django.utils.translation import force_unicode, check_for_language
-from django.utils.simplejson import JSONEncoder
+from django.utils.translation import check_for_language
+from django.utils.encoding import force_unicode
 from django import forms
 from django.template.defaultfilters import urlize as django_urlize
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
-
 from pybb import settings as pybb_settings
 
 
@@ -32,12 +32,16 @@ def render_to(template_path):
             if not isinstance(output, dict):
                 return output
             kwargs = {'context_instance': RequestContext(request)}
+ 
+            # NOCOMM: 'MIME_TYPE' is never in output as i can see for now.
+            # But if, this should maybe 'content_type' instead
             if 'MIME_TYPE' in output:
                 kwargs['mimetype'] = output.pop('MIME_TYPE')
             if 'TEMPLATE' in output:
                 template = output.pop('TEMPLATE')
             else:
                 template = template_path
+                
             return render_to_response(template, output, **kwargs)
         return wrapper
 
@@ -106,7 +110,7 @@ def ajax(func):
     return wrapper
 
 
-class LazyJSONEncoder(JSONEncoder):
+class LazyJSONEncoder(json.JSONEncoder):
     """
     This fing need to save django from crashing.
     """
@@ -122,11 +126,11 @@ class JsonResponse(HttpResponse):
     """
     HttpResponse subclass that serialize data into JSON format.
     """
-
+    # NOCOMM: The mimetype argument maybe must be replaced with content_type
     def __init__(self, data, mimetype='application/json'):
         json_data = LazyJSONEncoder().encode(data)
         super(JsonResponse, self).__init__(
-            content=json_data, mimetype=mimetype)
+            content=json_data, content_type=mimetype)
 
         
 def build_form(Form, _request, GET=False, *args, **kwargs):
@@ -159,9 +163,9 @@ def urlize(data):
                     islink = True
                     break
                 ptr = ptr.parent
-
             if not islink:
-                chunk = chunk.replaceWith(django_urlize(unicode(chunk)))
+                # Using unescape to prevent conversation of f.e. &gt; to &amp;gt;
+                chunk = chunk.replaceWith(django_urlize(unicode(unescape(chunk))))
 
         return unicode(soup)
 
@@ -240,11 +244,12 @@ def paginate(items, request, per_page, total_count=None):
     return page, paginator
 
 
+# NOCOMM: This function is never used AFAIK
+# 'django_language' isn't available since django 1.8
 def set_language(request, language):
     """
     Change the language of session of authenticated user.
     """
-
     if language and check_for_language(language):
         if hasattr(request, 'session'):
             request.session['django_language'] = language

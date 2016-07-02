@@ -1,14 +1,16 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 
-from registration.forms import RegistrationForm
-from wlrecaptcha.forms import RecaptchaForm, \
-    RecaptchaFieldPlaceholder, RecaptchaWidget
 from django import forms
+from registration.forms import RegistrationForm
+from nocaptcha_recaptcha.fields import NoReCaptchaField
+from wlprofile.models import Profile as wlprofile
 
-class RegistrationWithCaptchaForm(RegistrationForm,RecaptchaForm):
-    captcha = RecaptchaFieldPlaceholder(widget=RecaptchaWidget(theme="white"),
-                                label="Are you human?")
+# Overwritten form to include a captcha
+class RegistrationWithCaptchaForm(RegistrationForm):
+    captcha = NoReCaptchaField()
+
+    
 
 class ContactForm(forms.Form):
     surname = forms.CharField(max_length=80)

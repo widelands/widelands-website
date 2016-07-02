@@ -21,7 +21,7 @@ class Profile(models.Model):
     user = AutoOneToOneField(User, related_name='wlprofile', verbose_name=_('User'))
 
     # Web related fields.
-    site = models.URLField(_('Website'), verify_exists=False, blank=True, default='')
+    site = models.URLField(_('Website'), blank=True, default='')
     jabber = models.CharField(_('Jabber'), max_length=80, blank=True, default='')
     icq = models.CharField(_('ICQ'), max_length=12, blank=True, default='')
     msn = models.CharField(_('MSN'), max_length=80, blank=True, default='')
@@ -35,12 +35,9 @@ class Profile(models.Model):
     time_zone = models.FloatField(_('Time zone'), choices=TZ_CHOICES, default=float(settings.DEFAULT_TIME_ZONE))
     time_display = models.CharField(_('Time display'), max_length=80, default=settings.DEFAULT_TIME_DISPLAY)
     signature = models.TextField(_('Signature'), blank=True, default='', max_length=settings.SIGNATURE_MAX_LENGTH)
-    # language = models.CharField(_('Language'), max_length=10, blank=True, default='',
-    #                             choices=settings.LANGUAGES)
 
     avatar = ExtendedImageField(_('Avatar'), blank=True, default="wlprofile/anonymous.png", upload_to="wlprofile/avatars/", width=settings.AVATAR_WIDTH, height=settings.AVATAR_HEIGHT)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
-    # markup = models.CharField(_('Default markup'), max_length=15, default=settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
 
     class Meta:
         verbose_name = _('Profile')

@@ -5,7 +5,8 @@
 from django.test import TestCase as DjangoTest, Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.utils import simplejson as json
+# NOCOMM: Not used, but should be replaced with python json because it gets removed in django 1.7
+#from django.utils import simplejson as json
 from wlmaps.models import *
 
 import os

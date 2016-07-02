@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
 
-from notification import models as notification
+from notification.models import send
 
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
@@ -18,7 +18,8 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['body', 'markup',]
+        # Listing fields again to get the the right order; See also the NOCOMM
+        fields = ['name','body', 'markup', 'attachment',]
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -26,7 +27,8 @@ class AddPostForm(forms.ModelForm):
         self.forum = kwargs.pop('forum', None)
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
-
+        
+        # NOCOMM: This doesn't work anymore with django 1.8 Use 'field_order' with django 1.9
         self.fields.keyOrder = ['name', 
                                 'body', 
                                 'markup', 
@@ -64,16 +66,17 @@ class AddPostForm(forms.ModelForm):
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
                     markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
+
         post.save(*args, **kwargs)
 
         if pybb_settings.ATTACHMENT_ENABLE:
             self.save_attachment(post, self.cleaned_data['attachment'])
 
         if topic_is_new:
-            notification.send(User.objects.all(), "forum_new_topic",
+            send(User.objects.all(), "forum_new_topic",
                 {'topic': topic, 'post':post, 'user':topic.user})
         else:
-            notification.send(self.topic.subscribers.all(), "forum_new_post",
+            send(self.topic.subscribers.all(), "forum_new_post",
                 {'post':post, 'topic':topic, 'user':post.user})
         return post
 

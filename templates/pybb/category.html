@@ -5,7 +5,7 @@
 <h1>Category: {{category.name}}</h1>
 
 <div class="blogEntry">
-	<a href="{% url pybb_index %}">Forums</a> &#187; {{category.name}}
+	<a href="{% url 'pybb_index' %}">Forums</a> &#187; {{category.name}}
 	<br /><br />
 	{% include 'pybb/inlines/display_category.html' %}
 </div>

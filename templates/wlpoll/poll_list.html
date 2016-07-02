@@ -3,26 +3,43 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% load wlpoll wlprofile %}
-{% load threadedcommentstags custom_date %}
+{% block extra_head %}
+{{ block.super}}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
+{% endblock %}
 
+{% load threadedcommentstags custom_date %}
 {% block title %}Poll Archive - {{ block.super }}{% endblock %}
 
 {% block content %}
-{% if perms.wlpoll %}
+    {% if perms.wlpoll %}
 	<div class="small posRight">
-		{% if perms.wlpoll.poll_can_add %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
+		{% if perms.wlpoll.add_poll %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
 	</div>
-	{% endif %}
-<h1>Poll Archive</h1>
-<div class="blogEntry">
-	<ul>
-	{% for o in object_list %}
-	{% get_comment_count for o as ccount %}
-		<li>
-			<a href="{{o.get_absolute_url}}">{{ o.name }}</a> - <span class="small">posted at {{ o.pub_date|custom_date:user }}, {{ ccount }} comments, {{o.total_votes}} votes</span>
-		</li>
-	{% endfor %}
-	</ul>
-</div>
+    {% endif %}
+    <h1>Poll Archive</h1>
+    <div class="blogEntry">
+        <div class="post">
+        <table>
+            <tr>
+                <th>Poll</th>
+                <th>Begin</th>
+                <th>End</th>
+                <th>Votes</th>
+                <th>Comments</th>
+            </tr>
+            
+            {% for o in object_list %}
+            {% get_comment_count for o as ccount %}
+        	<tr>
+                <td><a href="{{o.get_absolute_url}}">{{ o.name }}</a></td>
+                <td>{{ o.pub_date|custom_date:user }}</td>
+                <td>{{ o.closed_date|custom_date:user }}</td>
+                <td class="center">{{o.total_votes}}</td>
+                <td class="right">{{ ccount }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
 {% endblock %}

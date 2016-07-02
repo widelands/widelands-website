@@ -65,7 +65,7 @@ def download(request, map_slug):
     m.nr_downloads += 1
     m.save()
 
-    response = HttpResponse(data, mimetype='application/octet-stream')
+    response = HttpResponse(data, content_type='application/octet-stream')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     return response
@@ -74,7 +74,6 @@ def download(request, map_slug):
 def view(request, map_slug):
     map = get_object_or_404(models.Map, slug=map_slug)
     context = {
-        #"average_rating": _average_rating( map.rating ),
         'map': map,
     }
     return render_to_response('wlmaps/map_detail.html',

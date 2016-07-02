@@ -1,5 +1,5 @@
 from django.contrib import admin
-from widelands.news.models import *
+from news.models import *
 
 
 class CategoryAdmin(admin.ModelAdmin):

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
@@ -61,14 +62,14 @@ class Image(models.Model):
     # Generic Foreign Key Fields
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey()
+    content_object = GenericForeignKey()
     
     name = models.CharField(max_length=100)
     revision = models.PositiveIntegerField()
 
     # User Field
     user = models.ForeignKey(User)
-    editor_ip = models.IPAddressField(_('IP address'), null=True, blank=True)
+    editor_ip = models.GenericIPAddressField(_('IP address'), null=True, blank=True)
     
     # Date Fields
     date_submitted = models.DateTimeField(_('date/time submitted'), default = datetime.now)

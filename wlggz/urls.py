@@ -9,10 +9,10 @@
 # Last Modified: $Date$
 #
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 import views
 
-urlpatterns = patterns('',
+urlpatterns = [
    url(r'^$', views.view_overview, name='wlggz_main'),
    url(r'^stats/?$', views.view, name='wlggz_userstats'),
    url(r'^info/?$', views.view, name='wlggz_userinfo'),
@@ -21,5 +21,5 @@ urlpatterns = patterns('',
    url(r'^changepw$', views.change_password, name='wlggz_changepw'),
    url(r'^ranking$', views.view_ranking, name='wlggz_ranking'),
    url(r'^matches$', views.view_matches, name='wlggz_matches'),
-)
+]
 

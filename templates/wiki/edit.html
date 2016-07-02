@@ -1,6 +1,6 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
-{% load wlimages %}
+{% load wlimages_extras %}
 
 {% block title %}
 {% trans "Editing" %} {{ article.title }} - {{ block.super }}
@@ -18,7 +18,7 @@
 		$("#id_preview").click(function(){ 
 			// Activate preview
 			$("#preview").html("<h3>Preview</h3>\n<hr>\n<div class=\"wiki_article\" id=\"content_preview\">Loading...</div>\n<hr>");
-			$("#content_preview").load( "{% url wiki_preview %}", 
+			$("#content_preview").load( "{% url 'wiki_preview' %}", 
 				{"body": $("#id_content").val()});
 		})
 
@@ -27,7 +27,7 @@
 		$("#id_diff").click(function(){ 
 			// Activate preview
 			$("#diff").html("<h3>Diff</h3>\n<hr>\n<div id=\"content_diff\">Loading...</div>\n<hr>");
-			$("#content_diff").load( "{% url wiki_preview_diff %}", 
+			$("#content_diff").load( "{% url 'wiki_preview_diff' %}", 
 				{"body": $("#id_content").val(), "article": {{ object_id }} });
 		})
 	{%endifequal%}
@@ -39,9 +39,9 @@
 {% block content %}
 {% if not new_article %} 
 <div class="posRight small">
-	<a href="{% url wiki_article article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
+	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
 	|
-	<a href="{% url wiki_article_history article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
+	<a href="{% url 'wiki_article_history' article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
 </div>
 {% endif %}
 <h1>{% trans "Editing" %} {{ article.title }}</h1>

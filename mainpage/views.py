@@ -20,7 +20,6 @@ def mainpage(request):
 
 def legal_notice(request):
     """The legal notice page to fullfill law."""
-
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -32,10 +31,11 @@ def legal_notice(request):
                                 form.cleaned_data['inquiry']])
             sender = 'legal_note@widelands.org'
 
-            ## get email addresses which are in a tuple of ('name','email'),
+            ## get email addresses which are in form of ('name','email'),
             recipients = []
             for recipient in INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
+                print('recipeients: ', recipients)
 
             send_mail(subject, message, sender,
                 recipients, fail_silently=False)
@@ -43,41 +43,38 @@ def legal_notice(request):
 
     else:
         form = ContactForm() # An unbound form
-
+    
     return render(request, 'mainpage/legal_notice.html', {
         'form': form,
+        'inquiry_recipients': INQUIRY_RECIPIENTS,
         })
 
 def legal_notice_thanks(request):
     return render(request, 'mainpage/legal_notice_thanks.html')
 
+from wlprofile.models import Profile
+from registration.backends.hmac.views import RegistrationView
+from django.contrib.auth.models import User
 
-from forms import RegistrationWithCaptchaForm
-from registration.backends.default import DefaultBackend
-
-
-def register(request):
-    """Overwritten view from registration to include a captcha.
-
-    We only need this because the remote IP addr must be passed to the
-    form; the registration doesn't do this
-
+class OwnRegistrationView(RegistrationView):
     """
-    remote_ip = request.META['REMOTE_ADDR']
-    if request.method == 'POST':
-        form = RegistrationWithCaptchaForm(remote_ip, data=request.POST,
-                                           files=request.FILES)
-        if form.is_valid():
-            new_user = DefaultBackend().register(request, **form.cleaned_data)
-            return HttpResponseRedirect(reverse('registration_complete'))
-    else:
-        form = RegistrationWithCaptchaForm(remote_ip)
+    Overwriting the default function to save also the extended User model (wlprofile)
+    """
+    def create_inactive_user(self, form):
+        """
+        Additionally save the custom enxtended user data.
+        """
+        new_user = form.save(commit=False)
+        new_user.is_active = False
+        new_user.save()
+        reg_user = User.objects.get(username=new_user)
+        ext_profile = Profile(user=reg_user)
+        ext_profile.save()
 
-    return render_to_response('registration/registration_form.html',
-                              {'registration_form': form},
-                              context_instance=RequestContext(request))
+        self.send_activation_email(new_user)
 
-
+        return new_user
+    
 def developers(request):
     """This reads out some json files in the SVN directory, and returns it as a
     wl_markdown_object.

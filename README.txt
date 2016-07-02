@@ -9,11 +9,11 @@ build dependencies for numpy, which will be compiled as a part of getting
 the dependencies for the website. Go and install them all.
 
 Example:
-On Ubuntu, installing all required tools and dependencies in two commands::
+On Ubuntu, installing all required tools and dependencies in two commands:
 
    $ sudo apt-get install python-dev python-virtualenv python-pip mercurial bzr subversion git-core sqlite3
    $ sudo apt-get build-dep python-numpy
-
+   
 Setting up the local environment
 --------------------------------
 
@@ -23,9 +23,9 @@ Go to the directory you want to install the homepage to, then run::
 
 This will make sure that your virtual environment is not tainted with python
 packages from your global site packages. Very important!
-Now, we create and activate our environment:: 
+Now, we create and activate our environment. This installation depends on python2.7, so you must may use a special virtualenv-command: 
 
-   $ virtualenv --no-site-packages wlwebsite
+   $ virtualenv wlwebsite
    $ cd wlwebsite
    $ source bin/activate
 
@@ -63,30 +63,16 @@ directly, but you might want to edit the bd variable in local_settings.py::
    $ ln -s local_urls.py.sample local_urls.py
    $ ln -s local_settings.py.sample local_settings.py
    
-There has to be some corrections to get into the admin pages:
-
-Either copy the folders "media" and "templates"
-
-   from: ~/wlwebsite/django/contrib/admin
-   to:   ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/
-   
-or create symlinks:
-
-   $ ln -s ~/wlwebsite/django/contrib/admin/templates/ ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/templates
-   $ ln -s ~/wlwebsite/django/contrib/admin/media/ ~/wlwebsite/lib/python2.7/site-packages/django/contrib/admin/media
-
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Now, let's try if everything works out::
-
-   $ ./manage.py syncdb
-
-You will need to enter a superuser name and account.
-After setting up the database, pybb and djangoratings will not be synced.
-To migrate these, run::
+Now creating the tables in the database:
 
    $ ./manage.py migrate
+
+Create a superuser:
+
+   $ ./manage.py createsuperuser
 
 Now, let's run the page::
 
@@ -99,8 +85,12 @@ Some important settings
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Go to http://localhost:8000/admin. Log in with your super user and go to the
-Sites Admin. Change your site name from example.com to localhost. Now,
-everything should work out.
+following Tables:
+
+- Site/Sites: Change your site name from example.com to localhost:8000. 
+- Wlprofile/Profiles: Add yourself as a user
+
+Now everything should work.
 
 Accessing the website from other machines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,7 +103,7 @@ production environments, only for development/testing.
 
    $ ./manage.py runserver 169.254.1.0:8000
 
-See also http://docs.djangoproject.com/en/dev/ref/django-admin/#runserver-port-or-address-port
+See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
 for further details. 
 
 Setting up the online help / encyclopedia

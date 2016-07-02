@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 from django.contrib.auth.models import User
 from tagging.fields import TagField
-from widelands.news.managers import PublicManager
+from news.managers import PublicManager
 from django.core.urlresolvers import reverse
 
 import settings
@@ -51,7 +51,7 @@ class Post(models.Model):
     )
     title           = models.CharField(_('title'), max_length=200)
     slug            = models.SlugField(_('slug'), unique_for_date='publish')
-    author          = models.ForeignKey(User, blank=True, null=True)
+    author          = models.ForeignKey(User, null=True)
     body            = models.TextField(_('body'))
     tease           = models.TextField(_('tease'), blank=True)
     status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
@@ -114,7 +114,7 @@ class Post(models.Model):
         return ('news_detail', None, {
             'slug': self.slug,
             'year': self.publish.year,
-            'month': self.publish.strftime('%m'),
+            'month': self.publish.strftime('%b'),
             'day': self.publish.day,
         })
     

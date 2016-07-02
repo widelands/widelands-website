@@ -1,42 +1,43 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-from widelands.mainpage.views import mainpage
+from mainpage.views import mainpage
 
-from widelands.news.feeds import NewsPostsFeed
-from widelands.wiki.feeds import RssHistoryFeed
-from django.views.generic.simple import redirect_to
+from news.feeds import NewsPostsFeed
+from django.views.generic.base import RedirectView
+from django.contrib.syndication.views import Feed
+from mainpage.views import OwnRegistrationView
+from mainpage.forms import RegistrationWithCaptchaForm
 
-feeds = {
-    'news': NewsPostsFeed,
-
-    # Wiki has it's own set of feeds
-}
-
-urlpatterns = patterns('',
+urlpatterns = [
     # Uncomment the next line to enable the admin:
-    (r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 
     # Django builtin / Registration
     # overwrite registration with own implementation
-    url (r'^accounts/register/$', 'mainpage.views.register', name='registration_register'),
-    (r'^accounts/', include('registration.backends.default.urls')),
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    url (r'^accounts/register/$', OwnRegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    
+    # Feed for Mainpage
+    url (r'^feeds/news/$', NewsPostsFeed()),
 
-    # 3rd party, unmodified
-    (r'^notification/', include('notification.urls')),
+    # Formerly 3rd party
+    url (r'^notification/', include('notification.urls')),
+
     # (r'^stats/', include('simplestats.urls')),
-    (r'^messages/', include('django_messages.urls')),
-    (r'^threadedcomments/', include('threadedcomments.urls')),
-    (r'^docs/', include('sphinxdoc.urls')),
+    url (r'^messages/', include('django_messages.urls')),
+    url (r'^threadedcomments/', include('threadedcomments.urls')),
+#    url(r'^articles/comments/', include('django_comments.urls')),
+    
+    url (r'^docs/', include('sphinxdoc.urls')),
 
     # 3rd party, modified for widelands
-    (r'^wiki/', include('wiki.urls')),
-    (r'^news/', include('news.urls')),
-    (r'^forum/', include('pybb.urls')),
+    url (r'^wiki/', include('wiki.urls')),
+    url (r'^news/', include('news.urls')),
+    url (r'^forum/', include('pybb.urls')),
 
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
@@ -44,7 +45,7 @@ urlpatterns = patterns('',
     url(r'^developers/$', "mainpage.views.developers", name="developers"),
     url(r'^legal_notice/$', "mainpage.views.legal_notice", name="legal_notice"),
     url(r'^legal_notice_thanks/$', "mainpage.views.legal_notice_thanks", name="legal_notice_thanks"),
-    url(r'^help/(?P<path>.*)', redirect_to, { "url": "/encyclopedia/%(path)s", "permanent": True }), # to not break old links
+    url(r'^help/(?P<path>.*)', RedirectView.as_view( url= "/encyclopedia/%(path)s" , permanent=True)), # to not break old links
     url(r'^encyclopedia/', include("wlhelp.urls")),
     url(r'^webchat/', include("wlwebchat.urls")),
     url(r'^images/', include("wlimages.urls")),
@@ -54,7 +55,7 @@ urlpatterns = patterns('',
     url(r'^maps/', include("wlmaps.urls")),
     url(r'^screenshots/', include("wlscreens.urls")),
     url(r'^ggz/', include("wlggz.urls")),
-)
+]
 
 try:
     from local_urls import *

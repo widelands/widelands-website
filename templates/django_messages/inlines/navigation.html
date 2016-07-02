@@ -7,10 +7,10 @@
             <td width="">&nbsp;
             </td>
             <td width="370" align="right" style="table-layout: fixed; background-image: url(/wlmedia/img/background-4F4F4F.png);">
-                <a href="{% url messages_inbox %} ">{% trans "Inbox" %}</a>
-                | <a href="{% url messages_outbox %} ">{% trans "Sent Messages" %}</a>
-                | <a href="{% url messages_compose %} ">{% trans "New Message" %}</a>
-                | <a href="{% url messages_trash %} ">{% trans "Message Trash" %}</a>
+                <a href="{% url 'messages_inbox' %} ">{% trans "Inbox" %}</a>
+                | <a href="{% url 'messages_outbox' %} ">{% trans "Sent Messages" %}</a>
+                | <a href="{% url 'messages_compose' %} ">{% trans "New Message" %}</a>
+                | <a href="{% url 'messages_trash' %} ">{% trans "Message Trash" %}</a>
             </td>
         </tr>
     </table>

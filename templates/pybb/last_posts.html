@@ -1,5 +1,5 @@
 {% load i18n %} 
-{% load wlprofile %} 
+{% load wlprofile_extras %} 
 {% load custom_date %} 
 {% load pybb_extras %}
 
@@ -12,7 +12,7 @@
 			<li>
 				{{ post.topic.forum.name }}<br />
 				<a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|pybb_cut_string:30 }}</a><br />
-				by <a href="{% url profile_view post.user %}">{{post.user.username}}</a> {{ post.created|minutes }} ago
+				by <a href="{% url 'profile_view' post.user %}">{{post.user.username}}</a> {{ post.created|minutes }} ago
 			</li>
 			{% endfor %}
 		</ul>
