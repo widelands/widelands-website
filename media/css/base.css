@@ -164,8 +164,9 @@ td {
 }
 
 .right  {
-	text-align: right;
+       text-align: right;
 }
+
 .middle {
 	vertical-align: middle;
 }

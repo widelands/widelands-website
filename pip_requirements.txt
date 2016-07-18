@@ -22,7 +22,7 @@ pyparsing==2.1.4
 six==1.10.0
 #franku: sphinxdoc is now included in wl
 #django-sphinxdoc==0.3.2
-Sphinx==0.6.5
+Sphinx==1.4.5
 untokenize==0.1.1
 #-e git://github.com/kerin/django-sphinx.git/@1c5ef8abcf86f9a9458f763ceb9e5d882247ea37#egg=djangosphinx
 -e git://github.com/kerin/django-sphinx.git#egg=django-sphinx
