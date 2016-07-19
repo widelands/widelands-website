@@ -7,8 +7,7 @@
 {% block content %}
 <h1>Documentation: {{ app.name }}</h1>
 <div class="blogEntry">
-	<a href="/docs/">Documentation</a> 
-	» <a href="{{ app.get_absolute_url }}">{{ app.name }}</a>
+	<a href="{{ app.get_absolute_url }}">{{ app.name }}</a>
 	{% for p in doc.parents %}
 	» <a href="{{ p.link }}">{{ p.title|safe }}</a>
 	{% endfor %}
