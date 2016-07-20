@@ -20,6 +20,7 @@ urlpatterns = [
     # overwrite registration with own implementation
     url (r'^accounts/register/$', OwnRegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url('^', include('django.contrib.auth.urls')),
     
     # Feed for Mainpage
     url (r'^feeds/news/$', NewsPostsFeed()),

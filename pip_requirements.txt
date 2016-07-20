@@ -5,7 +5,7 @@ django-contrib-comments==1.6.2
 django-messages==0.5.3
 django-nocaptcha-recaptcha==0.0.19
 # next is a more updated version of linaro-django-pagination
--e git://github.com/zyga/django-pagination.git#egg=django-pagination
+-e git://github.com/zyga/django-pagination.git#egg=linaro-django-pagination
 django-registration==2.0.4
 django-tagging==0.4.1
 docutils==0.12
