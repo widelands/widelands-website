@@ -32,9 +32,11 @@ urlpatterns = [
     url (r'^messages/', include('django_messages.urls')),
     url (r'^threadedcomments/', include('threadedcomments.urls')),
 #    url(r'^articles/comments/', include('django_comments.urls')),
-    
-    url (r'^docs/', include('sphinxdoc.urls')),
 
+    # Redirect old urls to docs to docs/wl
+    url(r'^docs/$', RedirectView.as_view( url='/docs/wl' ), name='docs'),
+    url (r'^docs/', include('sphinxdoc.urls')),
+        
     # 3rd party, modified for widelands
     url (r'^wiki/', include('wiki.urls')),
     url (r'^news/', include('news.urls')),
@@ -64,3 +66,4 @@ try:
 except ImportError:
     pass
 
+handler500 = 'mainpage.views.custom_http_500'
