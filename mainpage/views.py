@@ -174,5 +174,5 @@ def changelog(request):
 
 
 def custom_http_500(request):
-    """A custom http 500 error page to not loose css styling."""
+    """A custom http 500 error page to not lose css styling."""
     return render(request, '500.html', status=500)
