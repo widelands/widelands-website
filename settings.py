@@ -315,7 +315,7 @@ BLEACH_ALLOWED_TAGS = [u'a',
                        u'img',
                        u'hr',
                        u'table', u'tbody', u'thead', u'th', u'tr', u'td',
-		       u'sup',
+                       u'sup',
 ]
 
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], '*': ['class', 'id', 'title']}

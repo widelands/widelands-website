@@ -18,36 +18,40 @@ def mainpage(request):
     return render_to_response('mainpage.html',
                               context_instance=RequestContext(request))
 
+
 def legal_notice(request):
     """The legal notice page to fullfill law."""
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['forename'] +  ' ' + form.cleaned_data['surname']
-            subject =  'An inquiry over the webpage'
+            name = form.cleaned_data['forename'] + \
+                ' ' + form.cleaned_data['surname']
+            subject = 'An inquiry over the webpage'
             message = '\n'.join(['From: ' + name,
-                                'EMail: ' + form.cleaned_data['email'],
-                                'Inquiry:',
-                                form.cleaned_data['inquiry']])
+                                 'EMail: ' + form.cleaned_data['email'],
+                                 'Inquiry:',
+                                 form.cleaned_data['inquiry']])
             sender = 'legal_note@widelands.org'
 
-            ## get email addresses which are in form of ('name','email'),
+            # get email addresses which are in form of ('name','email'),
             recipients = []
             for recipient in INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
                 print('recipeients: ', recipients)
 
             send_mail(subject, message, sender,
-                recipients, fail_silently=False)
-            return HttpResponseRedirect('/legal_notice_thanks/') # Redirect after POST
+                      recipients, fail_silently=False)
+            # Redirect after POST
+            return HttpResponseRedirect('/legal_notice_thanks/')
 
     else:
-        form = ContactForm() # An unbound form
-    
+        form = ContactForm()  # An unbound form
+
     return render(request, 'mainpage/legal_notice.html', {
         'form': form,
         'inquiry_recipients': INQUIRY_RECIPIENTS,
-        })
+    })
+
 
 def legal_notice_thanks(request):
     return render(request, 'mainpage/legal_notice_thanks.html')
@@ -56,14 +60,13 @@ from wlprofile.models import Profile
 from registration.backends.hmac.views import RegistrationView
 from django.contrib.auth.models import User
 
+
 class OwnRegistrationView(RegistrationView):
-    """
-    Overwriting the default function to save also the extended User model (wlprofile)
-    """
+    """Overwriting the default function to save also the extended User model
+    (wlprofile)"""
+
     def create_inactive_user(self, form):
-        """
-        Additionally save the custom enxtended user data.
-        """
+        """Additionally save the custom enxtended user data."""
         new_user = form.save(commit=False)
         new_user.is_active = False
         new_user.save()
@@ -74,7 +77,8 @@ class OwnRegistrationView(RegistrationView):
         self.send_activation_email(new_user)
 
         return new_user
-    
+
+
 def developers(request):
     """This reads out some json files in the SVN directory, and returns it as a
     wl_markdown_object.
@@ -167,3 +171,8 @@ def changelog(request):
                               {'changelog': data},
                               context_instance=RequestContext(request)
                               )
+
+
+def custom_http_500(request):
+    """A custom http 500 error page to not lose css styling."""
+    return render(request, '500.html', status=500)
