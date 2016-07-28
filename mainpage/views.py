@@ -59,7 +59,7 @@ def legal_notice_thanks(request):
 from wlprofile.models import Profile
 from registration.backends.hmac.views import RegistrationView
 from django.contrib.auth.models import User
-
+from wlggz.models import GGZAuth
 
 class OwnRegistrationView(RegistrationView):
     """Overwriting the default function to save also the extended User model
@@ -71,8 +71,12 @@ class OwnRegistrationView(RegistrationView):
         new_user.is_active = False
         new_user.save()
         reg_user = User.objects.get(username=new_user)
-        ext_profile = Profile(user=reg_user)
+        # Creating a wlprofile
+	ext_profile = Profile(user=reg_user)
         ext_profile.save()
+	# Creating a ggzprofile
+        ggz_profile = GGZAuth(user=reg_user)
+        ggz_profile.save()
 
         self.send_activation_email(new_user)
 
