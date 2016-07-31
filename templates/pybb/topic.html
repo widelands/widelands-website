@@ -92,12 +92,6 @@
 				{% if post.user.wlprofile.location %}
 				<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
 				{% endif %}
-				{% if post.user.wlprofile.get_ggzstats and post.user.wlprofile.get_ggzstats.ranking %} 
-				<strong>GGZ ranking:</strong> {{ post.user.wlprofile.get_ggzstats.ranking|floatformat }}<br />
-				<strong>GGZ rating:</strong> {{ post.user.wlprofile.get_ggzstats.rating|floatformat }}<br />
-				<strong>GGZ win:</strong> {{ post.user.wlprofile.get_ggzstats.wins|floatformat }}<br />
-				<strong>GGZ loses:</strong> {{ post.user.wlprofile.get_ggzstats.losses|floatformat }}<br />
-				{% endif %}
 				</div>
 			</td>
 			<td class="post">
@@ -178,12 +172,6 @@
 				<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
 				{% if post.user.wlprofile.location %}
 				<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
-				{% endif %}
-				{% if post.user.wlprofile.get_ggzstats and post.user.wlprofile.get_ggzstats.ranking %} 
-				<strong>GGZ ranking:</strong> {{ post.user.wlprofile.get_ggzstats.ranking|floatformat }}<br />
-				<strong>GGZ rating:</strong> {{ post.user.wlprofile.get_ggzstats.rating|floatformat }}<br />
-				<strong>GGZ win:</strong> {{ post.user.wlprofile.get_ggzstats.wins|floatformat }}<br />
-				<strong>GGZ loses:</strong> {{ post.user.wlprofile.get_ggzstats.losses|floatformat }}<br />
 				{% endif %}
 				</div>
 			</td>
