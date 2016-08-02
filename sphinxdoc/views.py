@@ -15,7 +15,7 @@ from sphinxdoc.models import App
 
 SPECIAL_TITLES = {
     'genindex': 'General Index',
-    'modindex': 'Module Index',
+    'py-modindex': 'Module Index',
     'search': 'Search',
 }
 
