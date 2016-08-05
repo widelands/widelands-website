@@ -29,6 +29,7 @@ NORECAPTCHA_SECRET_KEY = 'dummy'
 LOGO_FILE = 'Logo_alpha.png'
 
 # Setting an email backend prevents 'connection refused' errors
+# Don't use this on the widelands server!
 # This Backend shows Emails in console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
