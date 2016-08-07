@@ -16,7 +16,7 @@
         <dt>
           {# contents.0 is a list of links for the item #}
             {% if contents.0 %}
-            <a href="{{ contents.0.0 }}">{{ name }}</a>
+            <a href="{{ contents.0.0.1 }}">{{ name }}</a>
             {% else %}
             {{ name }}
             {% endif %}
@@ -25,7 +25,7 @@
             {% if contents.1 %}
                 {% for subname, sublinks in contents.1 %}
         <dd>
-            <a href="{{ sublinks.0 }}">{{ subname }}</a>
+            <a href="{{ sublinks.0.1 }}">{{ subname }}</a>
                     {% for link in sublinks|slice:"1:" %}, <a href="{{ link }}">[Link]</a>{% endfor %}
         </dd>
                 {% endfor %}
