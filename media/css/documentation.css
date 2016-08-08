@@ -7,6 +7,10 @@
 	visibility: visible; 
 }
 
+img.math{
+	vertical-align: middle;
+}
+
 /*******************************/
 /* Pygment Syntax Highlighting */
 /*******************************/

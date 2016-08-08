@@ -34,7 +34,7 @@ urlpatterns = [
 #    url(r'^articles/comments/', include('django_comments.urls')),
 
     # Redirect old urls to docs to docs/wl
-    url(r'^docs/$', RedirectView.as_view( url='/docs/wl' ), name='docs'),
+    url(r'^docs/$', RedirectView.as_view( url='/docs/wl', permanent=True ), name='docs'),
     url (r'^docs/', include('sphinxdoc.urls')),
         
     # 3rd party, modified for widelands

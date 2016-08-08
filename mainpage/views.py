@@ -72,9 +72,9 @@ class OwnRegistrationView(RegistrationView):
         new_user.save()
         reg_user = User.objects.get(username=new_user)
         # Creating a wlprofile
-	ext_profile = Profile(user=reg_user)
+        ext_profile = Profile(user=reg_user)
         ext_profile.save()
-	# Creating a ggzprofile
+        # Creating a ggzprofile
         ggz_profile = GGZAuth(user=reg_user)
         ggz_profile.save()
 
