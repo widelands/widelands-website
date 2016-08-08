@@ -19,8 +19,41 @@ DATABASES = {
 
 
 # The following are just dummy values, but needed defined
+# To use the registration you have to create an API key pair
+# See https://developers.google.com/recaptcha/docs/start
+# You have to use 'localhost' as Domain
 NORECAPTCHA_SITE_KEY = 'dummy'
 NORECAPTCHA_SECRET_KEY = 'dummy'
 
 # The logo used for mainpage
 LOGO_FILE = 'Logo_alpha.png'
+
+# Setting an email backend prevents 'connection refused' errors
+# Don't use this on the widelands server!
+# This Backend shows Emails in console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Uncomment 'LOGGING = {...}' for debugging purposes when you have set DEBUG=False.
+# Use then in the code:
+
+# import logging
+# log = logging.getLogger(__name__)
+# log.info('Variable x: %s', x)
+
+# This prints the value for Variable 'x' to log.txt
+
+#LOGGING = {
+#    'version': 1,
+#    'disable_existing_loggers': False,
+#    'handlers': {
+#        'logfile': {
+#            'level':'DEBUG',
+#            'class':'logging.FileHandler',
+#            'filename': bd + "/log.txt",
+#        },
+#    },
+#    'root': {
+#        'level': 'INFO',
+#        'handlers': ['logfile']
+#    },
+#}

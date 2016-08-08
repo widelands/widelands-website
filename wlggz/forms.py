@@ -12,8 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 
 import hashlib
 import base64
-import settings
-import re
 
 class EditGGZForm(forms.ModelForm):
     password = forms.CharField(label=_(u'Online Gaming Password'), widget = forms.PasswordInput(render_value = False), required=True)

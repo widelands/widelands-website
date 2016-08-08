@@ -9,7 +9,6 @@ import logging
 from django.db.models import OneToOneField
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
 from django.db import models
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
@@ -32,50 +31,3 @@ class AutoOneToOneField(OneToOneField):
         setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
         #if not cls._meta.one_to_one_field:
             #cls._meta.one_to_one_field = self
-
-
-class ExtendedImageField(models.ImageField):
-    """
-    Extended ImageField that can resize image before saving it.
-    """
-    def __init__(self, *args, **kwargs):
-        self.width = kwargs.pop('width', None)
-        self.height = kwargs.pop('height', None)
-        super(ExtendedImageField, self).__init__(*args, **kwargs)
-
-
-    def save_form_data(self, instance, data):
-        if data and self.width and self.height:
-            if instance.avatar:
-                instance.avatar.delete()
-
-            content = self.resize_image(data.read(), width=self.width, height=self.height)
-            data = SimpleUploadedFile(instance.user.username + ".png", content, data.content_type)
-            super(ExtendedImageField, self).save_form_data(instance, data)
-
-
-    def resize_image(self, rawdata, width, height):
-        """
-        Resize image to fit it into (width, height) box.
-        """
-        import Image
-
-        image = Image.open(StringIO(rawdata))
-        try:
-            oldw, oldh = image.size
-
-            if oldw > width or oldh > height:
-                if oldw >= oldh:
-                    x = int(round((oldw - oldh) / 2.0))
-                    image = image.crop((x, 0, (x + oldh) - 1, oldh - 1))
-                else:
-                    y = int(round((oldh - oldw) / 2.0))
-                    image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
-                image = image.resize((width, height), resample=Image.ANTIALIAS)
-        except Exception, err:
-            logging.error(err)
-            return ''
-
-        string = StringIO()
-        image.save(string, format='PNG')
-        return string.getvalue()
