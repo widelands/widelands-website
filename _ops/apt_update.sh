@@ -11,7 +11,7 @@ set -ex
 apt-get update
 stop wlwebsite
 
-apt-get dist-upgrade -y
+apt-get dist-upgrade
 
 start wlwebsite
 
