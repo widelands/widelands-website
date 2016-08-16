@@ -24,9 +24,9 @@ class Map(models.Model):
     descr = models.TextField(verbose_name='Description')
     hint = models.TextField(verbose_name='Hint')
     minimap = models.ImageField(
-        verbose_name='Minimap', upload_to=settings.MEDIA_ROOT + '/wlmaps/minimaps/')
+        verbose_name='Minimap', upload_to='wlmaps/minimaps')
     file = models.FileField(verbose_name='Mapfile',
-                            upload_to=settings.MEDIA_ROOT + '/wlmaps/maps/')
+                            upload_to='wlmaps/maps')
 
     world_name = models.CharField(max_length=50)
 
