@@ -17,11 +17,11 @@ On Ubuntu, installing all required tools and dependencies in two commands:
 Used python version
 -------------------
 
-Currently the website depends on python 2.7. In case you have python 3 as default (like on arch-linux),
-you have to adjust the python relevant commands to use python 2.7. F.e. 'virtualenv2 wlwebsite' creates
-a virtualenvironment using python 2.7. If the virtualenvironment is activated, python 2.7 will be become
+Currently, the website depends on python 2.7. In case you have python 3 as default (like on arch-linux),
+you have to adjust the python relevant commands to use python 2.7. E.g. 'virtualenv2 wlwebsite' creates
+a virtualenvironment using python 2.7. If the virtualenvironment is activated, python 2.7 will become
 standard for executing python code in this shell.
-   
+
 Setting up the local environment
 --------------------------------
 
@@ -50,12 +50,12 @@ website needs. We use pip for that.
 Installation of the third party libraries should be easy, given you have
 development tools installed and in your path. The two difficult packages are
 PIL and numpy; you can also try to migrate them over from your global site dir
-or add your global site dir to your PYTHONPATH. 
+or add your global site dir to your PYTHONPATH.
 Installation via pip should work like this::
 
    $ pip install -r pip_requirements.txt
 
-This will take a while. If no errors are shown we should be fine. 
+This will take a while. If no errors are shown we should be fine.
 
 Setting up the website
 ----------------------
@@ -70,7 +70,7 @@ directly, but you might want to edit the bd variable in local_settings.py::
 
    $ ln -s local_urls.py.sample local_urls.py
    $ ln -s local_settings.py.sample local_settings.py
-   
+
 Setting up the database
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -87,7 +87,7 @@ Now, let's run the page::
    $ ./manage.py runserver
 
 Open your browser to http://localhost:8000. You should see something that
-resembles the widelands homepage quite closely. All content is missing though. 
+resembles the widelands homepage quite closely. All content is missing though.
 
 Some important settings
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -95,7 +95,7 @@ Some important settings
 Go to http://localhost:8000/admin. Log in with your super user and go to the
 following tables:
 
-- Site/Sites: Change your site name from example.com to localhost:8000. 
+- Site/Sites: Change your site name from example.com to localhost:8000.
 - Wlprofile/Profiles: Add yourself as a user
 - Wlggz/Ggz: Add yourself as a user
 
@@ -113,7 +113,7 @@ production environments, only for development/testing.
    $ ./manage.py runserver 169.254.1.0:8000
 
 See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
-for further details. 
+for further details.
 
 Setting up the online help / encyclopedia
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -155,7 +155,7 @@ Name: Widelands developer documentation
 Slug: wl
 Path: /your/path/to/widelands-src/doc/sphinx/build/json/
 
-Open http://localhost:8000/docs/wl/ to see if all is working.
+Open http://localhost:8000/docs/wl/ to test if everything is working.
 
 
 Contact
