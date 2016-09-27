@@ -11,6 +11,24 @@ img.math{
 	vertical-align: middle;
 }
 
+th {
+	background-color: #595959;
+}
+
+/* Disable base style and set new ones */
+code {
+	background-image: none;
+	background-color: #3F3E3E;
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+/* Used for functions in first line */
+code.descname {
+	font-size: 1.4em;
+}
+
+
 /*******************************/
 /* Pygment Syntax Highlighting */
 /*******************************/
