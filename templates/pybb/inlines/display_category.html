@@ -29,13 +29,22 @@
 			Topics: {{ forum.topics.count }}<br/>
 			Posts: {{ forum.posts.count }}
 		</td>
-		<td class="lastPost">
-		{% if forum.last_unhided_post %}
-			<a href="{{forum.last_unhided_post.get_absolute_url}}">{{ forum.last_unhided_post.topic.name }}</a><br />
-			<span class="small">by {{ forum.last_unhided_post.user|user_link }}<br />
-			on {{ forum.last_unhided_post.created|custom_date:user}}</span>
-		{% else %}
-			&nbsp;
+		{% if user.is_superuser %} {# Show all to superuser #}
+			{% if forum.last_post %}
+			<td class="lastPost">
+				<a href="{{forum.last_post.get_absolute_url}}">{{ forum.last_post.topic.name }}</a><br />
+				<span class="small">by {{ forum.last_post.user|user_link }}<br />
+				on {{ forum.last_post.created|custom_date:user}}</span>
+			</td>
+			{% endif %}
+		{% else %} {# no super_user: Show only unhided posts#}
+			{% if forum.last_unhided_post %}
+			<td class="lastPost">
+				<a href="{{forum.last_unhided_post.get_absolute_url}}">{{ forum.last_unhided_post.topic.name }}</a><br />
+				<span class="small">by {{ forum.last_unhided_post.user|user_link }}<br />
+				on {{ forum.last_unhided_post.created|custom_date:user}}</span>
+			</td>
+			{% endif %}
 		{% endif %}
 		</td>
 	</tr>
