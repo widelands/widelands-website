@@ -1,0 +1,171 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0035)http://akismet.com/development/api/ -->
+<HTML 
+xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>Development « Akismet</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<STYLE type=text/css>@import url( /style.css );
+#promo {
+	BACKGROUND: url(i/days-1.jpg)
+}
+</STYLE>
+<LINK title="Akismet Blog and Updates" href="http://akismet.com/blog/feed/" 
+type=application/rss+xml rel=alternate>
+<SCRIPT src="Development « Akismet_files/urchin.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT type=text/javascript>
+_uacct = "UA-52447-4";
+urchinTracker();
+</SCRIPT>
+
+<META content="MSHTML 6.00.2900.2769" name=GENERATOR></HEAD>
+<BODY>
+<DIV id=rap>
+<H1 id=logo><A href="http://akismet.com/">Akismet</A></H1>
+<UL id=menu>
+  <LI><A href="http://akismet.com/">About Akismet</A> </LI>
+  <LI><A href="http://akismet.com/download/">Download</A> </LI>
+  <LI><A href="http://akismet.com/faq/">FAQ</A> </LI>
+  <LI><A href="http://akismet.com/commercial/">Commercial Use</A> </LI>
+  <LI><A href="http://akismet.com/blog/">Blog</A> </LI>
+  <LI><A href="http://akismet.com/contact/">Contact Us</A> </LI></UL>
+<H1>Akismet API Documentation Version 1.1 </H1>
+<H2>About the Akismet Service</H2>
+<P>Akismet is basically a big machine that sucks up all the data it possibly 
+can, looks for patterns, and learns from its mistakes. Thus far it has been 
+highly effective at stopping spam and adapting to new techniques and attempts to 
+evade it, and time will tell how it stands up. I've tried to keep the API 
+interaction as simple as possible.</P>
+<H3>A Good Consumer</H3>
+<P>To interact fully with the Akismet API your program really should be putting 
+data back into the system as well as just taking it out. If it is at all 
+possible within the framework of your application you should have a way for your 
+users to submit missed spam and false positives, otherwise Akismet will never 
+learn from its mistakes.</P>
+<H2>User Agent</H2>
+<P>If it is at all possible, please modify the user agent string you request 
+with to be of the following format:</P><PRE>Application Name/Version | Plugin Name/Version</PRE>
+<P>So in the WordPress plugin this looks like:</P><PRE>$ksd_user_agent = "WordPress/$wp_version | Akismet/1.11";
+</PRE>
+<H2>Call Structure</H2>
+<P>All calls to Akismet are POST requests much like a web form would send. The 
+request variables should be constructed like a query string, 
+<CODE>key=value</CODE> and multiple variables separated by ampersands. Don't 
+forget to URL escape the values. </P>
+<P>In the WordPress plugin the POST part of things is abstracted out in this 
+function:</P><PRE>function ksd_http_post($request, $host, $path, $port = 80) {
+	global $ksd_user_agent;
+
+	$http_request  = "POST $path HTTP/1.0\r\n";
+	$http_request .= "Host: $host\r\n";
+	$http_request .= "Content-Type: application/x-www-form-urlencoded; charset=" . get_settings('blog_charset') . "\r\n";
+	$http_request .= "Content-Length: " . strlen($request) . "\r\n";
+	$http_request .= "User-Agent: $ksd_user_agent\r\n";
+	$http_request .= "\r\n";
+	$http_request .= $request;
+
+	$response = '';
+	if( false !== ( $fs = @fsockopen($host, $port, $errno, $errstr, 3) ) ) {
+		fwrite($fs, $http_request);
+		while ( !feof($fs) )
+			$response .= fgets($fs, 1160); // One TCP-IP packet
+		fclose($fs);
+		$response = explode("\r\n\r\n", $response, 2);
+	}
+	return $response;
+}  </PRE>
+<P>This sends a POST request to the specified host and port with a timeout of 3 
+seconds. The HTTP request is constructed with full headers. The response headers 
+are discarded and the function returns the body of the response. </P>
+<H2>API Key</H2>
+<P>Use of the Akismet API requires an API key, which are currently only being 
+provided along with accounts to <A 
+href="http://wordpress.com/">WordPress.com</A>. The API key is used as a 
+subdomain in the call, for example if you had the API key <CODE>aoeu1aoue</CODE> 
+you would make all API calls to <CODE>aoeu1aoue.rest.akismet.com</CODE>. The 
+only exception to this is the <A 
+href="http://akismet.com/development/api/#verify-key">verify-key</A> call, which 
+may be made to <CODE>rest.akismet.com</CODE> without an API key subdomain. </P>
+<H2 id=verify-key>Key Verification — <CODE>rest.akismet.com/1.1/verify 
+key</CODE> </H2>
+<P>The key verification call should be made before beginning to use the service. 
+It requires two variables, key and blog.</P>
+<DL>
+  <DT><CODE>key</CODE> (required) 
+  <DD>The API key being verified for use with the API 
+  <DT><CODE>blog</CODE> (required) 
+  <DD>The front page or home URL of the instance making the request. For a blog 
+  or wiki this would be the front page. </DD></DL>
+<P>The call returns "<CODE>valid</CODE>" if the key is valid. This is the one 
+call that can be made without the API key subdomain. Using our example function 
+from above, this is how the API key is verified in the WP plugin: <PRE>function akismet_verify_key( $key ) {
+	global $ksd_api_host, $ksd_api_port;
+	$blog = urlencode( get_option('home') );
+	$response = ksd_http_post("key=$key&amp;blog=$blog", 'rest.akismet.com', '/1.1/verify-key', $ksd_api_port);
+	if ( 'valid' == $response[1] )
+		return true;
+	else
+		return false;
+}</PRE>
+<H2 id=comment-check>Comment Check — 
+<CODE>api-key.rest.akismet.com/1.1/comment-check</CODE></H2>
+<P>This is basically the core of everything. This call takes a number of 
+arguments and characteristics about the submitted content and then returns a 
+thumbs up or thumbs down. Almost everything is optional, but performance can 
+drop dramatically if you exclude certain elements. I would recommend erring on 
+the side of too much data, as everything is used as part of the Akismet 
+signature.</P>
+<DL>
+  <DT><CODE>blog </CODE>(required) 
+  <DD>The front page or home URL of the instance making the request. For a blog 
+  or wiki this would be the front page. 
+  <DT><CODE>user_ip</CODE> (required) 
+  <DD>IP address of the comment submitter. 
+  <DT><CODE>user_agent</CODE> (required) 
+  <DD>User agent information. 
+  <DT><CODE>referrer</CODE> (note spelling) 
+  <DD>The content of the HTTP_REFERER header should be sent here. 
+  <DT><CODE>permalink</CODE> 
+  <DD>The permanent location of the entry the comment was submitted to. 
+  <DT><CODE>comment_type</CODE> 
+  <DD>May be blank, comment, trackback, pingback, or a made up value like 
+  "registration". 
+  <DT><CODE>comment_author</CODE> 
+  <DD>Submitted name with the comment 
+  <DT><CODE>comment_author_email</CODE> 
+  <DD>Submitted email address 
+  <DT><CODE>comment_author_url</CODE> 
+  <DD>Commenter URL. 
+  <DT><CODE>comment_content</CODE> 
+  <DD>The content that was submitted. 
+  <DT>Other server enviroment variables 
+  <DD>In PHP there is an array of enviroment variables called 
+  <CODE>$_SERVER</CODE> which contains information about the web server itself 
+  as well as a key/value for every HTTP header sent with the request. This data 
+  is highly useful to Akismet as how the submited content interacts with the 
+  server can be very telling, so please include as much information as possible. 
+  </DD></DL>
+<P>This call returns either "true" or "false" as the body content. True means 
+that the comment is spam and false means that it isn't spam. If you are having 
+trouble triggering you can send "viagra-test-123" as the author and it will 
+trigger a true response, always. </P>
+<H2 id=submit-spam>Submit Spam — 
+<CODE>api-key.rest.akismet.com/1.1/submit-spam</CODE></H2>
+<P>This call is for submitting comments that weren't marked as spam but should 
+have been. It takes identical arguments as comment check.</P>
+<H2 id=submit-ham>Submit Ham — 
+<CODE>api-key.rest.akismet.com/1.1/submit-ham</CODE></H2>
+<P>This call is intended for the marking of false positives, things that were 
+incorrectly marked as spam. It takes identical arguments as <A 
+href="http://akismet.com/development/api/#comment-check">comment check</A> and 
+submit spam.</P>
+<DL></DL>
+<DIV id=zeitgeist>
+<H2>Live Spam Zeitgeist</H2>
+<P>477,826 spams caught so far</P>
+<P>2,099 so far today</P>
+<P>81% of all comments are spam</P><!--  --></DIV>
+<DIV id=footer><A id=ap href="http://automattic.com/">An Automattic 
+Production</A> 
+<P><A href="http://akismet.com/privacy/">Privacy Policy</A> 
+</P></DIV></DIV></BODY></HTML>

@@ -1,0 +1,7 @@
+# Lines starting with '#' are comments
+# The first non-blank, non-comment, line should be your api key
+# The second your blog URL
+#
+# You can get a wordpress API key from http://wordpress.com/
+SOME KEY
+SOME URL

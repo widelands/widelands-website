@@ -1,0 +1,68 @@
+8
+
+dir
+2
+https://mfoord.googlecode.com/svn/trunk/akismet/docs/stylesheets
+https://mfoord.googlecode.com/svn
+
+
+
+2009-06-18T18:58:24.300424Z
+2
+fuzzyman
+
+
+svn:special svn:externals svn:needs-lock
+
+pysrc.css
+file
+
+
+
+
+2005-08-26T17:57:02.000000Z
+fc37699fc65d57ee407b4d6987c3330e
+2009-06-18T18:58:24.300424Z
+2
+fuzzyman
+has-props
+
+voidspace_docutils.css
+file
+
+
+
+
+2005-10-28T19:17:32.000000Z
+4532ba5f1e85a1cbf24a6f37a629ad7b
+2009-06-18T18:58:24.300424Z
+2
+fuzzyman
+has-props
+
+default.css
+file
+
+
+
+
+2006-01-04T20:27:42.000000Z
+a4ac76699b87ba40aa201cf9f64fdcc3
+2009-06-18T18:58:24.300424Z
+2
+fuzzyman
+has-props
+
+pep.css
+file
+
+
+
+
+2005-09-25T14:52:16.000000Z
+50f264243a603bde9ceaf9f30ec916e7
+2009-06-18T18:58:24.300424Z
+2
+fuzzyman
+has-props
+

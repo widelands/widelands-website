@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Akismet - The Python API</title>
+<meta name="author" content="Michael Foord" />
+<meta name="date" content="2009/06/18" />
+<link rel="stylesheet" href="stylesheets/voidspace_docutils.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="akismet-the-python-api">
+<h1 class="title">Akismet - The Python API</h1>
+<h2 class="subtitle" id="stopping-comment-spam-with-akismet">Stopping Comment Spam with Akismet</h2>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td><a class="first last reference external" href="http://www.voidspace.org.uk/python/index.shtml">Michael Foord</a></td></tr>
+<tr><th class="docinfo-name">Contact:</th>
+<td><a class="first last reference external" href="mailto:fuzzyman&#37;&#52;&#48;voidspace&#46;org&#46;uk">fuzzyman<span>&#64;</span>voidspace<span>&#46;</span>org<span>&#46;</span>uk</a></td></tr>
+<tr><th class="docinfo-name">Version:</th>
+<td>0.2.0</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>2009/06/18</td></tr>
+<tr class="field"><th class="docinfo-name">License:</th><td class="field-body"><a class="reference external" href="BSD-LICENSE.txt">BSD License</a> <a class="footnote-reference" href="#id5" id="id1">[1]</a></td>
+</tr>
+<tr class="field"><th class="docinfo-name">Online Docs:</th><td class="field-body"><a class="reference external" href="http://www.voidspace.org.uk/python/akismet_python.html">akismet.py online</a></td>
+</tr>
+</tbody>
+</table>
+<div class="contents topic" id="the-akismet-api">
+<p class="topic-title first">The Akismet API</p>
+<ul class="simple">
+<li><a class="reference internal" href="#introduction" id="id9">Introduction</a><ul>
+<li><a class="reference internal" href="#downloading" id="id10">Downloading</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#apikey-txt" id="id11">apikey.txt</a></li>
+<li><a class="reference internal" href="#the-akismet-class" id="id12">The Akismet Class</a><ul>
+<li><a class="reference internal" href="#creating-an-instance" id="id13">Creating an Instance</a><ul>
+<li><a class="reference internal" href="#user-agent" id="id14">User-Agent</a></li>
+<li><a class="reference internal" href="#example-1" id="id15">Example 1</a></li>
+<li><a class="reference internal" href="#example-2" id="id16">Example 2</a></li>
+<li><a class="reference internal" href="#example-3" id="id17">Example 3</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setapikey" id="id18">setAPIKey</a></li>
+<li><a class="reference internal" href="#akismet-methods" id="id19">Akismet Methods</a><ul>
+<li><a class="reference internal" href="#verify-key" id="id20">verify-key</a></li>
+<li><a class="reference internal" href="#comment-check" id="id21">comment-check</a></li>
+<li><a class="reference internal" href="#submit-spam" id="id22">submit-spam</a></li>
+<li><a class="reference internal" href="#submit-ham" id="id23">submit-ham</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#error-classes" id="id24">Error Classes</a><ul>
+<li><a class="reference internal" href="#akismeterror" id="id25">AkismetError</a></li>
+<li><a class="reference internal" href="#apikeyerror" id="id26">APIKeyError</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage-example" id="id27">Usage Example</a></li>
+<li><a class="reference internal" href="#akismet-test-cgi" id="id28">Akismet Test CGI</a></li>
+<li><a class="reference internal" href="#todo" id="id29">TODO</a></li>
+<li><a class="reference internal" href="#changelog" id="id30">CHANGELOG</a><ul>
+<li><a class="reference internal" href="#version-0-2-0" id="id31">2009/06/18      Version 0.2.0</a></li>
+<li><a class="reference internal" href="#version-0-1-5" id="id32">2007/02/05      Version 0.1.5</a></li>
+<li><a class="reference internal" href="#version-0-1-4" id="id33">2006/12/13      Version 0.1.4</a></li>
+<li><a class="reference internal" href="#version-0-1-3" id="id34">2006/07/18      Version 0.1.3</a></li>
+<li><a class="reference internal" href="#version-0-1-2" id="id35">2005/12/04      Version 0.1.2</a></li>
+<li><a class="reference internal" href="#version-0-1-1" id="id36">2005/12/02      Version 0.1.1</a></li>
+<li><a class="reference internal" href="#version-0-1-0" id="id37">2005/12/01      Version 0.1.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#footnotes" id="id38">Footnotes</a></li>
+</ul>
+</div>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">As of version 0.2.0 akismet.py can be used with Google AppEngine.</p>
+</div>
+<div class="section" id="introduction">
+<h1><a class="toc-backref" href="#id9">Introduction</a></h1>
+<p><a class="reference external" href="http://www.akismet.com">Akismet</a> is a web service for recognising spam
+comments. It promises to be almost 100% effective at catching comment spam.
+They say that currently 81% of all comments submitted to them are spam.</p>
+<p>It's designed to work with the <a class="reference external" href="http://wordpress.org/">Wordpress Blog Tool</a>,
+but it's not restricted to that - so this is a Python interface to the
+<a class="reference external" href="http://akismet.com/development/api/">Akismet API</a>.</p>
+<p>You'll need a <a class="reference external" href="http://wordpress.com">Wordpress Key</a> to use it. This script
+will allow you to plug akismet into any CGI script or web application, and
+there are full docs in the code. It's extremely easy to use, because the folks
+at  akismet have implemented a nice and straightforward
+<acronym title="REpresentational State Transfer">REST</acronym> API.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p>If possible your program should inform Akismet of false positives and false
+negatives.</p>
+<p>Informing Akismet helps makes the service more reliable.  <img src="/smilies/smile.gif" alt="Smile" height="15" width="15" /> </p>
+<p class="last">To do this, use the <a class="reference internal" href="#submit-spam">submit-spam</a> and <a class="reference internal" href="#submit-ham">submit-ham</a> functionality.</p>
+</div>
+<p>Most of the work is done by the <a class="reference internal" href="#comment-check">comment-check</a> function.</p>
+<div class="section" id="downloading">
+<h2><a class="toc-backref" href="#id10">Downloading</a></h2>
+<p>You can download <strong>akismet.py</strong> from :</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.voidspace.org.uk/downloads/akismet.py">akismet.py</a></li>
+<li><a class="reference external" href="http://www.voidspace.org.uk/downloads/akismet-0.2.0.zip">akismet.zip (48k)</a></li>
+</ul>
+<p>This contains the docs, <strong>akismet.py</strong>, and a test CGI called <em>test_akismet.py</em>.</p>
+</div>
+</div>
+<div class="section" id="apikey-txt">
+<h1><a class="toc-backref" href="#id11">apikey.txt</a></h1>
+<p>The easiest way to use <em>akismet.py</em> is to provide the wordpress key and blog
+URL in a text file called <tt class="docutils literal"><span class="pre">apikey.txt</span></tt>.</p>
+<p>This should be in the current directory when you create your <tt class="docutils literal"><span class="pre">Akismet</span></tt>
+instance (or call <a class="reference internal" href="#setapikey">setAPIKey</a> with no arguments).</p>
+<p>The format for <tt class="docutils literal"><span class="pre">apikey.txt</span></tt> is simple (see the example one in the
+distribution.</p>
+<p>Lines that start with a <tt class="docutils literal"><span class="pre">#</span></tt> are comments. The first non-blank, non-comment
+line should be the API key. The second line should be the blog URL (or
+application URL) to use.</p>
+<pre class="literal-block">
+# Lines starting with '#' are comments
+# The first non-blank, non-comment, line should be your api key
+# The second your blog URL
+#
+# You can get a wordpress API key from http://wordpress.com/
+some_key
+some_blog_url
+</pre>
+</div>
+<div class="section" id="the-akismet-class">
+<h1><a class="toc-backref" href="#id12">The Akismet Class</a></h1>
+<p>The <a class="reference external" href="http://www.akismet.com">akismet</a> API provides four functions. <em>akismet.py</em> gives you access to
+all of these through a single class.</p>
+<p>The four akismet functions are :</p>
+<ul class="simple">
+<li><a class="reference internal" href="#verify-key">verify-key</a>     - the <tt class="docutils literal"><span class="pre">verify_key</span></tt> method</li>
+<li><a class="reference internal" href="#comment-check">comment-check</a>  - the <tt class="docutils literal"><span class="pre">comment_check</span></tt> method</li>
+<li><a class="reference internal" href="#submit-spam">submit-spam</a>   - the <tt class="docutils literal"><span class="pre">submit_spam</span></tt> method</li>
+<li><a class="reference internal" href="#submit-ham">submit-ham</a>   - the <tt class="docutils literal"><span class="pre">submit_ham</span></tt> method</li>
+</ul>
+<p>In addition to these, the Akismet class has the following user methods and
+attributes :</p>
+<ul class="simple">
+<li><a class="reference internal" href="#setapikey">setAPIKey</a>    - method</li>
+<li>key           - attribute</li>
+<li>blog_url      - attribute</li>
+</ul>
+<div class="section" id="creating-an-instance">
+<h2><a class="toc-backref" href="#id13">Creating an Instance</a></h2>
+<pre class="literal-block">
+Akismet(key=None, blog_url=None, agent=None)
+</pre>
+<p>To use the akismet web service you <em>need</em> an API key. There are three ways of
+telling the <tt class="docutils literal"><span class="pre">Akismet</span></tt> class what this is.</p>
+<ol class="arabic simple">
+<li>When you create a new <tt class="docutils literal"><span class="pre">Akismet</span></tt> instance you can pass in the API key and
+blog url.</li>
+<li>If you don't pass in a key, it will automatically look for <a class="reference internal" href="#apikey-txt">apikey.txt</a> in
+the current directory, and attempt to load it.</li>
+<li>You can set the <tt class="docutils literal"><span class="pre">key</span></tt> and <tt class="docutils literal"><span class="pre">blog_url</span></tt> Attributes manually, after creating
+your instance.</li>
+</ol>
+<div class="section" id="user-agent">
+<h3><a class="toc-backref" href="#id14">User-Agent</a></h3>
+<p>As well as setting your key, you <em>ought</em> to pass in a string for <tt class="docutils literal"><span class="pre">Akismet</span></tt> to
+create a User-Agent header with. This is the <tt class="docutils literal"><span class="pre">agent</span></tt> argument.</p>
+<p>According to the <a class="reference external" href="http://akismet.com/development/api/">API docs</a>, this ought
+to be in the form :</p>
+<pre class="literal-block">
+Program Name/Version
+</pre>
+<p><em>akismet.py</em> adds it's version number to this, to create a User-Agent in the
+form liked by akismet.</p>
+<p>The default User-Agent (if you don't pass in a values to <tt class="docutils literal"><span class="pre">agent</span></tt>) is:</p>
+<pre class="literal-block">
+Python Interface by Fuzzyman/0.2.0 | akismet.py/0.2.0
+</pre>
+</div>
+<div class="section" id="example-1">
+<h3><a class="toc-backref" href="#id15">Example 1</a></h3>
+<div class="pysrc"><span class="pycomment">#example 1<br />
+</span><span class="pytext">api</span> <span class="pyoperator">=</span> <span class="pytext">Akismet</span><span class="pyoperator">(</span><span class="pytext">api_key</span><span class="pyoperator">,</span> <span class="pytext">url</span><span class="pyoperator">,</span> <span class="pytext">agent</span><span class="pyoperator">=</span><span class="pystring">'Example/0.1'</span><span class="pyoperator">)</span><span class="pytext"></span></div></div>
+<div class="section" id="example-2">
+<h3><a class="toc-backref" href="#id16">Example 2</a></h3>
+<div class="pysrc"><span class="pycomment">#example 2<br />
+</span><span class="pykeyword">if</span> <span class="pytext">os</span><span class="pyoperator">.</span><span class="pytext">path</span><span class="pyoperator">.</span><span class="pytext">isfile</span><span class="pyoperator">(</span><span class="pystring">'apikey.txt'</span><span class="pyoperator">)</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pytext">api</span> <span class="pyoperator">=</span> <span class="pytext">Akismet</span><span class="pyoperator">(</span><span class="pytext">agent</span><span class="pyoperator">=</span><span class="pystring">'Example/0.2'</span><span class="pyoperator">)</span><br />
+<br />
+<span class="pycomment"># The key and URL are loaded from<br />
+</span><span class="pycomment"># 'apikey.txt'</span><span class="pytext"></span></div></div>
+<div class="section" id="example-3">
+<h3><a class="toc-backref" href="#id17">Example 3</a></h3>
+<div class="pysrc"><span class="pycomment">#example 3<br />
+</span><span class="pytext">url</span> <span class="pyoperator">=</span> <span class="pystring">'http://www.voidspace.org.uk/cgi-bin/voidspace/guestbook.py'</span><br />
+<span class="pytext">api_key</span> <span class="pyoperator">=</span> <span class="pystring">'0acdfg1fr'</span><br />
+<span class="pykeyword">if</span> <span class="pykeyword">not</span> <span class="pytext">os</span><span class="pyoperator">.</span><span class="pytext">path</span><span class="pyoperator">.</span><span class="pytext">isfile</span><span class="pyoperator">(</span><span class="pystring">'apikey.txt'</span><span class="pyoperator">)</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pytext">api</span> <span class="pyoperator">=</span> <span class="pytext">Akismet</span><span class="pyoperator">(</span><span class="pytext">agent</span><span class="pyoperator">=</span><span class="pystring">'Example/0.3'</span><span class="pyoperator">)</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pytext">api</span><span class="pyoperator">.</span><span class="pytext">key</span> <span class="pyoperator">=</span> <span class="pytext">api_key</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pytext">api</span><span class="pyoperator">.</span><span class="pytext">blog_url</span> <span class="pyoperator">=</span> <span class="pytext">url</span><br />
+<br />
+<span class="pycomment"># The key and URL are set manually</span><span class="pytext"></span></div></div>
+</div>
+<div class="section" id="setapikey">
+<h2><a class="toc-backref" href="#id18">setAPIKey</a></h2>
+<pre class="literal-block">
+setAPIKey(key=None, blog_url=None)
+</pre>
+<p>Set the wordpress API key for all transactions.</p>
+<p>If you don't specify an explicit API <tt class="docutils literal"><span class="pre">key</span></tt> and <tt class="docutils literal"><span class="pre">blog_url</span></tt> it will
+attempt to load them from a file called <tt class="docutils literal"><span class="pre">apikey.txt</span></tt> in the current
+directory.</p>
+<p>This method is <em>usually</em> called automatically when you create a new <tt class="docutils literal"><span class="pre">Akismet</span></tt>
+instance.</p>
+</div>
+<div class="section" id="akismet-methods">
+<h2><a class="toc-backref" href="#id19">Akismet Methods</a></h2>
+<p>These four methods equate to the four functions of the <a class="reference external" href="http://akismet.com/development/api/">Akismet API</a>.</p>
+<div class="section" id="verify-key">
+<h3><a class="toc-backref" href="#id20">verify-key</a></h3>
+<pre class="literal-block">
+verify_key()
+</pre>
+<p>This equates to the <tt class="docutils literal"><span class="pre">verify-key</span></tt> call against the akismet API.</p>
+<p>It returns <tt class="docutils literal"><span class="pre">True</span></tt> if the key is valid.</p>
+<p>The docs state that your program <em>ought</em> to call this at the start of the
+transaction.</p>
+<p>It raises <tt class="docutils literal"><span class="pre">APIKeyError</span></tt> if you have not yet set an API key.</p>
+<p>If the connection to akismet fails, it allows the normal <tt class="docutils literal"><span class="pre">HTTPError</span></tt>
+or <tt class="docutils literal"><span class="pre">URLError</span></tt> to be raised. (<em>akismet.py</em> uses
+<a class="reference external" href="http://docs.python.org/lib/module-urllib2.html">urllib2</a>)</p>
+</div>
+<div class="section" id="comment-check">
+<h3><a class="toc-backref" href="#id21">comment-check</a></h3>
+<pre class="literal-block">
+comment_check(comment, data=None, build_data=True, DEBUG=False)
+</pre>
+<p>This is the main function in the Akismet API. It checks comments.</p>
+<p>It returns <tt class="docutils literal"><span class="pre">True</span></tt> for spam and <tt class="docutils literal"><span class="pre">False</span></tt> for ham.</p>
+<p>If you set <tt class="docutils literal"><span class="pre">DEBUG=True</span></tt> then it will return the text of the response,
+instead of the <tt class="docutils literal"><span class="pre">True</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt> object.</p>
+<p>It raises <tt class="docutils literal"><span class="pre">APIKeyError</span></tt> if you have not yet set an API key.</p>
+<p>If the connection to Akismet fails then the <tt class="docutils literal"><span class="pre">HTTPError</span></tt> or
+<tt class="docutils literal"><span class="pre">URLError</span></tt> will be propogated.</p>
+<p>As a minimum it requires the body of the comment. This is the
+<tt class="docutils literal"><span class="pre">comment</span></tt> argument.</p>
+<p>Akismet requires some other arguments, and allows some optional ones.
+The more information you give it, the more likely it is to be able to
+make an accurate diagnosise.</p>
+<p>You supply these values using a mapping object (dictionary) as the
+<tt class="docutils literal"><span class="pre">data</span></tt> argument.</p>
+<p>If <tt class="docutils literal"><span class="pre">build_data</span></tt> is <tt class="docutils literal"><span class="pre">True</span></tt> (the default), then <em>akismet.py</em> will
+attempt to fill in as much information as possible, using default
+values where necessary. This is particularly useful for programs
+running in a CGI environment. A lot of useful information
+can be supplied from evironment variables (<tt class="docutils literal"><span class="pre">os.environ</span></tt>). See below.</p>
+<p>You <em>only</em> need supply values for which you don't want defaults filled
+in for. All values must be strings.</p>
+<p>There are a few required values. If they are not supplied, and
+defaults can't be worked out, then an <tt class="docutils literal"><span class="pre">AkismetError</span></tt> is raised.</p>
+<p>If you set <tt class="docutils literal"><span class="pre">build_data=False</span></tt> and a required value is missing an
+<tt class="docutils literal"><span class="pre">AkismetError</span></tt> will also be raised.</p>
+<p>The normal values (and defaults) are as follows :</p>
+<ul class="simple">
+<li>'user_ip':          <tt class="docutils literal"><span class="pre">os.environ['REMOTE_ADDR']</span></tt>       (*)</li>
+<li>'user_agent':       <tt class="docutils literal"><span class="pre">os.environ['HTTP_USER_AGENT']</span></tt>   (*)</li>
+<li>'referrer':         <tt class="docutils literal"><span class="pre">os.environ.get('HTTP_REFERER',</span> <span class="pre">'unknown')</span></tt> <a class="footnote-reference" href="#id6" id="id3">[2]</a></li>
+<li>'permalink':        ''</li>
+<li>'comment_type':     'comment' <a class="footnote-reference" href="#id7" id="id4">[3]</a></li>
+<li>'comment_author':   ''</li>
+<li>'comment_author_email': ''</li>
+<li>'comment_author_url': ''</li>
+<li>'SERVER_ADDR':      <tt class="docutils literal"><span class="pre">os.environ.get('SERVER_ADDR',</span> <span class="pre">'')</span></tt></li>
+<li>'SERVER_ADMIN':     <tt class="docutils literal"><span class="pre">os.environ.get('SERVER_ADMIN',</span> <span class="pre">'')</span></tt></li>
+<li>'SERVER_NAME':      <tt class="docutils literal"><span class="pre">os.environ.get('SERVER_NAME',</span> <span class="pre">'')</span></tt></li>
+<li>'SERVER_PORT':      <tt class="docutils literal"><span class="pre">os.environ.get('SERVER_PORT',</span> <span class="pre">'')</span></tt></li>
+<li>'SERVER_SIGNATURE': <tt class="docutils literal"><span class="pre">os.environ.get('SERVER_SIGNATURE',</span> <span class="pre">'')</span></tt></li>
+<li>'SERVER_SOFTWARE':  <tt class="docutils literal"><span class="pre">os.environ.get('SERVER_SOFTWARE',</span> <span class="pre">'')</span></tt></li>
+<li>'HTTP_ACCEPT':      <tt class="docutils literal"><span class="pre">os.environ.get('HTTP_ACCEPT',</span> <span class="pre">'')</span></tt></li>
+</ul>
+<p>(*) Required values</p>
+<p>You may supply as many additional <strong>'HTTP_*'</strong> type values as you wish.
+These should correspond to the http headers sent with the request.</p>
+</div>
+<div class="section" id="submit-spam">
+<h3><a class="toc-backref" href="#id22">submit-spam</a></h3>
+<pre class="literal-block">
+submit_spam(comment, data=None, build_data=True)
+</pre>
+<p>This function is used to tell akismet that a comment it marked as ham,
+is really spam.</p>
+<p>It takes all the same arguments as <tt class="docutils literal"><span class="pre">comment_check</span></tt>, except for
+<em>DEBUG</em>.</p>
+</div>
+<div class="section" id="submit-ham">
+<h3><a class="toc-backref" href="#id23">submit-ham</a></h3>
+<pre class="literal-block">
+submit_ham(self, comment, data=None, build_data=True)
+</pre>
+<p>This function is used to tell akismet that a comment it marked as spam,
+is really ham.</p>
+<p>It takes all the same arguments as <tt class="docutils literal"><span class="pre">comment_check</span></tt>, except for
+<em>DEBUG</em>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="error-classes">
+<h1><a class="toc-backref" href="#id24">Error Classes</a></h1>
+<p>In the course of using <em>akismet.py</em>, there are two possible errors you could
+see.</p>
+<div class="section" id="akismeterror">
+<h2><a class="toc-backref" href="#id25">AkismetError</a></h2>
+<p>This is for general Akismet errors. For example, if you didn't supply some of
+the required information.</p>
+<p>This error is a subclass of <tt class="docutils literal"><span class="pre">Exception</span></tt>.</p>
+<p>This error is also raised if there is a network connection error. This can happen when the Akismet
+service or domain goes down temporarily.</p>
+<p>Your code should trap this and handle it appropriately (either let the comment through or push it
+onto a moderation queue).</p>
+</div>
+<div class="section" id="apikeyerror">
+<h2><a class="toc-backref" href="#id26">APIKeyError</a></h2>
+<p>If <em>apikey.txt</em> is invalid, or you attempt to call one of the <a class="reference internal" href="#akismet-methods">akismet methods</a>
+without setting a key, you will get an <tt class="docutils literal"><span class="pre">APIKeyError</span></tt>.</p>
+<p>This error is a subclass of <tt class="docutils literal"><span class="pre">AkismetError</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="usage-example">
+<h1><a class="toc-backref" href="#id27">Usage Example</a></h1>
+<p>A simple example that loads the key automatically, verifies the key, and then
+checks a comment.</p>
+<div class="pysrc"><span class="pytext">api</span> <span class="pyoperator">=</span> <span class="pytext">Akismet</span><span class="pyoperator">(</span><span class="pytext">agent</span><span class="pyoperator">=</span><span class="pystring">'Test Script'</span><span class="pyoperator">)</span><br />
+<span class="pycomment"># if apikey.txt is in place,<br />
+</span><span class="pycomment"># the key will automatically be set<br />
+</span><span class="pycomment"># or you can call ``api.setAPIKey()``<br />
+</span><span class="pycomment">#<br />
+</span><span class="pykeyword">if</span> <span class="pytext">api</span><span class="pyoperator">.</span><span class="pytext">key</span> <span class="pykeyword">is</span> <span class="pytext">None</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pykeyword">print</span> <span class="pystring">"No 'apikey.txt' file."</span><br />
+<span class="pykeyword">elif</span> <span class="pykeyword">not</span> <span class="pytext">api</span><span class="pyoperator">.</span><span class="pytext">verify_key</span><span class="pyoperator">(</span><span class="pyoperator">)</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pykeyword">print</span> <span class="pystring">"The API key is invalid."</span><br />
+<span class="pykeyword">else</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pycomment"># data should be a dictionary of values<br />
+</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pycomment"># They can all be filled in with defaults<br />
+</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pycomment"># from a CGI environment<br />
+</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pykeyword">if</span> <span class="pytext">api</span><span class="pyoperator">.</span><span class="pytext">comment_check</span><span class="pyoperator">(</span><span class="pytext">comment</span><span class="pyoperator">,</span> <span class="pytext">data</span><span class="pyoperator">)</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pykeyword">print</span> <span class="pystring">'This comment is spam.'</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pykeyword">else</span><span class="pyoperator">:</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pykeyword">print</span> <span class="pystring">'This comment is ham.'</span><span class="pytext"></span></div></div>
+<div class="section" id="akismet-test-cgi">
+<h1><a class="toc-backref" href="#id28">Akismet Test CGI</a></h1>
+<p>Included in the distribution is a file called <tt class="docutils literal"><span class="pre">test_akismet.py</span></tt>.</p>
+<p>This is a simple test CGI. It needs <a class="reference external" href="http://www.voidspace.org.uk/python/recipebook.shtml#util">cgiutils</a>
+to run.</p>
+<p>When activated, it allows you to put a comment in and test it with akismet. It
+will tell you if the comment is marked as <em>ham</em>, or <em>spam</em>.</p>
+<p>To confirm that your setup is working; any post with <strong>viagra-test-123</strong> as the
+name, should be marked as spam.</p>
+<p>Obviously you will need an API key for this to work.</p>
+<p>You can try this online at :</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.voidspace.org.uk/cgi-bin/akismet/test_akismet.py">Akismet Example CGI</a></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="todo">
+<h1><a class="toc-backref" href="#id29">TODO</a></h1>
+<p>Make the timeout adjustable ?</p>
+<p>Should we fill in a default value for permalink ?</p>
+<p>What about automatically filling in the 'HTTP_*' values from os.environ ?</p>
+</div>
+<div class="section" id="changelog">
+<h1><a class="toc-backref" href="#id30">CHANGELOG</a></h1>
+<div class="section" id="version-0-2-0">
+<h2><a class="toc-backref" href="#id31">2009/06/18      Version 0.2.0</a></h2>
+<p>If 'blog' is not in the data dictionary passed to <tt class="docutils literal"><span class="pre">comment_check</span></tt> it will be
+added even if <tt class="docutils literal"><span class="pre">build_data</span></tt> is False. Thanks to Mark Walling.</p>
+<p>Fix for compatibility with Google AppEngine. Thanks to Matt King.</p>
+<p>Added a setup.py.</p>
+</div>
+<div class="section" id="version-0-1-5">
+<h2><a class="toc-backref" href="#id32">2007/02/05      Version 0.1.5</a></h2>
+<p>Fixed a typo/bug in <tt class="docutils literal"><span class="pre">submit_ham</span></tt>. Thanks to Ian Ozsvald for pointing this out.</p>
+</div>
+<div class="section" id="version-0-1-4">
+<h2><a class="toc-backref" href="#id33">2006/12/13      Version 0.1.4</a></h2>
+<p>Akismet now traps errors in connections. If there is a network error it raises an <tt class="docutils literal"><span class="pre">AkismetError</span></tt>.</p>
+<p>This can happen when the Akismet service or domain goes down temporarily.</p>
+<p>Your code should trap this and handle it appropriately (either let the comment through or push it onto a moderation
+queue).</p>
+</div>
+<div class="section" id="version-0-1-3">
+<h2><a class="toc-backref" href="#id34">2006/07/18      Version 0.1.3</a></h2>
+<p>Add the blog url to the data. Bugfix thanks to James Bennett.</p>
+</div>
+<div class="section" id="version-0-1-2">
+<h2><a class="toc-backref" href="#id35">2005/12/04      Version 0.1.2</a></h2>
+<p>Added the <tt class="docutils literal"><span class="pre">build_data</span></tt> argument to <tt class="docutils literal"><span class="pre">comment_check</span></tt>, <tt class="docutils literal"><span class="pre">submit_spam</span></tt>, and
+<tt class="docutils literal"><span class="pre">submit_ham</span></tt>.</p>
+</div>
+<div class="section" id="version-0-1-1">
+<h2><a class="toc-backref" href="#id36">2005/12/02      Version 0.1.1</a></h2>
+<p>Corrected so that ham and spam are the right way round  <img src="/smilies/smile.gif" alt="Smile" height="15" width="15" /> </p>
+</div>
+<div class="section" id="version-0-1-0">
+<h2><a class="toc-backref" href="#id37">2005/12/01      Version 0.1.0</a></h2>
+<p>Test version.</p>
+</div>
+</div>
+<div class="section" id="footnotes">
+<h1><a class="toc-backref" href="#id38">Footnotes</a></h1>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Online at <a class="reference external" href="http://www.voidspace.org.uk/python/license.shtml">http://www.voidspace.org.uk/python/license.shtml</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Note the spelling &quot;referrer&quot;. This is a required value by the
+akismet api - however, referrer information is not always
+supplied by the browser or server. In fact the HTTP protocol
+forbids relying on referrer information for functionality in
+programs.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>The <a class="reference external" href="http://akismet.com/development/api/">API docs</a> state that this value
+can be &quot; <em>blank, comment, trackback, pingback, or a made up value</em>
+<em>like 'registration'</em> &quot;.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="footer">
+<hr class="footer" />
+<a class="reference external" href="akismet_python.txt">View document source</a>.
+Generated on: 2009-06-18 23:45 UTC.
+Generated by <a class="reference external" href="http://docutils.sourceforge.net/">Docutils</a> from <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> source.
+
+</div>
+</body>
+</html>

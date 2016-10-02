@@ -41,6 +41,7 @@
 		</thead>
 		<tbody>
 	{% for topic in topics %}
+		{% if not topic.hided %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
@@ -66,6 +67,7 @@
 				{% endif %}
 			</td>
 		</tr>
+		{% endif %}
 	{% endfor %}
 		</tbody>
 	</table>

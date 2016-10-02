@@ -95,6 +95,13 @@ class Forum(models.Model):
         except IndexError:
             return None
 
+    @property
+    def last_unhided_post(self):
+        posts = self.posts.order_by('-created').filter(hided=False).select_related()
+        try:
+            return posts[0]
+        except IndexError:
+            return None
 
 class Topic(models.Model):
     forum = models.ForeignKey(Forum, related_name='topics', verbose_name=_('Forum'))
@@ -106,6 +113,7 @@ class Topic(models.Model):
     sticky = models.BooleanField(_('Sticky'), blank=True, default=False)
     closed = models.BooleanField(_('Closed'), blank=True, default=False)
     subscribers = models.ManyToManyField(User, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)
+    hided = models.BooleanField(_('Hided'), blank=True, default=False)
 
     # Django sphinx
     if settings.USE_SPHINX:
@@ -193,6 +201,7 @@ class Post(RenderableItem):
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
     user_ip = models.GenericIPAddressField(_('User IP'), default='')
+    hided = models.BooleanField(_('Hided'), blank=True, default=False)
 
     # Django sphinx
     if settings.USE_SPHINX:

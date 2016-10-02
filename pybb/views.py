@@ -65,7 +65,7 @@ def show_forum_ctx(request, forum_id):
 
     topics = forum.topics.order_by('-sticky', '-updated').select_related()
     page, paginator = paginate(topics, request, pybb_settings.FORUM_PAGE_SIZE)
-
+    
     return {'forum': forum,
             'topics': page.object_list,
             'quick': quick,
