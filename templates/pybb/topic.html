@@ -157,6 +157,7 @@
 	<table class="forum">
 		<tbody>
 	{% for post in posts %}
+		{% if not post.hided or user.is_superuser %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="author">
 				{{ post.user|user_link }}<br />
@@ -228,6 +229,7 @@
 				{% endif %}
 			</td>
 		</tr>
+		{% endif %}
 		<tr class="spacer">
 			<td></td>
 			<td></td>

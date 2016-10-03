@@ -61,10 +61,17 @@
 				Views: {{ topic.views }}
 			</td>
 			<td class="lastPost">
-				{%if topic.last_post %}
+			{% if user.is_superuser %}
+				{% if topic.last_post %}
 				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
+			{% else %}
+				{% if topic.last_unhided_post %}
+				{{ topic.last_unhided_post.user|user_link }} <a href="{{ topic.last_unhided_post.get_absolute_url }}">&#187;</a><br />
+				<span class="small">on {{ topic.last_unhided_post.created|custom_date:user }}</span>
+				{% endif %}
+			{% endif %}
 			</td>
 		</tr>
 		{% endif %}

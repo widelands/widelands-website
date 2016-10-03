@@ -138,7 +138,11 @@ class Topic(models.Model):
     @property
     def last_post(self):
         return self.posts.all().order_by('-created').select_related()[0]
-
+    
+    @property
+    def last_unhided_post(self):
+        return self.posts.all().order_by('-created').filter(hided=False).select_related()[0]
+    
     @property
     def post_count(self):
         return Post.objects.filter(topic=self).count()

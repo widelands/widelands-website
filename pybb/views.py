@@ -10,6 +10,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.utils import translation
+from django.shortcuts import render
 
 from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -159,7 +160,24 @@ def add_post_ctx(request, forum_id, topic_id):
                       initial={'markup': "markdown", 'body': quote})
 
     if form.is_valid():
-        post = form.save();
+        # Add akismet check here
+        text = form.cleaned_data['body']
+        spam = False
+        if any(x in text.lower() for x in ['vashikaran', 'baba']):
+            spam = True
+
+        post = form.save()
+        if spam:
+            # Hide the post against normal users
+            post.hided = True
+            # Hide the topic if this is the first post
+            if post.topic.post_count <= 1:
+                post.topic.hided = True
+                post.topic.save()
+            post.save()
+            # Redirect to an info page to inform the user
+            return HttpResponseRedirect('pybb_moderate_info')
+        
         if not topic:
             post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
@@ -353,3 +371,6 @@ def post_ajax_preview(request):
 
     html = urlize(html)
     return {'content': html}
+
+def pybb_moderate_info(request):
+    return render(request, 'pybb/pybb_moderate_info.html')
