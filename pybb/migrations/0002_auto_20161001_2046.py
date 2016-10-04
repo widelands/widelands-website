@@ -16,9 +16,4 @@ class Migration(migrations.Migration):
             name='hided',
             field=models.BooleanField(default=False, verbose_name='Hided'),
         ),
-        migrations.AddField(
-            model_name='topic',
-            name='hided',
-            field=models.BooleanField(default=False, verbose_name='Hided'),
-        ),
     ]

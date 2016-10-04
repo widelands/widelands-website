@@ -113,7 +113,6 @@ class Topic(models.Model):
     sticky = models.BooleanField(_('Sticky'), blank=True, default=False)
     closed = models.BooleanField(_('Closed'), blank=True, default=False)
     subscribers = models.ManyToManyField(User, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)
-    hided = models.BooleanField(_('Hided'), blank=True, default=False)
 
     # Django sphinx
     if settings.USE_SPHINX:
@@ -138,10 +137,6 @@ class Topic(models.Model):
     @property
     def last_post(self):
         return self.posts.all().order_by('-created').select_related()[0]
-    
-    @property
-    def last_unhided_post(self):
-        return self.posts.all().order_by('-created').filter(hided=False).select_related()[0]
     
     @property
     def post_count(self):

@@ -41,14 +41,14 @@
 		</thead>
 		<tbody>
 	{% for topic in topics %}
-		{% if not topic.hided or user.is_superuser %}
+        {% if not topic.last_post.hided or user.is_superuser %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
-				{% if topic|pybb_has_unreads:user %}
+                {% if topic|pybb_has_unreads:user %}
 				<img src="{{ MEDIA_URL }}forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
-				{% else %}
+                {% else %}
 				<img src="{{ MEDIA_URL }}forum/img/doc_big_work.png" style="margin: 0px;" alt="" class="middle" />
-				{% endif %}
+                {% endif %}
 			</td>
 			<td class="forumTitle">
 				{% if topic.sticky %}<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt="Sticky" title="Sticky" />{% endif %}
@@ -61,17 +61,10 @@
 				Views: {{ topic.views }}
 			</td>
 			<td class="lastPost">
-			{% if user.is_superuser %}
 				{% if topic.last_post %}
 				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
-				{% endif %}
-			{% else %}
-				{% if topic.last_unhided_post %}
-				{{ topic.last_unhided_post.user|user_link }} <a href="{{ topic.last_unhided_post.get_absolute_url }}">&#187;</a><br />
-				<span class="small">on {{ topic.last_unhided_post.created|custom_date:user }}</span>
-				{% endif %}
-			{% endif %}
+                {% endif %}
 			</td>
 		</tr>
 		{% endif %}
