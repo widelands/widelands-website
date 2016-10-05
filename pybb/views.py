@@ -163,7 +163,7 @@ def add_post_ctx(request, forum_id, topic_id):
         # Add akismet check here
         text = form.cleaned_data['body']
         spam = False
-        if any(x in text.lower() for x in ['vashikaran', 'baba']):
+        if all(x in text.lower() for x in ['vashikaran', 'baba']):
             spam = True
 
         post = form.save()
