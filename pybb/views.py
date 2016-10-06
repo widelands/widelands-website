@@ -161,11 +161,19 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         # Add akismet check here
-        text = form.cleaned_data['body']
         spam = False
+        
+        # Check in post text
+        text = form.cleaned_data['body']
         if all(x in text.lower() for x in ['vashikaran', 'baba']):
             spam = True
-
+            
+        # Check in topic name ('name' is empty if this a post to an existing topic)
+        text = form.cleaned_data['name']
+        if text != '':
+            if any(x in text.lower() for x in [' baba ', 'ji']):
+                spam = True
+        
         post = form.save()
         if spam:
             # Hide the post against normal users
