@@ -96,8 +96,8 @@ class Forum(models.Model):
             return None
 
     @property
-    def last_unhided_post(self):
-        posts = self.posts.order_by('-created').filter(hided=False).select_related()
+    def last_nonhidden_post(self):
+        posts = self.posts.order_by('-created').filter(hidden=False).select_related()
         try:
             return posts[0]
         except IndexError:
@@ -139,18 +139,18 @@ class Topic(models.Model):
         return self.posts.all().order_by('-created').select_related()[0]
     
     @property
-    def last_unhided_post(self):
+    def last_nonhidden_post(self):
         try:
-            p = self.posts.all().order_by('-created').filter(hided=False).select_related()[0]
+            p = self.posts.all().order_by('-created').filter(hidden=False).select_related()[0]
         except IndexError:
             return self.posts.all().order_by('-created').select_related()[0]
         return p
     
-    # If the first post of this topic is hided, the topic is hided
+    # If the first post of this topic is hidden, the topic is hidden
     @property
-    def is_hided(self):
+    def is_hidden(self):
         try:
-            p = self.posts.all().order_by('created').filter(hided=False).select_related()[0]
+            p = self.posts.all().order_by('created').filter(hidden=False).select_related()[0]
         except IndexError:
             return True
         return False
@@ -217,7 +217,7 @@ class Post(RenderableItem):
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
     user_ip = models.GenericIPAddressField(_('User IP'), default='')
-    hided = models.BooleanField(_('Hided'), blank=True, default=False)
+    hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
     # Django sphinx
     if settings.USE_SPHINX:

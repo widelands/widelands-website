@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='post',
-            name='hided',
-            field=models.BooleanField(default=False, verbose_name='Hided'),
+            name='hidden',
+            field=models.BooleanField(default=False, verbose_name='Hidden'),
         ),
     ]

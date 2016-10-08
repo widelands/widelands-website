@@ -9,7 +9,7 @@
 	<div class="columnModuleBox">
 		<ul>
 			{% for post in posts %}
-				{% if not post.hided %}
+				{% if not post.hidden %}
 				<li>
 					{{ post.topic.forum.name }}<br />
 					<a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|pybb_cut_string:30 }}</a><br />

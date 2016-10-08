@@ -41,7 +41,7 @@
 		</thead>
 		<tbody>
 		{% for topic in topics %}
-		{% if not topic.is_hided %}
+		{% if not topic.is_hidden %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
@@ -67,8 +67,8 @@
 						<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 					{% endif %}
 				{% else %}
-					{{ topic.last_unhided_post.user|user_link }} <a href="{{ topic.last_unhided_post.get_absolute_url }}">&#187;</a><br />
-					<span class="small">on {{ topic.last_unhided_post.created|custom_date:user }}</span>
+					{{ topic.last_nonhidden_post.user|user_link }} <a href="{{ topic.last_nonhidden_post.get_absolute_url }}">&#187;</a><br />
+					<span class="small">on {{ topic.last_nonhidden_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
 		</tr>
@@ -96,7 +96,7 @@
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 			</td>
 		</tr>
-		{% endif %} {# topic.is_hided #}
+		{% endif %} {# topic.is_hidden #}
 		{% endfor %} {# topic #}
 		</tbody>
 	</table>

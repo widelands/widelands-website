@@ -177,7 +177,7 @@ def add_post_ctx(request, forum_id, topic_id):
         post = form.save()
         if spam:
             # Hide the post against normal users
-            post.hided = True
+            post.hidden = True
             post.save()
             # Redirect to an info page to inform the user
             return HttpResponseRedirect('pybb_moderate_info')

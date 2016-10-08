@@ -39,7 +39,7 @@ class TopicAdmin(admin.ModelAdmin):
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields': (('views',), ('sticky', 'closed', 'hided'), 'subscribers')
+                'fields': (('views',), ('sticky', 'closed', 'hidden'), 'subscribers')
                 }
          ),
         )
@@ -57,7 +57,7 @@ class PostAdmin(admin.ModelAdmin):
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields' : (('created', 'updated'), 'user_ip', 'hided')
+                'fields' : (('created', 'updated'), 'user_ip', 'hidden')
                 }
          ),
         (_('Message'), {

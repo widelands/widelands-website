@@ -37,12 +37,12 @@
 				on {{ forum.last_post.created|custom_date:user}}</span>
 			</td>
 			{% endif %}
-		{% else %} {# no super_user: Show only unhided posts#}
-			{% if forum.last_unhided_post %}
+		{% else %} {# no super_user: Show only nonhidden posts#}
+			{% if forum.last_nonhidden_post %}
 			<td class="lastPost">
-				<a href="{{forum.last_unhided_post.get_absolute_url}}">{{ forum.last_unhided_post.topic.name }}</a><br />
-				<span class="small">by {{ forum.last_unhided_post.user|user_link }}<br />
-				on {{ forum.last_unhided_post.created|custom_date:user}}</span>
+				<a href="{{forum.last_nonhidden_post.get_absolute_url}}">{{ forum.last_nonhidden_post.topic.name }}</a><br />
+				<span class="small">by {{ forum.last_nonhidden_post.user|user_link }}<br />
+				on {{ forum.last_nonhidden_post.created|custom_date:user}}</span>
 			</td>
 			{% endif %}
 		{% endif %}
