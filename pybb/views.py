@@ -1,6 +1,6 @@
 import math
 from mainpage.templatetags.wl_markdown import do_wl_markdown
-from pybb.markups import mypostmarkup 
+from pybb.markups import mypostmarkup
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, Http404
@@ -15,7 +15,7 @@ from django.shortcuts import render
 from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
                         MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm, UserSearchForm 
+from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
@@ -66,7 +66,7 @@ def show_forum_ctx(request, forum_id):
 
     topics = forum.topics.order_by('-sticky', '-updated').select_related()
     page, paginator = paginate(topics, request, pybb_settings.FORUM_PAGE_SIZE)
-    
+
     return {'forum': forum,
             'topics': page.object_list,
             'quick': quick,
@@ -75,7 +75,7 @@ def show_forum_ctx(request, forum_id):
             }
 show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
-    
+
 def show_topic_ctx(request, topic_id):
 
     try:
@@ -113,7 +113,7 @@ def show_topic_ctx(request, topic_id):
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
     # profiles = dict((x.user_id, x) for x in profiles)
-    
+
     # for post in page.object_list:
     #     post.user.pybb_profile = profiles[post.user.id]
 
@@ -160,20 +160,20 @@ def add_post_ctx(request, forum_id, topic_id):
                       initial={'markup': "markdown", 'body': quote})
 
     if form.is_valid():
-        # Add akismet check here
+        # TODO: Add akismet check here
         spam = False
-        
-        # Check in post text
+
+        # Check in post text.
         text = form.cleaned_data['body']
         if all(x in text.lower() for x in ['vashikaran', 'baba']):
             spam = True
-            
+
         # Check in topic name ('name' is empty if this a post to an existing topic)
         text = form.cleaned_data['name']
         if text != '':
             if any(x in text.lower() for x in [' baba ', 'ji']):
                 spam = True
-        
+
         post = form.save()
         if spam:
             # Hide the post against normal users
@@ -181,7 +181,7 @@ def add_post_ctx(request, forum_id, topic_id):
             post.save()
             # Redirect to an info page to inform the user
             return HttpResponseRedirect('pybb_moderate_info')
-        
+
         if not topic:
             post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
