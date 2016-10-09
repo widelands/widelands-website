@@ -18,6 +18,7 @@ from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
+from django.conf import settings
 
 try:
     from notification import models as notification
@@ -165,13 +166,14 @@ def add_post_ctx(request, forum_id, topic_id):
 
         # Check in post text.
         text = form.cleaned_data['body']
-        if all(x in text.lower() for x in ['vashikaran', 'baba']):
+        if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
             spam = True
-
-        # Check in topic name ('name' is empty if this a post to an existing topic)
+        
+        # Check in topic subject ('name' is empty if this a post to an existing topic)
         text = form.cleaned_data['name']
         if text != '':
-            if any(x in text.lower() for x in [' baba ', 'ji']):
+            # This is a new topic
+            if any(x in text.lower() for x in settings.ANTI_SPAM_TOPIC):
                 spam = True
 
         post = form.save()
