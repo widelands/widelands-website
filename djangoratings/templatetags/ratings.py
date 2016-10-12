@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import ObjectDoesNotExist
 
 from djangoratings.models import Vote
+from wl_utils import get_real_ip
 
 register = template.Library()
 
@@ -25,7 +26,7 @@ class RatingByRequestNode(template.Node):
         except (template.VariableDoesNotExist, AttributeError):
             return ''
         try:
-            vote = field.get_rating_for_user(request.user, request.META['REMOTE_ADDR'], request.COOKIES)
+            vote = field.get_rating_for_user(request.user, get_real_ip(request), request.COOKIES)
             context[self.context_var] = vote
         except ObjectDoesNotExist:
             context[self.context_var] = 0

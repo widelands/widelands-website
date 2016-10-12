@@ -18,6 +18,8 @@ from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
+from wl_utils import get_real_ip
+
 # Settings
 #  lock duration in minutes
 try:
@@ -33,16 +35,6 @@ except ImportError:
 # default querysets
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
-
-
-def get_real_ip(request):
-    """ Returns the real user IP, even if behind a proxy.
-    Set BEHIND_PROXY to True in your settings if Django is
-    running behind a proxy.
-    """
-    if getattr(settings, 'BEHIND_PROXY', False):
-        return request.META['HTTP_X_FORWARDED_FOR']
-    return request.META['REMOTE_ADDR']
 
 def get_articles_by_group(article_qs, group_slug=None,
                           group_slug_field=None, group_qs=None):

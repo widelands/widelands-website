@@ -1,26 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 
 from models import Image
-from settings import MEDIA_ROOT
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.conf import settings
-
+from wl_utils import get_real_ip
 from forms import UploadImageForm
-
-
-def get_real_ip(request):
-    """ Returns the real user IP, even if behind a proxy.
-    Set BEHIND_PROXY to True in your settings if Django is
-    running behind a proxy.
-    """
-    if getattr(settings, 'BEHIND_PROXY', False):
-        return request.META['HTTP_X_FORWARDED_FOR']
-    return request.META['REMOTE_ADDR']
 
 def display( request, image, revision ):
     revision = int(revision)
