@@ -35,8 +35,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Anti spam keywords
 # If these are found, the posts/topics in forum get hidden
-ANTI_SPAM_BODY = ['']
-ANTI_SPAM_TOPIC = ['']
+ANTI_SPAM_BODY = ['spam']
+ANTI_SPAM_TOPIC = ['spam']
 
 # Uncomment 'LOGGING = {...}' for debugging purposes when you have set DEBUG=False.
 # Use then in the code:

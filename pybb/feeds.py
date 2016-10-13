@@ -14,7 +14,6 @@ class PybbFeed(Feed):
             return self.one_title % obj.name
         
     def items(self, obj):
-
         if obj == self.all_objects:
             return obj.order_by('-created')[:15]
         else:
