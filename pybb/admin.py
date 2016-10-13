@@ -39,7 +39,7 @@ class TopicAdmin(admin.ModelAdmin):
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields': (('views',), ('sticky', 'closed', 'hidden'), 'subscribers')
+                'fields': (('views',), ('sticky', 'closed'), 'subscribers')
                 }
          ),
         )
