@@ -54,10 +54,10 @@ class LastPosts(PybbFeed):
     title_template = 'pybb/feeds/posts_title.html'
     description_template = 'pybb/feeds/posts_description.html'
 
-    all_objects = Post.objects
+    all_objects = Post.objects.filter(hidden=False)
 
     def items_for_object(self,obj):
-        return Post.objects.filter( topic__forum = obj ).order_by('-created')[:15]
+        return Post.objects.filter( hidden = False, topic__forum = obj ).order_by('-created')[:15]
 
     def item_author_name(self, item):
         """
@@ -73,10 +73,10 @@ class LastTopics(PybbFeed):
     title_template = 'pybb/feeds/topics_title.html'
     description_template = 'pybb/feeds/topics_description.html'
     
-    all_objects = Topic.objects
+    all_objects = Topic.objects.exclude(posts__hidden = True)
 
     def items_for_object(self,item):
-        return Topic.objects.filter( forum = item ).order_by('-created')[:15]
+        return Topic.objects.exclude( posts__hidden = True ).filter( forum = item ).order_by('-created')[:15]
 
     def item_author_name(self, item):
         """
