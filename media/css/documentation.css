@@ -4,7 +4,7 @@
 }
 
 .sphinx *:hover > a.headerlink {
-	visibility: visible; 
+	visibility: visible;
 }
 
 img.math{
@@ -12,20 +12,26 @@ img.math{
 }
 
 th {
-	background-color: #595959;
+	background-color: #4A4A4A;
 }
 
 /* Disable base style and set new ones */
 code {
-	background-image: none;
-	background-color: #3F3E3E;
 	font-weight: bold;
 	font-size: 1.3em;
 }
 
 /* Used for functions in first line */
+dt {
+	margin-top: 0.5em;
+	margin-bottom: 0.25em;
+}
 code.descname {
+	padding: 0.25em;
+	background-image: none;
+	font-weight: bold;
 	font-size: 1.4em;
+	color: rgba(254, 234, 138, 1);
 }
 
 
