@@ -40,7 +40,8 @@
 			</tr>
 		</thead>
 		<tbody>
-	{% for topic in topics %}
+		{% for topic in topics %}
+		{% if not topic.is_hidden %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
@@ -60,13 +61,43 @@
 				Views: {{ topic.views }}
 			</td>
 			<td class="lastPost">
-				{%if topic.last_post %}
-				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
-				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
+				{% if user.is_superuser %}
+					{% if topic.last_post %}
+						{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
+						<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
+					{% endif %}
+				{% else %}
+					{{ topic.last_nonhidden_post.user|user_link }} <a href="{{ topic.last_nonhidden_post.get_absolute_url }}">&#187;</a><br />
+					<span class="small">on {{ topic.last_nonhidden_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
 		</tr>
-	{% endfor %}
+		{% elif user.is_superuser %}
+		<tr class="{% cycle 'odd' 'even' %}">
+			<td class="forumIcon center">
+				{% if topic|pybb_has_unreads:user %}
+				<img src="{{ MEDIA_URL }}forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
+				{% else %}
+					<img src="{{ MEDIA_URL }}forum/img/doc_big_work.png" style="margin: 0px;" alt="" class="middle" />
+				{% endif %}
+			</td>
+			<td class="forumTitle">
+				{% if topic.sticky %}<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt="Sticky" title="Sticky" />{% endif %}
+				{% if topic.closed %}<img src="{{ MEDIA_URL }}forum/img/closed.png" alt="Closed" title="Closed" />{% endif %}
+				<a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a><br />
+				<span class="small">Created by {{ topic.user|user_link }} on {{ topic.created|custom_date:user }}</span>
+			</td>
+			<td class="forumCount center small" style="width: 120px;">
+				Posts: {{ topic.post_count }}<br/>
+				Views: {{ topic.views }}
+			</td>
+			<td class="lastPost">
+				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
+				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
+			</td>
+		</tr>
+		{% endif %} {# topic.is_hidden #}
+		{% endfor %} {# topic #}
 		</tbody>
 	</table>
 

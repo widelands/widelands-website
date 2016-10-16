@@ -57,7 +57,7 @@ class PostAdmin(admin.ModelAdmin):
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields' : (('created', 'updated'), 'user_ip')
+                'fields' : (('created', 'updated'), 'user_ip', 'hidden')
                 }
          ),
         (_('Message'), {

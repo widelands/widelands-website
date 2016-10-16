@@ -95,6 +95,13 @@ class Forum(models.Model):
         except IndexError:
             return None
 
+    @property
+    def last_nonhidden_post(self):
+        posts = self.posts.order_by('-created').filter(hidden=False).select_related()
+        try:
+            return posts[0]
+        except IndexError:
+            return None
 
 class Topic(models.Model):
     forum = models.ForeignKey(Forum, related_name='topics', verbose_name=_('Forum'))
@@ -130,6 +137,22 @@ class Topic(models.Model):
     @property
     def last_post(self):
         return self.posts.all().order_by('-created').select_related()[0]
+
+    @property
+    def last_nonhidden_post(self):
+        try:
+            return self.posts.all().order_by('-created').filter(hidden=False).select_related()[0]
+        except IndexError:
+            return self.posts.all().order_by('-created').select_related()[0]
+
+    # If the first post of this topic is hidden, the topic is hidden
+    @property
+    def is_hidden(self):
+        try:
+            p = self.posts.all().order_by('created').filter(hidden=False).select_related()[0]
+        except IndexError:
+            return True
+        return False
 
     @property
     def post_count(self):
@@ -193,6 +216,7 @@ class Post(RenderableItem):
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
     user_ip = models.GenericIPAddressField(_('User IP'), default='')
+    hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
     # Django sphinx
     if settings.USE_SPHINX:

@@ -1,6 +1,6 @@
 import math
 from mainpage.templatetags.wl_markdown import do_wl_markdown
-from pybb.markups import mypostmarkup 
+from pybb.markups import mypostmarkup
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, Http404
@@ -10,13 +10,15 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.utils import translation
+from django.shortcuts import render
 
 from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
                         MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm, UserSearchForm 
+from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
+from django.conf import settings
 
 try:
     from notification import models as notification
@@ -74,7 +76,7 @@ def show_forum_ctx(request, forum_id):
             }
 show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
-    
+
 def show_topic_ctx(request, topic_id):
 
     try:
@@ -112,7 +114,7 @@ def show_topic_ctx(request, topic_id):
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
     # profiles = dict((x.user_id, x) for x in profiles)
-    
+
     # for post in page.object_list:
     #     post.user.pybb_profile = profiles[post.user.id]
 
@@ -159,7 +161,29 @@ def add_post_ctx(request, forum_id, topic_id):
                       initial={'markup': "markdown", 'body': quote})
 
     if form.is_valid():
-        post = form.save();
+        # TODO: Add akismet check here
+        spam = False
+
+        # Check in post text.
+        text = form.cleaned_data['body']
+        if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
+            spam = True
+        
+        # Check in topic subject ('name' is empty if this a post to an existing topic)
+        text = form.cleaned_data['name']
+        if text != '':
+            # This is a new topic
+            if any(x in text.lower() for x in settings.ANTI_SPAM_TOPIC):
+                spam = True
+
+        post = form.save()
+        if spam:
+            # Hide the post against normal users
+            post.hidden = True
+            post.save()
+            # Redirect to an info page to inform the user
+            return HttpResponseRedirect('pybb_moderate_info')
+
         if not topic:
             post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
@@ -353,3 +377,6 @@ def post_ajax_preview(request):
 
     html = urlize(html)
     return {'content': html}
+
+def pybb_moderate_info(request):
+    return render(request, 'pybb/pybb_moderate_info.html')
