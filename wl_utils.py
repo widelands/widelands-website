@@ -1,13 +1,8 @@
-from django.conf import settings
-
 
 def get_real_ip(request):
-    """Returns the real user IP, even if behind a proxy.
+    """Returns the real user IP, even if behind a proxy."""
+    for key in ('HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'):
+        if key in request.META:
+            return request.META[key]
 
-    Set BEHIND_PROXY to True in your settings if Django is running
-    behind a proxy.
-
-    """
-    if getattr(settings, 'BEHIND_PROXY', False):
-        return request.META['HTTP_X_FORWARDED_FOR']
-    return request.META['REMOTE_ADDR']
+    return '192.168.255.255'
