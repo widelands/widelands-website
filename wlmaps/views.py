@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpRespon
 from django.core.urlresolvers import reverse
 import models
 from settings import MAPS_PER_PAGE
-
+from wl_utils import get_real_ip
 import os
 
 
@@ -42,7 +42,7 @@ def rate(request, map_slug):
 
     if not (0 < val <= 10):
         return HttpResponseBadRequest()
- 
+
     m.rating.add(score=val, user=request.user,
                  ip_address=get_real_ip(request))
     
