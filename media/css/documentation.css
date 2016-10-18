@@ -31,7 +31,7 @@ code.descname {
 	background-image: none;
 	font-weight: bold;
 	font-size: 1.4em;
-	color: rgba(254, 234, 138, 1);
+	color: #181;
 }
 
 
@@ -40,6 +40,7 @@ code.descname {
 /*******************************/
 pre {
 	margin: 0px;
+	display: block; /*show black background over the whole width*/
 }
 .highlight {
 /*	text-shadow: none;
