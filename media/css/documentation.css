@@ -4,18 +4,43 @@
 }
 
 .sphinx *:hover > a.headerlink {
-	visibility: visible; 
+	visibility: visible;
 }
 
 img.math{
 	vertical-align: middle;
 }
 
+th {
+	background-color: #4A4A4A;
+}
+
+/* Disable base style and set new ones */
+code {
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+/* Used for functions in first line */
+dt {
+	margin-top: 0.5em;
+	margin-bottom: 0.25em;
+}
+code.descname {
+	padding: 0.25em;
+	background-image: none;
+	font-weight: bold;
+	font-size: 1.4em;
+	color: #181;
+}
+
+
 /*******************************/
 /* Pygment Syntax Highlighting */
 /*******************************/
 pre {
 	margin: 0px;
+	display: block; /*show black background over the whole width*/
 }
 .highlight {
 /*	text-shadow: none;
