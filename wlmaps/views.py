@@ -8,12 +8,10 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
-from django.db import IntegrityError
 import models
 from settings import MAPS_PER_PAGE
-
+from wl_utils import get_real_ip
 import os
-import zipfile
 
 
 #########
@@ -46,7 +44,8 @@ def rate(request, map_slug):
         return HttpResponseBadRequest()
 
     m.rating.add(score=val, user=request.user,
-                 ip_address=request.META['REMOTE_ADDR'])
+                 ip_address=get_real_ip(request))
+    
     # m.save() is not needed
 
     return HttpResponseRedirect(reverse('wlmaps_view', None, {'map_slug': m.slug}))

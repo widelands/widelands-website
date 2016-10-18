@@ -5,6 +5,7 @@ from django.http import HttpResponse, Http404
 from exceptions import *
 from django.conf import settings
 from default_settings import RATINGS_VOTES_PER_IP
+from wl_utils import get_real_ip
 
 class AddRatingView(object):
     def __call__(self, request, content_type_id, object_id, field_name, score):
@@ -30,12 +31,12 @@ class AddRatingView(object):
             'score': score,
         })
         
-        had_voted = bool(field.get_rating_for_user(request.user, request.META['REMOTE_ADDR'], request.COOKIES))
+        had_voted = bool(field.get_rating_for_user(request.user, get_real_ip(request), request.COOKIES))
         
         context['had_voted'] = had_voted
                     
         try:
-            adds = field.add(score, request.user, request.META.get('REMOTE_ADDR'), request.COOKIES)
+            adds = field.add(score, request.user, get_real_ip(request), request.COOKIES)
         except IPLimitReached:
             return self.too_many_votes_from_ip_response(request, context)
         except AuthRequired:

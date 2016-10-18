@@ -8,6 +8,7 @@ from django.conf import settings
 from threadedcomments.forms import FreeThreadedCommentForm, ThreadedCommentForm
 from threadedcomments.models import ThreadedComment, FreeThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.utils import JSONResponse, XMLResponse
+from wl_utils import get_real_ip
 
 def _adjust_max_comment_length(form, field_name='comment'):
     """
@@ -84,7 +85,7 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
     if form.is_valid():
         new_comment = form.save(commit=False)
         if not edit_id:
-            new_comment.ip_address = request.META.get('REMOTE_ADDR', None)
+            new_comment.ip_address = get_real_ip(request)
             new_comment.content_type = get_object_or_404(ContentType, id = int(content_type))
             new_comment.object_id = int(object_id)
         if model == ThreadedComment:

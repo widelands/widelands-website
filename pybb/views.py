@@ -19,6 +19,7 @@ from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 from django.conf import settings
+from wl_utils import get_real_ip
 
 try:
     from notification import models as notification
@@ -155,9 +156,8 @@ def add_post_ctx(request, forum_id, topic_id):
         post = get_object_or_404(Post, pk=quote_id)
         quote = quote_text(post.body, post.user, "markdown")
 
-    ip = request.META.get('REMOTE_ADDR', '')
     form = build_form(AddPostForm, request, topic=topic, forum=forum,
-                      user=request.user, ip=ip,
+                      user=request.user, ip=get_real_ip(request),
                       initial={'markup': "markdown", 'body': quote})
 
     if form.is_valid():
