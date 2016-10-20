@@ -9,8 +9,9 @@ from django.contrib.auth.models import User
 
 from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
-
+from django.conf import settings
 from notification.models import send
+from django.core.mail import send_mail
 
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
@@ -63,20 +64,42 @@ class AddPostForm(forms.ModelForm):
             topic_is_new = False
             topic = self.topic
 
+        # Check for spam
+        # TODO: This is currently a simple keyword search. Maybe add akismet check here
+        hidden = False
+        text = self.cleaned_data['body']
+        if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
+            hidden = True
+        
+        if topic_is_new:
+            text = self.cleaned_data['name']
+            if any(x in text.lower() for x in settings.ANTI_SPAM_TOPIC):
+                hidden = True
+
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
                     markup=self.cleaned_data['markup'],
-                    body=self.cleaned_data['body'])
+                    body=self.cleaned_data['body'], hidden=hidden)
         post.save(*args, **kwargs)
 
         if pybb_settings.ATTACHMENT_ENABLE:
             self.save_attachment(post, self.cleaned_data['attachment'])
 
-        if topic_is_new:
-            send(User.objects.all(), "forum_new_topic",
-                {'topic': topic, 'post':post, 'user':topic.user})
+        if not hidden:
+            if topic_is_new:
+                send(User.objects.all(), "forum_new_topic",
+                    {'topic': topic, 'post':post, 'user':topic.user})
+            else:
+                send(self.topic.subscribers.all(), "forum_new_post",
+                    {'post':post, 'topic':topic, 'user':post.user})
         else:
-            send(self.topic.subscribers.all(), "forum_new_post",
-                {'post':post, 'topic':topic, 'user':post.user})
+            recipients = [addr[1] for addr in settings.ADMINS]
+            message = '\n'.join(['A post was hidden by Spam check:',
+                                 'Topic name: ' + topic.name,
+                                 'Post body: ' + post.body,
+                                 'Go to the admin page, review and uncover it, if it is no spam.'])
+            send_mail('A post was hidden', message, 'pybb@widelands.org',
+                      recipients, fail_silently=False)
+
         return post
 
 

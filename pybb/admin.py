@@ -45,7 +45,7 @@ class TopicAdmin(admin.ModelAdmin):
         )
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['topic', 'user', 'created', 'updated', 'summary']
+    list_display = ['summary', 'topic', 'user', 'created', 'hidden']
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'

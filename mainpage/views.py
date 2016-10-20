@@ -37,7 +37,6 @@ def legal_notice(request):
             recipients = []
             for recipient in INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
-                print('recipeients: ', recipients)
 
             send_mail(subject, message, sender,
                       recipients, fail_silently=False)
