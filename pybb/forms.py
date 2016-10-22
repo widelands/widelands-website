@@ -12,6 +12,7 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from django.core.mail import send_mail
+from django.contrib.sites.models import Site
 
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
@@ -96,7 +97,7 @@ class AddPostForm(forms.ModelForm):
             message = '\n'.join(['A post was hidden by Spam check:',
                                  'Topic name: ' + topic.name,
                                  'Post body: ' + post.body,
-                                 'Go to the admin page, review and uncover it, if it is no spam.'])
+                                 'Admin page: http://'+ Site.objects.get_current().domain + '/admin/login/?next=/admin/pybb/post/'+ str(post.id)])
             send_mail('A post was hidden', message, 'pybb@widelands.org',
                       recipients, fail_silently=False)
 
