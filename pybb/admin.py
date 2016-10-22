@@ -3,6 +3,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read
 
+def delete_selected(modeladmin, request, queryset):
+    """ Overwritten default action to delete a post.
+    This action uses the delete() method of the post model.
+    This ensures also deleting a topic if neccesary, preventing
+    index-errors if a topic has no post."""
+    for obj in queryset:
+        obj.delete()
+delete_selected.short_description = 'Delete selected posts'
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'position', 'forum_count']
     list_per_page = 20
@@ -50,14 +59,15 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['body']
+    actions = [delete_selected]
     fieldsets = (
         (None, {
-                'fields': ('topic', 'user', 'markup')
+                'fields': ('topic', 'user', 'markup', 'hidden')
                 }
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields' : (('created', 'updated'), 'user_ip', 'hidden')
+                'fields' : (('created', 'updated'), 'user_ip' )
                 }
          ),
         (_('Message'), {

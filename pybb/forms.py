@@ -94,11 +94,11 @@ class AddPostForm(forms.ModelForm):
                     {'post':post, 'topic':topic, 'user':post.user})
         else:
             recipients = [addr[1] for addr in settings.ADMINS]
-            message = '\n'.join(['A post was hidden by Spam check:',
+            message = '\n'.join(['Hidden post:',
                                  'Topic name: ' + topic.name,
                                  'Post body: ' + post.body,
                                  'Admin page: http://'+ Site.objects.get_current().domain + '/admin/login/?next=/admin/pybb/post/'+ str(post.id)])
-            send_mail('A post was hidden', message, 'pybb@widelands.org',
+            send_mail('A post was hidden by spam check', message, 'pybb@widelands.org',
                       recipients, fail_silently=False)
 
         return post
