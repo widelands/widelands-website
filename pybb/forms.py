@@ -14,6 +14,8 @@ from notification.models import send
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 
+INTERN_PHONE_NR = re.compile('([0]{2}|[\+\@\ ]{1})\d{2}[\ \-\=]{,1}\d{8,11}')
+
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
     attachment = forms.FileField(label=_('Attachment'), required=False)
@@ -71,10 +73,15 @@ class AddPostForm(forms.ModelForm):
         text = self.cleaned_data['body']
         if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
             hidden = True
+
+        if re.search(INTERN_PHONE_NR, text):
+            hidden = True
         
         if topic_is_new:
             text = self.cleaned_data['name']
             if any(x in text.lower() for x in settings.ANTI_SPAM_TOPIC):
+                hidden = True
+            if re.search(INTERN_PHONE_NR, text):
                 hidden = True
 
         post = Post(topic=topic, user=self.user, user_ip=self.ip,
