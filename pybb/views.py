@@ -162,12 +162,13 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save()
+        if not topic:
+            post.topic.subscribers.add(request.user)
+
         if post.hidden:
             # Redirect to an info page to inform the user
             return HttpResponseRedirect('pybb_moderate_info')
 
-        if not topic:
-            post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
 
     if topic:

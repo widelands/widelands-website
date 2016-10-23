@@ -100,6 +100,7 @@ class AddPostForm(forms.ModelForm):
                 send(self.topic.subscribers.all(), "forum_new_post",
                     {'post':post, 'topic':topic, 'user':post.user})
         else:
+            # Inform admins of a hidden post
             recipients = [addr[1] for addr in settings.ADMINS]
             message = '\n'.join(['Hidden post:',
                                  'Topic name: ' + topic.name,
