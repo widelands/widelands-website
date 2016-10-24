@@ -2,8 +2,6 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read
-from notification.models import send
-from django.contrib.auth.models import User
 
 def delete_selected(modeladmin, request, queryset):
     """ Overwritten Django's default action to delete a post.
@@ -19,16 +17,7 @@ delete_selected.short_description = 'Delete selected posts'
 def unhide_post(modeladmin, request, queryset):
     "Unhide post(s) and inform subscribers"
     for obj in queryset:
-        obj.hidden = False
-        obj.save()
-        if obj.topic.post_count == 1:
-            # The topic is new
-            send(User.objects.all(), "forum_new_topic",
-                 {'topic': obj.topic, 'post':obj, 'user':obj.topic.user})
-        else:
-            # Inform topic subscribers
-            send(obj.topic.subscribers.all(), "forum_new_post",
-                    {'post':obj, 'topic':obj.topic, 'user':obj.user})
+        obj.unhide_post()
 unhide_post.short_description = 'Unhide post and inform subscribers'
 
 class CategoryAdmin(admin.ModelAdmin):
