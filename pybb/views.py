@@ -18,7 +18,7 @@ from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
-from django.conf import settings
+
 from wl_utils import get_real_ip
 
 try:
@@ -161,31 +161,14 @@ def add_post_ctx(request, forum_id, topic_id):
                       initial={'markup': "markdown", 'body': quote})
 
     if form.is_valid():
-        # TODO: Add akismet check here
-        spam = False
-
-        # Check in post text.
-        text = form.cleaned_data['body']
-        if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
-            spam = True
-        
-        # Check in topic subject ('name' is empty if this a post to an existing topic)
-        text = form.cleaned_data['name']
-        if text != '':
-            # This is a new topic
-            if any(x in text.lower() for x in settings.ANTI_SPAM_TOPIC):
-                spam = True
-
         post = form.save()
-        if spam:
-            # Hide the post against normal users
-            post.hidden = True
-            post.save()
+        if not topic:
+            post.topic.subscribers.add(request.user)
+
+        if post.hidden:
             # Redirect to an info page to inform the user
             return HttpResponseRedirect('pybb_moderate_info')
 
-        if not topic:
-            post.topic.subscribers.add(request.user)
         return HttpResponseRedirect(post.get_absolute_url())
 
     if topic:

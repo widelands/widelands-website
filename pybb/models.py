@@ -15,6 +15,8 @@ from pybb.util import urlize, memoize_method, unescape
 from pybb import settings as pybb_settings
 
 from django.conf import settings
+from notification.models import send
+from django.contrib.auth.models import User
 if settings.USE_SPHINX:
     from djangosphinx.models import SphinxSearch
 
@@ -260,6 +262,18 @@ class Post(RenderableItem):
     def get_absolute_url(self):
         return reverse('pybb_post', args=[self.id])
 
+    def unhide_post(self):
+        "Unhide post(s) and inform subscribers"
+        self.hidden = False
+        self.save()
+        if self.topic.post_count == 1:
+            # The topic is new
+            send(User.objects.all(), "forum_new_topic",
+                 {'topic': self.topic, 'post':self, 'user':self.topic.user})
+        else:
+            # Inform topic subscribers
+            send(self.topic.subscribers.all(), "forum_new_post",
+                    {'post':self, 'topic':self.topic, 'user':self.user})
 
     def delete(self, *args, **kwargs):
         self_id = self.id

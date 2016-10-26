@@ -3,6 +3,23 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read
 
+def delete_selected(modeladmin, request, queryset):
+    """ Overwritten Django's default action to delete a post.
+    
+    This action uses the delete() method of the post model.
+    This ensures also deleting a topic if neccesary, preventing
+    index-errors if a topic has only one post.
+    """
+    for obj in queryset:
+        obj.delete()
+delete_selected.short_description = 'Delete selected posts'
+
+def unhide_post(modeladmin, request, queryset):
+    "Unhide post(s) and inform subscribers"
+    for obj in queryset:
+        obj.unhide_post()
+unhide_post.short_description = 'Unhide post and inform subscribers'
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'position', 'forum_count']
     list_per_page = 20
@@ -27,7 +44,7 @@ class ForumAdmin(admin.ModelAdmin):
         )
 
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ['name', 'forum', 'created', 'head']
+    list_display = ['name', 'forum', 'created', 'head', 'is_hidden']
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'
@@ -45,19 +62,20 @@ class TopicAdmin(admin.ModelAdmin):
         )
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['topic', 'user', 'created', 'updated', 'summary']
+    list_display = ['summary', 'topic', 'user', 'created', 'hidden']
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['body']
+    actions = [delete_selected, unhide_post]
     fieldsets = (
         (None, {
-                'fields': ('topic', 'user', 'markup')
+                'fields': ('topic', 'user', 'markup', 'hidden')
                 }
          ),
         (_('Additional options'), {
                 'classes': ('collapse',),
-                'fields' : (('created', 'updated'), 'user_ip', 'hidden')
+                'fields' : (('created', 'updated'), 'user_ip' )
                 }
          ),
         (_('Message'), {
