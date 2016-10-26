@@ -69,6 +69,7 @@ class AddPostForm(forms.ModelForm):
 
         # Check for spam
         # TODO: This is currently a simple keyword search. Maybe add akismet check here
+        # and move it to an own directory/app
         hidden = False
         text = self.cleaned_data['body']
         if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
@@ -101,11 +102,13 @@ class AddPostForm(forms.ModelForm):
                     {'post':post, 'topic':topic, 'user':post.user})
         else:
             # Inform admins of a hidden post
+            # Moving this to an own method makes the code clearer
+            # There is also similar code in mainpage.views.py
             recipients = [addr[1] for addr in settings.ADMINS]
             message = '\n'.join(['Hidden post:',
                                  'Topic name: ' + topic.name,
                                  'Post body: ' + post.body,
-                                 'Admin page: http://'+ Site.objects.get_current().domain + '/admin/login/?next=/admin/pybb/post/'+ str(post.id)])
+                                 'Admin page: http://'+ Site.objects.get_current().domain + '/admin/login/?next=/admin/pybb/post/'])
             send_mail('A post was hidden by spam check', message, 'pybb@widelands.org',
                       recipients, fail_silently=False)
 
