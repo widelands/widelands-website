@@ -138,7 +138,7 @@ class Topic(models.Model):
 
     @property
     def last_post(self):
-        return self.posts.all().order_by('-created').select_related()[0]
+        return self.posts.all().exclude(hidden=True).order_by('-created').select_related()[0]
 
     @property
     def last_nonhidden_post(self):

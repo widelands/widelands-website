@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Topic: {{ topic }}</h1>
+<h1>Topic: {{ topic }} </h1>
 <div class="blogEntry">
 	<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
 	{% pybb_link topic.forum.category %} &#187; 
@@ -158,6 +158,7 @@
 		<tbody>
 	{% for post in posts %}
 		{% if not post.hidden or user.is_superuser %}
+			pp
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="author">
 				{{ post.user|user_link }}<br />
