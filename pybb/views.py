@@ -57,7 +57,6 @@ show_category = render_to('pybb/category.html')(show_category_ctx)
 
 
 def show_forum_ctx(request, forum_id):
-    print('franku in forum_ctx')
     forum = get_object_or_404(Forum, pk=forum_id)
 
     quick = {'posts': forum.post_count,
@@ -67,9 +66,9 @@ def show_forum_ctx(request, forum_id):
                 [:pybb_settings.QUICK_POSTS_NUMBER],
              }
 
-    #topics = forum.topics.order_by('-sticky', '-updated').select_related()
-    topics = forum.topics.order_by('-sticky', '-updated').exclude(posts__hidden=True).select_related()
+    topics = forum.topics.order_by('-sticky', '-updated').select_related()
     page, paginator = paginate(topics, request, pybb_settings.FORUM_PAGE_SIZE)
+    
     return {'forum': forum,
             'topics': page.object_list,
             'quick': quick,
@@ -80,7 +79,6 @@ show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
 
 def show_topic_ctx(request, topic_id):
-    print('franku in show_topic')
     try:
         topic = Topic.objects.select_related().get(pk=topic_id)
     except Topic.DoesNotExist:
@@ -108,7 +106,7 @@ def show_topic_ctx(request, topic_id):
     subscribed = (request.user.is_authenticated() and
                   request.user in topic.subscribers.all())
 
-    posts = topic.posts.all().select_related()
+    posts = topic.posts.exclude(hidden=True).select_related()
     page, paginator = paginate(posts, request, pybb_settings.TOPIC_PAGE_SIZE,
                                total_count=topic.post_count)
 
@@ -195,7 +193,6 @@ user = render_to('pybb/user.html')(user_ctx)
 
 
 def show_post(request, post_id):
-    print('franku in show_post')
     post = get_object_or_404(Post, pk=post_id)
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
