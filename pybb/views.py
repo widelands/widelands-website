@@ -66,7 +66,7 @@ def show_forum_ctx(request, forum_id):
                 [:pybb_settings.QUICK_POSTS_NUMBER],
              }
 
-    topics = forum.topics.order_by('-sticky', '-updated').select_related()
+    topics = forum.topics.order_by('-sticky', '-updated').exclude(posts__hidden=True).select_related()
     page, paginator = paginate(topics, request, pybb_settings.FORUM_PAGE_SIZE)
     
     return {'forum': forum,

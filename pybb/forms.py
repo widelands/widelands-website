@@ -67,9 +67,11 @@ class AddPostForm(forms.ModelForm):
             topic_is_new = False
             topic = self.topic
 
-        # Check for spam
+        # Check for spam and hide the post
         # TODO: This is currently a simple keyword search. Maybe add akismet check here
         # could be improved...
+        # The admins get informed of hidden post(s) over
+        # a Django command. See pybb/management/commands
         hidden = False
         text = self.cleaned_data['body']
         if any(x in text.lower() for x in settings.ANTI_SPAM_BODY):
@@ -100,9 +102,6 @@ class AddPostForm(forms.ModelForm):
             else:
                 send(self.topic.subscribers.all(), "forum_new_post",
                     {'post':post, 'topic':topic, 'user':post.user})
-
-            # Informing admins of a hidden post is now managed over
-            # a Django command. See pybb/management/commands
 
         return post
 
