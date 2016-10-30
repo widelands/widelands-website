@@ -130,7 +130,7 @@ class Topic(models.Model):
 
     @property
     def last_post(self):
-        return self.posts.all().order_by('-created').select_related()[0]
+        return self.posts.exclude(hidden=True).order_by('-created').select_related()[0]
 
     # If the first post of this topic is hidden, the topic is hidden
     @property
