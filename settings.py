@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.humanize',
     'django_comments',
+    'django.contrib.sitemaps',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
     'tracking', # included as wlapp

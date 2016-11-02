@@ -5,17 +5,24 @@ from django.contrib import admin
 admin.autodiscover()
 
 from mainpage.views import mainpage
-
+from django.contrib.sitemaps.views import sitemap
 from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
 from mainpage.views import OwnRegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
+from sitemaps import *
+sitemaps = {
+    'News': NewsSitemap,
+    'Wiki': WikiSitemap,}
 
 urlpatterns = [
     # Uncomment the next line to enable the admin:
     url(r'^admin/', admin.site.urls),
-
+    # Creating a sitemap.xml
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+    name='django.contrib.sitemaps.views.sitemap'),
+    
     # Django builtin / Registration
     # overwrite registration with own implementation
     url (r'^accounts/register/$', OwnRegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
