@@ -1,5 +1,7 @@
 from django.contrib.sitemaps import Sitemap
-from widelands.news.models import Post
+from .models import Post
+from datetime import datetime
+from datetime import timedelta
 
 
 class NewsSitemap(Sitemap):
@@ -7,7 +9,8 @@ class NewsSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return Post.objects.published()
+        start_date = datetime.today() - timedelta(days=365 * 4)
+        return Post.objects.filter(publish__gt=start_date)
 
-        def lastmod(self, obj):
-            return obj.publish
+    def lastmod(self, obj):
+        return obj.publish
