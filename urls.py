@@ -15,7 +15,7 @@ from mainpage.forms import RegistrationWithCaptchaForm
 
 urlpatterns = [
     # Creating a sitemap.xml
-    url(r'^sitemap\.xml/', include('sitemaps_urls')),
+    url(r'^sitemap\.xml/', include('sitemap_urls')),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', admin.site.urls),
