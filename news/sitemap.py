@@ -9,7 +9,7 @@ class NewsSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        start_date = datetime.today() - timedelta(days=365 * 4)
+        start_date = datetime.today() - timedelta(days=365 * 2)
         return Post.objects.filter(publish__gt=start_date)
 
     def lastmod(self, obj):
