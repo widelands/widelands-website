@@ -5,7 +5,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 from mainpage.views import mainpage
-from django.contrib.sitemaps.views import sitemap
 from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
