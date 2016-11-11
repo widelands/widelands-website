@@ -10,7 +10,8 @@
 
 <h1>News Archive</h1>
 <a href="{% url 'news_index' %}" class="invertedColor">News Archiv</a> &#187;
-<a href="{% url 'news_index' %}{{ year|date:"Y" }}" class="invertedColor">{{ year|date:"Y" }}</a>: 
+<a href="{% url 'news_index' %}{{ year|date:"Y" }}" class="invertedColor">{{ year|date:"Y" }}</a>:
+
 {% for month in date_list %}
 	<a href="{% url 'news_index' %}{{ year|date:"Y" }}/{{ month|date:"b" }}/" class="invertedColor">{{ month|date:"F" }}</a>
 	{% if not forloop.last %} | {% endif %}
@@ -23,6 +24,7 @@
 </div>
 <br />
 {% for object in object_list %}
+	{{ object }}
 	{% include "news/inlines/post_detail.html" %}
 {% endfor %}
 {% if page_obj.has_other_pages %}

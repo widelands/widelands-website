@@ -52,7 +52,7 @@ class NewsYears(template.Node):
         self.var_name = var_name
 
     def render(self, context):
-        years = Post.objects.all().dates('publish', 'year')
+        years = Post.objects.all().dates('publish', 'year').exclude(status=1)
         context[self.var_name] = years
         return ''
 
@@ -130,4 +130,4 @@ def get_links(value):
         if settings.DEBUG:
             raise template.TemplateSyntaxError, "Error in 'get_links' filter: BeautifulSoup isn't installed."
     return value
-
+ 
