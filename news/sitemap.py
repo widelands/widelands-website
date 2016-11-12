@@ -10,7 +10,7 @@ class NewsSitemap(Sitemap):
 
     def items(self):
         start_date = datetime.today() - timedelta(days=365 * 2)
-        return Post.objects.filter(publish__gt=start_date)
+        return Post.objects.published().filter(publish__gt=start_date)
 
     def lastmod(self, obj):
         return obj.publish
