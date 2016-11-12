@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from tagging.fields import TagField
 from news.managers import PublicManager
 from django.core.urlresolvers import reverse
-
+import datetime
 import settings
 if settings.USE_SPHINX:
     from djangosphinx.models import SphinxSearch
@@ -119,8 +119,10 @@ class Post(models.Model):
         })
     
     def get_previous_post(self):
+        # get_previous_by_FOO(**kwargs) is a django model function
         return self.get_previous_by_publish(status__gte=2)
     
     def get_next_post(self):
-        return self.get_next_by_publish(status__gte=2)
+        # get_next_by_FOO(**kwargs) is a django model function
+        return self.get_next_by_publish(status__gte=2, publish__lte=datetime.datetime.now())
 

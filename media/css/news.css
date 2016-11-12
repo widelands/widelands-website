@@ -1,0 +1,9 @@
+.pagination a{
+    color: #181;
+    text-decoration: none;
+    text-shadow: none;
+}
+.current-page {
+    text-decoration: none;
+    text-shadow: none;    
+}

@@ -1,8 +1,6 @@
 {% extends "news/base_news.html" %}
 {% load custom_date %}
-{% load news_extras %}
 {% load pagination_tags %}
-{#{% load markup %}#}
 
 {% block title %}{{ month|date:"F - Y" }} - {{block.super}}}{% endblock %}
 
@@ -12,22 +10,20 @@
 <a href="{% url 'news_index' %}" class="invertedColor">News Archiv</a> &#187; 
 <a href="{% url 'news_index' %}{{ month|date:"Y" }}/" class="invertedColor">{{ month|date:"Y" }}</a> &#187; 
 <a href="{% url 'news_index' %}{{ month|date:"Y" }}/{{ month|date:"b" }}/" class="invertedColor">{{ month|date:"F" }}</a>
-{% for day in object_list %}
-{% endfor %}
 <br />
 
 <div class="center">
-{% autopaginate object_list 10 %}
-{% paginate %}
+	{% autopaginate object_list 2 %}
+	{% paginate %}
 </div>
 <br />
 
 {% for object in object_list %}
 	{% include "news/inlines/post_detail.html" %}
 {% endfor %}
-{% if page_obj.has_other_pages %}
 
-<div class="box_item_model even show_center">
+{% if page_obj.has_other_pages %}
+<div class="center">
 {% paginate %}
 </div>
 {% endif %}

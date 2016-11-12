@@ -1,36 +1,32 @@
 {% extends "news/base_news.html" %}
-{% load custom_date %}
-{% load news_extras %}
 {% load pagination_tags %}
-{#{% load markup %}#}
 
 {% block title %}{{ year }} - {{ block.super }}{% endblock %}
 
 {% block content %}
 
 <h1>News Archive</h1>
-<a href="{% url 'news_index' %}" class="invertedColor">News Archiv</a> &#187;
-<a href="{% url 'news_index' %}{{ year|date:"Y" }}" class="invertedColor">{{ year|date:"Y" }}</a>:
+<a href="{% url 'news_index' %}" class="invertedColor">News Archiv </a><span class="green">&#187;</span>
+<a href="{% url 'news_index' %}{{ year|date:"Y" }}" class="invertedColor">{{ year|date:"Y" }}</a><span class="green"> : </span>
 
 {% for month in date_list %}
 	<a href="{% url 'news_index' %}{{ year|date:"Y" }}/{{ month|date:"b" }}/" class="invertedColor">{{ month|date:"F" }}</a>
-	{% if not forloop.last %} | {% endif %}
+	{% if not forloop.last %} <span class="green"> | </span> {% endif %}
 {% endfor %}
 <br />
-
-<div class="center">
-{% autopaginate object_list 10 %}
-{% paginate %}
-</div>
 <br />
+<div class="center">
+	{% autopaginate object_list 10 %}
+	{% paginate %}
+</div>
+
 {% for object in object_list %}
-	{{ object }}
 	{% include "news/inlines/post_detail.html" %}
 {% endfor %}
 {% if page_obj.has_other_pages %}
 
 <div class="center">
-{% paginate %}
+	{% paginate %}
 </div>
 {% endif %}
 

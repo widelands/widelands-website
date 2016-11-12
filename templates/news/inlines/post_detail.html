@@ -5,20 +5,23 @@
 
 {% endcomment %}
 {% load threadedcommentstags %}
-{% load news_extras wl_markdown tagging_tags wlprofile_extras custom_date %}
+{% load wl_markdown tagging_tags wlprofile_extras custom_date %}
 
 <div class="blogEntry">
 	{% if object.has_image %}
-	<a href="{{ object.get_absolute_url }}"><img class="title posLeft" src='{{MEDIA_URL}}{{ object.image|urlencode }}' alt='{{ object.image_alt }}' /></a>
+		<a href="{{ object.get_absolute_url }}"><img class="title posLeft" src='{{MEDIA_URL}}{{ object.image|urlencode }}' alt='{{ object.image_alt }}' /></a>
 	{% endif %}
 	{% if perms.news %}
-	<div class="small posRight invertedColor">
+		<div class="small posRight invertedColor">
 		{% if perms.news.add_post %}<a href="/admin/news/post/add/">Add New News</a>{% endif %}
 		{% if perms.news.change_post %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
-	</div>
+		</div>
     {% endif %}
+	
 	<h2><a href="{{ object.get_absolute_url }}" class="invertedColor">{{ object.title }}</a></h2>
+	
 	{{ object.body|wl_markdown }}
+	
 	<hr />
 	{% get_comment_count for object as ccount %}
 	<span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments</a></span>

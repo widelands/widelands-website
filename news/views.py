@@ -1,32 +1,22 @@
 from news.models import Post
-from django.views.generic import ListView, YearArchiveView, MonthArchiveView
+from django.views.generic import ArchiveIndexView, YearArchiveView, MonthArchiveView
 import datetime
 
 
-class NewsList(ListView):
-    
-    template_name = 'news/post_list.html'
-    
-    def get_queryset(self):
-        return Post.objects.exclude(status=1) #1 means 'Draft'
+class NewsList(ArchiveIndexView):
+
+    queryset = Post.objects.published()
+    date_field = 'publish'
+
 
 class YearNews(YearArchiveView):
-    
-    date_field="publish"
-    #model = Post
-    #make_object_list = True
-    allow_future = True
-    
-    def get_queryset(self):
-        since = datetime.date(int(self.get_year()), 1, 1)
-        until = datetime.date(int(self.get_year()), 12, 31)
-        qs = Post.objects.exclude(status=1).exclude(publish__lt=since).exclude(publish__gt=until) #1 means 'Draft'
-        print('franku qs: ', qs)
-        return qs
+
+    queryset = Post.objects.published()
+    date_field = 'publish'
+    make_object_list = True
+
 
 class MonthNews(MonthArchiveView):
-    
+
+    queryset = Post.objects.published()
     template_name = 'post_archive_year.html'
-    
-    def get_queryset(self):
-        return Post.objects.exclude(status=1) #1 means 'Draft'
