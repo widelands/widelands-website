@@ -1,20 +1,27 @@
 from django.conf.urls import *
-from news.models import Post
-from django.views.generic import DetailView
-from news.views import NewsList, YearNews, MonthNews
+from django.views.generic import ListView
+from news.views import NewsList, YearNews, MonthNews, NewsDetail, CategoryView
 
 urlpatterns = [ 
      url(r'^(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/(?P<slug>[-\w]+)/$',
-        DetailView.as_view(queryset=Post.objects.published(), template_name="news/post_detail.html"),
+        NewsDetail.as_view(),
         name='news_detail'),
 
      url(r'^(?P<year>\d{4})/(?P<month>[-\w]+)/$',
-          MonthNews.as_view(date_field="publish"),
+          MonthNews.as_view(),
           name='news_archive_month'),
 
      url(r'^(?P<year>\d{4})/$',
           YearNews.as_view(),
           name='news_archive_year'),
+     
+     url(r'^category/(?P<slug>[-\w]+)/',
+          CategoryView.as_view(),
+          name='category_detail'),
+     
+     # url(r'^category_list/',
+     #      ListView.as_view(model=Category,
+     #      template_name='news/category_list.html'), name='category_ist'),
      
      url(r'^$',
          NewsList.as_view(template_name = 'news/post_list.html'),

@@ -117,7 +117,14 @@ class Post(models.Model):
             'month': self.publish.strftime('%b'),
             'day': self.publish.day,
         })
-    
+
+    def get_category_slug(self):
+        try:
+            s = self.categories.all()[0].slug
+        except IndexError:
+            return None
+        return s
+
     def get_previous_post(self):
         # get_previous_by_FOO(**kwargs) is a django model function
         return self.get_previous_by_publish(status__gte=2)

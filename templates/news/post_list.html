@@ -27,7 +27,14 @@
     <ul>
         {% for object in object_list %}
 	       	{% get_comment_count for object as ccount %}
-	        <li><a href="{{object.get_absolute_url}}">{{ object.title }}</a> - <span class="small">posted at {{ object.publish|custom_date:user }}, {{ ccount }} comments</span></li>
+	        <li>
+				<a href="{{object.get_absolute_url}}">{{ object.title }}</a> -
+				<span class="small">
+					posted at {{ object.publish|custom_date:user }},
+					{{ ccount }} comments,
+					Category: {{ object.get_category_slug }}
+				</span>
+			</li>
 	    {% endfor %}
 	</ul>
 
