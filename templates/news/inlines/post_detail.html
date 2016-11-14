@@ -9,7 +9,7 @@
 
 <div class="blogEntry">
 	{% if object.has_image %}
-		<a href="{% url 'category_detail' slug=object.get_category_slug %}">
+		<a href="{% url 'category_posts' slug=object.get_category_slug %}">
 			<img class="title posLeft" src='{{MEDIA_URL}}{{ object.image|urlencode }}' alt='{{ object.image_alt }}'
 		</a>
 	{% endif %}

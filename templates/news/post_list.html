@@ -10,7 +10,7 @@
 	<a href="{% url 'news_index' %}" class="invertedColor">News Archiv: </a>
 	{% for dateobj in date_list reversed %}
 		<a href="{% url 'news_index' %}{{ dateobj|date:'Y' }}" class="invertedColor">{{ dateobj|date:'Y' }}</a>
-	{% if not forloop.last %} <span class="green"> | </span> {% endif %}
+		{% if not forloop.last %} <span class="green"> | </span> {% endif %}
 	{% endfor%}
 </div>
 {% if perms.news %}
@@ -24,25 +24,25 @@
 	{% autopaginate object_list 20 %}
 	{% paginate %}
 	</div>
-    <ul>
-        {% for object in object_list %}
-	       	{% get_comment_count for object as ccount %}
-	        <li>
+	<ul>
+		{% for object in object_list %}
+			{% get_comment_count for object as ccount %}
+			<li>
 				<a href="{{object.get_absolute_url}}">{{ object.title }}</a> -
 				<span class="small">
 					posted at {{ object.publish|custom_date:user }},
 					{{ ccount }} comments,
-					Category: {{ object.get_category_slug }}
+					Category: <a href=" {% url 'category_posts' slug=object.get_category_slug %}"> {{ object.get_category_slug|title }}</a>
 				</span>
 			</li>
 	    {% endfor %}
 	</ul>
 
-{% if page_obj.has_other_pages %}
-<div class="center">
-{% paginate %}
-</div>
-{% endif %}
+	{% if page_obj.has_other_pages %}
+	<div class="center">
+	{% paginate %}
+	</div>
+	{% endif %}
 </div>
 
 {% endblock %}

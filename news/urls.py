@@ -17,11 +17,7 @@ urlpatterns = [
      
      url(r'^category/(?P<slug>[-\w]+)/',
           CategoryView.as_view(),
-          name='category_detail'),
-     
-     # url(r'^category_list/',
-     #      ListView.as_view(model=Category,
-     #      template_name='news/category_list.html'), name='category_ist'),
+          name='category_posts'),
      
      url(r'^$',
          NewsList.as_view(template_name = 'news/post_list.html'),

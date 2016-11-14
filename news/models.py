@@ -32,15 +32,11 @@ class Category(models.Model):
         db_table = 'news_categories'
         ordering = ('title',)
 
-    class Admin:
-        pass
-
     def __unicode__(self):
         return u'%s' % self.title
 
-    @permalink
     def get_absolute_url(self):
-        return ('news_category_detail', None, {'slug': self.slug})
+        return reverse('category_posts', args=(self.slug,))
 
 
 class Post(models.Model):
@@ -79,11 +75,6 @@ class Post(models.Model):
         ordering  = ('-publish',)
         get_latest_by = 'publish'
 
-    class Admin:
-        list_display  = ('title', 'publish', 'status')
-        list_filter   = ('publish', 'categories', 'status')
-        search_fields = ('title', 'body')
-
     def __unicode__(self):
         return u'%s' % self.title
    
@@ -109,20 +100,14 @@ class Post(models.Model):
             return '' 
         return self.categories.all()[0].title
 
-    @permalink
     def get_absolute_url(self):
-        return ('news_detail', None, {
-            'slug': self.slug,
-            'year': self.publish.year,
-            'month': self.publish.strftime('%b'),
-            'day': self.publish.day,
-        })
+        return reverse('news_detail', args=(self.publish.year, self.publish.strftime('%b'), self.publish.day, self.slug, ))
 
     def get_category_slug(self):
         try:
             s = self.categories.all()[0].slug
         except IndexError:
-            return None
+            return 'none'
         return s
 
     def get_previous_post(self):
