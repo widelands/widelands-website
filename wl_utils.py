@@ -16,10 +16,13 @@ def get_real_ip(request):
 # This doesn't worked anymore with django 1.8
 # changed according to:
 #   https://github.com/skorokithakis/django-annoying/issues/36
-#
-# Needs also changes in Django 1.9 because of renaming:
-# https://docs.djangoproject.com/en/1.9/releases/1.9/#miscellaneous
-#   SingleRelatedObjectDescriptor is ReverseOneToOneDescriptor
+
+
+# SingleRelatedObjectDescriptor gets renamed with Django 1.9
+try:
+    from django.db.models.fields.related import SingleRelatedObjectDescriptor
+except ImportError:
+    from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor
 
 from django.db.models import OneToOneField
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
@@ -54,5 +57,3 @@ class AutoOneToOneField(OneToOneField):
 
     def contribute_to_related_class(self, cls, related):
         setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
-        #if not cls._meta.one_to_one_field:
-            #cls._meta.one_to_one_field = self
