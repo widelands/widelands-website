@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import wlggz.fields
-
+import wl_utils
 
 class Migration(migrations.Migration):
 
@@ -21,7 +20,7 @@ class Migration(migrations.Migration):
                 ('lastlogin', models.DateTimeField(null=True, verbose_name='ggz lastlogin')),
                 ('permissions', models.IntegerField(default=7, verbose_name='ggz permissions')),
                 ('confirmed', models.IntegerField(default=1, verbose_name='confirmed', editable=False)),
-                ('user', wlggz.fields.AutoOneToOneField(related_name='wlggz', verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                ('user', wl_utils.AutoOneToOneField(related_name='wlggz', verbose_name='User', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'ggz',

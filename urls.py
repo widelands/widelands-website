@@ -9,7 +9,7 @@ from mainpage.views import mainpage
 from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
-from mainpage.views import OwnRegistrationView
+from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
 urlpatterns = [
@@ -18,7 +18,7 @@ urlpatterns = [
 
     # Django builtin / Registration
     # overwrite registration with own implementation
-    url (r'^accounts/register/$', OwnRegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
+    url (r'^accounts/register/$', RegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url('^', include('django.contrib.auth.urls')),
     
