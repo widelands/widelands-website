@@ -5,7 +5,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))#+ '/widelands'
 DEBUG = True
-
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -76,8 +75,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
-    'django_comments',
-    'django.contrib.sitemaps',
+    #'django_comments',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
     'tracking', # included as wlapp
