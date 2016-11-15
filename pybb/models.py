@@ -83,23 +83,15 @@ class Forum(models.Model):
 
     @property
     def posts(self):
-        return Post.objects.filter(topic__forum=self).select_related()
+        return Post.objects.filter(topic__forum=self).exclude(hidden=True).select_related()
 
     @property
     def post_count(self):
-        return Post.objects.filter(topic__forum=self).count()
+        return Post.objects.filter(topic__forum=self).exclude(hidden=True).count()
 
     @property
     def last_post(self):
-        posts = self.posts.order_by('-created').select_related()
-        try:
-            return posts[0]
-        except IndexError:
-            return None
-
-    @property
-    def last_nonhidden_post(self):
-        posts = self.posts.order_by('-created').filter(hidden=False).select_related()
+        posts = self.posts.exclude(hidden=True).order_by('-created').select_related()
         try:
             return posts[0]
         except IndexError:
@@ -138,27 +130,20 @@ class Topic(models.Model):
 
     @property
     def last_post(self):
-        return self.posts.all().order_by('-created').select_related()[0]
-
-    @property
-    def last_nonhidden_post(self):
-        try:
-            return self.posts.all().order_by('-created').filter(hidden=False).select_related()[0]
-        except IndexError:
-            return self.posts.all().order_by('-created').select_related()[0]
+        return self.posts.exclude(hidden=True).order_by('-created').select_related()[0]
 
     # If the first post of this topic is hidden, the topic is hidden
     @property
     def is_hidden(self):
         try:
-            p = self.posts.all().order_by('created').filter(hidden=False).select_related()[0]
+            p = self.posts.order_by('created').filter(hidden=False).select_related()[0]
         except IndexError:
             return True
         return False
 
     @property
     def post_count(self):
-        return Post.objects.filter(topic=self).count()
+        return Post.objects.filter(topic=self).exclude(hidden=True).count()
 
     def get_absolute_url(self):
         return reverse('pybb_topic', args=[self.id])
