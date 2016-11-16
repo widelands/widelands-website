@@ -34,7 +34,6 @@ class ImageManager(models.Manager):
     def create_and_save_image(self,user,image, content_type, object_id, ip):
         # if self.has_image(name):
         #     raise RuntimeError,"Image with name %s already exists. This is likely an Error" % name
-        name = image.name.lower()
         im = self.create(content_type=content_type, object_id=object_id, 
                     user=user,revision=1,name=name, editor_ip = ip)
 
@@ -45,7 +44,7 @@ class ImageManager(models.Manager):
         for chunk in image.chunks():
             destination.write(chunk)
 
-        im.image = "wlimages/%s" % (name)
+        im.image = "wlimages/%s" % (image.name)
         im.url = url
 
         im.save()
