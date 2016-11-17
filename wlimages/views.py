@@ -9,6 +9,7 @@ from wl_utils import get_real_ip
 from forms import UploadImageForm
 
 def display( request, image, revision ):
+    print('farnku in wlimages display')
     revision = int(revision)
 
     img = get_object_or_404( Image, name = image, revision = revision )
@@ -30,7 +31,6 @@ def upload(request,content_type,object_id, next="/"):
         if form.is_valid(): # All validation rules pass
             Image.objects.create_and_save_image(user=request.user,image=request.FILES["imagename"],
                         content_type=ContentType.objects.get(pk=content_type),object_id=object_id, ip=get_real_ip(request))
-
             return HttpResponseRedirect(next) # Redirect after POST
     else:
         form = UploadImageForm() # An unbound form

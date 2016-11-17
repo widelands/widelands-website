@@ -6,8 +6,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
-
 from settings import MEDIA_ROOT, MEDIA_URL
+from wl_utils import make_safe_filename
+
 
 class ImageManager(models.Manager):
     """
@@ -31,21 +32,22 @@ class ImageManager(models.Manager):
         
         return super(ImageManager,self).create(**keyw)
 
-    def create_and_save_image(self,user,image, content_type, object_id, ip):
-        # if self.has_image(name):
-        #     raise RuntimeError,"Image with name %s already exists. This is likely an Error" % name
+    def create_and_save_image(self, user, image, content_type, object_id, ip):
+        safe_filename = make_safe_filename(image.name)
+        if not safe_filename:
+            raise IntegrityError("File extension is missing or not allowed")
+                                 
         im = self.create(content_type=content_type, object_id=object_id, 
-                    user=user,revision=1,name=name, editor_ip = ip)
-
-        path = "%swlimages/%s" % (MEDIA_ROOT,image.name)
-        url = "%swlimages/%s" % (MEDIA_URL,image.name)
+                    user=user, revision=1, name=image.name, editor_ip = ip)
+        path = "%swlimages/%s" % (MEDIA_ROOT,safe_filename)
+        #url = "%swlimages/%s" % (MEDIA_URL,safe_filename)
 
         destination = open(path,"wb")
         for chunk in image.chunks():
             destination.write(chunk)
 
-        im.image = "wlimages/%s" % (image.name)
-        im.url = url
+        im.image = "wlimages/%s" % (safe_filename)
+        #im.url = url
 
         im.save()
 

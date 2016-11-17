@@ -84,7 +84,7 @@ class Article(models.Model):
     class Meta:
         verbose_name = _(u'Article')
         verbose_name_plural = _(u'Articles')
-	app_label = 'wiki'
+        app_label = 'wiki'
 
     def get_absolute_url(self):
         if self.group is None:
