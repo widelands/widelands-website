@@ -11,13 +11,22 @@ import datetime
 
 class NewsList(ArchiveIndexView):
 
+    template_name = 'news/category_posts.html'
     queryset = Post.objects.published()
     date_field = 'publish'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(NewsList, self).get_context_data(**kwargs)
 
+        context['categories'] = Category.objects.all()
+        return context
+        
+        
 class YearNews(YearArchiveView):
 
     queryset = Post.objects.published()
+    template_name = 'news/post_archive_year.html'
     date_field = 'publish'
     make_object_list = True
 
@@ -25,7 +34,7 @@ class YearNews(YearArchiveView):
 class MonthNews(MonthArchiveView):
 
     queryset = Post.objects.published()
-    template_name = 'post_archive_year.html'
+    template_name = 'news/post_archive_month.html'
     date_field = 'publish'
 
 
@@ -43,7 +52,7 @@ class CategoryView(ListView):
         # Call the base implementation first to get a context
         context = super(CategoryView, self).get_context_data(**kwargs)
         if self.kwargs['slug'] == 'none':
-            # Exemption for post with no category
+            # Exemption for posts with no category
             context['cur_category'] = 'None'
         else:
             context['cur_category'] = get_object_or_404(

@@ -1,33 +1,38 @@
 {% extends "news/base_news.html" %}
 {% load pagination_tags %}
-
+{% load threadedcommentstags %}
 {% load custom_date %}
 
 {% block content %}
 <h1>Posts for Category: {{ cur_category }}</h1>
 <div>
-	<p><a href="{% url 'news_index' %}" class="invertedColor">News Archive</a></p>
-	<span class="green">Categories: </span>
-	{% for category in categories %}
-		<a href="{% url 'category_posts' slug=category.slug %}" class="invertedColor"> {{ category }} </a>
-		<span class="green"> | </span>
-	{% endfor %}
-	{# Speciallink to provide post which have no category #}
-	<a href="{% url 'category_posts' slug='none' %}" class="invertedColor"> None </a>
-
+	<div class="linksBox">
+		<a href="{% url 'news_index' %}">News Archive</a>
+	</div>
+	<br />
+	<div class="linksBox">Other Categories: 
+		{% for category in categories %}
+			<a href="{% url 'category_posts' slug=category.slug %}">{{ category }} </a> | 
+		{% endfor %}
+		{# Speciallink to provide posts which have no category #}
+		<a href="{% url 'category_posts' slug='none' %}"> None </a>
+	</div>
 </div>
 <div class="blogEntry">
 	<div class="center">
 	{% autopaginate post_list 20 %}
 	{% paginate %}
 	</div>
-    <table>
+    <table width="100%">
       <th align="left">Title</th>
       <th>Posted at</th>
+	  <th>Comments</th>
     {% for post in post_list %}
+		{% get_comment_count for post as ccount %}
         <tr>
           <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
-          <td>{{ post.publish|custom_date:user }}</td>
+          <td align="center">{{ post.publish|custom_date:user }}</td>
+		  <td align="center"> {{ ccount }}</td>
         </tr>
     {% endfor %}
     </table>

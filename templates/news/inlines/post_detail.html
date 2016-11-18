@@ -10,7 +10,7 @@
 <div class="blogEntry">
 	{% if object.has_image %}
 		<a href="{% url 'category_posts' slug=object.get_category_slug %}">
-			<img class="title posLeft" src='{{MEDIA_URL}}{{ object.image|urlencode }}' alt='{{ object.image_alt }}'
+			<img class="title posLeft" src="{{MEDIA_URL}}{{ object.image|urlencode }}" alt="{{ object.image_alt }}">
 		</a>
 	{% endif %}
 	{% if perms.news %}
@@ -20,7 +20,7 @@
 		</div>
     {% endif %}
 	
-	<h2><a href="{{ object.get_absolute_url }}" class="invertedColor">{{ object.title }}</a></h2>
+	<h2>{{ object.title }}</h2>
 	
 	{{ object.body|wl_markdown }}
 	
