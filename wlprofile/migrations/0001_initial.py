@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
+import wl_utils
 import wlprofile.fields
-
 
 class Migration(migrations.Migration):
 
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('signature', models.TextField(default=b'', max_length=255, verbose_name='Signature', blank=True)),
                 ('avatar', wlprofile.fields.ExtendedImageField(default=b'wlprofile/anonymous.png', upload_to=b'wlprofile/avatars/', verbose_name='Avatar', blank=True)),
                 ('show_signatures', models.BooleanField(default=True, verbose_name='Show signatures')),
-                ('user', wlprofile.fields.AutoOneToOneField(related_name='wlprofile', verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                ('user', wl_utils.AutoOneToOneField(related_name='wlprofile', verbose_name='User', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'Profile',
