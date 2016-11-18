@@ -1,7 +1,7 @@
 from StringIO import StringIO
 from django.db import models
 import logging
-
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class ExtendedImageField(models.ImageField):
     """
