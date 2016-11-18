@@ -55,32 +55,6 @@ def legal_notice(request):
 def legal_notice_thanks(request):
     return render(request, 'mainpage/legal_notice_thanks.html')
 
-from wlprofile.models import Profile
-from registration.backends.hmac.views import RegistrationView
-from django.contrib.auth.models import User
-from wlggz.models import GGZAuth
-
-class OwnRegistrationView(RegistrationView):
-    """Overwriting the default function to save also the extended User model
-    (wlprofile)"""
-
-    def create_inactive_user(self, form):
-        """Additionally save the custom enxtended user data."""
-        new_user = form.save(commit=False)
-        new_user.is_active = False
-        new_user.save()
-        reg_user = User.objects.get(username=new_user)
-        # Creating a wlprofile
-        ext_profile = Profile(user=reg_user)
-        ext_profile.save()
-        # Creating a ggzprofile
-        ggz_profile = GGZAuth(user=reg_user)
-        ggz_profile.save()
-
-        self.send_activation_email(new_user)
-
-        return new_user
-
 
 def developers(request):
     """This reads out some json files in the SVN directory, and returns it as a

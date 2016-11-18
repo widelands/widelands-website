@@ -135,7 +135,7 @@ def pybb_has_unreads(topic, user):
             return not _is_topic_read(topic,user)
         if isinstance(topic,Forum):
             forum = topic
-            for t in forum.topics.all():
+            for t in forum.topics.exclude(posts__hidden=True):
                 rv = _is_topic_read(t,user)
 
                 if rv == False:
