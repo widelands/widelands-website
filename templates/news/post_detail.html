@@ -1,5 +1,10 @@
 {% extends "news/base_news.html" %}
 
+{% comment %}
+Base view to show a news post in the archive
+{% endcomment %}
+
+
 {% load threadedcommentstags %}
 
 {% block title %}{{ object.title }} - {{ block.super }}{% endblock %}
