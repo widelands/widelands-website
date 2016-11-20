@@ -1,7 +1,5 @@
 {% extends "news/base_news.html" %}
 
-{% load threadedcommentstags custom_date %}
-
 {% block content %}
 
 <h1>News Archive</h1>
@@ -13,12 +11,11 @@
 	{% endfor%}
 </div>
 {% if perms.news %}
-	<div class="small posRight invertedColor">
-		{% if perms.news.add_post %}<a href="/admin/news/post/add/" class="invertedColor">Add New News</a>{% endif %}
+	<div class="small posRight linksBox">
+		{% if perms.news.add_post %}<a href="/admin/news/post/add/">Add New News</a>{% endif %}
 	</div>
 {% endif %}
 
-{# Show all posts #}
 {% include "news/inlines/posts_table.html" %}
 
 {% endblock %}

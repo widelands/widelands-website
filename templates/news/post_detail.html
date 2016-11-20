@@ -18,13 +18,13 @@ Base view to show a news post in the archive
 {% block content %}
 	<h1>News: {{ object.title }}</h1>
 	<div class="linksBox">
-	<a href="{% url 'news_index' %}">News Archive: </a>
-	{% if object.get_previous_by_publish %}
-		<a href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{ object.get_previous_post }}</a>
-	{% endif %}
-	{% if object.get_next_post %}
-		<a href="{{ object.get_next_post.get_absolute_url }}">{{ object.get_next_post }} &raquo;</a> 
-	{% endif %}
+		<a href="{% url 'news_index' %}">News Archive: </a>
+		{% if object.get_previous_by_publish %}
+			<a href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{ object.get_previous_post }}</a>
+		{% endif %}
+		{% if object.get_next_post %}
+			| <a href="{{ object.get_next_post.get_absolute_url }}">{{ object.get_next_post }} &raquo;</a> 
+		{% endif %}
 	</div>
 
 	{% include "news/inlines/post_detail.html" %}

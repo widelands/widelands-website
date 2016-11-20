@@ -1,8 +1,6 @@
 {% extends "news/base_news.html" %}
-{% load custom_date %}
-{% load pagination_tags %}
 
-{% block title %}{{ month|date:"F - Y" }} - {{block.super}}}{% endblock %}
+{% block title %}{{ month|date:"F - Y" }} - {{block.super}} {% endblock %}
 
 {% block content %}
 
