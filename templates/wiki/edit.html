@@ -95,53 +95,8 @@
 	{% else %}
 		{% if images.count %}
 		Images attached to this article:
-		
-		{% for img in images %}
-		<table width="100%" class="images">
-		<thead>
-			<tr>
-				<th class="first-column" style="text-align: right;">Name:</th>
-				<th>{{ img.name}}</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					<span>Properties:</span><br />
-					<span class="grey">Width:</span><br />
-					{{ img.image.width }} px<br />
-					<span class="grey">Height:</span><br />
-					{{ img.image.height }} px<br />
-					<span class="grey">Filesize:</span><br />
-					{{ img.image.size|filesizeformat }}
-				<td  style="vertical-align: middle; text-align: center;"><img src="{{ img.image.url }}"></td>
-			</tr>
-			<tr>
-				<td class="grey">Code to use in article:</td>
-				{# Show only one code snippet if the image is greater than 700px #}
-				{% if img.image.width > 700 %}
-				<td style="text-align: center;">[![{{img.name}}]({{ img.image.url }})]({{ img.image.url }})</td>
-			</tr>
-
-				{# otherwise provide all options #}
-				{% else %}
-					<td style="text-align: center;">![{{img.name}}]({{ img.image.url }})</td>
-			</tr>
-					
-				<tr>
-					<td class="grey">Right aligned:</td>
-					<td style="text-align: center;">![{{img.name}}]({{ img.image.url }}){: .right}</td>
-				</tr>
-				<tr>
-					<td class="grey">Left aligned:</td>
-					<td style="text-align: center;">![{{img.name}}]({{ img.image.url }}){: .left}</td>
-				</tr>
-				{% endif %}
-		</tbody>
-		</table>
-		{% endfor %}
 		{% endif %}
-
+		{% include 'wlimages/inlines/image_list.html' %}
 		{% get_upload_form as iform %}
 		<form enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/{{request.path|iriencode}}" method="POST">
 			{{ iform.as_p }}

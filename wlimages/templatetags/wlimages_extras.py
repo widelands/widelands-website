@@ -8,6 +8,7 @@
 # import re
 from django import template
 from wlimages.forms import UploadImageForm
+import os.path
 
 register = template.Library()
 
@@ -36,3 +37,10 @@ class UploadFormNode(template.Node):
 
 register.tag('get_upload_form', do_get_upload_image_form)
 
+def is_file(obj):
+    try:
+        os.path.isfile(obj.image.file.name)
+        return True
+    except IOError:
+        return False
+register.filter('is_file', is_file)

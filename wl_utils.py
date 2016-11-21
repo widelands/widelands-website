@@ -10,8 +10,8 @@ def make_safe_filename(name):
     if not any(x in ext.lower() for x in VALID_EXTENSIONS):
         # No valid extension found
         return None
-    
-    filename = "".join(x for x in name if x.isalnum()) + '.' + ext
+
+    filename = "".join([x if x.isalnum() else "_" for x in name]) + '.' + ext
     return filename
 
 # Get the real IP when the Django server runs behind a proxy
