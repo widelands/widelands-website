@@ -1,6 +1,6 @@
 {% extends "news/base_news.html" %}
 
-{% block title %}{{ year }} - {{ block.super }}{% endblock %}
+{% block title %}{{ year|date:"Y" }} - {{ block.super }}{% endblock %}
 
 {% block content %}
 

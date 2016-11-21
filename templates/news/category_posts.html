@@ -3,6 +3,8 @@
 {% load threadedcommentstags %}
 {% load custom_date %}
 
+{% block title %} Category: {{ cur_category }} - {{ block.super }}{% endblock %}
+
 {% block content %}
 <h1>Posts for Category: {{ cur_category }}</h1>
 <div>
@@ -10,7 +12,7 @@
 		<a href="{% url 'news_index' %}">News Archive</a>
 	</div>
 	<br />
-	<div class="linksBox">Other Categories: 
+	<div class="linksBox">All Categories: 
 		{% for category in categories %}
 			<a href="{% url 'category_posts' slug=category.slug %}">{{ category }} </a> | 
 		{% endfor %}
