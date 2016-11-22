@@ -5,17 +5,20 @@ from django.contrib import admin
 admin.autodiscover()
 
 from mainpage.views import mainpage
-
 from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.contrib.syndication.views import Feed
 from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
+
 urlpatterns = [
+    # Creating a sitemap.xml
+    url(r'^sitemap\.xml/', include('sitemap_urls')),
+
     # Uncomment the next line to enable the admin:
     url(r'^admin/', admin.site.urls),
-
+    
     # Django builtin / Registration
     # overwrite registration with own implementation
     url (r'^accounts/register/$', RegistrationView.as_view(form_class=RegistrationWithCaptchaForm), name='registration_register'),
