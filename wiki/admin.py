@@ -5,11 +5,6 @@ from wiki.models import Article, ChangeSet
 from wlimages.models import Image
 from django.contrib.contenttypes.admin import GenericTabularInline
 
-# class InlineChangeSet(admin.TabularInline):
-#     model = ChangeSet
-#     extra = 0
-#     raw_id_fields = ('editor',)
-
 
 class InlineImages(GenericTabularInline):
     model = Image

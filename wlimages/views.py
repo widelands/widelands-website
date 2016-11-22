@@ -9,7 +9,7 @@ from wl_utils import get_real_ip
 from forms import UploadImageForm
 
 def display( request, image, revision ):
-    print('farnku in wlimages display')
+    print('farnku in wlimages display', request)
     revision = int(revision)
 
     img = get_object_or_404( Image, name = image, revision = revision )
@@ -20,6 +20,7 @@ def display( request, image, revision ):
 
     r = HttpResponse()
     r['Content-Type'] = 'image/%s' % extension
+    print('franku r: ', r)
     r.write(img.image.read())
 
     return r

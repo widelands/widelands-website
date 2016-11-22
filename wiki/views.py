@@ -261,7 +261,7 @@ def edit_article(request, title,
     if request.method == 'POST':
 
         form = ArticleFormClass(request.POST, instance=article)
-
+        
         form.cache_old_content()
         if form.is_valid():
 
@@ -308,7 +308,6 @@ def edit_article(request, title,
             initial['action'] = 'edit'
             form = ArticleFormClass(instance=article,
                                     initial=initial)
-
     if not article:
         template_params = {'form': form, "new_article": True }
     else:
