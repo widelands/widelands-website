@@ -7,7 +7,8 @@ from wiki.sitemap import *
 from news.sitemap import *
 from pybb.sitemap import *
 from wlhelp.sitemap import *
-from sphinxdoc.sitemap  import *
+from sphinxdoc.sitemap import *
+
 
 sitemaps = {
     'static': StaticViewSitemap,
