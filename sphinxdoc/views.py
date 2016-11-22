@@ -6,7 +6,6 @@ import os.path
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
-#from django.utils import simplejson as json
 import json
 from django.views import static
 
@@ -52,7 +51,7 @@ def documentation(request, slug, url):
     }
     if 'title' not in data['doc']:
         data['doc']['title'] = SPECIAL_TITLES[page_name]
-        
+
     return render_to_response(templates, data,
             context_instance=RequestContext(request))
 
