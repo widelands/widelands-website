@@ -10,7 +10,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% if img|is_file %}
+		{% if img|has_file %}
 		<tr>
 			<td>
 				<span>Properties:</span><br />
@@ -42,10 +42,10 @@
 		</tr>
 			{% endif %}
 		{% else %}
-			<tr>
+		<tr>
 			<td colspan=2 align="center">
 				!! Haven't found a file to this image !!<br />
-				{{ img.image.name}}
+				{{ img.image.name}}<br />
 				Please inform an admin about this issue
 			</td>
 		</tr>

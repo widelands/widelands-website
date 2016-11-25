@@ -37,10 +37,10 @@ class UploadFormNode(template.Node):
 
 register.tag('get_upload_form', do_get_upload_image_form)
 
-def is_file(obj):
+def has_file(obj):
     try:
         os.path.isfile(obj.image.file.name)
         return True
     except IOError:
         return False
-register.filter('is_file', is_file)
+register.filter('has_file', has_file)
