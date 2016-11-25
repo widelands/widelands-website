@@ -4,7 +4,7 @@ from models import Image
 import os
 
 class UploadImageForm(forms.Form):
-    imagename = forms.ImageField()
+    imagename = forms.ImageField(max_length=100)
 
     def clean_imagename( self ):
         name = self.cleaned_data["imagename"]

@@ -34,9 +34,7 @@ class ImageManager(models.Manager):
 
     def create_and_save_image(self, user, image, content_type, object_id, ip):
         safe_filename = make_safe_filename(image.name)
-        if not safe_filename:
-            raise IntegrityError("File extension is missing or not allowed")
-                                 
+                                         
         im = self.create(content_type=content_type, object_id=object_id, 
                     user=user, revision=1, name=image.name, editor_ip = ip)
         path = "%swlimages/%s" % (MEDIA_ROOT,safe_filename)

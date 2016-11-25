@@ -98,7 +98,7 @@
 		{% endif %}
 		{% include 'wlimages/inlines/image_list.html' %}
 		{% get_upload_form as iform %}
-		<form enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/{{request.path|iriencode}}" method="POST">
+		<form enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/{{ article.title }}" method="POST">
 			{{ iform.as_p }}
 			<div>
 				<input type="submit" value="{% trans "Upload Image" %}" />
