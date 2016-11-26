@@ -34,7 +34,6 @@ class UploadFormNode(template.Node):
         form = UploadImageForm()
         context[self.context_name] = form
         return ''
-
 register.tag('get_upload_form', do_get_upload_image_form)
 
 def has_file(obj):
