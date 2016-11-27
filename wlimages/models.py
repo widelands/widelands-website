@@ -37,14 +37,12 @@ class ImageManager(models.Manager):
         im = self.create(content_type=content_type, object_id=object_id, 
                     user=user, revision=1, name=image.name, editor_ip = ip)
         path = "%swlimages/%s" % (MEDIA_ROOT,safe_filename)
-        #url = "%swlimages/%s" % (MEDIA_URL,safe_filename)
 
         destination = open(path,"wb")
         for chunk in image.chunks():
             destination.write(chunk)
 
         im.image = "wlimages/%s" % (safe_filename)
-        #im.url = url
 
         im.save()
 
