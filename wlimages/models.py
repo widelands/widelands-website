@@ -72,7 +72,6 @@ class Image(models.Model):
     # Date Fields
     date_submitted = models.DateTimeField(_('date/time submitted'), default = datetime.now)
     image = models.ImageField(upload_to="wlimages/")
-    url = models.CharField(max_length=250)
 
 
     objects = ImageManager()
