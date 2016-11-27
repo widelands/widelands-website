@@ -319,7 +319,7 @@ BLEACH_ALLOWED_TAGS = [u'a',
                        u'sup',
 ]
 
-BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], '*': ['class', 'id', 'title']}
+BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], 'td': ['align'], '*': ['class', 'id', 'title']}
 
 try:
    from local_settings import *
