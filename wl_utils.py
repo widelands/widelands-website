@@ -1,19 +1,4 @@
 
-# Make a save filename
-VALID_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'wmf', 'wgf']
-def make_safe_filename(name):
-    
-    name, sep, ext = name.rpartition('.')
-    if not ext:
-        # Each file must have an extension
-        return None
-    if not any(x in ext.lower() for x in VALID_EXTENSIONS):
-        # No valid extension found
-        return None
-
-    filename = "".join([x if x.isalnum() else "_" for x in name]) + '.' + ext
-    return filename
-
 # Get the real IP when the Django server runs behind a proxy
 def get_real_ip(request):
     """Returns the real user IP, even if behind a proxy."""

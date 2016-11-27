@@ -7,8 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
 from settings import MEDIA_ROOT, MEDIA_URL
-from wl_utils import make_safe_filename
-
+from django.core.files.storage import FileSystemStorage
 
 class ImageManager(models.Manager):
     """
@@ -18,7 +17,6 @@ class ImageManager(models.Manager):
     """
     def has_image(self,image_name):
         return bool(self.filter(name=image_name).count())
-           
 
     def create(self,**keyw):
         """
@@ -29,12 +27,13 @@ class ImageManager(models.Manager):
 
         if self.filter(name=keyw["name"],revision=keyw["revision"]).count():
             raise Image.AlreadyExisting()
-        
+
         return super(ImageManager,self).create(**keyw)
 
     def create_and_save_image(self, user, image, content_type, object_id, ip):
-        safe_filename = make_safe_filename(image.name)
-                                         
+        # Use Django default's for a safe filename
+        storage = FileSystemStorage()
+        safe_filename = storage.get_valid_name(image.name)
         im = self.create(content_type=content_type, object_id=object_id, 
                     user=user, revision=1, name=image.name, editor_ip = ip)
         path = "%swlimages/%s" % (MEDIA_ROOT,safe_filename)
