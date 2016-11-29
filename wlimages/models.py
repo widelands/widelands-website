@@ -31,7 +31,7 @@ class ImageManager(models.Manager):
         return super(ImageManager,self).create(**keyw)
 
     def create_and_save_image(self, user, image, content_type, object_id, ip):
-        # Use Django default's for a safe filename
+        # Use Django's get_valid_name() to get a safe filename
         storage = FileSystemStorage()
         safe_filename = storage.get_valid_name(image.name)
         im = self.create(content_type=content_type, object_id=object_id, 
