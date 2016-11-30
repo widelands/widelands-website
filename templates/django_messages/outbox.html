@@ -20,7 +20,7 @@ Outbox - {{ block.super }}
 		</thead>
 		<tbody>
 		{% for message in message_list %} 
-			<tr {% if message.new %}class="italic" title="The recipient hasn't read your message yet"{% endif %}>
+			<tr {% if message.new %}class="italic" title="The recipient hasn&apos;t read your message yet"{% endif %}>
 				<td>{{ message.recipient|user_link }}</td>
 				<td>
 					<a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
