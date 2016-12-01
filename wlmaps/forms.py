@@ -7,7 +7,6 @@ from subprocess import check_call, CalledProcessError
 from django import forms
 from django.forms import ModelForm
 from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 
 from settings import MEDIA_ROOT
 from wlmaps.models import Map
@@ -22,26 +21,26 @@ class UploadMapForm(ModelForm):
     def clean(self):
         cleaned_data = super(UploadMapForm, self).clean()
 
-        file = cleaned_data.get('file')
-        if not file:
+        mem_file_obj = cleaned_data.get('file')
+        if not mem_file_obj:
             # no clean file => abort
             return cleaned_data
 
-        name = MEDIA_ROOT + 'wlmaps/maps/' + file.name
-        default_storage.save(name, ContentFile(file.read()))
+        file_path = MEDIA_ROOT + 'wlmaps/maps/' + default_storage.get_valid_name(mem_file_obj.name)
+        saved_file = default_storage.save(file_path, mem_file_obj)
         try:
             # call map info tool to generate minimap and json info file
-            check_call(['wl_map_info', name])
+            check_call(['wl_map_info', saved_file])
             # TODO(shevonar): delete file because it will be saved again when
             # the model is saved. File should not be saved twice
-            default_storage.delete(name)
+            default_storage.delete(saved_file)
         except CalledProcessError:
             self._errors['file'] = self.error_class(
                 ['The map file could not be processed.'])
             del cleaned_data['file']
             return cleaned_data
 
-        mapinfo = json.load(open(name + '.json'))
+        mapinfo = json.load(open(saved_file + '.json'))
 
         if Map.objects.filter(name=mapinfo['name']):
             self._errors['file'] = self.error_class(
@@ -60,10 +59,10 @@ class UploadMapForm(ModelForm):
 
         self.instance.world_name = mapinfo['world_name']
         # mapinfo["minimap"] is an absolute path and cannot be used.
-        self.instance.minimap = '/wlmaps/maps/' + file.name + '.png'
+        self.instance.minimap = '/wlmaps/maps/' + default_storage.get_valid_name(mem_file_obj.name) + '.png'
 
         # the json file is no longer needed
-        default_storage.delete(name + '.json')
+        default_storage.delete(saved_file + '.json')
         
         return cleaned_data
 
