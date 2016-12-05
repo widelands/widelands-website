@@ -1,0 +1,15 @@
+tbody > tr:hover {
+    background-color: rgba(83,83,83,0.2);
+}
+
+div.linksBox {
+    background-color: #332f29;
+	background-image: url("../img/but1.png");
+	border-radius: 4px;
+	border: 1px solid black;
+	padding: 0.2em;
+    padding-left: 0.5em;
+	margin-bottom: 1em;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+    display: inline-block;
+}
