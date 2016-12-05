@@ -4,7 +4,7 @@
 
 <h1>News Archive</h1>
 <div class="linksBox">
-	<a href="{% url 'news_index' %}">News Archiv: </a>
+	<a href="{% url 'news_index' %}">News Archive: </a>
 	{% for dateobj in date_list reversed %}
 		<a href="{% url 'news_index' %}{{ dateobj|date:'Y' }}">{{ dateobj|date:'Y' }}</a>
 		{% if not forloop.last %} | {% endif %}
