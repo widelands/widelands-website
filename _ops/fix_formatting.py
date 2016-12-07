@@ -11,10 +11,7 @@ import re
 import sys
 from subprocess import call
 
-LEADING_TABS = re.compile(r'^\s*\t+\s*')
 PYTHON3 = sys.version_info >= (3, 0)
-SPACES_PER_TAB = 3
-
 
 def parse_args():
     p = argparse.ArgumentParser(
@@ -33,7 +30,7 @@ def find_files(startpath, extensions):
 def main():
     parse_args()
 
-    if not os.path.isdir('pybb') or not os.path.isdir('utils'):
+    if not os.path.isdir('pybb') or not os.path.isdir('_ops'):
         print('CWD is not the root of the repository.')
         return 1
 
@@ -44,7 +41,7 @@ def main():
         call(['pyformat', '-i', filename])
     print(' done.')
 
-    print 'Formatting finished.'
+    print ('Formatting finished.')
     return 0
 
 if __name__ == '__main__':
