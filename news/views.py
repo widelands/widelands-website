@@ -5,7 +5,7 @@ from django.views.generic import \
     ArchiveIndexView, \
     YearArchiveView, \
     MonthArchiveView, \
-    DetailView
+    DateDetailView
 import datetime
 
 
@@ -38,10 +38,11 @@ class MonthNews(MonthArchiveView):
     date_field = 'publish'
 
 
-class NewsDetail(DetailView):
+class NewsDetail(DateDetailView):
 
     queryset = Post.objects.published()
     template_name = 'news/post_detail.html'
+    date_field = 'publish'
 
 
 class CategoryView(ListView):

@@ -30,12 +30,17 @@ def upload(request,content_type,object_id, next="/"):
         if form.is_valid(): # All validation rules pass
             Image.objects.create_and_save_image(user=request.user,image=request.FILES["imagename"],
                         content_type=ContentType.objects.get(pk=content_type),object_id=object_id, ip=get_real_ip(request))
-
             return HttpResponseRedirect(next) # Redirect after POST
     else:
         form = UploadImageForm() # An unbound form
+    
+    # Get the App (model) to which this image belongs to:
+    app = ContentType.objects.get(id=content_type)
+    # Get the current object's name (provided by __unicode__()) from this model
+    name = app.get_object_for_this_type(id=object_id)
 
     return render_to_response('wlimages/upload.html', {
         'upload_form': form,
+        'referer': name,
     }, context_instance=RequestContext(request))
 

@@ -1,38 +1,43 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-
 from wiki.models import Article, ChangeSet
+from wlimages.models import Image
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 
-class InlineChangeSet(admin.TabularInline):
-    model = ChangeSet
+class InlineImages(GenericTabularInline):
+    model = Image
     extra = 0
-    raw_id_fields = ('editor',)
+    fields = ('name', 'image', 'user', 'date_submitted')
+    raw_id_fields = ('user',)
+
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'markup', 'created_at')
+    search_fields = ['title']
+    list_display = ('title', 'markup', 'created_at', 'last_update',)
     list_filter = ('title',)
-    ordering = ('last_update',)
+    ordering = ['-last_update']
     fieldsets = (
         (None, {'fields': ('title', 'content', 'markup')}),
         ('Creator', {'fields': ('creator', 'creator_ip'),
                      'classes': ('collapse', 'wide')}),
-        ('Group', {'fields': ('object_id', 'content_type'),
-                     'classes': ('collapse', 'wide')}),
+        # ('Group', {'fields': ('object_id', 'content_type'),
+        #              'classes': ('collapse', 'wide')}),
     )
     raw_id_fields = ('creator',)
-    inlines = [InlineChangeSet]
+    inlines = [InlineImages]
 
 admin.site.register(Article, ArticleAdmin)
 
 
 class ChangeSetAdmin(admin.ModelAdmin):
+    search_fields = ['article__title']
     list_display = ('article', 'revision', 'old_title', 'old_markup',
                     'editor', 'editor_ip', 'reverted', 'modified',
                     'comment')
     list_filter = ('old_title', 'content_diff')
-    ordering = ('modified',)
+    ordering = ('-modified',)
     fieldsets = (
         ('Article', {'fields': ('article',)}),
         ('Differences', {'fields': ('old_title', 'old_markup',
