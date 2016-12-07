@@ -3,7 +3,10 @@ import datetime
 
 
 class PublicManager(Manager):
-    """Returns published posts that are not in the future."""
-    
+    """Returns news posts that are:
+
+       - not in the future
+       - not published"""
+
     def published(self):
-        return self.get_queryset().filter(status__gte=2, publish__lte=datetime.datetime.now())
+        return self.get_queryset().exclude(status=1).filter(publish__lte=datetime.datetime.now())

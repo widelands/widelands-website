@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
-
 from settings import MEDIA_ROOT, MEDIA_URL
+from django.core.files.storage import FileSystemStorage
 
 class ImageManager(models.Manager):
     """
@@ -17,7 +17,6 @@ class ImageManager(models.Manager):
     """
     def has_image(self,image_name):
         return bool(self.filter(name=image_name).count())
-           
 
     def create(self,**keyw):
         """
@@ -28,25 +27,22 @@ class ImageManager(models.Manager):
 
         if self.filter(name=keyw["name"],revision=keyw["revision"]).count():
             raise Image.AlreadyExisting()
-        
+
         return super(ImageManager,self).create(**keyw)
 
-    def create_and_save_image(self,user,image, content_type, object_id, ip):
-        # if self.has_image(name):
-        #     raise RuntimeError,"Image with name %s already exists. This is likely an Error" % name
-        name = image.name.lower()
+    def create_and_save_image(self, user, image, content_type, object_id, ip):
+        # Use Django's get_valid_name() to get a safe filename
+        storage = FileSystemStorage()
+        safe_filename = storage.get_valid_name(image.name)
         im = self.create(content_type=content_type, object_id=object_id, 
-                    user=user,revision=1,name=name, editor_ip = ip)
-
-        path = "%swlimages/%s" % (MEDIA_ROOT,image.name)
-        url = "%swlimages/%s" % (MEDIA_URL,image.name)
+                    user=user, revision=1, name=image.name, editor_ip = ip)
+        path = "%swlimages/%s" % (MEDIA_ROOT,safe_filename)
 
         destination = open(path,"wb")
         for chunk in image.chunks():
             destination.write(chunk)
 
-        im.image = "wlimages/%s" % (name)
-        im.url = url
+        im.image = "wlimages/%s" % (safe_filename)
 
         im.save()
 
@@ -74,7 +70,6 @@ class Image(models.Model):
     # Date Fields
     date_submitted = models.DateTimeField(_('date/time submitted'), default = datetime.now)
     image = models.ImageField(upload_to="wlimages/")
-    url = models.CharField(max_length=250)
 
 
     objects = ImageManager()

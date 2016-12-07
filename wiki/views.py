@@ -277,7 +277,7 @@ def edit_article(request, title,
             #     else:
             #         user_message = u"Your article was edited successfully."
             #     messages.success(request, user_message)
-                    
+
 
             if ((article is None) and (group_slug is not None)):
                 form.group = group
@@ -308,7 +308,6 @@ def edit_article(request, title,
             initial['action'] = 'edit'
             form = ArticleFormClass(instance=article,
                                     initial=initial)
-
     if not article:
         template_params = {'form': form, "new_article": True }
     else:
