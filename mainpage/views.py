@@ -6,12 +6,13 @@ from operator import itemgetter
 from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 import sys
 import json
 import os
 import os.path
+import locale
 
 
 def mainpage(request):
@@ -153,3 +154,11 @@ def changelog(request):
 def custom_http_500(request):
     """A custom http 500 error page to not lose css styling."""
     return render(request, '500.html', status=500)
+
+
+def view_locale(request):
+    loc_info = "getlocale: " + str(locale.getlocale()) + \
+        "<br/>getdefaultlocale(): " + str(locale.getdefaultlocale()) + \
+        "<br/>fs_encoding: " + str(sys.getfilesystemencoding()) + \
+        "<br/>sys default encoding: " + str(sys.getdefaultencoding())
+    return HttpResponse(loc_info)
