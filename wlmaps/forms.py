@@ -49,7 +49,7 @@ class UploadMapForm(ModelForm):
             saved_file = default_storage.save(file_path, mem_file_obj)
         except UnicodeEncodeError:
             self._errors['file'] = self.error_class(
-                ['The filename contain characters which cannot be handled. Please rename and upload again.'])
+                ['The filename contains characters which cannot be handled. Please rename and upload again.'])
             del cleaned_data['file']
             return cleaned_data
 
