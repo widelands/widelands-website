@@ -1,5 +1,6 @@
 import os
-bd = "/some/path"
+import re
+
 bd = os.getcwd() # Better make this a static path
 
 STATIC_MEDIA_PATH = bd + '/media'
@@ -37,6 +38,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # If these are found, the posts/topics in forum get hidden
 ANTI_SPAM_BODY = ['spam']
 ANTI_SPAM_TOPIC = ['spam']
+ANTI_SPAM_PHONE_NR = re.compile('\d{8,16}')
 
 # Uncomment 'LOGGING = {...}' for debugging purposes when you have set DEBUG=False.
 # Use then in the code:
