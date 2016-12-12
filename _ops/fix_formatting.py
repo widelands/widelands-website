@@ -11,8 +11,6 @@ import re
 import sys
 from subprocess import call
 
-PYTHON3 = sys.version_info >= (3, 0)
-
 def parse_args():
     p = argparse.ArgumentParser(
         description='Run pyformat over the code base.'
