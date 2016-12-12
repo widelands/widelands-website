@@ -47,6 +47,7 @@ urlpatterns = [
 
     # WL specific:
     url(r'^$', mainpage, name="mainpage"),
+    url(r'^locale/$', 'mainpage.views.view_locale'),
     url(r'^changelog/$', "mainpage.views.changelog", name="changelog"),
     url(r'^developers/$', "mainpage.views.developers", name="developers"),
     url(r'^legal_notice/$', "mainpage.views.legal_notice", name="legal_notice"),
