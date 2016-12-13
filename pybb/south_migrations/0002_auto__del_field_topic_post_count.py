@@ -4,19 +4,19 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Deleting field 'Topic.post_count'
         db.delete_column('pybb_topic', 'post_count')
 
-
     def backwards(self, orm):
-        
-        # Adding field 'Topic.post_count'
-        db.add_column('pybb_topic', 'post_count', self.gf('django.db.models.fields.IntegerField')(default=0, blank=True), keep_default=False)
 
+        # Adding field 'Topic.post_count'
+        db.add_column('pybb_topic', 'post_count', self.gf(
+            'django.db.models.fields.IntegerField')(default=0, blank=True), keep_default=False)
 
     models = {
         'auth.group': {

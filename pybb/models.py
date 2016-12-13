@@ -60,11 +60,13 @@ class Category(models.Model):
 
 
 class Forum(models.Model):
-    category = models.ForeignKey(Category, related_name='forums', verbose_name=_('Category'))
+    category = models.ForeignKey(
+        Category, related_name='forums', verbose_name=_('Category'))
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
     description = models.TextField(_('Description'), blank=True, default='')
-    moderators = models.ManyToManyField(User, blank=True, verbose_name=_('Moderators'))
+    moderators = models.ManyToManyField(
+        User, blank=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
 
     class Meta:
@@ -91,14 +93,17 @@ class Forum(models.Model):
 
     @property
     def last_post(self):
-        posts = self.posts.exclude(hidden=True).order_by('-created').select_related()
+        posts = self.posts.exclude(hidden=True).order_by(
+            '-created').select_related()
         try:
             return posts[0]
         except IndexError:
             return None
 
+
 class Topic(models.Model):
-    forum = models.ForeignKey(Forum, related_name='topics', verbose_name=_('Forum'))
+    forum = models.ForeignKey(
+        Forum, related_name='topics', verbose_name=_('Forum'))
     name = models.CharField(_('Subject'), max_length=255)
     created = models.DateTimeField(_('Created'), null=True)
     updated = models.DateTimeField(_('Updated'), null=True)
@@ -106,15 +111,16 @@ class Topic(models.Model):
     views = models.IntegerField(_('Views count'), blank=True, default=0)
     sticky = models.BooleanField(_('Sticky'), blank=True, default=False)
     closed = models.BooleanField(_('Closed'), blank=True, default=False)
-    subscribers = models.ManyToManyField(User, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)
+    subscribers = models.ManyToManyField(
+        User, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)
 
     # Django sphinx
     if settings.USE_SPHINX:
         search = SphinxSearch(
-            weights = {
+            weights={
                 'name': 100,
-                }
-            )
+            }
+        )
 
     class Meta:
         ordering = ['-updated']
@@ -136,7 +142,8 @@ class Topic(models.Model):
     @property
     def is_hidden(self):
         try:
-            p = self.posts.order_by('created').filter(hidden=False).select_related()[0]
+            p = self.posts.order_by('created').filter(
+                hidden=False).select_related()[0]
         except IndexError:
             return True
         return False
@@ -160,19 +167,18 @@ class Topic(models.Model):
             read.time = datetime.now()
             read.save()
 
-    #def has_unreads(self, user):
-        #try:
+    # def has_unreads(self, user):
+        # try:
             #read = Read.objects.get(user=user, topic=self)
-        #except Read.DoesNotExist:
-            #return True
-        #else:
-            #return self.updated > read.time
+        # except Read.DoesNotExist:
+            # return True
+        # else:
+            # return self.updated > read.time
 
 
 class RenderableItem(models.Model):
-    """
-    Base class for models that has markup, body, body_text and body_html fields.
-    """
+    """Base class for models that has markup, body, body_text and body_html
+    fields."""
 
     class Meta:
         abstract = True
@@ -181,7 +187,8 @@ class RenderableItem(models.Model):
         if self.markup == 'bbcode':
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':
-            self.body_html = unicode(do_wl_markdown(self.body, 'bleachit', wikiwords=False))
+            self.body_html = unicode(do_wl_markdown(
+                self.body, 'bleachit', wikiwords=False))
         else:
             raise Exception('Invalid markup property: %s' % self.markup)
 
@@ -193,12 +200,16 @@ class RenderableItem(models.Model):
 
         self.body_html = urlize(self.body_html)
 
+
 class Post(RenderableItem):
-    topic = models.ForeignKey(Topic, related_name='posts', verbose_name=_('Topic'))
-    user = models.ForeignKey(User, related_name='posts', verbose_name=_('User'))
+    topic = models.ForeignKey(
+        Topic, related_name='posts', verbose_name=_('Topic'))
+    user = models.ForeignKey(
+        User, related_name='posts', verbose_name=_('User'))
     created = models.DateTimeField(_('Created'), blank=True)
     updated = models.DateTimeField(_('Updated'), blank=True, null=True)
-    markup = models.CharField(_('Markup'), max_length=15, default=pybb_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
+    markup = models.CharField(_('Markup'), max_length=15,
+                              default=pybb_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
     body = models.TextField(_('Message'))
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
@@ -208,12 +219,11 @@ class Post(RenderableItem):
     # Django sphinx
     if settings.USE_SPHINX:
         search = SphinxSearch(
-            weights = {
+            weights={
                 'body_text': 100,
                 'body_html': 0,
-                }
-            )
-
+            }
+        )
 
     class Meta:
         ordering = ['created']
@@ -243,22 +253,21 @@ class Post(RenderableItem):
 
         super(Post, self).save(*args, **kwargs)
 
-
     def get_absolute_url(self):
         return reverse('pybb_post', args=[self.id])
 
     def unhide_post(self):
-        "Unhide post(s) and inform subscribers"
+        """Unhide post(s) and inform subscribers."""
         self.hidden = False
         self.save()
         if self.topic.post_count == 1:
             # The topic is new
-            send(User.objects.all(), "forum_new_topic",
-                 {'topic': self.topic, 'post':self, 'user':self.topic.user})
+            send(User.objects.all(), 'forum_new_topic',
+                 {'topic': self.topic, 'post': self, 'user': self.topic.user})
         else:
             # Inform topic subscribers
-            send(self.topic.subscribers.all(), "forum_new_post",
-                    {'post':self, 'topic':self.topic, 'user':self.user})
+            send(self.topic.subscribers.all(), 'forum_new_post',
+                 {'post': self, 'topic': self.topic, 'user': self.user})
 
     def delete(self, *args, **kwargs):
         self_id = self.id
@@ -273,10 +282,8 @@ class Post(RenderableItem):
 
 
 class Read(models.Model):
-    """
-    For each topic that user has entered the time
-    is logged to this model.
-    """
+    """For each topic that user has entered the time is logged to this
+    model."""
 
     user = models.ForeignKey(User, verbose_name=_('User'))
     topic = models.ForeignKey(Topic, verbose_name=_('Topic'))
@@ -292,18 +299,20 @@ class Read(models.Model):
             self.time = datetime.now()
         super(Read, self).save(*args, **kwargs)
 
-
     def __unicode__(self):
         return u'T[%d], U[%d]: %s' % (self.topic.id, self.user.id, unicode(self.time))
 
 
 class PrivateMessage(RenderableItem):
 
-    dst_user = models.ForeignKey(User, verbose_name=_('Recipient'), related_name='dst_users')
-    src_user = models.ForeignKey(User, verbose_name=_('Author'), related_name='src_users')
+    dst_user = models.ForeignKey(User, verbose_name=_(
+        'Recipient'), related_name='dst_users')
+    src_user = models.ForeignKey(User, verbose_name=_(
+        'Author'), related_name='src_users')
     read = models.BooleanField(_('Read'), blank=True, default=False)
     created = models.DateTimeField(_('Created'), blank=True)
-    markup = models.CharField(_('Markup'), max_length=15, default=pybb_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
+    markup = models.CharField(_('Markup'), max_length=15,
+                              default=pybb_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
     subject = models.CharField(_('Subject'), max_length=255)
     body = models.TextField(_('Message'))
     body_html = models.TextField(_('HTML version'))
@@ -333,21 +342,24 @@ class PrivateMessage(RenderableItem):
         super(PrivateMessage, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return  reverse('pybb_show_pm', args=[self.id])
+        return reverse('pybb_show_pm', args=[self.id])
 
 
 class Attachment(models.Model):
-    post = models.ForeignKey(Post, verbose_name=_('Post'), related_name='attachments')
+    post = models.ForeignKey(Post, verbose_name=_(
+        'Post'), related_name='attachments')
     size = models.IntegerField(_('Size'))
     content_type = models.CharField(_('Content type'), max_length=255)
     path = models.CharField(_('Path'), max_length=255)
     name = models.TextField(_('Name'))
-    hash = models.CharField(_('Hash'), max_length=40, blank=True, default='', db_index=True)
+    hash = models.CharField(_('Hash'), max_length=40,
+                            blank=True, default='', db_index=True)
 
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
         if not self.hash:
-            self.hash = hashlib.sha1(str(self.id) + settings.SECRET_KEY).hexdigest()
+            self.hash = hashlib.sha1(
+                str(self.id) + settings.SECRET_KEY).hexdigest()
         super(Attachment, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -364,7 +376,6 @@ class Attachment(models.Model):
             return '%dKb' % int(size / 1024)
         else:
             return '%.2fMb' % (size / float(1024 * 1024))
-
 
     def get_absolute_path(self):
         return os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO,

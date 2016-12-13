@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 
-"""This script runs pyformat over the code base.
-"""
+"""This script runs pyformat over the code base."""
 
 import argparse
 import os
 import re
 import sys
 from subprocess import call
+
 
 def parse_args():
     p = argparse.ArgumentParser(
@@ -39,7 +39,7 @@ def main():
         call(['pyformat', '-i', filename])
     print(' done.')
 
-    print ('Formatting finished.')
+    print('Formatting finished.')
     return 0
 
 if __name__ == '__main__':

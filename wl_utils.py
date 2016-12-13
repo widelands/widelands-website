@@ -28,10 +28,11 @@ from django.db.models import OneToOneField
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
 from django.db import models
 
+
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
-    """
-    The descriptor that handles the object creation for an AutoOneToOneField.
-    """
+    """The descriptor that handles the object creation for an
+    AutoOneToOneField."""
+
     def __get__(self, instance, instance_type=None):
         model = getattr(self.related, 'related_model', self.related.model)
 
@@ -49,11 +50,11 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
             return (super(AutoSingleRelatedObjectDescriptor, self)
                     .__get__(instance, instance_type))
 
+
 class AutoOneToOneField(OneToOneField):
-    """
-    OneToOneField creates dependent object on first request from parent object
-    if dependent oject has not created yet.
-    """
+    """OneToOneField creates dependent object on first request from parent
+    object if dependent oject has not created yet."""
 
     def contribute_to_related_class(self, cls, related):
-        setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
+        setattr(cls, related.get_accessor_name(),
+                AutoSingleRelatedObjectDescriptor(related))

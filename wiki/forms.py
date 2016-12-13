@@ -34,8 +34,7 @@ class ArticleForm(forms.ModelForm):
                    'group', 'created_at', 'last_update')
 
     def clean_title(self):
-        """ Page title must be a WikiWord.
-        """
+        """Page title must be a WikiWord."""
         title = self.cleaned_data['title']
         if not wikiword_pattern.match(title):
             raise forms.ValidationError(_('Must be a WikiWord.'))
@@ -52,11 +51,11 @@ class ArticleForm(forms.ModelForm):
                 kw['content_type'] = self.cleaned_data['content_type']
                 kw['object_id'] = self.cleaned_data['object_id']
             except KeyError:
-                pass # some error in this fields
+                pass  # some error in this fields
             else:
                 if Article.objects.filter(**kw).count():
                     raise forms.ValidationError(
-                        _("An article with this title already exists."))
+                        _('An article with this title already exists.'))
 
         return self.cleaned_data
 
@@ -94,4 +93,3 @@ class ArticleForm(forms.ModelForm):
             comment, editor_ip, editor)
 
         return article, changeset
-

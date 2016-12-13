@@ -13,18 +13,19 @@ if settings.USE_SPHINX:
 import tagging
 
 
-def get_upload_name( inst, fn ):
+def get_upload_name(inst, fn):
     try:
         extension = fn.split('.')[-1].lower()
     except:
         extension = 'png'
-    return 'news/img/%s.%s' % (inst.title,extension)
+    return 'news/img/%s.%s' % (inst.title, extension)
+
 
 class Category(models.Model):
     """Category model."""
-    title       = models.CharField(_('title'), max_length=100)
-    slug        = models.SlugField(_('slug'), unique=True)
-    image       = models.ImageField( upload_to=get_upload_name, max_length=100 )
+    title = models.CharField(_('title'), max_length=100)
+    slug = models.SlugField(_('slug'), unique=True)
+    image = models.ImageField(upload_to=get_upload_name, max_length=100)
 
     class Meta:
         verbose_name = _('category')
@@ -45,39 +46,41 @@ class Post(models.Model):
         (1, _('Draft')),
         (2, _('Public')),
     )
-    title           = models.CharField(_('title'), max_length=200)
-    slug            = models.SlugField(_('slug'), unique_for_date='publish')
-    author          = models.ForeignKey(User, null=True)
-    body            = models.TextField(_('body'), help_text="Text entered here will be rendered using Markdown")
-    tease           = models.TextField(_('tease'), blank=True)
-    status          = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
-    allow_comments  = models.BooleanField(_('allow comments'), default=True)
-    publish         = models.DateTimeField(_('publish'))
-    created         = models.DateTimeField(_('created'), auto_now_add=True)
-    modified        = models.DateTimeField(_('modified'), auto_now=True)
-    categories      = models.ManyToManyField(Category, blank=True)
-    tags            = TagField()
-    objects         = PublicManager()
-   
+    title = models.CharField(_('title'), max_length=200)
+    slug = models.SlugField(_('slug'), unique_for_date='publish')
+    author = models.ForeignKey(User, null=True)
+    body = models.TextField(
+        _('body'), help_text='Text entered here will be rendered using Markdown')
+    tease = models.TextField(_('tease'), blank=True)
+    status = models.IntegerField(
+        _('status'), choices=STATUS_CHOICES, default=2)
+    allow_comments = models.BooleanField(_('allow comments'), default=True)
+    publish = models.DateTimeField(_('publish'))
+    created = models.DateTimeField(_('created'), auto_now_add=True)
+    modified = models.DateTimeField(_('modified'), auto_now=True)
+    categories = models.ManyToManyField(Category, blank=True)
+    tags = TagField()
+    objects = PublicManager()
+
     if settings.USE_SPHINX:
-        search          = SphinxSearch(
-            weights = {
+        search = SphinxSearch(
+            weights={
                 'title': 100,
                 'body': 80,
                 'tease': 80,
-                }
+            }
         )
 
     class Meta:
         verbose_name = _('post')
         verbose_name_plural = _('posts')
-        db_table  = 'news_posts'
-        ordering  = ('-publish',)
+        db_table = 'news_posts'
+        ordering = ('-publish',)
         get_latest_by = 'publish'
 
     def __unicode__(self):
         return u'%s' % self.title
-   
+
     #########
     # IMAGE #
     #########
@@ -88,16 +91,18 @@ class Post(models.Model):
         if self.categories.count() == 0:
             return False
         return self.categories.all()[0].image != ''
+
     @property
     def image(self):
         if self.categories.count() == 0:
-            return None 
+            return None
         return self.categories.all()[0].image
+
     @property
     def image_alt(self):
         "alt='' tag for <img>"
         if self.categories.count() == 0:
-            return '' 
+            return ''
         return self.categories.all()[0].title
 
     def get_absolute_url(self):
@@ -113,8 +118,7 @@ class Post(models.Model):
     def get_previous_post(self):
         # get_previous_by_FOO(**kwargs) is a django model function
         return self.get_previous_by_publish(status__gte=2)
-    
+
     def get_next_post(self):
         # get_next_by_FOO(**kwargs) is a django model function
         return self.get_next_by_publish(status__gte=2, publish__lte=datetime.datetime.now())
-

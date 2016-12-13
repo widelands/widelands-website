@@ -31,7 +31,7 @@ DATABASES = {
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Berlin'
-USE_TZ = False # See https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-TIME_ZONE
+USE_TZ = False  # See https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-TIME_ZONE
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -63,8 +63,8 @@ ROOT_URLCONF = 'urls'
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
 INSTALLED_APPS = (
@@ -80,7 +80,7 @@ INSTALLED_APPS = (
     'django_comments',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
-    'tracking', # included as wlapp
+    'tracking',  # included as wlapp
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
@@ -103,11 +103,11 @@ INSTALLED_APPS = (
     'pybb',  # Feature enriched version of pybb
 
     # Thirdparty apps
-    'threadedcomments', # included as wlapp
+    'threadedcomments',  # included as wlapp
     'notification',     # included as wlapp
     'django_messages',
     #'pagination',
-     'linaro_django_pagination',
+    'linaro_django_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
     'sphinxdoc',        # included as wlapp
@@ -175,7 +175,7 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 # User configuration #
 ######################
-#AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: This is not longer used anymore, see:
+# AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: This is not longer used anymore, see:
 # https://docs.djangoproject.com/en/1.8/releases/1.5/#auth-profile-module
 
 DEFAULT_TIME_ZONE = 3
@@ -317,16 +317,17 @@ BLEACH_ALLOWED_TAGS = [u'a',
                        u'hr',
                        u'table', u'tbody', u'thead', u'th', u'tr', u'td',
                        u'sup',
-]
+                       ]
 
-BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': ['href'], 'td': ['align'], '*': ['class', 'id', 'title']}
+BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
+    'href'], 'td': ['align'], '*': ['class', 'id', 'title']}
 
 try:
-   from local_settings import *
+    from local_settings import *
 except ImportError:
-   pass
+    pass
 
 if USE_SPHINX:
-   INSTALLED_APPS += (
-       'djangosphinx',
-   )
+    INSTALLED_APPS += (
+        'djangosphinx',
+    )

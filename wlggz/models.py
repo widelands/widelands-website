@@ -15,9 +15,12 @@ from pybb.models import Post
 
 import settings
 
+
 class GGZAuth(models.Model):
-    user = AutoOneToOneField(User, related_name='wlggz', verbose_name=_('User'))
-    password = models.CharField(_('ggz password'), max_length=80, blank=True, default='')
+    user = AutoOneToOneField(
+        User, related_name='wlggz', verbose_name=_('User'))
+    password = models.CharField(
+        _('ggz password'), max_length=80, blank=True, default='')
     permissions = models.IntegerField(_('ggz permissions'), default=7)
 
     class Meta:

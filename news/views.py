@@ -21,8 +21,8 @@ class NewsList(ArchiveIndexView):
 
         context['categories'] = Category.objects.all()
         return context
-        
-        
+
+
 class YearNews(YearArchiveView):
 
     queryset = Post.objects.published()

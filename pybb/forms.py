@@ -14,6 +14,7 @@ from notification.models import send
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 
+
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
     attachment = forms.FileField(label=_('Attachment'), required=False)
@@ -21,7 +22,7 @@ class AddPostForm(forms.ModelForm):
     class Meta:
         model = Post
         # Listing fields again to get the the right order; See also the NOCOMM
-        fields = ['name','body', 'markup', 'attachment',]
+        fields = ['name', 'body', 'markup', 'attachment', ]
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -29,11 +30,12 @@ class AddPostForm(forms.ModelForm):
         self.forum = kwargs.pop('forum', None)
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
-        
-        # NOCOMM: This doesn't work anymore with django 1.8 Use 'field_order' with django 1.9
-        self.fields.keyOrder = ['name', 
-                                'body', 
-                                'markup', 
+
+        # NOCOMM: This doesn't work anymore with django 1.8 Use 'field_order'
+        # with django 1.9
+        self.fields.keyOrder = ['name',
+                                'body',
+                                'markup',
                                 'attachment']
 
         if self.topic:
@@ -43,7 +45,6 @@ class AddPostForm(forms.ModelForm):
         if not pybb_settings.ATTACHMENT_ENABLE:
             self.fields['attachment'].widget = forms.HiddenInput()
             self.fields['attachment'].required = False
- 
 
     def clean_attachment(self):
         if self.cleaned_data['attachment']:
@@ -51,8 +52,6 @@ class AddPostForm(forms.ModelForm):
             if memfile.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
                 raise forms.ValidationError(_('Attachment is too big'))
         return self.cleaned_data['attachment']
-
-
 
     def save(self, *args, **kwargs):
         if self.forum:
@@ -77,7 +76,7 @@ class AddPostForm(forms.ModelForm):
 
         if re.search(settings.ANTI_SPAM_PHONE_NR, text):
             hidden = True
-        
+
         if topic_is_new:
             text = self.cleaned_data['name']
             if any(x in text.lower() for x in settings.ANTI_SPAM_TOPIC):
@@ -95,20 +94,20 @@ class AddPostForm(forms.ModelForm):
 
         if not hidden:
             if topic_is_new:
-                send(User.objects.all(), "forum_new_topic",
-                    {'topic': topic, 'post':post, 'user':topic.user})
+                send(User.objects.all(), 'forum_new_topic',
+                     {'topic': topic, 'post': post, 'user': topic.user})
             else:
-                send(self.topic.subscribers.all(), "forum_new_post",
-                    {'post':post, 'topic':topic, 'user':post.user})
+                send(self.topic.subscribers.all(), 'forum_new_post',
+                     {'post': post, 'topic': topic, 'user': post.user})
 
         return post
-
 
     def save_attachment(self, post, memfile):
         if memfile:
             obj = Attachment(size=memfile.size, content_type=memfile.content_type,
                              name=memfile.name, post=post)
-            dir = os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO)
+            dir = os.path.join(settings.MEDIA_ROOT,
+                               pybb_settings.ATTACHMENT_UPLOAD_TO)
             fname = '%d.0' % post.id
             path = os.path.join(dir, fname)
             file(path, 'w').write(memfile.read())
@@ -116,8 +115,8 @@ class AddPostForm(forms.ModelForm):
             obj.save()
 
 
-
 class EditPostForm(forms.ModelForm):
+
     class Meta:
         model = Post
         fields = ['body', 'markup']

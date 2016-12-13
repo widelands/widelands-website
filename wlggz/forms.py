@@ -13,17 +13,19 @@ from django.utils.translation import ugettext_lazy as _
 import hashlib
 import base64
 
+
 class EditGGZForm(forms.ModelForm):
-    password = forms.CharField(label=_(u'Online Gaming Password'), widget = forms.PasswordInput(render_value = False), required=True)
+    password = forms.CharField(label=_(u'Online Gaming Password'),
+                               widget=forms.PasswordInput(render_value=False), required=True)
 
     class Meta:
         model = GGZAuth
-        fields = [ 'password', ]
+        fields = ['password', ]
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs.pop("instance")
+        instance = kwargs.pop('instance')
 
-        super(EditGGZForm, self).__init__(instance=instance, *args,**kwargs)
+        super(EditGGZForm, self).__init__(instance=instance, *args, **kwargs)
 
     def clean_password(self):
         pw = self.cleaned_data['password']

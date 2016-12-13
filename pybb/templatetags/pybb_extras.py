@@ -20,17 +20,20 @@ from pybb import settings as pybb_settings
 
 register = template.Library()
 
+
 @register.tag
 def pybb_time(parser, token):
     try:
         tag, time = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError('pybb_time requires single argument')
+        raise template.TemplateSyntaxError(
+            'pybb_time requires single argument')
     else:
         return PybbTimeNode(time)
 
 
 class PybbTimeNode(template.Node):
+
     def __init__(self, time):
         self.time = template.Variable(time)
 
@@ -68,7 +71,7 @@ class PybbTimeNode(template.Node):
             return dateformat.format(time, 'd M, Y H:i')
 
 
-@register.inclusion_tag('pybb/pagination.html',takes_context=True)
+@register.inclusion_tag('pybb/pagination.html', takes_context=True)
 def pybb_pagination(context, label):
     page = context['page']
     paginator = context['paginator']
@@ -77,9 +80,12 @@ def pybb_pagination(context, label):
             'label': label,
             }
 import time
+
+
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
-def pybb_last_posts(context, number = 5):
-    last_posts = Post.objects.filter(hidden=False).order_by('-created').select_related()[:45]
+def pybb_last_posts(context, number=5):
+    last_posts = Post.objects.filter(hidden=False).order_by(
+        '-created').select_related()[:45]
     check = []
     answer = []
     for post in last_posts:
@@ -88,29 +94,27 @@ def pybb_last_posts(context, number = 5):
             answer = answer + [post]
     return {
         'posts': answer,
-        }
+    }
+
 
 @register.simple_tag
 def pybb_link(object, anchor=u''):
-    """
-    Return A tag with link to object.
-    """
+    """Return A tag with link to object."""
 
-    url = hasattr(object,'get_absolute_url') and object.get_absolute_url() or None
+    url = hasattr(
+        object, 'get_absolute_url') and object.get_absolute_url() or None
     anchor = anchor or smart_unicode(object)
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
 
 
 @register.filter
 def pybb_has_unreads(topic, user):
-    """
-    Check if topic has messages which user didn't read.
-    """
+    """Check if topic has messages which user didn't read."""
 
     now = datetime.now()
     delta = timedelta(seconds=pybb_settings.READ_TIMEOUT)
 
-    def _is_topic_read(topic,user):
+    def _is_topic_read(topic, user):
         if (now - delta > topic.updated):
             return True
         else:
@@ -132,11 +136,11 @@ def pybb_has_unreads(topic, user):
         return False
     else:
         if isinstance(topic, Topic):
-            return not _is_topic_read(topic,user)
-        if isinstance(topic,Forum):
+            return not _is_topic_read(topic, user)
+        if isinstance(topic, Forum):
             forum = topic
             for t in forum.topics.exclude(posts__hidden=True):
-                rv = _is_topic_read(t,user)
+                rv = _is_topic_read(t, user)
 
                 if rv == False:
                     return True
@@ -152,18 +156,14 @@ def pybb_setting(name):
 
 @register.filter
 def pybb_moderated_by(topic, user):
-    """
-    Check if user is moderator of topic's forum.
-    """
+    """Check if user is moderator of topic's forum."""
 
     return user.is_superuser or user in topic.forum.moderators.all()
 
 
 @register.filter
 def pybb_editable_by(post, user):
-    """
-    Check if the post could be edited by the user.
-    """
+    """Check if the post could be edited by the user."""
 
     if user.is_superuser:
         return True
@@ -176,18 +176,14 @@ def pybb_editable_by(post, user):
 
 @register.filter
 def pybb_posted_by(post, user):
-    """
-    Check if the post is writed by the user.
-    """
+    """Check if the post is writed by the user."""
 
     return post.user == user
 
 
 @register.filter
 def pybb_equal_to(obj1, obj2):
-    """
-    Check if objects are equal.
-    """
+    """Check if objects are equal."""
 
     return obj1 == obj2
 
@@ -196,13 +192,15 @@ def pybb_equal_to(obj1, obj2):
 def pybb_unreads(qs, user):
     return cache_unreads(qs, user)
 
+
 @register.filter
 @stringfilter
 def pybb_cut_string(value, arg):
     if len(value) > arg:
-        return value[0:arg-3] + "..."
+        return value[0:arg - 3] + '...'
     else:
         return value
+
 
 @register.filter
 @stringfilter
@@ -218,10 +216,11 @@ def pybb_output_bbcode(post):
     """
     return pprint(post)
 
+
 @register.simple_tag
 def pybb_render_post(post, mode='html'):
-    """
-    Process post contents and replace special tags with human readeable messages.
+    """Process post contents and replace special tags with human readeable
+    messages.
 
     Arguments:
         post - the ``Post`` instance
@@ -246,7 +245,6 @@ def pybb_render_post(post, mode='html'):
         else:
             return join_message
 
-
     body = getattr(post, 'body_%s' % mode)
     re_tag = re.compile(r'@@@AUTOJOIN-(\d+)@@@')
     return re_tag.sub(render_autojoin_message, body)
@@ -254,6 +252,7 @@ def pybb_render_post(post, mode='html'):
 """
 Spielwiese, Playground, Cour de récréati ;)
 """
+
 
 @register.filter
 @stringfilter
@@ -272,45 +271,46 @@ def pybb_trim_string(value, arg):
     koennte wieder entfernt werden, aber vllt findet ja einer noch einen nutzen
     dafuer ;)
     """
-    _iWord = ""
-    _iSign = ""
-    _lArguments = arg.split("-")
-    _sOption = _lArguments[0].split(":")[0]
-    _iValue = _lArguments[0].split(":")[1]
+    _iWord = ''
+    _iSign = ''
+    _lArguments = arg.split('-')
+    _sOption = _lArguments[0].split(':')[0]
+    _iValue = _lArguments[0].split(':')[1]
     if len(_lArguments) == 1:
-        if _sOption == "w":
+        if _sOption == 'w':
             _iWord = int(_iValue)
-        elif _sOption == "z":
+        elif _sOption == 'z':
             _iSign = int(_iValue)
         else:
             pass
     elif len(_lArguments) == 2:
-        if _sOption == "w":
+        if _sOption == 'w':
             _iWord = int(_iValue)
-            _iSign = int(_lArguments[1].split(":")[1])
-        elif _sOption == "z":
+            _iSign = int(_lArguments[1].split(':')[1])
+        elif _sOption == 'z':
             _iSign = int(_iValue)
-            _iWord = int(_lArguments[1].split(":")[1])
+            _iWord = int(_lArguments[1].split(':')[1])
         else:
             pass
     else:
         pass
-    if _iWord != "" or _iSign != "":
-        _iWordCount = int(len(value.split(" ")))
+    if _iWord != '' or _iSign != '':
+        _iWordCount = int(len(value.split(' ')))
         _iSignCount = int(len(value))
         """
         Hier waere noch die Ueberlegung wenn 2 Werte gesetzt das man dann
         wirklich nur ganze Woerter anzeigen laesst ohne sie zu beschneiden
         """
-        if _iWord != "" and _iSign != "" and _iSignCount >= _iSign:
-            return value[0:_iSign] + "..."
-        elif _iWord != "" and _iSign == "" and _iWordCount >= _iWord:
-            return ' '.join(value.split(" ")[0:_iWord]) + "..."
-        elif _iWord == "" and _iSign != "" and _iSignCount >= _iSign:
-            return value[0:_iSign] + "..."
+        if _iWord != '' and _iSign != '' and _iSignCount >= _iSign:
+            return value[0:_iSign] + '...'
+        elif _iWord != '' and _iSign == '' and _iWordCount >= _iWord:
+            return ' '.join(value.split(' ')[0:_iWord]) + '...'
+        elif _iWord == '' and _iSign != '' and _iSignCount >= _iSign:
+            return value[0:_iSign] + '...'
         else:
             return value
-            # return " " + str(len(value)) + " " + str(len(value.split(" "))) + " " + str(arg) + " " + str(_iWord) + ":" + str(_iWordCount) + " " + str(_iSign) + ":" + str(_iSignCount)
+            # return " " + str(len(value)) + " " + str(len(value.split(" "))) +
+            # " " + str(arg) + " " + str(_iWord) + ":" + str(_iWordCount) + " "
+            # + str(_iSign) + ":" + str(_iSignCount)
     else:
         return value
-
