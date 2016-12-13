@@ -18,41 +18,51 @@ TZ_CHOICES = [(float(x[0]), x[1]) for x in (
     (11.5, '+11.5'), (12, '+12'), (13, '+13'), (14, '+14'),
 )]
 
+
 class Profile(models.Model):
-    user = AutoOneToOneField(User, related_name='wlprofile', verbose_name=_('User'))
+    user = AutoOneToOneField(
+        User, related_name='wlprofile', verbose_name=_('User'))
 
     # Web related fields.
     site = models.URLField(_('Website'), blank=True, default='')
-    jabber = models.CharField(_('Jabber'), max_length=80, blank=True, default='')
+    jabber = models.CharField(
+        _('Jabber'), max_length=80, blank=True, default='')
     icq = models.CharField(_('ICQ'), max_length=12, blank=True, default='')
     msn = models.CharField(_('MSN'), max_length=80, blank=True, default='')
     aim = models.CharField(_('AIM'), max_length=80, blank=True, default='')
     yahoo = models.CharField(_('Yahoo'), max_length=80, blank=True, default='')
 
     # Personal Informations
-    location = models.CharField(_('Location'), max_length=30, blank=True, default='')
+    location = models.CharField(
+        _('Location'), max_length=30, blank=True, default='')
 
     # Configuration for Forum/Site
-    time_zone = models.FloatField(_('Time zone'), choices=TZ_CHOICES, default=float(settings.DEFAULT_TIME_ZONE))
-    time_display = models.CharField(_('Time display'), max_length=80, default=settings.DEFAULT_TIME_DISPLAY)
-    signature = models.TextField(_('Signature'), blank=True, default='', max_length=settings.SIGNATURE_MAX_LENGTH)
+    time_zone = models.FloatField(
+        _('Time zone'), choices=TZ_CHOICES, default=float(settings.DEFAULT_TIME_ZONE))
+    time_display = models.CharField(
+        _('Time display'), max_length=80, default=settings.DEFAULT_TIME_DISPLAY)
+    signature = models.TextField(
+        _('Signature'), blank=True, default='', max_length=settings.SIGNATURE_MAX_LENGTH)
 
-    avatar = ExtendedImageField(_('Avatar'), blank=True, default="wlprofile/anonymous.png", upload_to="wlprofile/avatars/", width=settings.AVATAR_WIDTH, height=settings.AVATAR_HEIGHT)
-    show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
+    avatar = ExtendedImageField(_('Avatar'), blank=True, default='wlprofile/anonymous.png',
+                                upload_to='wlprofile/avatars/', width=settings.AVATAR_WIDTH, height=settings.AVATAR_HEIGHT)
+    show_signatures = models.BooleanField(
+        _('Show signatures'), blank=True, default=True)
 
     class Meta:
         verbose_name = _('Profile')
         verbose_name_plural = _('Profiles')
 
-
     def unread_pm_count(self):
         return PrivateMessage.objects.filter(dst_user=self, read=False).count()
 
     def post_count(self):
-        """
-        Return the nr of posts the user has. This uses djangos filter feature
-        will therefore hit the database. This should maybe be reworked when the
-        database grows to not be always calculated.
+        """Return the nr of posts the user has.
+
+        This uses djangos filter feature will therefore hit the
+        database. This should maybe be reworked when the database grows
+        to not be always calculated.
+
         """
         return Post.objects.filter(user=self.user).count()
 
@@ -60,18 +70,16 @@ class Profile(models.Model):
         nump = self.post_count()
 
         if nump < 6:
-            return { "text":"Just found this site", "image":"rang_1.png" }
+            return {'text': 'Just found this site', 'image': 'rang_1.png'}
         elif nump < 50:
-            return { "text":"Pry about Widelands", "image":"rang_2.png" }
+            return {'text': 'Pry about Widelands', 'image': 'rang_2.png'}
         elif nump < 120:
-            return { "text":"Likes to be here", "image":"rang_3.png" }
+            return {'text': 'Likes to be here', 'image': 'rang_3.png'}
         elif nump < 180:
-            return { "text":"At home in WL-forums", "image":"rang_4.png" }
+            return {'text': 'At home in WL-forums', 'image': 'rang_4.png'}
         elif nump < 250:
-            return { "text":"Widelands-Forum-Junkie", "image":"rang_5.png" }
+            return {'text': 'Widelands-Forum-Junkie', 'image': 'rang_5.png'}
         elif nump < 500:
-            return { "text":"Tribe Member", "image":"rang_6.png" }
+            return {'text': 'Tribe Member', 'image': 'rang_6.png'}
         else:
-            return { "text":"One Elder of Players", "image":"rang_7.png" }
-
-
+            return {'text': 'One Elder of Players', 'image': 'rang_7.png'}

@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from news.models import Post, Category
 
 # Validated through http://validator.w3.org/feed/
+
+
 class NewsPostsFeed(Feed):
     # RSS Feed
     title = 'Widelands news feed'
@@ -21,6 +23,8 @@ class NewsPostsFeed(Feed):
         return item.publish
 
 # Currently not used / not checked for compatibility for django 1.8
+
+
 class NewsPostsByCategory(Feed):
     title = 'Widelands.org posts category feed'
 
@@ -35,7 +39,7 @@ class NewsPostsByCategory(Feed):
         return item.get_absolute_url()
 
     def description(self, item):
-        return "Posts recently categorized as %s" % item.title
+        return 'Posts recently categorized as %s' % item.title
 
     def items(self, item):
         return item.post_set.published()[:10]

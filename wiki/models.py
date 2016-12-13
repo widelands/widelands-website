@@ -30,6 +30,7 @@ except ImportError:
 # We dont need to create a new one everytime
 dmp = diff_match_patch()
 
+
 def diff(txt1, txt2):
     """Create a 'diff' from txt1 to txt2."""
     patch = dmp.patch_make(txt1, txt2)
@@ -47,8 +48,7 @@ except AttributeError:
 
 
 class Article(models.Model):
-    """ A wiki page.
-    """
+    """A wiki page."""
     title = models.CharField(_(u"Title"), max_length=50)
     content = models.TextField(_(u"Content"))
     summary = models.CharField(_(u"Summary"), max_length=150,
@@ -58,8 +58,8 @@ class Article(models.Model):
                               null=True, blank=True)
     creator = models.ForeignKey(User, verbose_name=_('Article Creator'),
                                 null=True)
-    creator_ip = models.GenericIPAddressField(_("IP Address of the Article Creator"),
-                                       blank=True, null=True)
+    creator_ip = models.GenericIPAddressField(_('IP Address of the Article Creator'),
+                                              blank=True, null=True)
     created_at = models.DateTimeField(default=datetime.now)
     last_update = models.DateTimeField(blank=True, null=True)
 
@@ -71,15 +71,15 @@ class Article(models.Model):
 
     tags = TagField()
 
-    # Django sphinx 
+    # Django sphinx
     if settings.USE_SPHINX:
         search = SphinxSearch(
-            weights = {
+            weights={
                 'title': 100,
                 'summary': 80,
                 'content': 50,
-                }
-            )
+            }
+        )
 
     class Meta:
         verbose_name = _(u'Article')
@@ -101,13 +101,13 @@ class Article(models.Model):
                 reverted=False).order_by('-revision')[0]
         except IndexError:
             return ChangeSet.objects.none()
-    
+
     def all_images(self):
         return self.images.all()
 
     def new_revision(self, old_content, old_title, old_markup,
                      comment, editor_ip, editor):
-        '''Create a new ChangeSet with the old content.'''
+        """Create a new ChangeSet with the old content."""
 
         content_diff = diff(self.content, old_content)
 
@@ -123,14 +123,12 @@ class Article(models.Model):
         return cs
 
     def revert_to(self, revision, editor_ip, editor=None):
-        """ Revert the article to a previuos state, by revision number.
-        """
+        """Revert the article to a previuos state, by revision number."""
         changeset = self.changeset_set.get(revision=revision)
         changeset.reapply(editor_ip, editor)
 
     def compare(self, from_revision, to_revision):
-        """ Compares to revisions of this article.
-        """
+        """Compares to revisions of this article."""
         changeset = self.changeset_set.get(revision=to_revision)
         return changeset.compare_to(from_revision)
 
@@ -138,12 +136,13 @@ class Article(models.Model):
         return self.title
 
 
-
 class ChangeSetManager(models.Manager):
 
     def all_later(self, revision):
-        """ Return all changes later to the given revision.
+        """Return all changes later to the given revision.
+
         Util when we want to revert to the given revision.
+
         """
         return self.filter(revision__gt=int(revision))
 
@@ -185,9 +184,9 @@ class ChangeSet(models.Model):
     class Meta:
         verbose_name = _(u'Change set')
         verbose_name_plural = _(u'Change sets')
-        get_latest_by  = 'modified'
+        get_latest_by = 'modified'
         ordering = ('-revision',)
-	app_label = 'wiki'
+        app_label = 'wiki'
 
     def __unicode__(self):
         return u'#%s' % self.revision
@@ -203,13 +202,11 @@ class ChangeSet(models.Model):
                  'title': self.article.title,
                  'revision': self.revision})
 
-
     def is_anonymous_change(self):
         return self.editor is None
 
     def reapply(self, editor_ip, editor):
-        """ Return the Article to this revision.
-        """
+        """Return the Article to this revision."""
 
         # XXX Would be better to exclude reverted revisions
         #     and revisions previous/next to reverted ones
@@ -240,18 +237,17 @@ class ChangeSet(models.Model):
         article.new_revision(
             old_content=old_content, old_title=old_title,
             old_markup=old_markup,
-            comment="Reverted to revision #%s" % self.revision,
+            comment='Reverted to revision #%s' % self.revision,
             editor_ip=editor_ip, editor=editor)
 
         self.save()
 
         if None not in (notification, self.editor):
-            notification.send([self.editor], "wiki_revision_reverted",
+            notification.send([self.editor], 'wiki_revision_reverted',
                               {'revision': self, 'article': self.article})
 
     def save(self, *args, **kwargs):
-        """ Saves the article with a new revision.
-        """
+        """Saves the article with a new revision."""
         if self.id is None:
             try:
                 self.revision = ChangeSet.objects.filter(
@@ -261,8 +257,7 @@ class ChangeSet(models.Model):
         super(ChangeSet, self).save(*args, **kwargs)
 
     def display_diff(self):
-        ''' Returns a HTML representation of the diff.
-        '''
+        """Returns a HTML representation of the diff."""
 
         # well, it *will* be the old content
         old_content = self.article.content
@@ -275,7 +270,7 @@ class ChangeSet(models.Model):
         # apply all patches to get the content of this revision
         for i, changeset in enumerate(newer_changesets):
             patches = dmp.patch_fromText(changeset.content_diff)
-            if len(newer_changesets) == i+1:
+            if len(newer_changesets) == i + 1:
                 # we need to compare with the next revision after the change
                 next_rev_content = old_content
             old_content = dmp.patch_apply(patches, old_content)[0]
@@ -285,19 +280,20 @@ class ChangeSet(models.Model):
         return dmp.diff_prettyHtml(diffs)
 
     def get_content(self):
-        """ Returns the content of this revision.
-        """
+        """Returns the content of this revision."""
         content = self.article.content
-        newer_changesets = ChangeSet.objects.filter(article=self.article, revision__gt=self.revision).order_by('-revision')
+        newer_changesets = ChangeSet.objects.filter(
+            article=self.article, revision__gt=self.revision).order_by('-revision')
         for changeset in newer_changesets:
             patches = dmp.patch_fromText(changeset.content_diff)
             content = dmp.patch_apply(patches, content)[0]
         return content
-        
+
     def compare_to(self, revision_from):
         other_content = u""
         if revision_from > 0:
-            other_content = ChangeSet.objects.filter(article=self.article, revision__lte=revision_from).order_by("-revision")[0].get_content()
+            other_content = ChangeSet.objects.filter(
+                article=self.article, revision__lte=revision_from).order_by('-revision')[0].get_content()
         diffs = dmp.diff_main(other_content, self.get_content())
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)

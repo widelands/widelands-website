@@ -29,11 +29,12 @@ natural_year_expr =  re.compile(r'''\%NY\((.*?)\)''')
 ZERO = timedelta(0)
 HOUR = timedelta(hours=1)
 
+
 class FixedOffset(tzinfo):
     """Fixed offset in minutes east from UTC."""
 
     def __init__(self, offset, name):
-        self.__offset = timedelta(minutes = offset)
+        self.__offset = timedelta(minutes=offset)
         self.__name = name
 
     def utcoffset(self, dt):
@@ -45,11 +46,12 @@ class FixedOffset(tzinfo):
     def dst(self, dt):
         return ZERO
 
-def do_custom_date( format, date, timezone, now= None ):
-    """
-    Returns a string formatted representation of date according to format. This accepts
-    all formats that strftime also accepts, but it also accepts some new options which are dependant
-    on the current date.
+
+def do_custom_date(format, date, timezone, now=None):
+    """Returns a string formatted representation of date according to format.
+    This accepts all formats that strftime also accepts, but it also accepts
+    some new options which are dependant on the current date.
+
         %NY(format)        (natural year) for example %NY(.%Y) will give ".2008" if this year is not 2008, else
                             an empty string
         %ND(alternatives)  (natural day) for example %ND(%d.%m.%Y)
@@ -59,6 +61,7 @@ def do_custom_date( format, date, timezone, now= None ):
     date        - datetime object to display
     timezone    - vaild timzone as int
     now         - overwrite the value for now; only for debug reasons
+
     """
     if now is None:
         now = datetime.now()
@@ -80,14 +83,14 @@ def do_custom_date( format, date, timezone, now= None ):
     ForumStdTimeZone = FixedOffset(60, 'UTC+1')
 
     # set the user's timezone information
-    ForumUserTimeZone = FixedOffset(timezone*60, tz_info)
+    ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
 
     # if there is tzinfo not set
     try:
         if not date.tzinfo:
             date = date.replace(tzinfo=ForumStdTimeZone)
         date = date.astimezone(ForumUserTimeZone)
-    except AttributeError: # maybe this is no valid date object?
+    except AttributeError:  # maybe this is no valid date object?
         return format
 
     # If it's done, timezone informations are now available ;)
@@ -95,12 +98,12 @@ def do_custom_date( format, date, timezone, now= None ):
 
     def _replace_ny(g):
         if now.year == date.year:
-            return ""
+            return ''
         return g.group(1)
 
     def _replace_nd(g):
-        delta = ddate(date.year,date.month,date.day) - \
-                ddate(now.year,now.month,now.day)
+        delta = ddate(date.year, date.month, date.day) - \
+            ddate(now.year, now.month, now.day)
         if delta.days == 0:
             return _(ur'\T\o\d\a\y')
         elif delta.days == 1:
@@ -112,32 +115,32 @@ def do_custom_date( format, date, timezone, now= None ):
     try:
         while 1:
             oformat = format
-            format = natural_year_expr.sub(_replace_ny,format)
-            format = natural_day_expr.sub(_replace_nd,format)
+            format = natural_year_expr.sub(_replace_ny, format)
+            format = natural_day_expr.sub(_replace_nd, format)
             if oformat == format:
                 break
 
-        data = django_date(date,format)
+        data = django_date(date, format)
     except NotImplementedError:
         return format
 
     return data
 
+
 @register.filter
-def custom_date( date, user ):
-    """
-    If this user is logged in, return his representation,
-    otherwise, return a sane default
-    """
+def custom_date(date, user):
+    """If this user is logged in, return his representation, otherwise, return
+    a sane default."""
     if not user.is_authenticated():
-        return do_custom_date( DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE) )
+        return do_custom_date(DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE))
     try:
-        userprofile = User.objects.get(username=user).wlprofile        
-        return do_custom_date( userprofile.time_display, date, userprofile.time_zone )
+        userprofile = User.objects.get(username=user).wlprofile
+        return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
     except ObjectDoesNotExist:
-        return do_custom_date( DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE) )
+        return do_custom_date(DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE))
 
 custom_date.is_safe = False
+
 
 def total_seconds(td):
     # Not defined in 2.6, so we redefine it.
@@ -163,9 +166,9 @@ def minutes(date):
     else:
         return sign + '%d hours' % (hours)
 
+
 @register.simple_tag
 def current_time(user):
     time = datetime.today()
-    time = custom_date(time, user);
+    time = custom_date(time, user)
     return time
-

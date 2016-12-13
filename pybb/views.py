@@ -14,7 +14,7 @@ from django.shortcuts import render
 
 from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
-                        MARKUP_CHOICES
+    MARKUP_CHOICES
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
@@ -25,6 +25,7 @@ try:
     from notification import models as notification
 except ImportError:
     notification = None
+
 
 def index_ctx(request):
     quick = {'posts': Post.objects.count(),
@@ -47,8 +48,8 @@ def show_category_ctx(request, category_id):
     quick = {'posts': category.posts.count(),
              'topics': category.topics.count(),
              'last_topics': category.topics.select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': category.posts.order_by('-created').select_related()\
-                [:pybb_settings.QUICK_POSTS_NUMBER],
+             'last_posts': category.posts.order_by('-created').select_related()
+             [:pybb_settings.QUICK_POSTS_NUMBER],
              }
     return {'category': category,
             'quick': quick,
@@ -62,13 +63,14 @@ def show_forum_ctx(request, forum_id):
     quick = {'posts': forum.post_count,
              'topics': forum.topics.count(),
              'last_topics': forum.topics.all().select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': forum.posts.order_by('-created').select_related()\
-                [:pybb_settings.QUICK_POSTS_NUMBER],
+             'last_posts': forum.posts.order_by('-created').select_related()
+             [:pybb_settings.QUICK_POSTS_NUMBER],
              }
 
-    topics = forum.topics.order_by('-sticky', '-updated').exclude(posts__hidden=True).select_related()
+    topics = forum.topics.order_by(
+        '-sticky', '-updated').exclude(posts__hidden=True).select_related()
     page, paginator = paginate(topics, request, pybb_settings.FORUM_PAGE_SIZE)
-    
+
     return {'forum': forum,
             'topics': page.object_list,
             'quick': quick,
@@ -86,7 +88,6 @@ def show_topic_ctx(request, topic_id):
     topic.views += 1
     topic.save()
 
-
     if request.user.is_authenticated():
         topic.update_read(request.user)
 
@@ -98,7 +99,7 @@ def show_topic_ctx(request, topic_id):
 
     initial = {}
     if request.user.is_authenticated():
-        initial = {'markup': "markdown" }
+        initial = {'markup': 'markdown'}
     form = AddPostForm(topic=topic, initial=initial)
 
     moderator = (request.user.is_superuser or
@@ -153,11 +154,11 @@ def add_post_ctx(request, forum_id, topic_id):
         quote = ''
     else:
         post = get_object_or_404(Post, pk=quote_id)
-        quote = quote_text(post.body, post.user, "markdown")
+        quote = quote_text(post.body, post.user, 'markdown')
 
     form = build_form(AddPostForm, request, topic=topic, forum=forum,
                       user=request.user, ip=get_real_ip(request),
-                      initial={'markup': "markdown", 'body': quote})
+                      initial={'markup': 'markdown', 'body': quote})
 
     if form.is_valid():
         post = form.save()
@@ -196,7 +197,8 @@ def show_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
-    url = '%s?page=%d#post-%d' % (reverse('pybb_topic', args=[post.topic.id]), page, post.id)
+    url = '%s?page=%d#post-%d' % (reverse('pybb_topic',
+                                          args=[post.topic.id]), page, post.id)
     return HttpResponseRedirect(url)
 
 
@@ -251,8 +253,8 @@ def delete_post_ctx(request, post_id):
 
     allowed = False
     if request.user.is_superuser or\
-        request.user in post.topic.forum.moderators.all() or \
-        (post.user == request.user and post == last_post):
+            request.user in post.topic.forum.moderators.all() or \
+            (post.user == request.user and post == last_post):
         allowed = True
 
     if not allowed:
@@ -332,7 +334,6 @@ def add_subscription(request, topic_id):
     return HttpResponseRedirect(reverse('pybb_topic', args=[topic.id]))
 
 
-
 @login_required
 def show_attachment(request, hash):
     attachment = get_object_or_404(Attachment, hash=hash)
@@ -359,6 +360,7 @@ def post_ajax_preview(request):
 
     html = urlize(html)
     return {'content': html}
+
 
 def pybb_moderate_info(request):
     return render(request, 'pybb/pybb_moderate_info.html')

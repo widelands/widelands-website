@@ -7,10 +7,11 @@ from nocaptcha_recaptcha.fields import NoReCaptchaField
 from wlprofile.models import Profile as wlprofile
 
 # Overwritten form to include a captcha
+
+
 class RegistrationWithCaptchaForm(RegistrationForm):
     captcha = NoReCaptchaField()
 
-    
 
 class ContactForm(forms.Form):
     surname = forms.CharField(max_length=80)

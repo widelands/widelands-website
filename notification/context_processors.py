@@ -1,5 +1,6 @@
 from notification.models import Notice
 
+
 def notification(request):
     if request.user.is_authenticated():
         return {

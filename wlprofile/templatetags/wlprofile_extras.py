@@ -15,12 +15,9 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+
 @register.filter
 def user_link(user):
-    data = u'<a href="%s">%s</a>' % (\
+    data = u'<a href="%s">%s</a>' % (
         reverse('profile_view', args=[user.username]), user.username)
     return mark_safe(data)
-
-
-
-

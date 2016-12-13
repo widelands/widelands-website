@@ -15,8 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BannedIP',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('ip_address', models.GenericIPAddressField(help_text='The IP address that should be banned', verbose_name=b'IP Address')),
+                ('id', models.AutoField(verbose_name='ID',
+                                        serialize=False, auto_created=True, primary_key=True)),
+                ('ip_address', models.GenericIPAddressField(
+                    help_text='The IP address that should be banned', verbose_name=b'IP Address')),
             ],
             options={
                 'ordering': ('ip_address',),
@@ -27,7 +29,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UntrackedUserAgent',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID',
+                                        serialize=False, auto_created=True, primary_key=True)),
                 ('keyword', models.CharField(help_text='Part or all of a user-agent string.  For example, "Googlebot" here will be found in "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" and that visitor will not be tracked.', max_length=100, verbose_name='keyword')),
             ],
             options={
@@ -39,7 +42,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Visitor',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID',
+                                        serialize=False, auto_created=True, primary_key=True)),
                 ('session_key', models.CharField(max_length=40)),
                 ('ip_address', models.CharField(max_length=20)),
                 ('user_agent', models.CharField(max_length=255)),

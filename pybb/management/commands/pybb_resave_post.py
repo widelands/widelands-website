@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from pybb.models import Post
 from pybb import settings as app_settings
 
+
 class Command(BaseCommand):
     help = 'Resave all posts.'
 

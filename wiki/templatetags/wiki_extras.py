@@ -22,31 +22,33 @@ wikiwordfier = re.compile(r'(?<!!)\b(%s)\b' % WIKI_WORD_RE)
 
 register = template.Library()
 
+
 @register.filter
 def wikiwords(s):
-    """ Transform every WikiWord in a text into links.
-        WikiWord must match this regular expression:
-        '(?:[A-Z]+[a-z]+){2,}'
+    """Transform every WikiWord in a text into links.
+
+    WikiWord must match this regular expression:
+    '(?:[A-Z]+[a-z]+){2,}'
+
     """
     # @@@ TODO: absolute links
     s = wikiwordfier.sub(r'<a href="/wiki/\1/">\1</a>', s)
     return force_unicode(s)
 wikiwords.is_safe = True
 
+
 @register.filter
 def restore_commandsymbols(s):
-    """
-    We need to restore " " for textile to work properly
-    """
-    s = s.replace("&quot;",'"')
-    s = s.replace("&quot;",'"')
+    """We need to restore " " for textile to work properly."""
+    s = s.replace('&quot;', '"')
+    s = s.replace('&quot;', '"')
     return force_unicode(s)
 restore_commandsymbols.is_safe = True
 
 
 @register.inclusion_tag('wiki/article_content.html')
 def render_content(article, content_attr='content', markup_attr='markup'):
-    """ Display an the body of an article, rendered with the right markup.
+    """Display an the body of an article, rendered with the right markup.
 
     - content_attr is the article attribute that will be rendered.
     - markup_attr is the article atribure with the markup that used
@@ -81,15 +83,14 @@ def render_content(article, content_attr='content', markup_attr='markup'):
 
 @register.inclusion_tag('wiki/article_teaser.html')
 def show_teaser(article):
-    """ Show a teaser box for the summary of the article.
-    """
+    """Show a teaser box for the summary of the article."""
     return {'article': article}
 
 
 @register.inclusion_tag('wiki/wiki_title.html')
 def wiki_title(group):
-    """ Display a <h1> title for the wiki, with a link to the group main page.
-    """
+    """Display a <h1> title for the wiki, with a link to the group main
+    page."""
     return {'group_name': group.name,
             'group_type': group._meta.verbose_name.title(),
             'group_url': group.get_absolute_url()}

@@ -15,13 +15,16 @@ import os
 ###########
 # Uploads #
 ###########
+
+
 class TestWLScreens_IndexSite_ExceptCorrectResult(DjangoTest):
+
     def runTest(self):
         url = reverse('wlscreens_index')
         k = self.client.get(url)
 
-        self.assertTemplateUsed(k,"wlscreens/index.html")
-        self.assertTrue(k.context["categories"] is not None)
+        self.assertTemplateUsed(k, 'wlscreens/index.html')
+        self.assertTrue(k.context['categories'] is not None)
 
 # TODO(sirver): figure out how to make templates simpler for tests so that this
 # simple test does not depend on the whole stack.
@@ -34,6 +37,3 @@ class TestWLScreens_IndexSite_ExceptCorrectResult(DjangoTest):
         # c = self.client.get(url)
 
         # self.assertEqual(c.status_code, 404 )
-
-
-

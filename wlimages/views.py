@@ -8,14 +8,15 @@ from models import Image
 from wl_utils import get_real_ip
 from forms import UploadImageForm
 
-def display( request, image, revision ):
+
+def display(request, image, revision):
     revision = int(revision)
 
-    img = get_object_or_404( Image, name = image, revision = revision )
+    img = get_object_or_404(Image, name=image, revision=revision)
 
     extension = img.image.path[-3:].lower()
-    if extension not in ("png","gif","jpg","bmp"):
-        extension = "png"
+    if extension not in ('png', 'gif', 'jpg', 'bmp'):
+        extension = 'png'
 
     r = HttpResponse()
     r['Content-Type'] = 'image/%s' % extension
@@ -23,17 +24,19 @@ def display( request, image, revision ):
 
     return r
 
+
 @login_required
-def upload(request,content_type,object_id, next="/"):
+def upload(request, content_type, object_id, next='/'):
     if request.method == 'POST':
-        form = UploadImageForm(request.POST, request.FILES) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            Image.objects.create_and_save_image(user=request.user,image=request.FILES["imagename"],
-                        content_type=ContentType.objects.get(pk=content_type),object_id=object_id, ip=get_real_ip(request))
-            return HttpResponseRedirect(next) # Redirect after POST
+        # A form bound to the POST data
+        form = UploadImageForm(request.POST, request.FILES)
+        if form.is_valid():  # All validation rules pass
+            Image.objects.create_and_save_image(user=request.user, image=request.FILES['imagename'],
+                                                content_type=ContentType.objects.get(pk=content_type), object_id=object_id, ip=get_real_ip(request))
+            return HttpResponseRedirect(next)  # Redirect after POST
     else:
-        form = UploadImageForm() # An unbound form
-    
+        form = UploadImageForm()  # An unbound form
+
     # Get the App (model) to which this image belongs to:
     app = ContentType.objects.get(id=content_type)
     # Get the current object's name (provided by __unicode__()) from this model
@@ -43,4 +46,3 @@ def upload(request,content_type,object_id, next="/"):
         'upload_form': form,
         'referer': name,
     }, context_instance=RequestContext(request))
-

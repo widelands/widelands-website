@@ -5,24 +5,30 @@ import datetime
 # lambda couldn't be used in field default and for python2 it must be declared
 # in module body
 # NOCOMM franku: The lambda won't work; why not return the result?
+
+
 def closed_date_default():
-    #return lambda: datetime.datetime.now() + datetime.timedelta(days=90)
+    # return lambda: datetime.datetime.now() + datetime.timedelta(days=90)
     return datetime.datetime.now() + datetime.timedelta(days=90)
 
+
 class PollManager(models.Manager):
+
     def open(self):
         return self.all().exclude(closed_date__lte=datetime.datetime.now())
 
+
 class Poll(models.Model):
     name = models.CharField(max_length=256)
-    pub_date = models.DateTimeField("date published", default = datetime.datetime.now)
-    closed_date = models.DateTimeField("date closed", default = closed_date_default,
+    pub_date = models.DateTimeField(
+        'date published', default=datetime.datetime.now)
+    closed_date = models.DateTimeField('date closed', default=closed_date_default,
                                        blank=True, null=True)
 
     objects = PollManager()
-        
+
     def total_votes(self):
-        return self.choices.all().aggregate(models.Sum("votes"))["votes__sum"]
+        return self.choices.all().aggregate(models.Sum('votes'))['votes__sum']
 
     def has_user_voted(self, u):
         return u.poll_votes.filter(poll=self).count() > 0
@@ -39,18 +45,19 @@ class Poll(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Choice(models.Model):
-    poll = models.ForeignKey(Poll, related_name="choices")
+    poll = models.ForeignKey(Poll, related_name='choices')
     choice = models.CharField(max_length=256)
     votes = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
-        return u"%i:%s" % (self.votes,self.choice)
+        return u"%i:%s" % (self.votes, self.choice)
+
 
 class Vote(models.Model):
-    user = models.ForeignKey(User, related_name="poll_votes")
+    user = models.ForeignKey(User, related_name='poll_votes')
     poll = models.ForeignKey(Poll)
     choice = models.ForeignKey(Choice)
-    date_voted = models.DateTimeField("voted at", default = datetime.datetime.now)
-
-
+    date_voted = models.DateTimeField(
+        'voted at', default=datetime.datetime.now)

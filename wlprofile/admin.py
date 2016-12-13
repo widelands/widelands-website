@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from models import Profile
 
+
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'time_zone', 'location']
     list_per_page = 20
@@ -20,20 +21,19 @@ class ProfileAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
     fieldsets = (
         (None, {
-                'fields': ('user', 'time_zone', 'location')
-                }
-         ),
+            'fields': ('user', 'time_zone', 'location')
+        }
+        ),
         (_('IM'), {
-                'classes': ('collapse',),
-                'fields' : ('jabber', 'icq', 'msn', 'aim', 'yahoo')
-                }
-         ),
+            'classes': ('collapse',),
+            'fields': ('jabber', 'icq', 'msn', 'aim', 'yahoo')
+        }
+        ),
         (_('Additional options'), {
-                'classes': ('collapse',),
-                'fields' : ('site', 'avatar', 'signature', 'show_signatures')
-                }
-         ),
-        )
+            'classes': ('collapse',),
+            'fields': ('site', 'avatar', 'signature', 'show_signatures')
+        }
+        ),
+    )
 
 admin.site.register(Profile, ProfileAdmin)
-
