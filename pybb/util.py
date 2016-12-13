@@ -19,9 +19,10 @@ from pybb import settings as pybb_settings
 
 
 def render_to(template_path):
-    """
-    Expect the dict from view. Render returned dict with
-    RequestContext.
+    """Expect the dict from view.
+
+    Render returned dict with RequestContext.
+
     """
 
     def decorator(func):
@@ -32,7 +33,7 @@ def render_to(template_path):
             if not isinstance(output, dict):
                 return output
             kwargs = {'context_instance': RequestContext(request)}
- 
+
             # NOCOMM: 'MIME_TYPE' is never in output as i can see for now.
             # But if, this should maybe 'content_type' instead
             if 'MIME_TYPE' in output:
@@ -41,19 +42,20 @@ def render_to(template_path):
                 template = output.pop('TEMPLATE')
             else:
                 template = template_path
-                
+
             return render_to_response(template, output, **kwargs)
         return wrapper
 
     return decorator
 
 
-def paged(paged_list_name, per_page):#, per_page_var='per_page'):
+def paged(paged_list_name, per_page):  # , per_page_var='per_page'):
+    """Parse page from GET data and pass it to view.
+
+    Split the query set returned from view.
+
     """
-    Parse page from GET data and pass it to view. Split the
-    query set returned from view.
-    """
-    
+
     def decorator(func):
         def wrapper(request, *args, **kwargs):
             result = func(request, *args, **kwargs)
@@ -66,14 +68,14 @@ def paged(paged_list_name, per_page):#, per_page_var='per_page'):
 
             real_per_page = per_page
 
-            #if per_page_var:
-                #try:
-                    #value = int(request.GET[per_page_var])
-                #except (ValueError, KeyError):
-                    #pass
-                #else:
-                    #if value > 0:
-                        #real_per_page = value
+            # if per_page_var:
+            # try:
+            #value = int(request.GET[per_page_var])
+            # except (ValueError, KeyError):
+            # pass
+            # else:
+            # if value > 0:
+            #real_per_page = value
 
             from django.core.paginator import Paginator
             paginator = Paginator(result['paged_qs'], real_per_page)
@@ -90,10 +92,11 @@ def paged(paged_list_name, per_page):#, per_page_var='per_page'):
 
 
 def ajax(func):
-    """
-    Checks request.method is POST. Return error in JSON in other case.
+    """Checks request.method is POST. Return error in JSON in other case.
 
-    If view returned dict, returns JsonResponse with this dict as content.
+    If view returned dict, returns JsonResponse with this dict as
+    content.
+
     """
     def wrapper(request, *args, **kwargs):
         if request.method == 'POST':
@@ -102,7 +105,8 @@ def ajax(func):
             except Exception, ex:
                 response = {'error': traceback.format_exc()}
         else:
-            response = {'error': {'type': 403, 'message': 'Accepts only POST request'}}
+            response = {'error': {'type': 403,
+                                  'message': 'Accepts only POST request'}}
         if isinstance(response, dict):
             return JsonResponse(response)
         else:
@@ -111,9 +115,7 @@ def ajax(func):
 
 
 class LazyJSONEncoder(json.JSONEncoder):
-    """
-    This fing need to save django from crashing.
-    """
+    """This fing need to save django from crashing."""
 
     def default(self, o):
         if isinstance(o, Promise):
@@ -123,20 +125,17 @@ class LazyJSONEncoder(json.JSONEncoder):
 
 
 class JsonResponse(HttpResponse):
-    """
-    HttpResponse subclass that serialize data into JSON format.
-    """
+    """HttpResponse subclass that serialize data into JSON format."""
     # NOCOMM: The mimetype argument maybe must be replaced with content_type
+
     def __init__(self, data, mimetype='application/json'):
         json_data = LazyJSONEncoder().encode(data)
         super(JsonResponse, self).__init__(
             content=json_data, content_type=mimetype)
 
-        
+
 def build_form(Form, _request, GET=False, *args, **kwargs):
-    """
-    Shorcut for building the form instance of given form class.
-    """
+    """Shorcut for building the form instance of given form class."""
 
     if not GET and 'POST' == _request.method:
         form = Form(_request.POST, _request.FILES, *args, **kwargs)
@@ -145,42 +144,40 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     else:
         form = Form(*args, **kwargs)
     return form
-    
+
 
 def urlize(data):
-        """
-        Urlize plain text links in the HTML contents.
-       
-        Do not urlize content of A and CODE tags.
-        """
+    """Urlize plain text links in the HTML contents.
 
-        soup = BeautifulSoup(data)
-        for chunk in soup.findAll(text=True):
-            islink = False
-            ptr = chunk.parent
-            while ptr.parent:
-                if ptr.name == 'a' or ptr.name == 'code':
-                    islink = True
-                    break
-                ptr = ptr.parent
-            if not islink:
-                # Using unescape to prevent conversation of f.e. &gt; to &amp;gt;
-                chunk = chunk.replaceWith(django_urlize(unicode(unescape(chunk))))
+    Do not urlize content of A and CODE tags.
 
-        return unicode(soup)
+    """
+
+    soup = BeautifulSoup(data)
+    for chunk in soup.findAll(text=True):
+        islink = False
+        ptr = chunk.parent
+        while ptr.parent:
+            if ptr.name == 'a' or ptr.name == 'code':
+                islink = True
+                break
+            ptr = ptr.parent
+        if not islink:
+            # Using unescape to prevent conversation of f.e. &gt; to &amp;gt;
+            chunk = chunk.replaceWith(django_urlize(unicode(unescape(chunk))))
+
+    return unicode(soup)
 
 
 def quote_text(text, user, markup):
-    """
-    Quote message using selected markup.
-    """
-    text = "*" + user.username + " wrote:*\n\n" + text
+    """Quote message using selected markup."""
+    text = '*' + user.username + ' wrote:*\n\n' + text
 
     # if markup == 'markdown':
     if markup == 'markdown':
         # Inserting a space after ">" will not change the generated HTML,
         # but it will unbreak certain constructs like '>:-))'.
-        return '> '+text.replace('\r','').replace('\n','\n> ') + '\n'
+        return '> ' + text.replace('\r', '').replace('\n', '\n> ') + '\n'
     elif markup == 'bbcode':
         return '[quote]\n%s\n[/quote]\n' % text
     else:
@@ -192,9 +189,7 @@ def absolute_url(path):
 
 
 def memoize_method(func):
-    """
-    Cached result of function call.
-    """
+    """Cached result of function call."""
 
     def wrapper(self, *args, **kwargs):
         CACHE_NAME = '__memcache'
@@ -240,16 +235,14 @@ def paginate(items, request, per_page, total_count=None):
         page.next_link = None
 
     #import pdb; pdb.set_trace()
-    
+
     return page, paginator
 
 
 # NOCOMM: This function is never used AFAIK
 # 'django_language' isn't available since django 1.8
 def set_language(request, language):
-    """
-    Change the language of session of authenticated user.
-    """
+    """Change the language of session of authenticated user."""
     if language and check_for_language(language):
         if hasattr(request, 'session'):
             request.session['django_language'] = language
@@ -258,9 +251,7 @@ def set_language(request, language):
 
 
 def unescape(text):
-    """
-    Do reverse escaping.
-    """
+    """Do reverse escaping."""
 
     text = text.replace('&amp;', '&')
     text = text.replace('&lt;', '<')

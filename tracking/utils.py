@@ -5,14 +5,17 @@ import unicodedata
 # this is not intended to be an all-knowing IP address regex
 IP_RE = re.compile('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 
+
 def get_ip(request):
-    """
-    Retrieves the remote IP address from the request data.  If the user is
+    """Retrieves the remote IP address from the request data.
+
+    If the user is
     behind a proxy, they may have a comma-separated list of IP addresses, so
     we need to account for that.  In such a case, only the first IP in the
     list will be retrieved.  Also, some hosts that use a proxy will put the
     REMOTE_ADDR into HTTP_X_FORWARDED_FOR.  This will handle pulling back the
     IP from the proper place.
+
     """
 
     # if neither header contain a value, just use local loopback
@@ -33,12 +36,12 @@ def get_ip(request):
 
     return ip_address
 
+
 def get_timeout():
-    """
-    Gets any specified timeout from the settings file, or use 10 minutes by
-    default
-    """
+    """Gets any specified timeout from the settings file, or use 10 minutes by
+    default."""
     return getattr(settings, 'TRACKING_TIMEOUT', 10)
+
 
 def get_cleanup_timeout():
     """
@@ -47,8 +50,9 @@ def get_cleanup_timeout():
     """
     return getattr(settings, 'TRACKING_CLEANUP_TIMEOUT', 24)
 
+
 def u_clean(s):
-    """A strange attempt at cleaning up unicode"""
+    """A strange attempt at cleaning up unicode."""
 
     uni = ''
     try:
@@ -68,4 +72,3 @@ def u_clean(s):
                         uni += '-'
 
     return uni.encode('ascii', 'xmlcharrefreplace')
-

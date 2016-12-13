@@ -16,10 +16,9 @@ DEFAULT_TRACKING_TEMPLATE = getattr(settings, 'DEFAULT_TRACKING_TEMPLATE',
                                     'tracking/visitor_map.html')
 log = logging.getLogger('tracking.views')
 
+
 def update_active_users(request):
-    """
-    Returns a list of all active users
-    """
+    """Returns a list of all active users."""
     if request.is_ajax():
         active = Visitor.objects.active()
         user = getattr(request, 'user', None)
@@ -41,12 +40,11 @@ def update_active_users(request):
     # if the request was not made via AJAX, raise a 404
     raise Http404
 
+
 @never_cache
 def get_active_users(request):
-    """
-    Retrieves a list of active users which is returned as plain JSON for
-    easier manipulation with JavaScript.
-    """
+    """Retrieves a list of active users which is returned as plain JSON for
+    easier manipulation with JavaScript."""
     if request.is_ajax():
         active = Visitor.objects.active().reverse()
         now = datetime.now()
@@ -63,9 +61,10 @@ def get_active_users(request):
                     'geoip': v.geoip_data_json,
                     'last_update': (now - v.last_update).seconds,
                     'friendly_time': ', '.join(friendly_time((now - v.last_update).seconds)),
-                } for v in active]}
+                    } for v in active]}
         except:
-            log.error('There was a problem putting all of the visitor data together:\n%s\n\n%s' % (traceback.format_exc(), locals()))
+            log.error('There was a problem putting all of the visitor data together:\n%s\n\n%s' % (
+                traceback.format_exc(), locals()))
             return HttpResponse(content='{}', mimetype='text/javascript')
 
         response = HttpResponse(content=JSONEncoder().encode(data),
@@ -77,6 +76,7 @@ def get_active_users(request):
     # if the request was not made via AJAX, raise a 404
     raise Http404
 
+
 def friendly_time(last_update):
     minutes = last_update / 60
     seconds = last_update % 60
@@ -84,24 +84,27 @@ def friendly_time(last_update):
     friendly_time = []
     if minutes > 0:
         friendly_time.append(ungettext(
-                '%(minutes)i minute',
-                '%(minutes)i minutes',
-                minutes
-        ) % {'minutes': minutes })
+            '%(minutes)i minute',
+            '%(minutes)i minutes',
+            minutes
+        ) % {'minutes': minutes})
     if seconds > 0:
         friendly_time.append(ungettext(
-                '%(seconds)i second',
-                '%(seconds)i seconds',
-                seconds
-        ) % {'seconds': seconds })
+            '%(seconds)i second',
+            '%(seconds)i seconds',
+            seconds
+        ) % {'seconds': seconds})
 
     return friendly_time or 0
 
+
 def display_map(request, template_name=DEFAULT_TRACKING_TEMPLATE,
-        extends_template='base.html'):
-    """
-    Displays a map of recently active users.  Requires a Google Maps API key
-    and GeoIP in order to be most effective.
+                extends_template='base.html'):
+    """Displays a map of recently active users.
+
+    Requires a Google Maps API key and GeoIP in order to be most
+    effective.
+
     """
 
     GOOGLE_MAPS_KEY = getattr(settings, 'GOOGLE_MAPS_KEY', None)

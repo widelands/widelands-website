@@ -1,7 +1,7 @@
 try:
-	from hashlib import md5
+    from hashlib import md5
 except ImportError:
-	from md5 import md5
+    from md5 import md5
 import os
 import os.path
 import warnings
@@ -18,11 +18,12 @@ from django.conf import settings
 
 warnings.filterwarnings('ignore', r'tmpnam')
 
+
 def fetch_gravatar(email):
-    """
-    Fetch avatar from gravatar.com service.
+    """Fetch avatar from gravatar.com service.
 
     Return None if avatar was not found.
+
     """
 
     hash = md5(email).hexdigest()
@@ -33,6 +34,7 @@ def fetch_gravatar(email):
     fname = os.tmpnam()
 
     class RedirectHandler(urllib2.HTTPRedirectHandler):
+
         def http_error_302(*args):
             raise IOError('Redirect found')
 
@@ -44,7 +46,7 @@ def fetch_gravatar(email):
     try:
         file(fname, 'wb').write(opener.open(url, fname).read())
     except IOError, ex:
-        #logging.error(ex)
+        # logging.error(ex)
         return None
     else:
         return fname
@@ -56,13 +58,15 @@ def check_gravatar(user, ignore_date_joined=False, ignore_saved_avatar=False):
             if ignore_saved_avatar or not user.pybb_profile.avatar:
                 path = fetch_gravatar(user.email)
                 if path:
-                    avatars_dir = os.path.join(settings.MEDIA_ROOT, pybb_settings.AVATARS_UPLOAD_TO)
+                    avatars_dir = os.path.join(
+                        settings.MEDIA_ROOT, pybb_settings.AVATARS_UPLOAD_TO)
                     avatar_name = '_pybb_%d' % user.id
 
                     avatar_path = os.path.join(avatars_dir, avatar_name)
                     shutil.copy(path, avatar_path)
 
-                    relpath = os.path.join(pybb_settings.AVATARS_UPLOAD_TO, avatar_name)
+                    relpath = os.path.join(
+                        pybb_settings.AVATARS_UPLOAD_TO, avatar_name)
                     user.pybb_profile.avatar = relpath
                     user.pybb_profile.save()
                     return True

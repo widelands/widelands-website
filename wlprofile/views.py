@@ -12,24 +12,29 @@ from forms import EditProfileForm
 import settings
 
 # Settings
+
+
 @login_required
-def view(request, user = None):
-    """
-    View the profile. Note that login is required here
-    to make sure that not all spam post can harvest here
+def view(request, user=None):
+    """View the profile.
+
+    Note that login is required here to make sure that not all spam post
+    can harvest here
+
     """
     if user is None:
         profile = request.user.wlprofile
     else:
-        profile = User.objects.get( username = user ).wlprofile
+        profile = User.objects.get(username=user).wlprofile
 
     template_params = {
-        "profile": profile,
+        'profile': profile,
     }
 
-    return render_to_response("wlprofile/view_profile.html",
+    return render_to_response('wlprofile/view_profile.html',
                               template_params,
                               context_instance=RequestContext(request))
+
 
 @login_required
 def edit(request):
@@ -37,7 +42,7 @@ def edit(request):
 
     if request.method == 'POST':
         form = EditProfileForm(request.POST,
-                    instance=instance, files = request.FILES)
+                               instance=instance, files=request.FILES)
         if form.is_valid():
             form.save()
 
@@ -46,11 +51,9 @@ def edit(request):
         form = EditProfileForm(instance=instance)
 
     template_params = {
-        "profile": instance,
-        "profile_form": form,
+        'profile': instance,
+        'profile_form': form,
     }
-    return render_to_response("wlprofile/edit_profile.html",
+    return render_to_response('wlprofile/edit_profile.html',
                               template_params,
                               context_instance=RequestContext(request))
-
-

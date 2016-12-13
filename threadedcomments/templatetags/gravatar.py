@@ -12,33 +12,34 @@ GRAVATAR_SIZE = getattr(settings, 'GRAVATAR_SIZE', 80)
 
 GRAVATAR_URL = u'http://www.gravatar.com/avatar.php?gravatar_id=%(hash)s&rating=%(rating)s&size=%(size)s&default=%(default)s'
 
+
 def get_gravatar_url(parser, token):
-    """
-    Generates a gravatar image URL based on the given parameters.
-        
-    Format is as follows (The square brackets indicate that those arguments are 
+    """Generates a gravatar image URL based on the given parameters.
+
+    Format is as follows (The square brackets indicate that those arguments are
     optional.)::
-    
+
         {% get_gravatar_url for myemailvar [rating "R" size 80 default img:blank as gravatar_url] %}
-    
+
     Rating, size, and default may be either literal values or template variables.
     The template tag will attempt to resolve variables first, and on resolution
     failure it will use the literal value.
-    
+
     If ``as`` is not specified, the URL will be output to the template in place.
-    
-    For all other arguments that are not specified, the appropriate default 
+
+    For all other arguments that are not specified, the appropriate default
     settings attribute will be used instead.
+
     """
     words = token.contents.split()
     tagname = words.pop(0)
     if len(words) < 2:
-        raise template.TemplateSyntaxError, "%r tag: At least one argument should be provided." % tagname
-    if words.pop(0) != "for":
-        raise template.TemplateSyntaxError, "%r tag: Syntax is {% get_gravatar_url for myemailvar rating "R" size 80 default img:blank as gravatar_url %}, where everything after myemailvar is optional."
+        raise template.TemplateSyntaxError, '%r tag: At least one argument should be provided.' % tagname
+    if words.pop(0) != 'for':
+        raise template.TemplateSyntaxError, '%r tag: Syntax is {% get_gravatar_url for myemailvar rating 'R" size 80 default img:blank as gravatar_url %}, where everything after myemailvar is optional."
     email = words.pop(0)
     if len(words) % 2 != 0:
-        raise template.TemplateSyntaxError, "%r tag: Imbalanced number of arguments." % tagname
+        raise template.TemplateSyntaxError, '%r tag: Imbalanced number of arguments.' % tagname
     args = {
         'email': email,
         'rating': GRAVATAR_MAX_RATING,
@@ -48,13 +49,15 @@ def get_gravatar_url(parser, token):
     for name, value in zip(words[::2], words[1::2]):
         name = name.lower()
         if name not in ('rating', 'size', 'default', 'as'):
-            raise template.TemplateSyntaxError, "%r tag: Invalid argument %r." % tagname, name
+            raise template.TemplateSyntaxError, '%r tag: Invalid argument %r.' % tagname, name
         args[smart_str(name)] = value
     return GravatarUrlNode(**args)
 
+
 class GravatarUrlNode(template.Node):
-    def __init__(self, email=None, rating=GRAVATAR_MAX_RATING, size=GRAVATAR_SIZE, 
-        default=GRAVATAR_DEFAULT_IMG, **other_kwargs):
+
+    def __init__(self, email=None, rating=GRAVATAR_MAX_RATING, size=GRAVATAR_SIZE,
+                 default=GRAVATAR_DEFAULT_IMG, **other_kwargs):
         self.email = template.Variable(email)
         self.rating = template.Variable(rating)
         try:
@@ -85,7 +88,7 @@ class GravatarUrlNode(template.Node):
             default = self.default.resolve(context)
         except template.VariableDoesNotExist:
             default = self.default.var
-        
+
         gravatargs = {
             'hash': md5_constructor(email).hexdigest(),
             'rating': rating,
@@ -98,6 +101,7 @@ class GravatarUrlNode(template.Node):
             return ''
         return url
 
+
 def gravatar(email):
     """
     Takes an e-mail address and returns a gravatar image URL, using properties
@@ -106,7 +110,7 @@ def gravatar(email):
     hashed_email = md5_constructor(email).hexdigest()
     return mark_safe(GRAVATAR_URL % {
         'hash': hashed_email,
-        'rating': GRAVATAR_MAX_RATING, 
+        'rating': GRAVATAR_MAX_RATING,
         'size': GRAVATAR_SIZE,
         'default': urllib.quote_plus(GRAVATAR_DEFAULT_IMG),
     })

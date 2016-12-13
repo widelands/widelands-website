@@ -5,7 +5,6 @@ from models import Category, Screenshot
 from views import *
 
 urlpatterns = [
-    url(r'^$', index, name="wlscreens_index" ),
-    url(r'^(?P<category_slug>[-\w]+)/$', category, name = "wlscreens_category" ),
+    url(r'^$', index, name='wlscreens_index'),
+    url(r'^(?P<category_slug>[-\w]+)/$', category, name='wlscreens_category'),
 ]
-

@@ -33,13 +33,16 @@ class CommentModerator(moderation.CommentModerator):
             return True
         return super(CommentModerator, self).moderate(comment, content_object)
 
+
 class Moderator(moderation.Moderator):
+
     def connect(self):
         for model in (ThreadedComment, FreeThreadedComment):
             signals.pre_save.connect(self.pre_save_moderation, sender=model)
             signals.post_save.connect(self.post_save_moderation, sender=model)
-    
-    ## THE FOLLOWING ARE HACKS UNTIL django-comment-utils GETS UPDATED SIGNALS ####
+
+    # THE FOLLOWING ARE HACKS UNTIL django-comment-utils GETS UPDATED SIGNALS
+    # ####
     def pre_save_moderation(self, sender=None, instance=None, **kwargs):
         return super(Moderator, self).pre_save_moderation(sender, instance)
 
@@ -47,7 +50,7 @@ class Moderator(moderation.Moderator):
         return super(Moderator, self).post_save_moderation(sender, instance)
 
 
-# Instantiate the ``Moderator`` so that other modules can import and 
+# Instantiate the ``Moderator`` so that other modules can import and
 # begin to register with it.
 
 moderator = Moderator()

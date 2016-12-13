@@ -20,10 +20,10 @@ sitemaps = {
     'wlhelpware': WlHelpWareSitemap,
     'wlhelpworker': WlHelpWorkerSitemap,
     'wlhelpbuildings': WlHelpBuildingSitemap,
-    }
+}
 
 urlpatterns = [
     # Creating a sitemap.xml
     url(r'^$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap')
-    ]
+]

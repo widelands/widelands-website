@@ -5,7 +5,7 @@ from datetime import timedelta
 
 
 class NewsSitemap(Sitemap):
-    changefreq = "never"
+    changefreq = 'never'
     priority = 0.5
 
     def items(self):

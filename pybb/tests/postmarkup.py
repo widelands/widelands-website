@@ -2,7 +2,9 @@ import unittest
 
 from pybb.markups import mypostmarkup
 
+
 class PostmarkupTestCase(unittest.TestCase):
+
     def setUp(self):
         self.markup = mypostmarkup.markup
 
@@ -10,7 +12,6 @@ class PostmarkupTestCase(unittest.TestCase):
         link = 'http://ya.ru/'
         self.assertEqual('<a href="%s">%s</a>' % (link, link),
                          self.markup('[url]%s[/url]' % link))
-
 
     def testPlainTest(self):
         text = 'just a text'
@@ -22,5 +23,5 @@ class PostmarkupTestCase(unittest.TestCase):
 
     def testCodeTag(self):
         text = 'foo [code]foo\nbar[/code] bar'
-        self.assertEqual('foo <pre><code>foo\nbar</code></pre>bar', self.markup(text))
-
+        self.assertEqual(
+            'foo <pre><code>foo\nbar</code></pre>bar', self.markup(text))

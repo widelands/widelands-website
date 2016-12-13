@@ -21,17 +21,19 @@ def delete_with_file(modeladmin, request, queryset):
         obj.delete()
 delete_with_file.short_description = 'Delete Image including File'
 
+
 class ImageAdmin(admin.ModelAdmin):
     readonly_fields = ('content_object', 'content_type', 'object_id')
-    list_display = ( '__unicode__', 'date_submitted', 'content_type', 'user')
+    list_display = ('__unicode__', 'date_submitted', 'content_type', 'user')
     list_filter = ('date_submitted',)
     date_hierarchy = 'date_submitted'
     search_fields = ('image', 'user__username')
     actions = [delete_with_file]
     fieldsets = (
-        (None, {'fields': ( 'image', 'name', 'date_submitted','revision')}),
-        (_('Upload data:'), { 'fields': ( 'user', 'editor_ip')}),
-        (_('Content object:'), { 'fields': ( ('content_type', 'content_object'), 'object_id')}),
+        (None, {'fields': ('image', 'name', 'date_submitted', 'revision')}),
+        (_('Upload data:'), {'fields': ('user', 'editor_ip')}),
+        (_('Content object:'), {
+         'fields': (('content_type', 'content_object'), 'object_id')}),
     )
 
 admin.site.register(Image, ImageAdmin)

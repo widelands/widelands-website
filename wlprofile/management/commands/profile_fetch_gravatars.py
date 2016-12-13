@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from pybb.gravatar import check_gravatar
 
+
 class Command(BaseCommand):
     help = 'Fetch avatars from gravatar.com service for those users which did not set avatar'
 

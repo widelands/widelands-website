@@ -4,32 +4,38 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'Category'
         db.create_table('pybb_category', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=80)),
-            ('position', self.gf('django.db.models.fields.IntegerField')(default=0, blank=True)),
+            ('position', self.gf('django.db.models.fields.IntegerField')(
+                default=0, blank=True)),
         ))
         db.send_create_signal('pybb', ['Category'])
 
         # Adding model 'Forum'
         db.create_table('pybb_forum', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(related_name='forums', to=orm['pybb.Category'])),
+            ('category', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='forums', to=orm['pybb.Category'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=80)),
-            ('position', self.gf('django.db.models.fields.IntegerField')(default=0, blank=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
+            ('position', self.gf('django.db.models.fields.IntegerField')(
+                default=0, blank=True)),
+            ('description', self.gf('django.db.models.fields.TextField')(
+                default='', blank=True)),
             ('updated', self.gf('django.db.models.fields.DateTimeField')(null=True)),
         ))
         db.send_create_signal('pybb', ['Forum'])
 
         # Adding M2M table for field moderators on 'Forum'
         db.create_table('pybb_forum_moderators', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('id', models.AutoField(verbose_name='ID',
+                                    primary_key=True, auto_created=True)),
             ('forum', models.ForeignKey(orm['pybb.forum'], null=False)),
             ('user', models.ForeignKey(orm['auth.user'], null=False))
         ))
@@ -38,21 +44,26 @@ class Migration(SchemaMigration):
         # Adding model 'Topic'
         db.create_table('pybb_topic', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('forum', self.gf('django.db.models.fields.related.ForeignKey')(related_name='topics', to=orm['pybb.Forum'])),
+            ('forum', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='topics', to=orm['pybb.Forum'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(null=True)),
             ('updated', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('views', self.gf('django.db.models.fields.IntegerField')(default=0, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(
+                to=orm['auth.User'])),
+            ('views', self.gf('django.db.models.fields.IntegerField')(
+                default=0, blank=True)),
             ('sticky', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('closed', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('post_count', self.gf('django.db.models.fields.IntegerField')(default=0, blank=True)),
+            ('post_count', self.gf('django.db.models.fields.IntegerField')(
+                default=0, blank=True)),
         ))
         db.send_create_signal('pybb', ['Topic'])
 
         # Adding M2M table for field subscribers on 'Topic'
         db.create_table('pybb_topic_subscribers', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('id', models.AutoField(verbose_name='ID',
+                                    primary_key=True, auto_created=True)),
             ('topic', models.ForeignKey(orm['pybb.topic'], null=False)),
             ('user', models.ForeignKey(orm['auth.user'], null=False))
         ))
@@ -61,23 +72,30 @@ class Migration(SchemaMigration):
         # Adding model 'Post'
         db.create_table('pybb_post', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(related_name='posts', to=orm['pybb.Topic'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='posts', to=orm['auth.User'])),
+            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='posts', to=orm['pybb.Topic'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='posts', to=orm['auth.User'])),
             ('created', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
-            ('updated', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('markup', self.gf('django.db.models.fields.CharField')(default='markdown', max_length=15)),
+            ('updated', self.gf('django.db.models.fields.DateTimeField')(
+                null=True, blank=True)),
+            ('markup', self.gf('django.db.models.fields.CharField')(
+                default='markdown', max_length=15)),
             ('body', self.gf('django.db.models.fields.TextField')()),
             ('body_html', self.gf('django.db.models.fields.TextField')()),
             ('body_text', self.gf('django.db.models.fields.TextField')()),
-            ('user_ip', self.gf('django.db.models.fields.IPAddressField')(default='', max_length=15, blank=True)),
+            ('user_ip', self.gf('django.db.models.fields.IPAddressField')(
+                default='', max_length=15, blank=True)),
         ))
         db.send_create_signal('pybb', ['Post'])
 
         # Adding model 'Read'
         db.create_table('pybb_read', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['pybb.Topic'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(
+                to=orm['auth.User'])),
+            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(
+                to=orm['pybb.Topic'])),
             ('time', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
         ))
         db.send_create_signal('pybb', ['Read'])
@@ -88,11 +106,14 @@ class Migration(SchemaMigration):
         # Adding model 'PrivateMessage'
         db.create_table('pybb_privatemessage', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('dst_user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='dst_users', to=orm['auth.User'])),
-            ('src_user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='src_users', to=orm['auth.User'])),
+            ('dst_user', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='dst_users', to=orm['auth.User'])),
+            ('src_user', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='src_users', to=orm['auth.User'])),
             ('read', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
-            ('markup', self.gf('django.db.models.fields.CharField')(default='markdown', max_length=15)),
+            ('markup', self.gf('django.db.models.fields.CharField')(
+                default='markdown', max_length=15)),
             ('subject', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('body', self.gf('django.db.models.fields.TextField')()),
             ('body_html', self.gf('django.db.models.fields.TextField')()),
@@ -103,18 +124,19 @@ class Migration(SchemaMigration):
         # Adding model 'Attachment'
         db.create_table('pybb_attachment', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('post', self.gf('django.db.models.fields.related.ForeignKey')(related_name='attachments', to=orm['pybb.Post'])),
+            ('post', self.gf('django.db.models.fields.related.ForeignKey')(
+                related_name='attachments', to=orm['pybb.Post'])),
             ('size', self.gf('django.db.models.fields.IntegerField')()),
             ('content_type', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('path', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('name', self.gf('django.db.models.fields.TextField')()),
-            ('hash', self.gf('django.db.models.fields.CharField')(default='', max_length=40, db_index=True, blank=True)),
+            ('hash', self.gf('django.db.models.fields.CharField')
+             (default='', max_length=40, db_index=True, blank=True)),
         ))
         db.send_create_signal('pybb', ['Attachment'])
 
-
     def backwards(self, orm):
-        
+
         # Removing unique constraint on 'Read', fields ['user', 'topic']
         db.delete_unique('pybb_read', ['user_id', 'topic_id'])
 
@@ -144,7 +166,6 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Attachment'
         db.delete_table('pybb_attachment')
-
 
     models = {
         'auth.group': {

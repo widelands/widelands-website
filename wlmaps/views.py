@@ -45,7 +45,7 @@ def rate(request, map_slug):
 
     m.rating.add(score=val, user=request.user,
                  ip_address=get_real_ip(request))
-    
+
     # m.save() is not needed
 
     return HttpResponseRedirect(reverse('wlmaps_view', None, {'map_slug': m.slug}))
