@@ -8,6 +8,7 @@
 User-agent: *
 Disallow: /profile
 Disallow: /admin
+Disallow: /accounts
 
 # url to sitemap
 Sitemap: https://wl.widelands.org/sitemap.xml/
