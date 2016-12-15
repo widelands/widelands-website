@@ -18,6 +18,8 @@ Allow: /maps
 Allow: /changelog
 Allow: /docs/wl
 Allow: /developers
+Allow: /screenshots
+Allow: /polls
 
 # url to sitemap
 Sitemap: https://wl.widelands.org/sitemap.xml/
