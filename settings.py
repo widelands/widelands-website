@@ -150,7 +150,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
                 'mainpage.context_processors.settings_for_templates',
-                'mainpage.context_processors.forums_navigation',
             ],
         },
     },

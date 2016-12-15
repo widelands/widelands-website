@@ -2,7 +2,7 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-
+{% load forum_navigation %}
 
 <script type="text/javascript">
 	/* Enable dropdown menus on touch devices */
@@ -44,9 +44,12 @@
 	</li>
 	<li><a href="{% url 'pybb_index' %}">Forums</a>
 		<ul>
-			{% for item in forums %}
-				<li><a href="{% url 'pybb_forum' item.id %}">{{ item.name }}</a></li>
-			{% endfor %}
+			{% forum_navigation %}
+			<!--{% for category in categories %}
+				{% for forum in category.forums.all %}
+					<li><a href="{% url 'pybb_forum' forum.id %}">{{ forum.name }}</a></li>
+				{% endfor %}
+			{% endfor %}-->
 		</ul>
 	</li>
 	<li><a href="{% url 'webchat_index' %}">Chat</a></li>
