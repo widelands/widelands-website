@@ -4,11 +4,19 @@
 # Disallow: /
 
 
-# These things should never be crawled
+# Disallow some things and explicit Allow some things
 User-agent: *
 Disallow: /profile
 Disallow: /admin
 Disallow: /accounts
+Allow: /news
+Allow: /wiki
+Allow: /encyclopedia
+Allow: /forum
+Allow: /maps
+Allow: /changelog
+Allow: /docs/wl
+Allow: /developers
 
 # url to sitemap
 Sitemap: https://wl.widelands.org/sitemap.xml/
