@@ -34,7 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ForumAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'position', 'topic_count']
     list_per_page = 20
-    ordering = ['-category']
+    ordering = ['category__position', 'position']
     search_fields = ['name', 'category__name']
     fieldsets = (
         (None, {
@@ -42,7 +42,8 @@ class ForumAdmin(admin.ModelAdmin):
         }
         ),
         (_('Additional options'), {
-            'classes': ('collapse',),
+            'description': 'Position is the position inside the category. \
+            This has effect on ordering in forums overview and the navigation bar.',
             'fields': ('position', 'description', 'moderators')
         }
         ),

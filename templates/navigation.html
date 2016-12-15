@@ -2,7 +2,7 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-
+{% load forum_navigation %}
 
 <script type="text/javascript">
 	/* Enable dropdown menus on touch devices */
@@ -43,20 +43,7 @@
 		</ul>
 	</li>
 	<li><a href="{% url 'pybb_index' %}">Forums</a>
-		<ul>
-			<li><a href="{% url 'pybb_forum' 1 %}">Technical Help</a></li>
-			<li><a href="{% url 'pybb_forum' 2 %}">Game Suggestions</a></li>
-			<li><a href="{% url 'pybb_forum' 3 %}">Playing Widelands</a></li>
-			<li><a href="{% url 'pybb_forum' 4 %}">Editor Forum</a></li>
-			<li><a href="{% url 'pybb_forum' 5 %}">[Deutsch] - Spielerforum</a></li>
-			<li><a href="{% url 'pybb_forum' 6 %}">[Español] - Foro de jugadores</a></li>
-			<li><a href="{% url 'pybb_forum' 7 %}">[Français] - Forum de joueurs</a></li>
-			<li><a href="{% url 'pybb_forum' 13 %}">[English] - Player Forum</a></li>
-			<li><a href="{% url 'pybb_forum' 9 %}">Graphic Development</a></li>
-			<li><a href="{% url 'pybb_forum' 10 %}">Sound &amp; Music Development</a></li>
-			<li><a href="{% url 'pybb_forum' 11 %}">Homepage</a></li>
-			<li><a href="{% url 'pybb_forum' 12 %}">Translations &amp; Internationalization</a></li>
-		</ul>
+			{% forum_navigation %}
 	</li>
 	<li><a href="{% url 'webchat_index' %}">Chat</a></li>
 	<li><a href="{% url 'wiki_article' "Development" %}">Development</a>
