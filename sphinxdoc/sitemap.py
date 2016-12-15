@@ -3,7 +3,10 @@ from sphinxdoc.models import App
 import datetime
 import os
 
-app = App.objects.get(slug='wl')
+try:
+    app = App.objects.get(slug='wl')
+except:
+    pass
 
 
 class DocumentationSitemap(Sitemap):
