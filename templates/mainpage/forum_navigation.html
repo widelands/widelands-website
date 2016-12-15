@@ -2,8 +2,10 @@
 Showing the forum navigation ordered by category position and forum position
 {% endcomment %}
 
+<ul>
 {% for category in categories %}
 	{% for forum in category.forums.all %}
 		<li><a href="{% url 'pybb_forum' forum.id %}">{{ forum.name }}</a></li>
 	{% endfor %}
 {% endfor %}
+</ul>

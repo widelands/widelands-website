@@ -43,14 +43,7 @@
 		</ul>
 	</li>
 	<li><a href="{% url 'pybb_index' %}">Forums</a>
-		<ul>
 			{% forum_navigation %}
-			<!--{% for category in categories %}
-				{% for forum in category.forums.all %}
-					<li><a href="{% url 'pybb_forum' forum.id %}">{{ forum.name }}</a></li>
-				{% endfor %}
-			{% endfor %}-->
-		</ul>
 	</li>
 	<li><a href="{% url 'webchat_index' %}">Chat</a></li>
 	<li><a href="{% url 'wiki_article' "Development" %}">Development</a>
