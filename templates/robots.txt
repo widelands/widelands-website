@@ -6,6 +6,7 @@
 
 # Disallow some things and explicit Allow some things
 User-agent: *
+Disallow: /
 Disallow: /profile
 Disallow: /admin
 Disallow: /accounts
