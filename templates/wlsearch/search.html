@@ -71,7 +71,7 @@
 	{% if forum_results_topic.count %}
 	<h4>Topics</h4>
 	<ul>
-	{% for r in forum_results_topic %}
+	{% for r in forum_results_topic|dictsortreversed:'created' %}
 		<li>
 			<a href="{{r.forum.get_absolute_url}}">{{r.forum.name}}</a>
 			&raquo; <a href="{{r.get_absolute_url}}">{{r.name}}</a>
@@ -84,7 +84,7 @@
 	{% if forum_results_post.count %}
 	<h4>Posts</h4>
 	<ul>
-	{% for r in forum_results_post %}
+	{% for r in forum_results_post|dictsortreversed:'created' %}
 		<li>
 			<a href="{{r.topic.forum.get_absolute_url}}">{{r.topic.forum.name}}</a>
 			&raquo; <a href="{{r.topic.get_absolute_url}}">{{r.topic.name}}</a> 
@@ -100,7 +100,7 @@
 {% if map_results.count %}
 	<h3>Maps</h3>
 	<ul>
-	{% for m in map_results %}
+	{% for m in map_results|dictsortreversed:'pub_date' %}
 		<li>
 			<a href="{{m.get_absolute_url}}">{{ m.name }}</a> by {{ m.author }}
 			, <span class="small">{{ m.pub_date|custom_date:user }}</span>
@@ -113,7 +113,7 @@
 {% if news_results.count %}
 	<h3>News results</h3>
 	<ul>
-	{% for r in news_results %}
+	{% for r in news_results|dictsortreversed:'publish' %}
 		<li>
 			<a href="{{r.get_absolute_url}}">{{ r.title }}</a>
 			, <span class="small">{{ r.publish|custom_date:user }}</span>
