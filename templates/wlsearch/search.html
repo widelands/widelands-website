@@ -37,7 +37,7 @@
 {% if wiki_results.count %}
 	<h3>Wiki</h3>
 	<ul>
-	{% for r in wiki_results %}
+	{% for r in wiki_results|dictsortreversed:'last_update' %}
 		<li><a href="{{r.get_absolute_url}}">{{r.title}}</a></li>
 	{% endfor %}
 	</ul>
