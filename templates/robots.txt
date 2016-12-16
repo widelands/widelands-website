@@ -1,8 +1,4 @@
 # robots.txt for wl.widelands.org
-# Disallowed Webcrawlers
-# User-agent: *
-# Disallow: /
-
 
 # These things should never be crawled
 User-agent: *
