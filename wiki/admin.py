@@ -33,10 +33,10 @@ admin.site.register(Article, ArticleAdmin)
 
 class ChangeSetAdmin(admin.ModelAdmin):
     search_fields = ['article__title']
-    list_display = ('article', 'revision', 'old_title', 'old_markup',
-                    'editor', 'editor_ip', 'reverted', 'modified',
+    list_display = ('article', 'old_title', 'old_markup',
+                    'editor', 'reverted', 'modified',
                     'comment')
-    list_filter = ('old_title', 'content_diff')
+    list_filter = ('old_title',)
     ordering = ('-modified',)
     fieldsets = (
         ('Article', {'fields': ('article',)}),
