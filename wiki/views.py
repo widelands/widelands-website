@@ -271,13 +271,13 @@ def edit_article(request, title,
         form.cache_old_content()
         if form.is_valid():
 
+            if request.user.is_authenticated():
+                form.editor = request.user
+
             # NOCOMM Franku: This has never worked as i know and is IMHO
             # useless. This code works with django 1.8 but misses some code
             # in template. See
             # https://docs.djangoproject.com/en/1.8/ref/contrib/messages/#module-django.contrib.messages
-
-            if request.user.is_authenticated():
-                form.editor = request.user
             #     if article is None:
             #         user_message = u"Your article was created successfully."
             #     else:
