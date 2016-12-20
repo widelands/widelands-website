@@ -477,7 +477,18 @@ def revert_to_revision(request, title,
             return HttpResponseForbidden()
 
         article = get_object_or_404(article_qs, **article_args)
-
+        print('franku request: ', request)
+        try:
+            # Check wether there is another Article with the same name to which this article
+            # want's to be reverted to
+            old_title = article.changeset_set.filter(revision=revision).get().old_title
+            Article.objects.exclude(pk=article.pk).get(title=old_title)
+            #messages.add_message(request, messages.INFO, 'Reverting not possible')
+            #return render(request, 'wiki/history.html', {'article': article})
+            return redirect(article, {'error': "Reverting not possible"})
+        except:
+            pass
+    
         if request.user.is_authenticated():
             article.revert_to(revision, get_real_ip(request), request.user)
         else:
