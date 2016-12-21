@@ -29,6 +29,13 @@
 	{% endif %}
 </div>
 <h1>{{ article.title }}</h1>
+
+	{% if messages %}
+	    {% for message in messages %}
+	    <p class="errormessage">{{ message }}</p>
+	    {% endfor %}
+	{% endif %}
+
 <div class="blogEntry">
 	{% if not article.id %}
 		<p>

@@ -10,6 +10,7 @@ from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
 
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
@@ -274,16 +275,6 @@ def edit_article(request, title,
             if request.user.is_authenticated():
                 form.editor = request.user
 
-            # NOCOMM Franku: This has never worked as i know and is IMHO
-            # useless. This code works with django 1.8 but misses some code
-            # in template. See
-            # https://docs.djangoproject.com/en/1.8/ref/contrib/messages/#module-django.contrib.messages
-            #     if article is None:
-            #         user_message = u"Your article was created successfully."
-            #     else:
-            #         user_message = u"Your article was edited successfully."
-            #     messages.success(request, user_message)
-
             if ((article is None) and (group_slug is not None)):
                 form.group = group
 
@@ -477,29 +468,23 @@ def revert_to_revision(request, title,
             return HttpResponseForbidden()
 
         article = get_object_or_404(article_qs, **article_args)
-        print('franku request: ', request)
+
         try:
-            # Check wether there is another Article with the same name to which this article
-            # want's to be reverted to
-            old_title = article.changeset_set.filter(revision=revision).get().old_title
+            # Check whether there is another Article with the same name to which this article
+            # want's to be reverted to. If so: prevent it and show a message.
+            old_title = article.changeset_set.filter(
+                revision=revision).get().old_title
             Article.objects.exclude(pk=article.pk).get(title=old_title)
-            #messages.add_message(request, messages.INFO, 'Reverting not possible')
-            #return render(request, 'wiki/history.html', {'article': article})
-            return redirect(article, {'error': "Reverting not possible"})
+            messages.error(
+                request, 'Reverting not possible because an article with name \'%s\' already exists' % old_title)
+            return redirect(article)
         except:
             pass
-    
+
         if request.user.is_authenticated():
             article.revert_to(revision, get_real_ip(request), request.user)
         else:
             article.revert_to(revision, get_real_ip(request))
-
-        # NOCOMM Franku: This has never worked as i know and is IMHO
-        # useless. If we want this it has to be fixed for django 1.8
-        # See comment in edit_article()
-        # if request.user.is_authenticated():
-        #     request.user.message_set.create(
-        #         message=u"The article was reverted successfully.")
 
         return redirect(article)
 
