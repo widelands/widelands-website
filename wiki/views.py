@@ -618,3 +618,17 @@ def article_diff(request):
     dmp.diff_cleanupSemantic(diffs)
 
     return HttpResponse(dmp.diff_prettyHtml(diffs), content_type='text/html')
+
+
+def what_links_here(request, title):
+    articles_all = Article.objects.all()
+    articles = []
+    for article in articles_all:
+        if title in article.content:
+            articles.append(article)
+            
+    context = {'articles': articles,
+               'name': title}
+    return render_to_response('wiki/what_links_here.html',
+                                  context,
+                                  context_instance=RequestContext(request))

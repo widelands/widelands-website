@@ -1,0 +1,28 @@
+{% extends 'wiki/base.html' %}
+{% load wiki_extras %}
+
+{% block title %}
+{{ article.title }} - What links here - {{block.super}}
+{% endblock %}
+
+{{ block.super}}
+
+{% block content %}
+<div class="posRight small">
+	<a class="invertedColor" href="{% url 'wiki_article' name %}">Back to article</a>
+</div>
+
+<h1>{{ name }}</h1>
+
+<div class="blogEntry">
+	<p>Following pages seem to have links which points to this article:</p>
+	{% if articles %}
+	<ul>
+		{% for article in articles %}
+		<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a> ... {{ article.summary }}
+		{% endfor %}
+	</ul>
+	{% endif %}
+</div>
+{% endblock %}
+
