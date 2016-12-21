@@ -1,5 +1,6 @@
 {% extends 'wiki/base.html' %}
 {% load wiki_extras %}
+{% load wl_markdown %}
 
 {% block title %}
 {{ article.title }} - What links here - {{block.super}}
@@ -15,13 +16,22 @@
 <h1>{{ name }}</h1>
 
 <div class="blogEntry">
-	<p>Following pages seem to have links which points to this article:</p>
 	{% if articles %}
-	<ul>
+	<p>Following pages seem to have links which points to this article:</p>
+	<table>
+		<tr>
+			<th>Article</th>
+			<th>Context (only the first occurrence is shown)</th>
+		</tr>
 		{% for article in articles %}
-		<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a> ... {{ article.summary }}
+		<tr>
+			<td><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></td>
+			<td>... {{ article.content }} ...</td>
+		</tr>
 		{% endfor %}
-	</ul>
+	</table>
+	{% else %}
+	<p><span class="errormessage">Every Wikipage must at least be linked from within another page.</span> Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"></p>
 	{% endif %}
 </div>
 {% endblock %}

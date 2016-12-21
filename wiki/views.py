@@ -621,14 +621,24 @@ def article_diff(request):
 
 
 def what_links_here(request, title):
+    """Simple text search for links in other wiki articles pointing to the
+    current article.
+
+    If we convert WikiWords to markdown wikilinks syntax, this view
+    should be changed to use '[[title]]' as search.
+
+    """
+
     articles_all = Article.objects.all()
-    articles = []
+    found_items = []
+    search_word = title
     for article in articles_all:
-        if title in article.content:
-            articles.append(article)
-            
-    context = {'articles': articles,
+        if search_word in article.content:
+            pos = article.content.find(search_word)
+            found_items.append({'title': article.title, 'content': article.content[pos-30:pos+len(title)+30]})
+
+    context = {'articles': found_items,
                'name': title}
     return render_to_response('wiki/what_links_here.html',
-                                  context,
-                                  context_instance=RequestContext(request))
+                              context,
+                              context_instance=RequestContext(request))
