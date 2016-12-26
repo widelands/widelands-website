@@ -15,8 +15,8 @@
 <h1>{{ name }}</h1>
 
 <div class="blogEntry">
-	{% if articles %}
-	<p>Following pages seem to have links which points to this article:</p>
+	{% if articles or old_links %}
+	<h3>Following pages seem to have links which points to this article:</h3>
 	<table>
 		<tr>
 			<th>Article</th>
@@ -29,6 +29,12 @@
 		</tr>
 		{% endfor %}
 	</table>
+	<h3> Following articles have links which points to one of the old name(s) of this article </h3>
+	<ul>
+	{% for article in old_links %}
+		<li><a href="{% url 'wiki_article' article.old_title %}">{{ article.old_title }}</a> contains at least one link to: {{ article.title }}</li>		
+	{% endfor %}
+	</ul>
 	{% else %}
 	<p><span class="errormessage">Every Wikipage must at least be linked from within another page.</span> Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"></p>
 	{% endif %}

@@ -629,15 +629,29 @@ def what_links_here(request, title):
 
     """
 
-    articles_all = Article.objects.all()
-    found_items = []
-    search_word = title
+    # Find old title(s) of this article
+    this_article = Article.objects.get(title=title)
+    changesets = this_article.changeset_set.all()
+    old_titles = []
+    for cs in changesets:
+        if cs.old_title != title and cs.old_title not in old_titles:
+            old_titles.append(cs.old_title)
+    
+    # Search for current and previous titles
+    found_old_links = []
+    found_links = []
+    articles_all = Article.objects.all().exclude(title=title)
     for article in articles_all:
-        if search_word in article.content:
-            pos = article.content.find(search_word)
-            found_items.append({'title': article.title, 'content': article.content[pos-30:pos+len(title)+30]})
+        art_content = article.content
+        if title in art_content:
+            pos = art_content.find(title)
+            found_links.append({'title': article.title, 'content': art_content[pos-30:pos+len(title)+30]})
+        for old_title in old_titles:
+            if old_title != '' and old_title in art_content:
+                found_old_links.append({'old_title': article.title, 'title': old_title })
 
-    context = {'articles': found_items,
+    context = {'articles': found_links,
+               'old_links': found_old_links,
                'name': title}
     return render_to_response('wiki/what_links_here.html',
                               context,
