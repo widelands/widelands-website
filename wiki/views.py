@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 from wl_utils import get_real_ip
+import re
 
 # Settings
 #  lock duration in minutes
@@ -625,7 +626,7 @@ def what_links_here(request, title):
     current article.
 
     If we convert WikiWords to markdown wikilinks syntax, this view
-    should be changed to use '[[title]]' as search.
+    should be changed to use '[[title]]' for searching.
 
     """
 
@@ -634,20 +635,28 @@ def what_links_here(request, title):
     changesets = this_article.changeset_set.all()
     old_titles = []
     for cs in changesets:
-        if cs.old_title != title and cs.old_title not in old_titles:
+        if cs.old_title and cs.old_title != title and cs.old_title not in old_titles:
             old_titles.append(cs.old_title)
+
+    # Differentiate between 'Wiki Page' and 'WikiPage'
+    if ' ' in title:
+        # A link must be in form of '[Wiki Page](../wiki/Wiki Page)'
+        search_title = re.compile(r'\/%s\)' % title)
+    else:
+        # A link is just a word -> ' WikiPage '
+        search_title = re.compile(r' %s ' % title)
     
     # Search for current and previous titles
     found_old_links = []
     found_links = []
     articles_all = Article.objects.all().exclude(title=title)
     for article in articles_all:
-        art_content = article.content
-        if title in art_content:
-            pos = art_content.find(title)
-            found_links.append({'title': article.title, 'content': art_content[pos-30:pos+len(title)+30]})
+        match = search_title.search(article.content)
+        if match:
+            found_links.append({'title': article.title, 'content': article.content[match.start()-30:match.end()+30]})
+        
         for old_title in old_titles:
-            if old_title != '' and old_title in art_content:
+            if old_title in article.content:
                 found_old_links.append({'old_title': article.title, 'title': old_title })
 
     context = {'articles': found_links,
