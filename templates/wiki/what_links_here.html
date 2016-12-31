@@ -13,32 +13,28 @@
 </div>
 <h1>{% trans "Backlinks of " %} {{ name }}</h1>
 <div class="blogEntry">
-	{% if articles or old_links %}
-		{% if articles %}
-		<h3>Following pages seem to have links which points to this article:</h3>
-		<table>
-			<tr>
-				<th>Article</th>
-				<th>Context (only the first occurrence is shown)</th>
-			</tr>
-			{% for article in articles %}
-			<tr>
-				<td><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></td>
-				<td>... {{ article.content }} ...</td>
-			</tr>
-			{% endfor %}
-		</table>
-		{% endif %}
-		{% if old_links %}
-		<h3> Following articles have links which points to one of the old name(s) of this article </h3>
+	{% if found_links or found_old_links %}
+		{% if found_links %}
+		<h3>Following pages have link(s) which points to this article:</h3>
 		<ul>
-		{% for article in old_links %}
-			<li><a href="{% url 'wiki_article' article.old_title %}">{{ article.old_title }}</a> contains at least one link to: {{ article.title }}</li>		
+		{% for article in found_links %}
+				<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></li>
+		{% endfor %}
+		</ul>
+		{% endif %}
+		{% if found_old_links %}
+		<h3> Following articles have links which points to one of the old name(s) of this article </h3>
+		<p>Just an easy thing to contribute: Edit those pages and change the links to let them point to '{{ name }}'
+		<img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"> See <a href="/wiki/WikiSyntax/">Wiki Syntax</a> for explanations.</p>
+		<ul>
+		{% for article in found_old_links %}
+			<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a> ({{ article.old_title }})</li>		
 		{% endfor %}
 		</ul>
 		{% endif %}
 	{% else %}
-		<p><span class="errormessage">Every Wikipage must at least be linked from within another page.</span> Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"></p>
+		<p><span class="errormessage">Every Wikipage must at least be linked from within another page.</span>
+		Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"></p>
 	{% endif %}
 </div>
 {% endblock %}

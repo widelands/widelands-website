@@ -17,7 +17,7 @@ from wiki.models import Article, ChangeSet, dmp
 
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
-from mainpage.templatetags.wl_markdown import do_wl_markdown
+from mainpage.templatetags.wl_markdown import custom_filters
 
 from wl_utils import get_real_ip
 import re
@@ -638,13 +638,14 @@ def what_links_here(request, title):
         if cs.old_title and cs.old_title != title and cs.old_title not in old_titles:
             old_titles.append(cs.old_title)
 
-    # Differentiate between 'Wiki Page' and 'WikiPage'
-    if ' ' in title:
-        # A link must be in form of '[Wiki Page](../wiki/Wiki Page)'
-        search_title = re.compile(r'\/%s\)' % title)
+    # Differentiate between WikiWords and other
+    m = re.match(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)", title)
+    if m:
+        # title is a 'WikiWord' -> This catches also 'MingW' but we have no such title
+        search_title = re.compile(r"%s" % title)
     else:
-        # A link is just a word -> ' WikiPage '
-        search_title = re.compile(r' %s ' % title)
+        # Others must be written like links: '[Wiki Page](/wiki/Wiki Page)'
+        search_title = re.compile(r"\/%s\)" % title)
     
     # Search for current and previous titles
     found_old_links = []
@@ -653,14 +654,14 @@ def what_links_here(request, title):
     for article in articles_all:
         match = search_title.search(article.content)
         if match:
-            found_links.append({'title': article.title, 'content': article.content[match.start()-30:match.end()+30]})
+            found_links.append({'title': article.title})
         
         for old_title in old_titles:
             if old_title in article.content:
-                found_old_links.append({'old_title': article.title, 'title': old_title })
+                found_old_links.append({'old_title': old_title, 'title': article.title })
 
-    context = {'articles': found_links,
-               'old_links': found_old_links,
+    context = {'found_links': found_links,
+               'found_old_links': found_old_links,
                'name': title}
     return render_to_response('wiki/what_links_here.html',
                               context,

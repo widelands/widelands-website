@@ -19,7 +19,7 @@
 		|
 		<a class="invertedColor" href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
 		|
-		<a class="invertedColor" href="{% url 'what_links_here' article.title %}">{% trans "What links here" %}</a>
+		<a class="invertedColor" href="{% url 'what_links_here' article.title %}">{% trans "Backlinks" %}</a>
 		{% if can_observe %}
 			| 
 			{% if is_observing %} 
