@@ -11,13 +11,12 @@ from django.http import (Http404, HttpResponseRedirect,
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
-
+from django.core.exceptions import ObjectDoesNotExist
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
 
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
-from mainpage.templatetags.wl_markdown import custom_filters
 
 from wl_utils import get_real_ip
 import re
@@ -470,23 +469,23 @@ def revert_to_revision(request, title,
 
         article = get_object_or_404(article_qs, **article_args)
 
+        
+        # Check whether there is another Article with the same name to which this article
+        # want's to be reverted to. If so: prevent it and show a message.
+        old_title = article.changeset_set.filter(
+            revision=revision+1).get().old_title
         try:
-            # Check whether there is another Article with the same name to which this article
-            # want's to be reverted to. If so: prevent it and show a message.
-            old_title = article.changeset_set.filter(
-                revision=revision).get().old_title
-            Article.objects.exclude(pk=article.pk).get(title=old_title)
-            messages.error(
-                request, 'Reverting not possible because an article with name \'%s\' already exists' % old_title)
+            art = Article.objects.exclude(pk=article.pk).get(title=old_title)
+        except ObjectDoesNotExist:
+            # No existing article found -> reverting possible
+            if request.user.is_authenticated():
+                article.revert_to(revision, get_real_ip(request), request.user)
+            else:
+                article.revert_to(revision, get_real_ip(request))
             return redirect(article)
-        except:
-            pass
-
-        if request.user.is_authenticated():
-            article.revert_to(revision, get_real_ip(request), request.user)
-        else:
-            article.revert_to(revision, get_real_ip(request))
-
+        # An article with this name exists
+        messages.error(
+            request, 'Reverting not possible because an article with name \'%s\' already exists' % old_title)
         return redirect(article)
 
     return HttpResponseNotAllowed(['POST'])
@@ -621,7 +620,7 @@ def article_diff(request):
     return HttpResponse(dmp.diff_prettyHtml(diffs), content_type='text/html')
 
 
-def what_links_here(request, title):
+def backlinks(request, title):
     """Simple text search for links in other wiki articles pointing to the
     current article.
 
@@ -663,6 +662,6 @@ def what_links_here(request, title):
     context = {'found_links': found_links,
                'found_old_links': found_old_links,
                'name': title}
-    return render_to_response('wiki/what_links_here.html',
+    return render_to_response('wiki/backlinks.html',
                               context,
                               context_instance=RequestContext(request))
