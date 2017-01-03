@@ -52,10 +52,6 @@ class ArticleForm(forms.ModelForm):
                 kw['object_id'] = self.cleaned_data['object_id']
             except KeyError:
                 pass  # some error in this fields
-            else:
-                if Article.objects.filter(**kw).count():
-                    raise forms.ValidationError(
-                        _('An article with this title already exists.'))
 
         return self.cleaned_data
 
