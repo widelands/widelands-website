@@ -21,11 +21,11 @@
 		</ul>
 		{% endif %}
 		{% if found_old_links %}
-		<h3> Following articles have links which points to one of the old name(s) of this article </h3>
+		<h3> Following articles have links which points to one of the old name(s) of this article (redirects):</h3>
 		<ul>
 		{% for article in found_old_links %}
 			<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a>
-			(redirects to {{ article.old_title }})</li>
+			(has at least one link to: "{{ article.old_title }}"</li>
 		{% endfor %}
 		</ul>
 		{% endif %}
