@@ -22,11 +22,10 @@
 		{% endif %}
 		{% if found_old_links %}
 		<h3> Following articles have links which points to one of the old name(s) of this article </h3>
-		<p>Just an easy thing to contribute: Edit those pages and change the links to let them point to '{{ name }}'
-		<img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"> See <a href="/wiki/WikiSyntax/#links">Wiki Syntax</a> for explanations.</p>
 		<ul>
 		{% for article in found_old_links %}
-			<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a> ({{ article.old_title }})</li>		
+			<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a>
+			(redirects to {{ article.old_title }})</li>
 		{% endfor %}
 		</ul>
 		{% endif %}
