@@ -2,11 +2,11 @@
 import re
 
 from django import forms
-from django.forms import widgets
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
 from wiki.models import Article
+from wiki.models import ChangeSet
 from wiki.templatetags.wiki_extras import WIKI_WORD_RE
 
 wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
@@ -34,11 +34,21 @@ class ArticleForm(forms.ModelForm):
                    'group', 'created_at', 'last_update')
 
     def clean_title(self):
-        """Page title must be a WikiWord."""
+        """Check for some errors regarding the title:
+            1. Check for bad characters
+            2. Check for reserved titles
+
+            Checking for existing articles is done by Django on Database level
+            """
         title = self.cleaned_data['title']
         if not wikiword_pattern.match(title):
-            raise forms.ValidationError(_('Must be a WikiWord.'))
+            raise forms.ValidationError(_('The title contain bad characters.'))
 
+        cs = ChangeSet.objects.filter(old_title=title).count()
+        if cs > 0:
+            raise forms.ValidationError(
+                _('The title %(title)s is reserved for redirects or old links.'), params={'title': title},)
+        # No errors
         return title
 
     def clean(self):

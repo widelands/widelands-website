@@ -268,7 +268,7 @@ def edit_article(request, title,
     if request.method == 'POST':
 
         form = ArticleFormClass(request.POST, instance=article)
-
+        
         form.cache_old_content()
         if form.is_valid():
 
