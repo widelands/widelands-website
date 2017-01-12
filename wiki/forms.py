@@ -35,20 +35,32 @@ class ArticleForm(forms.ModelForm):
 
     def clean_title(self):
         """Check for some errors regarding the title:
-            1. Check for bad characters
-            2. Check for reserved titles
 
-            Checking for existing articles is done by Django on Database level
-            """
+        1. Check for bad characters
+        2. Check for already used titles
+
+        """
+
         title = self.cleaned_data['title']
         if not wikiword_pattern.match(title):
-            raise forms.ValidationError(_('The title contain bad characters.'))
-
-        cs = ChangeSet.objects.filter(old_title=title).count()
-        if cs > 0:
             raise forms.ValidationError(
-                _('The title %(title)s is reserved for redirects or old links.'), params={'title': title},)
-        # No errors
+                _('The title can only consist of alphanumeric characters and the underscore'))
+
+        # 'self.initial' contain the prefilled values of the form
+        # We use title as default here, so for new articles 'pre_title'
+        # contains the title of the new article.
+        pre_title = self.initial.get('title', title)
+        if pre_title != title:
+            # Check if the new name once has been used
+            try:
+                cs = ChangeSet.objects.filter(old_title=title)
+            except Changeset.DoesNotExist:
+                # no old names found
+                return title
+            else:
+                raise forms.ValidationError(
+                    _('The title %(title)s is already in use, maybe an other article had once this name.'), params={'title': title},)
+        # title not changed, no errors
         return title
 
     def clean(self):

@@ -11,7 +11,6 @@ from django.http import (Http404, HttpResponseRedirect,
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
 
@@ -261,9 +260,16 @@ def edit_article(request, title,
         return HttpResponseForbidden()
 
     try:
+        # Try to fetch an existing article
         article = article_qs.get(**article_args)
     except ArticleClass.DoesNotExist:
-        article = None
+        # No article found, maybe we have a redirect
+        try:
+            cs = ChangeSet.objects.filter(old_title=title)[0]
+            article = article_qs.get(title=cs.article)
+        except IndexError:
+            # No Article found and no redirect found
+            article = None
 
     if request.method == 'POST':
 
@@ -476,7 +482,7 @@ def revert_to_revision(request, title,
             revision=revision+1).get().old_title
         try:
             art = Article.objects.exclude(pk=article.pk).get(title=old_title)
-        except ObjectDoesNotExist:
+        except Article.DoesNotExist:
             # No existing article found -> reverting possible
             if request.user.is_authenticated():
                 article.revert_to(revision, get_real_ip(request), request.user)
