@@ -39,6 +39,8 @@ class ArticleForm(forms.ModelForm):
         1. Check for bad characters
         2. Check for already used titles
 
+        Immediately trying to change the title of a new article to an existing title is handled on Database level.
+
         """
 
         title = self.cleaned_data['title']
