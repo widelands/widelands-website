@@ -25,7 +25,7 @@
 		<ul>
 		{% for article in found_old_links %}
 			<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a>
-			(has at least one link to: "{{ article.old_title }}"</li>
+			(has at least one link to: "{{ article.old_title }}")</li>
 		{% endfor %}
 		</ul>
 		{% endif %}
