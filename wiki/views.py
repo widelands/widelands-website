@@ -477,7 +477,7 @@ def revert_to_revision(request, title,
 
         
         # Check whether there is another Article with the same name to which this article
-        # want's to be reverted to. If so: prevent it and show a message.
+        # wants to be reverted to. If so: prevent it and show a message.
         old_title = article.changeset_set.filter(
             revision=revision+1).get().old_title
         try:

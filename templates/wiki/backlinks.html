@@ -13,7 +13,7 @@
 <div class="blogEntry">
 	{% if found_links or found_old_links %}
 		{% if found_links %}
-		<h3>Following pages have link(s) which points to this article:</h3>
+		<h3>The following pages have link(s) which point to this article:</h3>
 		<ul>
 		{% for article in found_links %}
 				<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></li>
@@ -21,7 +21,7 @@
 		</ul>
 		{% endif %}
 		{% if found_old_links %}
-		<h3> Following articles have links which points to one of the old name(s) of this article (redirects):</h3>
+		<h3>The following articles have links which point to one of the old name(s) of this article (redirects):</h3>
 		<ul>
 		{% for article in found_old_links %}
 			<li><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a>
@@ -30,8 +30,8 @@
 		</ul>
 		{% endif %}
 	{% else %}
-		<p><span class="errormessage">Every Wikipage must at least be linked from within another page.</span>
-		Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"> See <a href="/wiki/WikiSyntax/#links">Wiki Syntax</a> for explanations.</p></p>
+		<p><span class="errormessage">Every Wikipage must be linked from at least one another page.</span>
+		Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"> See <a href="/wiki/WikiSyntax/#links">Wiki Syntax</a> for help.</p></p>
 	{% endif %}
 </div>
 {% endblock %}

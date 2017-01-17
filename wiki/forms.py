@@ -40,23 +40,23 @@ class ArticleForm(forms.ModelForm):
         2. Check for already used titles
 
         Immediately trying to change the title of a new article to an existing title
-        is handled on Database level.
+        is handled on the database level.
 
         """
 
         title = self.cleaned_data['title']
         if not wikiword_pattern.match(title):
             raise forms.ValidationError(
-                _('The title can only consist of alphanumeric characters the underscore and a blank space'))
+                _('Only alphanumeric characters, blank spaces and the underscore are allowed in a title.'))
 
         # 'self.initial' contains the prefilled values of the form
         pre_title = self.initial.get('title', None)
         if pre_title != title or not pre_title:
-            # Check if the new name once has been used
+            # Check if the new name has been used already
             cs = ChangeSet.objects.filter(old_title=title)
             if cs:
                 raise forms.ValidationError(
-                    _('The title %(title)s is already in use, maybe an other article had once this name.'), params={'title': title},)
+                    _('The title %(title)s is already in use, maybe an other article used to have this name.'), params={'title': title},)
 
         # title not changed, no errors
         return title
