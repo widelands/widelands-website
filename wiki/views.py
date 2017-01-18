@@ -16,6 +16,7 @@ from wiki.models import Article, ChangeSet, dmp
 
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
+from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 from wl_utils import get_real_ip
 import re
