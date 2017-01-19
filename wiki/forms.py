@@ -2,11 +2,11 @@
 import re
 
 from django import forms
-from django.forms import widgets
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
 from wiki.models import Article
+from wiki.models import ChangeSet
 from wiki.templatetags.wiki_extras import WIKI_WORD_RE
 
 wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
@@ -34,11 +34,31 @@ class ArticleForm(forms.ModelForm):
                    'group', 'created_at', 'last_update')
 
     def clean_title(self):
-        """Page title must be a WikiWord."""
+        """Check for some errors regarding the title:
+
+        1. Check for bad characters
+        2. Check for already used titles
+
+        Immediately trying to change the title of a new article to an existing title
+        is handled on the database level.
+
+        """
+
         title = self.cleaned_data['title']
         if not wikiword_pattern.match(title):
-            raise forms.ValidationError(_('Must be a WikiWord.'))
+            raise forms.ValidationError(
+                _('Only alphanumeric characters, blank spaces and the underscore are allowed in a title.'))
 
+        # 'self.initial' contains the prefilled values of the form
+        pre_title = self.initial.get('title', None)
+        if pre_title != title or not pre_title:
+            # Check if the new name has been used already
+            cs = ChangeSet.objects.filter(old_title=title)
+            if cs:
+                raise forms.ValidationError(
+                    _('The title %(title)s is already in use, maybe an other article used to have this name.'), params={'title': title},)
+
+        # title not changed, no errors
         return title
 
     def clean(self):
@@ -52,10 +72,6 @@ class ArticleForm(forms.ModelForm):
                 kw['object_id'] = self.cleaned_data['object_id']
             except KeyError:
                 pass  # some error in this fields
-            else:
-                if Article.objects.filter(**kw).count():
-                    raise forms.ValidationError(
-                        _('An article with this title already exists.'))
 
         return self.cleaned_data
 

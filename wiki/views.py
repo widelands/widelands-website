@@ -10,7 +10,7 @@ from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.contrib.contenttypes.models import ContentType
-
+from django.contrib import messages
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
 
@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 from wl_utils import get_real_ip
+import re
 
 # Settings
 #  lock duration in minutes
@@ -260,29 +261,26 @@ def edit_article(request, title,
         return HttpResponseForbidden()
 
     try:
+        # Try to fetch an existing article
         article = article_qs.get(**article_args)
     except ArticleClass.DoesNotExist:
-        article = None
+        # No article found, maybe we have a redirect
+        try:
+            cs = ChangeSet.objects.filter(old_title=title)[0]
+            article = article_qs.get(title=cs.article)
+        except IndexError:
+            # No Article found and no redirect found
+            article = None
 
     if request.method == 'POST':
 
         form = ArticleFormClass(request.POST, instance=article)
-
+        
         form.cache_old_content()
         if form.is_valid():
 
-            # NOCOMM Franku: This has never worked as i know and is IMHO
-            # useless. This code works with django 1.8 but misses some code
-            # in template. See
-            # https://docs.djangoproject.com/en/1.8/ref/contrib/messages/#module-django.contrib.messages
-
             if request.user.is_authenticated():
                 form.editor = request.user
-            #     if article is None:
-            #         user_message = u"Your article was created successfully."
-            #     else:
-            #         user_message = u"Your article was edited successfully."
-            #     messages.success(request, user_message)
 
             if ((article is None) and (group_slug is not None)):
                 form.group = group
@@ -478,18 +476,23 @@ def revert_to_revision(request, title,
 
         article = get_object_or_404(article_qs, **article_args)
 
-        if request.user.is_authenticated():
-            article.revert_to(revision, get_real_ip(request), request.user)
-        else:
-            article.revert_to(revision, get_real_ip(request))
-
-        # NOCOMM Franku: This has never worked as i know and is IMHO
-        # useless. If we want this it has to be fixed for django 1.8
-        # See comment in edit_article()
-        # if request.user.is_authenticated():
-        #     request.user.message_set.create(
-        #         message=u"The article was reverted successfully.")
-
+        
+        # Check whether there is another Article with the same name to which this article
+        # wants to be reverted to. If so: prevent it and show a message.
+        old_title = article.changeset_set.filter(
+            revision=revision+1).get().old_title
+        try:
+            art = Article.objects.exclude(pk=article.pk).get(title=old_title)
+        except Article.DoesNotExist:
+            # No existing article found -> reverting possible
+            if request.user.is_authenticated():
+                article.revert_to(revision, get_real_ip(request), request.user)
+            else:
+                article.revert_to(revision, get_real_ip(request))
+            return redirect(article)
+        # An article with this name exists
+        messages.error(
+            request, 'Reverting not possible because an article with name \'%s\' already exists' % old_title)
         return redirect(article)
 
     return HttpResponseNotAllowed(['POST'])
@@ -622,3 +625,50 @@ def article_diff(request):
     dmp.diff_cleanupSemantic(diffs)
 
     return HttpResponse(dmp.diff_prettyHtml(diffs), content_type='text/html')
+
+
+def backlinks(request, title):
+    """Simple text search for links in other wiki articles pointing to the
+    current article.
+
+    If we convert WikiWords to markdown wikilinks syntax, this view
+    should be changed to use '[[title]]' for searching.
+
+    """
+
+    # Find old title(s) of this article
+    this_article = Article.objects.get(title=title)
+    changesets = this_article.changeset_set.all()
+    old_titles = []
+    for cs in changesets:
+        if cs.old_title and cs.old_title != title and cs.old_title not in old_titles:
+            old_titles.append(cs.old_title)
+
+    # Differentiate between WikiWords and other
+    m = re.match(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)", title)
+    if m:
+        # title is a 'WikiWord' -> This catches also 'MingW' but we have no such title
+        search_title = re.compile(r"%s" % title)
+    else:
+        # Others must be written like links: '[Wiki Page](/wiki/Wiki Page)'
+        search_title = re.compile(r"\/%s\)" % title)
+    
+    # Search for current and previous titles
+    found_old_links = []
+    found_links = []
+    articles_all = Article.objects.all().exclude(title=title)
+    for article in articles_all:
+        match = search_title.search(article.content)
+        if match:
+            found_links.append({'title': article.title})
+        
+        for old_title in old_titles:
+            if old_title in article.content:
+                found_old_links.append({'old_title': old_title, 'title': article.title })
+
+    context = {'found_links': found_links,
+               'found_old_links': found_old_links,
+               'name': title}
+    return render_to_response('wiki/backlinks.html',
+                              context,
+                              context_instance=RequestContext(request))

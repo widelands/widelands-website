@@ -48,8 +48,8 @@ except AttributeError:
 
 
 class Article(models.Model):
-    """A wiki page."""
-    title = models.CharField(_(u"Title"), max_length=50)
+    """A wiki page reflecting the actual revision."""
+    title = models.CharField(_(u"Title"), max_length=50, unique=True)
     content = models.TextField(_(u"Content"))
     summary = models.CharField(_(u"Summary"), max_length=150,
                                null=True, blank=True)

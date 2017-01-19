@@ -15,7 +15,7 @@ class InlineImages(GenericTabularInline):
 
 class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title']
-    list_display = ('title', 'markup', 'created_at', 'last_update',)
+    list_display = ('title', 'creator', 'last_update',)
     list_filter = ('title',)
     ordering = ['-last_update']
     fieldsets = (
@@ -32,11 +32,11 @@ admin.site.register(Article, ArticleAdmin)
 
 
 class ChangeSetAdmin(admin.ModelAdmin):
-    search_fields = ['article__title']
-    list_display = ('article', 'revision', 'old_title', 'old_markup',
-                    'editor', 'editor_ip', 'reverted', 'modified',
+    search_fields = ['old_title']
+    list_display = ('article', 'old_title', 'old_markup',
+                    'editor', 'reverted', 'modified',
                     'comment')
-    list_filter = ('old_title', 'content_diff')
+    list_filter = ('article__title',)
     ordering = ('-modified',)
     fieldsets = (
         ('Article', {'fields': ('article',)}),

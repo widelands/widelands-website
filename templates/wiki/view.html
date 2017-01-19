@@ -18,6 +18,8 @@
 		<a class="invertedColor" href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
 		|
 		<a class="invertedColor" href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
+		|
+		<a class="invertedColor" href="{% url 'backlinks' article.title %}">{% trans "Backlinks" %}</a>
 		{% if can_observe %}
 			| 
 			{% if is_observing %} 
@@ -29,6 +31,13 @@
 	{% endif %}
 </div>
 <h1>{{ article.title }}</h1>
+
+	{% if messages %}
+	    {% for message in messages %}
+	    <p class="errormessage">{{ message }}</p>
+	    {% endfor %}
+	{% endif %}
+
 <div class="blogEntry">
 	{% if not article.id %}
 		<p>

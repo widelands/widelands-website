@@ -60,17 +60,17 @@
 			<!-- Title -->
 			<tr>
 				<th><label for="id_title">{% trans "Title" %}:</label></th>
-				<td>{{ form.title.errors }}{{ form.title }}</td>
+				<td class="errormessage">{{ form.title.errors }}{{ form.title }}</td>
 			</tr>
 			<!-- Content -->
 			<tr><th colspan="2"><label for="id_content">{% trans "Content" %}:</label></th></tr>
-			<tr><td colspan="2" >{{ form.content.errors }}{{ form.content }}</td></tr>
+			<tr><td colspan="2"  class="errormessage">{{ form.content.errors }}{{ form.content }}</td></tr>
 			<!-- Summary -->
 			<tr><th colspan="2"><label for="id_summary">{% trans "Page Summary" %}:</label></th></tr>
-			<tr><td colspan="2" >{{ form.summary.errors }}{{ form.summary }}</td></tr>
+			<tr><td colspan="2"  class="errormessage">{{ form.summary.errors }}{{ form.summary }}</td></tr>
 			<!-- Comment -->
 			<tr><th colspan=2><label for="id_comment">{% trans "Comment for this revision" %}:</label></th></tr>
-			<tr><td colspan=2 >{{ form.comment.errors }}{{ form.comment }}</td></tr>
+			<tr><td colspan=2  class="errormessage">{{ form.comment.errors }}{{ form.comment }}</td></tr>
 		</table>
 		<!-- Markup as hidden element -->
 		<input type="hidden" name="markup" value="mrk" />

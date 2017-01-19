@@ -56,4 +56,7 @@ urlpatterns = [
 
     url(r'^history/(?P<title>' + WIKI_URL_RE + r')/revert/$', views.revert_to_revision,
         name='wiki_revert_to_revision'),
+
+    url(r'^backlinks/(?P<title>' + WIKI_URL_RE + r')/$', views.backlinks,
+        name='backlinks'),
 ]
