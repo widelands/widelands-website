@@ -93,11 +93,9 @@ Some important settings
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Go to http://localhost:8000/admin. Log in with your super user and go to the
-following tables:
+following table:
 
 - Site/Sites: Change your site name from example.com to localhost:8000.
-- Wlprofile/Profiles: Add yourself as a user
-- Wlggz/Ggz: Add yourself as a user
 
 Now everything should work.
 
