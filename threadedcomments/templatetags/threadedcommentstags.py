@@ -136,34 +136,12 @@ def get_free_comment_url_xml(content_object, parent=None):
 
 def auto_transform_markup(comment):
     """Given a comment (``ThreadedComment`` or ``FreeThreadedComment``), this
-    tag looks up the markup type of the comment and formats the output
-    accordingly.
-
-    It can also output the formatted content to a context variable, if a
-    context name is specified.
+    tag simply returns the commetn after wl_markdown runs over it.
 
     """
-    # NOCOMM franku: django.contrib.markup doesn't exist anymore
-    try:
-        from django.utils.html import escape
-        from threadedcomments.models import MARKDOWN, TEXTILE, REST, PLAINTEXT
-        if comment.markup == MARKDOWN:
-            from django.contrib.markup.templatetags.markup import markdown
-            return markdown(comment.comment)
-        elif comment.markup == TEXTILE:
-            from django.contrib.markup.templatetags.markup import textile
-            return textile(comment.comment)
-        elif comment.markup == REST:
-            from django.contrib.markup.templatetags.markup import restructuredtext
-            return restructuredtext(comment.comment)
-#        elif comment.markup == HTML:
-#            return mark_safe(force_unicode(comment.comment))
-        elif comment.markup == PLAINTEXT:
-            return escape(comment.comment)
-    except ImportError:
-        # Not marking safe, in case tag fails and users input malicious code.
-        # NOCOMM franku: bleach the comment
-        return do_wl_markdown(comment.comment, 'bleachit')
+    
+    # Franku: bleach the comment
+    return do_wl_markdown(comment.comment, 'bleachit')
 
 
 def do_auto_transform_markup(parser, token):

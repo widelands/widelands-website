@@ -4,7 +4,7 @@ import re
 bd = os.getcwd() # Better make this a static path
 
 STATIC_MEDIA_PATH = bd + '/media'
-MEDIA_ROOT = bd + '/media/'
+MEDIA_ROOT = os.path.abspath(bd + '/media/')
 WIDELANDS_SVN_DIR = "/path/to/widelands/trunk/"
 
 DATABASES = {
