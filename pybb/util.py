@@ -34,7 +34,7 @@ def render_to(template_path):
                 return output
             kwargs = {'context_instance': RequestContext(request)}
 
-            # NOCOMM: 'MIME_TYPE' is never in output as i can see for now.
+            # TODO (Franku): 'MIME_TYPE' is never in output as i can see for now.
             # But if, this should maybe 'content_type' instead
             if 'MIME_TYPE' in output:
                 kwargs['mimetype'] = output.pop('MIME_TYPE')
@@ -126,7 +126,7 @@ class LazyJSONEncoder(json.JSONEncoder):
 
 class JsonResponse(HttpResponse):
     """HttpResponse subclass that serialize data into JSON format."""
-    # NOCOMM: The mimetype argument maybe must be replaced with content_type
+    # TODO (Franku): The mimetype argument maybe must be replaced with content_type
 
     def __init__(self, data, mimetype='application/json'):
         json_data = LazyJSONEncoder().encode(data)
@@ -239,7 +239,7 @@ def paginate(items, request, per_page, total_count=None):
     return page, paginator
 
 
-# NOCOMM: This function is never used AFAIK
+# TODO (Franku): This function is never used AFAIK
 # 'django_language' isn't available since django 1.8
 def set_language(request, language):
     """Change the language of session of authenticated user."""
