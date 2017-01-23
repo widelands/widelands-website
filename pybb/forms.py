@@ -31,7 +31,7 @@ class AddPostForm(forms.ModelForm):
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
-        # TODO (Franku): This doesn't work anymore with django 1.8 Use 'field_order'
+        # TODO(Franku): This doesn't work anymore with django 1.8 Use 'field_order'
         # with django 1.9
         self.fields.keyOrder = ['name',
                                 'body',
@@ -65,7 +65,7 @@ class AddPostForm(forms.ModelForm):
             topic = self.topic
 
         # Check for spam and hide the post
-        # TODO (Franku): This is currently a simple keyword search. Maybe add akismet check here
+        # TODO(Franku): This is currently a simple keyword search. Maybe add akismet check here
         # could be improved...
         # The admins get informed of hidden post(s) over
         # a Django command. See pybb/management/commands
