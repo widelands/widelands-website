@@ -136,7 +136,7 @@ def get_free_comment_url_xml(content_object, parent=None):
 
 def auto_transform_markup(comment):
     """Given a comment (``ThreadedComment`` or ``FreeThreadedComment``), this
-    tag simply returns the commetn after wl_markdown runs over it.
+    tag simply returns the comment after wl_markdown runs over it.
 
     """
     
