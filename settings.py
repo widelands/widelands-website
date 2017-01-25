@@ -77,7 +77,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
-    'django_comments',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
     'tracking',  # included as wlapp
@@ -106,16 +105,13 @@ INSTALLED_APPS = (
     'threadedcomments',  # included as wlapp
     'notification',     # included as wlapp
     'django_messages',
-    #'pagination',
     'linaro_django_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
     'sphinxdoc',        # included as wlapp
-    #'south',           included in django itself
 )
 
 MIDDLEWARE_CLASSES = (
-    # 'simplestats.middleware.RegexLoggingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -127,7 +123,6 @@ MIDDLEWARE_CLASSES = (
 
     # Remove this, when load gets to high or attachments are enabled
     'django.middleware.gzip.GZipMiddleware',
-    #'pagination.middleware.PaginationMiddleware',
     'linaro_django_pagination.middleware.PaginationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
     'tracking.middleware.VisitorCleanUpMiddleware',
@@ -175,10 +170,7 @@ WIKI_WORD_RE = r'[:\-\w ]+'
 ######################
 # User configuration #
 ######################
-# AUTH_PROFILE_MODULE = 'wlprofile.Profile' # NOCOMM: This is not longer used anymore, see:
-# https://docs.djangoproject.com/en/1.8/releases/1.5/#auth-profile-module
-
-DEFAULT_TIME_ZONE = 3
+DEFAULT_TIME_ZONE = 3  # See wlprofile.templatetags.custom_date
 DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601
 DEFAULT_MARKUP = 'markdown'
 SIGNATURE_MAX_LENGTH = 255
@@ -268,14 +260,6 @@ TRACKING_CLEANUP_TIMEOUT = 48
 # to access media (for minimap creation) or for online help
 # or for ChangeLog displays
 WIDELANDS_SVN_DIR = ''
-
-#####################
-# ChangeLog display #
-#####################
-# NOCOMM franku: This is only used in mainpage/wl_markdown/templatetags/wl_markdon.py/_insert_revision()
-# Since there is a plan to have only some prosa in the Changelog, both (this setting and the function)
-# could be removed. It didn't worked either...
-BZR_URL = r'http://bazaar.launchpad.net/~widelands-dev/widelands/trunk/revision/%s'
 
 ###############
 # Screenshots #

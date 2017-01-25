@@ -65,15 +65,13 @@ def get_url(urlname, group=None, args=None, kw=None):
         url = reverse(urlname, urlconf, kwargs=kw)
         return ''.join(['/', app, url])  # @@@ harcoded: /app/.../
 
-# NOCOMM Franku: This Class is currently not used
-# If we want this it has to be checked for the changes
-# related to django 1.8.
-# A javascript alert box is maybe a better solution
-
 
 class ArticleEditLock(object):
     """A soft lock to edting an article."""
-
+    # TODO(Franku): This Class is currently not used
+    # If we want this it has to be checked for the changes
+    # related to django 1.8.
+    # A javascript alert box is maybe a better solution
     def __init__(self, title, request, message_template=None):
         self.title = title
         self.user_ip = get_real_ip(request)
@@ -292,7 +290,7 @@ def edit_article(request, title,
     elif request.method == 'GET':
         user_ip = get_real_ip(request)
 
-        # NOCOMM FrankU: Never worked IMHO
+        # TODO(Franku): Never worked IMHO
         # lock = cache.get(title, None)
         # if lock is None:
         #     lock = ArticleEditLock(title, request)

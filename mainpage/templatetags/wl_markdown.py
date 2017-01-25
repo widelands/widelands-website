@@ -37,7 +37,7 @@ except ImportError:
 # We will also need the site domain
 from django.contrib.sites.models import Site
 from settings import SITE_ID, SMILEYS, SMILEY_DIR, \
-    SMILEY_PREESCAPING, BZR_URL
+    SMILEY_PREESCAPING
 
 try:
     _domain = Site.objects.get(pk=SITE_ID).domain
@@ -76,18 +76,6 @@ def _insert_smiley_preescaping(text):
     with the correct images."""
     for before, after in SMILEY_PREESCAPING:
         text = text.replace(before, after)
-    return text
-
-
-revisions_re = [
-    re.compile('bzr:r(\d+)'),
-]
-
-
-def _insert_revision(text):
-    for r in revisions_re:
-        text = r.sub( lambda m: """<a href="%s">r%s</a>""" % (
-            settings.BZR_URL % m.group(1), m.group(1)), text)
     return text
 
 
@@ -206,8 +194,7 @@ def do_wl_markdown(value, *args, **keyw):
         # went over it General consensus is to avoid replacing anything in
         # links [blah](blkf)
         if custom:
-            # Replace bzr revisions
-            rv = _insert_revision(text)
+            rv = text
             # Replace smileys; only outside "code-tags"
             if not text.parent.name == 'code':
                 rv = _insert_smileys(rv)

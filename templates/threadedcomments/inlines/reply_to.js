@@ -23,9 +23,6 @@ function show_reply_form(comment_id, url, depth) {
 					+ '<td class="text">'
 						+ '<form method="POST" action="' + url + '?next={{object.get_absolute_url}}">'
 							+ '<span class="errormessage">{{ form.comment.errors }}</span>'
-							/* NOCOMM franku: i don't know the reason why this do not work anymore
-							   I just replaced it with the next line
-							+ '{{ form.comment }}'*/
 							+ '<textarea cols="40" id="id_comment" maxlength="1000" name="comment" rows="10"></textarea>'
 							+ '<br />'
 							+ '<input type="hidden" name="markup" value="1" />'
