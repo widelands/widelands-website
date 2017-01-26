@@ -14,6 +14,7 @@ from django.conf import settings
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
 from settings import BLEACH_ALLOWED_TAGS, BLEACH_ALLOWED_ATTRIBUTES
+from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import SemanticWikiLinkExtension
 
 # Try to get a not so fully broken markdown module
 import markdown
@@ -163,14 +164,16 @@ custom_filters = {
 
 }
 
+# Predefine the markdown extensions here to have a clean code in
+# do_wl_markdown()
+md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 
 def do_wl_markdown(value, *args, **keyw):
     # Do Preescaping for markdown, so that some things stay intact
     # This is currently only needed for this smiley ">:-)"
     value = _insert_smiley_preescaping(value)
     custom = keyw.pop('custom', True)
-    html = smart_str(markdown(value, extensions=[
-                     'extra', 'toc'], *args, **keyw))
+    html = smart_str(markdown(value, extensions=md_extensions))
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
@@ -202,7 +205,7 @@ def do_wl_markdown(value, *args, **keyw):
             for name, (pattern, replacement) in custom_filters.iteritems():
                 if not len(text.strip()) or not keyw.get(name, True):
                     continue
-
+            
                 rv = pattern.sub(replacement, rv)
             text.replaceWith(rv)
 
