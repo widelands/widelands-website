@@ -111,7 +111,7 @@ def make_wikilink(md, rel, target, label):
     a.set('class', 'wikilink')
     if rel:
         pass
-    a.text = label
+    a.text = label or target
     return a
 
 class SemanticWikiLinkExtension(markdown.Extension):
