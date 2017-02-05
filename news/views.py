@@ -12,7 +12,7 @@ import datetime
 class NewsList(ArchiveIndexView):
 
     template_name = 'news/category_posts.html'
-    queryset = Post.objects.published()
+    model = Post
     date_field = 'publish'
 
     def get_context_data(self, **kwargs):
@@ -25,7 +25,7 @@ class NewsList(ArchiveIndexView):
 
 class YearNews(YearArchiveView):
 
-    queryset = Post.objects.published()
+    model = Post
     template_name = 'news/post_archive_year.html'
     date_field = 'publish'
     make_object_list = True
@@ -33,14 +33,14 @@ class YearNews(YearArchiveView):
 
 class MonthNews(MonthArchiveView):
 
-    queryset = Post.objects.published()
+    model = Post
     template_name = 'news/post_archive_month.html'
     date_field = 'publish'
 
 
 class NewsDetail(DateDetailView):
 
-    queryset = Post.objects.published()
+    model = Post
     template_name = 'news/post_detail.html'
     date_field = 'publish'
 
