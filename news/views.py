@@ -6,7 +6,6 @@ from django.views.generic import \
     YearArchiveView, \
     MonthArchiveView, \
     DateDetailView
-import datetime
 
 
 class NewsList(ArchiveIndexView):
