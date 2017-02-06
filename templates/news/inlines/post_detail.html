@@ -20,7 +20,7 @@
 		</div>
     {% endif %}
 	
-	<h2>{{ object.title }}</h2>
+	<h2><a href="{{ object.get_absolute_url }}" style="color: inherit;">{{ object.title }}</a></h2>
 	
 	{{ object.body|wl_markdown }}
 	
