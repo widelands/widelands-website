@@ -7,12 +7,6 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 
 
-try:
-    WIKI_URL_RE = settings.WIKI_URL_RE
-except AttributeError:
-    WIKI_URL_RE = r'\w+'
-
-
 register = template.Library()
 
 
