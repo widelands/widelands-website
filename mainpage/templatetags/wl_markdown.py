@@ -153,17 +153,6 @@ def _clickable_image(tag):
     return None
 
 
-custom_filters = {
-    # Wikiwordification
-    # Match a wiki page link LikeThis. All !WikiWords (with a !
-    # in front) are ignored
-    'wikiwords': (re.compile(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)"), lambda m:
-                  m.group(2) if m.group(1) == '!' else
-                  u"""<a href="/wiki/%(match)s">%(match)s</a>""" %
-                  {'match': m.group(2)}),
-
-}
-
 # Predefine the markdown extensions here to have a clean code in
 # do_wl_markdown()
 md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
@@ -202,11 +191,6 @@ def do_wl_markdown(value, *args, **keyw):
             if not text.parent.name == 'code':
                 rv = _insert_smileys(rv)
 
-            for name, (pattern, replacement) in custom_filters.iteritems():
-                if not len(text.strip()) or not keyw.get(name, True):
-                    continue
-            
-                rv = pattern.sub(replacement, rv)
             text.replaceWith(rv)
 
     # This call slows the whole function down...

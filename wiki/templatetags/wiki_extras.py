@@ -6,10 +6,6 @@ from django.conf import settings
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 
-try:
-    WIKI_WORD_RE = settings.WIKI_WORD_RE
-except AttributeError:
-    WIKI_WORD_RE = r'(?:[A-Z]+[a-z]+){2,}'
 
 try:
     WIKI_URL_RE = settings.WIKI_URL_RE
@@ -17,24 +13,7 @@ except AttributeError:
     WIKI_URL_RE = r'\w+'
 
 
-wikiwordfier = re.compile(r'(?<!!)\b(%s)\b' % WIKI_WORD_RE)
-#wikiwordfier = re.compile(r'\b(%s)\b' % WIKI_WORD)
-
 register = template.Library()
-
-
-@register.filter
-def wikiwords(s):
-    """Transform every WikiWord in a text into links.
-
-    WikiWord must match this regular expression:
-    '(?:[A-Z]+[a-z]+){2,}'
-
-    """
-    # @@@ TODO: absolute links
-    s = wikiwordfier.sub(r'<a href="/wiki/\1/">\1</a>', s)
-    return force_unicode(s)
-wikiwords.is_safe = True
 
 
 @register.filter

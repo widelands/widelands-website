@@ -79,12 +79,14 @@ See LICENSE.md for details.
 
 
 import markdown
-try: from markdown import etree
-except ImportError: from markdown.util import etree
+try:
+    from markdown import etree
+except ImportError:
+    from markdown.util import etree
 import re
 
 
-__version__ = "1.1.1"
+__version__ = '1.1.1'
 
 
 WIKILINK_RE = r"""
@@ -104,6 +106,7 @@ def make_link(md, rel, target, label):
     a.text = label or target
     return a
 
+
 def make_wikilink(md, rel, target, label):
     # Turns a link from Syntax [[ Page Name | linktext ]]
     a = etree.Element('a')
@@ -114,7 +117,9 @@ def make_wikilink(md, rel, target, label):
     a.text = label or target
     return a
 
+
 class SemanticWikiLinkExtension(markdown.Extension):
+
     def __init__(self, *args, **kwargs):
         self.config = {
             'make_link': [make_wikilink, 'Callback to convert link parts into an HTML/etree element'],
@@ -127,35 +132,37 @@ class SemanticWikiLinkExtension(markdown.Extension):
 
         # append to end of inline patterns
         ext = SemanticWikiLinkPattern(self.config, md)
-        md.inlinePatterns.add('semanticwikilink', ext, "<not_strong")
+        md.inlinePatterns.add('semanticwikilink', ext, '<not_strong')
 
 
 class SemanticWikiLinkPattern(markdown.inlinepatterns.Pattern):
+
     def __init__(self, config, md=None):
         markdown.inlinepatterns.Pattern.__init__(self, '', md)
-        self.compiled_re = re.compile("^(.*?)%s(.*?)$" % WIKILINK_RE, re.DOTALL | re.X)
+        self.compiled_re = re.compile(
+            '^(.*?)%s(.*?)$' % WIKILINK_RE, re.DOTALL | re.X)
         self.config = config
 
     def getCompiledRegExp(self):
         return self.compiled_re
 
     def handleMatch(self, m):
-        """ Returns etree """
+        """Returns etree."""
         d = m.groupdict()
         fn = self.config['make_link'][0]
-        namespace = d.get("namespace") or self.config['namespace'][0]
-        rel = d.get("rel")
+        namespace = d.get('namespace') or self.config['namespace'][0]
+        rel = d.get('rel')
 
         if rel:
-            rel = "%s:%s" % (namespace, d.get("rel"))
+            rel = '%s:%s' % (namespace, d.get('rel'))
 
-        return fn(self.markdown, rel, d.get("target"), d.get("label"))
+        return fn(self.markdown, rel, d.get('target'), d.get('label'))
 
 
 def makeExtension(*args, **kwargs):
     return SemanticWikiLinkExtension(*args, **kwargs)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import doctest
     doctest.testmod()
