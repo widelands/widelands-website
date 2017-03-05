@@ -188,7 +188,7 @@ class RenderableItem(models.Model):
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':
             self.body_html = unicode(do_wl_markdown(
-                self.body, 'bleachit', wikiwords=False))
+                self.body, 'bleachit'))
         else:
             raise Exception('Invalid markup property: %s' % self.markup)
 
