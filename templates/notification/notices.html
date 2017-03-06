@@ -10,6 +10,7 @@
 
 {% block content %}
 <h1>{% trans "Notifications" %}</h1>
+{% comment "Testing if this is used by users" %}
 <div class="blogEntry">
 {% autopaginate notices %}
 
@@ -40,6 +41,8 @@
 	</p>
 {% endif %}
 </div>
+{% endcomment %}
+
 <div class="blogEntry">
 	<h2>{% trans "Settings" %}</h2>
 
