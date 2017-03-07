@@ -10,7 +10,8 @@ from django.core.files.storage import default_storage
 
 from settings import MEDIA_ROOT
 from wlmaps.models import Map
-
+import os
+from settings import WIDELANDS_SVN_DIR
 
 class UploadMapForm(ModelForm):
     """
@@ -55,11 +56,14 @@ class UploadMapForm(ModelForm):
 
         try:
             # call map info tool to generate minimap and json info file
+            old_cwd = os.getcwd()
+            os.chdir(WIDELANDS_SVN_DIR)
             check_call(['wl_map_info', saved_file])
 
             # TODO(shevonar): delete file because it will be saved again when
             # the model is saved. File should not be saved twice
             default_storage.delete(saved_file)
+            os.chdir(old_cwd)
         except CalledProcessError:
             self._errors['file'] = self.error_class(
                 ['The map file could not be processed.'])

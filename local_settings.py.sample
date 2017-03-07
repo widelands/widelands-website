@@ -5,7 +5,12 @@ bd = os.getcwd() # Better make this a static path
 
 STATIC_MEDIA_PATH = os.path.join(bd, 'media')
 MEDIA_ROOT = os.path.join(bd, 'media/')
+
+# If you are using the developer version of widelands from Luanchpad
+# set WIDELANDS_SVN_DIR to the correct path. See also:
+# https://wl.widelands.org/wiki/BzrPrimer/
 WIDELANDS_SVN_DIR = "/path/to/widelands/trunk/"
+os.environ['PATH'] = WIDELANDS_SVN_DIR + ':' + os.environ['PATH']
 
 DATABASES = {
    'default': {
