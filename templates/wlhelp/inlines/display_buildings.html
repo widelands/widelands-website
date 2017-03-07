@@ -8,14 +8,27 @@
 	</tr>
 {% for b in buildings %}
 	<tr class="{% cycle "odd" "even" %}">
-		<td>
+		<td><p>Size: {{ b.size }}</p>
+			<p>Type: {{ b.type }}</p>
 			<a href="{% url 'wlhelp_building_details' b.tribe.name b.name %}" title="{{ b.displayname }}" id="{{ b.name }}">
 				{{ b.displayname }}
 				<br />
 				<img alt="{{b.displayname}}" src="{{ b.image_url }}" />
 			</a>
 		</td>
-		<td>{{ b.help }}</td>
+		<td>
+			{{ b.help }}
+			{% if b.enhanced_from or b.enhancement %}
+			<ul>
+				{% if b.enhanced_from %}
+					<li>May be enhanced from: <a href="#{{ b.enhanced_from.name }}">{{ b.enhanced_from.displayname }}</a></li>
+				{% endif %}
+				{% if b.enhancement %}
+					<li>Could be enhanced to: <a href="#{{ b.enhancement.name }}">{{ b.enhancement.displayname}}</a></li>
+				{% endif %}
+			</ul>
+			{% endif %}
+		</td>
 		<td>
 			{% for costs in b.get_build_cost %}
 				{% for w in costs %}
