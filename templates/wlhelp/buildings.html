@@ -10,16 +10,10 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% block content %}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	Buildings
-	<br />
 	<div class="posRight">
 	<form id="size_select">
 		<fieldset style="display: inline; border: none">
 			<legend>Show Buildings by Size and Type:</legend>
-			<!--<input type="checkbox" id="headquarters" name="sizes" value="size-H" checked="checked" />
-			<label for="big">Headquarters</label>-->
 			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
 			<label for="small">Small</label>
 			<input type="checkbox" id="medium" name="sizes" value="size-M"  checked="checked" />
@@ -28,8 +22,6 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 			<label for="big">Big</label>
 			<input type="checkbox" id="mines" name="sizes" value="size-I"  checked="checked" />
 			<label for="mines">Mines</label><br />
-			<!--<input type="checkbox" id="port" name="sizes" value="size-P"  checked="checked" />
-			<label for="mines">Port</label><br />-->
 			<input type="checkbox" id="warehouse" name="types" value="type-W" checked="checked" />
 			<label for="warehouse">Warehouse</label>
 			<input type="checkbox" id="production" name="types" value="type-P"  checked="checked" />
@@ -41,10 +33,12 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 			<button type="button" id="set_size" class="button">Update</button>
 		</fieldset>
 		</form>
-	</div><br />
-
+	</div>
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
+	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
+	Buildings
 {# Headquarters #}
-<div name="size-H">
+<div name="size-B">
 	<h2>Headquarters</h2>
 	{% with buildings.headquarters as buildings %}
 		{% include "wlhelp/inlines/display_buildings.html" %}
@@ -111,7 +105,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% endif %}
 </div>
 
-<div name="size-P">
+<div name="size-B">
 {# Ports #}
 {% if buildings.port.count %}
 	<h2>Ports</h2>
