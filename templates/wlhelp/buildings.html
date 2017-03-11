@@ -14,13 +14,35 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
 	Buildings
 	<br /><br />
+	<div class="right" style="margin-left: auto">
+	<form id="size_select">
+		<fieldset style="display: inline;">
+			<legend>Show Buildings with Size:</legend>
+			<input type="checkbox" id="headquarters" name="sizes" value="size-H" checked="checked" />
+			<label for="big">Headquarters</label>
+			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
+			<label for="small">Small</label>
+			<input type="checkbox" id="medium" name="sizes" value="size-M"  checked="checked" />
+			<label for="medium">Medium</label>
+			<input type="checkbox" id="big" name="sizes" value="size-B" checked="checked" />
+			<label for="big">Big</label>
+			<input type="checkbox" id="mines" name="sizes" value="size-I"  checked="checked" />
+			<label for="mines">Mines</label>
+			<input type="checkbox" id="port" name="sizes" value="size-P"  checked="checked" />
+			<label for="mines">Port</label><br />
+			<button type="button" id="set_size" class="button">Update</button>
+		</fieldset>
+		</form>
+	</div>
 
 {# Headquarters #}
+<div name="size-H">
 	<h2>Headquarters</h2>
 	{% with buildings.headquarters as buildings %}
 		{% include "wlhelp/inlines/display_buildings.html" %}
 	{% endwith %}
-
+</div>
+<div name="size-S">
 {# Small buildings #}
 {% if buildings.small.count %}
 	<h2>Small Buildings</h2>
@@ -34,7 +56,8 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 		{% include "wlhelp/inlines/display_buildings.html" %}
 	{% endwith %}
 {% endif %}
-
+</div>
+<div name="size-M">
 {# Medium buildings #}
 {% if buildings.medium.count %}
 	<h2>Medium Buildings</h2>
@@ -48,7 +71,8 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 		{% include "wlhelp/inlines/display_buildings.html" %}
 	{% endwith %}
 {% endif %}
-
+</div>
+<div name="size-B">
 {# Big buildings #}
 {% if buildings.big.count %}
 	<h2>Big Buildings</h2>
@@ -62,7 +86,8 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 		{% include "wlhelp/inlines/display_buildings.html" %}
 	{% endwith %}
 {% endif %}
-
+</div>
+<div name="size-I">
 {# Mines #}
 {% if buildings.mine.count %}
 	<h2>Mines</h2>
@@ -76,7 +101,9 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 		{% include "wlhelp/inlines/display_buildings.html" %}
 	{% endwith %}
 {% endif %}
+</div>
 
+<div name="size-P">
 {# Ports #}
 {% if buildings.port.count %}
 	<h2>Ports</h2>
@@ -90,6 +117,6 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 		{% include "wlhelp/inlines/display_buildings.html" %}
 	{% endwith %}
 {% endif %}
-
+</div>
 </div>
 {% endblock %}

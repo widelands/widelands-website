@@ -7,14 +7,13 @@
 		<th>Stores</th>
 	</tr>
 {% for b in buildings %}
-	<tr class="{% cycle "odd" "even" %}">
+	<tr class="{% cycle "odd" "even" %}" name="type-{{ b.type }}">
 		<td>
 			<a href="{% url 'wlhelp_building_details' b.tribe.name b.name %}" title="{{ b.displayname }}" id="{{ b.name }}">
 				{{ b.displayname }}
 				<br />
 				<img alt="{{b.displayname}}" src="{{ b.image_url }}" />
 			</a>
-			<p>Size: {{ b.size }}</p>
 			<p>Type: {{ b.type }}</p>
 		</td>
 		<td>
