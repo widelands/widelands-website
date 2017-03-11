@@ -13,13 +13,13 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
 	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
 	Buildings
-	<br /><br />
-	<div class="right" style="margin-left: auto">
+	<br />
+	<div class="posRight">
 	<form id="size_select">
-		<fieldset style="display: inline;">
-			<legend>Show Buildings with Size:</legend>
-			<input type="checkbox" id="headquarters" name="sizes" value="size-H" checked="checked" />
-			<label for="big">Headquarters</label>
+		<fieldset style="display: inline; border: none">
+			<legend>Show Buildings by Size and Type:</legend>
+			<!--<input type="checkbox" id="headquarters" name="sizes" value="size-H" checked="checked" />
+			<label for="big">Headquarters</label>-->
 			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
 			<label for="small">Small</label>
 			<input type="checkbox" id="medium" name="sizes" value="size-M"  checked="checked" />
@@ -27,13 +27,21 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 			<input type="checkbox" id="big" name="sizes" value="size-B" checked="checked" />
 			<label for="big">Big</label>
 			<input type="checkbox" id="mines" name="sizes" value="size-I"  checked="checked" />
-			<label for="mines">Mines</label>
-			<input type="checkbox" id="port" name="sizes" value="size-P"  checked="checked" />
-			<label for="mines">Port</label><br />
+			<label for="mines">Mines</label><br />
+			<!--<input type="checkbox" id="port" name="sizes" value="size-P"  checked="checked" />
+			<label for="mines">Port</label><br />-->
+			<input type="checkbox" id="warehouse" name="types" value="type-W" checked="checked" />
+			<label for="warehouse">Warehouse</label>
+			<input type="checkbox" id="production" name="types" value="type-P"  checked="checked" />
+			<label for="production">Production</label>
+			<input type="checkbox" id="military" name="types" value="type-M"  checked="checked" />
+			<label for="military">Military</label>
+			<input type="checkbox" id="training" name="types" value="type-T" checked="checked" />
+			<label for="training">Trainingsites</label><br />
 			<button type="button" id="set_size" class="button">Update</button>
 		</fieldset>
 		</form>
-	</div>
+	</div><br />
 
 {# Headquarters #}
 <div name="size-H">
