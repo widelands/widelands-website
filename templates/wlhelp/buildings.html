@@ -37,88 +37,82 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
 	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
 	Buildings
-{# Headquarters #}
-<div name="size-B">
-	<h2>Headquarters</h2>
-	{% with buildings.headquarters as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-</div>
-<div name="size-S">
-{# Small buildings #}
-{% if buildings.small.count %}
-	<h2>Small Buildings</h2>
-	{% with buildings.small as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-{% if buildings.small_enhanced.count %}
-	<h2>Small Enhanced Buildings</h2>
-	{% with buildings.small_enhanced as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-</div>
-<div name="size-M">
-{# Medium buildings #}
-{% if buildings.medium.count %}
-	<h2>Medium Buildings</h2>
-	{% with buildings.medium as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-{% if buildings.medium_enhanced.count %}
-	<h2>Medium Enhanced Buildings</h2>
-	{% with buildings.medium_enhanced as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-</div>
-<div name="size-B">
-{# Big buildings #}
-{% if buildings.big.count %}
-	<h2>Big Buildings</h2>
-	{% with buildings.big as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-{% if buildings.big_enhanced.count %}
-	<h2>Big Enhanced Buildings</h2>
-	{% with buildings.big_enhanced as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-</div>
-<div name="size-I">
-{# Mines #}
-{% if buildings.mine.count %}
-	<h2>Mines</h2>
-	{% with buildings.mine as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-{% if buildings.mine_enhanced.count %}
-	<h2>Enhanced Mines</h2>
-	{% with buildings.mine_enhanced as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-</div>
+	
+	{# Headquarters #}
+	<div name="size-B">
+		{% with buildings.headquarters as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html" with header="Headquarters" %}
+		{% endwith %}
+	</div>
+	
+	<div name="size-S">
+	{# Small buildings #}
+	{% if buildings.small.count %}
+		{% with buildings.small as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Small Buildings" %}
+		{% endwith %}
+	{% endif %}
+	{% if buildings.small_enhanced.count %}
+		{% with buildings.small_enhanced as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Small Enhanced Buildings" %}
+		{% endwith %}
+	{% endif %}
+	</div>
+	
+	<div name="size-M">
+	{# Medium buildings #}
+	{% if buildings.medium.count %}
+		{% with buildings.medium as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Medium Buildings" %}
+		{% endwith %}
+	{% endif %}
+	{% if buildings.medium_enhanced.count %}
+		{% with buildings.medium_enhanced as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Medium Enhanced Buildings" %}
+		{% endwith %}
+	{% endif %}
+	</div>
+	
+	<div name="size-B">
+	{# Big buildings #}
+	{% if buildings.big.count %}
+		{% with buildings.big as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Big Buildings" %}
+		{% endwith %}
+	{% endif %}
+	{% if buildings.big_enhanced.count %}
+		{% with buildings.big_enhanced as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Big Enhanced Buildings" %}
+		{% endwith %}
+	{% endif %}
+	</div>
+	
+	<div name="size-I">
+	{# Mines #}
+	{% if buildings.mine.count %}
+		{% with buildings.mine as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Mines" %}
+		{% endwith %}
+	{% endif %}
+	{% if buildings.mine_enhanced.count %}
+		{% with buildings.mine_enhanced as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Enhanced Mines" %}
+		{% endwith %}
+	{% endif %}
+	</div>
 
-<div name="size-B">
-{# Ports #}
-{% if buildings.port.count %}
-	<h2>Ports</h2>
-	{% with buildings.port as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-{% if buildings.port_enhanced.count %}
-	<h2>Enhanced Ports</h2>
-	{% with buildings.port_enhanced as buildings %}
-		{% include "wlhelp/inlines/display_buildings.html" %}
-	{% endwith %}
-{% endif %}
-</div>
+	<div name="size-B">
+	{# Ports #}
+	{% if buildings.port.count %}
+		{% with buildings.port as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Ports" %}
+		{% endwith %}
+	{% endif %}
+	{% if buildings.port_enhanced.count %}
+		{% with buildings.port_enhanced as buildings %}
+			{% include "wlhelp/inlines/display_buildings.html"  with header="Enhanced Ports" %}
+		{% endwith %}
+	{% endif %}
+	</div>
 </div>
 {% endblock %}

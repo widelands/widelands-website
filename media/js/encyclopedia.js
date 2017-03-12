@@ -35,10 +35,8 @@ function hide_tables(){
         }
         if (table.rows.length == hidden_rows+1){
             table.style.display = 'none';
-            table.previousElementSibling.style.display = 'none';
         }else{
             table.style.display = '';
-            table.previousElementSibling.style.display = '';            
         }
     }
 }
