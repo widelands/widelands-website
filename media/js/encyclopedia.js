@@ -1,16 +1,40 @@
 $(document).ready(function() {
-    var elem = document.getElementById('set_size');
-    elem.addEventListener('click', set_size);
-    checkb_names = ['sizes', 'types']; 
-    // Initialize after reload, e.g. pressing F5
+    var elem = document.getElementById('set_display');
+    elem.addEventListener('click', set_display);
+    // Find names of checkboxes:
+    checkb_names = get_input_names(); 
+    // Initialize after reload, e.g. pressing F5:
     init_checkboxes();
 });
 
-function set_size(){
+function get_input_names(){
+    var inp = document.getElementById('size_select').getElementsByTagName('input');
+    var n = [];
+    for (var i=0; i<inp.length; i++){
+        if (! n.includes(inp[i].name)){
+            n.push(inp[i].name);
+            }
+    }
+    return n;
+}
+
+function set_display(){
+    // Hide/unhide tables and/or rows
+    // Tables get hidden when filtering by size
+    // Rows get hidden when filtering by type
     for (var y=0; y<checkb_names.length; y++){
         var option_boxes = document.getElementsByName(checkb_names[y]);
+        if ( check_checked(option_boxes) === false ){
+            // Mark all as checked if none is checked for one type of filter
+            // This makes it possible to seach e.g. for all of type
+            // 'Production' (and no 'size' is checked) or all of size
+            // 'Big' (and no 'type' is checked)
+            for (var j=0; j<option_boxes.length; j++){
+                option_boxes[j].checked = true;
+            }
+        }
         for (var i = 0; i < option_boxes.length; i++) {
-            elements = document.getElementsByName(option_boxes[i].value);
+            var elements = document.getElementsByName(option_boxes[i].value);
             for (var x = 0 ; x < elements.length; x++){
                 if (option_boxes[i].checked){
                     elements[x].style.display = '';
@@ -20,10 +44,27 @@ function set_size(){
             }
         }
     }
-    hide_tables();
+    // Filtering by type may lead into empty tables resulting in showing just th
+    // or caption
+    hide_empty_tables();
 }
 
-function hide_tables(){
+function check_checked(chb_list){
+    // Check if none of the checkbox is checked in this list
+    var c=0;
+    chb_list.forEach( function(chb, i, ar){
+        if (! chb.checked){
+            c++;
+        }
+    });
+    if (c == chb_list.length){
+        return false;
+    }
+    return true;
+}
+
+function hide_empty_tables(){
+    // Hide a table if no row is displayed in it
     var tables = document.getElementsByTagName('table');
     for (var i=0; i<tables.length; i++){
         var table = tables[i];
@@ -33,6 +74,7 @@ function hide_tables(){
                 hidden_rows++;
             }
         }
+        // +1 here because we need to count also <th>
         if (table.rows.length == hidden_rows+1){
             table.style.display = 'none';
         }else{
@@ -42,6 +84,7 @@ function hide_tables(){
 }
 
 function init_checkboxes(){
+    // Mark all checkboxes as checked
     for (var x=0; x<checkb_names.length; x++){
         var option_boxes = document.getElementsByName(checkb_names[x]);
         for (i=0; i < option_boxes.length; i++){
