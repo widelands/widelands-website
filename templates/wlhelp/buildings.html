@@ -13,6 +13,8 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	<div class="posRight">
 	<form id="size_select">
 		<fieldset style="display: inline; border: none">
+			{# Attribute 'name': Groups filters (sizes/types) #}
+			{# Attribute 'value': Corresponding names of html elements (tables/rows) #}
 			<legend>Show Buildings by Size and/or Type:</legend>
 			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
 			<label for="small">Small</label>

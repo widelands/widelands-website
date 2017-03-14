@@ -5,6 +5,15 @@ $(document).ready(function() {
     checkb_names = get_input_names(); 
     // Initialize after reload, e.g. pressing F5:
     init_checkboxes();
+
+    // Smooth scrolling, taken from
+    // http://stackoverflow.com/a/18795112
+    $('a[href*=#]').click(function(event){
+        $('html, body').animate({
+            scrollTop: $( $.attr(this, 'href') ).offset().top
+        }, 500);
+        event.preventDefault();
+    });
 });
 
 function get_input_names(){
@@ -26,8 +35,8 @@ function set_display(){
         var option_boxes = document.getElementsByName(checkb_names[y]);
         if ( check_checked(option_boxes) === false ){
             // Mark all as checked if none is checked for one type of filter
-            // This makes it possible to seach e.g. for all of type
-            // 'Production' (and no 'size' is checked) or all of size
+            // This makes it possible to search e.g. for all of type
+            // 'Production' (and no 'size' is checked), or all of size
             // 'Big' (and no 'type' is checked)
             for (var j=0; j<option_boxes.length; j++){
                 option_boxes[j].checked = true;
@@ -35,24 +44,28 @@ function set_display(){
         }
         for (var i = 0; i < option_boxes.length; i++) {
             var elements = document.getElementsByName(option_boxes[i].value);
-            for (var x = 0 ; x < elements.length; x++){
-                if (option_boxes[i].checked){
-                    elements[x].style.display = '';
-                }else{
-                    elements[x].style.display = 'none';    
-                }
-            }
+            hide_unhide_elements(elements, option_boxes[i].checked);
         }
     }
-    // Filtering by type may lead into empty tables resulting in showing just th
-    // or caption
+    // Filtering by type may lead into empty tables resulting in showing just
+    // rows with <th> or caption
     hide_empty_tables();
+}
+
+function hide_unhide_elements(elem_list, checked){
+    elem_list.forEach( function(elem){
+        if (checked){
+            elem.style.display = '';
+        }else{
+            elem.style.display = 'none';
+        }
+    });
 }
 
 function check_checked(chb_list){
     // Check if none of the checkbox is checked in this list
     var c=0;
-    chb_list.forEach( function(chb, i, ar){
+    chb_list.forEach( function(chb){
         if (! chb.checked){
             c++;
         }
