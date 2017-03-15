@@ -1,12 +1,12 @@
 $(document).ready(function() {
-    var elem = document.getElementById('set_display');
+    var elem = document.getElementById('apply_filter');
     elem.addEventListener('click', set_display);
     // Find names of checkboxes:
     checkb_names = get_input_names(); 
     // Initialize after reload, e.g. pressing F5:
     init_checkboxes();
 
-    // Smooth scrolling, taken from
+    // Smooth scrolling, taken from:
     // http://stackoverflow.com/a/18795112
     $('a[href*=#]').click(function(event){
         $('html, body').animate({
@@ -17,7 +17,7 @@ $(document).ready(function() {
 });
 
 function get_input_names(){
-    var inp = document.getElementById('size_select').getElementsByTagName('input');
+    var inp = document.getElementById('filter_select').getElementsByTagName('input');
     var n = [];
     for (var i=0; i<inp.length; i++){
         if (! n.includes(inp[i].name)){

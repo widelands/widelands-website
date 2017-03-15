@@ -11,7 +11,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">
 	<div class="posRight">
-	<form id="size_select">
+	<form id="filter_select">
 		<fieldset style="display: inline; border: none">
 			{# Attribute 'name': Groups filters (sizes/types) #}
 			{# Attribute 'value': Corresponding names of html elements (tables/rows) #}
@@ -32,7 +32,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 			<label for="military">Military</label>
 			<input type="checkbox" id="training" name="types" value="type-T" checked="checked" />
 			<label for="training">Trainingsites</label><br />
-			<button type="button" id="set_display" class="button">Update</button>
+			<button type="button" id="apply_filter" class="button">Update</button>
 		</fieldset>
 		</form>
 	</div>

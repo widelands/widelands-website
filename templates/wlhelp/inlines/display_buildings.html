@@ -21,10 +21,10 @@
 			{% if b.enhanced_from or b.enhancement %}
 			<ul>
 				{% if b.enhanced_from %}
-					<li>Could be enhanced from: <a href="#{{ b.enhanced_from.name }}">{{ b.enhanced_from.displayname }}</a></li>
+					<li>Can be enhanced from: <a href="#{{ b.enhanced_from.name }}">{{ b.enhanced_from.displayname }}</a></li>
 				{% endif %}
 				{% if b.enhancement %}
-					<li>Could be enhanced to: <a href="#{{ b.enhancement.name }}">{{ b.enhancement.displayname}}</a></li>
+					<li>Can be enhanced to: <a href="#{{ b.enhancement.name }}">{{ b.enhancement.displayname}}</a></li>
 				{% endif %}
 			</ul>
 			{% endif %}
