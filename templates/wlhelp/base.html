@@ -5,6 +5,7 @@ Encyclopedia - {{ block.super }}
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/help.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/encyclopedia.css" />
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/encyclopedia.js"></script>
 {{ block.super}}
 {% endblock %}
