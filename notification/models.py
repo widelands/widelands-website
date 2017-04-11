@@ -125,46 +125,46 @@ class NoticeManager(models.Manager):
         return self.notices_for(user, unseen=True, **kwargs).count()
 
 
-class Notice(models.Model):
-
-    user = models.ForeignKey(User, verbose_name=_('user'))
-    message = models.TextField(_('message'))
-    notice_type = models.ForeignKey(NoticeType, verbose_name=_('notice type'))
-    added = models.DateTimeField(_('added'), default=datetime.datetime.now)
-    unseen = models.BooleanField(_('unseen'), default=True)
-    archived = models.BooleanField(_('archived'), default=False)
-    on_site = models.BooleanField(_('on site'))
-
-    objects = NoticeManager()
-
-    def __unicode__(self):
-        return self.message
-
-    def archive(self):
-        self.archived = True
-        self.save()
-
-    def is_unseen(self):
-        """returns value of self.unseen but also changes it to false.
-
-        Use this in a template to mark an unseen notice differently the
-        first time it is shown.
-
-        """
-        unseen = self.unseen
-        if unseen:
-            self.unseen = False
-            self.save()
-        return unseen
-
-    class Meta:
-        ordering = ['-added']
-        verbose_name = _('notice')
-        verbose_name_plural = _('notices')
-
-    def get_absolute_url(self):
-        return ('notification_notice', [str(self.pk)])
-    get_absolute_url = models.permalink(get_absolute_url)
+# class Notice(models.Model):
+# 
+#     user = models.ForeignKey(User, verbose_name=_('user'))
+#     message = models.TextField(_('message'))
+#     notice_type = models.ForeignKey(NoticeType, verbose_name=_('notice type'))
+#     added = models.DateTimeField(_('added'), default=datetime.datetime.now)
+#     unseen = models.BooleanField(_('unseen'), default=True)
+#     archived = models.BooleanField(_('archived'), default=False)
+#     on_site = models.BooleanField(_('on site'))
+# 
+#     objects = NoticeManager()
+# 
+#     def __unicode__(self):
+#         return self.message
+# 
+#     def archive(self):
+#         self.archived = True
+#         self.save()
+# 
+#     def is_unseen(self):
+#         """returns value of self.unseen but also changes it to false.
+# 
+#         Use this in a template to mark an unseen notice differently the
+#         first time it is shown.
+# 
+#         """
+#         unseen = self.unseen
+#         if unseen:
+#             self.unseen = False
+#             self.save()
+#         return unseen
+# 
+#     class Meta:
+#         ordering = ['-added']
+#         verbose_name = _('notice')
+#         verbose_name_plural = _('notices')
+# 
+#     def get_absolute_url(self):
+#         return ('notification_notice', [str(self.pk)])
+#     get_absolute_url = models.permalink(get_absolute_url)
 
 
 class NoticeQueueBatch(models.Model):
@@ -312,9 +312,10 @@ def send_now(users, label, extra_context=None, on_site=True):
         body = render_to_string('notification/email_body.txt', {
             'message': messages['full.txt'],
         }, context)
-
-        notice = Notice.objects.create(user=user, message=messages['notice.html'],
-                                       notice_type=notice_type, on_site=on_site)
+    
+        # Todo Franku: comment here to not create notices
+        # notice = Notice.objects.create(user=user, message=messages['notice.html'],
+        #                                notice_type=notice_type, on_site=on_site)
         if should_send(user, notice_type, '1') and user.email:  # Email
             recipients.append(user.email)
         send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
