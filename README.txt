@@ -116,7 +116,7 @@ for further details.
 Dependencies between website and widelands source code
 ======================================================
 
-Some parts of the website needs access to the source code of widelands:
+Some parts of the website need access to the source code of widelands:
 
 * Online help/Encyclopedia
 * Possibility to upload a map onto the local website
@@ -173,7 +173,7 @@ Open http://localhost:8000/docs/wl/ to test if everything is working.
 Uploading a map to the local website
 ------------------------------------
 
-Compile the widelands binarys by using the compile.sh script
+Compile the widelands binaries by using the compile.sh script
 
    $ ./compile.sh
 
