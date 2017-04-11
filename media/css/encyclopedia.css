@@ -23,3 +23,16 @@ table.help td {
 img.icon {
 	margin: 0px 10px 10px 0px;
 }
+
+/* Let Table headers look like h2 */
+caption {
+    font-size: 1.5em;
+    color: #181;
+    margin: 0.8em 0em 0.5em 0em;
+    white-space: nowrap;
+}
+
+/* Give the div a min-height to fit with the selection form */
+div.blogEntry {
+    min-height: 6em;
+}

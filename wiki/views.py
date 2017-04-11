@@ -17,6 +17,7 @@ from wiki.models import Article, ChangeSet, dmp
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
+from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import WIKILINK_RE
 
 from wl_utils import get_real_ip
 import re
@@ -626,12 +627,8 @@ def article_diff(request):
 
 
 def backlinks(request, title):
-    """Simple text search for links in other wiki articles pointing to the
+    """Search for links in other wiki articles pointing to the
     current article.
-
-    If we convert WikiWords to markdown wikilinks syntax, this view
-    should be changed to use '[[title]]' for searching.
-
     """
 
     # Find old title(s) of this article
@@ -642,24 +639,19 @@ def backlinks(request, title):
         if cs.old_title and cs.old_title != title and cs.old_title not in old_titles:
             old_titles.append(cs.old_title)
 
-    # Differentiate between WikiWords and other
-    m = re.match(r"(!?)(\b[A-Z][a-z]+[A-Z]\w+\b)", title)
-    if m:
-        # title is a 'WikiWord' -> This catches also 'MingW' but we have no such title
-        search_title = re.compile(r"%s" % title)
-    else:
-        # Others must be written like links: '[Wiki Page](/wiki/Wiki Page)'
-        search_title = re.compile(r"\/%s\)" % title)
-    
+    search_title = [re.compile(r"\[\[\s*%s\s*\]\]" % title)]
+    search_title.append(re.compile(r"\/%s\)" % title))
+
     # Search for current and previous titles
     found_old_links = []
     found_links = []
     articles_all = Article.objects.all().exclude(title=title)
     for article in articles_all:
-        match = search_title.search(article.content)
-        if match:
-            found_links.append({'title': article.title})
-        
+        for regexp in search_title:
+            match = regexp.search(article.content)
+            if match:
+                found_links.append({'title': article.title})
+
         for old_title in old_titles:
             if old_title in article.content:
                 found_old_links.append({'old_title': old_title, 'title': article.title })

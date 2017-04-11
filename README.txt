@@ -58,10 +58,10 @@ Installation via pip should work like this::
 This will take a while. If no errors are shown we should be fine.
 
 Setting up the website
-----------------------
+======================
 
 Setting your local paths
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
 
 Copy or symlink the two files settings_local.py.sample and
 local_urls.py.sample to settings_local.py and local_urls.py. Take a look at
@@ -72,7 +72,7 @@ directly, but you might want to edit the bd variable in local_settings.py::
    $ ln -s local_settings.py.sample local_settings.py
 
 Setting up the database
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
 
 Now creating the tables in the database:
 
@@ -90,7 +90,7 @@ Open your browser to http://localhost:8000. You should see something that
 resembles the widelands homepage quite closely. All content is missing though.
 
 Some important settings
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
 
 Go to http://localhost:8000/admin. Log in with your super user and go to the
 following table:
@@ -100,7 +100,7 @@ following table:
 Now everything should work.
 
 Accessing the website from other machines
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------------
 
 When starting the server as described above, the website will by default
 only be available from the machine it is running on. If you wish to access
@@ -113,8 +113,27 @@ production environments, only for development/testing.
 See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
 for further details.
 
+Dependencies between website and widelands source code
+======================================================
+
+Some parts of the website need access to the source code of widelands:
+
+* Online help/Encyclopedia
+* Possibility to upload a map onto the local website
+* Source code documentation
+
+You will need the widelands source code for this, see
+
+https://wl.widelands.org/wiki/BzrPrimer/
+
+After the source code is downloaded, adjust the path of 
+
+WIDELANDS_SVN_DIR
+
+in local_settings.py to the path where the widelands source code is found.
+
 Setting up the online help / encyclopedia
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------------
 
 You will need graphviz to generate the graphs for the online help. On Ubuntu run:
 
@@ -129,13 +148,9 @@ After that you can create the overview pdf files with
    $ ./manage.py update_help_pdf
 
 Setting up widelands source code documentation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------
 
-You will need the widelands source code for this, see
-
-https://wl.widelands.org/wiki/BzrPrimer/
-
-Change to the directory doc/sphinx/ of the source code and run
+Change to the directory doc/sphinx/ of the widelands source code and run
 
    $ ./extract_rst.py
 
@@ -155,6 +170,14 @@ Path: /your/path/to/widelands-src/doc/sphinx/build/json/
 
 Open http://localhost:8000/docs/wl/ to test if everything is working.
 
+Uploading a map to the local website
+------------------------------------
+
+Compile the widelands binaries by using the compile.sh script
+
+   $ ./compile.sh
+
+Now you should be able to upload a map onto your local website.
 
 Contact
 =======

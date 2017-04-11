@@ -10,39 +10,7 @@
 
 {% block content %}
 <h1>{% trans "Notifications" %}</h1>
-{% comment %}
-<div class="blogEntry">
 
-{% autopaginate notices %}
-
-{% if notices %}
-	<a href="{% url 'notification_mark_all_seen' %}" class="posRight small">{% trans "Mark all as seen" %}</a>
-	{% paginate %}
-
-	{# TODO: get timezone support working with regroup #}
-	{% regroup notices by added.date as notices_by_date %}
-	{% for date in notices_by_date %}
-		<br />
-		<h3>{{ date.grouper|naturalday:_("MONTH_DAY_FORMAT")|title }}</h3>
-		<table class="notifications">
-		{% for notice in date.list %}
-			<tr class="{% cycle "odd" "even" %} {% if notice.is_unseen %}italic{% endif %}">
-				<td class="type"><a href="{% url 'notification_notice' notice.pk %} ">{% trans notice.notice_type.display %}</a></td>
-				<td class="text">{{ notice.message|safe }}</td>
-				<td class="date">{{ notice.added|custom_date:user }}</td>
-			</tr>
-		{% endfor %}
-		</table>
-	{% endfor %}
-	<br />
-	{% paginate %}
-{% else %}
-	<p>
-		{% trans "No notifications." %}
-	</p>
-{% endif %}
-</div>
-{% endcomment %}
 <div class="blogEntry">
 	<h2>{% trans "Settings" %}</h2>
 

@@ -3,7 +3,7 @@
 from django.conf.urls import *
 from django.http import HttpResponseRedirect
 from wiki import views, models
-from wiki.templatetags.wiki_extras import WIKI_URL_RE
+from settings import WIKI_URL_RE
 from django.views.generic import RedirectView
 from wiki.feeds import RssHistoryFeed, AtomHistoryFeed, RssArticleHistoryFeed, AtomArticleHistoryFeed
 
