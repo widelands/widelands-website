@@ -95,10 +95,10 @@ class AddPostForm(forms.ModelForm):
         if not hidden:
             if topic_is_new:
                 send(User.objects.all(), 'forum_new_topic',
-                     {'topic': topic, 'post': post, 'user': topic.user})
+                     {'topic': topic, 'post': post, 'user': topic.user}, queue = True)
             else:
                 send(self.topic.subscribers.all(), 'forum_new_post',
-                     {'post': post, 'topic': topic, 'user': post.user})
+                     {'post': post, 'topic': topic, 'user': post.user}, queue = True)
 
         return post
 
