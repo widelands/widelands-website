@@ -1,3 +1,0 @@
-{% load i18n %}
-{% load wlprofile_extras %}
-{% blocktrans with message.get_absolute_url as message_url and message.sender|user_link as message_sender %}You have received the message <a href="{{ message_url }}">{{ message }}</a> from {{ message_sender }}.{% endblocktrans %}

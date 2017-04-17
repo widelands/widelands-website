@@ -11,8 +11,8 @@ from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
-from django.core.mail import send_mail
-from django.contrib.sites.models import Site
+# FrankU from django.core.mail import send_mail
+# FrankU from django.contrib.sites.models import Site
 
 
 class AddPostForm(forms.ModelForm):
