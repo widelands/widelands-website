@@ -36,7 +36,7 @@
 			</tr>
 		{% for row in notice_settings.rows %}
 			<tr class="{% cycle "odd" "even" %}">
-				<td>test{{ row.notice_type }}<br />
+				<td>
 					{% trans row.notice_type.display %}<br />
 					{% trans row.notice_type.description %}
 				</td>

@@ -6,7 +6,7 @@ from notification.models import *
 
 
 @login_required
-def notices(request):
+def notice_settings(request):
     settings_table = []
     for notice_type in NoticeType.objects.all():
         settings_row = []
@@ -29,7 +29,6 @@ def notices(request):
         'rows': settings_table,
     }
 
-    return render_to_response('notification/notices.html', {
+    return render_to_response('notification/notice_settings.html', {
         'notice_settings': notice_settings,
     }, context_instance=RequestContext(request))
-
