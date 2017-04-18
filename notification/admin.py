@@ -13,6 +13,7 @@ class NoticeSettingAdmin(admin.ModelAdmin):
 class ObserverdItemAdmin(admin.ModelAdmin):
     list_display = ('id', 'notice_type', 'user',)
 
+
 admin.site.register(NoticeType, NoticeTypeAdmin)
 admin.site.register(NoticeSetting, NoticeSettingAdmin)
 admin.site.register(ObservedItem, ObserverdItemAdmin)

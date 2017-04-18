@@ -2,6 +2,7 @@ This is the old version (0.1.4) of the notification app by James Tauber.
 It is included as a widelands app because the new version is 
 incompatible with our old data.
 
+Year 2017:
 The ability to store notices is removed and therefor it acts only as an app
 to send e-mails for observed items.
 
