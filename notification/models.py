@@ -333,7 +333,15 @@ class ObservedItem(models.Model):
     def send_notice(self):
         send([self.user], self.notice_type.label,
              {'observed': self.observed_object})
-
+        
+    def get_content_object(self):
+        """
+        taken from threadedcomments:
+    
+        Wrapper around the GenericForeignKey due to compatibility reasons
+        and due to ``list_display`` limitations.
+        """
+        return self.observed_object
 
 def observe(observed, observer, notice_type_label, signal='post_save'):
     """Create a new ObservedItem.
