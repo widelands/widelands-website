@@ -94,6 +94,15 @@ def get_notification_setting(user, notice_type, medium):
 def should_send(user, notice_type, medium):
     return get_notification_setting(user, notice_type, medium).send
 
+def get_users_for(notice_type):
+    """ Returns the list of users which wants to get a message (email) for this type of notice.
+    """
+    settings = NoticeSetting.objects.filter(notice_type__label=notice_type).filter(send=True)
+    users = []
+    for s in settings:
+        users.append(s.user)
+    return users
+
 
 class NoticeQueueBatch(models.Model):
     """A queued notice.

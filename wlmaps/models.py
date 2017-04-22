@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 import datetime
+from notification.models import send, get_users_for
 
 import settings
 if settings.USE_SPHINX:
@@ -64,4 +65,6 @@ class Map(models.Model):
             self.slug = slugify(self.name)
 
         map = super(Map, self).save(*args, **kwargs)
+        send(get_users_for('wlmaps_new_map'), 'wlmaps_new_map',
+             {'mapname': self.name, 'url': self.get_absolute_url(), 'user': self.author, 'uploader_comment': self.uploader_comment}, queue=True)
         return map

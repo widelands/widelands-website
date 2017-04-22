@@ -1,0 +1,8 @@
+{% load i18n %}A new map was uploaded to the Website by {{ user }}:
+
+{% blocktrans %}
+Mapname: {{ mapname }}
+Description: {{ uploader_comment }}
+–––––––––––
+Link to map: http://{{ current_site }}{{ url }}
+{% endblocktrans %}

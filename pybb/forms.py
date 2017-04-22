@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from pybb.models import Topic, Post, PrivateMessage, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
-from notification.models import send
+from notification.models import send, get_users_for
 
 
 class AddPostForm(forms.ModelForm):
@@ -92,7 +92,7 @@ class AddPostForm(forms.ModelForm):
 
         if not hidden:
             if topic_is_new:
-                send(User.objects.all(), 'forum_new_topic',
+                send(get_users_for('forum_new_topic'), 'forum_new_topic',
                      {'topic': topic, 'post': post, 'user': topic.user}, queue = True)
             else:
                 send(self.topic.subscribers.all(), 'forum_new_post',
