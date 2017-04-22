@@ -14,7 +14,7 @@ class NoticeSettingAdmin(admin.ModelAdmin):
 
 class ObserverdItemAdmin(admin.ModelAdmin):
     readonly_fields = ('observed_object', 'content_type', 'object_id')
-    search_fields = ['user__username',]
+    search_fields = ['user__username', 'notice_type__label']
     list_display = ('user', 'notice_type', 'content_type', 'get_content_object')
     fieldsets = (
             (None, {'fields': ('user',)}),

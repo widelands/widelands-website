@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from wiki.models import Article
 from wiki.models import ChangeSet
 from settings import WIKI_WORD_RE
+from notification import models as notification
 
 wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
 
@@ -102,6 +103,7 @@ class ArticleForm(forms.ModelForm):
                 article.creator = editor
                 article.group = group
             article.save(*args, **kwargs)
+            notification.observe(article, editor, 'wiki_observed_article_changed')
 
         # 4 - Create new revision
         changeset = article.new_revision(

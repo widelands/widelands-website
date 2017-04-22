@@ -6,9 +6,6 @@ try:
     from notification import models as notification
 
     def create_notice_types(app, created_models, verbosity, **kwargs):
-        notification.create_notice_type('wiki_article_edited',
-                                        _('Article Edited'),
-                                        _('your article has been edited'))
         notification.create_notice_type('wiki_revision_reverted',
                                         _('Article Revision Reverted'),
                                         _('your revision has been reverted'))
