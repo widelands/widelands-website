@@ -68,7 +68,11 @@ NOTICE_MEDIA_DEFAULTS = {
 
 class NoticeSetting(models.Model):
     """Indicates, for a given user, whether to send notifications of a given
-    type to a given medium."""
+    type to a given medium.
+    
+    Notice types for each user are added if he/she enters the notification page.
+    
+    """
 
     user = models.ForeignKey(User, verbose_name=_('user'))
     notice_type = models.ForeignKey(NoticeType, verbose_name=_('notice type'))
@@ -82,6 +86,12 @@ class NoticeSetting(models.Model):
 
 
 def get_notification_setting(user, notice_type, medium):
+    """Return NotceSetting for a specific user. If a NoticeSetting of
+    given NoticeType didn't exist for given user, a NoticeSetting is created.
+    
+    If a new NoticeSetting is created, the field 'default' of a NoticeType
+    decides whether NoticeSetting.send is True or False as default.
+    """
     try:
         return NoticeSetting.objects.get(user=user, notice_type=notice_type, medium=medium)
     except NoticeSetting.DoesNotExist:
@@ -94,9 +104,9 @@ def get_notification_setting(user, notice_type, medium):
 def should_send(user, notice_type, medium):
     return get_notification_setting(user, notice_type, medium).send
 
-def get_users_for(notice_type):
-    """ Returns the list of users which wants to get a message (email) for this type of notice.
-    """
+def get_observers_for(notice_type):
+    """ Returns the list of users which wants to get a message (email) for this
+    type of notice."""
     settings = NoticeSetting.objects.filter(notice_type__label=notice_type).filter(send=True)
     users = []
     for s in settings:
@@ -200,7 +210,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         extra_context = {}
 
     # FrankU: This try statement is added to pass notice types
-    # which are not available anymore. E.g. from third party apps
+    # which are deleted but used by third party apps
     try:
         notice_type = NoticeType.objects.get(label=label)
     
