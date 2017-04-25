@@ -126,7 +126,7 @@ class NoticeQueueBatch(models.Model):
 def create_notice_type(label, display, description, default=2, verbosity=1):
     """Creates a new NoticeType.
 
-    This is intended to be used by other apps as a post_syncdb
+    This is intended to be used by other apps as a post_migrate
     manangement step.
 
     """
@@ -210,7 +210,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         extra_context = {}
 
     # FrankU: This try statement is added to pass notice types
-    # which are deleted but used by third party apps
+    # which are deleted but used by third party apps to create a notice
     try:
         notice_type = NoticeType.objects.get(label=label)
     
@@ -243,7 +243,6 @@ def send_now(users, label, extra_context=None, on_site=True):
             # update context with user specific translations
             context = Context({
                 'user': user,
-                #'notice': ugettext(notice_type.display),
                 'notices_url': notices_url,
                 'current_site': current_site,
             })

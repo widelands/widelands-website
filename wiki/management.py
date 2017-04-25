@@ -13,7 +13,7 @@ try:
                                         _('Observed Article Changed'),
                                         _('an article you observe has changed'))
 
-    signals.post_syncdb.connect(create_notice_types,
+    signals.post_migrate.connect(create_notice_types,
                                 sender=notification)
 except ImportError:
     print 'Skipping creation of NoticeTypes as notification app not found'

@@ -10,7 +10,7 @@ try:
                                         _('A new Map is available'),
                                         _('a new map is available for download'),1)
 
-    signals.post_syncdb.connect(create_notice_types,
+    signals.post_migrate.connect(create_notice_types,
                                 sender=notification)
 except ImportError:
     print 'Skipping creation of NoticeTypes as notification app not found'
