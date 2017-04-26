@@ -8,7 +8,11 @@ from notification.models import *
 @login_required
 def notice_settings(request):
     settings_table = []
-    for notice_type in NoticeType.objects.all():
+    apps = []
+    for notice_type in NoticeType.objects.all().order_by('label'):
+        app = notice_type.label.partition('_')[0]
+        if app not in apps:
+            apps.append(app)
         settings_row = []
         for medium_id, medium_display in NOTICE_MEDIA:
             form_label = '%s_%s' % (notice_type.label, medium_id)
@@ -30,5 +34,6 @@ def notice_settings(request):
     }
 
     return render_to_response('notification/notice_settings.html', {
+        'apps': apps,
         'notice_settings': notice_settings,
     }, context_instance=RequestContext(request))

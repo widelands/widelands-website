@@ -13,7 +13,9 @@ try:
                                         _('Observed Article Changed'),
                                         _('an article you observe has changed'))
 
-    signals.post_migrate.connect(create_notice_types,
+    # TODO (Franku): post_syncdb is deprecated since Django 1.7
+    # See: https://docs.djangoproject.com/en/1.8/ref/signals/#post-syncdb
+    signals.post_syncdb.connect(create_notice_types,
                                 sender=notification)
 except ImportError:
     print 'Skipping creation of NoticeTypes as notification app not found'
