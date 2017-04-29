@@ -52,7 +52,7 @@ def send_all():
                     # FrankU: commented, because not all users get e-mailed
                     # and to supress useless logging
                     # logging.info('emitting notice to %s' % user)
-                    
+
                     # call this once per user to be atomic and allow for logging to
                     # accurately show how long each takes.
                     notification.send_now(

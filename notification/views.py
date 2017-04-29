@@ -25,9 +25,9 @@ def notice_settings(request):
                     setting.send = False
                 setting.save()
             checkbox_values.append((form_label, setting.send))
-            
+
         app_tables[app].append({'notice_type': notice_type, 'html_values': checkbox_values})
-        
+
     return render_to_response('notification/notice_settings.html', {
         'column_headers': [medium_display for medium_id, medium_display in NOTICE_MEDIA],
         'app_tables': app_tables,

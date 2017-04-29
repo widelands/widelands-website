@@ -69,9 +69,9 @@ NOTICE_MEDIA_DEFAULTS = {
 class NoticeSetting(models.Model):
     """Indicates, for a given user, whether to send notifications of a given
     type to a given medium.
-    
+
     Notice types for each user are added if he/she enters the notification page.
-    
+
     """
 
     user = models.ForeignKey(User, verbose_name=_('user'))
@@ -88,7 +88,7 @@ class NoticeSetting(models.Model):
 def get_notification_setting(user, notice_type, medium):
     """Return NotceSetting for a specific user. If a NoticeSetting of
     given NoticeType didn't exist for given user, a NoticeSetting is created.
-    
+
     If a new NoticeSetting is created, the field 'default' of a NoticeType
     decides whether NoticeSetting.send is True or False as default.
     """
@@ -213,20 +213,20 @@ def send_now(users, label, extra_context=None, on_site=True):
     # which are deleted but used by third party apps to create a notice
     try:
         notice_type = NoticeType.objects.get(label=label)
-    
+
         current_site = Site.objects.get_current()
         notices_url = u"http://%s%s" % (
             unicode(current_site),
             reverse('notification_notices'),
         )
-    
+
         current_language = get_language()
-    
+
         formats = (
             'short.txt',
             'full.txt',
         )  # TODO make formats configurable
-    
+
         for user in users:
             recipients = []
             # get user language for user from language store defined in
@@ -235,11 +235,11 @@ def send_now(users, label, extra_context=None, on_site=True):
                 language = get_notification_language(user)
             except LanguageStoreNotAvailable:
                 language = None
-    
+
             if language is not None:
                 # activate the user's language
                 activate(language)
-    
+
             # update context with user specific translations
             context = Context({
                 'user': user,
@@ -247,23 +247,23 @@ def send_now(users, label, extra_context=None, on_site=True):
                 'current_site': current_site,
             })
             context.update(extra_context)
-    
+
             # get prerendered format messages
             messages = get_formatted_messages(formats, label, context)
-    
+
             # Strip newlines from subject
             subject = ''.join(render_to_string('notification/email_subject.txt', {
                 'message': messages['short.txt'],
             }, context).splitlines())
-    
+
             body = render_to_string('notification/email_body.txt', {
                 'message': messages['full.txt'],
             }, context)
-        
+
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
             send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
-    
+
         # reset environment to original language
         activate(current_language)
     except NoticeType.DoesNotExist:
@@ -359,7 +359,7 @@ class ObservedItem(models.Model):
     def get_content_object(self):
         """
         taken from threadedcomments:
-    
+
         Wrapper around the GenericForeignKey due to compatibility reasons
         and due to ``list_display`` limitations.
         """

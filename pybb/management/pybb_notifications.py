@@ -13,7 +13,7 @@ try:
         notification.create_notice_type('forum_new_post',
                                         _('Forum New Post'),
                                         _('a new comment has been posted to a topic you observe'))
-        
+
     # TODO (Franku): post_syncdb is deprecated since Django 1.7
     # See: https://docs.djangoproject.com/en/1.8/ref/signals/#post-syncdb
     signals.post_syncdb.connect(create_notice_types,

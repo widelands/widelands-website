@@ -61,13 +61,11 @@ class TopicAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('forum', 'name', 'user', ('created', 'updated'))
-        }
-        ),
+        }),
         (_('Additional options'), {
             'classes': ('collapse',),
             'fields': (('views',), ('sticky', 'closed'),)
-        }
-        ),
+        }),
     )
     inlines = [ SubscribersInline, ]
 
