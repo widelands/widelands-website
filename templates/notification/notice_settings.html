@@ -25,32 +25,34 @@
 		You do not have a verified email address to which notifications can be sent. You can add one by <a href="{% url 'profile_edit' %}">editing your profile</a>.
 	</p>
 	{% endif %}
-<p>bb{{ apps|capfirst }}</p>
-	<form method="POST" action="."> {# doubt this easy to do in uni-form #}
+	<form method="POST" action=".">
+	{% for app, settings in app_tables.items %}
+		<h3>{{ app|capfirst }} </h3>
 		<table class="notifications">
 			<tr>
 				<th class="small">{% trans "Notification Type" %}</th>
-			{% for header in notice_settings.column_headers %}
-				<th class="small">{{ header }}</th>
-			{% endfor %}
+				{% for header in column_headers %}
+					<th class="small">{{ header }}</th>
+				{% endfor %}
 			</tr>
-		{% for row in notice_settings.rows %}
+			{% for setting in settings %}
 			<tr class="{% cycle "odd" "even" %}">
 				<td>
-					{% trans row.notice_type.display %}<br />
-					{% trans row.notice_type.description %}
+					{% trans setting.notice_type.display %}<br />
+					{% trans setting.notice_type.description %}
 				</td>
-			{% for cell in row.cells %}
-				<td>
-					<input type="checkbox" name="{{ cell.0 }}" {% if cell.1 %}checked="checked" {% endif %}/>
+				<td style="width: 5em;">
+					{% for html_value in setting.html_values %}
+						<input type="checkbox" name="{{ html_value.0 }}" {% if html_value.1 %}checked="checked" {% endif %}/>
+					{% endfor %}
 				</td>
-			{% endfor %}
 			</tr>
-		{% endfor %}
+			{% endfor %}
 		</table>
 		<br />
-		{% csrf_token %}
-		<input type="submit" value="{% trans "Change" %}" />
+	{% endfor %}
+	{% csrf_token %}
+	<input class="posRight" type="submit" value="{% trans "Change" %}" />
 	</form>
 </div>
 {% endblock %}

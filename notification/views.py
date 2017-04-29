@@ -7,13 +7,13 @@ from notification.models import *
 
 @login_required
 def notice_settings(request):
-    settings_table = []
-    apps = []
+    app_tables = {}
     for notice_type in NoticeType.objects.all().order_by('label'):
+        # Assuming each notice_type.label begins with the name of the app
+        # followed by an underscore:
         app = notice_type.label.partition('_')[0]
-        if app not in apps:
-            apps.append(app)
-        settings_row = []
+        app_tables.setdefault(app, [])
+        checkbox_values = []
         for medium_id, medium_display in NOTICE_MEDIA:
             form_label = '%s_%s' % (notice_type.label, medium_id)
             setting = get_notification_setting(
@@ -24,16 +24,11 @@ def notice_settings(request):
                 else:
                     setting.send = False
                 setting.save()
-            settings_row.append((form_label, setting.send))
-        settings_table.append(
-            {'notice_type': notice_type, 'cells': settings_row})
-
-    notice_settings = {
-        'column_headers': [medium_display for medium_id, medium_display in NOTICE_MEDIA],
-        'rows': settings_table,
-    }
-
+            checkbox_values.append((form_label, setting.send))
+            
+        app_tables[app].append({'notice_type': notice_type, 'html_values': checkbox_values})
+        
     return render_to_response('notification/notice_settings.html', {
-        'apps': apps,
-        'notice_settings': notice_settings,
+        'column_headers': [medium_display for medium_id, medium_display in NOTICE_MEDIA],
+        'app_tables': app_tables,
     }, context_instance=RequestContext(request))
