@@ -12,7 +12,7 @@ try:
     from notification import models as notification
 except:
     notification = None
-        
+
 
 wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
 
