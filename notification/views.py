@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-
+from collections import OrderedDict
 from notification.models import *
 
 
@@ -30,5 +30,5 @@ def notice_settings(request):
 
     return render_to_response('notification/notice_settings.html', {
         'column_headers': [medium_display for medium_id, medium_display in NOTICE_MEDIA],
-        'app_tables': app_tables,
+        'app_tables': OrderedDict(sorted(app_tables.items(), key=lambda t: t[0]))
     }, context_instance=RequestContext(request))

@@ -6,7 +6,7 @@ try:
     from notification import models as notification
 
     def create_notice_types(app, created_models, verbosity, **kwargs):
-        notification.create_notice_type('wlmaps_new_map',
+        notification.create_notice_type('maps_new_map',
                                         _('A new Map is available'),
                                         _('a new map is available for download'),1)
 

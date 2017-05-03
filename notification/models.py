@@ -108,11 +108,7 @@ def get_observers_for(notice_type):
     """ Returns the list of users which wants to get a message (email) for this
     type of notice."""
     settings = NoticeSetting.objects.filter(notice_type__label=notice_type).filter(send=True)
-    users = []
-    for s in settings:
-        users.append(s.user)
-    return users
-
+    return [s.user for s in NoticeSetting.objects.filter(notice_type__label=notice_type).filter(send=True)]
 
 class NoticeQueueBatch(models.Model):
     """A queued notice.
