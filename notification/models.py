@@ -207,6 +207,9 @@ def send_now(users, label, extra_context=None, on_site=True):
 
     # FrankU: This try statement is added to pass notice types
     # which are deleted but used by third party apps to create a notice
+    # e.g. django-messages installed some notice-types which are superfluous
+    # because they just create a notice (which is not used anymore), but not
+    # used for sending email, like: 'message deleted' or 'message recovered'
     try:
         notice_type = NoticeType.objects.get(label=label)
 
