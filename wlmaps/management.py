@@ -6,13 +6,9 @@ try:
     from notification import models as notification
 
     def create_notice_types(app, created_models, verbosity, **kwargs):
-        notification.create_notice_type('forum_new_topic',
-                                        _('Forum New Topic'),
-                                        _('a new topic has been added to the forum'),
-                                        default=1)
-        notification.create_notice_type('forum_new_post',
-                                        _('Forum New Post'),
-                                        _('a new comment has been posted to a topic you observe'))
+        notification.create_notice_type('maps_new_map',
+                                        _('A new Map is available'),
+                                        _('a new map is available for download'),1)
 
     # TODO (Franku): post_syncdb is deprecated since Django 1.7
     # See: https://docs.djangoproject.com/en/1.8/ref/signals/#post-syncdb

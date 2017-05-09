@@ -10,6 +10,7 @@ class Command(NoArgsCommand):
     help = 'Emit queued notices.'
 
     def handle_noargs(self, **options):
-        logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+        # Franku: Uncomment for debugging purposes
+        # logging.basicConfig(level=logging.DEBUG, format='%(message)s')
         logging.info('-' * 72)
         send_all()

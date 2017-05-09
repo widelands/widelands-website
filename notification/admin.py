@@ -1,5 +1,6 @@
 from django.contrib import admin
-from notification.models import NoticeType, NoticeSetting, Notice, ObservedItem
+from notification.models import NoticeType, NoticeSetting, ObservedItem
+from django.utils.translation import ugettext_lazy as _
 
 
 class NoticeTypeAdmin(admin.ModelAdmin):
@@ -7,15 +8,20 @@ class NoticeTypeAdmin(admin.ModelAdmin):
 
 
 class NoticeSettingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'notice_type', 'medium', 'send')
+    search_fields = ['user__username',]
+    list_display = ('user', 'notice_type', 'medium', 'send')
 
 
-class NoticeAdmin(admin.ModelAdmin):
-    list_display = ('message', 'user', 'notice_type',
-                    'added', 'unseen', 'archived')
-
+class ObserverdItemAdmin(admin.ModelAdmin):
+    readonly_fields = ('observed_object', 'content_type', 'object_id')
+    search_fields = ['user__username', 'notice_type__label']
+    list_display = ('user', 'notice_type', 'content_type', 'get_content_object')
+    fieldsets = (
+            (None, {'fields': ('user',)}),
+            (_('Observed object'), {'fields': ('observed_object', 'content_type', 'object_id')}),
+            (_('Settings'), {'fields': ('added', 'notice_type', 'signal')}),
+            )
 
 admin.site.register(NoticeType, NoticeTypeAdmin)
 admin.site.register(NoticeSetting, NoticeSettingAdmin)
-admin.site.register(Notice, NoticeAdmin)
-admin.site.register(ObservedItem)
+admin.site.register(ObservedItem, ObserverdItemAdmin)

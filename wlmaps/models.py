@@ -5,6 +5,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 import datetime
+try:
+    from notification import models as notification
+except ImportError:
+    notification = None
 
 import settings
 if settings.USE_SPHINX:
@@ -64,4 +68,8 @@ class Map(models.Model):
             self.slug = slugify(self.name)
 
         map = super(Map, self).save(*args, **kwargs)
-        return map
+        if notification:
+            notification.send(notification.get_observers_for('wlmaps_new_map'), 'wlmaps_new_map',
+                              {'mapname': self.name, 'url': self.get_absolute_url(), 'user': self.uploader, 'uploader_comment': self.uploader_comment}, queue=True)
+
+        return map    

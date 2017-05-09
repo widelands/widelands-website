@@ -48,7 +48,9 @@ class ForumAdmin(admin.ModelAdmin):
         }
         ),
     )
-
+    
+class SubscribersInline(admin.TabularInline):
+    model = Topic.subscribers.through
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'forum', 'created', 'head', 'is_hidden']
@@ -59,14 +61,13 @@ class TopicAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('forum', 'name', 'user', ('created', 'updated'))
-        }
-        ),
+        }),
         (_('Additional options'), {
             'classes': ('collapse',),
-            'fields': (('views',), ('sticky', 'closed'), 'subscribers')
-        }
-        ),
+            'fields': (('views',), ('sticky', 'closed'),)
+        }),
     )
+    inlines = [ SubscribersInline, ]
 
 
 class PostAdmin(admin.ModelAdmin):

@@ -49,7 +49,10 @@ def send_all():
                     str(queued_batch.pickled_data).decode('base64'))
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
-                    logging.info('emitting notice to %s' % user)
+                    # FrankU: commented, because not all users get e-mailed
+                    # and to supress useless logging
+                    # logging.info('emitting notice to %s' % user)
+
                     # call this once per user to be atomic and allow for logging to
                     # accurately show how long each takes.
                     notification.send_now(

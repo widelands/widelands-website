@@ -6,9 +6,6 @@ try:
     from notification import models as notification
 
     def create_notice_types(app, created_models, verbosity, **kwargs):
-        notification.create_notice_type('wiki_article_edited',
-                                        _('Article Edited'),
-                                        _('your article has been edited'))
         notification.create_notice_type('wiki_revision_reverted',
                                         _('Article Revision Reverted'),
                                         _('your revision has been reverted'))
@@ -16,6 +13,8 @@ try:
                                         _('Observed Article Changed'),
                                         _('an article you observe has changed'))
 
+    # TODO (Franku): post_syncdb is deprecated since Django 1.7
+    # See: https://docs.djangoproject.com/en/1.8/ref/signals/#post-syncdb
     signals.post_syncdb.connect(create_notice_types,
                                 sender=notification)
 except ImportError:
