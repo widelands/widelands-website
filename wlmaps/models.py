@@ -69,7 +69,7 @@ class Map(models.Model):
 
         map = super(Map, self).save(*args, **kwargs)
         if notification:
-            notification.send(notification.get_observers_for('wlmaps_new_map'), 'wlmaps_new_map',
+            notification.send(notification.get_observers_for('maps_new_map'), 'maps_new_map',
                               {'mapname': self.name, 'url': self.get_absolute_url(), 'user': self.uploader, 'uploader_comment': self.uploader_comment}, queue=True)
 
         return map    
