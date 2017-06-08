@@ -62,7 +62,7 @@ def download(request, map_slug):
 
     # Remember that this has been downloaded
     m.nr_downloads += 1
-    m.save()
+    m.save(update_fields=['nr_downloads'])
 
     response = HttpResponse(data, content_type='application/octet-stream')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
