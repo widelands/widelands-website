@@ -87,7 +87,7 @@ def edit_comment(request, map_slug):
         form = EditCommentForm(request.POST)
         if form.is_valid():
             map.uploader_comment = form.cleaned_data['uploader_comment']
-            map.save()
+            map.save(update_fields=['uploader_comment'])
             return HttpResponseRedirect(map.get_absolute_url())
     else:
         form = EditCommentForm(instance=map)
