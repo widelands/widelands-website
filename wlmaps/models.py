@@ -67,10 +67,17 @@ class Map(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
 
+        # Check if this is a new map for sending notifications
+        is_new = False
+        try:
+            Map.objects.get(slug=self.slug)
+        except Map.DoesNotExist:
+            is_new = True
+
         map = super(Map, self).save(*args, **kwargs)
 
         # Send notifications only on new maps, not when updating fields, e.g. nr_downloads
-        if notification and not 'update_fields' in kwargs:
+        if notification and is_new:
             notification.send(notification.get_observers_for('maps_new_map'), 'maps_new_map',
                               {'mapname': self.name, 'url': self.get_absolute_url(), 'user': self.uploader, 'uploader_comment': self.uploader_comment}, queue=True)
 
