@@ -130,7 +130,7 @@ def pybb_has_unreads(topic, user):
             if read is None:
                 return False
             else:
-                return topic.updated < read.time
+                return topic.updated <= read.time
 
     if not user.is_authenticated():
         return False
