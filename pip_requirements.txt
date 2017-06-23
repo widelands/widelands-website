@@ -2,7 +2,6 @@
 
 BeautifulSoup==3.2.0
 Django==1.8
-django-appconf==1.0.1
 django-contrib-comments==1.8.0
 django-messages==0.5.3
 django-nocaptcha-recaptcha==0.0.19
