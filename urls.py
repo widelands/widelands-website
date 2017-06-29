@@ -11,6 +11,7 @@ from django.views.generic import TemplateView
 from django.contrib.syndication.views import Feed
 from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
+from wlsearch.views import HaystackSearchView
 
 
 urlpatterns = [
@@ -34,11 +35,12 @@ urlpatterns = [
 
     # Formerly 3rd party
     url(r'^notification/', include('notification.urls')),
+    
+    # search
+    #url(r'^search/', include('haystack.urls')),
 
-    # (r'^stats/', include('simplestats.urls')),
     url(r'^messages/', include('django_messages.urls')),
     url(r'^threadedcomments/', include('threadedcomments.urls')),
-    #    url(r'^articles/comments/', include('django_comments.urls')),
 
     # Redirect old urls to docs to docs/wl
     url(r'^docs/$', RedirectView.as_view(url='/docs/wl', permanent=True), name='docs'),

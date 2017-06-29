@@ -1,0 +1,4 @@
+# define the model fields where to search
+{{ object.body_text }}
+{{ object.user }}
+

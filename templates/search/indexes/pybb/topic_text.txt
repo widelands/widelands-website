@@ -1,0 +1,5 @@
+# define here the model fields where to search
+
+{{ object.name }}
+{{ object.user }}
+

@@ -13,7 +13,6 @@ from news.models import Post as NewsPost
 from wlhelp.models import Building, Ware
 from wlmaps.models import Map
 
-
 class DummyEmptyQueryset(object):
     """A simple dummy class when a search should not be run.
 
@@ -93,3 +92,40 @@ def search(request):
     return render_to_response('wlsearch/search.html',
                               template_params,
                               context_instance=RequestContext(request))
+
+
+from haystack.generic_views import SearchView
+from haystack.forms import SearchForm as HaystackForm
+
+
+class HaystackSearchView(SearchView):
+    """My custom search view."""
+
+    def get_queryset(self):
+        queryset = super(HaystackSearchView, self).get_queryset()
+        print('franku queryset', queryset.all())
+        # The field to sort is defined in search_indexes.py for each model
+        return queryset.order_by('-date')
+
+    def get_context_data(self, *args, **kwargs):
+        """ Regrouping the search results """
+
+        context = super(HaystackSearchView, self).get_context_data(*args, **kwargs)
+        maps = []
+        topics = []
+        posts = []
+        for item in context['object_list']:
+            if item.content_type() == 'wlmaps.map':
+                maps.append(item)
+            if item.content_type() == "pybb.topic":
+                topics.append(item)
+            if item.content_type() == "pybb.post":
+                posts.append(item)
+        
+        sorted_objects = [
+            {'maps': maps},
+            {'topics': topics},
+            {'posts': posts},
+        ]
+        context['object_list'] = sorted_objects
+        return context

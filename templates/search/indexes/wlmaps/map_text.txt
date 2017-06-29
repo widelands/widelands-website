@@ -1,0 +1,3 @@
+{{ object.name }}
+{{ object.author }}
+{{ object.uploader_comment }}
