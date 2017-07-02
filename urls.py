@@ -11,7 +11,6 @@ from django.views.generic import TemplateView
 from django.contrib.syndication.views import Feed
 from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
-from wlsearch.views import HaystackSearchView
 
 
 urlpatterns = [
@@ -36,9 +35,6 @@ urlpatterns = [
     # Formerly 3rd party
     url(r'^notification/', include('notification.urls')),
     
-    # search
-    #url(r'^search/', include('haystack.urls')),
-
     url(r'^messages/', include('django_messages.urls')),
     url(r'^threadedcomments/', include('threadedcomments.urls')),
 
