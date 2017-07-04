@@ -6,6 +6,12 @@ Documentation - {{ block.super }}
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/documentation.css" />
+
+{# using mathjax for formulas #}
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
 {{ block.super}}
 {% endblock %}
 
