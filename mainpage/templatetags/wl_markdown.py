@@ -91,7 +91,10 @@ def _classify_link(tag):
     if tag.findChild('img') != None:
         return None
 
-    href = tag['href'].lower()
+    try:
+        href = tag['href'].lower()
+    except KeyError:
+        return None
 
     # Check for external link
     if href.startswith('http'):
