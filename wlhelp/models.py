@@ -55,6 +55,9 @@ class Ware(models.Model):
     # This limit shall probably cover the longest help (found 209, nothing
     # more)
     help = models.TextField(max_length=256)
+    
+    class Meta:
+        ordering = ['name']
 
     if settings.USE_SPHINX:
         search = SphinxSearch(

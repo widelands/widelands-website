@@ -24,6 +24,7 @@ import shutil
 import re
 import json
 import subprocess
+import collections
 
 from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
 
@@ -209,6 +210,7 @@ class TribeParser(object):
             element_set = {}
             for element in json_:
                 element_set[element['name']] = str(element['amount'])
+            element_set = collections.OrderedDict(sorted(element_set.items()))
             counts = ' '.join(element_set.values())
             objects = [objtype.objects.get_or_create(name=w, tribe=self._to)[
                 0] for w in element_set.keys()]
