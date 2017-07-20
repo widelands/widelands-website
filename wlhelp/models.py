@@ -179,6 +179,8 @@ class Building(models.Model):
         return (self.build_wares.all().count() != 0)
 
     def get_build_cost(self):
+        # Creating the relation between build_cost and build_wares
+        # Querying the wares returns the wares in alphabetical order!
         count = map(int, self.build_costs.split())
         for c, w in zip(count, self.build_wares.all()):
             yield [w] * c

@@ -210,6 +210,9 @@ class TribeParser(object):
             element_set = {}
             for element in json_:
                 element_set[element['name']] = str(element['amount'])
+            # Sort the dictionary alphabetical. Otherwise there will be made
+            # a wrong relation between e.g. build_cost and build_wares in 
+            # models.get_build_cost() and other functions over there.
             element_set = collections.OrderedDict(sorted(element_set.items()))
             counts = ' '.join(element_set.values())
             objects = [objtype.objects.get_or_create(name=w, tribe=self._to)[
