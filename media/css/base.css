@@ -96,7 +96,7 @@ pre > code {
 }
 
 input, button, textarea, .button {
-	display: inline-block;
+	box-sizing: border-box;
 	margin-bottom: 5px;
 	padding: 2px 10px;
 	border: 1px solid black;

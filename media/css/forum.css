@@ -135,7 +135,7 @@ div.blogEntry .post p {
 }
 
 .post-form #id_body {
-   width: 98%;
-   max-width: 98%;
    height: 150px;
+   width: 100%;
 }
+
