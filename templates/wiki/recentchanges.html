@@ -11,10 +11,10 @@
 {% block content %}
 <h1>Wiki: {% trans "Recent Changes" %}</h1>
 <div class="blogEntry">
-{% autopaginate changes %}
-{% paginate %}
+{% autopaginate changes as object_list %}
+{% paginate using "pagination/pagination_mod.html" %}
 <br />
-{% for change in changes %}
+{% for change in object_list %}
 	{% ifchanged change.modified.date %}
 		{% if not forloop.first %}
 		</table>

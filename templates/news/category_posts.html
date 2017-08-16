@@ -22,14 +22,14 @@
 </div>
 <div class="blogEntry">
 	<div class="center">
-	{% autopaginate post_list 20 %}
-	{% paginate %}
+	{% autopaginate post_list 20 as object_list %}
+	{% paginate using "pagination/pagination_mod.html" %}
 	</div>
     <table width="100%">
       <th align="left">Title</th>
       <th>Posted at</th>
 	  <th>Comments</th>
-    {% for post in post_list %}
+    {% for post in object_list %}
 		{% get_comment_count for post as ccount %}
         <tr>
           <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>

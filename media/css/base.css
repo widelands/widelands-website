@@ -453,9 +453,12 @@ div.blogEntry hr {
 
 /* Pagination */
 
-.current.page{
-	/*font-weight: bold;*/
+.pagination .current.page{
+	font-weight: bold;
 	font-size: large;
 	color: #C8BE93;
 	vertical-align: bottom;
+}
+.pagination .summary{
+	margin-right: 1em;
 }
