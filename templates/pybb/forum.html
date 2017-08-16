@@ -4,6 +4,7 @@
 {% load humanize %}
 {% load wlprofile_extras %}
 {% load custom_date %}
+{% load pagination_tags %}
 
 {% block title %}
 {{ forum.name }} - {{ block.super }}
@@ -27,7 +28,8 @@
 		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
-	{% pybb_pagination _('Topics') %}
+	{% autopaginate topics page_size as object_list %}
+	{% paginate using "pagination/pagination_mod.html" %}
 	<br /><br />
 
 	<table class="forum">
@@ -40,7 +42,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for topic in topics %}
+		{% for topic in object_list %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
@@ -75,7 +77,7 @@
 		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
-	{% pybb_pagination _('Topics') %}
+	{% paginate %}
 	<br />
 </div>
 
