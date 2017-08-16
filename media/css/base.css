@@ -451,4 +451,11 @@ div.blogEntry hr {
 	clear: left;
 }
 
+/* Pagination */
 
+.current.page{
+	/*font-weight: bold;*/
+	font-size: large;
+	color: #C8BE93;
+	vertical-align: bottom;
+}
