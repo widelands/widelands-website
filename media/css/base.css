@@ -49,10 +49,6 @@ a:hover {
 	color: #181;
 }
 
-.breadCrumb{
-	margin-bottom: 10px;
-}
-
 /* We put this after a:hover  */
 /* to prevend the hover style */
 /* for this link              */
@@ -423,7 +419,6 @@ div.blogEntry {
 	border-radius: 4px;
 	border: 1px solid black;
 	padding: 15px;
-	padding-bottom: 30px;
 	margin-bottom: 20px;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 }
@@ -451,7 +446,15 @@ div.blogEntry hr {
 	clear: left;
 }
 
+div.blogEntry .breadCrumb{
+	margin-bottom: 1em;
+}
+
 /* Pagination */
+
+.pagination{
+	margin: 0 0 0.5em 0;
+}
 
 .pagination .current.page{
 	font-weight: bold;
@@ -459,6 +462,7 @@ div.blogEntry hr {
 	color: #C8BE93;
 	vertical-align: bottom;
 }
+
 .pagination .summary{
 	margin-right: 1em;
 }

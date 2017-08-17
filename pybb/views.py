@@ -125,9 +125,8 @@ def show_topic_ctx(request, topic_id):
             'form': form,
             'moderator': moderator,
             'subscribed': subscribed,
-            'posts': page.object_list,
-            'page': page,
-            'paginator': paginator,
+            'posts': posts,
+            'page_size': pybb_settings.TOPIC_PAGE_SIZE,
             'form_url': reverse('pybb_add_post', args=[topic.id]),
             }
 show_topic = render_to('pybb/topic.html')(show_topic_ctx)
