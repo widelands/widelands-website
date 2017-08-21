@@ -418,7 +418,7 @@ div.blogEntry {
 	-khtml-border-radius: 4px;
 	border-radius: 4px;
 	border: 1px solid black;
-	padding: 15px;
+	padding: 1em 1em 2em 1em;
 	margin-bottom: 20px;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 }
@@ -450,11 +450,11 @@ div.blogEntry .breadCrumb{
 	margin-bottom: 1em;
 }
 
-/* Pagination */
-
-.pagination{
-	margin: 0 0 0.5em 0;
+div.blogEntry .posRight{
+	margin-bottom: 1em;
 }
+
+/* Pagination */
 
 .pagination .current.page{
 	font-weight: bold;

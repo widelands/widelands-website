@@ -306,6 +306,13 @@ BLEACH_ALLOWED_TAGS = [u'a',
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
     'href'], 'td': ['align'], '*': ['class', 'id', 'title']}
 
+################################
+# Pagination settings          #
+# for linaro-django-pagination #
+################################
+PAGINATION_DEFAULT_WINDOW = 2
+
+
 try:
     from local_settings import *
 except ImportError:

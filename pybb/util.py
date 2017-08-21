@@ -173,7 +173,6 @@ def quote_text(text, user, markup):
     """Quote message using selected markup."""
     text = '*' + user.username + ' wrote:*\n\n' + text
 
-    # if markup == 'markdown':
     if markup == 'markdown':
         # Inserting a space after ">" will not change the generated HTML,
         # but it will unbreak certain constructs like '>:-))'.
@@ -203,51 +202,6 @@ def memoize_method(func):
             cache[key] = func(self, *args, **kwargs)
         return cache[key]
     return wrapper
-
-
-def paginate(items, request, per_page, total_count=None):
-    try:
-        page_number = int(request.GET.get('page', 1))
-    except ValueError:
-        page_number = 1
-
-    paginator = Paginator(items, per_page)
-    if total_count:
-        paginator._count = total_count
-
-    try:
-        page = paginator.page(page_number)
-    except (EmptyPage, InvalidPage):
-        page = paginator.page(1)
-
-    if page.has_previous:
-        get = request.GET.copy()
-        get['page'] = page.number - 1
-        page.previous_link = '?%s' % get.urlencode()
-    else:
-        page.previous_link = None
-
-    if page.has_next:
-        get = request.GET.copy()
-        get['page'] = page.number + 1
-        page.next_link = '?%s' % get.urlencode()
-    else:
-        page.next_link = None
-
-    #import pdb; pdb.set_trace()
-
-    return page, paginator
-
-
-# TODO(Franku): This function is never used AFAIK
-# 'django_language' isn't available since django 1.8
-def set_language(request, language):
-    """Change the language of session of authenticated user."""
-    if language and check_for_language(language):
-        if hasattr(request, 'session'):
-            request.session['django_language'] = language
-        else:
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
 
 
 def unescape(text):
