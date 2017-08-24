@@ -12,7 +12,6 @@ from django.contrib.syndication.views import Feed
 from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
-
 urlpatterns = [
     # Creating a sitemap.xml
     url(r'^sitemap\.xml/', include('sitemap_urls')),

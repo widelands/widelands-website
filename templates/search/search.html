@@ -3,9 +3,6 @@
 {% block content %}
     <h2>Search</h2>
 
-    <div class="blogEntry">
-    <p>The Search is case insentive. Search Words get stemmed (e.g.: 'Tribes' find also 'Tribe').
-    Providing more than one word, the words get ANDed, so all words must be in a topic.</p>
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
@@ -16,41 +13,16 @@
                 </td>
             </tr>
         </table>
+
         {% if query %}
-            <h2>Results</h2>
-            {% for result in object_list %}
-                {% for section, entry in result.items %}
-                    {% if section == "maps" and entry|length > 0 %}
-                        <h3> Maps:</h3>
-                        <ul>
-                            {% for map in entry %}
-                            <li><a href=" {{ map.object.get_absolute_url }}">{{ map.object.name }}</a> by {{ map.object.author}} at {{map.object.pub_date}}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if section == "topics" and entry|length > 0 %}
-                        <h3> Topics: </h3>
-                        <ul>
-                            {% for topic in entry %}
-                            <li><a href=" {{ topic.object.get_absolute_url }}">{{ topic.object.name }}</a><span class="small"> @ </span> 
-                                Forum <a href="{{ topic.object.forum.get_absolute_url }}">{{ topic.object.forum }}</a>
-                                by {{topic.object.user}},
-                                {{topic.object.updated}}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if section == "posts" and entry|length > 0 %}
-                        <h3> Posts: </h3>
-                        <ul>
-                            {% for post in entry %}
-                            <li><a href=" {{ post.object.get_absolute_url }}">Post by {{ post.object.user }}</a><span class="small"> @ </span>
-                             Topic <a href="{{ post.object.topic.get_absolute_url }}">{{ post.object.topic }}</a><span class="small"> @ </span>
-                             Forum <a href="{{ post.object.topic.forum.get_absolute_url }}">{{ post.object.topic.forum }}</a>,
-                             {{post.object.created}}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endfor %}
+            <h3>Results</h3>
+
+            {% for result in page.object_list %}
+                <p>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+                </p>
+            {% empty %}
+                <p>No results found.</p>
             {% endfor %}
 
             {% if page.has_previous or page.has_next %}
@@ -64,5 +36,4 @@
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
     </form>
-    </div>
 {% endblock %}
