@@ -72,12 +72,6 @@
 			<td class="grey">Signature:</td>
 			<td>{{ profile.signature|urlize|linebreaks }}</td>
 		</tr>
-		{% ifequal user profile.user %}
-		<tr>
-			<td class="grey">Email:</td>
-			<td>{{ profile.user.email }}</td>
-		</tr>
-		{% endifequal %}
 	</table>
 </div>
 

@@ -55,6 +55,9 @@ class Ware(models.Model):
     # This limit shall probably cover the longest help (found 209, nothing
     # more)
     help = models.TextField(max_length=256)
+    
+    class Meta:
+        ordering = ['name']
 
     if settings.USE_SPHINX:
         search = SphinxSearch(
@@ -176,6 +179,8 @@ class Building(models.Model):
         return (self.build_wares.all().count() != 0)
 
     def get_build_cost(self):
+        # Creating the relation between build_cost and build_wares
+        # Querying the wares returns the wares in alphabetical order!
         count = map(int, self.build_costs.split())
         for c, w in zip(count, self.build_wares.all()):
             yield [w] * c
