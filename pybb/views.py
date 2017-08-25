@@ -12,7 +12,7 @@ from django.db import connection
 from django.utils import translation
 from django.shortcuts import render
 
-from pybb.util import render_to, paged, build_form, quote_text, paginate, set_language, ajax, urlize
+from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
     MARKUP_CHOICES
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
@@ -69,13 +69,11 @@ def show_forum_ctx(request, forum_id):
 
     topics = forum.topics.order_by(
         '-sticky', '-updated').exclude(posts__hidden=True).select_related()
-    page, paginator = paginate(topics, request, pybb_settings.FORUM_PAGE_SIZE)
 
     return {'forum': forum,
-            'topics': page.object_list,
+            'topics': topics,
             'quick': quick,
-            'page': page,
-            'paginator': paginator,
+            'page_size': pybb_settings.FORUM_PAGE_SIZE,
             }
 show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
@@ -108,8 +106,6 @@ def show_topic_ctx(request, topic_id):
                   request.user in topic.subscribers.all())
 
     posts = topic.posts.exclude(hidden=True).select_related()
-    page, paginator = paginate(posts, request, pybb_settings.TOPIC_PAGE_SIZE,
-                               total_count=topic.post_count)
 
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
@@ -119,7 +115,7 @@ def show_topic_ctx(request, topic_id):
     # for post in page.object_list:
     #     post.user.pybb_profile = profiles[post.user.id]
 
-    load_related(page.object_list, Attachment.objects.all(), 'post')
+    load_related(posts, Attachment.objects.all(), 'post')
 
     return {'topic': topic,
             'last_post': last_post,
@@ -127,9 +123,8 @@ def show_topic_ctx(request, topic_id):
             'form': form,
             'moderator': moderator,
             'subscribed': subscribed,
-            'posts': page.object_list,
-            'page': page,
-            'paginator': paginator,
+            'posts': posts,
+            'page_size': pybb_settings.TOPIC_PAGE_SIZE,
             'form_url': reverse('pybb_add_post', args=[topic.id]),
             }
 show_topic = render_to('pybb/topic.html')(show_topic_ctx)

@@ -9,7 +9,7 @@ List all news in a table
 <div class="blogEntry">
 	<div class="center">
 	{% autopaginate object_list 20 %}
-	{% paginate %}
+	{% paginate using "pagination/pagination_mod.html" %}
 	</div>
 	<table width="100%">
 		<caption></caption>

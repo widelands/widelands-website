@@ -5,6 +5,7 @@
 {% load wiki_extras %}
 {% load wlprofile_extras %}
 {% load custom_date %}
+{% load pagination_tags %}
 
 {% block title %}
 {{ topic.name }} - {{ topic.forum.name }} - {{ block.super }}
@@ -19,11 +20,13 @@
 {% block content %}
 <h1>Topic: {{ topic }} </h1>
 <div class="blogEntry">
+	<div class="breadCrumb">
 	<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
 	{% pybb_link topic.forum.category %} &#187; 
 	<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
 	{{ topic }}
-	<br /><br />
+	</div>
+
 	<div class="posRight">
 	{% if moderator %}
 		{% if topic.sticky %}
@@ -67,8 +70,8 @@
 		</a>
 	{% endif %}
 	</div>
-	{% pybb_pagination _('Posts') %}
-	<br /><br />
+	{% autopaginate posts page_size as object_list %}
+	{% paginate using "pagination/pagination_mod.html" %}
 
 {% if first_post %}
 	{% ifnotequal first_post posts.0 %}
@@ -156,7 +159,7 @@
 
 	<table class="forum">
 		<tbody>
-	{% for post in posts %}
+	{% for post in object_list %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="author">
 				{{ post.user|user_link }}<br />
@@ -228,10 +231,13 @@
 				{% endif %}
 			</td>
 		</tr>
+		{% if not forloop.last %}
+		{# no spacer at end of table #}
 		<tr class="spacer">
 			<td></td>
 			<td></td>
 		</tr>
+		{% endif %}
 	{% endfor %}
 		</tbody>
 	</table>
@@ -279,8 +285,7 @@
 		</a>
 	{% endif %}
 	</div>
-	{% pybb_pagination _('Posts') %}
-	<br />
+	{% paginate %}
 </div>
 
 {% if user.is_authenticated %}

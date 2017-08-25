@@ -4,6 +4,7 @@
 {% load humanize %}
 {% load wlprofile_extras %}
 {% load custom_date %}
+{% load pagination_tags %}
 
 {% block title %}
 {{ forum.name }} - {{ block.super }}
@@ -19,16 +20,17 @@
 <h1>Forum: {{ forum }}</h1>
 
 <div class="blogEntry">
+	<div class="breadCrumb">
 	<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
 	{% pybb_link forum.category %} &#187; 
 	{{ forum }}
-	<br /><br />
+	</div>
 	<a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
 		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
-	{% pybb_pagination _('Topics') %}
-	<br /><br />
+	{% autopaginate topics page_size as object_list %}
+	{% paginate using "pagination/pagination_mod.html" %}
 
 	<table class="forum">
 		<thead>
@@ -40,7 +42,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for topic in topics %}
+		{% for topic in object_list %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
@@ -69,14 +71,11 @@
 		{% endfor %}
 		</tbody>
 	</table>
-
-	<br />
 	<a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
 		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
-	{% pybb_pagination _('Topics') %}
-	<br />
+	{% paginate %}
 </div>
 
 <div class="center green">

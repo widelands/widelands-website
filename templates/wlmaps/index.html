@@ -16,11 +16,11 @@
 	<p>
 	The map files have to be placed in the Widelands map directory to be found by the game. Check the <a href="/wiki/Technical%20FAQ/#where_are_my_maps_and_savegames_stored">Technical FAQ</a> to find the map directory.
 	</p>
-	{% autopaginate maps maps_per_page %}
-	{% paginate %}
+	{% autopaginate maps maps_per_page as object_list %}
+	{% paginate using "pagination/pagination_mod.html" %}
 	<br />
 	<table class="maps">
-		{% for map in maps %}
+		{% for map in object_list %}
 		<tr class="{% cycle "odd" "even" %}">
 			<td class="first-column"><a href="{{ map.get_absolute_url }}"><img class="minimap" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" /></a></td>
 			<td>
