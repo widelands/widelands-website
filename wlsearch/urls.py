@@ -11,10 +11,11 @@
 
 from django.conf.urls import *
 from views import HaystackSearchView
+from haystack.query import EmptySearchQuerySet
 
 urlpatterns = [
-    #url(r'^$', HaystackSearchView.as_view(), name='haystack_search'),
-    url(r'^/?$',HaystackSearchView.as_view(), name='search'),
+    #url(r'^nav/$', nav_search, name='nav_search'),
+    url(r'^/?$', HaystackSearchView.as_view(), name='search'),
     #url(r'^$', SearchView(), name='haystack_search'),
     #url(r'^$', include('haystack.urls')),
 ]

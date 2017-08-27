@@ -2,7 +2,7 @@
 
 
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 
 from forms import SearchForm
@@ -99,61 +99,65 @@ from haystack.forms import ModelSearchForm as HaystackForm
 from forms import WlSearchForm
 from haystack.query import EmptySearchQuerySet, SearchQuerySet
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 
 
 class HaystackSearchView(SearchView):
     """My custom search view."""
     template_name = 'search/search_test.html'
-    form_class = WlSearchForm
-    #initial = {'incl_wiki': True, 'incl_forum': True, 'incl_news': True, 'incl_maps': True, 'incl_help': True}
+    form_class = HaystackForm#WlSearchForm
+    #initial = {'models': True}
     paginate_by = None
-    
+
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            sqs = SearchQuerySet().filter(content=form.cleaned_data['q']).order_by('-date')
-            print('frank cleaned_data: ', form.cleaned_data)
-            context = []
-            if form.cleaned_data['incl_maps']:
-                context.extend([{'maps': [map for map in sqs.models(Map)]}])
-            if form.cleaned_data['incl_forum']:
-                context.extend([{'topics': [topic for topic in sqs.models(Topic)]}])
-                context.extend([{'posts': [post for post in sqs.models(Post)]}])
-            print('franku context: ', context)
+        """ This is executed when searching through the box in the navigation
         
-        return render(request, self.template_name, {'query': form.cleaned_data['q'], 'form': form, 'object_list': context})
+        We build the query string and redirect it to this view again.
+
+        """
+        form = self.form_class(request.POST)
+        if form.is_valid() and form.cleaned_data['q'] != '':
+            model_str = 'q=%s' % (form.cleaned_data['q'])
+            for model in form.cleaned_data['models']:
+                model_str += '&models=%s' % (model)
+            return HttpResponseRedirect('%s?%s' % (reverse('search'), model_str))
+        print('franku when will this be arived?')
+        return render(request, self.template_name, {'form': form})
 
     def get_queryset(self):
         queryset = super(HaystackSearchView, self).get_queryset()
-        print('franku queryset', queryset)
+        #print('franku queryset', queryset)
         # The field to sort is defined in search_indexes.py for each model
-        #q = queryset.order_by('-date')
-        #print('franku q', q)
-        
-        return queryset.order_by('-date')
+        if queryset != EmptySearchQuerySet:
+            return queryset.order_by('-date')
+        else:
+            return queryset
 
     def get_context_data(self, *args, **kwargs):
         """ Regrouping the search results """
     
         context = super(HaystackSearchView, self).get_context_data(*args, **kwargs)
-        print('franku context kwargs: ', args, kwargs)
-        print('franku context data: ', context)
-        maps = []
-        topics = []
-        posts = []
-        for item in context['object_list']:
-            #print('franku item: ', item.content_type())
-            if item.content_type() == 'wlmaps.map':
-                maps.append(item)
-            if item.content_type() == "pybb.post":
-                posts.append(item)
-            if item.content_type() == "pybb.topic":
-                topics.append(item)
+        #print('franku context kwargs: ', args, kwargs)
+        #print('franku context data: ', context)
+        if context['object_list'] != EmptySearchQuerySet:
+            maps = []
+            topics = []
+            posts = []
+            for item in context['object_list']:
+                #print('franku item: ', item.content_type())
+                if item.content_type() == 'wlmaps.map':
+                    maps.append(item)
+                if item.content_type() == "pybb.post":
+                    posts.append(item)
+                if item.content_type() == "pybb.topic":
+                    topics.append(item)
+            
+            sorted_objects = [
+                {'maps': maps},
+                {'topics': topics},
+                {'posts': posts},
+            ]
+            context['object_list'] = sorted_objects
         
-        sorted_objects = [
-            {'maps': maps},
-            {'topics': topics},
-            {'posts': posts},
-        ]
-        context['object_list'] = sorted_objects
         return context
