@@ -16,11 +16,14 @@
 
         {% if query %}
             <h3>Results</h3>
-
-            {% for result in page.object_list %}
-                <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
-                </p>
+            {% for result in object_list %}
+                
+                {% if result.content_type == "wlmaps.map" %}
+                    <h3> Maps:</h3>
+                    <ul>
+                    {% include "search/includes/maps.html" %}
+                    </ul>
+                {% endif %}
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}

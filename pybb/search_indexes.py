@@ -21,11 +21,12 @@ class TopicIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     date = indexes.DateTimeField(model_attr='created')
     name = indexes.CharField(model_attr='name')
-    author = indexes.CharField(model_attr='user')
 
     def get_model(self):
         return Topic
 
+    def get_updated_field(self):
+        return "updated"
 
 class PostIndex(indexes.SearchIndex, indexes.Indexable):
 
@@ -45,7 +46,9 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     date = indexes.DateTimeField(model_attr='created')
     body_text = indexes.CharField(model_attr='body_text')
-    author = indexes.CharField(model_attr='user')
 
     def get_model(self):
         return Post
+    
+    def get_updated_field(self):
+        return "created"

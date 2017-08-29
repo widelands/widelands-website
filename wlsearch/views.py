@@ -106,9 +106,10 @@ from django.http import HttpResponseRedirect
 class HaystackSearchView(SearchView):
     """My custom search view."""
     template_name = 'search/search_test.html'
+    #query = ''
     form_class = HaystackForm#WlSearchForm
     #initial = {'models': True}
-    paginate_by = None
+    #paginate_by = None
 
     def post(self, request, *args, **kwargs):
         """ This is executed when searching through the box in the navigation
@@ -127,7 +128,7 @@ class HaystackSearchView(SearchView):
 
     def get_queryset(self):
         queryset = super(HaystackSearchView, self).get_queryset()
-        #print('franku queryset', queryset)
+        print('franku queryset', queryset)
         # The field to sort is defined in search_indexes.py for each model
         if queryset != EmptySearchQuerySet:
             return queryset.order_by('-date')
@@ -139,7 +140,7 @@ class HaystackSearchView(SearchView):
     
         context = super(HaystackSearchView, self).get_context_data(*args, **kwargs)
         #print('franku context kwargs: ', args, kwargs)
-        #print('franku context data: ', context)
+        print('franku context data: ', context)
         if context['object_list'] != EmptySearchQuerySet:
             maps = []
             topics = []

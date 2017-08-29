@@ -24,3 +24,6 @@ class MapIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Map
+    
+    def get_updated_field(self):
+        return "pub_date"

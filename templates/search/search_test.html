@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
+{% load highlight %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/search.css" />
+{{block.super}}
+{% endblock %}
 
 {% block content %}
     <h2>Search</h2>
 
     <div class="blogEntry">
-    <p>The Search is case insentive. Search Words get stemmed (e.g.: 'Tribes' find also 'Tribe').
-    Providing more than one word, the words get ANDed, so all words must be in a topic.</p>
+        <ul>
+            <li>The Search is case insentive.</li>
+            <li>Search Words get stemmed, e.g. 'Tribes' find also 'Tribe', 'attachment' finds also 'attach'.</li>
+            <li>Providing more than one word, the words get ANDed, so all words must be in a topics name.</li>
+        </ul>
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
@@ -46,7 +55,9 @@
                             <li><a href=" {{ post.object.get_absolute_url }}">Post by {{ post.object.user }}</a><span class="small"> @ </span>
                              Topic <a href="{{ post.object.topic.get_absolute_url }}">{{ post.object.topic }}</a><span class="small"> @ </span>
                              Forum <a href="{{ post.object.topic.forum.get_absolute_url }}">{{ post.object.topic.forum }}</a>,
-                             {{post.object.created}}</li>
+                             {{post.object.created}}<br>
+                             {% highlight post.object.body_text with query max_length 100 %}
+                            </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
