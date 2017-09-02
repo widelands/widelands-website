@@ -1,4 +1,3 @@
-import datetime
 from haystack import indexes
 from pybb.models import Topic, Post
 
@@ -49,6 +48,6 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Post
-    
+
     def get_updated_field(self):
         return "created"

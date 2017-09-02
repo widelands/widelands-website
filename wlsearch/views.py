@@ -106,10 +106,19 @@ from django.http import HttpResponseRedirect
 class HaystackSearchView(SearchView):
     """My custom search view."""
     template_name = 'search/search_test.html'
-    #query = ''
+    #queryset = EmptySearchQuerySet()
     form_class = HaystackForm#WlSearchForm
     #initial = {'models': True}
-    #paginate_by = None
+    paginate_by = None
+
+    # def get(self, request, *args, **kwargs):
+    #     if 'q' in request.GET:
+    #         print('franku GET', request.GET['q'])
+    #     print('franku GET', request.GET)
+    #     form = self.form_class(request.GET)
+    #     print('franku form', form.get_models())
+    #     #self.queryset = EmptySearchQuerySet()
+    #     return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         """ This is executed when searching through the box in the navigation
@@ -123,7 +132,6 @@ class HaystackSearchView(SearchView):
             for model in form.cleaned_data['models']:
                 model_str += '&models=%s' % (model)
             return HttpResponseRedirect('%s?%s' % (reverse('search'), model_str))
-        print('franku when will this be arived?')
         return render(request, self.template_name, {'form': form})
 
     def get_queryset(self):
@@ -140,24 +148,30 @@ class HaystackSearchView(SearchView):
     
         context = super(HaystackSearchView, self).get_context_data(*args, **kwargs)
         #print('franku context kwargs: ', args, kwargs)
-        print('franku context data: ', context)
+        for k,v in context.iteritems():
+            print('franku context data: ', k, " : ", v)
+        print('franku object_list: ', context['object_list'])
         if context['object_list'] != EmptySearchQuerySet:
             maps = []
             topics = []
             posts = []
+            workers = []
             for item in context['object_list']:
-                #print('franku item: ', item.content_type())
+                print('franku item: ', item)
                 if item.content_type() == 'wlmaps.map':
                     maps.append(item)
                 if item.content_type() == "pybb.post":
                     posts.append(item)
                 if item.content_type() == "pybb.topic":
                     topics.append(item)
+                if item.content_type() == "wlhelp.worker":
+                    workers.append(item)
             
             sorted_objects = [
                 {'maps': maps},
                 {'topics': topics},
                 {'posts': posts},
+                {'workers': workers},
             ]
             context['object_list'] = sorted_objects
         

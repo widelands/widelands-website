@@ -1,0 +1,4 @@
+<li><a href=" {{ topic.object.get_absolute_url }}">{{ topic.object.name }}</a><span class="small"> @ </span> 
+    Forum <a href="{{ topic.object.forum.get_absolute_url }}">{{ topic.object.forum }}</a>
+    by {{topic.object.user}},
+    {{topic.object.created}}</li>

@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load highlight %}
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/search.css" />
@@ -12,8 +11,8 @@
     <div class="blogEntry">
         <ul>
             <li>The Search is case insentive.</li>
-            <li>Search Words get stemmed, e.g. 'Tribes' find also 'Tribe', 'attachment' finds also 'attach'.</li>
-            <li>Providing more than one word, the words get ANDed, so all words must be in a topics name.</li>
+            <li>Search terms get stemmed, e.g. 'Tribes' find also 'tribe', 'mining' finds also 'Mine' and 'miner'.</li>
+            <li>Providing more than one word, the words get ANDed, e.g. all words must be in a topics name.</li>
         </ul>
     <form method="get" action=".">
         <table>
@@ -28,47 +27,46 @@
         {% if query %}
             <h2>Results</h2>
             {% for result in object_list %}
-                {% for section, entry in result.items %}
-                    {% if section == "maps" and entry|length > 0 %}
+                {% for section, section_entries in result.items %}
+                    {% if section == "maps" and section_entries|length > 0 %}
                         <h3> Maps:</h3>
                         <ul>
-                            {% for map in entry %}
-                            <li><a href=" {{ map.object.get_absolute_url }}">{{ map.object.name }}</a> by {{ map.object.author}} at {{map.object.pub_date}}</li>
+                            {% for map in section_entries %}
+                                {% include "search/includes/maps.html" %}
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if section == "topics" and entry|length > 0 %}
+                    {% if section == "topics" and section_entries|length > 0 %}
                         <h3> Topics: </h3>
                         <ul>
-                            {% for topic in entry %}
-                            <li><a href=" {{ topic.object.get_absolute_url }}">{{ topic.object.name }}</a><span class="small"> @ </span> 
-                                Forum <a href="{{ topic.object.forum.get_absolute_url }}">{{ topic.object.forum }}</a>
-                                by {{topic.object.user}},
-                                {{topic.object.created}}</li>
+                            {% for topic in section_entries %}
+                                {% include "search/includes/topics.html" %}
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if section == "posts" and entry|length > 0 %}
+                    {% if section == "posts" and section_entries|length > 0 %}
                         <h3> Posts: </h3>
                         <ul>
-                            {% for post in entry %}
-                            <li><a href=" {{ post.object.get_absolute_url }}">Post by {{ post.object.user }}</a><span class="small"> @ </span>
-                             Topic <a href="{{ post.object.topic.get_absolute_url }}">{{ post.object.topic }}</a><span class="small"> @ </span>
-                             Forum <a href="{{ post.object.topic.forum.get_absolute_url }}">{{ post.object.topic.forum }}</a>,
-                             {{post.object.created}}<br>
-                             {% highlight post.object.body_text with query max_length 100 %}
-                            </li>
+                            {% for post in section_entries %}
+                                {% include "search/includes/posts.html" %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if section == "workers" and section_entries|length > 0 %}
+                        <h3> Workers: </h3>
+                        <ul>
+                            {% for worker in section_entries %}
+                                {% include "search/includes/workers.html" %}
                             {% endfor %}
                         </ul>
                     {% endif %}
                 {% endfor %}
             {% endfor %}
-
-            {% if page.has_previous or page.has_next %}
+            {% if page_obj.has_previous or page_obj.has_next %}
                 <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    {% if page_obj.has_previous %}<a href="?q={{ query }}&amp;page={{ page_obj.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
                     |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                    {% if page_obj.has_next %}<a href="?q={{ query }}&amp;page={{ page_obj.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
                 </div>
             {% endif %}
         {% else %}

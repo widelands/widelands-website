@@ -1,0 +1,8 @@
+{% load highlight %}
+
+<li><a href=" {{ post.object.get_absolute_url }}">Post by {{ post.object.user }}</a><span class="small"> @ </span>
+ Topic <a href="{{ post.object.topic.get_absolute_url }}">{{ post.object.topic }}</a><span class="small"> @ </span>
+ Forum <a href="{{ post.object.topic.forum.get_absolute_url }}">{{ post.object.topic.forum }}</a>,
+ {{post.object.created}}<br>
+ {% highlight post.object.body_text with query max_length 100 %}
+</li>

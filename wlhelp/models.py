@@ -13,6 +13,9 @@ class Tribe(models.Model):
     network_pdf_url = models.CharField(max_length=256)
     network_gif_url = models.CharField(max_length=256)
 
+    def __unicode__(self):
+        return u'%s' % self.name
+
 
 class Worker(models.Model):
     if settings.USE_SPHINX:

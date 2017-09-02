@@ -2,7 +2,8 @@
 
 {% block content %}
     <h2>Search</h2>
-
+    
+    <div class="blogEntry">
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
@@ -16,13 +17,28 @@
 
         {% if query %}
             <h3>Results</h3>
-            {% for result in object_list %}
-                
-                {% if result.content_type == "wlmaps.map" %}
-                    <h3> Maps:</h3>
+            content_type {{ object_list }}
+            {% regroup object_list by content_type as test %}
+            <ul>
+                {% for x in test %}
+                    <li> {{ x.grouper }}
                     <ul>
-                    {% include "search/includes/maps.html" %}
+                        {% for item in x.list %}
+                            <li> {{ item }} </li>
+                        {% endfor %}
                     </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            <p>grouper {{ test.grouper }}</p>
+            {% for result in object_list %}
+            
+                {% if result.content_type == "wlmaps.map" %}
+                <h3> Maps:</h3>
+                <ul>
+                    {% include "search/includes/maps.html" %}
+                </ul>
                 {% endif %}
             {% empty %}
                 <p>No results found.</p>
@@ -39,4 +55,5 @@
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
     </form>
+    </div>
 {% endblock %}
