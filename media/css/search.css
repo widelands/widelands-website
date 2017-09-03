@@ -1,3 +1,19 @@
 .highlighted {
-    color: red;
+    color: lightgray;
+}
+
+.search_options{
+    display: table;
+    border-bottom: 1px solid #998;
+    width: 100%
+}
+.search_options .row{
+    display: table-row;
+}
+.search_options .cell{
+    display: table-cell;
+    padding: 0 1em 0 1em;
+}
+.closeable{
+    
 }

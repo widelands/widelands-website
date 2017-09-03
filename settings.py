@@ -123,7 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 
     # Remove this, when load gets to high or attachments are enabled
-    'django.middleware.gzip.GZipMiddleware',
+    # 'django.middleware.gzip.GZipMiddleware',
     'linaro_django_pagination.middleware.PaginationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
     'tracking.middleware.VisitorCleanUpMiddleware',
@@ -182,7 +182,7 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-PYBB_ATTACHMENT_ENABLE = False  # disable gzip middleware when enabling attachments
+PYBB_ATTACHMENT_ENABLE = True  # disable gzip middleware when enabling attachments
 PYBB_DEFAULT_MARKUP = 'markdown'
 PYBB_FREEZE_FIRST_POST = False
 
