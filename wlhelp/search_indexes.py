@@ -1,5 +1,7 @@
 from haystack import indexes
 from wlhelp.models import Worker
+from haystack.fields import DateField
+from datetime import date
 
 
 class WorkerIndex(indexes.SearchIndex, indexes.Indexable):
@@ -16,7 +18,8 @@ class WorkerIndex(indexes.SearchIndex, indexes.Indexable):
     """
 
     text = indexes.CharField(document=True, use_template=True)
-    name = indexes.CharField(model_attr='name')
+    # To get date related search working: 
+    date = DateField(default=date.today())
     displayname = indexes.CharField(model_attr='displayname')
     help = indexes.CharField(model_attr='help')
 

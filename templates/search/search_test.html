@@ -15,7 +15,9 @@
             <li>Search terms get stemmed, e.g. 'Tribes' find also 'tribe',
             'Mines' finds also 'mine', 'Miner' and 'mining'.</li>
             <li>Providing more than one word, the words get ANDed, e.g. all words must be in a topics name.</li>
-            <li>Default is searching the last two years</li>
+            <li>Words preceding with a minus means excluding, e.g. searching for 'tribe -barbarian'
+            finds all posts which content contains 'tribe' but not 'barbarian'.</li>
+            <li>Default is searching the last two years.</li>
         </ul>
     </div>
     <form method="get" action=".">
@@ -31,10 +33,10 @@
             <div class="row">
                 <div class="cell">
                     {% for m in form.models %}
-                        {{ m.choice_label }} {{ m.tag }}
+                        {{ m.choice_label }} {{ m.tag }} |
                     {% endfor %}
                 </div>
-                <div class="cell">{{ form.start_date }} <span style="font-size: small">Format: YYYY-MM-DD</span> </div>
+                <div class="cell">{{ form.start_date }}</div>
             </div>
         <input class="posRight" type="submit" value="Search"><br>
         </div>

@@ -15,8 +15,5 @@ from haystack.query import EmptySearchQuerySet
 from haystack.views import basic_search
 
 urlpatterns = [
-    #url(r'^/?$', basic_search(), name='search'),
     url(r'^/?$', HaystackSearchView.as_view(), name='search'),
-    #url(r'^$', SearchView(), name='haystack_search'),
-    #url(r'^$', include('haystack.urls')),
 ]

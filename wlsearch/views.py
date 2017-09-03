@@ -106,9 +106,7 @@ from datetime import date, timedelta
 class HaystackSearchView(SearchView):
     """My custom search view."""
     template_name = 'search/search_test.html'
-    query = ''
     form_class = WlSearchForm
-    
     paginate_by = None
 
     def post(self, request, *args, **kwargs):
@@ -128,15 +126,6 @@ class HaystackSearchView(SearchView):
                 search_url += '&models=%s' % (model)
             return HttpResponseRedirect('%s?%s' % (reverse('search'), search_url))
         return render(request, self.template_name, {'form': form})
-
-    def get_queryset(self):
-        queryset = super(HaystackSearchView, self).get_queryset()
-        print('franku queryset', queryset)
-        # The field to sort is defined in search_indexes.py for each model
-        if queryset != EmptySearchQuerySet:
-            return queryset.order_by('-date')
-        else:
-            return queryset
 
     def get_context_data(self, *args, **kwargs):
         """ Regrouping the search results """
