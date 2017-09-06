@@ -17,3 +17,29 @@
 .closeable{
     
 }
+
+.ui-datepicker {
+    background-image: url("../img/wood.png");
+    border-radius: 4px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+    padding: 0.8em;
+}
+
+.ui-datepicker-header {
+    text-align: center;
+    border: 1px inset darkgray;
+    background-image: url("../img/black50.png");
+    margin-bottom: 5px;
+}
+
+.ui-datepicker-calendar {
+    border: 1px inset darkgray;
+    background-image: url("../img/black20.png");
+}
+.ui-datepicker-prev {
+    padding: 0 3em 0 0;
+}
+ 
+.ui-datepicker-next {
+    padding: 0 0 0 3em;
+}

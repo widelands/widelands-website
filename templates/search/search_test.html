@@ -2,44 +2,60 @@
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/search.css" />
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 {{block.super}}
 {% endblock %}
 
 {% block content %}
+    <script>
+  $( function() {
+    $( ".datepicker" ).datepicker({
+        dateFormat: "yy-mm-dd",
+        showAnim: "slideDown"
+        });
+  } );
+  </script>
     <h2>Search</h2>
 
     <div class="blogEntry">
         <div class="closeable">
         <ul>
             <li>The Search is case insentive.</li>
-            <li>Search terms get stemmed, e.g. 'Tribes' find also 'tribe',
+            <li>Search terms get stemmed, e.g. 'Tribes' find also 'tribe'.
             'Mines' finds also 'mine', 'Miner' and 'mining'.</li>
             <li>Providing more than one word, the words get ANDed, e.g. all words must be in a topics name.</li>
             <li>Words preceding with a minus means excluding, e.g. searching for 'tribe -barbarian'
-            finds all posts which content contains 'tribe' but not 'barbarian'.</li>
+            finds all posts containing 'tribe' but excludes all posts containing 'barbarian'.</li>
             <li>Default is searching the last two years.</li>
         </ul>
     </div>
     <form method="get" action=".">
-        <div class="search_options">
-            <div class="row">
-                <div class="cell">Search for: {{ form.q }}</div>
-            </div>
+        {{ form.non_field_errors }}
 
-            <div class="row">
-                <div class="cell"><strong>{{form.models.label}}:</strong></div>
-                <div class="cell">Search from this date on (Leave empty for disabling):</div>
-            </div>
-            <div class="row">
-                <div class="cell">
-                    {% for m in form.models %}
-                        {{ m.choice_label }} {{ m.tag }} |
-                    {% endfor %}
-                </div>
-                <div class="cell">{{ form.start_date }}</div>
-            </div>
+        <div class="search-options">
+          <p>
+            <strong>Search for:</strong> {{ form.q }}
+            <strong>Startdate: </strong>
+                {% if form.start_date.errors %}
+                    <span class="errormessage"> Enter a valid date in form of YYYY-MM-DD </span>
+                {% endif %}
+                {{ form.start_date }}
+                 (Leave empty for searching all)
+          </p>
+          <p>
+            <strong>Search in:</strong>
+          
+                    {{ form.incl_forum.label }} {{ form.incl_forum }} |
+                    {{ form.incl_maps.label }} {{ form.incl_maps }} |
+                    {{ form.incl_wiki.label }} {{ form.incl_wiki }} |
+                    {{ form.incl_help.label }} {{ form.incl_help }} |
+                    {{ form.incl_news.label }} {{ form.incl_news }}
+          </p>
         <input class="posRight" type="submit" value="Search"><br>
         </div>
+        
 
         {% if query %}
             <h2>Results</h2>
