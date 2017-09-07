@@ -15,51 +15,62 @@
         dateFormat: "yy-mm-dd",
         showAnim: "slideDown"
         });
-  } );
+  });
+  $( function() {
+    $( ".search-help" ).click(function() {
+      if ( $( ".search-help-hints" ).is( ":hidden" ) ) {
+        $( ".search-help-hints" ).show( "slow", function() {
+          $( ".search-help" ).text( "Hide help");
+      });
+      } else {
+        $( ".search-help-hints" ).slideUp( "slow", function() {
+          $( ".search-help" ).text( "Show help");
+          });
+        }
+    });
+});
   </script>
     <h2>Search</h2>
 
     <div class="blogEntry">
-        <div class="closeable">
-        <ul>
+        <div class="search-help">Show help</div>
+        <ul class="search-help-hints">
             <li>The Search is case insentive.</li>
             <li>Search terms get stemmed, e.g. 'Tribes' find also 'tribe'.
             'Mines' finds also 'mine', 'Miner' and 'mining'.</li>
             <li>Providing more than one word, the words get ANDed, e.g. all words must be in a topics name.</li>
             <li>Words preceding with a minus means excluding, e.g. searching for 'tribe -barbarian'
             finds all posts containing 'tribe' but excludes all posts containing 'barbarian'.</li>
-            <li>Default is searching the last two years.</li>
         </ul>
-    </div>
     <form method="get" action=".">
         {{ form.non_field_errors }}
 
         <div class="search-options">
-          <p>
-            <strong>Search for:</strong> {{ form.q }}
+          <div>
+            <strong>Search for: </strong>{{ form.q }}
             <strong>Startdate: </strong>
+                {{ form.start_date }}
                 {% if form.start_date.errors %}
                     <span class="errormessage"> Enter a valid date in form of YYYY-MM-DD </span>
                 {% endif %}
-                {{ form.start_date }}
-                 (Leave empty for searching all)
-          </p>
-          <p>
-            <strong>Search in:</strong>
-          
+                 (Leave empty for full search)
+          </div>
+          <div>
+            <strong>Search in: </strong>
                     {{ form.incl_forum.label }} {{ form.incl_forum }} |
                     {{ form.incl_maps.label }} {{ form.incl_maps }} |
                     {{ form.incl_wiki.label }} {{ form.incl_wiki }} |
                     {{ form.incl_help.label }} {{ form.incl_help }} |
                     {{ form.incl_news.label }} {{ form.incl_news }}
-          </p>
-        <input class="posRight" type="submit" value="Search"><br>
+                    <input class="posRight" type="submit" value="Search">
+          </div>
         </div>
-        
-
         {% if query %}
             <h2>Results</h2>
+             {{ object_list }}<br>
             {% for result in object_list %}
+              
+              
                 {% for section, section_entries in result.items %}
                     {% if section == "maps" and section_entries|length > 0 %}
                         <h3> Maps:</h3>
@@ -93,17 +104,32 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
+                    {% if section == "wares" and section_entries|length > 0 %}
+                        <h3> Wares: </h3>
+                        <ul>
+                            {% for ware in section_entries %}
+                                {% include "search/includes/wares.html" %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if section == "buildings" and section_entries|length > 0 %}
+                        <h3> Buildings: </h3>
+                        <ul>
+                            {% for building in section_entries %}
+                                {% include "search/includes/buildings.html" %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if section == "tribes" and section_entries|length > 0 %}
+                        <h3> Tribes: </h3>
+                        <ul>
+                            {% for tribe in section_entries %}
+                                {% include "search/includes/tribes.html" %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 {% endfor %}
             {% endfor %}
-            {% if page_obj.has_previous or page_obj.has_next %}
-                <div>
-                    {% if page_obj.has_previous %}<a href="?q={{ query }}&amp;page={{ page_obj.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
-                    |
-                    {% if page_obj.has_next %}<a href="?q={{ query }}&amp;page={{ page_obj.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
     </form>
     </div>

@@ -2,24 +2,23 @@
     color: lightgray;
 }
 
-.search_options{
-    display: table;
+.search-help {
     border-bottom: 1px solid #998;
-    width: 100%
 }
-.search_options .row{
-    display: table-row;
+
+.search-help-hints {
+    display: none;
 }
-.search_options .cell{
-    display: table-cell;
-    padding: 0 1em 0 1em;
-}
-.closeable{
-    
+.search-options{
+    display: grid;
+    border-bottom: 1px solid #998;
+    border-top: 1px solid #998;
+    padding-top: 1em;
 }
 
 .ui-datepicker {
     background-image: url("../img/wood.png");
+    border: 1px solid black;
     border-radius: 4px;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
     padding: 0.8em;

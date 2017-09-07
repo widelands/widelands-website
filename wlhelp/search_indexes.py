@@ -1,5 +1,5 @@
 from haystack import indexes
-from wlhelp.models import Worker
+from wlhelp.models import Worker, Ware, Building, Tribe
 from haystack.fields import DateField
 from datetime import date
 
@@ -25,3 +25,36 @@ class WorkerIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Worker
+
+class WareIndex(indexes.SearchIndex, indexes.Indexable):
+
+    text = indexes.CharField(document=True, use_template=True)
+    # To get date related search working: 
+    date = DateField(default=date.today())
+    displayname = indexes.CharField(model_attr='displayname')
+    help = indexes.CharField(model_attr='help')
+
+    def get_model(self):
+        return Ware
+
+class BuildingIndex(indexes.SearchIndex, indexes.Indexable):
+
+    text = indexes.CharField(document=True, use_template=True)
+    # To get date related search working: 
+    date = DateField(default=date.today())
+    displayname = indexes.CharField(model_attr='displayname')
+    help = indexes.CharField(model_attr='help')
+
+    def get_model(self):
+        return Building
+
+class TribeIndex(indexes.SearchIndex, indexes.Indexable):
+
+    text = indexes.CharField(document=True, use_template=True)
+    # To get date related search working: 
+    date = DateField(default=date.today())
+    displayname = indexes.CharField(model_attr='displayname')
+    help = indexes.CharField(model_attr='descr')
+
+    def get_model(self):
+        return Tribe

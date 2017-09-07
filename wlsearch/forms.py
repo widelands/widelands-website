@@ -39,9 +39,9 @@ class WlSearchForm(SearchForm):
         #     search_models.append(haystack_get_model('wiki', 'article'))
         if self.cleaned_data['incl_help']:
             search_models.append(haystack_get_model('wlhelp', 'worker'))
-            # search_models.append(haystack_get_model('wlhelp', 'tribe'))
-            # search_models.append(haystack_get_model('wlhelp', 'ware'))
-            # search_models.append(haystack_get_model('wlhelp', 'building'))
+            search_models.append(haystack_get_model('wlhelp', 'tribe'))
+            search_models.append(haystack_get_model('wlhelp', 'ware'))
+            search_models.append(haystack_get_model('wlhelp', 'building'))
         # if self.cleaned_data['incl_news']:
         #     search_models.append(haystack_get_model('news', 'post'))
         # Add the chosen models to the query
@@ -51,7 +51,9 @@ class WlSearchForm(SearchForm):
         # Check to see if a start_date was chosen.
         if self.cleaned_data['start_date']:
             sqs = sqs.filter(date__gte=self.cleaned_data[
-                             'start_date']).order_by('-date')
-
+                             'start_date'])
+        # Order by date
+        sqs = sqs.order_by('-date')
+        
         # Run the query
         return sqs
