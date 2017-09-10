@@ -43,99 +43,102 @@
             finds all posts containing 'tribe' but excludes all posts containing 'barbarian'.</li>
         </ul>
     <form method="get" action=".">
-        {{ form.non_field_errors }}
+      {% csrf_token %}
+      {{ form.non_field_errors }}
 
-        <div class="search-options">
-          <div>
-            <strong>Search for: </strong>{{ form.q }}
-            <strong>Startdate: </strong>
-                {{ form.start_date }}
-                {% if form.start_date.errors %}
-                    <span class="errormessage"> Enter a valid date in form of YYYY-MM-DD </span>
-                {% endif %}
-                 (Leave empty for full search)
-          </div>
-          <div>
-            <strong>Search in: </strong>
-                    {{ form.incl_forum.label }} {{ form.incl_forum }} |
-                    {{ form.incl_maps.label }} {{ form.incl_maps }} |
-                    {{ form.incl_wiki.label }} {{ form.incl_wiki }} |
-                    {{ form.incl_help.label }} {{ form.incl_help }} |
-                    {{ form.incl_news.label }} {{ form.incl_news }}
-                    <input class="posRight" type="submit" value="Search">
-          </div>
+      <div class="search-options">
+        <div>
+          <strong>Search for: </strong>{{ form.q }}
+          <strong>Startdate: </strong>
+              {{ form.start_date }}
+              {% if form.start_date.errors %}
+                  <span class="errormessage"> Enter a valid date in form of YYYY-MM-DD </span>
+              {% endif %}
+               (Leave empty for full search)
         </div>
-        {% if query %}
-            <h2>Results</h2>
-             {{ object_list }}<br>
-            {% for result in object_list %}
-              {% for section, entries in result.items %}
-              
-                {% if section == "wlmaps" %}
-                    <h3> Maps:</h3>
+        <div>
+          <strong>Search in: </strong>
+                  {{ form.incl_forum.label }} {{ form.incl_forum }} |
+                  {{ form.incl_maps.label }} {{ form.incl_maps }} |
+                  {{ form.incl_wiki.label }} {{ form.incl_wiki }} |
+                  {{ form.incl_help.label }} {{ form.incl_help }} |
+                  {{ form.incl_news.label }} {{ form.incl_news }}
+                  <input class="posRight" type="submit" value="Search">
+        </div>
+      </div>
+
+      {% if query %}
+          <h2>Results</h2>
+          {% for result in object_list %}
+            {% for section, entries in result.items %}
+            
+              {% if section == "wlmaps" %}
+                  <h2>Maps:</h2>
+                  <ul>
+                      {% for map in entries.maps %}
+                          {% include "search/includes/maps.html" %}
+                      {% endfor %}
+                  </ul>
+              {% endif %}
+              {% if section == "forum" %}
+                <h2>Forum:</h2>
+                {% if entries.topics|length > 0 %}
+                  <h3>Topics: </h3>
+                  <ul>
+                      {% for topic in entries.topics %}
+                          {% include "search/includes/topics.html" %}
+                      {% endfor %}
+                  </ul>
+                {% endif %}
+                {% if entries.posts|length > 0 %}
+                  <h3>Posts: </h3>
+                  <ul>
+                      {% for post in entries.posts %}
+                          {% include "search/includes/posts.html" %}
+                      {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endif %} {# End of Forum #}
+              {% if section == "encyclopedia" %}
+                <h2>Encylopedia:</h2>
+                {% if entries.workers|length > 0 %}
+                    <h3>Workers: </h3>
                     <ul>
-                        {% for map in entries.maps %}
-                            {% include "search/includes/maps.html" %}
+                        {% for worker in entries.workers %}
+                            {% include "search/includes/workers.html" %}
                         {% endfor %}
                     </ul>
                 {% endif %}
-                {% if section == "forum" %}
-                  <h2>Forum</h2>
-                  {% if entries.topics|length > 0 %}
-                    <h3> Topics: </h3>
+                {% if entries.wares|length > 0 %}
+                    <h3>Wares: </h3>
                     <ul>
-                        {% for topic in entries.topics %}
-                            {% include "search/includes/topics.html" %}
+                        {% for ware in entries.wares %}
+                            {% include "search/includes/wares.html" %}
                         {% endfor %}
                     </ul>
-                  {% endif %}
-                  {% if entries.posts|length > 0 %}
-                    <h3> Posts: </h3>
-                    <ul>
-                        {% for post in entries.posts %}
-                            {% include "search/includes/posts.html" %}
-                        {% endfor %}
-                    </ul>
-                  {% endif %}
                 {% endif %}
-                  {% if section == "encyclopedia" %}
-                    <h2>Encylopedia</h2>
-                    {% if entries.workers|length > 0 %}
-                        <h3> Workers: </h3>
-                        <ul>
-                            {% for worker in entries.workers %}
-                                {% include "search/includes/workers.html" %}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if entries.wares|length > 0 %}
-                        <h3> Wares: </h3>
-                        <ul>
-                            {% for ware in entries.wares %}
-                                {% include "search/includes/wares.html" %}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if entries.buildings|length > 0 %}
-                        <h3> Buildings: </h3>
-                        <ul>
-                            {% for building in entries.buildings %}
-                                {% include "search/includes/buildings.html" %}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if entries.tribes|length > 0 %}
-                        <h3> Tribes: </h3>
-                        <ul>
-                            {% for tribe in entries.tribes %}
-                                {% include "search/includes/tribes.html" %}
-                            {% endfor %}
-                        </ul>
-                      {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        {% endif %}
+                {% if entries.buildings|length > 0 %}
+                    <h3>Buildings: </h3>
+                    <ul>
+                        {% for building in entries.buildings %}
+                            {% include "search/includes/buildings.html" %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if entries.tribes|length > 0 %}
+                    <h3>Tribes: </h3>
+                    <ul>
+                        {% for tribe in entries.tribes %}
+                            {% include "search/includes/tribes.html" %}
+                        {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endif %} {# Encyclopedia #}
+              {% endfor %}
+          {% empty %}
+            <p>Nothing found...</p>
+          {% endfor %}
+      {% endif %}
     </form>
     </div>
 {% endblock %}
