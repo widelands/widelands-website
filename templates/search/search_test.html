@@ -69,64 +69,69 @@
             <h2>Results</h2>
              {{ object_list }}<br>
             {% for result in object_list %}
+              {% for section, entries in result.items %}
               
-              
-                {% for section, section_entries in result.items %}
-                    {% if section == "maps" and section_entries|length > 0 %}
-                        <h3> Maps:</h3>
-                        <ul>
-                            {% for map in section_entries %}
-                                {% include "search/includes/maps.html" %}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if section == "topics" and section_entries|length > 0 %}
-                        <h3> Topics: </h3>
-                        <ul>
-                            {% for topic in section_entries %}
-                                {% include "search/includes/topics.html" %}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if section == "posts" and section_entries|length > 0 %}
-                        <h3> Posts: </h3>
-                        <ul>
-                            {% for post in section_entries %}
-                                {% include "search/includes/posts.html" %}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    {% if section == "workers" and section_entries|length > 0 %}
+                {% if section == "wlmaps" %}
+                    <h3> Maps:</h3>
+                    <ul>
+                        {% for map in entries.maps %}
+                            {% include "search/includes/maps.html" %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if section == "forum" %}
+                  <h2>Forum</h2>
+                  {% if entries.topics|length > 0 %}
+                    <h3> Topics: </h3>
+                    <ul>
+                        {% for topic in entries.topics %}
+                            {% include "search/includes/topics.html" %}
+                        {% endfor %}
+                    </ul>
+                  {% endif %}
+                  {% if entries.posts|length > 0 %}
+                    <h3> Posts: </h3>
+                    <ul>
+                        {% for post in entries.posts %}
+                            {% include "search/includes/posts.html" %}
+                        {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endif %}
+                  {% if section == "encyclopedia" %}
+                    <h2>Encylopedia</h2>
+                    {% if entries.workers|length > 0 %}
                         <h3> Workers: </h3>
                         <ul>
-                            {% for worker in section_entries %}
+                            {% for worker in entries.workers %}
                                 {% include "search/includes/workers.html" %}
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if section == "wares" and section_entries|length > 0 %}
+                    {% if entries.wares|length > 0 %}
                         <h3> Wares: </h3>
                         <ul>
-                            {% for ware in section_entries %}
+                            {% for ware in entries.wares %}
                                 {% include "search/includes/wares.html" %}
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if section == "buildings" and section_entries|length > 0 %}
+                    {% if entries.buildings|length > 0 %}
                         <h3> Buildings: </h3>
                         <ul>
-                            {% for building in section_entries %}
+                            {% for building in entries.buildings %}
                                 {% include "search/includes/buildings.html" %}
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if section == "tribes" and section_entries|length > 0 %}
+                    {% if entries.tribes|length > 0 %}
                         <h3> Tribes: </h3>
                         <ul>
-                            {% for tribe in section_entries %}
+                            {% for tribe in entries.tribes %}
                                 {% include "search/includes/tribes.html" %}
                             {% endfor %}
                         </ul>
+                      {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endfor %}
