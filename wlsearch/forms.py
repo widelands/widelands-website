@@ -39,7 +39,6 @@ class WlSearchForm(SearchForm):
             search_models.append(haystack_get_model('wiki', 'article'))
         if self.cleaned_data['incl_help']:
             search_models.append(haystack_get_model('wlhelp', 'worker'))
-            search_models.append(haystack_get_model('wlhelp', 'tribe'))
             search_models.append(haystack_get_model('wlhelp', 'ware'))
             search_models.append(haystack_get_model('wlhelp', 'building'))
         if self.cleaned_data['incl_news']:
