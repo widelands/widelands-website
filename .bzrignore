@@ -10,3 +10,4 @@ media/wlmaps/maps/*
 media/wlprofile/avatars/*
 media/wlscreens/*
 media/wlimages/*
+whoosh_index

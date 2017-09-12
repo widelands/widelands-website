@@ -243,12 +243,6 @@ SMILEY_PREESCAPING = [
     ('>:-)', '\>:-)')
 ]
 
-###############################
-# Sphinx (Search prog) Config #
-###############################
-USE_SPHINX = True
-SPHINX_API_VERSION = 0x116
-
 #################
 # Search Config #
 #################
@@ -258,7 +252,6 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-#HAYSTACK_DOCUMENT_FIELD = 'text'
 
 ############
 # Tracking #
@@ -322,8 +315,3 @@ try:
     from local_settings import *
 except ImportError:
     pass
-
-if USE_SPHINX:
-    INSTALLED_APPS += (
-        'djangosphinx',
-    )

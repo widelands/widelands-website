@@ -13,18 +13,19 @@
   $( function() {
     $( ".datepicker" ).datepicker({
         dateFormat: "yy-mm-dd",
-        showAnim: "slideDown"
+        showAnim: "slideDown",
+        defaultDate: '-2y'
         });
   });
   $( function() {
-    $( ".search-help" ).click(function() {
+    $( ".closeable" ).click(function() {
       if ( $( ".search-help-hints" ).is( ":hidden" ) ) {
         $( ".search-help-hints" ).show( "slow", function() {
-          $( ".search-help" ).text( "Hide help");
+          $( ".closeable" ).text( "Hide help" );
       });
       } else {
         $( ".search-help-hints" ).slideUp( "slow", function() {
-          $( ".search-help" ).text( "Show help");
+          $( ".closeable" ).text( "Show help" );
           });
         }
     });
@@ -33,36 +34,36 @@
     <h2>Search</h2>
 
     <div class="blogEntry">
-        <div class="search-help">Show help</div>
+        <div class="closeable">Show help</div>
         <ul class="search-help-hints">
             <li>The Search is case insentive.</li>
-            <li>Search terms get stemmed, e.g. 'Tribes' find also 'tribe'.
-            'Mines' finds also 'mine', 'Miner' and 'mining'.</li>
-            <li>Providing more than one word, the words get ANDed, e.g. all words must be in a topics name.</li>
+            <li>Search terms get stemmed: E.g. 'Mining' finds also 'mine', 'mines' and 'miner'.</li>
+            <li>Providing more than one word, the words get ANDed: E.g. all words must be in a topics name.</li>
+            <li>Words surrounded with parentheses will find exact matches:
+            E.g. "main page" finds all wiki articles whith this name or the content contains 'main page'</li>
             <li>Words preceding with a minus means excluding, e.g. searching for 'tribe -barbarian'
             finds all posts containing 'tribe' but excludes all posts containing 'barbarian'.</li>
+            <li>The Startdate is not considered when searching the Encyclopedia and the Wiki.</li>
         </ul>
     <form method="get" action=".">
-      {% csrf_token %}
       {{ form.non_field_errors }}
 
       <div class="search-options">
         <div>
           <strong>Search for: </strong>{{ form.q }}
-          <strong>Startdate: </strong>
-              {{ form.start_date }}
-              {% if form.start_date.errors %}
-                  <span class="errormessage"> Enter a valid date in form of YYYY-MM-DD </span>
-              {% endif %}
-               (Leave empty for full search)
+          <strong>Startdate: </strong>{{ form.start_date }}
+            {% if form.start_date.errors %}
+                <span class="errormessage"> Enter a date in form of YYYY-MM-DD </span>
+            {% endif %}
+            (Leave empty for full search)
         </div>
         <div>
           <strong>Search in: </strong>
-                  {{ form.incl_forum.label }} {{ form.incl_forum }} |
-                  {{ form.incl_maps.label }} {{ form.incl_maps }} |
-                  {{ form.incl_wiki.label }} {{ form.incl_wiki }} |
-                  {{ form.incl_help.label }} {{ form.incl_help }} |
-                  {{ form.incl_news.label }} {{ form.incl_news }}
+                  {{ form.incl_forum.label_tag }} {{ form.incl_forum }} |
+                  {{ form.incl_maps.label_tag }} {{ form.incl_maps }} |
+                  {{ form.incl_wiki.label_tag }} {{ form.incl_wiki }} |
+                  {{ form.incl_help.label_tag }} {{ form.incl_help }} |
+                  {{ form.incl_news.label_tag }} {{ form.incl_news }}
                   <input class="posRight" type="submit" value="Search">
         </div>
       </div>
@@ -71,7 +72,6 @@
           <h2>Results</h2>
           {% for result in object_list %}
             {% for section, entries in result.items %}
-            
               {% if section == "wlmaps" %}
                   <h2>Maps:</h2>
                   <ul>
@@ -132,12 +132,30 @@
                             {% include "search/includes/tribes.html" %}
                         {% endfor %}
                     </ul>
-                  {% endif %}
-                {% endif %} {# Encyclopedia #}
-              {% endfor %}
+                {% endif %}
+              {% endif %} {# Encyclopedia #}
+              {% if section == "news" %}
+                  <h2>News:</h2>
+                  <ul>
+                      {% for news in entries.news %}
+                          {% include "search/includes/news.html" %}
+                      {% endfor %}
+                  </ul>
+              {% endif %}
+              {% if section == "wiki_articles" %}
+                  <h2>Wiki:</h2>
+                  <ul>
+                      {% for article in entries.wiki|dictsort:"pk" %}
+                          {% include "search/includes/wiki_articles.html" %}
+                      {% endfor %}
+                  </ul>
+              {% endif %}
+            {% endfor %}
           {% empty %}
-            <p>Nothing found...</p>
+            <p>Nothing found... You may have to adjust the Startdate :-)</p>
           {% endfor %}
+      {% else %}
+        <p>Please enter a word to search for.</p>
       {% endif %}
     </form>
     </div>

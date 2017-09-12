@@ -1,9 +1,5 @@
 from django.db import models
 
-import settings
-if settings.USE_SPHINX:
-    from djangosphinx.models import SphinxSearch
-
 
 class Tribe(models.Model):
     name = models.CharField(max_length=100)
@@ -18,14 +14,6 @@ class Tribe(models.Model):
 
 
 class Worker(models.Model):
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'displayname': 100,
-                'help': 60,
-                'name': 20,
-            }
-        )
 
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
@@ -61,15 +49,6 @@ class Ware(models.Model):
     
     class Meta:
         ordering = ['name']
-
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'displayname': 100,
-                'help': 60,
-                'name': 20,
-            }
-        )
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -117,15 +96,6 @@ class Building(models.Model):
     )
 
     objects = BuildingManager()
-
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'displayname': 100,
-                'help': 60,
-                'name': 20,
-            }
-        )
 
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)

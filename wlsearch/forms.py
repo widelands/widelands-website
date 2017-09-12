@@ -2,7 +2,7 @@ from haystack.forms import SearchForm
 from haystack.utils.app_loading import haystack_get_model
 from django import forms
 from datetime import date, timedelta
-
+from wiki.models import Article
 
 class WlSearchForm(SearchForm):
 
@@ -35,15 +35,15 @@ class WlSearchForm(SearchForm):
             search_models.append(haystack_get_model('pybb', 'post'))
         if self.cleaned_data['incl_maps']:
             search_models.append(haystack_get_model('wlmaps', 'map'))
-        # if self.cleaned_data['incl_wiki']:
-        #     search_models.append(haystack_get_model('wiki', 'article'))
+        if self.cleaned_data['incl_wiki']:
+            search_models.append(haystack_get_model('wiki', 'article'))
         if self.cleaned_data['incl_help']:
             search_models.append(haystack_get_model('wlhelp', 'worker'))
             search_models.append(haystack_get_model('wlhelp', 'tribe'))
             search_models.append(haystack_get_model('wlhelp', 'ware'))
             search_models.append(haystack_get_model('wlhelp', 'building'))
-        # if self.cleaned_data['incl_news']:
-        #     search_models.append(haystack_get_model('news', 'post'))
+        if self.cleaned_data['incl_news']:
+            search_models.append(haystack_get_model('news', 'post'))
         # Add the chosen models to the query
         if search_models:
             sqs = sqs.models(*search_models)
@@ -52,6 +52,7 @@ class WlSearchForm(SearchForm):
         if self.cleaned_data['start_date']:
             sqs = sqs.filter(date__gte=self.cleaned_data[
                              'start_date'])
+
         # Order by date
         sqs = sqs.order_by('-date')
         

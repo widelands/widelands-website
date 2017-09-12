@@ -1,0 +1,9 @@
+{% load highlight %}
+{% load wl_markdown %}
+
+    <li><a href="{{ article.object.get_absolute_url }}">
+    {{ article.title }}</a> | "{{ article.summary }}"<br>
+    {% with content=article.content|wl_markdown %}
+        {% highlight content with query %}
+    {% endwith %}   
+    </li>

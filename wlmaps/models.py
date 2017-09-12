@@ -10,10 +10,6 @@ try:
 except ImportError:
     notification = None
 
-import settings
-if settings.USE_SPHINX:
-    from djangosphinx.models import SphinxSearch
-
 from djangoratings.fields import AnonymousRatingField
 
 
@@ -42,15 +38,6 @@ class Map(models.Model):
         verbose_name='Download count', default=0)
 
     rating = AnonymousRatingField(range=10, can_change_vote=True)
-
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'name': 100,
-                'author': 60,
-                'uploader_comment': 40,
-            }
-        )
 
     class Meta:
         ordering = ('-pub_date',)

@@ -4,7 +4,6 @@ from haystack.generic_views import SearchView
 from forms import WlSearchForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from datetime import date, timedelta
 
 
 class HaystackSearchView(SearchView):
@@ -12,7 +11,6 @@ class HaystackSearchView(SearchView):
     template_name = 'search/search_test.html'
     form_class = WlSearchForm
     paginate_by = None
-
 
     def get(self, request, *args, **kwargs):
         """Used to return form errors."""
@@ -54,21 +52,25 @@ class HaystackSearchView(SearchView):
         workers = [w for w in context['object_list'] if w.content_type() == "wlhelp.worker"]
         buildings = [b for b in context['object_list'] if b.content_type() == "wlhelp.building"]
         wares = [w for w in context['object_list'] if w.content_type() == "wlhelp.ware"]
-        tribes = [t for t in context['object_list'] if t.content_type() == "wlhelp.tribe"]
-
+        news = [p for p in context['object_list'] if p.content_type() == "news.post"]
+        wiki_articles = [a for a in context['object_list'] if a.content_type() == "wiki.article"]
+        
         sorted_objects = []
         # Put all found things into the context, omit if nothing was found
         # so the context is as small as possible
-        if len(maps) > 0 :
+        if len(maps):
             sorted_objects.append({'wlmaps': {'maps': maps}})
-        if len(topics) > 0 or len(posts) > 0:
+        if len(news):
+            sorted_objects.append({'news': {'news': news}})
+        if len(wiki_articles):
+            sorted_objects.append({'wiki_articles': {'wiki': wiki_articles }})
+        if len(topics) or len(posts) :
             sorted_objects.append({'forum': {'topics': topics,
                        'posts': posts,
                        }},)
-        if len(workers) or len(buildings) or len(wares) or len(tribes):
+        if len(workers) or len(buildings) or len(wares):
             sorted_objects.append({'encyclopedia': {'wares': wares,
                               'buildings': buildings,
-                              'tribes': tribes,
                               'workers': workers,
                               }})
 

@@ -7,9 +7,6 @@ from news.managers import PublicManager
 from django.core.urlresolvers import reverse
 import datetime
 import settings
-if settings.USE_SPHINX:
-    from djangosphinx.models import SphinxSearch
-
 import tagging
 
 
@@ -61,15 +58,6 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category, blank=True)
     tags = TagField()
     objects = PublicManager()
-
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'title': 100,
-                'body': 80,
-                'tease': 80,
-            }
-        )
 
     class Meta:
         verbose_name = _('post')

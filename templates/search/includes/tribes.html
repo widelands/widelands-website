@@ -1,5 +1,0 @@
-{% load highlight %}
-
-    <li><a href="{% url 'wlhelp_tribe_details' tribe.object.name %}">
-    {{ tribe.displayname }}</a><br>
-    {% highlight tribe.help with query %}</li>

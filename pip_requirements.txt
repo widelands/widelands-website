@@ -18,7 +18,6 @@ pydot==1.2.3
 pyparsing==2.2.0
 Sphinx==1.6.2
 untokenize==0.1.1
--e git://github.com/kerin/django-sphinx.git@1c5ef8abcf86f9a9458f763ceb9e5d882247ea37#egg=django_sphinx
 bleach==2.0.0
 Whoosh==2.7.4
 

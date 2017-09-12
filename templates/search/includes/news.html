@@ -1,0 +1,6 @@
+{% load highlight %}
+
+    <li><a href="{{ news.object.get_absolute_url }}">
+    {{ news.title }}</a> <span class="small">{{news.object.publish}}</span><br>
+    {% highlight news.body with query %}
+    </li>
