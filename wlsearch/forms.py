@@ -44,8 +44,8 @@ class WlSearchForm(SearchForm):
         if self.cleaned_data['incl_news']:
             search_models.append(haystack_get_model('news', 'post'))
         # Add the chosen models to the query
-        if search_models:
-            sqs = sqs.models(*search_models)
+        # Haystack will search all models if none was chosen
+        sqs = sqs.models(*search_models)
 
         # Check to see if a start_date was chosen.
         if self.cleaned_data['start_date']:
