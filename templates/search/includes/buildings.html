@@ -1,5 +1,5 @@
 {% load highlight %}
 
-    <li><a href="{% url 'wlhelp_building_details' building.object.tribe.name building.object.name %}">
+    <a href="{% url 'wlhelp_building_details' building.object.tribe.name building.object.name %}">
     {{ building.object.tribe|capfirst }} {{ building.displayname }}</a><br>
-    {% highlight building.help with query %}</li>
+    {% highlight building.help with query %}

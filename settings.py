@@ -122,8 +122,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    # Remove this, when load gets to high or attachments are enabled
-    # 'django.middleware.gzip.GZipMiddleware',
     'linaro_django_pagination.middleware.PaginationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
     'tracking.middleware.VisitorCleanUpMiddleware',

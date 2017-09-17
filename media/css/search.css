@@ -1,9 +1,13 @@
 .highlighted {
-    color: lightgray;
+    color: #C8BE93;
 }
 
-.closeable {
-    border-bottom: 1px solid #998;
+li.highlight {
+  margin-bottom: 0.5em;  
+}
+.closeable::after{
+	content: '↓↑';
+	margin-left: .1em;
 }
 
 .search-help-hints {

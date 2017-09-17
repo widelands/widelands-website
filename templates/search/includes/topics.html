@@ -1,5 +1,6 @@
 {% load custom_date %}
-<li><a href=" {{ topic.topic_link }}">{{ topic.name }}</a><span class="small"> @ </span> 
+
+    <a href=" {{ topic.topic_link }}">{{ topic.name }}</a><span class="small"> @ </span> 
     Forum <a href="{{ topic.object.forum.get_absolute_url }}">{{ topic.object.forum }}</a>
     by {{topic.user}},
-    {{topic.date|custom_date:user}}</li>
+    {{topic.date|custom_date:user}}

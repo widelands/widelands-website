@@ -1,6 +1,9 @@
 {% load highlight %}
+{% load wl_markdown %}
 
-    <li><a href="{{ news.object.get_absolute_url }}">
-    {{ news.title }}</a> <span class="small">{{news.object.publish}}</span><br>
-    {% highlight news.body with query %}
-    </li>
+    <a href="{{ news.object.get_absolute_url }}">
+    {{ news.title }}</a> <span class="small">, published at: {{news.object.publish}}</span><br>
+    {% with content=news.body|wl_markdown %}
+        {% highlight content with query %}
+    {% endwith %}
+    

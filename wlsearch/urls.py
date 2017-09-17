@@ -11,8 +11,6 @@
 
 from django.conf.urls import *
 from views import HaystackSearchView
-from haystack.query import EmptySearchQuerySet
-from haystack.views import basic_search
 
 urlpatterns = [
     url(r'^/?$', HaystackSearchView.as_view(), name='search'),

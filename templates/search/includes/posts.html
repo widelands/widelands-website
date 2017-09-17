@@ -1,9 +1,8 @@
 {% load highlight %}
 {% load custom_date %}
 
-<li><a href=" {{ post.post_link }}">Post by {{ post.user }}</a><span class="small"> @ </span>
- Topic <a href="{{ post.topic_link }}">{{ post.topic }}</a><span class="small"> @ </span>
+<a href=" {{ post.post_link }}">Post by {{ post.user }}</a><span class="small"> @ </span>
+ Topic <a href="{{ post.object.topic.get_absolute_url }}">{{ post.object.topic }}</a><span class="small"> @ </span>
  Forum <a href="{{ post.object.topic.forum.get_absolute_url }}">{{ post.object.topic.forum }}</a>,
  {{ post.date|custom_date:user }}<br>
  {% highlight post.body_text with query max_length 100 %}
-</li>

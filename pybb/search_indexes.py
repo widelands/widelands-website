@@ -46,7 +46,6 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     user = indexes.CharField(model_attr='user', indexed='false')
     post_link = indexes.CharField(
         model_attr='get_absolute_url', indexed='false')
-    topic_link = indexes.CharField(model_attr='topic', indexed='false')
 
     def get_model(self):
         return Post

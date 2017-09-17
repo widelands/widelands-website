@@ -1,5 +1,5 @@
 {% load highlight %}
 
-<li><a href="{% url 'wlhelp_worker_details' worker.object.tribe.name worker.object.name %}">
+    <a href="{% url 'wlhelp_worker_details' worker.object.tribe.name worker.object.name %}">
     {{ worker.object.tribe|capfirst }} {{ worker.displayname }}</a><br>
-    {% highlight worker.help with query %}</li>
+    {% highlight worker.help with query %}

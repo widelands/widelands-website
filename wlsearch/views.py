@@ -4,6 +4,13 @@ from haystack.generic_views import SearchView
 from forms import WlSearchForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from haystack.utils.app_loading import haystack_get_model
+from pybb.models import Topic
+from pybb.models import Post as ForumPost
+from wiki.models import Article
+from news.models import Post as NewsPost
+from wlmaps.models import Map
+from wlhelp.models import Building, Ware, Worker
 
 
 class HaystackSearchView(SearchView):
@@ -15,14 +22,50 @@ class HaystackSearchView(SearchView):
     def get(self, request, *args, **kwargs):
         """Used to return form errors."""
         form = self.form_class(request.GET)
-        if form.is_valid():
-            form.search()
-            return super(HaystackSearchView, self).get(form)
+        if form.is_valid() and form.cleaned_data['q'] != '':
+            context = {'form': form,
+                       'query': form.cleaned_data['q'],
+                       'result': {}}
+            if form.cleaned_data['incl_forum']:
+                topic_results = [x for x in form.search(Topic,)]
+                post_results = [x for x in form.search(ForumPost)]
+                if len(topic_results):
+                    context['result'].update({'topics': topic_results})
+                if len(post_results):
+                    context['result'].update({'posts': post_results})
+
+            if form.cleaned_data['incl_wiki']:
+                wiki_results = [x for x in form.search(Article)]
+                if len(wiki_results):
+                    context['result'].update({'wiki': wiki_results})
+
+            if form.cleaned_data['incl_news']:
+                news_results = [x for x in form.search(NewsPost)]
+                if len(news_results):
+                    context['result'].update({'news': news_results})
+
+            if form.cleaned_data['incl_maps']:
+                map_results = [x for x in form.search(Map)]
+                if len(map_results):
+                    context['result'].update({'maps': map_results})
+
+            if form.cleaned_data['incl_help']:
+                worker_results = [x for x in form.search(Worker)]
+                ware_results = [x for x in form.search(Ware)]
+                building_results = [x for x in form.search(Building)]
+                if len(worker_results):
+                    context['result'].update({'workers': worker_results})
+                if len(ware_results):
+                    context['result'].update({'wares': ware_results})
+                if len(building_results):
+                    context['result'].update({'buildings': building_results})
+
+            return render(request, self.template_name, context)
 
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        """ This is executed when searching through the box in the navigation.
+        """This is executed when searching through the box in the navigation.
 
         We build the query string and redirect it to this view again.
 
@@ -39,41 +82,3 @@ class HaystackSearchView(SearchView):
             return HttpResponseRedirect('%s?%s' % (reverse('search'), search_url))
         form = self.form_class
         return render(request, self.template_name, {'form': form})
-
-    def get_context_data(self, *args, **kwargs):
-        """Regrouping the search results."""
-
-        context = super(HaystackSearchView, self).get_context_data(
-            *args, **kwargs)
-        
-        maps = [m for m in context['object_list'] if m.content_type() == "wlmaps.map"]
-        topics = [t for t in context['object_list'] if t.content_type() == "pybb.topic"]
-        posts = [p for p in context['object_list'] if p.content_type() == "pybb.post"]
-        workers = [w for w in context['object_list'] if w.content_type() == "wlhelp.worker"]
-        buildings = [b for b in context['object_list'] if b.content_type() == "wlhelp.building"]
-        wares = [w for w in context['object_list'] if w.content_type() == "wlhelp.ware"]
-        news = [p for p in context['object_list'] if p.content_type() == "news.post"]
-        wiki_articles = [a for a in context['object_list'] if a.content_type() == "wiki.article"]
-        
-        sorted_objects = []
-        # Put all found things into the context, omit if nothing was found
-        # so the context is as small as possible
-        if len(maps):
-            sorted_objects.append({'wlmaps': {'maps': maps}})
-        if len(news):
-            sorted_objects.append({'news': {'news': news}})
-        if len(wiki_articles):
-            sorted_objects.append({'wiki_articles': {'wiki': wiki_articles }})
-        if len(topics) or len(posts) :
-            sorted_objects.append({'forum': {'topics': topics,
-                       'posts': posts,
-                       }},)
-        if len(workers) or len(buildings) or len(wares):
-            sorted_objects.append({'encyclopedia': {'wares': wares,
-                              'buildings': buildings,
-                              'workers': workers,
-                              }})
-
-        context['object_list'] = sorted_objects
-        
-        return context
