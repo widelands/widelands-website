@@ -10,8 +10,8 @@
 #
 
 from django.conf.urls import *
-from views import HaystackSearchView
+from views import HaystackSearchView, search
 
 urlpatterns = [
-    url(r'^/?$', HaystackSearchView.as_view(), name='search'),
+    url(r'^/?$', search, name='search'),
 ]
