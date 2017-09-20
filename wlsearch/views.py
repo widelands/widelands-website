@@ -32,7 +32,7 @@ def search(request):
             return HttpResponseRedirect('%s?%s' % (reverse('search'), search_url))
         
         form = WlSearchForm()
-        return render(request, 'search/search_test.html', {'form': form})
+        return render(request, 'search/search.html', {'form': form})
     
     else:
         form = WlSearchForm(request.GET)
@@ -74,6 +74,6 @@ def search(request):
                 if len(building_results):
                     context['result'].update({'buildings': building_results})
     
-            return render(request, 'search/search_test.html', context)
+            return render(request, 'search/search.html', context)
     
-        return render(request, 'search/search_test.html', {'form': form})
+        return render(request, 'search/search.html', {'form': form})

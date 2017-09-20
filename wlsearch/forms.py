@@ -27,8 +27,7 @@ class WlSearchForm(SearchForm):
     def search(self, search_models):
         """Search per model"""
         
-        sqs = SearchQuerySet()
-        sqs = sqs.models(search_models)
+        sqs = SearchQuerySet().models(search_models)
 
         # Check to see if a start_date was chosen.
         if self.cleaned_data['start_date']:
