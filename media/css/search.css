@@ -1,18 +1,5 @@
-.highlighted {
-    color: #C8BE93;
-}
+/* CSS for the serach page */
 
-li.highlight {
-  margin-bottom: 0.5em;  
-}
-.closeable::after{
-	content: '↓↑';
-	margin-left: .1em;
-}
-
-.search-help-hints {
-    display: none;
-}
 .search-options{
     display: grid;
     border-bottom: 1px solid #998;
@@ -20,6 +7,31 @@ li.highlight {
     padding-top: 1em;
 }
 
+/* Styling search results */
+/* Color for highlighted words */
+.highlighted {
+    color: #C8BE93;
+}
+/* Put a small space between highlighted results */
+li.highlight {
+  margin-bottom: 0.5em;  
+}
+
+/* A sort of link to expand and close the next element*/
+.closeable {
+    text-decoration: none;
+	color: rgba(254, 234, 138, 1);
+	font-weight: bold;
+}
+.closeable:hover {
+    cursor: pointer;
+}
+/* The element which could be expanded and closed */
+.search-help-hints {
+    display: none;
+}
+
+/* CSS for the datepicker */
 .ui-datepicker {
     background-image: url("../img/wood.png");
     border: 1px solid black;
