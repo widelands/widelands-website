@@ -10,6 +10,12 @@ from news.models import Post as NewsPost
 from wlmaps.models import Map
 from wlhelp.models import Building, Ware, Worker
 
+choices = {'Forum': 'incl_forum',
+           'Encyclopedia': 'incl_help',
+           'Wiki': 'incl_wiki',
+           'News': 'incl_news',
+           'Maps': 'incl_maps'}
+
 
 def search(request):
     """Custom search view."""
@@ -22,19 +28,27 @@ def search(request):
         """
         form = WlSearchForm(request.POST)
         if form.is_valid() and form.cleaned_data['q'] != '':
-            # Allways set the search string
             search_url = 'q=%s' % (form.cleaned_data['q'])
-            # add initial values of the form fields
-            for field, v in form.fields.iteritems():
-                if field == 'q':
-                    continue
-                search_url += '&%s=%s' % (field, v.initial)
+            result = choices.get(request.POST['section'], 'default')
+            if result == 'default':
+                # Either 'All' or something unknown was submitted
+                # Add initial values of all the form fields
+                for field, v in form.fields.iteritems():
+                    if field == 'q':
+                        continue
+                    search_url += '&%s=%s' % (field, v.initial)
+            else:
+                # One of choices are submitted
+                search_url += '&%s=True' % (result)
+                # The start date has to be set as well
+                search_url += '&start_date=%s' % (form.fields['start_date'].initial)
+
             return HttpResponseRedirect('%s?%s' % (reverse('search'), search_url))
-        
+
         form = WlSearchForm()
         return render(request, 'search/search.html', {'form': form})
     
-    else:
+    elif request.method == 'GET':
         form = WlSearchForm(request.GET)
         if form.is_valid() and form.cleaned_data['q'] != '':
             context = {'form': form,

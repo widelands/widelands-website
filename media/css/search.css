@@ -1,4 +1,4 @@
-/* CSS for the serach page */
+/* CSS for the search page */
 
 .search-options{
     display: grid;
@@ -8,6 +8,7 @@
 }
 
 /* Styling search results */
+
 /* Color for highlighted words */
 .highlighted {
     color: #C8BE93;
@@ -17,16 +18,21 @@ li.highlight {
   margin-bottom: 0.5em;  
 }
 
-/* A sort of link to expand and close the next element*/
+/* Element styled as a link */
+/* Clicking rolls out/in the next element*/
 .closeable {
     text-decoration: none;
 	color: rgba(254, 234, 138, 1);
 	font-weight: bold;
 }
+.closeable::after {
+    content: url('../img/up_down.png');
+    margin-left: 0.5em;
+}
 .closeable:hover {
     cursor: pointer;
 }
-/* The element which could be expanded and closed */
+/* The element which get rolled out/in */
 .search-help-hints {
     display: none;
 }

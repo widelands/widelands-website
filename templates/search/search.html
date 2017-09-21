@@ -40,7 +40,8 @@
             E.g. "main page" finds all wiki articles whith this name or the content contains 'main page'</li>
             <li>Words preceding with a minus means excluding: E.g. searching for 'tribe -barbarian'
             finds all posts containing 'tribe' but excludes all posts containing 'barbarian'.</li>
-            <li>The Startdate is not considered when searching the Encyclopedia and the Wiki.</li>
+            <li>The Startdate is not considered when searching the Encyclopedia and the Wiki.
+            Default is searching the last year from today.</li>
         </ul>
     <form method="get" action=".">
       {{ form.non_field_errors }}
@@ -66,7 +67,6 @@
       </div>
       {% if query %}
         {% if result %}
-          <h2>Results</h2>
             {% if result.topics or result.posts %}
               <h2>Forum:</h2>
               {% if result.topics %}
@@ -154,7 +154,7 @@
                 {% endif %}
               {% endif %} {# Encyclopedia #}
         {% else %}
-          <p>Nothing found... You may have to adjust the Startdate :-)</p>
+          <p class="errormessage">Nothing found... You may have to adjust the Startdate</p>
         {% endif %}
       {% else %}
         <p>Please enter a term to search for.</p>
