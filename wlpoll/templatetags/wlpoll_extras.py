@@ -15,7 +15,7 @@ class DisplayPollNode(template.Node):
         self._poll = template.Variable(poll_var)
 
     def render(self, context):
-        """Render this chart using googles chart API."""
+        """Render this Poll using Highcharts"""
         p = self._poll.resolve(context)
 
         choices = p.choices.all()
@@ -27,12 +27,20 @@ class DisplayPollNode(template.Node):
 
         s = r"""
         <script type="text/javascript">
-        var chart1; // globally available
         $(document).ready(function() {
-              chart1 = new Highcharts.Chart({
+              Highcharts.chart('chartContainer', {
                  chart: {
-                    renderTo: 'chartContainer',
                     type: 'pie'
+                 },
+                 plotOptions: {
+                    pie: {
+                        center: ["50%%", "50%%"],
+                        dataLabels: {
+                            style: {
+                                width: '150px',
+                            }
+                        }
+                    } 
                  },
                  title: {
                     text: '%(name)s'
@@ -52,8 +60,6 @@ class DisplayPollNode(template.Node):
               });
            });
        </script>
-
-        <div id="chartContainer" style="width: 100%%; height: 400px"></div>
         """ % { 'name': _esc(p.name), 'data': data }
 
         return s
