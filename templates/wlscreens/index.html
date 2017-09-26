@@ -7,27 +7,15 @@
 
 {% block extra_head %}
 {{ block.super }}
-<!-- Add fancyBox with button helper -->
-<link rel="stylesheet" href="{{ MEDIA_URL }}fancybox_v3/jquery.fancybox.css" type="text/css" media="screen" />
-<script type="text/javascript" src="{{ MEDIA_URL }}fancybox_v3/jquery.fancybox.min.js"></script>
+<link rel="stylesheet" href="{{ MEDIA_URL }}lightbox_v2/css/lightbox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="{{ MEDIA_URL }}lightbox_v2/css/custom.css" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ MEDIA_URL }}lightbox_v2/lightbox-plus-jquery.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$(".fancybox").fancybox({
-			infobar : true,
-			loop : true,
-			margin : [0, 100],
-			idleTime : 50000,
-			buttons : [
-				'fullScreen',
-				'close'
-			],
-			beforeLoad: function () {
-				alert(this.name);
-				this.width = "80";
-				//this.height="auto";
-			}
+	lightbox.option({
+		  'resizeDuration': 400,
+		  'wrapAround': true,
+		  'showImageNumberLabel': false,
 		});
-	});
 </script>
 {% endblock %}
 
@@ -35,22 +23,21 @@
 <h1>Screenshots</h1>
 
 {% for c in categories %}
-<div class="blogEntry">
-	<h2>{{ c.name }}</h2>
-	<ul class="screenshot_list">
-	{% for s in c.screenshots.all %}
-		<li>
-			<a class="fancybox" href="{{ s.screenshot.url }}"
-			   data-fancybox="{{ c.slug }}"
-			   data-caption="{{ s.name }}: {{ s.comment }}"
-			   data-width="600" data-height="400">
-				<img src="{{ s.thumbnail.url }}" alt="" />
-			</a>
-			<br />
-			<span>{{ s.name }}</span>
-		</li>
-	{% endfor %}
-	</ul>
-</div>
+	<div class="blogEntry">
+		<h2>{{ c.name }}</h2>
+		<ul class="screenshot_list">
+		{% for s in c.screenshots.all %}
+			<li>
+				<a href="{{ s.screenshot.url }}"
+				   data-lightbox="{{ c.slug }}"
+				   data-title="{{ s.name }}: {{ s.comment }}">
+					<img src="{{ s.thumbnail.url }}" alt="" />
+				</a>
+				<br />
+				<span>{{ s.name }}</span>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
 {% endfor %}
 {% endblock %}
