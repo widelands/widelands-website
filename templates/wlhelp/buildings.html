@@ -7,6 +7,11 @@
 Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
+{% block extra_head %}
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/encyclopedia.js"></script>
+{{ block.super}}
+{% endblock %}
+
 {% block content %}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">

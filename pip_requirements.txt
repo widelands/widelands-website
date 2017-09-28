@@ -6,7 +6,7 @@ django-contrib-comments==1.8.0
 django-haystack==2.6.1
 django-messages==0.5.3
 django-nocaptcha-recaptcha==0.0.19
--e git://github.com/zyga/django-pagination.git@86caf150984733eb5a0bb07af26cd8fc0a8d8496#egg=linaro_django_pagination
+-e git://github.com/zyga/django-pagination.git#egg=linaro_django_pagination
 django-registration==2.2
 django-tagging==0.4.5
 gunicorn==19.7.1

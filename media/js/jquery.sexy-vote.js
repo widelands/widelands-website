@@ -31,7 +31,7 @@ jQuery.fn.sexyVote = function(config) {
 	$container.find("img:even").
 	attr("src", config.passiveImageSrc).
 	css({display: "inline"}).
-	bind("mouseover", function(e) {	    
+	on("mouseover", function(e) {	    
 	    var len = $container.find("img:even").index(e.target) + 1;
 	    
 	    $container.find("img:even").slice(0, len).css({display: "none"});
@@ -46,7 +46,7 @@ jQuery.fn.sexyVote = function(config) {
 	find("img:odd").
 	attr("src", config.activeImageSrc).
 	css({display: "none"}).
-	bind("mouseout", function(e) {
+	on("mouseout", function(e) {
 
 	    var len = $container.find("img:odd").
 	    index(e.target) + 1;
@@ -63,11 +63,11 @@ jQuery.fn.sexyVote = function(config) {
 	    
 	        
 	}).
-	bind("click", function(e) {
+	on("click", function(e) {
 	    $container.find("img").
-	    unbind("mouseover").
-	    unbind("mouseout").
-	    unbind("click");
+	    off("mouseover").
+	    off("mouseout").
+	    off("click");
 	    $container.find("span").
 	    text(config.messages[0]);
 	    config.fn.call(this, e, $container.find("img:odd").index(e.target) + 1);

@@ -1,6 +1,5 @@
 $(document).ready(function() {
-    var elem = document.getElementById('apply_filter');
-    elem.addEventListener('click', set_display);
+    $('#apply_filter').on('click', set_display);
     // Find names of checkboxes:
     checkb_names = get_input_names(); 
     // Initialize after reload, e.g. pressing F5:
@@ -8,7 +7,7 @@ $(document).ready(function() {
 
     // Smooth scrolling, taken from:
     // http://stackoverflow.com/a/18795112
-    $('a[href*=#]').click(function(event){
+    $("a[href*='#']").click(function(event){
         $('html, body').animate({
             scrollTop: $( $.attr(this, 'href') ).offset().top
         }, 500);

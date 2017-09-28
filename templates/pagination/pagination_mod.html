@@ -1,0 +1,32 @@
+{% extends "pagination/pagination.html" %}
+{% comment %}
+This template overrides one block of the shipped template of
+linaro-django-pagination to get a nice prequel to the
+pagination: (x - y of z modelsname).
+Involved: Custom filter in mainpage.templatetags.get_model_name
+{% endcomment %}
+
+{% load i18n %}
+{% load get_model_name %}
+  {% block previouslink %}
+	<span class="summary">
+		<strong>{{ page_obj.start_index }}</strong> &mdash;
+		<strong>{{ page_obj.end_index }}</strong> {% trans "of" %}
+		<strong>{{ paginator.count }}</strong>
+		{{ object_list.0 | get_model_name }}{{ paginator.count|pluralize }}</span>
+  {% if page_obj.has_previous %}
+		{% if disable_link_for_first_page and page_obj.previous_page_number == 1 %}
+			<a href="{{ request.path }}
+			{% if getvars %}
+				?{{ getvars|slice:"1:" }}
+			{% endif %}
+			" class="prev">{{ previous_link_decorator|safe }}{% trans "previous" %}</a>
+		{% else %}
+			<a href="?page{{ page_suffix }}={{ page_obj.previous_page_number }}{{ getvars }}" class="prev">{{ previous_link_decorator|safe }}{% trans "previous" %}</a>
+		{% endif %}
+		{% else %}
+		{% if display_disabled_previous_link %}
+			<span class="disabled prev">{{ previous_link_decorator|safe }}{% trans "previous" %}</span>
+		{% endif %}
+  {% endif %}
+  {% endblock previouslink %}

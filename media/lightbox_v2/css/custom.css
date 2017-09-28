@@ -1,0 +1,11 @@
+/* Use this file to overwrite defaults */
+
+.lightbox .lb-image {
+    border: 8px groove #C8BE93;
+}
+
+.lb-data .lb-caption {
+    font: inherit;
+    font-size: large;
+    font-weight: bold;
+}
