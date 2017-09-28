@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <script>
+<script>
   $( function() {
     $( ".datepicker" ).datepicker({
         dateFormat: "yy-mm-dd",
@@ -18,6 +18,7 @@
         defaultDate: '-1y'
         });
   });
+  
   $( function() {
     $( ".closeable" ).click(function() {
       if ( $( this.nextElementSibling ).is( ":hidden" ) ) {
@@ -27,7 +28,7 @@
         }
     });
 });
-  </script>
+</script>
     <h2>Search</h2>
 
     <div class="blogEntry">
