@@ -19,7 +19,8 @@
 	{% endif %}
 	<h1>Poll: {{ object.name }}</h1>
 	<div class="blogEntry">
-		{% display_poll object %}
+		<div id="chartContainer" style="width: 100%; height: 400px"></div>
+		{% display_poll object %}		
 		<hr />
 		{% get_comment_count for object as ccount %}
 		<span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments, {{object.total_votes}} votes</a></span>

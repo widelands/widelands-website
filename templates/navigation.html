@@ -7,7 +7,7 @@
 <script type="text/javascript">
 	/* Enable dropdown menus on touch devices */
 	$(document).ready(function(){
-		$(".menu li").live("touchstart", function() {
+		$(".menu li").on("touchstart", function() {
 			$(this).next("ul").css("display", "block");
 		});
 	});

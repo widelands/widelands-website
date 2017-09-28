@@ -6,11 +6,11 @@
  */
 $.fn.disableOnSubmit = function(disableList){
 	
-	if(disableList == null){var $list = 'input[type=submit],input[type=button],input[type=reset],button';}
+	if(disableList === null){var $list = 'input[type=submit],input[type=button],input[type=reset],button';}
 	else{var $list = disableList;}
 	
 	// Makes sure button is enabled at start
-	$(this).find($list).removeAttr('disabled');
+	$(this).find($list).prop("disabled", true);
 	
 	$(this).submit(function(){$(this).find($list).attr('disabled','disabled');});
 	return this;
