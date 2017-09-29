@@ -7,7 +7,6 @@ div.searchBox {
 
 div.searchBoxInner {
 	border: 1px solid black;
-	/*width: 150px;*/
 	padding: 0px 10px 0px 10px;
 	height: 20px;
 	border-radius: 10px;
@@ -22,7 +21,6 @@ input.searchField {
 	margin: 0px;
 	border: none;
 	background: none;
-	/*width: 150px;*/
 	outline: none;
 	color: #ffffff;
 	padding: 0px;
