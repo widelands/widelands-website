@@ -180,7 +180,7 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-PYBB_ATTACHMENT_ENABLE = True  # disable gzip middleware when enabling attachments
+PYBB_ATTACHMENT_ENABLE = False  # disable gzip middleware when enabling attachments
 PYBB_DEFAULT_MARKUP = 'markdown'
 PYBB_FREEZE_FIRST_POST = False
 
