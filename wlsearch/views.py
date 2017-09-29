@@ -28,23 +28,26 @@ def search(request):
         """
         form = WlSearchForm(request.POST)
         if form.is_valid() and form.cleaned_data['q'] != '':
+            # Query string
             search_url = 'q=%s' % (form.cleaned_data['q'])
-            result = choices.get(request.POST['section'], 'default')
-            if result == 'default':
-                # Either 'All' or something unknown was submitted
+            
+            section = choices.get(request.POST['section'], 'all')
+            if section == 'all':
                 # Add initial values of all the form fields
                 for field, v in form.fields.iteritems():
                     if field == 'q':
+                        # Don't change the query string
                         continue
                     search_url += '&%s=%s' % (field, v.initial)
             else:
-                # One of choices are submitted
-                search_url += '&%s=True' % (result)
-                # The start date has to be set as well
+                # A particular section was chosen
+                search_url += '&%s=True' % (section)
+                # Set initial start date
                 search_url += '&start_date=%s' % (form.fields['start_date'].initial)
 
             return HttpResponseRedirect('%s?%s' % (reverse('search'), search_url))
-
+        
+        # Form invalid or no search query was given
         form = WlSearchForm()
         return render(request, 'search/search.html', {'form': form})
     
@@ -54,6 +57,8 @@ def search(request):
             context = {'form': form,
                        'query': form.cleaned_data['q'],
                        'result': {}}
+            # Search the models depending on the given section
+            # Add search results, if any is found, to the context
             if form.cleaned_data['incl_forum']:
                 topic_results = [x for x in form.search(Topic)]
                 post_results = [x for x in form.search(ForumPost)]
@@ -89,5 +94,6 @@ def search(request):
                     context['result'].update({'buildings': building_results})
     
             return render(request, 'search/search.html', context)
-    
+        
+        # Form errors or no search query was given
         return render(request, 'search/search.html', {'form': form})

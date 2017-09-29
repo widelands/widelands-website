@@ -3,8 +3,7 @@
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/search.css" />
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{ MEDIA_URL }}js/jquery-ui.min.js"></script>
 
 {{block.super}}
 {% endblock %}
@@ -29,6 +28,7 @@
     });
 });
 </script>
+
     <h2>Search</h2>
 
     <div class="blogEntry">
@@ -41,7 +41,7 @@
             E.g. "main page" finds all wiki articles whith this name or the content contains 'main page'</li>
             <li>Words preceding with a minus means excluding: E.g. searching for 'tribe -barbarian'
             finds all posts containing 'tribe' but excludes all posts containing 'barbarian'.</li>
-            <li>The Startdate is not considered when searching the Encyclopedia and the Wiki.
+            <li>The Startdate is not considered when searching the Encyclopedia, the Wiki and Maps.
             Default is searching the last year from today.</li>
         </ul>
     <form method="get" action=".">
@@ -58,12 +58,22 @@
         </div>
         <div>
           <strong>Search in: </strong>
-                  {{ form.incl_forum.label_tag }} {{ form.incl_forum }} |
-                  {{ form.incl_maps.label_tag }} {{ form.incl_maps }} |
-                  {{ form.incl_wiki.label_tag }} {{ form.incl_wiki }} |
-                  {{ form.incl_help.label_tag }} {{ form.incl_help }} |
-                  {{ form.incl_news.label_tag }} {{ form.incl_news }}
-                  <input class="posRight" type="submit" value="Search">
+          <span class="button">
+            {{ form.incl_forum.label_tag }} {{ form.incl_forum }}
+          </span>
+          <span class="button">
+            {{ form.incl_maps.label_tag }} {{ form.incl_maps }}
+          </span>
+          <span class="button">
+            {{ form.incl_wiki.label_tag }} {{ form.incl_wiki }}
+          </span>
+          <span class="button">
+            {{ form.incl_help.label_tag }} {{ form.incl_help }}
+          </span>
+          <span class="button">
+            {{ form.incl_news.label_tag }} {{ form.incl_news }}
+          </span>
+          <input class="posRight" type="submit" value="Search">
         </div>
       </div>
       {% if query %}
@@ -158,7 +168,7 @@
           <p class="errormessage">Nothing found... You may have to adjust the Startdate</p>
         {% endif %}
       {% else %}
-        <p>Please enter a term to search for.</p>
+        <p class="errormessage">Please enter a term to search for.</p>
       {% endif %}
     </form>
     </div>
