@@ -50,7 +50,7 @@ class CustomUserAdmin(UserAdmin):
     """
     list_display = ('username', 'email', 'date_joined', 'last_login',
                     'is_active', 'is_staff')
-    ordering = ('-last_login',)
+    ordering = ('-date_joined',)
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
