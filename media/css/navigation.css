@@ -27,7 +27,11 @@ input.searchField {
 }
 
 select.selection {
-	width: 5em;
+	width: 18px;
+	background-color: #695536;
+	font-size: inherit;
+	border-radius: 3px;
+	color: inherit;
 }
 
 div#topmenu {

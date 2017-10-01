@@ -7,9 +7,15 @@ $(document).ready(function() {
 		}
 	}).blur(function() {
 	var input = $(this);
-		if (input.val() == '' || input.val() == input.attr('placeholder')) {
+		if (input.val() === '' || input.val() == input.attr('placeholder')) {
 			input.addClass('placeholder');
 			input.val(input.attr('placeholder'));
 		}
 	}).blur();
+
+	$(".selection").click(function() {
+		input = $('#id_nav_search');
+		input.val('');
+		input.attr("placeholder", "Search "+this.value);
+	});
 });

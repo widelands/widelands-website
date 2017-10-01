@@ -59,6 +59,7 @@
 <div class="searchBox posRight">
 	<form method="post" action="/search/">
 		<div class="searchBoxInner">
+			<input id="id_nav_search" type="text" name="q" class="searchField placeholder" placeholder="Search Forum" size="15" maxlength="200" />
 			<select name="section" class="selection" title="Search in">
 				<option>Forum</option>
 				<option>Wiki</option>
@@ -67,7 +68,6 @@
 				<option>Maps</option>
 				<option>All</option>
 			</select>
-			<input id="id_nav_search" type="text" name="q" class="searchField placeholder" placeholder="Search..." size="15" maxlength="200" />
 			{% csrf_token %}
 		</div>
 	</form>
