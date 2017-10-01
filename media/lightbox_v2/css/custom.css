@@ -1,11 +1,33 @@
 /* Use this file to overwrite defaults */
 
-.lightbox .lb-image {
-    border: 8px groove #C8BE93;
+body .lightboxOverlay {
+	background-image: url(../../img/black50.png);
+	background-color: transparent;
+	opacity: inherit;
 }
 
-.lb-data .lb-caption {
-    font: inherit;
-    font-size: large;
-    font-weight: bold;
+.lightbox .lb-container .lb-image {
+	border-color: transparent;
+}
+
+.lightbox .lb-outerContainer {
+	background-color: transparent;
+    background-image: url(../../img/black50.png);
+}
+
+.lightbox .lb-dataContainer {
+	background-image: url(../../img/black50.png);
+}
+
+.lightbox .lb-data .lb-caption {
+	font-size: inherit
+}
+
+.lightbox .lb-data .lb-details {
+	padding-left: 7px;
+}
+
+.lightbox .lb-closeContainer .lb-close {
+	margin-right: 7px;
+	margin-top: -7px;
 }
