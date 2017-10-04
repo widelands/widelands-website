@@ -3,15 +3,17 @@
 /***************************/
 
 .search-options{
-    display: grid;
-    border-bottom: 1px solid #998;
-    border-top: 1px solid #998;
-    padding-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .search-options strong {
     padding-left: 0.8em;
     padding-right: 0.2em;
+}
+
+.flex-right {
+    margin-left: auto;
 }
 
 /**************************/

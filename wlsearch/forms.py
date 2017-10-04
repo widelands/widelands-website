@@ -10,7 +10,7 @@ class WlSearchForm(SearchForm):
         required=False, initial=date.today() - timedelta(365),
         widget=forms.TextInput(attrs=
                                {'size': '10',
-                                #'placeholder': 'YYYY-MM-DD',
+                                'placeholder': 'YYYY-MM-DD',
                                 'class': 'datepicker',
                                 }))
     incl_forum = forms.BooleanField(
