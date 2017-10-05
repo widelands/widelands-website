@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from forms import WlSearchForm
 from pybb.models import Topic
