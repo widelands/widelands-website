@@ -16,14 +16,14 @@
         <div class="closeable" title="Click to expand">Help</div>
         <ul class="search-help-hints">
             <li>The search is case insensitive.</li>
-            <li>Search terms get stemmed: E.g. 'Mining' finds also 'mine', 'mines' and 'miner'.</li>
-            <li>Providing more than one word, the words get ANDed: E.g. all words must be in a forum topics name.</li>
-            <li>Words surrounded with parentheses will find exact matches:
-            E.g. "main page" finds all wiki articles whith this name or the content contains 'main page'</li>
-            <li>Words preceding with a minus means excluding: E.g. searching for 'tribe -barbarian'
-            finds all forum posts containing 'tribe' but excludes all forum posts containing 'barbarian'.</li>
-            <li>The Startdate is not considered when searching the Encyclopedia, the Wiki and Maps.
-            Default is searching the last year from today.</li>
+            <li>Search terms get stemmed: E.g. 'Mining' will also find 'mine', 'mines' and 'miner'.</li>
+            <li>If you search for more than one word, only entries that contain all of the given words will be returned.</li>
+            <li>Words surrounded by parentheses will find exact matches:
+            E.g. "main page" will find all wiki articles with this name or the content contains 'main page'</li>
+            <li>Words preceding with a minus will be excluded: E.g. searching for 'tribe -barbarian'
+            will find all forum posts containing 'tribe' but exclude all forum posts containing 'barbarian'.</li>
+            <li>The start date won't be considered when searching the encyclopedia, maps or the wiki.
+            The default is set to return results for the span of one year.</li>
         </ul>
     <form method="get" action=".">
       {{ form.non_field_errors }}
@@ -35,7 +35,7 @@
         <div>
           <strong>Startdate: </strong>{{ form.start_date }}
             {% if form.start_date.errors %}
-                <span class="errormessage"> Enter a date in form of YYYY-MM-DD </span>
+                <span class="errormessage"> Enter a date in the form of YYYY-MM-DD </span>
             {% endif %}
             (Leave empty for full search)
         </div>
@@ -154,7 +154,7 @@
               {% endif %} {# Encyclopedia #}
         {% else %}
           <p><span class="errormessage">Nothing found... </span>
-          consider to adjust the start date when searching the Forum or News.
+          consider adjusting the start date when searching the Forum or News.
           </p>
         {% endif %} {# result #}
       {% else %}
