@@ -36,8 +36,9 @@
           <strong>Startdate: </strong>{{ form.start_date }}
             {% if form.start_date.errors %}
                 <span class="errormessage"> Enter a date in the form of YYYY-MM-DD </span>
+            {% else %}
+                (Leave empty for full search)
             {% endif %}
-            (Leave empty for full search)
         </div>
       </div>
       <div  class="search-options">

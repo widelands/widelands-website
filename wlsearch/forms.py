@@ -38,6 +38,6 @@ class WlSearchForm(SearchForm):
         sqs = sqs.order_by('-date')
         
         # Run the query
-        sqs = sqs.auto_query(self.cleaned_data['q']).load_all()
+        result = sqs.auto_query(self.cleaned_data['q']).load_all()
 
-        return sqs
+        return result
