@@ -25,7 +25,10 @@ $( function() {
 $( function() {
       $(".selection").click(function() {
         input = $('#id_nav_search');
-        input.val('');
+        /* Run the search if a search string is already given */
+        if ( input[0].value != "") {
+          input[0].form.submit();
+        }
         input.attr("placeholder", "Search "+this.value);
       });
 });
