@@ -29,12 +29,12 @@ class WlSearchForm(SearchForm):
         
         sqs = SearchQuerySet().models(search_models)
 
-        # Check to see if a start_date was chosen.
+        # Add start_date to the query
         if self.cleaned_data['start_date']:
             sqs = sqs.filter(date__gte=self.cleaned_data[
                              'start_date'])
 
-        # Order by date
+        # Add Order to the query
         sqs = sqs.order_by('-date')
         
         # Run the query
