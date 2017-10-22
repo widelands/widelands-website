@@ -26,13 +26,29 @@ input.searchField {
 	padding: 0px;
 }
 
-select.selection {
+.fake_selector{
+	width: 80px;
+	overflow: hidden;
+}
+
+.fake_selector select{
+	-webkit-appearance: none;
+   -moz-appearance: none;
 	width: 18px;
+	height: 18px;
 	background-color: #695536;
 	font-size: inherit;
 	border: none;
 	color: rgba(254, 234, 138, 1);
-	-moz-appearance: button-arrow-down;
+	background-image: url("../img/download.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	appearance: none;
+   padding: 2px 20px 2px 2px;
+}
+
+select::-ms-expand {
+    display: none;
 }
 
 /* Overwrite the color of selection entries */
