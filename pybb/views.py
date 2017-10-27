@@ -162,9 +162,10 @@ def add_post_ctx(request, forum_id, topic_id):
             post.topic.subscribers.add(request.user)
 
         if post.hidden:
-            hidden_posts_count = Post.objects.filter( user=request.user, hidden=True).count()
+            hidden_posts_count = Post.objects.filter(
+                user=request.user, hidden=True).count()
 
-            if hidden_posts_count >= settings.MAX_HIDDEN_POSTS :
+            if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
                 user = get_object_or_404(User, username=request.user)
                 # Set the user inactive so he can't login
                 user.is_active = False
