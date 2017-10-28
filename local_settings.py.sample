@@ -51,6 +51,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ANTI_SPAM_BODY = ['spam']
 ANTI_SPAM_TOPIC = ['spam']
 ANTI_SPAM_PHONE_NR = re.compile('\d{8,16}')
+MAX_HIDDEN_POSTS = 5
 
 # Uncomment 'LOGGING = {...}' for debugging purposes when you have set DEBUG=False.
 # Use then in the code:
