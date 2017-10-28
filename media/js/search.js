@@ -23,7 +23,7 @@ $( function() {
 
 /* Change the placeholder to show which section to search for */
 $( function() {
-      $(".selector").click(function() {
+      $("#selector").change(function() {
         input = $('#id_nav_search');
         /* Run the search if a search string is already given */
         if ( input[0].value !== "") {
