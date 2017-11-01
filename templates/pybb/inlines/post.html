@@ -48,7 +48,7 @@
             </div>
          </td>
          <td width="85%" class="content top">
-            {{ post.body_html|safe }}<p>bla</p>
+            {{ post.body_html|safe }}
             {% if user.is_authenticated %}
                 {% ifequal user.wlprofile.show_signatures 1 %}
                     {% if post.user.wlprofile.signature %}
