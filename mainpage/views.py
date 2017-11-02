@@ -13,6 +13,7 @@ import json
 import os
 import os.path
 import locale
+import codecs
 
 
 def mainpage(request):
@@ -67,7 +68,7 @@ def developers(request):
 
     # Get locale and translator names from each .json file and
     # store them in one list.
-    txt = ''
+    txt = '[TOC]\n\n'
     transl_files = []
     transl_list = []
     path = os.path.normpath(WIDELANDS_SVN_DIR + 'data/i18n/locales/')
@@ -144,7 +145,7 @@ def changelog(request):
     This replaces the wiki changelog
 
     """
-    data = open(WIDELANDS_SVN_DIR + 'ChangeLog', 'r').read()
+    data = codecs.open(WIDELANDS_SVN_DIR + 'ChangeLog', encoding='utf-8', mode='r').read()
     return render_to_response('mainpage/changelog.html',
                               {'changelog': data},
                               context_instance=RequestContext(request)

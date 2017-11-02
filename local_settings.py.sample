@@ -39,7 +39,7 @@ NORECAPTCHA_SITE_KEY = 'dummy'
 NORECAPTCHA_SECRET_KEY = 'dummy'
 
 # The logo used for mainpage
-LOGO_FILE = 'Logo_alpha.png'
+LOGO_FILE = 'logo_alpha.png'
 
 # Setting an email backend prevents 'connection refused' errors
 # Don't use this on the widelands server!
