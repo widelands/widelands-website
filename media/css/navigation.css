@@ -36,7 +36,7 @@ input.searchField {
    -moz-appearance: none;
 	width: 18px;
 	height: 18px;
-	background-color: #695536;
+	background-color: rgba(90, 74, 49, 1);
 	font-size: inherit;
 	border: none;
 	color: rgba(254, 234, 138, 1);
