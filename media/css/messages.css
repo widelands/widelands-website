@@ -34,3 +34,43 @@ td.msg_box {
 .messages textarea {
 	width: 100%;
 }
+
+/******************************************/
+/* Styles for autocompletion of usernames */
+/******************************************/
+.ui-front {
+	z-index: 100;
+}
+
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	border-radius: 3px;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+}
+
+.ui-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	outline: none;
+}
+
+.ui-menu .ui-menu-item {
+	position: relative;
+	margin: 0;
+	padding: 3px 1em 3px .4em;
+	cursor: pointer;
+	min-height: 0;
+	font-size: 0.85em;
+	border-bottom: 1px solid black;
+}
+
+.ui-menu-item-wrapper:hover {
+	background-color: rgba(254, 234, 138, 0.26);
+}

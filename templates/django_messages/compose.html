@@ -1,5 +1,6 @@
 {% extends "django_messages/base.html" %} 
-{% load i18n %} 
+{% load i18n %}
+{% load all_users %}
 
 {% block title %}
 Compose - {{ block.super }}
@@ -8,6 +9,14 @@ Compose - {{ block.super }}
 {% block msg_title %}Compose{% endblock %}
 
 {% block msg_content %}
+<script>
+	$(function() {
+    $( "#id_recipient" ).autocomplete({
+        source: {% all_users %},
+		minLength: 3,
+        });
+});
+</script>
 <form action="." method="post">
 	<table class="messages">
 		{% for field in form %}
