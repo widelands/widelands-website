@@ -10,8 +10,8 @@
 #
 
 from django.conf.urls import *
-import views
+from views import search
 
 urlpatterns = [
-    url(r'^$', views.search, name='search'),
+    url(r'^/?$', search, name='search'),
 ]

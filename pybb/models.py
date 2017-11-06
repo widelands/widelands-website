@@ -17,8 +17,6 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from django.contrib.auth.models import User
-if settings.USE_SPHINX:
-    from djangosphinx.models import SphinxSearch
 
 try:
     from notification import models as notification
@@ -114,14 +112,6 @@ class Topic(models.Model):
     subscribers = models.ManyToManyField(
         User, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)
 
-    # Django sphinx
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'name': 100,
-            }
-        )
-
     class Meta:
         ordering = ['-updated']
         verbose_name = _('Topic')
@@ -215,15 +205,6 @@ class Post(RenderableItem):
     body_text = models.TextField(_('Text version'))
     user_ip = models.GenericIPAddressField(_('User IP'), default='')
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
-
-    # Django sphinx
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'body_text': 100,
-                'body_html': 0,
-            }
-        )
 
     class Meta:
         ordering = ['created']

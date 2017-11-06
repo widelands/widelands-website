@@ -160,6 +160,10 @@
 	<table class="forum">
 		<tbody>
 	{% for post in object_list %}
+		{% comment %}
+		TODO (Franku): use
+		{% include 'pybb/inlines/post.html' %}
+		{% endcomment %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			<td class="author">
 				{{ post.user|user_link }}<br />

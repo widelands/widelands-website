@@ -14,11 +14,6 @@ from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKe
 
 from tagging.fields import TagField
 from tagging.models import Tag
-
-import settings
-if settings.USE_SPHINX:
-    from djangosphinx.models import SphinxSearch
-
 from wlimages.models import Image
 
 try:
@@ -70,16 +65,6 @@ class Article(models.Model):
     images = GenericRelation(Image)
 
     tags = TagField()
-
-    # Django sphinx
-    if settings.USE_SPHINX:
-        search = SphinxSearch(
-            weights={
-                'title': 100,
-                'summary': 80,
-                'content': 50,
-            }
-        )
 
     class Meta:
         verbose_name = _(u'Article')

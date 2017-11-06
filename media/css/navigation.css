@@ -7,7 +7,6 @@ div.searchBox {
 
 div.searchBoxInner {
 	border: 1px solid black;
-	width: 150px;
 	padding: 0px 10px 0px 10px;
 	height: 20px;
 	border-radius: 10px;
@@ -22,10 +21,39 @@ input.searchField {
 	margin: 0px;
 	border: none;
 	background: none;
-	width: 150px;
 	outline: none;
 	color: #ffffff;
 	padding: 0px;
+}
+
+.fake_selector{
+	width: 80px;
+	overflow: hidden;
+}
+
+.fake_selector select{
+	-webkit-appearance: none;
+   -moz-appearance: none;
+	width: 18px;
+	height: 18px;
+	background-color: rgba(90, 74, 49, 1);
+	font-size: inherit;
+	border: none;
+	color: rgba(254, 234, 138, 1);
+	background-image: url("../img/arrow_down_short.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	appearance: none;
+   padding: 2px 20px 2px 2px;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+/* Overwrite the color of selection entries */
+select.selection option {
+	color: #ffffee;
 }
 
 div#topmenu {
@@ -116,4 +144,26 @@ ul.menu li ul li a {
 
 ul.menu li ul li:first-child {
 	border: none;
+}
+
+/***********************************************************/
+/* CSS for overrriding browser color change of placeholder */
+/***********************************************************/
+::-webkit-input-placeholder {
+    color: #aaa;
+    opacity: 1 !important; /* for older chrome versions. may no longer apply. */
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: #aaa;
+    opacity: 1 !important;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+    color: #aaa;
+    opacity: 1 !important;
+}
+
+:-ms-input-placeholder {
+   color: #aaa;
 }

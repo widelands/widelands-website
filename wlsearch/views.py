@@ -1,95 +1,98 @@
-# Create your views here.
-
-
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-
-from forms import SearchForm
-
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from forms import WlSearchForm
+from pybb.models import Topic
+from pybb.models import Post as ForumPost
 from wiki.models import Article
-from pybb.models import Post, Topic
 from news.models import Post as NewsPost
-from wlhelp.models import Building, Ware
 from wlmaps.models import Map
+from wlhelp.models import Building, Ware, Worker
 
-
-class DummyEmptyQueryset(object):
-    """A simple dummy class when a search should not be run.
-
-    The template expects a queryset and checks for the count member.
-
-    """
-
-    def count(self):
-        return 0
+choices = {'Forum': 'incl_forum',
+           'Encyclopedia': 'incl_help',
+           'Wiki': 'incl_wiki',
+           'News': 'incl_news',
+           'Maps': 'incl_maps'}
 
 
 def search(request):
+    """Custom search view."""
+
     if request.method == 'POST':
-        form = SearchForm(request.POST)
+        """This is executed when searching through the box in the navigation.
 
-        if form.is_valid():
-            query = form.cleaned_data['search']
-            do_wiki = form.cleaned_data['incl_wiki']
-            do_forum = form.cleaned_data['incl_forum']
-            do_news = form.cleaned_data['incl_news']
-            do_help = form.cleaned_data['incl_help']
-            do_maps = form.cleaned_data['incl_maps']
+        We build the query string and redirect it to this view again.
 
-            # Help
-            wlhelp_wares = Ware.search.query(
-                query) if do_help else DummyEmptyQueryset()
-            wlhelp_buildings = Building.search.query(
-                query) if do_help else DummyEmptyQueryset()
+        """
+        form = WlSearchForm(request.POST)
+        if form.is_valid() and form.cleaned_data['q'] != '':
+            # Query string
+            search_url = 'q=%s' % (form.cleaned_data['q'])
+            
+            section = choices.get(request.POST['section'], 'all')
+            if section == 'all':
+                # Add initial values of all the form fields
+                for field, v in form.fields.iteritems():
+                    if field == 'q':
+                        # Don't change the query string
+                        continue
+                    search_url += '&%s=%s' % (field, v.initial)
+            else:
+                # A particular section was chosen
+                search_url += '&%s=True' % (section)
+                # Set initial start date
+                search_url += '&start_date=%s' % (form.fields['start_date'].initial)
 
-            # Maps
-            map_results = Map.search.query(
-                query) if do_maps else DummyEmptyQueryset()
-
-            # Wiki
-            wiki_results = Article.search.query(
-                query) if do_wiki else DummyEmptyQueryset()
-
-            # Forum
-            forum_results_topic = Topic.search.query(
-                query) if do_forum else DummyEmptyQueryset()
-            forum_results_post = Post.search.query(
-                query) if do_forum else DummyEmptyQueryset()
-
-            # News
-            news_results = NewsPost.search.query(
-                query) if do_news else DummyEmptyQueryset()
-
-            template_params = {
-                'wiki_results': wiki_results,
-
-                'wlhelp_hits': wlhelp_wares.count() + wlhelp_buildings.count(),
-                'wlhelp_results_wares': wlhelp_wares,
-                'wlhelp_results_buildings': wlhelp_buildings,
-
-                'forum_hits': forum_results_post.count() + forum_results_topic.count(),
-                'forum_results_topic': forum_results_topic,
-                'forum_results_post': forum_results_post,
-
-                'map_results': map_results,
-
-                'news_results': news_results,
-
-                'search_form': form,
-                'post': True,
-            }
-
-            return render_to_response('wlsearch/search.html',
-                                      template_params,
-                                      context_instance=RequestContext(request))
-    else:
-        form = SearchForm()
-
-    template_params = {
-        'search_form': form,
-        'post': False,
-    }
-    return render_to_response('wlsearch/search.html',
-                              template_params,
-                              context_instance=RequestContext(request))
+            return HttpResponseRedirect('%s?%s' % (reverse('search'), search_url))
+        
+        # Form invalid or no search query was given
+        form = WlSearchForm()
+        return render(request, 'search/search.html', {'form': form})
+    
+    elif request.method == 'GET':
+        form = WlSearchForm(request.GET)
+        if form.is_valid() and form.cleaned_data['q'] != '':
+            context = {'form': form,
+                       'query': form.cleaned_data['q'],
+                       'result': {}}
+            # Search the models depending on the given section
+            # Add search results, if any is found, to the context
+            if form.cleaned_data['incl_forum']:
+                topic_results = [x for x in form.search(Topic)]
+                post_results = [x for x in form.search(ForumPost)]
+                if len(topic_results):
+                    context['result'].update({'topics': topic_results})
+                if len(post_results):
+                    context['result'].update({'posts': post_results})
+    
+            if form.cleaned_data['incl_wiki']:
+                wiki_results = [x for x in form.search(Article)]
+                if len(wiki_results):
+                    context['result'].update({'wiki': wiki_results})
+    
+            if form.cleaned_data['incl_news']:
+                news_results = [x for x in form.search(NewsPost)]
+                if len(news_results):
+                    context['result'].update({'news': news_results})
+    
+            if form.cleaned_data['incl_maps']:
+                map_results = [x for x in form.search(Map)]
+                if len(map_results):
+                    context['result'].update({'maps': map_results})
+    
+            if form.cleaned_data['incl_help']:
+                worker_results = [x for x in form.search(Worker)]
+                ware_results = [x for x in form.search(Ware)]
+                building_results = [x for x in form.search(Building)]
+                if len(worker_results):
+                    context['result'].update({'workers': worker_results})
+                if len(ware_results):
+                    context['result'].update({'wares': ware_results})
+                if len(building_results):
+                    context['result'].update({'buildings': building_results})
+    
+            return render(request, 'search/search.html', context)
+        
+        # Form errors or no search query was given
+        return render(request, 'search/search.html', {'form': form})

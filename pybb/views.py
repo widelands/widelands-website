@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render
+from django.contrib.auth import logout
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -161,7 +162,17 @@ def add_post_ctx(request, forum_id, topic_id):
             post.topic.subscribers.add(request.user)
 
         if post.hidden:
-            # Redirect to an info page to inform the user
+            hidden_posts_count = Post.objects.filter(
+                user=request.user, hidden=True).count()
+
+            if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
+                user = get_object_or_404(User, username=request.user)
+                # Set the user inactive so he can't login
+                user.is_active = False
+                user.save()
+                # Log the user out
+                logout(request)
+                return HttpResponse(status=403)
             return HttpResponseRedirect('pybb_moderate_info')
 
         return HttpResponseRedirect(post.get_absolute_url())

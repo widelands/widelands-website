@@ -1,0 +1,88 @@
+/***************************/
+/* CSS for the search page */
+/***************************/
+
+.search-options{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.search-options strong {
+    padding-left: 0.8em;
+    padding-right: 0.2em;
+}
+
+.flex-right {
+    margin-left: auto;
+}
+
+/**************************/
+/* Styling search results */
+/**************************/
+
+/* Color for highlighted words */
+.highlighted {
+    color: #C8BE93;
+}
+
+/* Put a small space between highlighted results */
+li.highlight {
+  margin-bottom: 0.5em;  
+}
+
+/* Element styled as a link */
+/* Clicking rolls out/in the next element */
+.closeable {
+    text-decoration: none;
+	color: rgba(254, 234, 138, 1);
+	font-weight: bold;
+}
+
+.closeable::after {
+    content: url('../img/up_down.png');
+    margin-left: 0.5em;
+}
+
+.closeable:hover {
+    cursor: pointer;
+}
+
+/* The element which get rolled out/in */
+.search-help-hints {
+    display: none;
+}
+
+/**************************/
+/* CSS for the datepicker */
+/**************************/
+
+.ui-datepicker {
+    background-image: url("../img/wood.png");
+    border: 1px solid black;
+    border-radius: 4px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+    padding: 0.8em;
+    display: none;
+}
+
+.ui-datepicker-header {
+    text-align: center;
+    border: 1px inset darkgray;
+    background-image: url("../img/black50.png");
+    margin-bottom: 5px;
+}
+
+.ui-datepicker-calendar {
+    border: 1px inset darkgray;
+    background-image: url("../img/black20.png");
+}
+
+.ui-datepicker-prev {
+    padding: 0 3em 0 0;
+    cursor: pointer;
+}
+ 
+.ui-datepicker-next {
+    padding: 0 0 0 3em;
+    cursor: pointer;
+}

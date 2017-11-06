@@ -94,6 +94,7 @@ INSTALLED_APPS = (
     'wlmaps',
     'wlscreens',
     'wlggz',
+    'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps
     'wiki',  # This is based on wikiapp, but has some local modifications
@@ -121,8 +122,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    # Remove this, when load gets to high or attachments are enabled
-    'django.middleware.gzip.GZipMiddleware',
     'linaro_django_pagination.middleware.PaginationMiddleware',
     'tracking.middleware.VisitorTrackingMiddleware',
     'tracking.middleware.VisitorCleanUpMiddleware',
@@ -242,11 +241,15 @@ SMILEY_PREESCAPING = [
     ('>:-)', '\>:-)')
 ]
 
-###############################
-# Sphinx (Search prog) Config #
-###############################
-USE_SPHINX = True
-SPHINX_API_VERSION = 0x116
+#################
+# Search Config #
+#################
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
 
 ############
 # Tracking #
@@ -317,8 +320,3 @@ try:
     from local_settings import *
 except ImportError:
     pass
-
-if USE_SPHINX:
-    INSTALLED_APPS += (
-        'djangosphinx',
-    )

@@ -10,3 +10,6 @@ media/wlmaps/maps/*
 media/wlprofile/avatars/*
 media/wlscreens/*
 media/wlimages/*
+whoosh_index
+media/map_object_info
+media/wlhelp
