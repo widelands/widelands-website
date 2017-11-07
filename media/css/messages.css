@@ -71,6 +71,13 @@ td.msg_box {
 	border-bottom: 1px solid black;
 }
 
-.ui-menu-item-wrapper:hover {
-	background-color: rgba(254, 234, 138, 0.26);
+/* Hover state of an entry */
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+	background-image: url("../img/black50.png");
+	font-weight: bold;
 }
