@@ -6,17 +6,20 @@
 Compose - {{ block.super }}
 {% endblock %}
 
-{% block msg_title %}Compose{% endblock %}
-
-{% block msg_content %}
+{% block extra_head %}
 <script>
 	$(function() {
     $( "#id_recipient" ).autocomplete({
-        source: {% all_users %},
+		source: {% all_users %},
 		minLength: 3,
         });
 });
 </script>
+{{ block.super}}{% endblock %}
+
+{% block msg_title %}Compose{% endblock %}
+
+{% block msg_content %}
 <form action="." method="post">
 	<table class="messages">
 		{% for field in form %}
