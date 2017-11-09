@@ -33,7 +33,7 @@ li.highlight {
 /* Element styled as a link */
 /* Clicking rolls out/in the next element */
 .closeable {
-    text-decoration: none;
+  text-decoration: none;
 	color: rgba(254, 234, 138, 1);
 	font-weight: bold;
 }

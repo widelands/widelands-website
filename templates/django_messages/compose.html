@@ -1,9 +1,21 @@
 {% extends "django_messages/base.html" %} 
-{% load i18n %} 
+{% load i18n %}
+{% load all_users %}
 
 {% block title %}
 Compose - {{ block.super }}
 {% endblock %}
+
+{% block extra_head %}
+<script>
+	$(function() {
+	$( "#id_recipient" ).autocomplete({
+		source: {% all_users %},
+		minLength: 3,
+		});
+});
+</script>
+{{ block.super}}{% endblock %}
 
 {% block msg_title %}Compose{% endblock %}
 

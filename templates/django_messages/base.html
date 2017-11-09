@@ -2,7 +2,9 @@
 {% load i18n %}  
 {% block bodyclass %}about{% endblock %}
 
-{% block extra_head %}<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/messages.css" />{{ block.super}}{% endblock %}
+{% block extra_head %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/messages.css" />
+{{ block.super}}{% endblock %}
 
 {% block title %}
 Messages - {{block.super}}
@@ -12,9 +14,9 @@ Messages - {{block.super}}
 <h1>Messages: {% block msg_title %}{% endblock %}</h1>
 <div class="blogEntry">
 	{% if messages %}
-	    {% for message in messages %}
-	    <p>{{ message }}</p>
-	    {% endfor %}
+		{% for message in messages %}
+		<p>{{ message }}</p>
+		{% endfor %}
 	{% endif %}
 	<table class="messages messages_border">
 	<tr>

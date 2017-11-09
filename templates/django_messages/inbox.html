@@ -31,7 +31,7 @@ Inbox - {{ block.super }}
 				</td>
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
-					<a href="{% url 'django_messages.views.delete' message.id %}">
+					<a href="{% url 'django_messages.views.delete' message.id %}?next={{ request.path|iriencode }}">
 						<img src="{{ MEDIA_URL }}img/delete.png" alt="delete" title="delete" />
 					</a>
 				</td>
