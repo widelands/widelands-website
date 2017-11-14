@@ -56,7 +56,13 @@
 					</tr>
 					{% if not map.world_name %}
 					<tr>
-						<td colspan="5"><strong>This map requires a version of Widelands newer than build18!</strong></td>
+						<td colspan="5"><strong>This map requires a version of Widelands newer than build
+						{% if map.nr_players > 8 %}
+							19!
+						{% else %}
+							18!
+						{% endif %}
+						</strong></td>
 					</tr>
 					{% endif %}
 					<tr>
