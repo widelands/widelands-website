@@ -22,6 +22,7 @@ if markdown.version_info[0] < 2:
     raise ImportError, 'Markdown library to old!'
 from markdown import markdown
 import re
+import urllib
 import bleach
 
 from BeautifulSoup import BeautifulSoup, NavigableString
@@ -113,7 +114,7 @@ def _classify_link(tag):
 
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
-        pn = tag['href'][6:].split('/', 1)[0]
+        pn = urllib.unquote(tag['href'][6:].split('/', 1)[0])
 
         if not len(pn):  # Wiki root link is not a page
             return {'class': 'wrongLink', 'title': 'This Link misses an articlename'}
