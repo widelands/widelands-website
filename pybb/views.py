@@ -175,11 +175,14 @@ def add_post_ctx(request, forum_id, topic_id):
 
         if notification:
             if not topic:
+                # Inform subscribers of a new topic
                 notification.send(notification.get_observers_for('forum_new_topic'), 'forum_new_topic',
-                     {'topic': topic, 'post': post, 'user': topic.user}, queue = True)
+                     {'topic': post.topic, 'post': post, 'user': post.topic.user}, queue = True)
                 # Set topics author as subscriber for all new posts in his topic
                 post.topic.subscribers.add(request.user)
+
             else:
+                # Send mails about a new post to topic subscribers
                 notification.send(post.topic.subscribers.all(), 'forum_new_post',
                      {'post': post, 'topic': topic, 'user': post.user}, queue = True)
 

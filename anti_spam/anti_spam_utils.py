@@ -10,7 +10,7 @@ def check_for_spam(*args, **kwargs):
     if is_spam:
         fs = FoundSpam(content_object=kwargs['instance'],
                        user=kwargs['user'],
-                       spam_text=kwargs['text_to_check'][:80])
+                       spam_text=kwargs['text_to_check'][:100])
         fs.save()
     return is_spam
 

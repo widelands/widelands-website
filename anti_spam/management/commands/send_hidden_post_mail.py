@@ -15,9 +15,8 @@ class Command(BaseCommand):
 
         for spam in spams:
             app = ContentType.objects.get_for_id(
-                spam.content_type_id).app_label
-            model = ContentType.objects.get_for_id(spam.content_type_id).name
-            message += '\nIn %s/%s: ' % (app, model)
+                spam.content_type_id)
+            message += '\nIn %s/%s: ' % (app.app_label, app.model)
             message += '\n User \'%s\' wrote: %s' % (spam.user, spam.spam_text)
 
         message += '\n\nAdmin page: https://%s/admin/pybb/post/' % Site.objects.get_current().domain
