@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render
-from django.contrib.auth import logout
+
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -21,6 +21,7 @@ from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
 from wl_utils import get_real_ip
+from anti_spam.anti_spam_utils import *
 
 try:
     from notification import models as notification
@@ -158,22 +159,29 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save()
+        
+        is_spam = False
+        # Check for spam in topics name for new topics
         if not topic:
-            post.topic.subscribers.add(request.user)
+            is_spam = check_for_spam(instance=post.topic, user=post.topic.user, text_to_check=post.topic.name)
+        # Check for spam in Post
+        if not is_spam:
+            is_spam = check_for_spam(instance=post, user=post.user, text_to_check=post.body)
+            
+        if is_spam:
+            post.hidden = is_spam
+            post.save(update_fields=['hidden'])
+            return HttpResponseRedirect('/moderated/')
 
-        if post.hidden:
-            hidden_posts_count = Post.objects.filter(
-                user=request.user, hidden=True).count()
-
-            if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
-                user = get_object_or_404(User, username=request.user)
-                # Set the user inactive so he can't login
-                user.is_active = False
-                user.save()
-                # Log the user out
-                logout(request)
-                return HttpResponse(status=403)
-            return HttpResponseRedirect('pybb_moderate_info')
+        if notification:
+            if not topic:
+                notification.send(notification.get_observers_for('forum_new_topic'), 'forum_new_topic',
+                     {'topic': topic, 'post': post, 'user': topic.user}, queue = True)
+                # Set topics author as subscriber for all new posts in his topic
+                post.topic.subscribers.add(request.user)
+            else:
+                notification.send(post.topic.subscribers.all(), 'forum_new_post',
+                     {'post': post, 'topic': topic, 'user': post.user}, queue = True)
 
         return HttpResponseRedirect(post.get_absolute_url())
 
