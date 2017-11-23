@@ -231,6 +231,11 @@ def edit_post_ctx(request, post_id):
 
     if form.is_valid():
         post = form.save()
+        is_spam = check_for_spam(instance=post, user=post.user, text_to_check=post.body)
+        if is_spam:
+            post.hidden = is_spam
+            post.save()
+            return HttpResponseRedirect('/moderated/')
         return HttpResponseRedirect(post.get_absolute_url())
 
     return {'form': form,
