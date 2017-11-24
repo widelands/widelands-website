@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from anti_spam.models import FoundSpam
+from check_input.models import SuspiciousInput
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Send email of found spam'
 
     def handle(self, *args, **options):
-        spams = FoundSpam.objects.all().order_by('content_type_id')
+        spams = SuspiciousInput.objects.all()
         message = 'There were %d hidden posts found:' % len(spams)
 
         for spam in spams:
@@ -21,5 +21,5 @@ class Command(BaseCommand):
 
         message += '\n\nAdmin page: https://%s/admin/pybb/post/' % Site.objects.get_current().domain
         recipients = [addr[1] for addr in settings.ADMINS]
-        send_mail('Hidden posts were found', message, 'anti_spam@widelands.org',
+        send_mail('Hidden posts were found', message, 'check_input@widelands.org',
                   recipients, fail_silently=False)

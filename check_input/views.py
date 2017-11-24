@@ -1,16 +1,22 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from anti_spam.models import FoundSpam
+from check_input.models import SuspiciousInput
 
 
 def moderate_info(request):
+    """Redirect to the moderate comments info page."""
     
-    hidden_posts_count = FoundSpam.objects.filter(
-        user=request.user).count()
+    # We need the try to catch logged out users
+    try:
+        hidden_posts_count = SuspiciousInput.objects.filter(
+            user=request.user).count()
+    except TypeError:
+        return render(request, 'mainpage.html')
+            
     
     if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
         user = get_object_or_404(User, username=request.user)
@@ -20,4 +26,4 @@ def moderate_info(request):
         # Log the user out
         logout(request)
         return HttpResponse(status=403)
-    return render(request, 'anti_spam/moderate_info.html')
+    return render(request, 'check_input/moderate_info.html')

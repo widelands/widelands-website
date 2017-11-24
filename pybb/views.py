@@ -21,7 +21,7 @@ from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
 from wl_utils import get_real_ip
-from anti_spam.anti_spam_utils import *
+from check_input.models import SuspiciousInput
 
 try:
     from notification import models as notification
@@ -159,15 +159,16 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save()
-        
-        is_spam = False
+
         # Check for spam in topics name for new topics
         if not topic:
-            is_spam = check_for_spam(instance=post.topic, user=post.topic.user, text_to_check=post.topic.name)
+            is_spam = SuspiciousInput(
+                content_object=post.topic, user=post.topic.user, text=post.topic.name).save()
         # Check for spam in Post
         if not is_spam:
-            is_spam = check_for_spam(instance=post, user=post.user, text_to_check=post.body)
-            
+            is_spam = SuspiciousInput(
+                content_object=post, user=post.user, text=post.body).save()
+
         if is_spam:
             post.hidden = is_spam
             post.save(update_fields=['hidden'])
@@ -177,14 +178,14 @@ def add_post_ctx(request, forum_id, topic_id):
             if not topic:
                 # Inform subscribers of a new topic
                 notification.send(notification.get_observers_for('forum_new_topic'), 'forum_new_topic',
-                     {'topic': post.topic, 'post': post, 'user': post.topic.user}, queue = True)
-                # Set topics author as subscriber for all new posts in his topic
+                                  {'topic': post.topic, 'post': post, 'user': post.topic.user}, queue = True)
+                # Topics author is subscriber for all new posts in his topic
                 post.topic.subscribers.add(request.user)
 
             else:
                 # Send mails about a new post to topic subscribers
                 notification.send(post.topic.subscribers.all(), 'forum_new_post',
-                     {'post': post, 'topic': topic, 'user': post.user}, queue = True)
+                                  {'post': post, 'topic': topic, 'user': post.user}, queue = True)
 
         return HttpResponseRedirect(post.get_absolute_url())
 
@@ -231,7 +232,7 @@ def edit_post_ctx(request, post_id):
 
     if form.is_valid():
         post = form.save()
-        is_spam = check_for_spam(instance=post, user=post.user, text_to_check=post.body)
+        is_spam = SuspiciousInput(content_object=post, user=post.user, text=post.body).save()
         if is_spam:
             post.hidden = is_spam
             post.save()

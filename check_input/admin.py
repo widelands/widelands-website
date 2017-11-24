@@ -1,11 +1,11 @@
-from anti_spam.models import FoundSpam
+from check_input.models import SuspiciousInput
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
 
 
-class FoundSpamAdmin(admin.ModelAdmin):
-    list_display = ('spam_text', 'user', 'get_app')
-    readonly_fields = ('spam_text', 'user', 'get_app',)
+class SuspiciousInputAdmin(admin.ModelAdmin):
+    list_display = ('text', 'user', 'get_app')
+    #readonly_fields = ('text', 'user', 'get_app',)
     exclude = ('content_type', 'object_id', )
     # fieldsets = (
     #     (None, {
@@ -21,4 +21,4 @@ class FoundSpamAdmin(admin.ModelAdmin):
         return '%s/%s' % (app.app_label, app.name)
     get_app.short_description = 'Found in App/Model'
 
-admin.site.register(FoundSpam, FoundSpamAdmin)
+admin.site.register(SuspiciousInput, SuspiciousInputAdmin)

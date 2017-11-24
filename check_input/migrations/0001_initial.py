@@ -14,13 +14,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='FoundSpam',
+            name='SuspiciousInput',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('spam_text', models.CharField(max_length=200)),
+                ('text', models.CharField(max_length=200, verbose_name=b'suspicious user input')),
                 ('object_id', models.PositiveIntegerField()),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('content_type', models.ForeignKey(verbose_name=b'related model', to='contenttypes.ContentType')),
+                ('user', models.ForeignKey(verbose_name=b'related user', to=settings.AUTH_USER_MODEL)),
             ],
+            options={
+                'ordering': ['content_type_id'],
+                'default_permissions': ('change',),
+            },
         ),
     ]
