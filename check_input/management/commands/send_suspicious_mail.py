@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 
 
 class Command(BaseCommand):
-    help = 'Send email of found spam'
+    help = 'Send email if suspicious content is found'
 
     def handle(self, *args, **options):
         spams = SuspiciousInput.objects.all()
