@@ -5,14 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 
 class SuspiciousInputAdmin(admin.ModelAdmin):
     list_display = ('text', 'user', 'get_app')
-    #readonly_fields = ('text', 'user', 'get_app',)
+    readonly_fields = ('text', 'user', 'get_app',)
     exclude = ('content_type', 'object_id', )
-    # fieldsets = (
-    #     (None, {
-    #         'description': '<strong>This is just an informational view!</strong>',
-    #         'fields': ('spam_text', 'user', 'content_type', 'object_id',)
-    #     }),
-    # )
     
     def get_app(self, obj):
         app = ContentType.objects.get_for_id(

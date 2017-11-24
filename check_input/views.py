@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
@@ -15,9 +15,12 @@ def moderate_info(request):
         hidden_posts_count = SuspiciousInput.objects.filter(
             user=request.user).count()
     except TypeError:
-        return render(request, 'mainpage.html')
-            
-    
+        return HttpResponseRedirect('/')
+
+    # Don't make the page accesible through browsers addressbar
+    if hidden_posts_count == 0:
+        return HttpResponseRedirect('/')
+
     if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
         user = get_object_or_404(User, username=request.user)
         # Set the user inactive so he can't login
@@ -25,5 +28,9 @@ def moderate_info(request):
         user.save()
         # Log the user out
         logout(request)
-        return HttpResponse(status=403)
-    return render(request, 'check_input/moderate_info.html')
+    
+    context={
+        'max_count': settings.MAX_HIDDEN_POSTS,
+        'act_count': hidden_posts_count,
+    }
+    return render(request, 'check_input/moderate_info.html', context=context)

@@ -160,6 +160,7 @@ def add_post_ctx(request, forum_id, topic_id):
     if form.is_valid():
         post = form.save()
 
+        is_spam = False
         # Check for spam in topics name for new topics
         if not topic:
             is_spam = SuspiciousInput(

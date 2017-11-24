@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['content_type_id'],
-                'default_permissions': ('change',),
+                'default_permissions': ('change', 'delete'),
             },
         ),
     ]
