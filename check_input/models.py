@@ -9,9 +9,13 @@ import re
 class SuspiciousInput(models.Model):
     """Model for collecting suspicios user input.
     
-    content_object = Models instance of a saved(!) object
+    Call directly the send function with this attributes:
+    content_object = Model instance of a saved(!) object
     user = user
     text = text to check for suspicious content
+    
+    Example:
+    is_suspicous = SuspiciousInput(content_type=post, user=post.user, text=post.body).send()
     """
     
     text = models.CharField(max_length=200, verbose_name="suspicious user input")
