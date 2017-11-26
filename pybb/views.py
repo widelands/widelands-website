@@ -163,12 +163,12 @@ def add_post_ctx(request, forum_id, topic_id):
         is_spam = False
         # Check for spam in topics name for new topics
         if not topic:
-            is_spam = SuspiciousInput(
-                content_object=post.topic, user=post.topic.user, text=post.topic.name).save()
+            is_spam = SuspiciousInput.check_input(
+                content_object=post.topic, user=post.topic.user, text=post.topic.name)
         # Check for spam in Post
         if not is_spam:
-            is_spam = SuspiciousInput(
-                content_object=post, user=post.user, text=post.body).save()
+            is_spam = SuspiciousInput.check_input(
+                content_object=post, user=post.user, text=post.body)
 
         if is_spam:
             post.hidden = is_spam
@@ -233,7 +233,7 @@ def edit_post_ctx(request, post_id):
 
     if form.is_valid():
         post = form.save()
-        is_spam = SuspiciousInput(content_object=post, user=post.user, text=post.body).save()
+        is_spam = SuspiciousInput.check_input(content_object=post, user=post.user, text=post.body)
         if is_spam:
             post.hidden = is_spam
             post.save()
