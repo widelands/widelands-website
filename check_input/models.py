@@ -15,7 +15,8 @@ class SuspiciousInput(models.Model):
     text = text to check for suspicious content
 
     Example:
-    is_suspicous = SuspiciousInput.check_input(content_type=post, user=post.user, text=post.body)
+    is_suspicous = SuspiciousInput.check_input(content_object=post, 
+user=post.user, text=post.body)
 
     """
 
