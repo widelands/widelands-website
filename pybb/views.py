@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render
-from django.contrib.auth import logout
+
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -21,6 +21,7 @@ from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
 from wl_utils import get_real_ip
+from check_input.models import SuspiciousInput
 
 try:
     from notification import models as notification
@@ -158,22 +159,34 @@ def add_post_ctx(request, forum_id, topic_id):
 
     if form.is_valid():
         post = form.save()
+
+        is_spam = False
+        # Check for spam in topics name for new topics
         if not topic:
-            post.topic.subscribers.add(request.user)
+            is_spam = SuspiciousInput.check_input(
+                content_object=post.topic, user=post.topic.user, text=post.topic.name)
+        # Check for spam in Post
+        if not is_spam:
+            is_spam = SuspiciousInput.check_input(
+                content_object=post, user=post.user, text=post.body)
 
-        if post.hidden:
-            hidden_posts_count = Post.objects.filter(
-                user=request.user, hidden=True).count()
+        if is_spam:
+            post.hidden = is_spam
+            post.save(update_fields=['hidden'])
+            return HttpResponseRedirect('/moderated/')
 
-            if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
-                user = get_object_or_404(User, username=request.user)
-                # Set the user inactive so he can't login
-                user.is_active = False
-                user.save()
-                # Log the user out
-                logout(request)
-                return HttpResponse(status=403)
-            return HttpResponseRedirect('pybb_moderate_info')
+        if notification:
+            if not topic:
+                # Inform subscribers of a new topic
+                notification.send(notification.get_observers_for('forum_new_topic'), 'forum_new_topic',
+                                  {'topic': post.topic, 'post': post, 'user': post.topic.user}, queue = True)
+                # Topics author is subscriber for all new posts in his topic
+                post.topic.subscribers.add(request.user)
+
+            else:
+                # Send mails about a new post to topic subscribers
+                notification.send(post.topic.subscribers.all(), 'forum_new_post',
+                                  {'post': post, 'topic': topic, 'user': post.user}, queue = True)
 
         return HttpResponseRedirect(post.get_absolute_url())
 
@@ -220,6 +233,11 @@ def edit_post_ctx(request, post_id):
 
     if form.is_valid():
         post = form.save()
+        is_spam = SuspiciousInput.check_input(content_object=post, user=post.user, text=post.body)
+        if is_spam:
+            post.hidden = is_spam
+            post.save()
+            return HttpResponseRedirect('/moderated/')
         return HttpResponseRedirect(post.get_absolute_url())
 
     return {'form': form,

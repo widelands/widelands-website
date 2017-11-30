@@ -65,6 +65,7 @@ urlpatterns = [
     url(r'^maps/', include('wlmaps.urls')),
     url(r'^screenshots/', include('wlscreens.urls')),
     url(r'^ggz/', include('wlggz.urls')),
+    url(r'^moderated/', include('check_input.urls')),
 ]
 
 try:

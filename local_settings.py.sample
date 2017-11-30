@@ -48,8 +48,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Anti spam keywords
 # If these are found, the posts/topics in forum get hidden
-ANTI_SPAM_BODY = ['spam']
-ANTI_SPAM_TOPIC = ['spam']
+ANTI_SPAM_KWRDS = ['spam']
 ANTI_SPAM_PHONE_NR = re.compile('\d{8,16}')
 MAX_HIDDEN_POSTS = 5
 

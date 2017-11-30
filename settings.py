@@ -94,6 +94,7 @@ INSTALLED_APPS = (
     'wlmaps',
     'wlscreens',
     'wlggz',
+    'check_input',
     'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps
