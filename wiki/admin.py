@@ -14,6 +14,8 @@ class InlineImages(GenericTabularInline):
 
 
 class ArticleAdmin(admin.ModelAdmin):
+    # Do not show 'Action' to prevent deleting:
+    actions = None
     search_fields = ['title']
     list_display = ('title', 'creator', 'last_update',)
     list_filter = ('title',)
@@ -50,3 +52,9 @@ class ChangeSetAdmin(admin.ModelAdmin):
     raw_id_fields = ('editor',)
 
 admin.site.register(ChangeSet, ChangeSetAdmin)
+
+
+# Just to get acces to permissions using djangos orm
+# Could be removed if wiki_article_can_delete is removed from the DB
+from django.contrib.auth.models import Permission
+admin.site.register(Permission)
