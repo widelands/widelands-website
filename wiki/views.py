@@ -21,6 +21,7 @@ from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import WIKILINK_
 
 from wl_utils import get_real_ip
 import re
+import urllib
 
 # Settings
 #  lock duration in minutes
@@ -632,14 +633,19 @@ def backlinks(request, title):
     """
 
     # Find old title(s) of this article
-    this_article = Article.objects.get(title=title)
+    this_article = get_object_or_404(Article, title=title)
     changesets = this_article.changeset_set.all()
     old_titles = []
     for cs in changesets:
         if cs.old_title and cs.old_title != title and cs.old_title not in old_titles:
             old_titles.append(cs.old_title)
 
-    search_title = [re.compile(r"\[\[\s*%s\s*\]\]" % title)]
+    # Search for semantic wiki links. The regexpr was copied from there
+    # and slightly modified
+    search_title = [re.compile(r"\[\[\s*(%s)/?\s*(\|\s*.+?\s*)?\]\]" % title)]
+
+    # Search for links in MarkDown syntax, like [Foo](wiki/FooBar)
+    # The regexpr matches the title between '/' and ')'
     search_title.append(re.compile(r"\/%s\)" % title))
 
     # Search for current and previous titles
@@ -648,13 +654,16 @@ def backlinks(request, title):
     articles_all = Article.objects.all().exclude(title=title)
     for article in articles_all:
         for regexp in search_title:
-            match = regexp.search(article.content)
+            # Need to unqoute the content to match
+            # e.g. [[ Back | Title%20of%20Page ]]
+            match = regexp.search(urllib.unquote(article.content))
             if match:
                 found_links.append({'title': article.title})
 
         for old_title in old_titles:
             if old_title in article.content:
-                found_old_links.append({'old_title': old_title, 'title': article.title })
+                found_old_links.append(
+                    {'old_title': old_title, 'title': article.title })
 
     context = {'found_links': found_links,
                'found_old_links': found_old_links,

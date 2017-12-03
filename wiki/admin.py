@@ -52,9 +52,3 @@ class ChangeSetAdmin(admin.ModelAdmin):
     raw_id_fields = ('editor',)
 
 admin.site.register(ChangeSet, ChangeSetAdmin)
-
-
-# Just to get acces to permissions using djangos orm
-# Could be removed if wiki_article_can_delete is removed from the DB
-from django.contrib.auth.models import Permission
-admin.site.register(Permission)
