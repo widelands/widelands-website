@@ -2,7 +2,7 @@
 
 "{{ user }}" wrote:
 
-{{ post.body_text }}
+{{ post.body_html }}
 {% blocktrans with post.get_absolute_url as post_url and topic.get_absolute_url as topic_url %} 
 –––––––––––
 Link to post: http://{{ current_site }}{{ post_url }}

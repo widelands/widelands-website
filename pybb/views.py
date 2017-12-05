@@ -185,7 +185,7 @@ def add_post_ctx(request, forum_id, topic_id):
 
             else:
                 # Send mails about a new post to topic subscribers
-                notification.send(post.topic.subscribers.all(), 'forum_new_post',
+                notification.send(post.topic.subscribers.exclude(username=post.user), 'forum_new_post',
                                   {'post': post, 'topic': topic, 'user': post.user}, queue = True)
 
         return HttpResponseRedirect(post.get_absolute_url())

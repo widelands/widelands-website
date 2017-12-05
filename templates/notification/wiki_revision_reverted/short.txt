@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktrans %}A wiki article has been reverted{% endblocktrans %}

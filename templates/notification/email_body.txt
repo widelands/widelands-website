@@ -1,4 +1,4 @@
-{% load i18n %}{% blocktrans %}You have received the following notice from {{ current_site }}:
+{% load i18n %}{% blocktrans %}
 
 {{ message }}
 To change how you receive notifications, please go to {{ notices_url }}.

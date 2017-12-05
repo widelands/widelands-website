@@ -1,1 +1,1 @@
-{% load i18n %}{% blocktrans %}[Widelands.org] {{ message }}{% endblocktrans %}
+{% load i18n %}{% blocktrans %}{{ message }}{% endblocktrans %}
