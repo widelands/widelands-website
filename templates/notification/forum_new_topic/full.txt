@@ -4,4 +4,4 @@ http://{{ current_site }}{{ topic_url }}
 {% endblocktrans %}
 {{ topic }}:
 
-{{ post.body_text }}
+{{ post.body }}
