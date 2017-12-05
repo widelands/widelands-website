@@ -70,6 +70,7 @@ class Article(models.Model):
         verbose_name = _(u'Article')
         verbose_name_plural = _(u'Articles')
         app_label = 'wiki'
+        default_permissions = ('change', 'add',)
 
     def get_absolute_url(self):
         if self.group is None:
