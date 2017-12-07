@@ -41,7 +41,7 @@ class NoticeType(models.Model):
 
     label = models.CharField(_('label'), max_length=40)
     display = models.CharField(_('display'), max_length=50)
-    description = models.CharField(_('description'), max_length=100)
+    description = models.CharField(_('description'), max_length=100, help_text="Used as subject when sending emails.")
 
     # by default only on for media with sensitivity less than or equal to this
     # number
@@ -244,6 +244,7 @@ def send_now(users, label, extra_context=None, on_site=True):
                 'user': user,
                 'notices_url': notices_url,
                 'current_site': current_site,
+                'subject': notice_type.description,
             })
             context.update(extra_context)
 

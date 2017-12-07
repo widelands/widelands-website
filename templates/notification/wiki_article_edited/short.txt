@@ -1,1 +1,0 @@
-{% load i18n %}{% blocktrans %}A wiki article created by you has been changed{% endblocktrans %}

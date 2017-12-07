@@ -1,1 +1,0 @@
-{% load i18n %}{% blocktrans %}A new Map has been uploaded to {{ current_site }}{% endblocktrans %}

@@ -1,1 +1,0 @@
-{% load i18n %}{% blocktrans %}A new topic has been created on {{ current_site }}{% endblocktrans %}
