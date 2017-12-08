@@ -1,4 +1,10 @@
-{% load i18n %}{% blocktrans with observed.get_absolute_url as article_url %}The article {{ observed }} that you observe has changed.
+{% load i18n %}{% with observed.get_absolute_url as article_url and observed.latest_changeset as cs %}
+The article "{{ observed }}" that you observe has been edited by {{ cs.editor }}.
 
+A diff is available at:
+http://{{ current_site }}/wiki/history/{{ observed|urlencode }}/changeset/{{ cs.revision }}/{{ cs.revision|add:"1" }}
+
+Link to article:
 http://{{ current_site }}{{ article_url }}
-{% endblocktrans %}
+
+{% endwith %}
