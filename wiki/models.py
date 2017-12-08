@@ -177,7 +177,6 @@ class ChangeSet(models.Model):
     def __unicode__(self):
         return u'#%s' % self.revision
 
-    @models.permalink
     def get_absolute_url(self):
         if self.article.group is None:
             return ('wiki_changeset', (),
@@ -241,7 +240,9 @@ class ChangeSet(models.Model):
             except self.DoesNotExist:
                 self.revision = 1
         super(ChangeSet, self).save(*args, **kwargs)
-        # if notification:
+        if notification:
+            print('franku send signal')
+            notification.handle_observations(Article, self.article)
         #     notification.send([self.editor], 'wiki_observed_article_changed',
         #                       {'editor': self.editor, 'revision': self, 'article': self.article})
 
@@ -287,5 +288,5 @@ class ChangeSet(models.Model):
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
 
-if notification is not None:
-    signals.post_save.connect(notification.handle_observations, sender=Article)
+# if notification is not None:
+#     signals.post_save.connect(notification.handle_observations, sender=Article)

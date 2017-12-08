@@ -1,8 +1,11 @@
-{% load i18n %}{% with observed.get_absolute_url as article_url and observed.latest_changeset as cs %}
-The article "{{ observed }}" that you observe has been edited by {{ cs.editor }}.
+{% load i18n %}
+{% url 'wiki_changeset_compare' observed observed.latest_changeset.revision|add:"-1" observed.latest_changeset.revision as diff_url %}
+{% url 'wiki_article' observed as article_url %}
+{% with observed.latest_changeset.editor as editor %}
+The article "{{ observed }}" that you observe has been edited by {{ editor }}.
 
 A diff is available at:
-http://{{ current_site }}/wiki/history/{{ observed|urlencode }}/changeset/{{ cs.revision }}/{{ cs.revision|add:"1" }}
+http://{{ current_site }}{{ diff_url }}
 
 Link to article:
 http://{{ current_site }}{{ article_url }}
