@@ -179,13 +179,15 @@ class ChangeSet(models.Model):
 
     def get_absolute_url(self):
         if self.article.group is None:
-            return ('wiki_changeset', (),
-                    {'title': self.article.title,
-                     'revision': self.revision})
-        return ('wiki_changeset', (),
-                {'group_slug': self.article.group.slug,
-                 'title': self.article.title,
-                 'revision': self.revision})
+            return reverse('wiki_changeset', kwargs={
+                'title': self.article.title,
+                'revision': self.revision
+            })
+        return reverse('wiki_changeset', kwargs={
+            'group_slug': self.article.group.slug,
+            'title': self.article.title,
+            'revision': self.revision,
+        })
 
     def is_anonymous_change(self):
         return self.editor is None
@@ -226,7 +228,6 @@ class ChangeSet(models.Model):
             editor_ip=editor_ip, editor=editor)
 
         self.save()
-
         if None not in (notification, self.editor):
             notification.send([self.editor], 'wiki_revision_reverted',
                               {'revision': self, 'article': self.article})
@@ -239,35 +240,31 @@ class ChangeSet(models.Model):
                     article=self.article).latest().revision + 1
             except self.DoesNotExist:
                 self.revision = 1
-        super(ChangeSet, self).save(*args, **kwargs)
-        if notification:
-            print('franku send signal')
-            notification.handle_observations(Article, self.article)
-        #     notification.send([self.editor], 'wiki_observed_article_changed',
-        #                       {'editor': self.editor, 'revision': self, 'article': self.article})
 
-    # def display_diff(self):
-    #     """Returns a HTML representation of the diff."""
-    # 
-    #     # well, it *will* be the old content
-    #     old_content = self.article.content
-    # 
-    #     # newer non-reverted revisions of this article, starting from this
-    #     newer_changesets = ChangeSet.non_reverted_objects.filter(
-    #         article=self.article,
-    #         revision__gte=self.revision)
-    # 
-    #     # apply all patches to get the content of this revision
-    #     for i, changeset in enumerate(newer_changesets):
-    #         patches = dmp.patch_fromText(changeset.content_diff)
-    #         if len(newer_changesets) == i + 1:
-    #             # we need to compare with the next revision after the change
-    #             next_rev_content = old_content
-    #         old_content = dmp.patch_apply(patches, old_content)[0]
-    # 
-    #     diffs = dmp.diff_main(old_content, next_rev_content)
-    #     dmp.diff_cleanupSemantic(diffs)
-    #     return dmp.diff_prettyHtml(diffs)
+        super(ChangeSet, self).save(*args, **kwargs)
+
+    def display_diff(self):
+        """Returns a HTML representation of the diff."""
+
+        # well, it *will* be the old content
+        old_content = self.article.content
+    
+        # newer non-reverted revisions of this article, starting from this
+        newer_changesets = ChangeSet.non_reverted_objects.filter(
+            article=self.article,
+            revision__gte=self.revision)
+
+        # apply all patches to get the content of this revision
+        for i, changeset in enumerate(newer_changesets):
+            patches = dmp.patch_fromText(changeset.content_diff)
+            if len(newer_changesets) == i + 1:
+                # we need to compare with the next revision after the change
+                next_rev_content = old_content
+            old_content = dmp.patch_apply(patches, old_content)[0]
+
+        diffs = dmp.diff_main(old_content, next_rev_content)
+        dmp.diff_cleanupSemantic(diffs)
+        return dmp.diff_prettyHtml(diffs)
 
     def get_content(self):
         """Returns the content of this revision."""

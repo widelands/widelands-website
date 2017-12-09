@@ -1,13 +1,10 @@
-{% load i18n %}
-{% url 'wiki_changeset_compare' observed observed.latest_changeset.revision|add:"-1" observed.latest_changeset.revision as diff_url %}
-{% url 'wiki_article' observed as article_url %}
-{% with observed.latest_changeset.editor as editor %}
-The article "{{ observed }}" that you observe has been edited by {{ editor }}.
+{% load i18n %}{% url 'wiki_changeset_compare' article pre_rev rev as diff_url %}
+{% url 'wiki_article' article as article_url %}
+{% blocktrans %}
+The article "{{ article }}" that you observe has been edited by {{ editor }}.
+Comment for this revision: "{{ rev_comment }}"
 
-A diff is available at:
-http://{{ current_site }}{{ diff_url }}
+A diff is available at: http://{{ current_site }}{{ diff_url }}
 
-Link to article:
-http://{{ current_site }}{{ article_url }}
-
-{% endwith %}
+Link to article: http://{{ current_site }}{{ article_url }}
+{% endblocktrans %}
