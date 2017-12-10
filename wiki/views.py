@@ -295,7 +295,6 @@ def edit_article(request, title,
                 notification.send(users, 'wiki_observed_article_changed',
                                   {'editor': request.user,
                                    'rev': changeset.revision,
-                                   'pre_rev': changeset.revision-1,
                                    'rev_comment': changeset.comment,
                                    'article': new_article})
 

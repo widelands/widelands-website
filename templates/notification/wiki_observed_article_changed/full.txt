@@ -1,4 +1,4 @@
-{% load i18n %}{% url 'wiki_changeset_compare' article pre_rev rev as diff_url %}
+{% load i18n %}{% url 'wiki_changeset' article rev as diff_url %}
 {% url 'wiki_article' article as article_url %}
 {% blocktrans %}
 The article "{{ article }}" that you observe has been edited by {{ editor }}.
