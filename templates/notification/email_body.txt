@@ -1,5 +1,4 @@
 {% load i18n %}{% blocktrans %}
-
 {{ message }}
 To change how you receive notifications, please go to {{ notices_url }}.
 {% endblocktrans %}
