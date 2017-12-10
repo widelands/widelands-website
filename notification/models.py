@@ -42,7 +42,7 @@ class NoticeType(models.Model):
     label = models.CharField(_('label'), max_length=40)
     display = models.CharField(_('display'),
                                max_length=50,
-                               help_text=_("Used as subject when sending emails."))
+                               help_text=_('Used as subject when sending emails.'))
     description = models.CharField(_('description'), max_length=100)
 
     # by default only on for media with sensitivity less than or equal to this
@@ -103,18 +103,22 @@ def get_notification_setting(user, notice_type, medium):
         setting.save()
         return setting
 
+
 def should_send(user, notice_type, medium):
     return get_notification_setting(user, notice_type, medium).send
 
+
 def get_observers_for(notice_type, excl_user=None):
-    """ Returns the list of users which wants to get a message (email) for this
+    """Returns the list of users which wants to get a message (email) for this
     type of notice."""
+    query = NoticeSetting.objects.filter(
+            notice_type__label=notice_type, send=True)
+
     if excl_user:
-        return [u.user for u in NoticeSetting.objects.filter(
-        notice_type__label=notice_type, send=True).exclude(user=excl_user)]
-    
-    return [s.user for s in NoticeSetting.objects.filter(
-        notice_type__label=notice_type, send=True)]
+        query = query.exclude(user=excl_user)
+
+    return [notice_setting.user for notice_setting in query]
+
 
 class NoticeQueueBatch(models.Model):
     """A queued notice.
