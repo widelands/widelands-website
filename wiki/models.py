@@ -220,6 +220,7 @@ class ChangeSet(models.Model):
             editor_ip=editor_ip, editor=editor)
 
         self.save()
+
         if None not in (notification, self.editor):
             notification.send([self.editor], 'wiki_revision_reverted',
                               {'revision': self, 'article': self.article})
