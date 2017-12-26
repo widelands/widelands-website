@@ -254,7 +254,7 @@ div#footer {
 	display: flex;
 	display: -webkit-flex;
 	justify-content: space-between;
-	align-items: flex-end;
+	align-items: center;
 }
 
 #header .box {
@@ -280,6 +280,13 @@ div#footer {
 #header .socialMediaList img {
 	/*height: 55px;*/
 	padding: 4px;
+	vertical-align: middle;
+}
+#header input.donate {
+	border: none;
+	background: none;
+
+	margin: 0px;
 }
 
 /****************/
@@ -363,11 +370,6 @@ div.columnModuleBox ul li {
 
 div.columnModuleBox ul li:first-child {
 	border-top: none;
-}
-
-input.donate {
-	border: none;
-	background: none;
 }
 
 /* News Posts */
