@@ -48,10 +48,7 @@
 		<a id="top"></a>
 		<div id="wrapper">
 			<div id="header">
-				<div class="loginBox posRight">
-					{% include "login_box.html" %}
-				</div>
-				<a href="{% url 'mainpage' %}"><img src="{{ MEDIA_URL }}img/{{ LOGO_FILE }}" class="posLeft" alt="Widelands Logo" /></a>
+				{% include "header.html" %}
 			</div>
 			<div id="topmenu">
 				<!-- Navigation -->
@@ -62,6 +59,7 @@
 					{% include "right_boxes.html" %}
 				</div>
 				<div id="content">
+					{% block tabbing %}{% endblock %}
 					{% block content %}
 						No Content here!
 					{% endblock %}

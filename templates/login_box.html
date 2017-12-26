@@ -2,70 +2,14 @@
 
 <!-- Login form / User information -->
 {% if user.is_authenticated %}
-<div class="small posLeft">
-	Welcome {{ user|user_link }},<br/>
-    {% comment %}
-    you have <a href="{% url 'messages_inbox' request.user %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
-    {% endcomment %}
-    you have <a href="{% url 'messages_inbox' %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
-</div>
-<div class="right small posRight">
 	<ul>
-		<li><a href="{% url 'messages_inbox' %}">Messages</a></li>
-		<li><a href="{% url 'notification_notices' %}">Notifications</a></li>
-		<li><a href="{% url 'profile_edit' %}">Edit Profile</a></li>
-		<li><a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a></li>
+	<li title="You are logged in as {{ user }}"><a href="{% url 'profile_view' %}">Your Profile</a>
+	{% if messages_inbox_count > 0 %}
+		( <a href="{% url 'messages_inbox' %}" title="Number of Private Messages">{{ messages_inbox_count }}</a> )
+	{% endif %}
+	</li>
+	<li><a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a></li>
 	</ul>
-</div>
 {% else %}
-<h4>Login</h4>
-{% comment %}
-<form method="post" action="https://{{ request.META.HTTP_HOST }}/accounts/login/" id="login_box">
-	<input id="id_login_username" type="text" name="username" maxlength="30" placeholder="Username" />
-	<input id="id_login_password" type="password" name="password" />
-	<input type="hidden" id="submitted" value="false" />
-	<button type="submit">login</button>
-	<input type="hidden" name="next" value="{{ request.path|iriencode }}" />
-	{% csrf_token %}
-</form>
-{% endcomment %}
-<div class="small center">
-	<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Click here to login</a><br />
-	<a href="{% url 'auth_password_reset' %}">Lost password?</a> | <a href="{% url 'registration_register' %}">Register now!</a>
-</div>
+	<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Login/Register</a>
 {% endif %}
-{% comment %}
-{# Login via iframe does not work between http and https #}
-<script type="text/javascript">
-$("#login_box").submit( function(data) {
-	var frameName = "login_frame" + (new Date()).getTime();
-	var frameSrc = "https://{{ request.META.HTTP_HOST }}/accounts/login/?next="
-					+ window.location.pathname + window.location.search + window.location.hash;
-	var loginFrame = $("<iframe name=\"" + frameName + "\" src=\"" + frameSrc + "\" />");
-
-	$("#login_box input[type='submit']").attr("disabled", "disabled")
-	loginFrame.css("display", "none");
-	loginFrame.load(function(data){
-		// get required fields
-		my_user_field = $(window.frames[ frameName ].document.getElementById("id_username"));
-		my_pass_field = $(window.frames[ frameName ].document.getElementById("id_password"));
-		parent_user_field = $("#id_login_username");
-		parent_pass_field = $("#id_login_password");
-		submitted_field = $("#submitted");
-
-		if (submitted_field.val() != "true") {
-			// copy login information and submit
-			my_user_field.val(parent_user_field.val() == "Username" ? "" : parent_user_field.val());
-			my_pass_field.val(parent_pass_field.val());
-			// submit form to parent
-			submitted_field.val("true");
-			login_form = $(window.frames[ frameName ].document.getElementById("login_form"));
-			login_form.attr('target', "_parent");
-			login_form.submit();
-		}
-	});
-	jQuery('body:first').append(loginFrame);
-	return false;
-});
-</script>
-{% endcomment %}

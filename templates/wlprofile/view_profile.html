@@ -7,31 +7,19 @@
 {{ profile.user.username }}'s Profile - {{ block.super }}
 {% endblock %}
 
+{% block profile %}class="active"{% endblock %}
 {% block content %}
-<div class="posRight small">
-	{% ifequal user profile.user %}
-		<a class="invertedColor" href="{% url 'profile_edit' %}">Edit Profile</a>
-	{% endifequal %}
-</div>
 <h1>{{ profile.user.username }}'s Profile</h1>
 
 <div class="blogEntry">
 	<table>
+		{% if profile.avatar %}
 		<tr>
 			<td>
-			{% if profile.avatar %}
-				<img src="{{ profile.avatar.url }}" alt="Avatar" />
-			{% endif %}
-			</td>
-			<td>
-			{% ifnotequal user profile.user %}
-				<button onclick="window.location.href='{% url 'messages_compose_to' profile.user %}';">
-					<img src="{{ MEDIA_URL }}forum/img/send_pm.png" alt ="" class="middle" />
-					<span class="middle">{% trans "Send PM" %}</span>
-				</button>
-			{% endifnotequal %}
+				<img class="posLeft" src="{{ profile.avatar.url }}" alt="Avatar" />
 			</td>
 		</tr>
+		{% endif %}
 		<tr>
 			<td class="grey">Joined:</td>
 			<td>{{ profile.user.date_joined|custom_date:user|title }}</td>
@@ -76,3 +64,4 @@
 </div>
 
 {% endblock %}
+
