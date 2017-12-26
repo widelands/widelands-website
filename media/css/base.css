@@ -258,9 +258,8 @@ div#footer {
 }
 
 #header .box {
-	border: 1px solid black;
-	background-color: #332f29;
-	background-image: url("../img/but1.png");
+	border: 1px solid #474444;
+	background-image: url("../img/black50.png");
 	-moz-border-radius: 4px 4px 0px 0px;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
@@ -270,6 +269,15 @@ div#footer {
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 }
 
+#header .shadow {
+	border-radius: 8px 8px 8px 8px;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+}
+
+#header img {
+	vertical-align: middle; /* to prevent a space below */
+}
+
 #header ul {
 	margin: 0px;
 	padding: 0px;
@@ -277,15 +285,10 @@ div#footer {
 	line-height: 1.5em;
 }
 
-#header .socialMediaList img {
-	/*height: 55px;*/
-	padding: 4px;
-	vertical-align: middle;
-}
 #header input.donate {
 	border: none;
 	background: none;
-
+	padding: 0px;
 	margin: 0px;
 }
 

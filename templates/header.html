@@ -3,37 +3,35 @@
   "{{ MEDIA_URL }}img/{{ LOGO_FILE }}" alt=
   "Widelands Logo"></a>
 </div>
-<div class="box center">
-  <ul>
-    <!--<li>Help us to pay our server!</li>-->
-    <li>
+<div class="box small">
+  <a href="{% url 'wlmaps_index' %}"><img src="{{ MEDIA_URL }}img/maps.png"><br />Maps</a>
+</div>
+<div class="box">
     <form action="https://www.paypal.com/cgi-bin/webscr" method=
     "post">
       <input type="hidden" name="cmd" value="_s-xclick">
       <input type="hidden" name="lc" value="GB"> <input type=
       "hidden" name="hosted_button_id" value="JH5R7YHSVRMRG">
       <input type="image" class="donate" src=
-      "https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" name=
+      "{{ MEDIA_URL }}img/donate.png" name=
       "submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" src=
       "https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1"
       height="1">
     </form>
-    </li>
-  </ul>
 </div>
-<div class="box socialMediaList">
-  <ul>
-    <!--<li>Social Media</li>-->
-    <li>
-      <a href="https://www.facebook.com/WidelandsOfficial"
-         target="_blank"><img src=
-        "{{ MEDIA_URL }}img/socialmedia/facebook.png" alt=
-        "Facebook"></a><a href="https://plus.google.com/108069355276040649622"
-        target="_blank"><img src=
-        "{{ MEDIA_URL }}img/socialmedia/googleplus.png" alt=
-        "Google+"></a>
-    </li>
-  </ul>
+<div class="box">
+  <a href="https://www.facebook.com/WidelandsOfficial"
+     target="_blank"><img src=
+     "{{ MEDIA_URL }}img/socialmedia/facebook.png" alt=
+     "Facebook">
+  </a>
+</div>
+<div class="box">
+  <a href="https://plus.google.com/108069355276040649622"
+     target="_blank"><img src=
+     "{{ MEDIA_URL }}img/socialmedia/googleplus.png" alt=
+     "Google+">
+  </a>
 </div>
 <div class="box small center">
   {% include "login_box.html" %}
