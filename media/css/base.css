@@ -250,6 +250,10 @@ div#footer {
 /**********/
 /* Header */
 /**********/
+#logo img {
+	width: 100%;
+}
+
 #header {
 	display: flex;
 	display: -webkit-flex;
@@ -277,11 +281,22 @@ div#footer {
 	z-index: 0;
 	padding: 4px;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	margin-left: 10px;
+	margin: 5px;
 	display: flex;
 	align-items: center;
 }
 
+#header .box ul {
+	display: block;
+}
+
+#header .box ul li {
+	display: block;
+	text-align: center;
+	box-shadow: none;
+	margin: 0px;
+ }
+ 
 #header img {
 	vertical-align: middle; /* to prevent a space below */
 }
@@ -471,4 +486,10 @@ div.blogEntry .posRight{
 .tab-list li.active {
 	border-bottom: none;
 	box-shadow: none;
+}
+
+@media (max-width: 1170px) {
+	#header {
+		justify-content: center;
+	}
 }
