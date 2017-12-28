@@ -7,22 +7,17 @@
 </div>
 <ul class="header_boxes">
 	<li class="box small">
-		<ul>
-			<li>
-				<a href="wiki/Download"><img src="{{ MEDIA_URL }}/img/download.png"><img /><br />Download</a>
-			</li>
-		</ul>
+		<span class="innerBox">
+			<a href="wiki/Download"><img src="{{ MEDIA_URL }}/img/download.png"><img /><br />Download</a>
+		</span>
 	</li>
 	<li class="box small">
-		<ul>
-			<li>
-				<a href="{% url 'wlmaps_index' %}"><img src="{{ MEDIA_URL }}img/maps.png"><img /><br />Maps</a>
-			</li>
-		</ul>
+		<span class="innerBox">
+			<a href="{% url 'wlmaps_index' %}"><img src="{{ MEDIA_URL }}img/maps.png"><img /><br />Maps</a>
+		</span>
 	</li>
 	<li class="box">
-		<ul>
-			<li>
+		<span class="innerBox">
 				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 				<input type="hidden" name="cmd" value="_s-xclick">
 				<input type="hidden" name="lc" value="GB"> <input type=
@@ -31,44 +26,32 @@
 				"{{ MEDIA_URL }}img/donate.png" name=
 				"submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" src=
 				"https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1">
-			</form>
-			</li>
-		</ul>
+		</span>
 	</li>
 	<li class="box">
-		<ul>
-			<li>
+		<span class="innerBox">
 				<a href="https://www.facebook.com/WidelandsOfficial"
 					target="_blank"><img src=
 					"{{ MEDIA_URL }}img/socialmedia/facebook.png" alt="Facebook">
 				</a>
-			</li>
-		</ul>
-	</li>
-	<li class="box">
-		<ul>
-			<li>
 				<a href="https://plus.google.com/108069355276040649622"
 					target="_blank"><img src="{{ MEDIA_URL }}img/socialmedia/googleplus.png" alt="Google+">
 				</a>
-			</li>
-		</ul>
+		</span>
 	</li>
 	<li class="box small center">
 		<!-- Login form / User information -->
-		{% if user.is_authenticated %}
-		<ul>
-			<li title="You are logged in as {{ user }}">
+		<span class="innerBox loginBox" title="You are logged in as {{ user }}">
+			{% if user.is_authenticated %}
 				<a href="{% url 'profile_view' %}">Your Profile</a>
 				{% if messages_inbox_count > 0 %}
-				( <a href="{% url 'messages_inbox' %}" title="Number of Private Messages">{{ messages_inbox_count }}</a> )
+					<a href="{% url 'messages_inbox' %}" title="Number of Private Messages">|{{ messages_inbox_count }}|</a>
 				{% endif %}
 				<br />
 				<a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a>
-			</li>
-		</ul>
-		{% else %}
-			<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Login/Register</a>
-		{% endif %}
+			{% else %}
+				<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Login/Register</a>
+			{% endif %}
+		</span>
 	</li>
 </ul>

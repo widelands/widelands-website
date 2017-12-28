@@ -262,7 +262,11 @@ div#footer {
 	align-items: center;
 }
 
-#header ul {
+#header a {
+	color: rgba(254, 234, 138, 1);
+}
+
+#header .header_boxes {
 	display: flex;
 	flex-flow: row wrap;
 	/*justify-content: space-between;*/
@@ -271,7 +275,7 @@ div#footer {
 	list-style-type: none;
 }
 
-#header ul li {
+#header .header_boxes li {
 	border: 1px solid #474444;
 	background-image: url("../img/black50.png");
 	-moz-border-radius: 4px 4px 0px 0px;
@@ -286,17 +290,20 @@ div#footer {
 	align-items: center;
 }
 
-#header .box ul {
-	display: block;
-}
-
-#header .box ul li {
+#header .innerBox {
+	background-image: url("../img/black20.png");
+	border-radius: 4px 4px 4px 4px;
+	padding: 4px;
 	display: block;
 	text-align: center;
 	box-shadow: none;
 	margin: 0px;
  }
- 
+
+#header .loginBox {
+	border: 2px solid #181; 
+}
+
 #header img {
 	vertical-align: middle; /* to prevent a space below */
 }
@@ -488,8 +495,14 @@ div.blogEntry .posRight{
 	box-shadow: none;
 }
 
-@media (max-width: 1170px) {
+/* The max-width has to be adjusted
+   depending on the width of the logo*/
+@media (max-width: 1160px) {
 	#header {
 		justify-content: center;
+	}
+	.header_boxes {
+		justify-content: center;
+		margin-bottom: 10px !important;
 	}
 }
