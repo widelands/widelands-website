@@ -12,7 +12,7 @@ body {
 	font-size: 0.88em;
 	line-height: 1.4em;
 	color: #ffffee;
-    text-shadow: 1px 1px 0px #000000;
+	text-shadow: 1px 1px 0px #000000;
 }
 
 /*+++++++++++++++++++++++++*/
@@ -160,7 +160,7 @@ td {
 }
 
 .right  {
-       text-align: right;
+	text-align: right;
 }
 
 .middle {
@@ -262,46 +262,63 @@ div#footer {
 	align-items: center;
 }
 
-#header a {
-	color: rgba(254, 234, 138, 1);
+#header .header_boxes li a, .header_boxes p {
+	color: #0e750e;
+	text-shadow: none;
+	font-weight: bold;
 }
 
 #header .header_boxes {
 	display: flex;
 	flex-flow: row wrap;
-	/*justify-content: space-between;*/
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
-}
-
-#header .header_boxes li {
-	border: 1px solid #474444;
-	background-image: url("../img/black50.png");
-	-moz-border-radius: 4px 4px 0px 0px;
+	align-items: flex-start;
+	/*border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
 	border-radius: 4px 4px 4px 4px;
-	z-index: 0;
-	padding: 4px;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	margin: 5px;
-	display: flex;
-	align-items: center;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);*/
 }
 
-#header .innerBox {
-	background-image: url("../img/black20.png");
-	border-radius: 4px 4px 4px 4px;
+#header .header_boxes li {
+/*	border-right: 1px solid #474444;
+	background-image: url("../img/black50.png");*/
+/*	-moz-border-radius: 4px 4px 0px 0px;
+	-webkit-border-radius: 4px 4px 0px 0px;
+	-khtml-border-radius: 4px 4px 0px 0px;
+	border-radius: 4px 4px 4px 4px;*/
+	z-index: 0;
 	padding: 4px;
+	margin: 5px;
 	display: block;
 	text-align: center;
 	box-shadow: none;
-	margin: 0px;
- }
+	/*display: flex;
+	align-items: flex-start;*/
+}
 
-#header .loginBox {
-	border: 2px solid #181; 
+#header li.loginBox {
+	background-image: url("../img/wood.png");
+	padding: 4px;
+	border: 1px solid #474444;
+	-webkit-border-radius: 4px 4px 0px 0px;
+	-khtml-border-radius: 4px 4px 0px 0px;
+	border-radius: 4px 4px 4px 4px;
+	/*box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);*/
+}
+
+#header li.loginBox a {
+	color: rgba(254, 234, 138, 1);
+}
+
+#header p {
+	
+	padding: 0px;
+	margin: 0px;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 #header img {
