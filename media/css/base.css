@@ -263,8 +263,8 @@ div#footer {
 }
 
 #header .header_boxes li a, .header_boxes p {
-	color: #0e750e;
-	text-shadow: none;
+	/*color: #0e750e;
+	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);*/
 	font-weight: bold;
 }
 
@@ -274,33 +274,33 @@ div#footer {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
-	align-items: flex-start;
-	/*border: 1px solid #474444;
+	/*align-items: flex-start;*/
+	border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
 	border-radius: 4px 4px 4px 4px;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);*/
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	background-image: url("../img/wood.png");
 }
 
 #header .header_boxes li {
-/*	border-right: 1px solid #474444;
-	background-image: url("../img/black50.png");*/
-/*	-moz-border-radius: 4px 4px 0px 0px;
+	/*border: 1px solid black;*/
+	/*background-image: url("../img/wood.png");*/
+	/*-moz-border-radius: 4px 4px 0px 0px;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
 	border-radius: 4px 4px 4px 4px;*/
 	z-index: 0;
-	padding: 4px;
-	margin: 5px;
+	padding: 6px;
+	/*margin: 5px;*/
 	display: block;
 	text-align: center;
-	box-shadow: none;
 	/*display: flex;
 	align-items: flex-start;*/
 }
 
 #header li.loginBox {
-	background-image: url("../img/wood.png");
+	background-image: url("../img/black20.png");
 	padding: 4px;
 	border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
@@ -491,8 +491,6 @@ div.blogEntry .posRight{
 }
 
 .tab-list li {
-	border: 1px solid blue;
-	padding: 1em;
 	background-color: #332f29;
 	background-image: url("../img/but1.png");
 	border-radius: 4px;

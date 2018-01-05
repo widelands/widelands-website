@@ -7,19 +7,16 @@
 </div>
 <ul class="header_boxes">
 	<li class="small">
-		<a href="wiki/Download">Download<br />
-		<img src="{{ MEDIA_URL }}/img/download.png" />
+		<a href="{% url 'wiki_article' "Download" %}" title="Download">Download<br />
+		<img src="{{ MEDIA_URL }}/img/download.png" alt="" />
 		</a>
 	</li>
 	<li class="small">
-		<a href="{% url 'wlmaps_index' %}">Maps<br />
-		<img src="{{ MEDIA_URL }}img/maps.png" />
+		<a href="{% url 'wlmaps_index' %}" title="Get new maps">Maps<br />
+		<img src="{{ MEDIA_URL }}img/maps.png" alt="" />
 		</a>
 	</li>
-	<li class="small" style="align-self: center;">
-		<p>
-			Help for our Server
-		</p>
+	<li style="align-self: center;" title="Help to pay our server">
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 		<input type="hidden" name="cmd" value="_s-xclick" />
 		<input type="hidden" name="lc" value="GB" />
@@ -28,8 +25,7 @@
 		<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
 		</form>
 	</li>
-	<li class="small" style="align-self: center;">
-		<p>Social Media</p>
+	<li style="align-self: center;">
 		<a href="https://www.facebook.com/WidelandsOfficial" target="_blank">
 			<img src="{{ MEDIA_URL }}img/socialmedia/facebook.png" alt="Facebook" />
 		</a>
