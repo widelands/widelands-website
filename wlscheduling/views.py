@@ -30,8 +30,6 @@ def scheduling_find (request):
             if not other_user.username in other_users_availabilities:
                 other_users_availabilities[other_user.username] = []
             other_users_availabilities[other_user.username].append(user_string_avail_time)
-        else:
-            a.delete()
     return render(request, 'wlscheduling/find.html', {'other_users_availabilities': json.dumps(other_users_availabilities)})
 
 @login_required
@@ -39,11 +37,6 @@ def scheduling(request):
     current_user = request.user
     current_user_availabilities = []
     user_timezone = current_user.wlprofile.time_zone
-    
-    # remove obsoletes dates from db
-    for a in Availabilities.objects.filter(user=current_user):
-        if datetime.utcnow() > a.avail_time:
-            a.delete()
         
     # Update of user's availabilities when post mode
     if request.method == 'POST':
