@@ -115,7 +115,6 @@ function updateAvailableDate(date) {
         var newDate = original.cloneNode(true);
         newDate.id = "day-" + date;
         newDate.removeAttribute("hidden");
-        newDate.style.display = "inline-block";
         var textDate = new Date(date);
         textDate = textDate.toDateString();
         newDate.getElementsByClassName('day-title')[0].innerHTML = '<h3>' + textDate + '</h3>';
