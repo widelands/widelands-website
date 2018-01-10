@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <h2>Select the dates you'll be available on</h2>
     {% include "wlscheduling/timezone-msg.html" %}
     <div id="scheduling-datepicker"></div>
-
+    
     <div id="second-step" hidden="hidden">
         <h2>Select the hours you'll be available on these dates</h2>
         <div id="days-wrapper"></div>
@@ -54,16 +54,10 @@ document.addEventListener('DOMContentLoaded', function(){
         <div class="hidden-hour"></div>
     </div>
 </div>
+    
 
 <!-- Template for the days of avaibility of the other users  -->
-<div id="other-day-template" hidden="hidden">
-    <div class="day-title"></div>
-    <div id="hours-wrapper" class="hours-wrapper" >
-        {% for i in "xxxxxxxxxxxxxxxxxxxxxxxx" %}
-            <div class="hours" title="{{ forloop.counter0 }} to {{ forloop.counter0|add:1 }} hour"></div>
-        {% endfor %}
-    </div>
-</div>
+{% include "wlscheduling/other-users-date.html" %}
 
 <div id="other-user-template" class="other-user-div" hidden="hidden">
     <div class="title"></div>

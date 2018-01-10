@@ -21,18 +21,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
 </div>
 
-<!-- TODO entirely in JS? -->
-<div id="other-day-template" hidden="hidden">
-    <div class="day-title"></div>
-    <div id="hours-wrapper" class="hours-wrapper" >
-        {% for i in "xxxxxxxxxxxxxxxxxxxxxxxx" %}
-            <div class="hours" title="{{ forloop.counter0 }} to {{ forloop.counter0|add:1 }} hour"></div>
-        {% endfor %}
-    </div>
-</div>
+<!-- Templates for the js script -->
+{% include "wlscheduling/other-users-date.html" %}
 
-
-<!-- TODO remove this template and do it entirely in js (it doesn't need any django value) -->
 <div id="other-user-template" class="other-user-div" hidden="hidden">
     <div class="title"></div>
 </div>
