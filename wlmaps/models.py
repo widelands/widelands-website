@@ -66,7 +66,7 @@ class Map(models.Model):
         # Send notifications only on new maps, not when updating fields, e.g.
         # nr_downloads
         if notification and is_new:
-            notification.send(notification.get_observers_for('maps_new_map', excl_user=self.uploader), 'maps_new_map',
+            notification.send(notification.get_observers_for('maps_new_map', excl_user=request.user), 'maps_new_map',
                               {'mapname': self.name,
                                'url': self.get_absolute_url(),
                                'user': self.uploader,
