@@ -179,7 +179,10 @@
     bottom: 0;
 }
 
-/**********  svg-clock **********/
+
+
+
+/**********  clock **********/
 
 #clocks-wrapper {
     display:flex;
@@ -188,13 +191,13 @@
     background-image: url("../img/black50.png");
 }
 
+#clocks-wrapper h1{
+    text-align: center;
+}
+
 svg.clock-svg {
     width: 150px;
     height: 150px;
-}
-
-svg.clock-svg * {
-    transform: translateX(-70px);
 }
 
 .hour-area {
@@ -208,18 +211,18 @@ svg.clock-svg * {
     fill: #118811;
 }
 
-.circle-area {
-    fill:none
-}
 
 .number-wrapper {
     line-height:100%;
     fill: white;
+    
+    stroke:black;
+    stroke-width:2.7;
 }
 
 .number {
-    -inkscape-font-specification:Cambria;
-    fill:white;
+    -inkscape-font-specification: "sans-serif";
+    font-family:"sans-serif";
 }
 
 .circle {
