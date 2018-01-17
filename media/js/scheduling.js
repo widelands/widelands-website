@@ -152,10 +152,20 @@ function displayHourForDate(date, hour, user) {
         dateDivID = user + '-day-' + date
     }
     dateDiv = document.getElementById(dateDivID);
+
+    // for the current user hours display
     hourDiv = dateDiv.getElementsByClassName('hours');
     for (var hourInDiv in hourDiv) {
         if (hourInDiv == hour) {
             hourDiv[hourInDiv].className += ' selected';
+        }
+    }
+
+    // for the other users hours display (the svg clock)
+    hoursArea = dateDiv.getElementsByClassName('hour-area');
+    for (var hourArea in hoursArea) {
+        if (hourArea == hour) {
+            hoursArea[hourArea].className.baseVal += ' active';
         }
     }
 }
