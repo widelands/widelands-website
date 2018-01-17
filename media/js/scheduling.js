@@ -152,12 +152,10 @@ function displayHourForDate(date, hour, user) {
         dateDivID = user + '-day-' + date
     }
     dateDiv = document.getElementById(dateDivID);
-
-    hoursArea = dateDiv.getElementsByClassName('hour-area');
-    //console.log(hoursArea)
-    for (var hourArea in hoursArea) {
-        if (hourArea == hour) {
-            hoursArea[hourArea].className.baseVal += ' active';
+    hourDiv = dateDiv.getElementsByClassName('hours');
+    for (var hourInDiv in hourDiv) {
+        if (hourInDiv == hour) {
+            hourDiv[hourInDiv].className += ' selected';
         }
     }
 }
