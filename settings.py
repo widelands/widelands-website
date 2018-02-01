@@ -320,4 +320,5 @@ PAGINATION_DEFAULT_WINDOW = 2
 try:
     from local_settings import *
 except ImportError:
+    print('Failed to load local_Settings.py !')
     pass
