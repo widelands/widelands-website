@@ -12,3 +12,10 @@ local_urlpatterns = [
        {'document_root': settings.STATIC_MEDIA_PATH},
        name='static_media_pybb'),
 ]
+
+# Only true if in debug mode, like when working at home
+if settings.DEBUG:
+    local_urlpatterns.append(url(r'^documentation/(?P<path>.*)$',
+        'django.views.static.serve',
+        {'document_root': settings.STATIC_MEDIA_PATH + '/documentation/html/'},
+        name = 'documentation'))
