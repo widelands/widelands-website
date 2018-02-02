@@ -8,19 +8,24 @@ import sys
 import imp
 import shutil
 
-# Didn't find a better way to get the settings from django
-f, path, descr = imp.find_module('../local_settings')
-settings = imp.load_module('local_settings', f, path, descr)
-f.close()
-
-GET_FROM = os.path.join(settings.WIDELANDS_SVN_DIR, 'doc/sphinx/build/html')
-WRITE_TO = os.path.join(settings.MEDIA_ROOT,'documentation/html')
+def get_settings():  
+    # Didn't find a better way to get the settings from django
+    f, path, descr = imp.find_module('../local_settings')
+    settings = imp.load_module('local_settings', f, path, descr)
+    f.close()
+    
+    return settings
 
 def move_docs():
+    settings = get_settings()
+    WRITE_TO = os.path.join(settings.MEDIA_ROOT, 'documentation/')
+    GET_FROM = os.path.join(settings.WIDELANDS_SVN_DIR, 'doc/sphinx/build/html')
     try:
+        if os.path.exists(WRITE_TO):
+            shutil.rmtree(WRITE_TO)
         shutil.copytree(GET_FROM, WRITE_TO)
-    except shutil.Error:
-        print("something went wrong while moving files and directories")
+    except (OSError, shutil.Error) as why:
+        print("Something went wrong while moving files and directories", why)
         
 if __name__ == '__main__':
     sys.exit(move_docs())
