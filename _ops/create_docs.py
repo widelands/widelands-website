@@ -55,8 +55,8 @@ def create_docs():
         sys.exit(1)
 
     if os.path.exists(BUILD_DIR):
-        # Clean build directory
-        shutil.rmtree(BUILD_DIR)
+        # Clean build/html directory
+        shutil.rmtree(os.path.join(BUILD_DIR, 'html'))
 
         # Clean also the autogen* files created by extract_rst.py
         # This has to be done because sometimes such a file remains after
