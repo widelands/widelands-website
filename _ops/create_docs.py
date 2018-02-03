@@ -67,10 +67,20 @@ def create_docs():
         except OSError:
             raise
 
+    # TODO(franku): Check if dirhtml works in production as expected
+    # We may want the sphinx builder 'dirhtml' in production
+    # Locally 'dirhtml' do not work because the staticfiles view disallow
+    # directory indexes
+    BUILDER = 'html'
+    if hasattr(settings, 'DEBUG'):
+        # In production we use DEBUG=False derived from local_settings
+        BUILDER = 'dirhtml'
+
     try:
         check_call(['python', os.path.join(SPHINX_DIR, 'extract_rst.py')])
         check_call(['sphinx-build',
-                    '-b', 'dirhtml',       # The used builder, either 'html' or 'dirhtml'
+                    '-b', BUILDER,
+                    '-d', os.path.join(BUILD_DIR, 'doctrees'),
                     os.path.join(SPHINX_DIR, 'source/'),
                     os.path.join(BUILD_DIR, 'html')
                     ])
