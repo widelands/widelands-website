@@ -6,4 +6,4 @@
 {% endblocktrans %}
 
 -------------------------
-http://{{ current_site }}{{ topic_url }}
+Link to topic: http://{{ current_site }}{{ topic_url }}

@@ -2,6 +2,7 @@
 {% blocktrans %}
 Mapname: {{ mapname }}
 Description: {{ uploader_comment }}
-–––––––––––
+
+-------------------------
 Link to map: http://{{ current_site }}{{ url }}
 {% endblocktrans %}
