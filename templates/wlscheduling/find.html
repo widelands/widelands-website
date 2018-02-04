@@ -1,5 +1,3 @@
-
-
 {% extends "wlscheduling/base.html" %}
 {% comment %}
    vim:ft=htmldjango
@@ -28,10 +26,6 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="title"></div>
 </div>
 
-
-
 <!-- Div to send django data to js file -->
 <div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}" users-to-fill="{{other_users_availabilities}}"></div>
-
-
 {% endblock %}

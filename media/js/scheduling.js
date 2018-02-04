@@ -1,8 +1,8 @@
 // global variables
 var lastSelectedDates = []
 
-// Create calandar and return it as an object. Useful for callbacks.
-function createCalandar() {
+// Create calender and return it as an object. Useful for callbacks.
+function createCalendar() {
     $('#scheduling-datepicker').multiDatesPicker({
         dateFormat: "yy-mm-dd",
         showAnim: "slideDown",
@@ -16,7 +16,7 @@ function createCalandar() {
 }
 
 
-//Add warning in case of disparency between browser and profil timezone
+// Add warning in case of disparency between browser and profil timezone
 function addTimeZoneWarningIfNeeded() {
     var userTimeZone = document.getElementById('django-data').getAttribute('user-time-zone')
     var browserTimeZone = - new Date().getTimezoneOffset()/60
@@ -31,7 +31,7 @@ function addTimeZoneWarningIfNeeded() {
 }
 
 function addPreviousDateFromUser(calendar) {
-    //Populate the current date with already filled date by the user
+    // Populate the current date with already filled date by the user
     old_availabilities_string_JSON = document.getElementById('django-data').getAttribute('day-to-fill')
     old_availabilities_list = stringJSONtoJSList(old_availabilities_string_JSON)
     if (old_availabilities_list == "") {
@@ -58,7 +58,7 @@ function addPreviousDateFromUser(calendar) {
 }
 
 function addOtherUsersAvailabilities() {
-    //Populate the result area showing other users and their disponibilities
+    // Populate the result area showing other users and their disponibilities
     if (document.getElementById('django-data').getAttribute('users-to-fill')) {
         var otherPlayerAvailabilitiesJSON = document.getElementById('django-data').getAttribute('users-to-fill');
         otherPlayerAvailabilities = JSON.parse(otherPlayerAvailabilitiesJSON)
@@ -77,11 +77,11 @@ function addOtherUsersAvailabilities() {
 }
 
 function sendDataAsForm(calendar) {
-    //Get informations from selected hours
+    // Get informations from selected hours
     var selectedDates = $( "#scheduling-datepicker" ).multiDatesPicker( "getDates" );
     var selectedDatesList = [];
     for (var d in selectedDates) {
-        //remove whitespace
+        // remove whitespace
         var dateID = 'day-' + selectedDates[d];
         dateObj = document.getElementById(dateID);
         if (dateObj) {
@@ -97,12 +97,12 @@ function sendDataAsForm(calendar) {
             } 
         }
     }
-    //Send informations to server
+    // Send informations to server
     console.log(selectedDatesList);
     post('.', selectedDatesList)
 }
 
-//Add or remove available dates in the ui.
+// Add or remove available dates in the ui.
 function updateAvailableDate(date) {
     newDateID = "day-" + date
     dateAlreadyExist = !!document.getElementById(newDateID);
@@ -118,7 +118,7 @@ function updateAvailableDate(date) {
         var textDate = new Date(date);
         textDate = textDate.toDateString();
         newDate.getElementsByClassName('day-title')[0].innerHTML = '<h3>' + textDate + '</h3>';
-        //We add the listeners to each hours One for the click event, the other for the hover when the mouse is pressed
+        // We add the listeners to each hours One for the click event, the other for the hover when the mouse is pressed
         hoursObj = newDate.getElementsByClassName('hours');
         for (var i = 0; i < hoursObj.length; i++) {
             hoursObj[i].addEventListener('click', updateHour, false);
@@ -128,9 +128,9 @@ function updateAvailableDate(date) {
                 }
             })
         }
-        //we look for the order the new date should be in
+        // We look for the order the new date should be in
         daysList = document.getElementById('days-wrapper').getElementsByClassName('days');
-        //We finally add the new date
+        // We finally add the new date
         document.getElementById('days-wrapper').appendChild(newDate);
     }
 
@@ -153,7 +153,7 @@ function displayHourForDate(date, hour, user) {
     }
     dateDiv = document.getElementById(dateDivID);
 
-    // for the current user hours display
+    // For the current user hours display
     hourDiv = dateDiv.getElementsByClassName('hours');
     for (var hourInDiv in hourDiv) {
         if (hourInDiv == hour) {
@@ -161,7 +161,7 @@ function displayHourForDate(date, hour, user) {
         }
     }
 
-    // for the other users hours display (the svg clock)
+    // For the other users hours display (the svg clock)
     hoursArea = dateDiv.getElementsByClassName('hour-area');
     for (var hourArea in hoursArea) {
         if (hourArea == hour) {
@@ -193,7 +193,7 @@ function createUserDivOrUpdateIt(user, availTime) {
         otherUser = document.getElementById("user-" + user);
     }
     var dtavailTime = new Date(availTime + ":00:00");
-    //Remove timezone offset which js automatically add...
+    // Remove timezone offset which js automatically add...
     js_offset = dtavailTime.getTimezoneOffset()/60
     dtavailTime = dtavailTime.addHours(js_offset);
     textDate = dtavailTime.toDateString();
@@ -214,12 +214,12 @@ function createUserDivOrUpdateIt(user, availTime) {
 /*****************************/
 /********* utilities *********/
 /*****************************/
-// read as "Stackoverflow coded this"
+// From stackoverflow: https://stackoverflow.com/questions/5898656/test-if-an-element-contains-a-class
 function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
 
-//We need a custom function to submit a form because our data isn't formated as a form.
+// We need a custom function to submit a form because our data isn't formated as a form.
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
     // The rest of this code assumes you are not using a library.
@@ -235,7 +235,7 @@ function post(path, params, method) {
 
             form.appendChild(hiddenField);
     }
-    //CSRF token
+    // CSRF token
     var csrf_div = document.createElement("div");
     csrf_div.innerHTML = document.getElementById('django-data').getAttribute('csrf-token')
     form.appendChild(csrf_div);
@@ -260,7 +260,7 @@ function cleanJSONfromWhiteSpace(json) {
 }
 
 function stringJSONtoJSList(json) {
-    //removes brackets
+    // Removes brackets
     json = json.substring(1, json.length-1);
     var jsonList= json.split(",")
     for (var i in jsonList){

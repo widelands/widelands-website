@@ -11,7 +11,7 @@
 }
 
 /* actual scheduling module */
-#calandar {
+#calender {
     display: flex;
     justify-content: center;
 }
@@ -38,7 +38,7 @@
     width: 100%;
 }
 
-.hours-title-wrapper p{
+.hours-title-wrapper p {
     width: 42px;
     user-select: none;
 }
@@ -84,7 +84,7 @@
     margin-top: 14px;
 }
 
-.other-user-div .hours{
+.other-user-div .hours {
     height: 10px;
     width: 20px;
 }
@@ -103,7 +103,7 @@
     white-space: nowrap;
     overflow: hidden !important;
     text-overflow: ellipsis;
-    color: #feea72;;
+    color: #feea72;
     font-weight: bold;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .other-user-div .title button:hover {
-    background-color:#118811;;
+    background-color:#118811;
 }
 
 .other-user-div .title img {
@@ -186,12 +186,14 @@
 
 #clocks-wrapper {
     display:flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
     height: 210px;
     margin-top: 20px;
     background-image: url("../img/black50.png");
 }
 
-#clocks-wrapper h1{
+#clocks-wrapper h1 {
     text-align: center;
 }
 
@@ -214,15 +216,16 @@ svg.clock-svg {
 
 .number-wrapper {
     line-height:100%;
-    fill: white;
-    
-    stroke:black;
+
     stroke-width:2.7;
 }
 
 .number {
     -inkscape-font-specification: "sans-serif";
     font-family:"sans-serif";
+        fill: white;
+    
+    stroke:black;
 }
 
 .circle {
