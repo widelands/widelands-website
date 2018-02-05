@@ -266,10 +266,14 @@ def send_now(users, label, extra_context=None, on_site=True):
             subject = ''.join(render_to_string('notification/email_subject.txt', {
                 'message': messages['short.txt'],
             }, context).splitlines())
-
+            
+            # Strip leading newlines. Make writing the email templates easier:
+            # Each linebreak in the templates results in a linebreak in the emails
+            # If the first line in a template contains only template tags the 
+            # email will contain an empty line at the top.
             body = render_to_string('notification/email_body.txt', {
                 'message': messages['full.txt'],
-            }, context)
+            }, context).lstrip()
 
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
