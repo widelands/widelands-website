@@ -38,8 +38,7 @@ urlpatterns = [
     url(r'^threadedcomments/', include('threadedcomments.urls')),
 
     # Redirect old urls to docs to docs/wl
-    url(r'^docs/$', RedirectView.as_view(url='/docs/wl', permanent=True), name='docs'),
-    url(r'^docs/', include('sphinxdoc.urls')),
+    url(r'^docs/$', RedirectView.as_view(url='/documentation/index.html', permanent=True), name='docs'),
 
     # 3rd party, modified for widelands
     url(r'^wiki/', include('wiki.urls')),
