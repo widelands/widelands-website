@@ -7,14 +7,13 @@
     {% comment %}
     you have <a href="{% url 'messages_inbox' request.user %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
     {% endcomment %}
-    you have <a href="{% url 'messages_inbox' %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
+    <a href="{% url 'scheduling_main' %}">Schedule your playtimes </a>
 </div>
 <div class="right small posRight">
 	<ul>
-		<li><a href="{% url 'messages_inbox' %}">Messages</a></li>
+		<li><a href="{% url 'messages_inbox' %}">Messages ({{ messages_inbox_count}})</a></li>
 		<li><a href="{% url 'notification_notices' %}">Notifications</a></li>
 		<li><a href="{% url 'profile_edit' %}">Edit Profile</a></li>
-		<li><a href="{% url 'scheduling_main' %}">Schedule a game</a></li>
 		<li><a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a></li>
 	</ul>
 </div>
