@@ -44,38 +44,42 @@ def get_local_settings():
 def move_docs(settings, SPHINX_DIR):
     """Move the documentation created by sphinxdoc to the right folder.
 
-    Dependent on Operating system create a temporary backup.
+    The server will serve the files from the symlink
+    'MEDIA/documentation/docs_html'. To have always a valid url between the
+    copy process, the link points intermediately to
+    doc/sphinx/build/html of the SVN repo.
 
     """
 
-    TARGET_DIR = os.path.join(settings.MEDIA_ROOT, 'documentation/new_html')
+    TARGET_DIR = os.path.join(settings.MEDIA_ROOT, 'documentation/html')
+
     if os.name == 'posix':
-        # Creating symlinks is only available on unix systems
-        LINK_NAME = os.path.join(settings.MEDIA_ROOT, 'documentation/html')
-        TMP_DIR = os.path.join(settings.MEDIA_ROOT, 'documentation/old_html')
-
-        if not os.path.exists(TARGET_DIR):
-            # only needed on first run
-            os.mkdir(TARGET_DIR)
-
-        shutil.copytree(TARGET_DIR, TMP_DIR)
-
-        if os.path.exists(LINK_NAME):
-            # only needed if this script has already run
+        try:
+            # Creating symlinks is only available on unix systems
+            LINK_NAME = os.path.join(
+                settings.MEDIA_ROOT, 'documentation/docs_html')
+            SPHINX_BUILD_DIR = os.path.join(SPHINX_DIR, 'build/html')
+    
+            if not os.path.exists(TARGET_DIR):
+                # only needed on first run
+                os.mkdir(TARGET_DIR)
+    
+            if os.path.exists(LINK_NAME):
+                # only needed if this script has already run
+                os.remove(LINK_NAME)
+    
+            os.symlink(SPHINX_BUILD_DIR, LINK_NAME)
+            shutil.rmtree(TARGET_DIR)
+            shutil.copytree(SPHINX_BUILD_DIR, TARGET_DIR)
             os.remove(LINK_NAME)
-
-        os.symlink(TMP_DIR, LINK_NAME)
-        shutil.rmtree(TARGET_DIR)
-        shutil.copytree(os.path.join(SPHINX_DIR, 'build/html'), TARGET_DIR)
-        os.remove(LINK_NAME)
-        os.symlink(TARGET_DIR, LINK_NAME)
-        shutil.rmtree(TMP_DIR)
+            os.symlink(TARGET_DIR, LINK_NAME)
+        except:
+            raise
     else:
-        # Non unix OS: Copy docs to main folder without using a symlink
+        # Non unix OS: Copy docs
         shutil.rmtree(TARGET_DIR)
-        shutil.copytree(os.path.join(SPHINX_DIR, 'build/html'), 
-                        os.path.join(settings.MEDIA_ROOT, 'documentation/html')
-                        )
+        shutil.copytree(os.path.join(SPHINX_DIR, 'build/html'),
+                        TARGET_DIR)
 
 
 def create_docs():
