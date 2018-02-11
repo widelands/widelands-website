@@ -73,21 +73,24 @@
 }
 
 .other-user-div{
-    width: 29%;
+    width: 100%;
     border: 1px solid black;
-    background-image: url("../img/black50.png");
+    background-image: url(../img/black50.png);
     padding: 11px;
     margin-top: 5px;
     margin-right: 5px;
 }
 
-.other-days-container > div {
-    margin-top: 14px;
+
+.other-days-container {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.other-user-div .hours {
-    height: 10px;
-    width: 20px;
+.other-days-container > div {
+    margin-top: 14px;
+    width: 32%;
+    margin-right: 7px;
 }
 
 .other-user-div .title {
@@ -119,11 +122,12 @@
     margin-right: 4px;
 }
 
+
 .show-clock-btn {
     height: 35px;
     width: 100%;
     text-align: center;
-    margin: 0;
+    margin-top: 8px;
     padding-top: 5px;
 }
 
