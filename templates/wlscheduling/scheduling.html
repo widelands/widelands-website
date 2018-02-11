@@ -57,11 +57,7 @@ document.addEventListener('DOMContentLoaded', function(){
     
 
 <!-- Template for the days of avaibility of the other users  -->
-{% include "wlscheduling/other-users-date.html" %}
-
-<div id="other-user-template" class="other-user-div" hidden="hidden">
-    <div class="title"></div>
-</div>
+{% include "wlscheduling/other-users.html" %}
 
 <!-- Div to send django data to js file -->
 <div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}" day-to-fill = "{{ current_user_availabilities }}" users-to-fill="{{other_users_availabilities}}" csrf-token = "{% csrf_token %}"></div>

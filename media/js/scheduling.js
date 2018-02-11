@@ -177,18 +177,27 @@ function createUserDivOrUpdateIt(user, availTime) {
         var otherUser = original.cloneNode(true);
         otherUser.id = "user-" + user;
         otherUser.removeAttribute("hidden");
-        var jsEventHTML = "/messages/compose/" + user
-        var imageHTML = '<img src="/wlmedia/forum/img/send_pm.png" alt="" class="middle"><span class="middle">Send PM</span>'
-        var userTitle = otherUser.children[0]
-        var button =  document.createElement("button");
-        button.innerHTML = imageHTML;
+
+        var userTitle = otherUser.getElementsByClassName('title')[0];
+        button = userTitle.querySelector('button');
         button.onclick = function(){
             window.location.href = '/messages/compose/' + user;
         }
-        var usernameP = document.createElement('p')
+
+        var usernameP = userTitle.querySelector('p');
         usernameP.innerHTML = user;
-        userTitle.appendChild(usernameP)
-        userTitle.appendChild(button)
+
+        var showClockBtn = otherUser.getElementsByClassName('show-clock-btn')[0];
+        showClockBtn.onclick = function (){
+            otherUser.classList.toggle('show');
+            var showClockText = '<i class="arrow"></i>Show clock';
+            var hideClockText = '<i class="arrow"></i>Hide clock';
+            if (showClockBtn.innerHTML == showClockText) {
+                showClockBtn.innerHTML = hideClockText;
+            } else {
+                showClockBtn.innerHTML = showClockText;
+            }
+        }
     } else {
         otherUser = document.getElementById("user-" + user);
     }
@@ -205,7 +214,7 @@ function createUserDivOrUpdateIt(user, availTime) {
         day.id = user + "-day-" + dateFormated;
         day.removeAttribute("hidden");
         day.getElementsByClassName('day-title')[0].innerHTML = '<h3>' + textDate + '</h3>'; 
-        otherUser.appendChild(day);
+        otherUser.getElementsByClassName('other-days-container')[0].appendChild(day)
     }
     document.getElementById('other-users-wrapper').appendChild(otherUser);
     displayHourForDate(dateFormated, availTimeFormated, user);

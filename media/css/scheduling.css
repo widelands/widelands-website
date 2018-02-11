@@ -63,8 +63,9 @@
     width: 40px;
 }
 
-
+/*********************************/
 /*  Display for the other users  */
+/*********************************/
 #other-users-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -80,7 +81,7 @@
     margin-right: 5px;
 }
 
-.other-user-div > div {
+.other-days-container > div {
     margin-top: 14px;
 }
 
@@ -99,7 +100,6 @@
 .other-user-div .title p {
     font-size: 20px;
     margin-top: 5px;
-    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden !important;
     text-overflow: ellipsis;
@@ -119,6 +119,84 @@
     margin-right: 4px;
 }
 
+.show-clock-btn {
+    height: 35px;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding-top: 5px;
+}
+
+.show-clock-btn:hover {
+    background-color: #118811;
+}
+
+.show-clock-btn .arrow {
+    width: 18px;
+    height: 18px;
+    font-size: inherit;
+    border: none;
+    color: rgba(254, 234, 138, 1);
+    background-image: url(../img/arrow_down_short.png);
+    background-repeat: no-repeat;
+    padding: 0px 20px 3px 2px;
+    background-position: center;
+}
+
+.show .show-clock-btn .arrow {
+    background-image: url(../img/arrow_up_short.png);
+}
+
+
+/**********  clock **********/
+.other-user-div.show .clocks-wrapper {
+    display: flex;
+}
+
+.clocks-wrapper {
+    display:none;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+    background-image: url("../img/black50.png");
+}
+
+.clocks-wrapper h1 {
+    text-align: center;
+}
+
+svg.clock-svg {
+    width: 150px;
+    height: 150px;
+}
+
+.hour-area {
+    stroke-linejoin:round;
+    stroke-width:8;
+    fill: #312925;
+    stroke: black;
+}
+
+.hour-area.active {
+    fill: #118811;
+}
+
+
+.number-wrapper {
+    line-height:100%;
+    stroke-width:2.7;
+}
+
+.number {
+    -inkscape-font-specification: "sans-serif";
+    font-family:"sans-serif";
+    fill: white;
+    stroke:black;
+}
+
+.circle {
+    fill: #312925;
+}
 
 /* btn */
 #validate-btn {
@@ -181,53 +259,3 @@
 
 
 
-
-/**********  clock **********/
-
-#clocks-wrapper {
-    display:flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
-    height: 210px;
-    margin-top: 20px;
-    background-image: url("../img/black50.png");
-}
-
-#clocks-wrapper h1 {
-    text-align: center;
-}
-
-svg.clock-svg {
-    width: 150px;
-    height: 150px;
-}
-
-.hour-area {
-    stroke-linejoin:round;
-    stroke-width:8;
-    fill: #312925;
-    stroke: black;
-}
-
-.hour-area.active {
-    fill: #118811;
-}
-
-
-.number-wrapper {
-    line-height:100%;
-
-    stroke-width:2.7;
-}
-
-.number {
-    -inkscape-font-specification: "sans-serif";
-    font-family:"sans-serif";
-        fill: white;
-    
-    stroke:black;
-}
-
-.circle {
-    fill: #312925;
-}
