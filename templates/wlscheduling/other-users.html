@@ -1,0 +1,24 @@
+<div id="other-user-template" class="other-user-div" hidden="hidden">
+    <div class="title">
+        <p></p>
+        <button>
+            <img src="/wlmedia/forum/img/send_pm.png" alt="" class="middle"><span class="middle">Send PM</span>
+        </button>
+    </div>
+    <div class="other-days-container"></div>
+    <button class="show-clock-btn"><i class="arrow"></i>Show clock</button>
+</div>
+
+<div id="other-day-template" hidden="hidden">
+    <div class="day-title"></div>
+    <div class="clocks-wrapper">
+        <div>
+            <h1>AM </h1>
+            {% include "wlscheduling/clock-svg.html" %}
+        </div>
+        <div>
+            <h1>PM </h1>
+            {% include "wlscheduling/clock-svg.html" %}
+        </div>
+    </div>
+</div>
