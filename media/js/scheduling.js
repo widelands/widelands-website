@@ -189,7 +189,7 @@ function createUserDivOrUpdateIt(user, availTime) {
 
         var showClockBtn = otherUser.getElementsByClassName('show-clock-btn')[0];
         showClockBtn.onclick = function (){
-            otherUser.classList.toggle('show');
+            otherUser.classList.toggle('hide');
             var showClockText = '<i class="arrow"></i>Show clock';
             var hideClockText = '<i class="arrow"></i>Hide clock';
             if (showClockBtn.innerHTML == showClockText) {

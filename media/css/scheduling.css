@@ -5,8 +5,13 @@
     margin-top: 40px;
 }
 
+.main-choices a {
+    width: calc(50% - 30px);
+}
+
 .main-choices button {
-    padding: 40px;
+    width: 100%;
+    height: 50px;
     font-size: 1em;
 }
 
@@ -89,8 +94,8 @@
 
 .other-days-container > div {
     margin-top: 14px;
-    width: 32%;
     margin-right: 7px;
+    width: 290px;
 }
 
 .other-user-div .title {
@@ -141,37 +146,38 @@
     font-size: inherit;
     border: none;
     color: rgba(254, 234, 138, 1);
-    background-image: url(../img/arrow_down_short.png);
+    background-image: url(../img/arrow_up_short.png);
     background-repeat: no-repeat;
     padding: 0px 20px 3px 2px;
     background-position: center;
 }
 
-.show .show-clock-btn .arrow {
-    background-image: url(../img/arrow_up_short.png);
+.hide .show-clock-btn .arrow {
+    background-image: url(../img/arrow_down_short.png);
 }
 
 
 /**********  clock **********/
-.other-user-div.show .clocks-wrapper {
-    display: flex;
+.other-user-div.hide .clocks-wrapper {
+    display: none;
 }
 
 .clocks-wrapper {
-    display:none;
+    display:flex;
     flex-flow: row wrap;
     justify-content: space-around;
     margin-top: 20px;
+    padding: 0px 22px;
     background-image: url("../img/black50.png");
 }
 
-.clocks-wrapper h1 {
+.clocks-wrapper h2 {
     text-align: center;
 }
 
 svg.clock-svg {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
 }
 
 .hour-area {
@@ -188,7 +194,7 @@ svg.clock-svg {
 
 .number-wrapper {
     line-height:100%;
-    stroke-width:2.7;
+    stroke-width:3.7;
 }
 
 .number {

@@ -6,18 +6,18 @@
         </button>
     </div>
     <div class="other-days-container"></div>
-    <button class="show-clock-btn"><i class="arrow"></i>Show clock</button>
+    <button class="show-clock-btn"><i class="arrow"></i>Hide clock</button>
 </div>
 
 <div id="other-day-template" hidden="hidden">
     <div class="day-title"></div>
     <div class="clocks-wrapper">
         <div>
-            <h1>AM </h1>
+            <h2>AM </h2>
             {% include "wlscheduling/clock-svg.html" %}
         </div>
         <div>
-            <h1>PM </h1>
+            <h2>PM </h2>
             {% include "wlscheduling/clock-svg.html" %}
         </div>
     </div>
