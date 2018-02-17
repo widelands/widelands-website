@@ -66,6 +66,7 @@ urlpatterns = [
     url(r'^screenshots/', include('wlscreens.urls')),
     url(r'^ggz/', include('wlggz.urls')),
     url(r'^moderated/', include('check_input.urls')),
+    url(r'^scheduling/', include('wlscheduling.urls')),
 ]
 
 try:

@@ -4,14 +4,17 @@
 {% if user.is_authenticated %}
 <div class="small posLeft">
 	Welcome {{ user|user_link }},<br/>
-    {% comment %}
-    you have <a href="{% url 'messages_inbox' request.user %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
-    {% endcomment %}
-    you have <a href="{% url 'messages_inbox' %}">{{ messages_inbox_count}} new message{{ messages_inbox_count|pluralize }}</a>.
+    <a href="{% url 'scheduling_main' %}">Playtime Scheduler</a>
 </div>
 <div class="right small posRight">
 	<ul>
-		<li><a href="{% url 'messages_inbox' %}">Messages</a></li>
+		<li>
+			{% if messages_inbox_count %}
+			<a href="{% url 'messages_inbox' %}" title="You have {{ messages_inbox_count }} new messages">Messages ({{ messages_inbox_count }})</a>
+			{% else %}
+			<a href="{% url 'messages_inbox' %}" title="No new message">Messages</a>
+			{% endif %}
+		</li>
 		<li><a href="{% url 'notification_notices' %}">Notifications</a></li>
 		<li><a href="{% url 'profile_edit' %}">Edit Profile</a></li>
 		<li><a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a></li>

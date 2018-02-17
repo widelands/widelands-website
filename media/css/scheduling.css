@@ -1,0 +1,273 @@
+/* Main */
+.main-choices {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+}
+
+.main-choices a {
+    width: calc(50% - 30px);
+}
+
+.main-choices button {
+    width: 100%;
+    height: 50px;
+    font-size: 1em;
+}
+
+/* actual scheduling module */
+#calender {
+    display: flex;
+    justify-content: center;
+}
+
+/*  Hours of each day display for the user  */
+.day {
+    margin-bottom: 15px;
+    background-image: url("../img/black50.png");
+    padding: 10px;
+}
+
+.day-title h3{
+    color:white;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+.hours-wrapper {
+    display: flex;
+}
+
+.hours-title-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.hours-title-wrapper p {
+    width: 42px;
+    user-select: none;
+}
+
+.hours {
+    border: 1px solid #909090;
+    height:40px;
+    width: 40px;
+    cursor: pointer;
+}
+
+.hours.selected {
+    background-color: #118811;
+}
+
+.hours:hover {
+    background-color: lightgreen;
+}
+
+.hidden-hour {
+    height: 40px;
+    width: 40px;
+}
+
+/*********************************/
+/*  Display for the other users  */
+/*********************************/
+#other-users-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.other-user-div{
+    width: 100%;
+    border: 1px solid black;
+    background-image: url(../img/black50.png);
+    padding: 11px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+
+.other-days-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.other-days-container > div {
+    margin-top: 14px;
+    margin-right: 7px;
+    width: 290px;
+}
+
+.other-user-div .title {
+    height: 36px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0;
+}
+
+.other-user-div .title p {
+    font-size: 20px;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    color: #feea72;
+    font-weight: bold;
+}
+
+.other-user-div .title button {
+    min-width: 114px;
+}
+
+.other-user-div .title button:hover {
+    background-color:#118811;
+}
+
+.other-user-div .title img {
+    margin-right: 4px;
+}
+
+
+.show-clock-btn {
+    height: 35px;
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+    padding-top: 5px;
+}
+
+.show-clock-btn:hover {
+    background-color: #118811;
+}
+
+.show-clock-btn .arrow {
+    width: 18px;
+    height: 18px;
+    font-size: inherit;
+    border: none;
+    color: rgba(254, 234, 138, 1);
+    background-image: url(../img/arrow_up_short.png);
+    background-repeat: no-repeat;
+    padding: 0px 20px 3px 2px;
+    background-position: center;
+}
+
+.hide .show-clock-btn .arrow {
+    background-image: url(../img/arrow_down_short.png);
+}
+
+
+/**********  clock **********/
+.other-user-div.hide .clocks-wrapper {
+    display: none;
+}
+
+.clocks-wrapper {
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding: 0px 22px;
+    background-image: url("../img/black50.png");
+}
+
+.clocks-wrapper h2 {
+    text-align: center;
+}
+
+svg.clock-svg {
+    width: 120px;
+    height: 120px;
+}
+
+.hour-area {
+    stroke-linejoin:round;
+    stroke-width:8;
+    fill: #312925;
+    stroke: black;
+}
+
+.hour-area.active {
+    fill: #118811;
+}
+
+
+.number-wrapper {
+    line-height:100%;
+    stroke-width:3.7;
+}
+
+.number {
+    -inkscape-font-specification: "sans-serif";
+    font-family:"sans-serif";
+    fill: white;
+    stroke:black;
+}
+
+.circle {
+    fill: #312925;
+}
+
+/* btn */
+#validate-btn {
+    margin-top: 10px;
+}
+
+
+/**************************/
+/* CSS for the datepicker */
+/**************************/
+
+.ui-datepicker {
+    background-image: url("../img/wood.png");
+    border: 1px solid black;
+    border-radius: 4px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+    padding: 0.8em;
+    display: none;
+}
+
+.ui-datepicker-header {
+    text-align: center;
+    border: 1px inset darkgray;
+    background-image: url("../img/black50.png");
+    margin-bottom: 5px;
+}
+
+.ui-datepicker-calendar {
+    border: 1px inset darkgray;
+    background-image: url("../img/black20.png");
+}
+
+.ui-datepicker-prev {
+    padding: 0 3em 0 0;
+    cursor: pointer;
+}
+ 
+.ui-datepicker-next {
+    padding: 0 0 0 3em;
+    cursor: pointer;
+}
+
+.ui-widget-content {
+    display: flex !important;
+    justify-content: space-around;
+    width: 540px !important;
+}
+
+.ui-datepicker-header {
+    height: 42px;
+    position: relative;
+}
+
+.ui-datepicker-title {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: 0;
+}
+
+.ui-datepicker .ui-datepicker-calendar .ui-state-highlight a {
+    background: #118811 none;
+}
+
+
