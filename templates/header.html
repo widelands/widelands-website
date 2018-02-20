@@ -1,8 +1,9 @@
 {% load wlprofile_extras %}
+{% load wl_extras %}
 
 <div id="logo">
 	<a href="{% url 'mainpage' %}"><img src=
-	"{{ MEDIA_URL }}img/{{ LOGO_FILE }}" alt=
+	"{{ MEDIA_URL }}img/{% wl_logo %}" alt=
 	"Widelands Logo"></a>
 </div>
 <ul class="header_boxes">

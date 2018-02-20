@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block extra_head %}
+<link  rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/jquery-ui.multidatespicker.css" >
+<link  rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/scheduling.css" >
+
+<script src="{{ MEDIA_URL }}js/jquery-ui.multidatespicker.js" type="text/javascript"></script>
+<script src="{{ MEDIA_URL }}js/scheduling.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block title %}
+    Scheduling - {{block.super}}
+{% endblock %}

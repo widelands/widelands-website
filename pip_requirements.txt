@@ -5,7 +5,8 @@ Django==1.8
 django-contrib-comments==1.8.0
 django-haystack==2.6.1
 # django-messages is very old on pypi
--e git://github.com/arneb/django-messages.git@b6bd11a767c9a5bf31fec6e1980a28b3734ea432#egg=django_messages
+# Do not install newer versions because our notifications app is affected
+-e git://github.com/arneb/django-messages.git@2d8dabb755e0b5ace876bde25f45d07c2051ac37#egg=django_messages
 django-nocaptcha-recaptcha==0.0.19
 -e git://github.com/zyga/django-pagination.git#egg=linaro_django_pagination
 django-registration==2.2

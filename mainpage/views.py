@@ -1,4 +1,3 @@
-from django.shortcuts import render_to_response
 from django.template import RequestContext
 from settings import WIDELANDS_SVN_DIR, INQUIRY_RECIPIENTS
 from templatetags.wl_markdown import do_wl_markdown
@@ -7,7 +6,6 @@ from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
 import sys
 import json
 import os
@@ -17,8 +15,7 @@ import codecs
 
 
 def mainpage(request):
-    return render_to_response('mainpage.html',
-                              context_instance=RequestContext(request))
+    return render(request, 'mainpage.html',)
 
 
 def legal_notice(request):
@@ -132,10 +129,9 @@ def developers(request):
 
     txt = do_wl_markdown(txt, custom=False)
 
-    return render_to_response('mainpage/developers.html',
-                              {'developers': txt},
-                              context_instance=RequestContext(request)
-                              )
+    return render(request, 'mainpage/developers.html',
+                  {'developers': txt}
+                  )
 
 
 def changelog(request):
@@ -146,10 +142,9 @@ def changelog(request):
 
     """
     data = codecs.open(WIDELANDS_SVN_DIR + 'ChangeLog', encoding='utf-8', mode='r').read()
-    return render_to_response('mainpage/changelog.html',
-                              {'changelog': data},
-                              context_instance=RequestContext(request)
-                              )
+    return render(request, 'mainpage/changelog.html',
+                  {'changelog': data},
+                  )
 
 
 def custom_http_500(request):
