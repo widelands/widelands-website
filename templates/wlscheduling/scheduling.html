@@ -1,0 +1,66 @@
+
+{% extends "wlscheduling/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+
+
+{% block content %}
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function(){ 
+    var calendar = createCalendar();
+    addTimeZoneWarningIfNeeded();
+    addPreviousDateFromUser(calendar);
+    addOtherUsersAvailabilities();
+    
+    //Validate btn
+    document.getElementById('validate-btn').onclick = function () {
+        sendDataAsForm(calendar);
+    }
+}, false);
+</script>
+
+<h1>Multiplayer</h1>
+
+<div class="blogEntry">
+    <h2>Select the dates you'll be available on</h2>
+    {% include "wlscheduling/timezone-msg.html" %}
+    <div id="scheduling-datepicker"></div>
+    
+    <div id="second-step" hidden="hidden">
+        <h2>Select the hours you'll be available on these dates</h2>
+        <div id="days-wrapper"></div>
+        <h2>Players that are currently available at the same hours as you</h2>
+        <div id="other-users-wrapper"></div>
+        <div id="no-user-to-display" hidden="hidden">Sorry, there are currently no players available at these hours. But your availabilities are noted, and another user might want to play with you!</div>
+        <button id="validate-btn">Update</button>
+    </div>
+</div>
+
+<!-- Templates for the js script -->
+<!-- Template for the days of avaibility of the current user  -->
+<div id="day-template" class="day" hidden="hidden">
+    <div class="day-title"></div>
+    <div class="hours-title-wrapper">
+        {% for i in "xxxxxxxxxxxxxxxxxxxxxxxxx" %}
+            <p>{{ forloop.counter0 }}</p>
+        {% endfor %}
+    </div>
+    <div class="hours-wrapper">
+    {% for i in "xxxxxxxxxxxxxxxxxxxxxxxx" %}
+        <div class="hours"></div>
+    {% endfor %}
+        <div class="hidden-hour"></div>
+    </div>
+</div>
+    
+
+<!-- Template for the days of avaibility of the other users  -->
+{% include "wlscheduling/other-users.html" %}
+
+<!-- Div to send django data to js file -->
+<div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}" day-to-fill = "{{ current_user_availabilities }}" users-to-fill="{{other_users_availabilities}}" csrf-token = "{% csrf_token %}"></div>
+
+
+{% endblock %}

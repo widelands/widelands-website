@@ -1,3 +1,4 @@
+{% load wl_extras %}
 
 <!DOCTYPE html>
 {% comment %}
@@ -51,7 +52,7 @@
 				<div class="loginBox posRight">
 					{% include "login_box.html" %}
 				</div>
-				<a href="{% url 'mainpage' %}"><img src="{{ MEDIA_URL }}img/{{ LOGO_FILE }}" class="posLeft" alt="Widelands Logo" /></a>
+				<a href="{% url 'mainpage' %}"><img src="{{ MEDIA_URL }}img/{% wl_logo %}" class="posLeft" alt="Widelands Logo" /></a>
 			</div>
 			<div id="topmenu">
 				<!-- Navigation -->
