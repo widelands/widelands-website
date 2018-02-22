@@ -22,13 +22,13 @@ class Map(models.Model):
     nr_players = models.PositiveIntegerField(verbose_name='Max Players')
 
     descr = models.TextField(verbose_name='Description')
-    hint = models.TextField(verbose_name='Hint')
+    hint = models.TextField(verbose_name='Hint', blank=True)
     minimap = models.ImageField(
         verbose_name='Minimap', upload_to='wlmaps/minimaps')
     file = models.FileField(verbose_name='Mapfile',
                             upload_to='wlmaps/maps')
 
-    world_name = models.CharField(max_length=50)
+    world_name = models.CharField(max_length=50, blank=True)
 
     pub_date = models.DateTimeField(default=datetime.datetime.now)
     uploader_comment = models.TextField(
