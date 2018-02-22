@@ -11,7 +11,7 @@ class MapAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name', 'author']
     list_filter = ['pub_date']
-    readonly_fields = ('uploader', 'nr_players', 'w', 'h', 'minimap', 'file')
+    readonly_fields = ('uploader', 'nr_players', 'w', 'h', 'minimap', 'file', 'world_name')
     fieldsets = (
         (None, {
             'fields': (('name', 'author'), 'uploader', 'uploader_comment')
