@@ -286,6 +286,18 @@ def edit_article(request, title,
                 form.group = group
 
             new_article, changeset = form.save()
+            
+            if notification and not changeset.reverted:
+                # Get observers for this article and exclude current editor
+                items = notification.ObservedItem.objects.all_for(
+                    new_article, 'post_save').exclude(user=request.user).iterator()
+                users = [o.user for o in items]
+                notification.send(users, 'wiki_observed_article_changed',
+                                  {'editor': request.user,
+                                   'rev': changeset.revision,
+                                   'rev_comment': changeset.comment,
+                                   'article': new_article})
+
 
             return redirect(new_article)
 

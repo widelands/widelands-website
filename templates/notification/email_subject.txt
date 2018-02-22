@@ -1,1 +1,6 @@
-{% load i18n %}{% blocktrans %}[Widelands.org] {{ message }}{% endblocktrans %}
+{% load i18n %}
+{% if message|length > 1 %}
+{% blocktrans %}{{ message }}{% endblocktrans %}
+{% else %}
+{% blocktrans %}{{ subject }}{% endblocktrans %}
+{% endif %}

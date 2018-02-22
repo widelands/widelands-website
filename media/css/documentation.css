@@ -1,3 +1,7 @@
+table.field-list{
+	border-collapse: separate;
+}
+
 .sphinx a.headerlink {
 	padding: 0 4px 0 4px;
 	visibility: hidden;

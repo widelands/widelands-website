@@ -40,7 +40,9 @@ class LanguageStoreNotAvailable(Exception):
 class NoticeType(models.Model):
 
     label = models.CharField(_('label'), max_length=40)
-    display = models.CharField(_('display'), max_length=50)
+    display = models.CharField(_('display'),
+                               max_length=50,
+                               help_text=_('Used as subject when sending emails.'))
     description = models.CharField(_('description'), max_length=100)
 
     # by default only on for media with sensitivity less than or equal to this
@@ -101,14 +103,22 @@ def get_notification_setting(user, notice_type, medium):
         setting.save()
         return setting
 
+
 def should_send(user, notice_type, medium):
     return get_notification_setting(user, notice_type, medium).send
 
-def get_observers_for(notice_type):
-    """ Returns the list of users which wants to get a message (email) for this
+
+def get_observers_for(notice_type, excl_user=None):
+    """Returns the list of users which wants to get a message (email) for this
     type of notice."""
-    settings = NoticeSetting.objects.filter(notice_type__label=notice_type).filter(send=True)
-    return [s.user for s in NoticeSetting.objects.filter(notice_type__label=notice_type).filter(send=True)]
+    query = NoticeSetting.objects.filter(
+            notice_type__label=notice_type, send=True)
+
+    if excl_user:
+        query = query.exclude(user=excl_user)
+
+    return [notice_setting.user for notice_setting in query]
+
 
 class NoticeQueueBatch(models.Model):
     """A queued notice.
@@ -244,6 +254,8 @@ def send_now(users, label, extra_context=None, on_site=True):
                 'user': user,
                 'notices_url': notices_url,
                 'current_site': current_site,
+                'subject': notice_type.display,
+                'description': notice_type.description,
             })
             context.update(extra_context)
 
@@ -254,10 +266,14 @@ def send_now(users, label, extra_context=None, on_site=True):
             subject = ''.join(render_to_string('notification/email_subject.txt', {
                 'message': messages['short.txt'],
             }, context).splitlines())
-
+            
+            # Strip leading newlines. Make writing the email templates easier:
+            # Each linebreak in the templates results in a linebreak in the emails
+            # If the first line in a template contains only template tags the 
+            # email will contain an empty line at the top.
             body = render_to_string('notification/email_body.txt', {
                 'message': messages['full.txt'],
-            }, context)
+            }, context).lstrip()
 
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
