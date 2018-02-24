@@ -78,8 +78,8 @@ pre {
 	background-image: url("../img/black50.png");
 	padding: 5px 10px;
 	margin: 5px 10px;
-	display: inline-block;
 	border: 1px solid black;
+	overflow-x: auto;
 }
 
 code {
