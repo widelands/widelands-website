@@ -21,6 +21,7 @@
 		<li {% block profile %}{% endblock %}><a href="{% url 'profile_view' %}">Profile</a></li>
 	    <li {% block edit_profile %}{% endblock %}><a href="{% url 'profile_edit' %}">Edit Profile</a></li>
 		<li {% block notifications %}{% endblock %}><a href="{% url 'notification_notices' %}">E-Mail settings</a></li>
+		<li {% block scheduling %}{% endblock %}><a href="{% url 'scheduling_main' %}">Game Scheduler</a></li>
 	{% endif %}
 	</ul>
 	</div>

@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{#{% extends "base.html" %}#}
+{% extends "wlprofile/base.html" %}
 {% block extra_head %}
 <link  rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/jquery-ui.multidatespicker.css" >
 <link  rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/scheduling.css" >
@@ -10,3 +11,4 @@
 {% block title %}
     Scheduling - {{block.super}}
 {% endblock %}
+{% block scheduling %}class="active"{% endblock %}

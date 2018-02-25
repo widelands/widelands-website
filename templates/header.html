@@ -42,7 +42,10 @@
 			{% if messages_inbox_count > 0 %}
 				<a href="{% url 'messages_inbox' %}" title="Number of Private Messages">|{{ messages_inbox_count }}|</a>
 			{% endif %}
-			</p><!--<br />-->
+			</p>
+			<p>
+			<a href="{% url 'scheduling_find' %}?next={{ request.path|iriencode }}">Playtimes</a>
+			</p>
 			<p>
 			<a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a>
 			</p>
