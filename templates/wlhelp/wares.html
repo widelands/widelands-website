@@ -15,21 +15,23 @@
 	Wares
 	<br /><br />
 
-	<table class="help">
+	<table class="help" style="table-layout: auto;">
 		<tr>
-			<th>Image</th>
-			<th>Name</th>
+			<th>Ware</th>
 			<th>Description</th>
 		</tr>
-	{% for ware in wares %}
+	{% for w in wares %}
 		<tr class="{% cycle "odd" "even" %}">
 			<td>
-				<a href="{% url 'wlhelp_ware_details' tribe.name ware.name %}">
-					<img src="{{ ware.image_url }}"  alt="{{ ware.name }}" />
+				<a id="{{ w.name }}" href="{% url 'wlhelp_ware_details' tribe.name w.name %}">{{ w.displayname }}
+					<br />
+					<img src="{{ w.image_url }}"  alt="{{ w.name }}" />
 				</a>
 			</td>
-			<td><a id="{{ ware.name }}" href="{% url 'wlhelp_ware_details' tribe.name ware.name %}">{{ ware.displayname }}</a></td>
-			<td>{{ ware.help }}</td> 
+			<td>
+				<div class="small" >Internal name: "{{ w.name }}"</div>
+				{{ w.help }}
+			</td>
 		</tr>
 	{% endfor %}
 	</table>

@@ -15,21 +15,31 @@ Workers - {{ tribe.displayname }} - {{ block.super }}
 	Workers
 	<br /><br />
 
-	<table class="help">
+	<table class="help" style="table-layout: auto;">
 		<tr>
-			<th>Image</th>
-			<th>Name</th>
+			<th>Worker</th>
 			<th>Description</th>
+			<th>Works at</th>
 		</tr>
 	{% for worker in workers %}
 		<tr class="{% cycle "odd" "even" %}">
 			<td>
 				<a href="{% url 'wlhelp_worker_details' tribe.name worker.name %}">
+					{{ worker.displayname }}<br />
 					<img src="{{ worker.image_url }}"  alt="{{ worker.name }}" />
 				</a>
 			</td>
-			<td><a id="{{ worker.name }}" href="{% url 'wlhelp_worker_details' tribe.name worker.name %}">{{ worker.displayname }}</a></td>
-			<td>{{ worker.help }}</td> 
+			<td>
+				<div class="small">Internal name: "{{ worker.name }}"</div>
+				{{ worker.help }}
+			</td>
+			<td>
+				{% for building in worker.workers_for_buildings.all %}
+				<a href="{% url 'wlhelp_building_details' tribe.name building.name %}">
+					{{ building.displayname }}</a>
+				<br />
+				{% endfor %}
+			</td>
 		</tr>
 	{% endfor %}
 	</table>
