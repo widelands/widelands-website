@@ -2,10 +2,11 @@ table.help {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 20px;
+	table-layout: fixed;
 }
 
-table.help tr {
-	
+table.help .last_row {
+	border-bottom: 2px solid black;
 }
 
 table.help th {
