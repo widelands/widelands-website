@@ -5,10 +5,6 @@ table.help {
 	table-layout: fixed;
 }
 
-table.help .last_row {
-	border-bottom: 2px solid black;
-}
-
 table.help th {
 	padding: 4px;
 	font-weight: normal;
@@ -19,8 +15,15 @@ table.help th {
 table.help td {
 	padding: 4px;
 	border: 1px solid black;
+		overflow: hidden;
 }
 
+table.help div.scripting{
+	padding-top: 1em;
+	display: none;
+}
+
+.toggle_buildings
 img.icon {
 	margin: 0px 10px 10px 0px;
 }

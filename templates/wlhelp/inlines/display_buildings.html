@@ -8,15 +8,14 @@
 		<th>Stores</th>
 	</tr>
 {% for b in buildings %}
-	<tr class="{% cycle "odd" "even" %}" name="type-{{ b.type }}">
-		<td>
-			<a href="{% url 'wlhelp_building_details' b.tribe.name b.name %}" title="{{ b.displayname }}" id="{{ b.name }}">
+	<tr class="{% cycle "odd" "even" %}" name="type-{{ b.type }}" id="{{ b.name }}">
+		<td> {# Building name and image #}
+			<a href="{% url 'wlhelp_building_details' b.tribe.name b.name %}" title=" title="Show economy graph"">
 				{{ b.displayname }}<br />
 				<img alt="{{b.displayname}}" src="{{ b.image_url }}" />
 			</a>
 		</td>
-		<td>
-			<div class="small">Internal name: "{{ b.name }}"</div>
+		<td> {# Description #}
 			{{ b.help }}
 			{% if b.enhanced_from or b.enhancement %}
 			<ul>
@@ -28,8 +27,9 @@
 				{% endif %}
 			</ul>
 			{% endif %}
+			<div class="small scripting">Internal name: "{{ b.name }}"</div>
 		</td>
-		<td>
+		<td> {# Build cost #}
 			{% for costs in b.get_build_cost %}
 				{% for w in costs %}
 				<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
@@ -37,7 +37,7 @@
 			<br />
 			{% endfor %}
 		</td>
-		<td>
+		<td> {# Produces #}
 			{% if b.produces and not b.trains %}
 				{% for w in b.get_ware_outputs %}
 				<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
@@ -49,7 +49,7 @@
 				{% endfor %}
 			{% endif %}
 		</td>
-		<td>
+		<td> {## Stored wares #}
 			{% for costs in b.get_stored_wares %}
 				{% for w in costs %}
 				<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>

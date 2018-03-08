@@ -7,11 +7,6 @@
 Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
-{% block extra_head %}
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/encyclopedia.js"></script>
-{{ block.super}}
-{% endblock %}
-
 {% block content %}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">
@@ -37,8 +32,13 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 			<label for="military">Military</label>
 			<input type="checkbox" id="training" name="types" value="type-T" checked="checked" />
 			<label for="training">Trainingsites</label><br />
-			<button type="button" id="apply_filter" class="button">Update</button>
 		</fieldset>
+		</form><br />
+		<form id="show_scripting">
+			<fieldset style="display: inline; border: none">
+				<input type="checkbox" id="toggle_scripting" name="scripting" value="toggle_on" />
+				<label for="toggle_scripting">Show names for scripting</label>
+			</fieldset>
 		</form>
 	</div>
 	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;

@@ -10,28 +10,61 @@
 {% block content %}
 <h1>{{ tribe.displayname }}: Wares</h1>
 <div class="blogEntry">
+	<div class="posRight">
+	<form id="show_scripting">
+		<fieldset style="display: inline; border: none">
+			<input type="checkbox" id="toggle_scripting" name="scripting" value="toggle_on" />
+			<label for="toggle_scripting">Show names for scripting</label>
+		</fieldset>
+	</form>
+	</div>
 	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
 	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
 	Wares
 	<br /><br />
 
-	<table class="help" style="table-layout: auto;">
+	<table class="help">
 		<tr>
 			<th>Ware</th>
-			<th>Description</th>
+			<th style="width: 70%;">Description</th>
+			<th style="width: 20%">Produced at/by</th>
 		</tr>
 	{% for w in wares %}
-		<tr class="{% cycle "odd" "even" %}">
+		<tr class="{% cycle "odd" "even" %}" id="{{ w.name }}">
 			<td>
-				<a id="{{ w.name }}" href="{% url 'wlhelp_ware_details' tribe.name w.name %}">{{ w.displayname }}
+				<a id="{{ w.name }}" href="{% url 'wlhelp_ware_details' tribe.name w.name %}" title="Show economy graph">
+					{{ w.displayname }}
 					<br />
 					<img src="{{ w.image_url }}"  alt="{{ w.name }}" />
 				</a>
 			</td>
 			<td>
-				<div class="small" >Internal name: "{{ w.name }}"</div>
 				{{ w.help }}
+				<div class="small scripting">Internal name: "{{ w.name }}"</div>
 			</td>
+			<td>
+				<table class="help small">
+					<tr>
+						<th>At:</th>
+						<th>By:</th>
+					</tr>
+					{% for building in w.produced_by_buildings.all %}
+					<tr>
+						<td>
+							<a href="../buildings/#{{ building.name }}">{{ building.displayname }}<br />
+								<img src="{{ building.image_url }}"  alt="{{ building.displayname }}" />
+							</a>
+						</td>
+						<td>
+							{% for worker in building.workers_types.all %}
+								<a href="../workers/#{{ worker.name }}">{{ worker.displayname }}<br />
+									<img src="{{ worker.image_url }}"  alt="{{ worker.displayname }}" />
+								</a><br />
+							{% endfor %}
+						</td>
+					</tr>
+					{% endfor %}
+				</table>
 		</tr>
 	{% endfor %}
 	</table>
