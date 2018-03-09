@@ -23,9 +23,8 @@ table.help div.scripting{
 	display: none;
 }
 
-.toggle_buildings
 img.icon {
-	margin: 0px 10px 10px 0px;
+	margin: 0 10px 0 0;
 }
 
 /* Let Table headers look like h2 */

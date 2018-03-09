@@ -11,39 +11,12 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">
 	<div class="posRight">
-	<form id="filter_select">
-		<fieldset style="display: inline; border: none">
-			{# Attribute 'name': Groups filters (sizes/types) #}
-			{# Attribute 'value': Corresponding names of html elements (tables/rows) #}
-			<legend>Show Buildings by Size and/or Type:</legend>
-			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
-			<label for="small">Small</label>
-			<input type="checkbox" id="medium" name="sizes" value="size-M"  checked="checked" />
-			<label for="medium">Medium</label>
-			<input type="checkbox" id="big" name="sizes" value="size-B" checked="checked" />
-			<label for="big">Big</label>
-			<input type="checkbox" id="mines" name="sizes" value="size-I"  checked="checked" />
-			<label for="mines">Mines</label><br />
-			<input type="checkbox" id="warehouse" name="types" value="type-W" checked="checked" />
-			<label for="warehouse">Warehouse</label>
-			<input type="checkbox" id="production" name="types" value="type-P"  checked="checked" />
-			<label for="production">Production</label>
-			<input type="checkbox" id="military" name="types" value="type-M"  checked="checked" />
-			<label for="military">Military</label>
-			<input type="checkbox" id="training" name="types" value="type-T" checked="checked" />
-			<label for="training">Trainingsites</label><br />
-		</fieldset>
-		</form><br />
-		<form id="show_scripting">
-			<fieldset style="display: inline; border: none">
-				<input type="checkbox" id="toggle_scripting" name="scripting" value="toggle_on" />
-				<label for="toggle_scripting">Show names for scripting</label>
-			</fieldset>
-		</form>
+		{% include 'wlhelp/inlines/js_form_buildings.html' %}<br />
+		{% include 'wlhelp/inlines/js_form_scripting.html' %}
 	</div>
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	Buildings
+	<div class="breadCrumb">
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Buildings
+	</div>
 	
 	{# Headquarters #}
 	<div name="size-B">

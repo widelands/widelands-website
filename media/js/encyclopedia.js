@@ -23,25 +23,29 @@ $(document).ready(function() {
         $("[name='size-I']").toggle();
     });
     $("#warehouse").click(function(){
-        $("[name='type-W']").toggle();
-        hide_empty_tables();
+        $("[name='type-W']").toggle( function(){
+            hide_empty_tables();
+        });
     });
     $("#production").click(function(){
-        $("[name='type-P']").toggle();
-        hide_empty_tables();
+        $("[name='type-P']").toggle( function(){
+            hide_empty_tables();
+        });
     });
     $("#military").click(function(){
-        $("[name='type-M']").toggle();
-        hide_empty_tables();
+        $("[name='type-M']").toggle( function(){
+            hide_empty_tables();
+        });
     });
     $("#training").click(function(){
-        $("[name='type-T']").toggle();
-        hide_empty_tables();
+        $("[name='type-T']").toggle( function(){
+            hide_empty_tables();
+        });
     });
 });
 
 function hide_empty_tables(){
-    // Hide a table if no row is displayed in it
+    // Hide a whole table if no row is displayed in it
     var tables = $("table");
     for (var i=0; i<tables.length; i++){
         var table = tables[i];

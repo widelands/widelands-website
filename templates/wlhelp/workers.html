@@ -11,17 +11,11 @@ Workers - {{ tribe.displayname }} - {{ block.super }}
 <h1>{{ tribe.displayname }}: Workers</h1>
 <div class="blogEntry">
 	<div class="posRight">
-	<form id="show_scripting">
-		<fieldset style="display: inline; border: none">
-			<input type="checkbox" id="toggle_scripting" name="scripting" value="toggle_on" />
-			<label for="toggle_scripting">Show names for scripting</label>
-		</fieldset>
-	</form>
+		{% include 'wlhelp/inlines/js_form_scripting.html' %}
 	</div>
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	Workers
-	<br /><br />
+	<div class="breadCrumb">
+		<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Workers
+	</div>
 
 	<table class="help">
 		<tr>
