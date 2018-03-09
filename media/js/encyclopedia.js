@@ -10,52 +10,56 @@ $(document).ready(function() {
     });
 
     // Toggle display of scripting values
-    if (sessionStorage.getItem('scripting_status') === "true"){
-        $("#toggle_scripting")[0].checked = true;
+    // Usage of sessionStore makes it possible to keep the status
+    // when switching to different pages. When switching the page the
+    // state of checkbox and the visibility of items has to be set.
+    if ( $("input#toggle_scripting").length > 0 &&
+        sessionStorage.getItem('scripting_status') === "true"){
+        $("input#toggle_scripting")[0].checked = true;
         $(".scripting").show();
     }
-    $("#toggle_scripting").click(function(){
+    $("input#toggle_scripting").click(function(){
         $(".scripting").toggle();
         sessionStorage.setItem('scripting_status', this.checked);
     });
 
     // Toggle the display of whole tables
-    $("#small").click(function(){
+    $("input#small").click(function(){
         $(".size-S").toggle();
     });
 
-    $("#medium").click(function(){
+    $("input#medium").click(function(){
         $(".size-M").toggle();
     });
 
-    $("#big").click(function(){
+    $("input#big").click(function(){
         $(".size-B").toggle();
     });
 
-    $("#mines").click(function(){
+    $("input#mines").click(function(){
         $(".size-I").toggle();
     });
 
     // Toggle rows of tables
-    $("#warehouse").click(function(){
+    $("input#warehouse").click(function(){
         $(".type-W").toggle( function(){
             hide_empty_tables();
         });
     });
 
-    $("#production").click(function(){
+    $("input#production").click(function(){
         $(".type-P").toggle( function(){
             hide_empty_tables();
         });
     });
 
-    $("#military").click(function(){
+    $("input#military").click(function(){
         $(".type-M").toggle( function(){
             hide_empty_tables();
         });
     });
 
-    $("#training").click(function(){
+    $("input#training").click(function(){
         $(".type-T").toggle( function(){
             hide_empty_tables();
         });
