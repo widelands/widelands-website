@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     // Smooth scrolling, taken from:
     // http://stackoverflow.com/a/18795112
     $("a[href*='#']").click(function(event){
@@ -8,9 +9,14 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
-    // Toggle display of scripting values    
+    // Toggle display of scripting values
+    if (sessionStorage.getItem('scripting_status') === "true"){
+        $("#toggle_scripting")[0].checked = true;
+        $(".scripting").show();
+    }
     $("#toggle_scripting").click(function(){
         $(".scripting").toggle();
+        sessionStorage.setItem('scripting_status', this.checked);
     });
 
     // Toggle the display of whole tables
