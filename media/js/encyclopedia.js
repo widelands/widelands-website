@@ -7,41 +7,54 @@ $(document).ready(function() {
         }, 500);
         event.preventDefault();
     });
+
+    // Toggle display of scripting values    
     $("#toggle_scripting").click(function(){
         $(".scripting").toggle();
     });
+
+    // Toggle the display of whole tables
     $("#small").click(function(){
-        $("[name='size-S']").toggle();
+        $(".size-S").toggle();
     });
+
     $("#medium").click(function(){
-        $("[name='size-M']").toggle();
+        $(".size-M").toggle();
     });
+
     $("#big").click(function(){
-        $("[name='size-B']").toggle();
+        $(".size-B").toggle();
     });
+
     $("#mines").click(function(){
-        $("[name='size-I']").toggle();
+        $(".size-I").toggle();
     });
+
+    // Toggle rows of tables
     $("#warehouse").click(function(){
-        $("[name='type-W']").toggle( function(){
+        $(".type-W").toggle( function(){
             hide_empty_tables();
         });
     });
+
     $("#production").click(function(){
-        $("[name='type-P']").toggle( function(){
+        $(".type-P").toggle( function(){
             hide_empty_tables();
         });
     });
+
     $("#military").click(function(){
-        $("[name='type-M']").toggle( function(){
+        $(".type-M").toggle( function(){
             hide_empty_tables();
         });
     });
+
     $("#training").click(function(){
-        $("[name='type-T']").toggle( function(){
+        $(".type-T").toggle( function(){
             hide_empty_tables();
         });
     });
+
 });
 
 function hide_empty_tables(){

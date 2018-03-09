@@ -13,13 +13,6 @@ def index(request):
                   {'tribes': tribes, })
 
 
-def tribe_details(request, tribe):
-    t = get_object_or_404(Tribe, name=tribe)
-
-    return render(request, 'wlhelp/tribe_details.html',
-                  {'tribe': t, })
-
-
 def ware_details(request, tribe, ware):
     w = get_object_or_404(Ware, tribe__name=tribe, name=ware)
     t = Tribe.objects.get(name=tribe)
