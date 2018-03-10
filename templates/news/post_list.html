@@ -1,21 +1,30 @@
 {% extends "news/base_news.html" %}
 
-{% block content %}
+{% block content_header %}
+	<h1>News Archive</h1>
 
-<h1>News Archive</h1>
-<div class="linksBox">
-	<a href="{% url 'news_index' %}">News Archive: </a>
-	{% for dateobj in date_list reversed %}
-		<a href="{% url 'news_index' %}{{ dateobj|date:'Y' }}">{{ dateobj|date:'Y' }}</a>
-		{% if not forloop.last %} | {% endif %}
-	{% endfor%}
-</div>
-{% if perms.news %}
-	<div class="small posRight linksBox">
-		{% if perms.news.add_post %}<a href="/admin/news/post/add/">Add New News</a>{% endif %}
+	<div class="linksBox">
+		<a href="{% url 'news_index' %}">News Archive: </a>
+		{% for dateobj in date_list reversed %}
+			<a href="{% url 'news_index' %}{{ dateobj|date:'Y' }}">{{ dateobj|date:'Y' }}</a>
+			{% if not forloop.last %} | {% endif %}
+		{% endfor%}
 	</div>
-{% endif %}
+{% endblock %}
 
+{% block content_tabbing %}
+	{% if perms.news %}
+	<ul class="small tab-list">
+		<li>
+		{% if perms.news.add_post %}
+			<a href="/admin/news/post/add/">Add New News</a>
+		{% endif %}
+		</li>
+	</ul>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
 {% include "news/inlines/posts_table.html" %}
 
 {% endblock %}

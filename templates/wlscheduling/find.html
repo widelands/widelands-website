@@ -3,6 +3,10 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+{% block content_header %}
+<h1>Scheduling: Other users playtimes</h1>
+{% endblock %}
+
 {% block content %}
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function(){ 
@@ -10,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function(){
     addOtherUsersAvailabilities();
 }, false);
 </script>
-<h1>Scheduling: Other users playtimes</h1>
-
 <div class="blogEntry">
     {% include "wlscheduling/timezone-msg.html" %}
     <div id="other-users-wrapper"></div>

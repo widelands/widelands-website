@@ -4,10 +4,11 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content %}
-
+{% block content_header %}
 <h1>Welcome in the scheduling module!</h1>
+{% endblock %}
 
+{% block content %}
 <div class="blogEntry">
     <div id="main-choices" class="main-choices">
         <a href="{% url 'scheduling_scheduling' %}" >

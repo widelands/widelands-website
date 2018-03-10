@@ -9,15 +9,30 @@
 
 {% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
 
-{% block content %}
-	{% if perms.wlpoll %}
-	<div class="small posRight">
-		{% if perms.wlpoll.add_poll %}<a href="/admin/wlpoll/poll/add/" class="invertedColor">Add New Poll</a>{% endif %}
-		{% if perms.wlpoll.change_poll %}| <a href="/admin/wlpoll/poll/{{object.id}}/" class="invertedColor">Edit</a>{% endif %}
-		{% if perms.wlpoll.delete_poll %}| <a href="/admin/wlpoll/poll/{{object.id}}/delete/" class="invertedColor">Delete</a>{% endif %}
-	</div>
-	{% endif %}
+{% block content_tabbing %}
 	<h1>Poll: {{ object.name }}</h1>
+	{% if perms.wlpoll %}
+	<ul class="small tab-list">
+		{% if perms.wlpoll.add_poll %}
+			<li>
+				<a href="/admin/wlpoll/poll/add/">Add New Poll</a>
+			</li>
+		{% endif %}
+		{% if perms.wlpoll.change_poll %}
+			<li>
+				<a href="/admin/wlpoll/poll/{{object.id}}/">Edit</a>
+			</li>
+		{% endif %}
+		{% if perms.wlpoll.delete_poll %}
+			<li>
+				<a href="/admin/wlpoll/poll/{{object.id}}/delete/">Delete</a>
+			</li>
+		{% endif %}
+	</ul>
+	{% endif %}
+
+{% endblock %}
+{% block content %}
 	<div class="blogEntry">
 		<div id="chartContainer" style="width: 100%; height: 400px"></div>
 		{% display_poll object %}		

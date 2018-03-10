@@ -6,10 +6,14 @@
 {% block title %}
 {% trans "Notifications "%} - {{ block.super }}
 {% endblock %}
-{% block notifications %}class="active"{% endblock %}
-{% block content %}
-<h1>{% trans "Notification Settings" %} {{ profile.user }}</h1>
 
+{% block notifications %}class="active"{% endblock %}
+
+{% block content_header %}
+	<h1>{% trans "Notification Settings" %} {{ profile.user }}</h1>
+{% endblock %}
+
+{% block content %}
 <div class="blogEntry">
 	<h2>{% trans "Settings" %}</h2>
 

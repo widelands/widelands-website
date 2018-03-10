@@ -12,17 +12,26 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/profile.css" />{{ block.super}}
 {% endblock %}
 
-{% block tabbing %}
-<div class="posRight small">
-	<ul class="tab-list">
+{% block content_tabbing %}
+	<ul class="tab-list small">
 	{% if profile.user and user != profile.user %}
-		<li {% block send_pm %}{% endblock %}><a href="{% url 'messages_compose_to' profile.user %}">Send PM</a></li>
+		<li>
+			<a {% block send_pm %}{% endblock %} href="{% url 'messages_compose_to' profile.user %}">Send PM</a>
+		</li>
 	{% else %}
-		<li {% block profile %}{% endblock %}><a href="{% url 'profile_view' %}">Profile</a></li>
-	    <li {% block edit_profile %}{% endblock %}><a href="{% url 'profile_edit' %}">Edit Profile</a></li>
-		<li {% block notifications %}{% endblock %}><a href="{% url 'notification_notices' %}">E-Mail settings</a></li>
-		<li {% block scheduling %}{% endblock %}><a href="{% url 'scheduling_main' %}">Game Scheduler</a></li>
+		<li>
+			<a {% block profile %}{% endblock %} href="{% url 'profile_view' %}">Profile</a>
+		
+		</li>
+	    <li>
+			<a {% block edit_profile %}{% endblock %} href="{% url 'profile_edit' %}">Edit Profile</a>
+		</li>
+		<li>
+			<a {% block notifications %}{% endblock %} href="{% url 'notification_notices' %}">E-Mail settings</a>
+		</li>
+		<li>
+			<a {% block scheduling %}{% endblock %} href="{% url 'scheduling_main' %}">Game Scheduler</a>
+		</li>
 	{% endif %}
 	</ul>
-	</div>
 {% endblock %}

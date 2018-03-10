@@ -8,9 +8,12 @@
 {% endblock %}
 
 {% block profile %}class="active"{% endblock %}
-{% block content %}
-<h1>{{ profile.user.username }}'s Profile</h1>
 
+{% block content_header %}
+	<h1>{{ profile.user.username }}'s Profile</h1>
+{% endblock %}
+
+{% block content %}
 <div class="blogEntry">
 	<table>
 		{% if profile.avatar %}

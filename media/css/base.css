@@ -125,7 +125,7 @@ input.radio {
 
 h1, h2, h3, h4, h5, h6 {
 	color: #181;
-	margin-top: 0px;
+	margin: 0 0 0.5em 0;
 	font-weight: normal;
 }
 
@@ -231,6 +231,8 @@ div #main {
 
 div#content {
 	margin-right: 240px;
+	display: flex;
+	flex-direction: column;
 }
 
 div#footer {
@@ -313,8 +315,7 @@ div#footer {
 	color: rgba(254, 234, 138, 1);
 }
 
-#header p {
-	
+#header p {	
 	padding: 0px;
 	margin: 0px;
 	padding-left: 4px;
@@ -330,6 +331,7 @@ div#footer {
 	background: none;
 	padding: 0px;
 	margin: 0px;
+	border-radius: 0px;
 }
 
 /****************/
@@ -484,13 +486,16 @@ div.blogEntry .posRight{
 /****************/
 
 .tab-list {
+	align-self: flex-end;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	z-index: 2;
 	display: flex;
 	flex-direction: row;
 	list-style: none;
-	margin: 7px 0 0 0;
 }
 
-.tab-list li {
+.tab-list a {
 	background-color: #332f29;
 	background-image: url("../img/but1.png");
 	border-radius: 4px;
@@ -498,14 +503,15 @@ div.blogEntry .posRight{
 	padding: 0.5em;
 	margin: 0 0.2em 0 0.2em;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	font-size: 0.83em;
 }
 
-.tab-list li:hover {
+.tab-list a:hover {
 	border-bottom: none;
 	box-shadow: none;
 }
 
-.tab-list li.active {
+.tab-list .active {
 	border-bottom: none;
 	box-shadow: none;
 }
