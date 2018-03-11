@@ -4,7 +4,7 @@
 {{ app.name }} - {{ block.super }}
 {% endblock %}
 
-{% block content %}
+{% block content_main %}
 <h1>Documentation: {{ app.name }}</h1>
 <div class="blogEntry">
 	<a href="{{ app.get_absolute_url }}">{{ app.name }}</a>
@@ -54,4 +54,4 @@
 		<span class="small">Last update: {{ update_date|date:"Y-m-d H:i" }} (<a href="http://www.timeanddate.com/worldclock/city.html?n=37">CET</a>)</span>
 	</div>
 </div>
-{% endblock content %}
+{% endblock content_main %}

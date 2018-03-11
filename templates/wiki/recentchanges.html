@@ -8,7 +8,7 @@
 {% trans "Recent Changes" %} - {{ block.super }}
 {% endblock %}
 
-{% block content %}
+{% block content_main %}
 <h1>Wiki: {% trans "Recent Changes" %}</h1>
 <div class="blogEntry">
 {% autopaginate changes as object_list %}

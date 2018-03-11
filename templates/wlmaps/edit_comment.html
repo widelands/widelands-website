@@ -1,6 +1,6 @@
 {% extends "wlmaps/base.html" %}
 
-{% block content %} 
+{% block content_main %} 
 <h1>Edit comment: {{ map.name }}</h1>
 <div class="blogEntry">
     <form enctype="multipart/form-data" action="{% url 'wlmaps_edit_comment' map.slug %}" method="post">

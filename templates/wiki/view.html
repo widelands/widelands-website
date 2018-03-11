@@ -12,13 +12,11 @@
 {{ block.super}}
 {% endblock %}
 
-{% block class_wiki_edit %}class="active"{% endblock %}
-
 {% block content_header %}
 	<h1>{{ article.title }}</h1>
 {% endblock %}
 
-{% block content %}
+{% block content_main %}
 	{% if messages %}
 	    {% for message in messages %}
 	    <p class="errormessage">{{ message }}</p>

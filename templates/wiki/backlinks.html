@@ -12,9 +12,8 @@
 	<h1>{% trans "Backlinks of " %} {{ name }}</h1>
 {% endblock %}
 
-{% block content %}
+{% block content_main %}
 <div class="blogEntry">
-	ID: {{article.id}}
 	{% if found_links or found_old_links %}
 		{% if found_links %}
 		<h3>The following pages have link(s) which point to this article:</h3>
