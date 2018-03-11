@@ -58,10 +58,19 @@
 					{% include "right_boxes.html" %}
 				</div>
 				<div id="content">
-					{% block content_header %}{% endblock %}
-					{% block content_tabbing %}{% endblock %}
+				<!-- all below navigation on the left -->
+					{% block content_header %}
+						<!-- used for tabbed pages where particular
+							 tabs point to different sites-->
+					{% endblock %}
+					
+					{% block content_tabbing %}
+					<!-- used to display tabs on pages. For tabs which point to
+						 other pages, use it in base.html of the main page -->
+					{% endblock %}
+				
 					{% block content %}
-						No Content here!
+						<!-- all in div blogEntry -->
 					{% endblock %}
 				</div>
 			</div>

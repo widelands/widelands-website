@@ -7,6 +7,12 @@
 {% trans "Article History of" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
+{% block class_wiki_hist %}class="active"{% endblock %}
+
+{% block content_header %}
+	<h1>{% trans "Article History of" %} {{ article.title }}</h1>
+{% endblock %}
+
 {% block content %}
 {% if changes|length > 1 %}
 <script type="text/javascript">
@@ -54,12 +60,6 @@
 	{% endwith %}
 </script>
 {% endif %}
-
-<div class="posRight small">
-	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
-	| <a href="{% url 'wiki_article_history_feed_atom' article.title %}"  class="invertedColor">Atom Feed</a>
-</div>
-<h1>{% trans "Article History of" %} {{ article.title }}</h1>
 
 <div class="blogEntry">
 	<form action="{% url 'wiki_revert_to_revision' article.title %}" method="post" onsubmit="return check(this);">

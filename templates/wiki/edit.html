@@ -6,6 +6,23 @@
 {% trans "Editing" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+	<h1>{% trans "Editing" %} {{ article.title }}</h1>
+{% endblock %}
+
+{% block content_tabbing %}
+	{% if not new_article %} 
+	<ul class="tab-list small">
+		<li>
+			<a href="{% url 'wiki_article' article.title %}">{% trans "Back to article" %}</a>
+		</li>
+		<li>
+			<a href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
+		</li>
+	</ul>
+	{% endif %}
+{% endblock %}
+
 {% block extra_head %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/disableOnSubmit.js"></script>
 <script type="text/javascript">
@@ -37,15 +54,6 @@
 {% endblock %}
 
 {% block content %}
-{% if not new_article %} 
-<div class="posRight small">
-	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
-	|
-	<a href="{% url 'wiki_article_history' article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
-</div>
-{% endif %}
-<h1>{% trans "Editing" %} {{ article.title }}</h1>
-
 <div class="blogEntry">
 	<p>
 	You can edit the wiki pages contents using the syntax described on the <a href="/wiki/WikiSyntax">WikiSyntax</a>.

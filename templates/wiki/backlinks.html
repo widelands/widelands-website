@@ -1,16 +1,20 @@
 {% extends 'wiki/base.html' %}
 {% load wiki_extras %}
 {% load i18n %}
+
 {% block title %}
 {{ name }} - Backlinks - {{block.super}}
 {% endblock %}
 
+{% block class_wiki_backl %}class="active"{% endblock %}
+
+{% block content_header %}
+	<h1>{% trans "Backlinks of " %} {{ name }}</h1>
+{% endblock %}
+
 {% block content %}
-<div class="posRight small">
-	<a class="invertedColor" href="{% url 'wiki_article' name %}">Back to article</a>
-</div>
-<h1>{% trans "Backlinks of " %} {{ name }}</h1>
 <div class="blogEntry">
+	ID: {{article.id}}
 	{% if found_links or found_old_links %}
 		{% if found_links %}
 		<h3>The following pages have link(s) which point to this article:</h3>

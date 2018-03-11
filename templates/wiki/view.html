@@ -12,30 +12,10 @@
 {{ block.super}}
 {% endblock %}
 
-{% block content_tabbing %}
-<h1>{{ article.title }}</h1>
-<ul class="small tab-list">
-	{% if article.id %}
-		<li>
-		<a href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
-		</li>
-		<li>
-		<a href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
-		</li>
-		<li>
-		<a href="{% url 'backlinks' article.title %}">{% trans "Backlinks" %}</a>
-		</li>
-		{% if can_observe %}
-			<li>
-			{% if is_observing %} 
-			<a href="{% url 'wiki_stop_observing' article.title %}">{% trans "Stop observing" %}</a>
-			{% else %}
-			<a href="{% url 'wiki_observe' article.title %}">{% trans "Observe" %}</a>
-			{% endif %}
-			</li>
-		{% endif %}
-	{% endif %}
-</ul>
+{% block class_wiki_edit %}class="active"{% endblock %}
+
+{% block content_header %}
+	<h1>{{ article.title }}</h1>
 {% endblock %}
 
 {% block content %}
