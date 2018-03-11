@@ -125,7 +125,7 @@ input.radio {
 
 h1, h2, h3, h4, h5, h6 {
 	color: #181;
-	margin: 0 0 0.5em 0;
+	margin: 0 0 18px 0;
 	font-weight: normal;
 }
 
@@ -265,8 +265,6 @@ div#footer {
 }
 
 #header .header_boxes li a, .header_boxes p {
-	/*color: #0e750e;
-	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7);*/
 	font-weight: bold;
 }
 
@@ -276,7 +274,6 @@ div#footer {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
-	/*align-items: flex-start;*/
 	border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
@@ -286,19 +283,11 @@ div#footer {
 }
 
 #header .header_boxes li {
-	/*border: 1px solid black;*/
-	/*background-image: url("../img/wood.png");*/
-	/*-moz-border-radius: 4px 4px 0px 0px;
-	-webkit-border-radius: 4px 4px 0px 0px;
-	-khtml-border-radius: 4px 4px 0px 0px;
-	border-radius: 4px 4px 4px 4px;*/
+	border: 1px solid rgba(90, 74, 49, 0.84);
 	z-index: 0;
 	padding: 6px;
-	/*margin: 5px;*/
 	display: block;
 	text-align: center;
-	/*display: flex;
-	align-items: flex-start;*/
 }
 
 #header li.loginBox {
@@ -308,7 +297,6 @@ div#footer {
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
 	border-radius: 4px 4px 4px 4px;
-	/*box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);*/
 }
 
 #header li.loginBox a {
@@ -516,9 +504,35 @@ div.blogEntry .posRight{
 	box-shadow: none;
 }
 
+.tab-list li ul {
+	position: absolute;
+	list-style: none;
+	padding-left: 0px;
+	display: none;
+}
+
+.tab-list li:hover ul{
+	display: block;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
+.tab-list li ul li{
+	border-top: 1px solid black;
+}
+
+.tab-list li ul li a{
+	box-shadow: none;
+  border-radius: 0px;
+  border: none;
+  margin: 0 0 0 0;
+	display: block;
+	box-shadow: none;
+	border-radius: 0px;
+}
 /* The max-width has to be adjusted
    depending on the width of the logo*/
-@media (max-width: 1160px) {
+@media (max-width: 1000px) {
 	#header {
 		justify-content: center;
 	}

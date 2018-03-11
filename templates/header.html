@@ -17,7 +17,7 @@
 		<img src="{{ MEDIA_URL }}img/maps.png" alt="" />
 		</a>
 	</li>
-	<li class="small" title="Help to pay our server for online gaming">
+	<li class="small" title="Help to pay the online gaming server.">
 		<a href="">Donate<br />
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 		<input type="hidden" name="cmd" value="_s-xclick" />
@@ -27,7 +27,7 @@
 		<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
 		</form></a>
 	</li>
-	<li style="align-self: center;">
+	<li style="align-self: center;"><span class="small">Social Media</span><br />
 		<a href="https://www.facebook.com/WidelandsOfficial" target="_blank">
 			<img src="{{ MEDIA_URL }}img/socialmedia/facebook.png" alt="Facebook" />
 		</a>
@@ -35,17 +35,17 @@
 			<img src="{{ MEDIA_URL }}img/socialmedia/googleplus.png" alt="Google+" />
 		</a>
 	</li>
-	<li class="loginBox small"  title="You are logged in as {{ user }}" style="align-self: center;">
+	<li class="loginBox small" style="align-self: center;">
 	<!-- Login form / User information -->
 		{% if user.is_authenticated %}
 			<p>
-			<a href="{% url 'profile_view' %}">Your Profile</a>
+			<a href="{% url 'profile_view' %}" title="You are logged in as {{ user }}">Your Profile</a>
 			{% if messages_inbox_count > 0 %}
 				<a href="{% url 'messages_inbox' %}" title="Number of Private Messages">|{{ messages_inbox_count }}|</a>
 			{% endif %}
 			</p>
 			<p>
-			<a href="{% url 'scheduling_find' %}?next={{ request.path|iriencode }}">Playtimes</a>
+			<a href="{% url 'scheduling_find' %}?next={{ request.path|iriencode }}" title="Show other users playtimes">Playtimes</a>
 			</p>
 			<p>
 			<a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a>

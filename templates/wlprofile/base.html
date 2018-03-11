@@ -30,6 +30,10 @@
 		</li>
 		<li>
 			<a {% block scheduling %}{% endblock %} href="{% url 'scheduling_main' %}">Game Scheduler</a>
+			<ul>
+				<li><a href="{% url 'scheduling_scheduling' %}">Define your playtime</a></li>
+				<li><a href="{% url 'scheduling_find' %}">Show playtimes</a></li>
+			</ul>
 		</li>
 	{% endif %}
 	</ul>
