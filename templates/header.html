@@ -27,7 +27,8 @@
 		<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
 		</form></a>
 	</li>
-	<li style="align-self: center;"><span class="small">Social Media</span><br />
+	<li class="small">
+		<span>Social Media</span><br />
 		<a href="https://www.facebook.com/WidelandsOfficial" target="_blank">
 			<img src="{{ MEDIA_URL }}img/socialmedia/facebook.png" alt="Facebook" />
 		</a>
@@ -35,7 +36,7 @@
 			<img src="{{ MEDIA_URL }}img/socialmedia/googleplus.png" alt="Google+" />
 		</a>
 	</li>
-	<li class="loginBox small" style="align-self: center;">
+	<li class="loginBox small">
 	<!-- Login form / User information -->
 		{% if user.is_authenticated %}
 			<p>

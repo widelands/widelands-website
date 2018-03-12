@@ -284,15 +284,16 @@ div#footer {
 
 #header .header_boxes li {
 	border: 1px solid rgba(90, 74, 49, 0.84);
-	z-index: 0;
-	padding: 6px;
-	display: block;
+	/*z-index: 0;*/
+	padding: 1px 4px 1px 4px;
+	/*display: block;*/
 	text-align: center;
+	align-self: center;
 }
 
 #header li.loginBox {
 	background-image: url("../img/black20.png");
-	padding: 4px;
+	/*padding: 4px;*/
 	border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
@@ -306,8 +307,8 @@ div#footer {
 #header p {	
 	padding: 0px;
 	margin: 0px;
-	padding-left: 4px;
-	padding-right: 4px;
+	/*padding-left: 4px;
+	padding-right: 4px;*/
 }
 
 #header img {
@@ -521,15 +522,19 @@ div.blogEntry .posRight{
 	border-top: 1px solid black;
 }
 
+.tab-list li ul li:first-child{
+	border-top: none;
+}
+
 .tab-list li ul li a{
-	box-shadow: none;
-  border-radius: 0px;
   border: none;
-  margin: 0 0 0 0;
+  margin: 0 0 0 1px;
 	display: block;
 	box-shadow: none;
 	border-radius: 0px;
+	padding: 2px 4px 2px 4px;
 }
+
 /* The max-width has to be adjusted
    depending on the width of the logo*/
 @media (max-width: 1000px) {
