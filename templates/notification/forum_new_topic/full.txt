@@ -1,7 +1,9 @@
-{% load i18n %}{% blocktrans with topic.get_absolute_url as topic_url %}The Forum topic {{ topic }} has been created by {{ user }}.
+{% load i18n %}{% blocktrans with topic.get_absolute_url as topic_url and post.body as txt %}The Forum topic "{{ topic }}" has been created by {{ user }}.
 
-http://{{ current_site }}{{ topic_url }}
+{{ user }} wrote:
+
+{{ txt }}
 {% endblocktrans %}
-{{ topic }}:
 
-{{ post.body_text }}
+-------------------------
+Link to topic: http://{{ current_site }}{{ topic_url }}

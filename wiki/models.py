@@ -133,13 +133,6 @@ class ChangeSetManager(models.Manager):
         return self.filter(revision__gt=int(revision))
 
 
-class NonRevertedChangeSetManager(ChangeSetManager):
-
-    def get_default_queryset(self):
-        super(PublishedBookManager, self).get_queryset().filter(
-            reverted=False)
-
-
 class ChangeSet(models.Model):
     """A report of an older version of some Article."""
 
@@ -165,7 +158,6 @@ class ChangeSet(models.Model):
     reverted = models.BooleanField(_(u"Reverted Revision"), default=False)
 
     objects = ChangeSetManager()
-    non_reverted_objects = NonRevertedChangeSetManager()
 
     class Meta:
         verbose_name = _(u'Change set')
@@ -177,16 +169,17 @@ class ChangeSet(models.Model):
     def __unicode__(self):
         return u'#%s' % self.revision
 
-    @models.permalink
     def get_absolute_url(self):
         if self.article.group is None:
-            return ('wiki_changeset', (),
-                    {'title': self.article.title,
-                     'revision': self.revision})
-        return ('wiki_changeset', (),
-                {'group_slug': self.article.group.slug,
-                 'title': self.article.title,
-                 'revision': self.revision})
+            return reverse('wiki_changeset', kwargs={
+                'title': self.article.title,
+                'revision': self.revision
+            })
+        return reverse('wiki_changeset', kwargs={
+            'group_slug': self.article.group.slug,
+            'title': self.article.title,
+            'revision': self.revision,
+        })
 
     def is_anonymous_change(self):
         return self.editor is None
@@ -240,30 +233,8 @@ class ChangeSet(models.Model):
                     article=self.article).latest().revision + 1
             except self.DoesNotExist:
                 self.revision = 1
+
         super(ChangeSet, self).save(*args, **kwargs)
-
-    def display_diff(self):
-        """Returns a HTML representation of the diff."""
-
-        # well, it *will* be the old content
-        old_content = self.article.content
-
-        # newer non-reverted revisions of this article, starting from this
-        newer_changesets = ChangeSet.non_reverted_objects.filter(
-            article=self.article,
-            revision__gte=self.revision)
-
-        # apply all patches to get the content of this revision
-        for i, changeset in enumerate(newer_changesets):
-            patches = dmp.patch_fromText(changeset.content_diff)
-            if len(newer_changesets) == i + 1:
-                # we need to compare with the next revision after the change
-                next_rev_content = old_content
-            old_content = dmp.patch_apply(patches, old_content)[0]
-
-        diffs = dmp.diff_main(old_content, next_rev_content)
-        dmp.diff_cleanupSemantic(diffs)
-        return dmp.diff_prettyHtml(diffs)
 
     def get_content(self):
         """Returns the content of this revision."""
@@ -283,6 +254,3 @@ class ChangeSet(models.Model):
         diffs = dmp.diff_main(other_content, self.get_content())
         dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)
-
-if notification is not None:
-    signals.post_save.connect(notification.handle_observations, sender=Article)

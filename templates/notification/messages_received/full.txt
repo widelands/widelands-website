@@ -4,7 +4,6 @@
 
 {{ message_body }}
 
-http://{{ current_site }}{{ message_url }}
-
-reply directly: 
-http://{{ current_site }}/messages/reply/{{ message_id }}/{% endblocktrans %}
+-------------------------
+Link to Message: http://{{ current_site }}{{ message_url }}
+Reply directly: http://{{ current_site }}/messages/reply/{{ message_id }}/{% endblocktrans %}
