@@ -10,9 +10,8 @@
 {% block content_main %}
 <h1>{{ tribe.displayname }}: {{ building.displayname }}</h1>
 <div class="blogEntry">
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	<a href="{% url 'wlhelp_buildings' tribe.name %}">Buildings</a> &#187;
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
+	<a href="{% url 'wlhelp_buildings' tribe.name %}">{{ tribe.displayname }} Buildings</a> &#187;
 	{{ building.displayname }}
 	<br /><br />
 

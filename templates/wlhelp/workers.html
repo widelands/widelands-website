@@ -10,26 +10,39 @@ Workers - {{ tribe.displayname }} - {{ block.super }}
 {% block content_main %}
 <h1>{{ tribe.displayname }}: Workers</h1>
 <div class="blogEntry">
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	Workers
-	<br /><br />
+	<div class="posRight">
+		{% include 'wlhelp/inlines/js_form_scripting.html' %}
+	</div>
+	<div class="breadCrumb">
+		<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Workers
+	</div>
 
 	<table class="help">
 		<tr>
-			<th>Image</th>
-			<th>Name</th>
-			<th>Description</th>
+			<th>Worker</th>
+			<th style="width: 75%">Description</th>
+			<th style="width: 15%">Works at</th>
 		</tr>
 	{% for worker in workers %}
-		<tr class="{% cycle "odd" "even" %}">
+		<tr class="{% cycle "odd" "even" %}" id="{{ worker.name }}">
 			<td>
-				<a href="{% url 'wlhelp_worker_details' tribe.name worker.name %}">
-					<img src="{{ worker.image_url }}"  alt="{{ worker.name }}" />
+				<a href="{% url 'wlhelp_worker_details' tribe.name worker.name %}" title="Show economy graph">
+					{{ worker.displayname }}<br />
+					<img src="{{ worker.image_url }}"  alt="{{ worker.displayname }}" />
 				</a>
 			</td>
-			<td><a id="{{ worker.name }}" href="{% url 'wlhelp_worker_details' tribe.name worker.name %}">{{ worker.displayname }}</a></td>
-			<td>{{ worker.help }}</td> 
+			<td>
+				{{ worker.help }}
+				<div class="small scripting">Internal name: "{{ worker.name }}"</div>
+			</td>
+			<td> {# works at #}
+				{% for building in worker.workers_for_buildings.all %}
+				<a href="../buildings/#{{ building.name }}" class="small">{{ building.displayname }}<br />
+					<img src="{{ building.image_url }}" alt="{{building.displayname}}" />
+				</a>
+				<br />
+				{% endfor %}
+			</td>
 		</tr>
 	{% endfor %}
 	</table>

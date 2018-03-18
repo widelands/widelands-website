@@ -2,10 +2,7 @@ table.help {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 20px;
-}
-
-table.help tr {
-	
+	table-layout: fixed;
 }
 
 table.help th {
@@ -18,10 +15,16 @@ table.help th {
 table.help td {
 	padding: 4px;
 	border: 1px solid black;
+		overflow: hidden;
+}
+
+table.help div.scripting{
+	padding-top: 1em;
+	display: none;
 }
 
 img.icon {
-	margin: 0px 10px 10px 0px;
+	margin: 0 10px 0 0;
 }
 
 /* Let Table headers look like h2 */

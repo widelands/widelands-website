@@ -1,0 +1,13 @@
+<div>
+	<img class="posLeft icon" src="{{ tribe.icon_url }}" alt="" />
+	<p>{{ tribe.descr }}</p>
+</div>
+
+<ul>
+	<li><a href="{% url 'wlhelp_buildings' tribe.name %}">Buildings</a></li>
+	<li><a href="{% url 'wlhelp_wares' tribe.name %}">Wares</a></li>
+	<li><a href="{% url 'wlhelp_workers' tribe.name %}">Workers</a></li>
+	<li><a href="{{ tribe.network_pdf_url }}" target="_blank">Economy Network as PDF</a></li>
+	<li><a href="{{ tribe.network_gif_url }}" target="_blank">Economy Network as GIF</a></li>
+</ul>
+

@@ -3,7 +3,7 @@
 {{ user }} wrote:
 
 {{ txt }}
-{% endblocktrans %}
 
 -------------------------
 Link to topic: http://{{ current_site }}{{ topic_url }}
+{% endblocktrans %}

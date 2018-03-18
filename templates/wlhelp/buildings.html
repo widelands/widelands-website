@@ -7,52 +7,25 @@
 Buildings - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
-{% block extra_head %}
-	<script type="text/javascript" src="{{ MEDIA_URL }}js/encyclopedia.js"></script>
-{{ block.super}}
-{% endblock %}
-
 {% block content_main %}
 <h1>{{ tribe.displayname }}: Buildings</h1>
 <div class="blogEntry">
 	<div class="posRight">
-	<form id="filter_select">
-		<fieldset style="display: inline; border: none">
-			{# Attribute 'name': Groups filters (sizes/types) #}
-			{# Attribute 'value': Corresponding names of html elements (tables/rows) #}
-			<legend>Show Buildings by Size and/or Type:</legend>
-			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
-			<label for="small">Small</label>
-			<input type="checkbox" id="medium" name="sizes" value="size-M"  checked="checked" />
-			<label for="medium">Medium</label>
-			<input type="checkbox" id="big" name="sizes" value="size-B" checked="checked" />
-			<label for="big">Big</label>
-			<input type="checkbox" id="mines" name="sizes" value="size-I"  checked="checked" />
-			<label for="mines">Mines</label><br />
-			<input type="checkbox" id="warehouse" name="types" value="type-W" checked="checked" />
-			<label for="warehouse">Warehouse</label>
-			<input type="checkbox" id="production" name="types" value="type-P"  checked="checked" />
-			<label for="production">Production</label>
-			<input type="checkbox" id="military" name="types" value="type-M"  checked="checked" />
-			<label for="military">Military</label>
-			<input type="checkbox" id="training" name="types" value="type-T" checked="checked" />
-			<label for="training">Trainingsites</label><br />
-			<button type="button" id="apply_filter" class="button">Update</button>
-		</fieldset>
-		</form>
+		{% include 'wlhelp/inlines/js_form_buildings.html' %}<br />
+		{% include 'wlhelp/inlines/js_form_scripting.html' %}
 	</div>
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	Buildings
+	<div class="breadCrumb">
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Buildings
+	</div>
 	
 	{# Headquarters #}
-	<div name="size-B">
+	<div class="size-B">
 		{% with buildings.headquarters as buildings %}
 			{% include "wlhelp/inlines/display_buildings.html" with header="Headquarters" %}
 		{% endwith %}
 	</div>
 	
-	<div name="size-S">
+	<div class="size-S">
 	{# Small buildings #}
 	{% if buildings.small.count %}
 		{% with buildings.small as buildings %}
@@ -66,7 +39,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	{% endif %}
 	</div>
 	
-	<div name="size-M">
+	<div class="size-M">
 	{# Medium buildings #}
 	{% if buildings.medium.count %}
 		{% with buildings.medium as buildings %}
@@ -80,7 +53,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	{% endif %}
 	</div>
 	
-	<div name="size-B">
+	<div class="size-B">
 	{# Big buildings #}
 	{% if buildings.big.count %}
 		{% with buildings.big as buildings %}
@@ -94,7 +67,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	{% endif %}
 	</div>
 	
-	<div name="size-I">
+	<div class="size-I">
 	{# Mines #}
 	{% if buildings.mine.count %}
 		{% with buildings.mine as buildings %}
@@ -108,7 +81,7 @@ Buildings - {{ tribe.displayname }} - {{ block.super }}
 	{% endif %}
 	</div>
 
-	<div name="size-B">
+	<div class="size-B">
 	{# Ports #}
 	{% if buildings.port.count %}
 		{% with buildings.port as buildings %}

@@ -4,32 +4,61 @@
 {% endcomment %}
 
 {% block title %}
-Wares - {{ tribe.displayname }} - {{ block.super }}
+{{ tribe.displayname }} - Wares - {{ block.super }}
 {% endblock %}
 
 {% block content_main %}
 <h1>{{ tribe.displayname }}: Wares</h1>
 <div class="blogEntry">
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	Wares
-	<br /><br />
+	<div class="posRight">
+		{% include 'wlhelp/inlines/js_form_scripting.html' %}
+	</div>
+	<div class="breadCrumb">
+		<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Wares
+	</div>
 
 	<table class="help">
 		<tr>
-			<th>Image</th>
-			<th>Name</th>
-			<th>Description</th>
+			<th>Ware</th>
+			<th style="width: 70%;">Description</th>
+			<th style="width: 20%">Produced at/by</th>
 		</tr>
-	{% for ware in wares %}
-		<tr class="{% cycle "odd" "even" %}">
+	{% for w in wares %}
+		<tr class="{% cycle "odd" "even" %}" id="{{ w.name }}">
 			<td>
-				<a href="{% url 'wlhelp_ware_details' tribe.name ware.name %}">
-					<img src="{{ ware.image_url }}"  alt="{{ ware.name }}" />
+				<a id="{{ w.name }}" href="{% url 'wlhelp_ware_details' tribe.name w.name %}" title="Show economy graph">
+					{{ w.displayname }}
+					<br />
+					<img src="{{ w.image_url }}"  alt="{{ w.name }}" />
 				</a>
 			</td>
-			<td><a id="{{ ware.name }}" href="{% url 'wlhelp_ware_details' tribe.name ware.name %}">{{ ware.displayname }}</a></td>
-			<td>{{ ware.help }}</td> 
+			<td>
+				{{ w.help }}
+				<div class="small scripting">Internal name: "{{ w.name }}"</div>
+			</td>
+			<td>
+				<table class="help small">
+					<tr>
+						<th>At:</th>
+						<th>By:</th>
+					</tr>
+					{% for building in w.produced_by_buildings.all %}
+					<tr>
+						<td>
+							<a href="../buildings/#{{ building.name }}">{{ building.displayname }}<br />
+								<img src="{{ building.image_url }}"  alt="{{ building.displayname }}" />
+							</a>
+						</td>
+						<td>
+							{% for worker in building.workers_types.all %}
+								<a href="../workers/#{{ worker.name }}">{{ worker.displayname }}<br />
+									<img src="{{ worker.image_url }}"  alt="{{ worker.displayname }}" />
+								</a><br />
+							{% endfor %}
+						</td>
+					</tr>
+					{% endfor %}
+				</table>
 		</tr>
 	{% endfor %}
 	</table>
