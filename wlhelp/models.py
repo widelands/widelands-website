@@ -92,7 +92,8 @@ class Building(models.Model):
             ('P', 'productionsite'),
             ('W', 'warehouse'),
             ('M', 'militarysite'),
-            ('T', 'trainingsite')
+            ('T', 'trainingsite'),
+            ('m', 'market'),
     )
 
     objects = BuildingManager()

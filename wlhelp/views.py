@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse
 from .models import Worker, Ware, Building, Tribe
@@ -9,58 +9,49 @@ from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
 def index(request):
     tribes = Tribe.objects.all().order_by('displayname')
 
-    return render_to_response('wlhelp/index.html',
-                              context_instance=RequestContext(request,
-                                                              {'tribes': tribes}))
-
-
-def tribe_details(request, tribe):
-    t = get_object_or_404(Tribe, name=tribe)
-
-    return render_to_response('wlhelp/tribe_details.html',
-                              context_instance=RequestContext(request,
-                                                              {'tribe': t}))
+    return render(request, 'wlhelp/index.html',
+                  {'tribes': tribes, })
 
 
 def ware_details(request, tribe, ware):
     w = get_object_or_404(Ware, tribe__name=tribe, name=ware)
     t = Tribe.objects.get(name=tribe)
 
-    return render_to_response('wlhelp/ware_details.html',
-                              context_instance=RequestContext(request,
-                                                              {'ware': w, 'tribe': t}))
+    return render(request, 'wlhelp/ware_details.html',
+                  {'ware': w,
+                   'tribe': t, })
 
 
 def building_details(request, tribe, building):
     b = get_object_or_404(Building, tribe__name=tribe, name=building)
     t = Tribe.objects.get(name=tribe)
 
-    return render_to_response('wlhelp/building_details.html',
-                              context_instance=RequestContext(request,
-                                                              {'building': b, 'tribe': t}))
+    return render(request, 'wlhelp/building_details.html',
+                  {'building': b,
+                   'tribe': t, })
 
 
 def worker_details(request, tribe, worker):
     w = get_object_or_404(Worker, tribe__name=tribe, name=worker)
     t = Tribe.objects.get(name=tribe)
 
-    return render_to_response('wlhelp/worker_details.html',
-                              context_instance=RequestContext(request,
-                                                              {'worker': w, 'tribe': t}))
+    return render(request, 'wlhelp/worker_details.html',
+                  {'worker': w,
+                   'tribe': t, })
 
 
 def workers(request, tribe='barbarians'):
     t = get_object_or_404(Tribe, name=tribe)
-    return render_to_response('wlhelp/workers.html', context_instance=RequestContext(request,
-                                                                                     {'workers': Worker.objects.filter(tribe=t).order_by('displayname'),
-                                                                                      'tribe': t}))
+    return render(request, 'wlhelp/workers.html',
+                  {'workers': Worker.objects.filter(tribe=t).order_by('displayname'),
+                   'tribe': t, })
 
 
 def wares(request, tribe='barbarians'):
     t = get_object_or_404(Tribe, name=tribe)
-    return render_to_response('wlhelp/wares.html', context_instance=RequestContext(request,
-                                                                                   {'wares': Ware.objects.filter(tribe=t).order_by('displayname'),
-                                                                                    'tribe': t}))
+    return render(request, 'wlhelp/wares.html',
+                  {'wares': Ware.objects.filter(tribe=t).order_by('displayname'),
+                   'tribe': t, })
 
 
 def buildings(request, tribe='barbarians'):
@@ -98,5 +89,6 @@ def buildings(request, tribe='barbarians'):
     buildings['port'] = port.filter(enhanced_from=None)
     buildings['port_enhanced'] = port.exclude(enhanced_from=None)
 
-    return render_to_response('wlhelp/buildings.html', context_instance=RequestContext(request,
-                                                                                       {'buildings': buildings, 'tribe': t}))
+    return render(request, 'wlhelp/buildings.html',
+                  {'buildings': buildings,
+                   'tribe': t, })
