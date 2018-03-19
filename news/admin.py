@@ -2,6 +2,7 @@ from django.contrib import admin
 from news.models import *
 from datetime import datetime
 
+
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
@@ -14,7 +15,8 @@ class PostAdmin(admin.ModelAdmin):
         # Set initial value for the ForeignKey field to prevent
         # digging through the users list
         return {'author': request.user,
-                'publish': datetime.now(),}
+                'publish': datetime.now(),
+                }
 
     list_display = ('title', 'publish', 'status')
     list_filter = ('publish', 'categories', 'status')
@@ -22,7 +24,7 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     fieldsets = (
         (None, {
-            'fields':(('title', 'slug'), 'body', ('publish', 'categories',), )
+            'fields': (('title', 'slug'), 'body', ('publish', 'categories',), )
         }),
         ('More options', {
             'classes': ('collapse',),
