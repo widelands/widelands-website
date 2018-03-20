@@ -12,8 +12,7 @@ admin.site.register(Category, CategoryAdmin)
 class PostAdmin(admin.ModelAdmin):
 
     def get_changeform_initial_data(self, request):
-        # Set initial value for the ForeignKey field to prevent
-        # digging through the users list
+        # Set initial values for new news
         return {'author': request.user,
                 'publish': datetime.now(),
                 }
