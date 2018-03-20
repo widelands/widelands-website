@@ -1,9 +1,4 @@
 $(document).ready(function() {
-    $('#apply_filter').on('click', set_display);
-    // Find names of checkboxes:
-    checkb_names = get_input_names(); 
-    // Initialize after reload, e.g. pressing F5:
-    init_checkboxes();
 
     // Smooth scrolling, taken from:
     // http://stackoverflow.com/a/18795112
@@ -13,71 +8,68 @@ $(document).ready(function() {
         }, 500);
         event.preventDefault();
     });
+
+    // Toggle display of scripting values
+    // Usage of sessionStore makes it possible to keep the status
+    // when switching to different pages. When switching the page the
+    // state of checkbox and the visibility of items has to be set.
+    if ( $("input#toggle_scripting").length > 0 &&
+        sessionStorage.getItem('scripting_status') === "true"){
+        $("input#toggle_scripting")[0].checked = true;
+        $(".scripting").show();
+    }
+    $("input#toggle_scripting").click(function(){
+        $(".scripting").toggle();
+        sessionStorage.setItem('scripting_status', this.checked);
+    });
+
+    // Toggle the display of whole tables
+    $("input#small").click(function(){
+        $(".size-S").toggle();
+    });
+
+    $("input#medium").click(function(){
+        $(".size-M").toggle();
+    });
+
+    $("input#big").click(function(){
+        $(".size-B").toggle();
+    });
+
+    $("input#mines").click(function(){
+        $(".size-I").toggle();
+    });
+
+    // Toggle rows of tables
+    $("input#warehouse").click(function(){
+        $(".type-W").toggle( function(){
+            hide_empty_tables();
+        });
+    });
+
+    $("input#production").click(function(){
+        $(".type-P").toggle( function(){
+            hide_empty_tables();
+        });
+    });
+
+    $("input#military").click(function(){
+        $(".type-M").toggle( function(){
+            hide_empty_tables();
+        });
+    });
+
+    $("input#training").click(function(){
+        $(".type-T").toggle( function(){
+            hide_empty_tables();
+        });
+    });
+
 });
 
-function get_input_names(){
-    var inp = document.getElementById('filter_select').getElementsByTagName('input');
-    var n = [];
-    for (var i=0; i<inp.length; i++){
-        if (! n.includes(inp[i].name)){
-            n.push(inp[i].name);
-            }
-    }
-    return n;
-}
-
-function set_display(){
-    // Hide/unhide tables and/or rows
-    // Tables get hidden when filtering by size
-    // Rows get hidden when filtering by type
-    for (var y=0; y<checkb_names.length; y++){
-        var option_boxes = document.getElementsByName(checkb_names[y]);
-        if ( check_checked(option_boxes) === false ){
-            // Mark all as checked if none is checked for one type of filter
-            // This makes it possible to search e.g. for all of type
-            // 'Production' (and no 'size' is checked), or all of size
-            // 'Big' (and no 'type' is checked)
-            for (var j=0; j<option_boxes.length; j++){
-                option_boxes[j].checked = true;
-            }
-        }
-        for (var i = 0; i < option_boxes.length; i++) {
-            var elements = document.getElementsByName(option_boxes[i].value);
-            hide_unhide_elements(elements, option_boxes[i].checked);
-        }
-    }
-    // Filtering by type may lead into empty tables resulting in showing just
-    // rows with <th> or caption
-    hide_empty_tables();
-}
-
-function hide_unhide_elements(elem_list, checked){
-    elem_list.forEach( function(elem){
-        if (checked){
-            elem.style.display = '';
-        }else{
-            elem.style.display = 'none';
-        }
-    });
-}
-
-function check_checked(chb_list){
-    // Check if none of the checkbox is checked in this list
-    var c=0;
-    chb_list.forEach( function(chb){
-        if (! chb.checked){
-            c++;
-        }
-    });
-    if (c == chb_list.length){
-        return false;
-    }
-    return true;
-}
-
 function hide_empty_tables(){
-    // Hide a table if no row is displayed in it
-    var tables = document.getElementsByTagName('table');
+    // Hide a whole table if no row is displayed in it
+    var tables = $("table");
     for (var i=0; i<tables.length; i++){
         var table = tables[i];
         var hidden_rows = 0;
@@ -91,16 +83,6 @@ function hide_empty_tables(){
             table.style.display = 'none';
         }else{
             table.style.display = '';
-        }
-    }
-}
-
-function init_checkboxes(){
-    // Mark all checkboxes as checked
-    for (var x=0; x<checkb_names.length; x++){
-        var option_boxes = document.getElementsByName(checkb_names[x]);
-        for (i=0; i < option_boxes.length; i++){
-            option_boxes[i].checked = true;
         }
     }
 }

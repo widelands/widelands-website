@@ -10,9 +10,8 @@
 {% block content %}
 <h1>{{ tribe.displayname }}: {{ ware.displayname }}</h1>
 <div class="blogEntry">
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia</a> &#187;
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}">{{ tribe.displayname }}</a> &#187;
-	<a href="{% url 'wlhelp_wares' tribe.name %}">Wares</a> &#187;
+	<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
+	<a href="{% url 'wlhelp_wares' tribe.name %}">{{ tribe.displayname }} Wares</a> &#187;
 	{{ ware.displayname }}
 	<br /><br />
 
@@ -22,26 +21,5 @@
 	<h2>Economy Graph</h2>
 	{{ ware.imagemap|safe }}
 	<img src="{{ ware.graph_url }}" usemap="#G" alt="Graph for {{ ware.displayname }}" />
-{% comment %}
-{% if ware.build_ware_for_buildings.all %}
-<h2>Used in the construction of</h2>
-<table style="width:100%" class="building">
-    <tr>
-        <th>Building</th>
-        <th>Name</th>
-        <th>Description</th>
-    </tr>
-    {% for b in ware.build_ware_for_buildings.all %}
-    <tr class="odd">
-        <td><img src="{{ b.image_url }}" alt="{{b.displayname}}" /></td>
-        <td><a href="../../buildings/{{b.name}}/">{{ b.displayname }}</a></td>
-        <td>{{ b.help }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-Not used for building.<br />
-{% endif %}
-{% endcomment %}
 </div>
 {% endblock %}

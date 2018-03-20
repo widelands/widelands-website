@@ -10,21 +10,11 @@
 {% block content %}
 <h1>Encyclopedia</h1>
 <div class="blogEntry">
-Encyclopedia &#187; Index
+Encyclopedia Index
 <h2>All Tribes in Widelands:</h2>
 {% for tribe in tribes %}
-<p><img class="posLeft icon" src="{{ tribe.icon_url }}" alt="">
-	<a href="{% url 'wlhelp_tribe_details' tribe.name %}"><b>{{ tribe.displayname }}</b></a><br />
-	{{ tribe.descr }}</p>
-	<ul style="list-style: circle; margin-left: 1em; margin-top: -0.2em;">
-		<li><a href="{% url 'wlhelp_buildings' tribe.name %}">Buildings</a></li>
-		<li><a href="{% url 'wlhelp_wares' tribe.name %}">Wares</a></li>
-		<li><a href="{% url 'wlhelp_workers' tribe.name %}">Workers</a></li>
-		<li><a href="{{ tribe.network_pdf_url }}" target="_blank">Economy Network as PDF</a></li>
-		<li><a href="{{ tribe.network_gif_url }}" target="_blank">Economy Network as GIF</a></li>
-	</ul>
-	</li>
-</ul>
+	<h3>{{ tribe.displayname }}</h3>
+	{% include "wlhelp/inlines/tribes_details.html" %}
 {% endfor %}
 </div>
 {% endblock %}

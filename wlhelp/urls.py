@@ -15,8 +15,6 @@ from views import *
 urlpatterns = [
     url(r'^$', index, name='wlhelp_index'),
 
-    # Detail pages
-    url(r'^(?P<tribe>\w+)/$', tribe_details, name='wlhelp_tribe_details'),
     url(r'^(?P<tribe>\w+)/wares/(?P<ware>[^/]+)/$',
         ware_details, name='wlhelp_ware_details'),
     url(r'^(?P<tribe>\w+)/buildings/(?P<building>[^/]+)/$',

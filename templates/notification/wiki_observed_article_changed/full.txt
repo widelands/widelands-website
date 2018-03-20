@@ -1,4 +1,8 @@
-{% load i18n %}{% blocktrans with observed.get_absolute_url as article_url %}The article {{ observed }} that you observe has changed.
+{% load i18n %}{% url 'wiki_changeset' article rev as diff_url %}{% url 'wiki_article' article as article_url %}{% blocktrans %}
+The article "{{ article }}" that you observe has been edited by {{ editor }}.
+Comment for this revision: "{{ rev_comment }}"
 
-http://{{ current_site }}{{ article_url }}
+-------------------------
+A diff is available at: http://{{ current_site }}{{ diff_url }}
+Link to article: http://{{ current_site }}{{ article_url }}
 {% endblocktrans %}

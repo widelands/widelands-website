@@ -1,0 +1,23 @@
+    <form id="filter_select">
+		<fieldset style="display: inline; border: none">
+			{# Attribute 'name': Groups filters (sizes/types) #}
+			{# Attribute 'value': Corresponding names of html elements (tables/rows) #}
+			<legend>Show Buildings by Size and/or Type:</legend>
+			<input type="checkbox" id="small" name="sizes" value="size-S"  checked="checked" />
+			<label for="small">Small</label>
+			<input type="checkbox" id="medium" name="sizes" value="size-M"  checked="checked" />
+			<label for="medium">Medium</label>
+			<input type="checkbox" id="big" name="sizes" value="size-B" checked="checked" />
+			<label for="big">Big</label>
+			<input type="checkbox" id="mines" name="sizes" value="size-I"  checked="checked" />
+			<label for="mines">Mines</label><br />
+			<input type="checkbox" id="warehouse" name="types" value="type-W" checked="checked" />
+			<label for="warehouse">Warehouse</label>
+			<input type="checkbox" id="production" name="types" value="type-P"  checked="checked" />
+			<label for="production">Production</label>
+			<input type="checkbox" id="military" name="types" value="type-M"  checked="checked" />
+			<label for="military">Military</label>
+			<input type="checkbox" id="training" name="types" value="type-T" checked="checked" />
+			<label for="training">Trainingsites</label><br />
+		</fieldset>
+	</form>
