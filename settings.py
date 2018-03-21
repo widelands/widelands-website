@@ -111,7 +111,6 @@ INSTALLED_APPS = (
     'linaro_django_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
-    'sphinxdoc',        # included as wlapp
 )
 
 MIDDLEWARE_CLASSES = (

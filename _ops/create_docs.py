@@ -82,7 +82,7 @@ def move_docs(settings, SPHINX_DIR):
                         TARGET_DIR)
 
 
-def create_docs():
+def create_sphinxdoc():
     """Create the widelands source code documentation.
 
     Or renew the documenation.
@@ -133,4 +133,4 @@ def create_docs():
     move_docs(settings, SPHINX_DIR)
 
 if __name__ == '__main__':
-    sys.exit(create_docs())
+    sys.exit(create_sphinxdoc())
