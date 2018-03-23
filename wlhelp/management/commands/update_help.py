@@ -172,14 +172,12 @@ class TribeParser(object):
             # Help
             workero.help = worker['helptext']
 
-            # Check for experience
-            if 'experience' in worker:
-                workero.exp = worker['experience']
-
             # See what the worker becomes
             if 'becomes' in worker:
                 try:
-                    enname = worker.becomes
+                    if worker['becomes']['experience']:
+                        workero.exp = worker['becomes']['experience']
+
                     workero.becomes = WorkerModel.objects.get_or_create(
                         name=worker['becomes']['name'], tribe=self._to)[0]
                 except:
