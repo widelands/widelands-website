@@ -178,6 +178,7 @@ class TribeParser(object):
                     if worker['becomes']['experience']:
                         workero.exp = worker['becomes']['experience']
 
+                    # The worker this worker becomes to may wasn't created yet
                     workero.becomes = WorkerModel.objects.get_or_create(
                         name=worker['becomes']['name'], tribe=self._to)[0]
                 except:
