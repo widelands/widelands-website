@@ -33,18 +33,20 @@ Workers - {{ tribe.displayname }} - {{ block.super }}
 			</td>
 			<td>
 				{{ worker.help }}
-				{% if worker.becomes %}
+				{% if worker.becomes or worker.trained_by_experience%}
 				<ul>
+					{% if worker.becomes %}
 					<li>At experience level {{ worker.exp }} he will become:
 						<a href="#{{ worker.becomes.name }}">{{ worker.becomes.displayname}}</a>
 					</li>
-				{% endif %}
-				{% if worker.trained_by_experience %}
+					{% endif %}
+					{% if worker.trained_by_experience %}
 					<li>
 						Became of: <a href="#{{ worker.trained_by_experience.name }}">
 						{{ worker.trained_by_experience.displayname}}</a>
 						(at experience level {{ worker.trained_by_experience.exp }})
 					</li>
+					{% endif %}
 				</ul>
 				{% endif %}
 				<div class="small scripting">Internal name: "{{ worker.name }}"</div>
