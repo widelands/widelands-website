@@ -23,11 +23,11 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     fieldsets = (
         (None, {
-            'fields': (('title', 'slug'), 'body', ('publish', 'categories',), )
+            'fields': (('title', 'slug'), 'body', ('publish', 'categories'))
         }),
         ('More options', {
             'classes': ('collapse',),
-            'fields': ('author', ('status', 'allow_comments',), 'tease', 'tags')
+            'fields': ('author', ('status', 'allow_comments'), 'tease', 'tags')
         }),
     )
 
