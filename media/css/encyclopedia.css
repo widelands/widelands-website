@@ -2,7 +2,7 @@ table.help {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 20px;
-	table-layout: fixed;
+	/*table-layout: fixed;*/
 }
 
 table.help th {
@@ -15,7 +15,11 @@ table.help th {
 table.help td {
 	padding: 4px;
 	border: 1px solid black;
-		overflow: hidden;
+	overflow: hidden;
+}
+
+table.help td img {
+	vertical-align: middle;
 }
 
 table.help div.scripting{

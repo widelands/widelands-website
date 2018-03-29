@@ -19,9 +19,9 @@ Workers - {{ tribe.displayname }} - {{ block.super }}
 
 	<table class="help">
 		<tr>
-			<th style="width: 8em;">Worker</th>
+			<th style="width: 9em;">Worker</th>
 			<th>Description</th>
-			<th style="width: 10em;">Works at</th>
+			<th style="width: 12em;">Works at</th>
 		</tr>
 	{% for worker in workers %}
 		<tr class="{% cycle "odd" "even" %}" id="{{ worker.name }}">
