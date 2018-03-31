@@ -2,8 +2,11 @@ table.help {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 20px;
-	/*table-layout: fixed;*/
 }
+
+ table.help.small {
+	table-layout: fixed;
+ }
 
 table.help th {
 	padding: 4px;
