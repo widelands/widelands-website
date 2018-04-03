@@ -1,8 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, render
 
 from models import Image
 from wl_utils import get_real_ip
@@ -42,7 +41,7 @@ def upload(request, content_type, object_id, next='/'):
     # Get the current object's name (provided by __unicode__()) from this model
     name = app.get_object_for_this_type(id=object_id)
 
-    return render_to_response('wlimages/upload.html', {
+    return render(request, 'wlimages/upload.html', {
         'upload_form': form,
-        'referer': name,
-    }, context_instance=RequestContext(request))
+        'referer': name,}
+                  )

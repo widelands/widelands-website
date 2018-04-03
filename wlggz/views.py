@@ -3,8 +3,7 @@
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 from forms import EditGGZForm
@@ -30,6 +29,5 @@ def change_password(request):
         'ggz_form': form,
     }
 
-    return render_to_response('wlggz/edit_ggz.html',
-                              template_params,
-                              context_instance=RequestContext(request))
+    return render(request, 'wlggz/edit_ggz.html',
+                              template_params)

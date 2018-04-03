@@ -3,8 +3,7 @@
 #
 
 from forms import UploadMapForm, EditCommentForm
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
@@ -19,11 +18,10 @@ import os
 #########
 def index(request):
     maps = models.Map.objects.all()
-    return render_to_response('wlmaps/index.html',
+    return render(request, 'wlmaps/index.html',
                               {'maps': maps,
                                'maps_per_page': MAPS_PER_PAGE,
-                               },
-                              context_instance=RequestContext(request))
+                               })
 
 
 def rate(request, map_slug):
@@ -75,9 +73,8 @@ def view(request, map_slug):
     context = {
         'map': map,
     }
-    return render_to_response('wlmaps/map_detail.html',
-                              context,
-                              context_instance=RequestContext(request))
+    return render(request, 'wlmaps/map_detail.html',
+                              context)
 
 
 @login_required
@@ -94,9 +91,8 @@ def edit_comment(request, map_slug):
 
     context = {'form': form, 'map': map}
 
-    return render_to_response('wlmaps/edit_comment.html',
-                              context,
-                              context_instance=RequestContext(request))
+    return render(request, 'wlmaps/edit_comment.html',
+                              context)
 
 
 @login_required
@@ -112,6 +108,5 @@ def upload(request):
         form = UploadMapForm()
 
     context = {'form': form, }
-    return render_to_response('wlmaps/upload.html',
-                              context,
-                              context_instance=RequestContext(request))
+    return render(request, 'wlmaps/upload.html',
+                              context)

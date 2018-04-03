@@ -79,7 +79,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'nocaptcha_recaptcha',
     # Thirdparty apps, but need preload
-    'tracking',  # included as wlapp
+    #'tracking',  # included as wlapp
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
@@ -125,8 +125,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 
     'linaro_django_pagination.middleware.PaginationMiddleware',
-    'tracking.middleware.VisitorTrackingMiddleware',
-    'tracking.middleware.VisitorCleanUpMiddleware',
+    #'tracking.middleware.VisitorTrackingMiddleware',
+    #'tracking.middleware.VisitorCleanUpMiddleware',
 )
 
 TEMPLATES = [

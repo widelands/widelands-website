@@ -4,7 +4,7 @@ from django.conf.urls import *
 from django.contrib import admin
 admin.autodiscover()
 
-from mainpage.views import mainpage
+from mainpage import views as mainpage_views
 from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
@@ -47,12 +47,12 @@ urlpatterns = [
     url(r'^forum/', include('pybb.urls')),
 
     # WL specific:
-    url(r'^$', mainpage, name='mainpage'),
-    url(r'^locale/$', 'mainpage.views.view_locale'),
-    url(r'^changelog/$', 'mainpage.views.changelog', name='changelog'),
-    url(r'^developers/$', 'mainpage.views.developers', name='developers'),
-    url(r'^legal_notice/$', 'mainpage.views.legal_notice', name='legal_notice'),
-    url(r'^legal_notice_thanks/$', 'mainpage.views.legal_notice_thanks',
+    url(r'^$', mainpage_views.mainpage, name='mainpage'),
+    url(r'^locale/$', mainpage_views.view_locale),
+    url(r'^changelog/$', mainpage_views.changelog, name='changelog'),
+    url(r'^developers/$', mainpage_views.developers, name='developers'),
+    url(r'^legal_notice/$', mainpage_views.legal_notice, name='legal_notice'),
+    url(r'^legal_notice_thanks/$', mainpage_views.legal_notice_thanks,
         name='legal_notice_thanks'),
     url(r'^help/(?P<path>.*)', RedirectView.as_view(url='/encyclopedia/%(path)s',
                                                     permanent=True)),  # to not break old links

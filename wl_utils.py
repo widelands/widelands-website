@@ -25,7 +25,6 @@ except ImportError:
     from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor
 
 from django.db.models import OneToOneField
-from django.db.models.fields.related import SingleRelatedObjectDescriptor
 from django.db import models
 
 

@@ -132,7 +132,7 @@ class NoticeQueueBatch(models.Model):
 def create_notice_type(label, display, description, default=2, verbosity=1):
     """Creates a new NoticeType.
 
-    This is intended to be used by other apps as a post_syncdb
+    This is intended to be used by other apps as a post_migrate
     manangement step.
 
     """

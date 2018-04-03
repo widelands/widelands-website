@@ -1,4 +1,3 @@
-from django.template import RequestContext
 from settings import WIDELANDS_SVN_DIR, INQUIRY_RECIPIENTS
 from templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
