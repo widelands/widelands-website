@@ -91,7 +91,7 @@ INSTALLED_APPS = (
     'wlsearch',
     'wlpoll',
     'wlevents',
-    'wlmaps',
+    'wlmaps.apps.WlMapsConfig',
     'wlscreens',
     'wlggz',
     'wlscheduling',
@@ -99,15 +99,16 @@ INSTALLED_APPS = (
     'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps
-    'wiki',  # This is based on wikiapp, but has some local modifications
+    'wiki.apps.WikiConfig',  # This is based on wikiapp, but has some local modifications
     'news',  # This is based on simple-blog, but has some local modifications
     'news.managers',
-    'pybb',  # Feature enriched version of pybb
+    'pybb.apps.PybbConfig',  # Feature enriched version of pybb
 
     # Thirdparty apps
     'threadedcomments',  # included as wlapp
     'notification',     # included as wlapp
-    'django_messages',
+    #'django_messages',
+    'django_messages_wl.apps.WLDjangoMessagesConfig',
     'linaro_django_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
