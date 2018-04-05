@@ -5,9 +5,9 @@ import re
 from pprint import pprint
 
 from django import template
-from django.core.urlresolvers import reverse
+#from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
-from django.template import RequestContext
+#from django.template import RequestContext
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
