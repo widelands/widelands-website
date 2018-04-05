@@ -4,7 +4,7 @@ import traceback
 
 from django.conf import settings
 from django.http import Http404, HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext, Context, loader
 from django.utils.simplejson import JSONEncoder
 from django.utils.translation import ungettext
@@ -109,7 +109,7 @@ def display_map(request, template_name=DEFAULT_TRACKING_TEMPLATE,
 
     GOOGLE_MAPS_KEY = getattr(settings, 'GOOGLE_MAPS_KEY', None)
 
-    return render_to_response(template_name,
-                              {'GOOGLE_MAPS_KEY': GOOGLE_MAPS_KEY,
-                               'template': extends_template},
-                              context_instance=RequestContext(request))
+    return render(request, template_name,
+                  {'GOOGLE_MAPS_KEY': GOOGLE_MAPS_KEY,
+                   'template': extends_template},
+                  )

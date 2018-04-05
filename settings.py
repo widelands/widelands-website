@@ -109,7 +109,7 @@ INSTALLED_APPS = (
     'notification',     # included as wlapp
     #'django_messages',
     'django_messages_wl.apps.WLDjangoMessagesConfig',
-    'linaro_django_pagination',
+    'dj_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
     'sphinxdoc',        # included as wlapp
@@ -121,11 +121,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    # Franku django1_11: Authentication should work  without
+    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'linaro_django_pagination.middleware.PaginationMiddleware',
+    'dj_pagination.middleware.PaginationMiddleware',
     #'tracking.middleware.VisitorTrackingMiddleware',
     #'tracking.middleware.VisitorCleanUpMiddleware',
 )

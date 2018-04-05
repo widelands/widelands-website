@@ -9,7 +9,6 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.template import Context
 from django.template.loader import render_to_string
 
 from django.core.exceptions import ImproperlyConfigured
@@ -186,15 +185,17 @@ def get_formatted_messages(formats, label, context):
 
     """
     format_templates = {}
+
     for format in formats:
         # conditionally turn off autoescaping for .txt extensions in format
-        if format.endswith('.txt'):
-            context.autoescape = False
-        else:
-            context.autoescape = True
+        # if format.endswith('.txt'):
+        #     context.autoescape = False
+        # else:
+        #     context.autoescape = True
         format_templates[format] = render_to_string((
             'notification/%s/%s' % (label, format),
-            'notification/%s' % format), context_instance=context)
+            'notification/%s' % format), context)
+
     return format_templates
 
 
@@ -250,13 +251,12 @@ def send_now(users, label, extra_context=None, on_site=True):
                 activate(language)
 
             # update context with user specific translations
-            context = Context({
+            context = {
                 'user': user,
-                'notices_url': notices_url,
                 'current_site': current_site,
                 'subject': notice_type.display,
                 'description': notice_type.description,
-            })
+            }
             context.update(extra_context)
 
             # get prerendered format messages
@@ -265,20 +265,21 @@ def send_now(users, label, extra_context=None, on_site=True):
             # Strip newlines from subject
             subject = ''.join(render_to_string('notification/email_subject.txt', {
                 'message': messages['short.txt'],
-            }, context).splitlines())
-            
+            }).splitlines())
+
             # Strip leading newlines. Make writing the email templates easier:
             # Each linebreak in the templates results in a linebreak in the emails
             # If the first line in a template contains only template tags the 
             # email will contain an empty line at the top.
             body = render_to_string('notification/email_body.txt', {
                 'message': messages['full.txt'],
-            }, context).lstrip()
+                'notices_url': notices_url,
+            }).lstrip()
 
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
             send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
-
+        
         # reset environment to original language
         activate(current_language)
     except NoticeType.DoesNotExist:
