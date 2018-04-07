@@ -9,7 +9,7 @@ django-haystack==2.6.1
 -e git://github.com/arneb/django-messages.git@2d8dabb755e0b5ace876bde25f45d07c2051ac37#egg=django_messages
 django-nocaptcha-recaptcha==0.0.19
 dj-pagination==2.3.2
-django-registration==2.2
+django-registration==2.4.1
 django-tagging==0.4.5
 gunicorn==19.7.1
 Markdown==2.6.8
