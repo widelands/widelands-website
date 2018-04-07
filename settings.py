@@ -95,7 +95,7 @@ INSTALLED_APPS = (
     'wlscreens',
     'wlggz',
     'wlscheduling',
-    'check_input',
+    'check_input.apps.CheckInput',
     'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps

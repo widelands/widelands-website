@@ -5,7 +5,7 @@ from django.db.models import signals
 class PybbConfig(AppConfig):
 
     name = 'pybb'
-    verbose_name = 'Bulletin Board'
+    verbose_name = 'Pybb'
 
     def ready(self):
         from pybb.management.pybb_notifications import create_notice_types
