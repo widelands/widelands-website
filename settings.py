@@ -115,21 +115,22 @@ INSTALLED_APPS = (
     'sphinxdoc',        # included as wlapp
 )
 
-MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # Franku django1_11: Authentication should work  without
-    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-
+    
+    # Foreign middleware
     'dj_pagination.middleware.PaginationMiddleware',
+    
+    # (todo Franku): The following have to be adjusted if we want them
     #'tracking.middleware.VisitorTrackingMiddleware',
     #'tracking.middleware.VisitorCleanUpMiddleware',
-)
+]
 
 TEMPLATES = [
     {
