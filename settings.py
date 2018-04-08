@@ -67,7 +67,7 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -107,13 +107,12 @@ INSTALLED_APPS = (
     # Thirdparty apps
     'threadedcomments',  # included as wlapp
     'notification',     # included as wlapp
-    #'django_messages',
     'django_messages_wl.apps.WLDjangoMessagesConfig',
     'dj_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
     'sphinxdoc',        # included as wlapp
-)
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -163,6 +162,13 @@ STATIC_URL = '/media/'
 ############################
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
+
+# Franku: SHA1 Needed as compatibility for old passwords
+# https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher'
+]
 
 ######################
 # Wiki configuration #
