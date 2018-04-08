@@ -6,7 +6,7 @@ from forms import UploadMapForm, EditCommentForm
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 import models
 from settings import MAPS_PER_PAGE
 from wl_utils import get_real_ip
