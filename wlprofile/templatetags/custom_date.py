@@ -131,7 +131,7 @@ def do_custom_date(format, date, timezone, now=None):
 def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
     a sane default."""
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return do_custom_date(DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE))
     try:
         userprofile = User.objects.get(username=user).wlprofile

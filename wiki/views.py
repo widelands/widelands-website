@@ -277,7 +277,7 @@ def edit_article(request, title,
         form.cache_old_content()
         if form.is_valid():
 
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 form.editor = request.user
 
             if ((article is None) and (group_slug is not None)):
@@ -492,7 +492,7 @@ def revert_to_revision(request, title,
             art = Article.objects.exclude(pk=article.pk).get(title=old_title)
         except Article.DoesNotExist:
             # No existing article found -> reverting possible
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 article.revert_to(revision, get_real_ip(request), request.user)
             else:
                 article.revert_to(revision, get_real_ip(request))

@@ -2,7 +2,7 @@ from pybb.models import Topic, Post, Read
 
 
 def cache_unreads(qs, user):
-    if not len(qs) or not user.is_authenticated():
+    if not len(qs) or not user.is_authenticated:
         return qs
     if isinstance(qs[0], Topic):
         reads = Read.objects.filter(topic__pk__in=set(x.id for x in qs),
