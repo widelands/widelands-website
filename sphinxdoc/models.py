@@ -4,6 +4,7 @@ Models for django-sphinxdoc.
 """
 
 from django.db import models
+from django.urls import reverse
 
 
 class App(models.Model):
@@ -15,9 +16,8 @@ class App(models.Model):
     def __unicode__(self):
         return self.name
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('doc-index', (), {'slug': self.slug})
+        return reverse('doc-index', kwargs={'slug': self.slug})
 
     class Meta:
         app_label = 'sphinxdoc'

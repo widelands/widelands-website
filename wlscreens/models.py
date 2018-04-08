@@ -8,6 +8,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.files.storage import FileSystemStorage
 import os
 from settings import THUMBNAIL_SIZE, MEDIA_ROOT
+from django.urls import reverse
+
 
 # Taken from django snippet 976
 
@@ -33,9 +35,8 @@ class Category(models.Model):
 
         return super(Category, self).save(*args, **kwargs)
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('wlscreens_category', None, {'category_slug': self.slug})
+        return reverse('wlscreens_category', kwargs={'category_slug': self.slug})
 
     def __unicode__(self):
         return u"%s" % self.name
