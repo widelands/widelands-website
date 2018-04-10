@@ -78,8 +78,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'nocaptcha_recaptcha',
-    # Thirdparty apps, but need preload
-    #'tracking',  # included as wlapp
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
@@ -125,10 +123,7 @@ MIDDLEWARE = [
     
     # Foreign middleware
     'dj_pagination.middleware.PaginationMiddleware',
-    
-    # (todo Franku): The following have to be adjusted if we want them
-    #'tracking.middleware.VisitorTrackingMiddleware',
-    #'tracking.middleware.VisitorCleanUpMiddleware',
+    'online_users_middleware.OnlineNowMiddleware',
 ]
 
 TEMPLATES = [
@@ -262,11 +257,6 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-############
-# Tracking #
-############
-TRACKING_CLEANUP_TIMEOUT = 48
-
 ###########################
 # Widelands SVN directory #
 ###########################
@@ -320,10 +310,10 @@ BLEACH_ALLOWED_TAGS = [u'a',
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
     'href'], 'td': ['align'], '*': ['class', 'id', 'title']}
 
-################################
-# Pagination settings          #
-# for linaro-django-pagination #
-################################
+##########################
+# Pagination settings    #
+# for dj-pagination      #
+##########################
 PAGINATION_DEFAULT_WINDOW = 2
 
 
