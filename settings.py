@@ -316,6 +316,15 @@ BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
 ##########################
 PAGINATION_DEFAULT_WINDOW = 2
 
+###########################
+# Settings for displaying #
+# online users            #
+###########################
+
+# Time in seconds how long a user will be shown online
+ONLINE_THRESHOLD = getattr(settings, 'ONLINE_THRESHOLD', 60 * 30)
+# Number of stored users
+ONLINE_MAX = getattr(settings, 'ONLINE_MAX', 25)
 
 try:
     from local_settings import *

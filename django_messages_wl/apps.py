@@ -4,7 +4,8 @@ from django.db.models import signals
 
 class WLDjangoMessagesConfig(DjangoMessagesConfig):
 
-    verbose_name = 'WL Messages'
+    #name = 'django_messages'
+    #verbose_name = 'Messages'
 
     def ready(self):
         from django_messages_wl.management import create_notice_types
