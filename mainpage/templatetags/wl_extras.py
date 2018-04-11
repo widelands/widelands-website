@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -23,8 +24,16 @@ def wl_logo():
 
 
 @register.simple_tag
+@mark_safe
 def all_users():
-    """Provide a list of all users."""
+    """Provide a list of all users.
+    
+    Only used for providing/filtering usernames with JS when writing PMs.
+    This is marked as 'safe', otherwise the list contains
+    &#39Username&#39 instead of 'Username' (replaced apostrophes) and JS
+    can't handle &#39.
+
+    """
 
     from django.contrib.auth.models import User
     return [str(u.username) for u in User.objects.all()]
