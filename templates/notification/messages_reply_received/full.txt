@@ -1,3 +1,4 @@
+{% autoescape off %}
 {% load i18n %}{% blocktrans with message.sender as message_sender and message.parent_msg as message_parent_msg and message.body|safe as message_body and message.get_absolute_url as message_url and message.id as message_id%}{{ message_sender }} replied to '{{ message_parent_msg }}':
 
 {{ message }}

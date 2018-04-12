@@ -1,3 +1,4 @@
+{% autoescape off %}
 {% load i18n %}A new map has been uploaded to the Website by {{ user }}:
 {% blocktrans %}
 Mapname: {{ mapname }}
