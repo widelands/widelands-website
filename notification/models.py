@@ -187,8 +187,8 @@ def get_formatted_messages(formats, label, context):
     format_templates = {}
 
     for format in formats:
-        # escaping for .txt templates was done here, but now it resides in
-        # the templates
+        # Switch off escaping for .txt templates was done here, but now it
+        # resides in the templates
         format_templates[format] = render_to_string((
             'notification/%s/%s' % (label, format),
             'notification/%s' % format), context)
