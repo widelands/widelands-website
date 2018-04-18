@@ -11,6 +11,7 @@ from django.contrib.syndication.views import Feed
 from registration.backends.hmac.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
+
 urlpatterns = [
     # Creating a sitemap.xml
     url(r'^sitemap\.xml/', include('sitemap_urls')),
@@ -33,7 +34,8 @@ urlpatterns = [
     # Formerly 3rd party
     url(r'^notification/', include('notification.urls')),
     
-    url(r'^messages/', include('django_messages.urls')),
+    url(r'^messages/', include('django_messages_wl.urls')),
+
     url(r'^threadedcomments/', include('threadedcomments.urls')),
 
     # Redirect old urls to docs to docs/wl
