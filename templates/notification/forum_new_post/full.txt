@@ -8,4 +8,4 @@
 -------------------------
 Link to post: http://{{ current_site }}{{ post_url }}
 Link to topic: http://{{ current_site }}{{ topic_url }}
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}

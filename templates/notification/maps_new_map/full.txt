@@ -6,4 +6,4 @@ Description: {{ uploader_comment }}
 
 -------------------------
 Link to map: http://{{ current_site }}{{ url }}
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}
