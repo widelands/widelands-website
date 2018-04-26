@@ -9,14 +9,14 @@ import re
 class SuspiciousInput(models.Model):
     """Model for collecting suspicios user input.
 
-    Call the check_input method with this attributes:
-    content_object = Model instance of a saved(!) object
-    user = user
-    text = text to check for suspicious content
+        Call the check_input method with this attributes:
+        content_object = Model instance of a saved(!) object
+        user = user
+        text = text to check for suspicious content
 
-    Example:
-    is_suspicous = SuspiciousInput.check_input(content_object=post, 
-user=post.user, text=post.body)
+        Example:
+        is_suspicous = SuspiciousInput.check_input(content_object=post,
+    user=post.user, text=post.body)
 
     """
 
@@ -34,6 +34,14 @@ user=post.user, text=post.body)
     def __unicode__(self):
         return self.text
 
+    def clean(self):
+        # Cleaning fields
+        max_chars = self._meta.get_field('text').max_length
+        if len(self.text) >= max_chars:
+            # Truncate the text to fit with max_length of field
+            # otherwise a Database error is thrown
+            self.text = self.text[:max_chars]
+
     def is_suspicious(self):
         if any(x in self.text.lower() for x in settings.ANTI_SPAM_KWRDS):
             return True
@@ -46,5 +54,10 @@ user=post.user, text=post.body)
         user_input = cls(*args, **kwargs)
         is_spam = user_input.is_suspicious()
         if is_spam:
-            user_input.save()
+            try:
+                user_input.clean()
+                user_input.save()
+            except:
+                pass
+
         return is_spam
