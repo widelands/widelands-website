@@ -4,6 +4,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 import datetime
 try:
     from notification import models as notification
@@ -43,9 +44,8 @@ class Map(models.Model):
         ordering = ('-pub_date',)
         get_latest_by = 'pub_date'
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('wlmaps_view', None, {'map_slug': self.slug})
+        return reverse('wlmaps_view', kwargs={'map_slug': self.slug})
 
     def __unicode__(self):
         return u'%s by %s' % (self.name, self.author)

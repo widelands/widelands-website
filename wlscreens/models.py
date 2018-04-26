@@ -8,13 +8,14 @@ from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.files.storage import FileSystemStorage
 import os
 from settings import THUMBNAIL_SIZE, MEDIA_ROOT
+from django.urls import reverse
+
 
 # Taken from django snippet 976
 
-
 class OverwriteStorage(FileSystemStorage):
 
-    def get_available_name(self, name):
+    def get_available_name(self, name, max_length=None):
         """Returns a filename that's free on the target storage system, and
         available for new content to be written to."""
         # If the filename already exists, remove it as if it was a true file
@@ -22,8 +23,6 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(MEDIA_ROOT, name))
         return name
-
-# Create your models here.
 
 
 class Category(models.Model):
@@ -36,25 +35,33 @@ class Category(models.Model):
 
         return super(Category, self).save(*args, **kwargs)
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('wlscreens_category', None, {'category_slug': self.slug})
+        return reverse('wlscreens_category', kwargs={'category_slug': self.slug})
 
     def __unicode__(self):
         return u"%s" % self.name
+
+
+def screenshot_path(instance, filename):
+    return 'wlscreens/screens/%s/%s.%s' % (
+            instance.category, instance.name, filename.rsplit('.', 1)[-1].lower()
+            )
+
+
+def thumbnail_path(instance, filename):
+    return 'wlscreens/thumbs/%s/%s.png' % (
+            instance.category, instance.name)
 
 
 class Screenshot(models.Model):
     name = models.CharField(max_length=255)
 
     screenshot = models.ImageField(
-        upload_to=lambda i, n: 'wlscreens/screens/%s/%s.%s' % (
-            i.category, i.name, n.rsplit('.', 1)[-1].lower()),
+        upload_to=screenshot_path,
         storage=OverwriteStorage(),
     )
     thumbnail = models.ImageField(
-        upload_to=lambda i, n: 'wlscreens/thumbs/%s/%s.png' % (
-            i.category, i.name),
+        upload_to=thumbnail_path,
         editable=False,
         storage=OverwriteStorage(),
     )

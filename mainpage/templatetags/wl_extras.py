@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -20,14 +21,6 @@ def wl_logo():
 
     from django.conf import settings
     return settings.LOGO_FILE
-
-
-@register.simple_tag
-def all_users():
-    """Provide a list of all users."""
-
-    from django.contrib.auth.models import User
-    return [str(u.username) for u in User.objects.all()]
 
 
 @register.inclusion_tag('mainpage/forum_navigation.html')

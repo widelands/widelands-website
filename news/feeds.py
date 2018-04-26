@@ -1,6 +1,6 @@
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from news.models import Post, Category
 
 # Validated through http://validator.w3.org/feed/

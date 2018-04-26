@@ -3,7 +3,7 @@ from django.conf import settings
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
-from django.utils.hashcompat import md5_constructor
+from hashlib import md5 as md5_constructor
 import urllib
 
 GRAVATAR_MAX_RATING = getattr(settings, 'GRAVATAR_MAX_RATING', 'R')

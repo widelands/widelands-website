@@ -1,3 +1,4 @@
+{% autoescape off %}
 {% load i18n %}{% url 'wiki_changeset' article rev as diff_url %}{% url 'wiki_article' article as article_url %}{% blocktrans %}
 The article "{{ article }}" that you observe has been edited by {{ editor }}.
 Comment for this revision: "{{ rev_comment }}"
@@ -5,4 +6,4 @@ Comment for this revision: "{{ rev_comment }}"
 -------------------------
 A diff is available at: http://{{ current_site }}{{ diff_url }}
 Link to article: http://{{ current_site }}{{ article_url }}
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}

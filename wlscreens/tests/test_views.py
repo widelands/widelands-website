@@ -3,7 +3,7 @@
 #
 
 from django.test import TestCase as DjangoTest, Client
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 from wlscreens.models import *
 

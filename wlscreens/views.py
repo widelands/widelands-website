@@ -1,17 +1,16 @@
 # Create your views here.
 
 from models import Category, Screenshot
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.http import Http404
 
 
 def index(request):
     c = Category.objects.order_by('-name')
 
-    return render_to_response('wlscreens/index.html',
-                              {'categories': c, },
-                              RequestContext(request))
+    return render(request, 'wlscreens/index.html',
+                  {'categories': c, }
+                  )
 
 
 def category(request, category_slug):

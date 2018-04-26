@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # Google Diff Match Patch library
 # http://code.google.com/p/google-diff-match-patch
