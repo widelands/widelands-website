@@ -37,7 +37,7 @@ class OnlineNowMiddleware(MiddlewareMixin):
         online_now_ids = [int(k.replace('online-', '')) for k in fresh]
 
         # If the user is authenticated, add their id to the list
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             uid = request.user.id
             # If their uid is already in the list, we want to bump it
             # to the top, so we remove the earlier entry.

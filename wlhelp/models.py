@@ -8,6 +8,10 @@ class Tribe(models.Model):
     icon_url = models.CharField(max_length=256)
     network_pdf_url = models.CharField(max_length=256)
     network_gif_url = models.CharField(max_length=256)
+    
+    class Meta:
+        ordering = ['name']
+
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -30,6 +34,10 @@ class Worker(models.Model):
     becomes = models.OneToOneField(
         'self', related_name='trained_by_experience', blank=True, null=True)
 
+    class Meta:
+        ordering = ['name']
+
+
     def __unicode__(self):
         return u'%s' % self.name
 
@@ -46,9 +54,10 @@ class Ware(models.Model):
     # This limit shall probably cover the longest help (found 209, nothing
     # more)
     help = models.TextField(max_length=256)
-    
+
     class Meta:
         ordering = ['name']
+
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -138,6 +147,10 @@ class Building(models.Model):
         Ware, related_name='produced_by_buildings', blank=True)
     output_workers = models.ManyToManyField(
         Worker, related_name='trained_by_buildings', blank=True)
+    
+    class Meta:
+        ordering = ['name']
+
 
     def save(self, *args, **kwargs):
 
