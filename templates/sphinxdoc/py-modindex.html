@@ -2,30 +2,21 @@
 
 {% block doc_body %}
     <h1>Module Index</h1>
-    <dl>
-    {% for c in doc.content.0.1 %}
-        {# Unpacking a list like here does not work with Django 1.11 #}
-        {#{% for modul, level, fname, mainmod, unknown1, unknown2, descr in c %}#}
-            {% if c.1 < 2 %}
-            <dt><a href="../{{ c.2 }}">{{ c.0 }}</a></dt>
-            <dd>{{ c.6 }}
+    <dl> 
+    {% for c in doc.content %}
+        {% for modul, level, fname, mainmod, unknown1, unknown2, descr in c.1 %}
+            {% if level < 2 %}
+            <dt><a href="../{{ fname }}">{{ modul }}</a></dt>
+            <dd>{{ descr }}
             {% else %}
                 <dl>
-                    <dt><a href="../{{ c.2 }}">{{ c.0 }}</a></dt>
-                    <dd>{{ c.6 }}</dd>
+                    <dt><a href="../{{ fname }}">{{ modul }}</a></dt>
+                    <dd>{{ descr }}</dd>
                 </dl>
-            
             {% endif %}
-        {#{% endfor %}#}
+        {% endfor %}
         </dd>
     {% endfor %}
-    
-    {% comment %}
-    {% for modname, collapse, cgroup, indent, fname, synops, pform, dep in doc.content.0 %}
-        <dt><a href="{{ fname }}"><tt class="literal xref">{{ modname }}</tt></a></dt>
-        <dd>{{ synops }}</dd>
-    {% endfor %}
-    {% endcomment %}
     </dl>
     <br />
 {% endblock doc_body %}
