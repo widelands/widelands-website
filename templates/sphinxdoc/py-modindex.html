@@ -2,12 +2,9 @@
 
 {% block doc_body %}
     <h1>Module Index</h1>
-    {% for index in doc.content.0.items %}
-    <p>index: {{index}}</p>
-{% endfor %}
-    <dl>
-    {% for c in doc.content.0 %}
-        {% for modul, level, fname, mainmod, unknown1, unknown2, descr in c %}
+    <dl> 
+    {% for c in doc.content %}
+        {% for modul, level, fname, mainmod, unknown1, unknown2, descr in c.1 %}
             {% if level < 2 %}
             <dt><a href="../{{ fname }}">{{ modul }}</a></dt>
             <dd>{{ descr }}
@@ -16,18 +13,10 @@
                     <dt><a href="../{{ fname }}">{{ modul }}</a></dt>
                     <dd>{{ descr }}</dd>
                 </dl>
-            
             {% endif %}
         {% endfor %}
         </dd>
     {% endfor %}
-    
-    {% comment %}
-    {% for modname, collapse, cgroup, indent, fname, synops, pform, dep in doc.content.0 %}
-        <dt><a href="{{ fname }}"><tt class="literal xref">{{ modname }}</tt></a></dt>
-        <dd>{{ synops }}</dd>
-    {% endfor %}
-    {% endcomment %}
     </dl>
     <br />
 {% endblock doc_body %}
