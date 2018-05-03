@@ -10,7 +10,6 @@
 {% load i18n %}
 {% load wlprofile_extras wlpoll_extras wlevents_extras %}
 {% load pybb_extras %}
-{% load online_users %}
 
 <!-- Donation Box -->
 <div class="columnModule">
@@ -109,7 +108,18 @@
 
 
 <!-- Logged in users -->
-{% online_users 10 %}
+{% if request.online_now %}
+<div class="columnModule">
+	<h3>Currently Online</h3>
+	<div class="columnModuleBox">
+		<ul class="player">
+			{% for user in request.online_now|slice:":10" %}
+			<li><a href="{% url 'profile_view' user %}">{{ user.username }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endif %}
 
 <!-- Latest Post -->
 {% pybb_last_posts %}

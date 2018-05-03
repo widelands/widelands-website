@@ -8,8 +8,7 @@ except ImportError:
 from django.db import models
 from django.db.models.query import QuerySet
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.template import Context
+from django.urls import reverse
 from django.template.loader import render_to_string
 
 from django.core.exceptions import ImproperlyConfigured
@@ -132,7 +131,7 @@ class NoticeQueueBatch(models.Model):
 def create_notice_type(label, display, description, default=2, verbosity=1):
     """Creates a new NoticeType.
 
-    This is intended to be used by other apps as a post_syncdb
+    This is intended to be used by other apps as a post_migrate
     manangement step.
 
     """
@@ -186,15 +185,14 @@ def get_formatted_messages(formats, label, context):
 
     """
     format_templates = {}
+
     for format in formats:
-        # conditionally turn off autoescaping for .txt extensions in format
-        if format.endswith('.txt'):
-            context.autoescape = False
-        else:
-            context.autoescape = True
+        # Switch off escaping for .txt templates was done here, but now it
+        # resides in the templates
         format_templates[format] = render_to_string((
             'notification/%s/%s' % (label, format),
-            'notification/%s' % format), context_instance=context)
+            'notification/%s' % format), context)
+
     return format_templates
 
 
@@ -232,8 +230,8 @@ def send_now(users, label, extra_context=None, on_site=True):
         current_language = get_language()
 
         formats = (
-            'short.txt',
-            'full.txt',
+            'short.txt', # used for subject
+            'full.txt',  # used for email body
         )  # TODO make formats configurable
 
         for user in users:
@@ -250,22 +248,20 @@ def send_now(users, label, extra_context=None, on_site=True):
                 activate(language)
 
             # update context with user specific translations
-            context = Context({
+            context = {
                 'user': user,
-                'notices_url': notices_url,
                 'current_site': current_site,
-                'subject': notice_type.display,
-                'description': notice_type.description,
-            })
+                'subject': notice_type.display
+            }
             context.update(extra_context)
 
-            # get prerendered format messages
+            # get prerendered format messages and subjects
             messages = get_formatted_messages(formats, label, context)
-
-            # Strip newlines from subject
-            subject = ''.join(render_to_string('notification/email_subject.txt', {
-                'message': messages['short.txt'],
-            }, context).splitlines())
+            
+            # Create the subject
+            # Use 'email_subject.txt' to add Strings in every emails subject
+            subject = render_to_string('notification/email_subject.txt',
+                                       {'message': messages['short.txt'],}).replace('\n', '')
             
             # Strip leading newlines. Make writing the email templates easier:
             # Each linebreak in the templates results in a linebreak in the emails
@@ -273,12 +269,14 @@ def send_now(users, label, extra_context=None, on_site=True):
             # email will contain an empty line at the top.
             body = render_to_string('notification/email_body.txt', {
                 'message': messages['full.txt'],
-            }, context).lstrip()
+                'notices_url': notices_url,
+            }).lstrip()
 
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
-            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
 
+            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
+        
         # reset environment to original language
         activate(current_language)
     except NoticeType.DoesNotExist:

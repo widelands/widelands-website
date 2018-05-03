@@ -10,7 +10,7 @@ Compose - {{ block.super }}
 <script>
 	$(function() {
 	$( "#id_recipient" ).autocomplete({
-		source: {% all_users %},
+		source: '/messages/django_messages_wl/get_usernames/',
 		minLength: 3,
 		});
 });

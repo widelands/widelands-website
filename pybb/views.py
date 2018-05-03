@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render
@@ -88,7 +88,7 @@ def show_topic_ctx(request, topic_id):
     topic.views += 1
     topic.save()
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         topic.update_read(request.user)
 
     if pybb_settings.FREEZE_FIRST_POST:
@@ -98,13 +98,13 @@ def show_topic_ctx(request, topic_id):
     last_post = topic.posts.order_by('-created')[0]
 
     initial = {}
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         initial = {'markup': 'markdown'}
     form = AddPostForm(topic=topic, initial=initial)
 
     moderator = (request.user.is_superuser or
                  request.user in topic.forum.moderators.all())
-    subscribed = (request.user.is_authenticated() and
+    subscribed = (request.user.is_authenticated and
                   request.user in topic.subscribers.all())
 
     posts = topic.posts.exclude(hidden=True).select_related()

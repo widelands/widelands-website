@@ -48,7 +48,7 @@ urlpatterns = [
     url('^api/post_ajax_preview/$', views.post_ajax_preview,
         name='pybb_post_ajax_preview'),
 
-    # Subsciption
+    # Subscription
     url('^topic/(?P<topic_id>\d+)/subscribe/$',
         views.add_subscription, name='pybb_add_subscription'),
     url('^topic/(?P<topic_id>\d+)/unsubscribe/$',

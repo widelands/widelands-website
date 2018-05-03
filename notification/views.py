@@ -1,5 +1,4 @@
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from collections import OrderedDict
 from notification.models import *
@@ -28,7 +27,7 @@ def notice_settings(request):
 
         app_tables[app].append({'notice_type': notice_type, 'html_values': checkbox_values})
 
-    return render_to_response('notification/notice_settings.html', {
+    return render(request, 'notification/notice_settings.html', {
         'column_headers': [medium_display for medium_id, medium_display in NOTICE_MEDIA],
         'app_tables': OrderedDict(sorted(app_tables.items(), key=lambda t: t[0]))
-    }, context_instance=RequestContext(request))
+    })

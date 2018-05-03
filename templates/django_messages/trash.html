@@ -34,11 +34,11 @@ Trash - {{ block.super }}
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
 					{% if message.sender == request.user %}
-					<a href="{% url 'django_messages.views.undelete' message.id %}?next=/messages/outbox/">
+					<a href="{% url 'messages_undelete' message.id %}?next=/messages/outbox/">
 						<img src="{{ MEDIA_URL }}img/undelete.png" alt="undelete" title="undelete" />
 					</a>
 					{% else %}
-					<a href="{% url 'django_messages.views.undelete' message.id %}?next=/messages/inbox/">
+					<a href="{% url 'messages_undelete' message.id %}?next=/messages/inbox/">
 						<img src="{{ MEDIA_URL }}img/undelete.png" alt="undelete" title="undelete" />
 					</a>
 					{% endif %}

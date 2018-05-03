@@ -5,10 +5,10 @@ from datetime import datetime
 from django.conf import settings
 from django.core.cache import cache
 from django.template import RequestContext
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import (Http404, HttpResponseRedirect,
                          HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
-from django.shortcuts import get_object_or_404, render_to_response, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from wiki.forms import ArticleForm
@@ -155,9 +155,8 @@ def article_list(request,
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render_to_response('/'.join([template_dir, template_name]),
-                                  template_params,
-                                  context_instance=RequestContext(request))
+        return render(request, '/'.join([template_dir, template_name]),
+                                  template_params,)
     return HttpResponseNotAllowed(['GET'])
 
 
@@ -224,9 +223,8 @@ def view_article(request, title, revision=None,
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render_to_response('/'.join([template_dir, template_name]),
-                                  template_params,
-                                  context_instance=RequestContext(request))
+        return render(request, '/'.join([template_dir, template_name]),
+                                  template_params,)
     return HttpResponseNotAllowed(['GET'])
 
 
@@ -279,7 +277,7 @@ def edit_article(request, title,
         form.cache_old_content()
         if form.is_valid():
 
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 form.editor = request.user
 
             if ((article is None) and (group_slug is not None)):
@@ -337,9 +335,8 @@ def edit_article(request, title,
     if extra_context is not None:
         template_params.update(extra_context)
 
-    return render_to_response('/'.join([template_dir, template_name]),
-                              template_params,
-                              context_instance=RequestContext(request))
+    return render(request, '/'.join([template_dir, template_name]),
+                              template_params,)
 
 
 def view_changeset(request, title, revision,
@@ -403,9 +400,8 @@ def view_changeset(request, title, revision,
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render_to_response('/'.join([template_dir, template_name]),
-                                  template_params,
-                                  context_instance=RequestContext(request))
+        return render(request, '/'.join([template_dir, template_name]),
+                                  template_params,)
     return HttpResponseNotAllowed(['GET'])
 
 
@@ -449,9 +445,8 @@ def article_history(request, title,
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render_to_response('/'.join([template_dir, template_name]),
-                                  template_params,
-                                  context_instance=RequestContext(request))
+        return render(request, '/'.join([template_dir, template_name]),
+                                  template_params,)
 
     return HttpResponseNotAllowed(['GET'])
 
@@ -497,7 +492,7 @@ def revert_to_revision(request, title,
             art = Article.objects.exclude(pk=article.pk).get(title=old_title)
         except Article.DoesNotExist:
             # No existing article found -> reverting possible
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 article.revert_to(revision, get_real_ip(request), request.user)
             else:
                 article.revert_to(revision, get_real_ip(request))
@@ -541,9 +536,8 @@ def history(request,
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render_to_response('/'.join([template_dir, template_name]),
-                                  template_params,
-                                  context_instance=RequestContext(request))
+        return render(request, '/'.join([template_dir, template_name]),
+                                  template_params,)
     return HttpResponseNotAllowed(['GET'])
 
 
@@ -680,6 +674,5 @@ def backlinks(request, title):
     context = {'found_links': found_links,
                'found_old_links': found_old_links,
                'name': title}
-    return render_to_response('wiki/backlinks.html',
-                              context,
-                              context_instance=RequestContext(request))
+    return render(request, 'wiki/backlinks.html',
+                              context,)

@@ -1,23 +1,23 @@
 from django.conf.urls import *
 from django.conf import settings
+from django.views.static import serve
 from os import path
+
 # Don't use this file on the server!
 
-if settings.DEBUG:
-    # This urls should never be used in production!
 
-    local_urlpatterns = [
-        url(r'^wlmedia/(?P<path>.*)$',
-            'django.views.static.serve',
-            {'document_root': settings.STATIC_MEDIA_PATH},
-            name='static_media'),
-        url(r'^media/(?P<path>.*)$',
-            'django.views.static.serve',
-            {'document_root': settings.STATIC_MEDIA_PATH},
-            name='static_media_pybb'),
-        url(r'^documentation/(?P<path>.*)$',
-            'django.views.static.serve',
-            {'document_root': path.join(
-                settings.STATIC_MEDIA_PATH, 'documentation/html')},
-            name='documentation')
-    ]
+local_urlpatterns = [
+   url(r'^wlmedia/(?P<path>.*)$',
+       serve,
+       {'document_root': settings.STATIC_MEDIA_PATH},
+       name='static_media'),
+   url(r'^media/(?P<path>.*)$',
+       serve,
+       {'document_root': settings.STATIC_MEDIA_PATH},
+       name='static_media_pybb'),
+   url(r'^documentation/(?P<path>.*)$',
+       serve,
+       {'document_root': path.join(
+         settings.STATIC_MEDIA_PATH, 'documentation/html')},
+       name='documentation')
+]
