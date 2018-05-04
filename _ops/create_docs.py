@@ -33,99 +33,98 @@ def get_local_settings():
     else:
         f.close()
 
+    global SPHINX_DIR, BUILD_DIR
+    SPHINX_DIR = os.path.join(settings.WIDELANDS_SVN_DIR, 'doc/sphinx')
+    BUILD_DIR = os.path.join(settings.MEDIA_ROOT, 'documentation/html_temp')
+
     return settings
 
 
-def move_docs(settings, SPHINX_DIR):
-    """Move the documentation created by sphinxdoc to the media folder.
+def move_docs(settings):
+    """Move the documentation created by sphinxdoc to the right folder.
 
-    The server will serve the files from the symlink
-    'MEDIA/documentation/docs_html'. To have always a valid url between
-    the copy process, the link points intermediately to
-    doc/sphinx/build/html of the SVN repo.
+    On unix systems the files were served from the symlink
+    'settings.MEDIA/documentation/html'. On Windows systems the files
+    will only be copied in to that folder.
 
     """
-
-    TARGET_DIR = os.path.join(settings.MEDIA_ROOT, 'documentation/html')
 
     if os.name == 'posix':
         try:
             # Creating symlinks is only available on unix systems
-            LINK_NAME = os.path.join(
-                settings.MEDIA_ROOT, 'documentation/docs_html')
-            SPHINX_BUILD_DIR = os.path.join(SPHINX_DIR, 'build/html')
+            link_name = os.path.join(
+                settings.MEDIA_ROOT, 'documentation/html')
+            target_dir = os.path.join(
+                settings.MEDIA_ROOT, 'documentation/current')
 
-            if not os.path.exists(TARGET_DIR):
+            if not os.path.exists(target_dir):
                 # only needed on first run
-                os.mkdir(TARGET_DIR)
+                os.mkdir(target_dir)
 
-            if os.path.exists(LINK_NAME):
+            if os.path.exists(link_name):
                 # only needed if this script has already run
-                os.remove(LINK_NAME)
+                os.remove(link_name)
 
-            os.symlink(SPHINX_BUILD_DIR, LINK_NAME)
-            shutil.rmtree(TARGET_DIR)
-            shutil.copytree(SPHINX_BUILD_DIR, TARGET_DIR)
-            os.remove(LINK_NAME)
-            os.symlink(TARGET_DIR, LINK_NAME)
+            # Temporarily switch the symlink
+            os.symlink(BUILD_DIR, link_name)
+            # Remove current
+            shutil.rmtree(target_dir)
+            # Copy new build to current
+            shutil.copytree(BUILD_DIR, target_dir)
+            # Switch the link to current
+            os.remove(link_name)
+            os.symlink(target_dir, link_name)
         except:
             raise
     else:
         # Non unix OS: Copy docs
-        shutil.rmtree(TARGET_DIR)
-        shutil.copytree(os.path.join(SPHINX_DIR, 'build/html'),
-                        TARGET_DIR)
+        try:
+            target_dir = os.path.join(
+                settings.MEDIA_ROOT, 'documentation/html')
+            if os.path.exists(target_dir):
+                shutil.rmtree(target_dir)
+            shutil.copytree(BUILD_DIR, target_dir)
+        except:
+            raise
+
+    # The newly created directory is no longer needed
+    shutil.rmtree(BUILD_DIR)
 
 
 def create_sphinxdoc():
     """Create the widelands source code documentation.
 
-    Or renew the documenation.
+    The Documenatation is build by sphinxdoc directly in the directory
+    'settings/MEDIA/documentation/html_temp'
 
     """
 
     settings = get_local_settings()
-    SPHINX_DIR = os.path.join(settings.WIDELANDS_SVN_DIR, 'doc/sphinx')
 
     if not os.path.exists(SPHINX_DIR):
         print("Can't find the directory given by WIDELANDS_SVN_DIR in local_settings.py:\n", SPHINX_DIR)
         sys.exit(1)
 
-    if os.path.exists(os.path.join(SPHINX_DIR, 'build')):
-
-        # Clean build/html directory
-        shutil.rmtree(os.path.join(SPHINX_DIR, 'build'))
-
-        # Clean also the autogen* files created by extract_rst.py
-        # This has to be done because sometimes such a file remains after
-        # removing it from extract_rst. sphinx-build throughs an error then.
-        try:
-            for f in glob.glob(os.path.join(SPHINX_DIR, 'source/autogen*')):
-                os.remove(f)
-        except OSError:
-            raise
-
     # Locally 'dirhtml' do not work because the staticfiles view disallow
     # directory indexes, but 'dirhtml' gives nicer addresses in production
-    BUILDER = 'html'
+    builder = 'html'
     if hasattr(settings, 'DEBUG'):
-        # In production we use DEBUG=False from settings.py
-        BUILDER = 'dirhtml'
+        # In production local_settings.py has no DEBUG statement
+        builder = 'dirhtml'
 
     try:
         check_call(['python', os.path.join(SPHINX_DIR, 'extract_rst.py')])
         check_call(['sphinx-build',
-                    '-b', BUILDER,
+                    '-b', builder,
                     '-d', os.path.join(SPHINX_DIR, 'build/doctrees'),
                     os.path.join(SPHINX_DIR, 'source'),
-                    os.path.join(SPHINX_DIR, 'build/html')
+                    os.path.join(BUILD_DIR),
                     ])
     except CalledProcessError as why:
-        print("Coulnd't find path %s as defined in local_settings.py! " %
-              SPHINX_DIR, why)
+        print('An error occured: {0}'.format(why))
         sys.exit(1)
 
-    move_docs(settings, SPHINX_DIR)
+    move_docs(settings)
 
 if __name__ == '__main__':
     try:
