@@ -15,7 +15,10 @@ def get_online_now(self):
 
 @receiver(user_logged_out)
 def logout(sender, **kwargs):
-    cache.delete('online-%s' % kwargs['user'].id)
+    try:
+        cache.delete('online-%s' % kwargs['user'].id)
+    except KeyError:
+        pass
 
 
 class OnlineNowMiddleware(MiddlewareMixin):
