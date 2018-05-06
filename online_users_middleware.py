@@ -17,7 +17,7 @@ def get_online_now(self):
 def logout(sender, **kwargs):
     try:
         cache.delete('online-%s' % kwargs['user'].id)
-    except KeyError:
+    except AttributeError:
         pass
 
 
