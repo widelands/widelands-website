@@ -39,7 +39,6 @@ DATABASES = {
    }
 }
 
-
 # The following are just dummy values, but needed defined
 # To use the registration you have to create an API key pair
 # See https://developers.google.com/recaptcha/docs/start
@@ -60,6 +59,19 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ANTI_SPAM_KWRDS = ['spam']
 ANTI_SPAM_PHONE_NR = re.compile('\d{8,16}')
 MAX_HIDDEN_POSTS = 5
+
+#######################
+#  Optional settings  #
+#######################
+
+# Set a Database cache. You won't need this for development or testing locally.
+# If you want to use this, run ./manage.py createcachetable after uncommenting.
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'wl_cache',
+#     }
+# }
 
 # Uncomment 'LOGGING = {...}' for debugging purposes when you have set DEBUG=False.
 # Use then in the code:

@@ -15,7 +15,10 @@ def get_online_now(self):
 
 @receiver(user_logged_out)
 def logout(sender, **kwargs):
-    cache.delete('online-%s' % kwargs['user'].id)
+    try:
+        cache.delete('online-%s' % kwargs['user'].id)
+    except AttributeError:
+        pass
 
 
 class OnlineNowMiddleware(MiddlewareMixin):
@@ -37,7 +40,7 @@ class OnlineNowMiddleware(MiddlewareMixin):
         online_now_ids = [int(k.replace('online-', '')) for k in fresh]
 
         # If the user is authenticated, add their id to the list
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             uid = request.user.id
             # If their uid is already in the list, we want to bump it
             # to the top, so we remove the earlier entry.
