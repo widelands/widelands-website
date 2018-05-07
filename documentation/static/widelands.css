@@ -1,0 +1,258 @@
+/*
+ * classic.css_t
+ * ~~~~~~~~~~~~~
+ *
+ * Sphinx stylesheet -- classic theme.
+ *
+ * :copyright: Copyright 2007-2018 by the Sphinx team, see AUTHORS.
+ * :license: BSD, see LICENSE for details.
+ *
+ */
+/* This was adjusted by the widelands development team to fit with the
+ * widelands website style.
+ */
+
+/* -- page layout ----------------------------------------------------------- */
+
+body {
+   font-family: sans-serif;
+   font-size: 100%;
+   background-image: url("parchment.png");
+   color: #ffffff;
+   margin: 0;
+   padding: 0;
+}
+
+div.documentwrapper {
+   float: left;
+   width: 100%;
+}
+
+div.bodywrapper {
+   margin: 0 0 0 230px;
+}
+
+div.body {
+   background-image: url("but1.png");
+   background-color: #000000;
+   padding: 0 20px 30px 20px;
+}
+
+div.footer {
+   color: #181;
+   width: 100%;
+   padding: 9px 0 9px 0;
+   text-align: center;
+   font-size: 75%;
+}
+
+div.footer a {
+   color: #181;
+}
+
+div.related {
+   background-color: #000000;
+   background-image: url("wood.png");
+   line-height: 30px;
+}
+
+div.related a {
+   font-weight: bold;
+   color: rgba(254, 234, 138, 1);
+}
+
+div.sphinxsidebar {
+   color: #0d440d;
+}
+
+div.sphinxsidebar h3 {
+   font-family: 'Trebuchet MS', sans-serif;
+   font-size: 1.4em;
+   margin: 0;
+   padding: 0;
+}
+
+div.sphinxsidebar h3 a {
+   border-bottom: 1px solid #0d440d;
+}
+
+div.sphinxsidebar h4 {
+   font-family: 'Trebuchet MS', sans-serif;
+   font-size: 1.3em;
+   margin: 5px 0 0 0;
+   padding: 0;
+}
+
+div.sphinxsidebar p.topless {
+   margin: 5px 10px 10px 10px;
+}
+
+div.sphinxsidebar ul {
+   padding: 0;
+}
+div.sphinxsidebar ul.this-page-menu {
+   margin: 5px 10px 10px 10px;
+}
+div.sphinxsidebar a {
+   color: #0d440d;
+}
+
+div.sphinxsidebar a:hover {
+   text-decoration: underline;
+}
+
+div.sphinxsidebar input {
+   font-family: sans-serif;
+   font-size: 1em;
+}
+
+/* -- hyperlink styles ------------------------------------------------------ */
+
+a {
+   color: rgba(254, 234, 138, 1);
+   text-decoration: none;
+}
+
+a:visited {
+   color: #C8BE93;
+   text-decoration: none;
+}
+
+a:hover {
+   color: #181;
+}
+
+/* -- body styles ----------------------------------------------------------- */
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4,
+div.body h5,
+div.body h6 {
+   font-family: 'Trebuchet MS', sans-serif;
+   background-image: url("black20.png");
+   font-weight: normal;
+   color: #181;
+   border-bottom: 1px solid #C8BE93;
+   margin: 20px -20px 10px -20px;
+   padding: 3px 0 3px 10px;
+}
+
+div.body h1 { 
+   margin-top: 0; 
+}
+
+a.headerlink {
+   color: #181;
+   font-size: 0.8em;
+   padding: 0 4px 0 4px;
+   text-decoration: none;
+}
+
+a.headerlink:hover {
+   background-color: #181;
+   color: white;
+}
+
+div.body p, div.body dd, div.body li, div.body blockquote {
+   line-height: 130%;
+   /*margin: 0;*/
+}
+
+div.admonition p.admonition-title + p {
+   display: inline;
+}
+
+div.admonition p {
+   margin-bottom: 5px;
+}
+
+div.admonition pre {
+   margin-bottom: 5px;
+}
+
+div.admonition ul, div.admonition ol {
+   margin-bottom: 5px;
+}
+
+div.note {
+    border: 1px solid #ccc;
+}
+
+div.seealso {
+   background-color: #ffc;
+   border: 1px solid #ff6;
+}
+
+div.topic {
+   background-color: #eee;
+}
+
+div.warning {
+   background-color: #ffe4e4;
+   border: 1px solid #f66;
+}
+
+p.admonition-title {
+   display: inline;
+}
+
+p.admonition-title:after {
+   content: ":";
+}
+
+pre {
+   padding: 5px;
+   margin-left: 1em;
+   /*line-height: 120%;*/
+   background-image: url("black20.png");
+   border-left: none;
+   border-right: none;
+}
+
+div.body code .pre {
+   background-image: url("black20.png");
+   padding: 0 1px 0 1px;
+}
+
+th {
+   background-image: url("black20.png");
+}
+
+.warning code {
+   background: #efc2c2;
+}
+
+/*.note code {
+   background: #d6d6d6;
+}*/
+
+.viewcode-back {
+   font-family: sans-serif;
+}
+
+div.viewcode-block:target {
+   background-color: #f4debf;
+   border-top: 1px solid #ac9;
+   border-bottom: 1px solid #ac9;
+}
+
+div.code-block-caption {
+   color: #efefef;
+   background-color: #1c4e63;
+}
+
+
+/* Overwritten classes from basic.css */
+code.descname {
+   color: #181;
+   font-size: larger;
+   padding-right: 0.5em;
+}
+
+table.indextable tr.cap {
+  margin-top: 10px;
+  background-image: url("black20.png");
+}
+
