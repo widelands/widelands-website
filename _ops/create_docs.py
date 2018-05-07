@@ -104,6 +104,17 @@ def create_sphinxdoc():
         print("Can't find the directory given by WIDELANDS_SVN_DIR in local_settings.py:\n", SPHINX_DIR)
         sys.exit(1)
 
+    if os.path.exists(os.path.join(SPHINX_DIR, 'build')):
+
+        # Clean the autogen* files created by extract_rst.py
+        # This has to be done because sometimes such a file remains after
+        # removing it from extract_rst. sphinx-build throughs an error then.
+        try:
+            for f in glob.glob(os.path.join(SPHINX_DIR, 'source/autogen*')):
+                os.remove(f)
+        except OSError:
+            raise
+
     # Locally 'dirhtml' do not work because the staticfiles view disallow
     # directory indexes, but 'dirhtml' gives nicer addresses in production
     builder = 'html'
@@ -116,6 +127,7 @@ def create_sphinxdoc():
         check_call(['sphinx-build',
                     '-b', builder,
                     '-d', os.path.join(SPHINX_DIR, 'build/doctrees'),
+                    '-c', os.path.join(BUILD_DIR, '../../../documentation'),
                     os.path.join(SPHINX_DIR, 'source'),
                     os.path.join(BUILD_DIR),
                     ])
