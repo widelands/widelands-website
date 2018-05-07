@@ -3,9 +3,8 @@
 
 """Create the source code documenation.
 
-This script covers all needed steps to create or recreate the documentation.
-A recreating is done if the documentation was already build (the directory
-'build' exists)
+This script covers all needed steps to create or recreate the widelands
+source code documentation.
 
 Needed dependency: Sphinx
 
@@ -41,11 +40,11 @@ def get_local_settings():
 
 
 def move_docs(settings):
-    """Move the documentation created by sphinxdoc to the right folder.
+    """Move the documentation created by sphinxdoc to the correct folder.
 
-    On unix systems the files were served from the symlink
-    'settings.MEDIA/documentation/html'. On Windows systems the files
-    will only be copied in to that folder.
+    On unix systems the files were served from the symlink called
+    'html'. On Windows systems the files will only be copied in a folder
+    called 'html'.
 
     """
 
@@ -95,7 +94,7 @@ def create_sphinxdoc():
     """Create the widelands source code documentation.
 
     The Documenatation is build by sphinxdoc directly in the directory
-    'settings/MEDIA/documentation/html_temp'
+    'settings/MEDIA/documentation/html_temp'.
 
     """
 
