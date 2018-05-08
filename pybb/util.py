@@ -5,8 +5,7 @@ import json
 
 from BeautifulSoup import BeautifulSoup
 from datetime import datetime
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.functional import Promise
 from django.utils.translation import check_for_language
@@ -32,7 +31,7 @@ def render_to(template_path):
             output = func(request, *args, **kwargs)
             if not isinstance(output, dict):
                 return output
-            kwargs = {'context_instance': RequestContext(request)}
+            
 
             # TODO(Franku): 'MIME_TYPE' is never in output as i can see for now.
             # But if, this should maybe 'content_type' instead
@@ -43,7 +42,7 @@ def render_to(template_path):
             else:
                 template = template_path
 
-            return render_to_response(template, output, **kwargs)
+            return render(request, template, output)
         return wrapper
 
     return decorator

@@ -11,7 +11,7 @@
 
 from django.utils.translation import ugettext as _
 from django import template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
@@ -131,7 +131,7 @@ def do_custom_date(format, date, timezone, now=None):
 def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
     a sane default."""
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return do_custom_date(DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE))
     try:
         userprofile = User.objects.get(username=user).wlprofile

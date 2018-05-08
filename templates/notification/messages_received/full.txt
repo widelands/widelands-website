@@ -1,3 +1,4 @@
+{% autoescape off %}
 {% load i18n %}{% blocktrans with message.sender as message_sender and message.body|safe as message_body and message.get_absolute_url as message_url and message.id as message_id %}{{ message_sender }} has sent you a message:
 
 {{ message }}
@@ -6,4 +7,4 @@
 
 -------------------------
 Link to Message: http://{{ current_site }}{{ message_url }}
-Reply directly: http://{{ current_site }}/messages/reply/{{ message_id }}/{% endblocktrans %}
+Reply directly: http://{{ current_site }}/messages/reply/{{ message_id }}/{% endblocktrans %}{% endautoescape %}

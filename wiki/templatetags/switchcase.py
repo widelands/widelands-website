@@ -72,8 +72,8 @@ class SwitchNode(template.Node):
         # Resolve the value; if it's a non-existant variable don't even bother
         # checking the values of the cases since they'll never match.
         try:
-            value = template.resolve_variable(self.value, context)
-        except VariableDoesNotExist:
+            value = template.Variable(self.value).resolve(context)
+        except template.VariableDoesNotExist:
             return ''
 
         # Check each case, and if it matches return the rendered content
@@ -99,8 +99,8 @@ class CaseNode(template.Node):
 
         """
         try:
-            return template.resolve_variable(self.value, context) == otherval
-        except VariableDoesNotExist:
+            return template.Variable(self.value).resolve(context) == otherval
+        except template.VariableDoesNotExist:
             # If the variable doesn't exist, it doesn't equal anything.
             return False
 

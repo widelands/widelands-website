@@ -28,13 +28,6 @@ class AddPostForm(forms.ModelForm):
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
-        # TODO(Franku): This doesn't work anymore with django 1.8 Use 'field_order'
-        # with django 1.9
-        self.fields.keyOrder = ['name',
-                                'body',
-                                'markup',
-                                'attachment']
-
         if self.topic:
             self.fields['name'].widget = forms.HiddenInput()
             self.fields['name'].required = False

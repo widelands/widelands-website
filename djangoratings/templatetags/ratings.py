@@ -20,8 +20,8 @@ class RatingByRequestNode(template.Node):
 
     def render(self, context):
         try:
-            request = template.resolve_variable(self.request, context)
-            obj = template.resolve_variable(self.obj, context)
+            request = django.template.Variable(self.request).resolve(context)
+            obj = django.template.Variable(self.obj).resolve(context)
             field = getattr(obj, self.field_name)
         except (template.VariableDoesNotExist, AttributeError):
             return ''
@@ -63,8 +63,8 @@ class RatingByUserNode(RatingByRequestNode):
 
     def render(self, context):
         try:
-            user = template.resolve_variable(self.request, context)
-            obj = template.resolve_variable(self.obj, context)
+            user = django.template.Variable(self.request).resolve(context)
+            obj = django.template.Variable(self.obj).resolve(context)
             field = getattr(obj, self.field_name)
         except template.VariableDoesNotExist:
             return ''

@@ -1,3 +1,4 @@
+{% autoescape off %}
 {% load i18n %}A new forum post was added to the topic "{{ topic }}":
 
 "{{ user }}" wrote:
@@ -7,4 +8,4 @@
 -------------------------
 Link to post: http://{{ current_site }}{{ post_url }}
 Link to topic: http://{{ current_site }}{{ topic_url }}
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}

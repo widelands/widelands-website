@@ -30,7 +30,7 @@
 	<table class="maps">
 		{% for map in object_list %}
 		<tr class="{% cycle "odd" "even" %}">
-			<td class="first-column"><a href="{{ map.get_absolute_url }}"><img class="minimap" src="{{ MEDIA_URL }}{{ map.minimap.url }}" alt="{{ map.name }}" /></a></td>
+			<td class="first-column"><a href="{{ map.get_absolute_url }}"><img class="minimap" src="{{ MEDIA_URL }}{{ map.minimap }}" alt="{{ map.name }}" /></a></td>
 			<td>
 				<h3><a class="invertedColor" href="{{ map.get_absolute_url }}">{{ map.name }}</a></h3>
 				<table>

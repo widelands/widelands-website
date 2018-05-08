@@ -1,15 +1,15 @@
 # Python requirements for widelands-website at 22.06.2017
 
 BeautifulSoup==3.2.0
-Django==1.8
+Django==1.11.12
 django-contrib-comments==1.8.0
-django-haystack==2.6.1
+django-haystack==2.8.1
 # django-messages is very old on pypi
 # Do not install newer versions because our notifications app is affected
 -e git://github.com/arneb/django-messages.git@2d8dabb755e0b5ace876bde25f45d07c2051ac37#egg=django_messages
 django-nocaptcha-recaptcha==0.0.19
--e git://github.com/zyga/django-pagination.git#egg=linaro_django_pagination
-django-registration==2.2
+dj-pagination==2.3.2
+django-registration==2.4.1
 django-tagging==0.4.5
 gunicorn==19.7.1
 Markdown==2.6.8

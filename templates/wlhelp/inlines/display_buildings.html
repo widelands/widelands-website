@@ -1,11 +1,11 @@
 <table class="help">
 	<caption style="text-align: left">{{ header }}</caption>
 	<tr>
-		<th style="width: 113px">Building</th>
-		<th style="width: 50%">Description</th>
-		<th>Build cost</th>
-		<th>Produces</th>
-		<th>Stores</th>
+		<th style="width: 10em;">Building</th>
+		<th>Description</th>
+		<th style="width: 6em;">Build cost</th>
+		<th style="width: 6em;">Produces</th>
+		<th style="width: 6em;">Stores</th>
 	</tr>
 {% for b in buildings %}
 	<tr class="{% cycle "odd" "even" %} type-{{ b.type }}" id="{{ b.name }}">
@@ -31,10 +31,13 @@
 		</td>
 		<td> {# Build cost #}
 			{% for costs in b.get_build_cost %}
-				{% for w in costs %}
-				<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="Show economy graph for {{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
-				{% endfor %}
-			<br />
+				<div>
+				{% with costs.0 as w %}
+					<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="Show economy graph for {{w.displayname}}">
+						{{ costs|length }} x <img src="{{ w.image_url }}" alt="{{ w.name }}" />
+				</a>
+				{% endwith %}
+				</div>
 			{% endfor %}
 		</td>
 		<td> {# Produces #}
@@ -51,10 +54,13 @@
 		</td>
 		<td> {## Stored wares #}
 			{% for costs in b.get_stored_wares %}
-				{% for w in costs %}
-				<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="Show economy graph for {{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
-				{% endfor %}
-			<br />
+				<div>
+				{% with costs.0 as w %}
+					<a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="Show economy graph for {{w.displayname}}">
+						{{ costs|length }} x <img src="{{ w.image_url }}" alt="{{ w.name }}" />
+					</a>
+				{% endwith %}
+				</div>
 			{% endfor %}
 		</td>
 	</tr>

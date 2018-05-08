@@ -1,14 +1,14 @@
 from django.conf.urls import *
 from django.conf import settings
-
+from django.views.static import serve
 
 local_urlpatterns = [
    url(r'^wlmedia/(?P<path>.*)$',
-       'django.views.static.serve',
+       serve,
        {'document_root': settings.STATIC_MEDIA_PATH},
        name='static_media'),
    url(r'^media/(?P<path>.*)$',
-       'django.views.static.serve',
+       serve,
        {'document_root': settings.STATIC_MEDIA_PATH},
        name='static_media_pybb'),
 ]

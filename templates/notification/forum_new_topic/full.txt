@@ -1,9 +1,9 @@
+{% autoescape off %}
 {% load i18n %}{% blocktrans with topic.get_absolute_url as topic_url and post.body as txt %}The Forum topic "{{ topic }}" has been created by {{ user }}.
-
 {{ user }} wrote:
 
 {{ txt }}
 
 -------------------------
 Link to topic: http://{{ current_site }}{{ topic_url }}
-{% endblocktrans %}
+{% endblocktrans %}{% endautoescape %}

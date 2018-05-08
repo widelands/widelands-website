@@ -115,7 +115,7 @@ class RatingManager(object):
             key=self.field.key,
         )
 
-        if not (user and user.is_authenticated()):
+        if not (user and user.is_authenticated):
             if not ip_address:
                 raise ValueError('``user`` or ``ip_address`` must be present.')
             kwargs['user__isnull'] = True
@@ -169,7 +169,7 @@ class RatingManager(object):
             raise InvalidRating('%s is not a valid choice for %s' %
                                 (score, self.field.name))
 
-        is_anonymous = (user is None or not user.is_authenticated())
+        is_anonymous = (user is None or not user.is_authenticated)
         if is_anonymous and not self.field.allow_anonymous:
             raise AuthRequired("user must be a user, not '%r'" % (user,))
 

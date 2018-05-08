@@ -67,7 +67,7 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,8 +78,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'nocaptcha_recaptcha',
-    # Thirdparty apps, but need preload
-    'tracking',  # included as wlapp
 
     # Our own apps
     'wiki.templatetags.restructuredtext',
@@ -91,43 +89,42 @@ INSTALLED_APPS = (
     'wlsearch',
     'wlpoll',
     'wlevents',
-    'wlmaps',
+    'wlmaps.apps.WlMapsConfig',
     'wlscreens',
     'wlggz',
     'wlscheduling',
-    'check_input',
+    'check_input.apps.CheckInput',
     'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps
-    'wiki',  # This is based on wikiapp, but has some local modifications
+    'wiki.apps.WikiConfig',  # This is based on wikiapp, but has some local modifications
     'news',  # This is based on simple-blog, but has some local modifications
     'news.managers',
-    'pybb',  # Feature enriched version of pybb
+    'pybb.apps.PybbConfig',  # Feature enriched version of pybb
 
     # Thirdparty apps
     'threadedcomments',  # included as wlapp
     'notification',     # included as wlapp
-    'django_messages',
-    'linaro_django_pagination',
+    'django_messages_wl.apps.WLDjangoMessagesConfig',
+    'dj_pagination',
     'tagging',
     'djangoratings',    # included as wlapp
     'sphinxdoc',        # included as wlapp
-)
+]
 
-MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-
-    'linaro_django_pagination.middleware.PaginationMiddleware',
-    'tracking.middleware.VisitorTrackingMiddleware',
-    'tracking.middleware.VisitorCleanUpMiddleware',
-)
+    
+    # Foreign middleware
+    'dj_pagination.middleware.PaginationMiddleware',
+    'online_users_middleware.OnlineNowMiddleware',
+]
 
 TEMPLATES = [
     {
@@ -160,6 +157,13 @@ STATIC_URL = '/media/'
 ############################
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
+
+# Franku: SHA1 Needed as compatibility for old passwords
+# https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher'
+]
 
 ######################
 # Wiki configuration #
@@ -253,11 +257,6 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-############
-# Tracking #
-############
-TRACKING_CLEANUP_TIMEOUT = 48
-
 ###########################
 # Widelands SVN directory #
 ###########################
@@ -311,12 +310,21 @@ BLEACH_ALLOWED_TAGS = [u'a',
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
     'href'], 'td': ['align'], '*': ['class', 'id', 'title']}
 
-################################
-# Pagination settings          #
-# for linaro-django-pagination #
-################################
+##########################
+# Pagination settings    #
+# for dj-pagination      #
+##########################
 PAGINATION_DEFAULT_WINDOW = 2
 
+###########################
+# Settings for displaying #
+# online users            #
+###########################
+
+# Time in seconds how long a user will be shown online
+ONLINE_THRESHOLD = 60 * 15
+# Number of stored users
+ONLINE_MAX = 25
 
 try:
     from local_settings import *

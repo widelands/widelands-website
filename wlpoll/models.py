@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 import datetime
 
 
@@ -33,9 +34,8 @@ class Poll(models.Model):
             return False
         return self.closed_date < datetime.datetime.now()
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('wlpoll_detail', (), {'pk': self.id})
+        return reverse('wlpoll_detail', kwargs={'pk': self.id})
 
     def __unicode__(self):
         return self.name
