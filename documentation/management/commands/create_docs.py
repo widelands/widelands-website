@@ -103,8 +103,7 @@ class Command(BaseCommand):
         if os.path.exists(os.path.join(self.sphinx_dir, 'build')):
             # Clean the autogen* files created by extract_rst.py
             # This has to be done because sometimes such a file remains after
-            # removing it from extract_rst. sphinx-build throughs an error
-            # then.
+            # removing it from extract_rst.
             try:
                 for f in glob.glob(os.path.join(self.sphinx_dir, 'source/autogen*')):
                     os.remove(f)
