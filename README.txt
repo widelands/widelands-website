@@ -153,7 +153,7 @@ Setting up widelands source code documentation
 There is a small helper script to get the documenation. Be sure
 you have set WIDELANDS_SVN_DIR set in local_settings.py. Run:
 
-   $ python manage.py create_docs
+   $ ./manage.py create_docs
 
 After finishing without errors, type localhost:8000/documentation/index.html
 in your browsers addressbar or click on "Development -> Documentation".

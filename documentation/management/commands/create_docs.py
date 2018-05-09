@@ -26,6 +26,7 @@ class Command(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
+
         # Define the main directories used in this class
         self.sphinx_dir = os.path.join(
             settings.WIDELANDS_SVN_DIR, 'doc/sphinx')
@@ -80,8 +81,11 @@ class Command(BaseCommand):
             except:
                 raise
 
-        # The newly build directory is no longer needed
-        shutil.rmtree(self.build_dir)
+        try:
+            # The new build directory is no longer needed
+            shutil.rmtree(self.build_dir)
+        except:
+            raise
 
     def handle(self, *args, **options):
         """Create the widelands source code documentation.
