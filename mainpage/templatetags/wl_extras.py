@@ -41,5 +41,5 @@ def forum_navigation():
 @register.filter
 def get_model_name(object):
     """Returns the name of an objects model."""
-
+    print("franku object: ", object)
     return object.__class__.__name__
