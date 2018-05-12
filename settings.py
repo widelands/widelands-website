@@ -329,5 +329,4 @@ ONLINE_MAX = 25
 try:
     from local_settings import *
 except ImportError:
-    print('Failed to load local_Settings.py !')
     pass
