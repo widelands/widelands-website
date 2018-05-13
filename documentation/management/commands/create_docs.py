@@ -90,7 +90,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Create the widelands source code documentation.
 
-        The Documenatation is build by sphinxdoc in the directory
+        The Documenatation is built by sphinxdoc in the directory
         'settings/MEDIA/documentation/html_temp'.
 
         """
@@ -125,7 +125,7 @@ class Command(BaseCommand):
                         '-d', os.path.join(self.sphinx_dir, 'build/doctrees'),
                         '-c', self.sphinx_conf_dir,
                         os.path.join(self.sphinx_dir, 'source'),
-                        os.path.join(self.build_dir),
+                        self.build_dir,
                         ])
         except CalledProcessError as why:
             print('An error occured: {0}'.format(why))
