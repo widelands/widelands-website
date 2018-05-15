@@ -5,7 +5,6 @@ from os import path
 
 # Don't use this file on the server!
 
-
 local_urlpatterns = [
    url(r'^wlmedia/(?P<path>.*)$',
        serve,
@@ -15,9 +14,4 @@ local_urlpatterns = [
        serve,
        {'document_root': settings.STATIC_MEDIA_PATH},
        name='static_media_pybb'),
-   url(r'^documentation/(?P<path>.*)$',
-       serve,
-       {'document_root': path.join(
-         settings.STATIC_MEDIA_PATH, 'documentation/html')},
-       name='documentation')
 ]
