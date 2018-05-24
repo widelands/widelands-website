@@ -38,7 +38,8 @@ urlpatterns = [
 
     url(r'^threadedcomments/', include('threadedcomments.urls')),
 
-    # Redirect old urls to docs to docs/wl
+    # Redirect old urls to new documentation
+    url(r'^docs/wl/(?P<path>.*)', RedirectView.as_view(url='/documentation/%(path)s', permanent=True), name='docs_wl'),
     url(r'^docs/$', RedirectView.as_view(url='/documentation/index.html', permanent=True), name='docs'),
 
     # 3rd party, modified for widelands
