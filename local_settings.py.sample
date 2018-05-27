@@ -17,6 +17,7 @@ MEDIA_ROOT = os.path.join(bd, 'media/')
 # set WIDELANDS_SVN_DIR to the correct path. See also:
 # https://wl.widelands.org/wiki/BzrPrimer/
 WIDELANDS_SVN_DIR = "/path/to/widelands/trunk/"
+
 os.environ['PATH'] = WIDELANDS_SVN_DIR + ':' + os.environ['PATH']
 
 DATABASES = {
