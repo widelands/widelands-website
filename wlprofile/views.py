@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 
 from forms import EditProfileForm
 import settings
@@ -24,7 +25,7 @@ def view(request, user=None):
     if user is None:
         profile = request.user.wlprofile
     else:
-        profile = User.objects.get(username=user).wlprofile
+        profile = get_object_or_404(User, username=user).wlprofile
 
     template_params = {
         'profile': profile,
