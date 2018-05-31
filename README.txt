@@ -150,25 +150,14 @@ After that you can create the overview pdf files with
 Setting up widelands source code documentation
 ----------------------------------------------
 
-Change to the directory doc/sphinx/ of the widelands source code and run
+There is a small helper script to get the documenation. Be sure
+you have set WIDELANDS_SVN_DIR set in local_settings.py. Run:
 
-   $ ./extract_rst.py
+   $ ./manage.py create_docs
 
-Now create the documentation as json files. You have to provide the path to
-the sphinx-build executable of the website:
+After finishing without errors, type localhost:8000/documentation/index.html
+in your browsers addressbar or click on "Development -> Documentation".
 
-   $ ~/wlwebsite/bin/sphinx-build -b json -d build/doctrees source build/json
-
-A new directory containing json files is created in doc/sphinx/build/json. The full path
-to this directory has to be set in the sphinxdoc-app of the website:
-
-Open http://localhost:8000/admin/sphinxdoc/app/ and add a new app with this values:
-
-Name: Widelands developer documentation
-Slug: wl
-Path: /your/path/to/widelands-src/doc/sphinx/build/json/
-
-Open http://localhost:8000/docs/wl/ to test if everything is working.
 
 Uploading a map to the local website
 ------------------------------------
@@ -182,7 +171,7 @@ Now you should be able to upload a map onto your local website.
 Contact
 =======
 
-Contact SirVer on the homepage for more information and problems.
+Contact user 'kaputtnik' on the homepage for more information and problems.
 
 
 -- vim:ft=rst:
