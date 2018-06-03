@@ -13,8 +13,12 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>{{ article.title }}</h1>
+	<h1>{{ article.title }} / {{ article.changeset_set.count }}</h1>
 {% endblock %}
+
+{# add the wanted classes to the tabs #}
+{% block class_wiki_back %}class="hidden"{% endblock %}
+{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
 {% block content_main %}
 	{% if messages %}

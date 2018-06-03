@@ -7,11 +7,13 @@
 {% trans "Article History of" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
-{% block class_wiki_hist %}class="active"{% endblock %}
-
 {% block content_header %}
 	<h1>{% trans "Article History of" %} {{ article.title }}</h1>
 {% endblock %}
+
+{# add the wanted classes to the tabs #}
+{% block class_wiki_edit %}class="hidden"{% endblock %}
+{% block class_wiki_hist %}class="hidden"{% endblock %}
 
 {% block content_main %}
 {% if changes|length > 1 %}

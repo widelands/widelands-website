@@ -673,6 +673,7 @@ def backlinks(request, title):
 
     context = {'found_links': found_links,
                'found_old_links': found_old_links,
-               'name': title}
+               'name': title,
+               'article': this_article,}
     return render(request, 'wiki/backlinks.html',
                               context,)

@@ -12,25 +12,34 @@ Wiki - {{ block.super }}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
 {% endblock %}
 
-{% block content_tabbing %}
+{# Define all(!) tabs for the wiki here (all in one place).
+We disable or change them in the subpages. #}
 
+{% block content_tabbing %}
 <ul class="small tab-list">
 	{% if article.id %}
 		<li>
 			<a {% block class_wiki_edit %}{% endblock %} href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
 		</li>
 		<li>
-			<a {% block class_wiki_hist %}{% endblock %} href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
+			<a {% block class_wiki_back %}{% endblock %}href="{% url 'wiki_article' article.title %}">{% trans "Back to article" %}</a>
+		</li>
+		<li>
+			<a {% block class_wiki_hist %}{% endblock %} href="{% url 'wiki_article_history' article.title %}">{% trans "History" %}</a>
 		</li>
 		<li>
 			<a {% block class_wiki_backl %}{% endblock %} href="{% url 'backlinks' article.title %}">{% trans "Backlinks" %}</a>
 		</li>
+		<li>
+			<a {% block class_wiki_hist_atom %}{% endblock %} href="{% url 'wiki_article_history_feed_atom' article.title %}">{% trans "Atom feed" %}</a>
+		</li>
+
 		{% if can_observe %}
 		<li>
 			{% if is_observing %} 
-			<a href="{% url 'wiki_stop_observing' article.title %}">{% trans "Stop observing" %}</a>
+			<a {% block class_wiki_stop_obs %}{% endblock %}href="{% url 'wiki_stop_observing' article.title %}">{% trans "Stop observing" %}</a>
 			{% else %}
-			<a href="{% url 'wiki_observe' article.title %}">{% trans "Observe" %}</a>
+			<a {% block class_wiki_obs %}{% endblock %}href="{% url 'wiki_observe' article.title %}">{% trans "Observe" %}</a>
 			{% endif %}
 		</li>
 		{% endif %}

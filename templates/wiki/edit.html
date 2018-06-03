@@ -6,23 +6,6 @@
 {% trans "Editing" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
-{% block content_header %}
-	<h1>{% trans "Editing" %} {{ article.title }}</h1>
-{% endblock %}
-
-{% block content_tabbing %}
-	{% if not new_article %} 
-	<ul class="tab-list small">
-		<li>
-			<a href="{% url 'wiki_article' article.title %}">{% trans "Back to article" %}</a>
-		</li>
-		<li>
-			<a href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
-		</li>
-	</ul>
-	{% endif %}
-{% endblock %}
-
 {% block extra_head %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/disableOnSubmit.js"></script>
 <script type="text/javascript">
@@ -52,6 +35,14 @@
 </script>
 {{ block.super }}
 {% endblock %}
+
+{% block content_header %}
+	<h1>{% trans "Editing" %} {{ article.title }}</h1>
+{% endblock %}
+
+{# add the wanted classes to the tabs #}
+{% block class_wiki_edit %}class="hidden"{% endblock %}
+{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
 {% block content_main %}
 <div class="blogEntry">
