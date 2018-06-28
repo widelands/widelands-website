@@ -481,7 +481,7 @@ div.blogEntry .posRight{
 .tab-list {
 	align-self: flex-end;
 	margin-bottom: 0px;
-	margin-top: 0px;
+	margin-top: -18px; /* Fix the margin of the header*/
 	z-index: 2;
 	display: flex;
 	flex-direction: row;

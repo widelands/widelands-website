@@ -12,5 +12,5 @@ div.linksBox {
 	padding-left: 0.5em;
 	margin-bottom: 1em;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	display: inline-table;
+	align-self: flex-start;
 }
