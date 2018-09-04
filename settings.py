@@ -275,9 +275,6 @@ THUMBNAIL_SIZE = (160, 160)
 ########
 MAPS_PER_PAGE = 10
 
-
-USE_GOOGLE_ANALYTICS = False
-
 ##############################################
 ## Recipient(s) who get an email if someone ##
 ## uses the form on legal notice page       ##
