@@ -12,7 +12,8 @@
 
 	<h2>Project lead</h2>
 	<ul>
-		<li>Holger Rapp</li>
+		<li>GunChleoc (Since 2016)</li>
+		<li>Holger Rapp (SirVer) (2001 – 2016)</li>
 	</ul>
 
 	<h2>Contact</h2>
@@ -28,25 +29,30 @@
     </ul>
         
 	<form action="/legal_notice/" method="post">{% csrf_token %}
-	{% if form.errors %}
-	<p class="errormessage" style="text-align: left;">Please fill out all fields!</p>
-   {% endif %}
 	<table>
 		<tr>
-			<td><label for="id_forename">First name: </label></td>
-			<td><input id="id_forename" type="text" name="forename" maxlength="80" required></td>
+			<td><label for="id_forename">First name (optional): </label></td>
+			<td><input id="id_forename" type="text" name="forename" maxlength="80"></td>
 		</tr>
 		<tr>
-			<td><label for="id_surname">Last name: </label></td>
-			<td><input id="id_surname" type="text" name="surname" maxlength="80" required></td>
+			<td><label for="id_surname">Last name (optional): </label></td>
+			<td><input id="id_surname" type="text" name="surname" maxlength="80"></td>
 		</tr>
 		<tr>
 			<td><label for="id_email">Email:</label></td>
-			<td><input type="text" name="email" id="id_email" required></td>
+			<td><input type="text" name="email" id="id_email" required>
+				{% for error in form.email.errors %}
+					<span class="errormessage">{{ error }}</span>
+				{% endfor %}
+			</td>
 		</tr>
 		<tr>
-			<td><label for="id_inquiry">Inquiry: </label></td>
-			<td><textarea id="id_inquiry" rows="10" cols="40" name="inquiry" required></textarea></td>
+			<td><label for="id_inquiry">Inquiry: </label>{{ form.inquiry.errors }}</td>
+			<td><textarea id="id_inquiry" rows="10" cols="40" name="inquiry" required></textarea>
+				{% for error in form.inquiry.errors %}
+					<span class="errormessage">{{ error }}</span>
+				{% endfor %}
+			</td>
 		</tr>
 		<tr>
 			<td></td>
