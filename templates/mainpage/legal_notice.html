@@ -40,7 +40,7 @@
 		</tr>
 		<tr>
 			<td><label for="id_email">Email:</label></td>
-			<td><input type="text" name="email" id="id_email" required>
+			<td><input type="email" name="email" id="id_email" required>
 				{% for error in form.email.errors %}
 					<span class="errormessage">{{ error }}</span>
 				{% endfor %}
