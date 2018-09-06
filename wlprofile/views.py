@@ -11,7 +11,16 @@ from django.shortcuts import get_object_or_404
 from forms import EditProfileForm
 import settings
 
-# Settings
+
+@login_required
+def delete_me(request, user=None):
+    """Delete the user"""
+    
+    context = {
+        'user': request.user
+    }
+    return render(request, 'wlprofile/delete_me.html',
+                  context)
 
 
 @login_required

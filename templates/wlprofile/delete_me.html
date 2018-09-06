@@ -1,0 +1,31 @@
+{% extends "wlprofile/base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+{% trans "Delete me" %} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<h1>{% trans "Delete your account" %}</h1>
+
+<div class="blogEntry">
+	<h3>Hi {{ user }},</h3>
+	<p>we are sorry that you want to delete yourself <img src="/wlmedia/img/smileys/face-sad.png" alt="Sad smiley"></p>
+	<h3>What deleting yourself means:</h3>
+	<ul>
+		<li>Your account will be deactivated. This means:
+			<ul>
+				<li>You can't log in anymore</li>
+				<li>The Username "{{ user }}" is preserved and can't be used anymore</li>
+			</ul>
+		</li>
+		<li>Your email address will be anonymized</li>
+		<li>Everything you posted will <b>not</b> be deleted. Instead of your users name the string "Deleted User" will be shown.</li>
+	</ul>
+	<p>
+		<button><a href="{#{% url 'do_delete' %}#}">Are you sure?</a></button>
+		<button><a href="{% url 'profile_edit' %}">Cancel</a></button>
+	</p>
+</div>
+{% endblock %}
