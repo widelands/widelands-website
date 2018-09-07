@@ -11,20 +11,25 @@
 
 <div class="blogEntry">
 	<h3>Hi {{ user }},</h3>
-	<p>we are sorry that you want to delete yourself <img src="/wlmedia/img/smileys/face-sad.png" alt="Sad smiley"></p>
+	<p>we are sorry that you want to leave our community <img src="/wlmedia/img/smileys/face-sad.png" alt="Sad smiley"></p>
 	<h3>What deleting yourself means:</h3>
 	<ul>
 		<li>Your account will be deactivated. This means:
 			<ul>
-				<li>You can't log in anymore</li>
-				<li>The Username "{{ user }}" is preserved and can't be used anymore</li>
+				<li>You will immediately logged out and can't log in anymore.</li>
+				<li>The Username "{{ user }}" is preserved and can't be used anymore.</li>
 			</ul>
 		</li>
-		<li>Your email address will be anonymized</li>
-		<li>Everything you posted will <b>not</b> be deleted. Instead of your users name the string "Deleted User" will be shown.</li>
+		<li>Your <a href="{% url 'profile_edit' %}">profile</a> will be deleted.</li>
+		<li>All your <a href="{% url 'messages_inbox' %}">private messages</a> will be deleted.
+		Messages you have send to other users will stay in their inbox, unless they delete them.</li>
+		<li>All your <a href="{% url 'notification_notices' %}">subscriptions</a> will be removed.</li>
+		<li>Your email address will be anonymized, so you will not recive any notification mails anymore.</li>
+		<li>Everything you posted (forum posts, comments and uploaded maps) will <b>not</b> be deleted. Instead of your users name the string "User_deleted" will be shown.</li>
 	</ul>
+	<p class="errormessage"><b>This step can't be undone!</b></p>
 	<p>
-		<button><a href="{#{% url 'do_delete' %}#}">Are you sure?</a></button>
+		<button><a href="{% url 'do_delete' %}">I am sure, please delete me</a></button>
 		<button><a href="{% url 'profile_edit' %}">Cancel</a></button>
 	</p>
 </div>
