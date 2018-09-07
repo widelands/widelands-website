@@ -21,8 +21,8 @@
 			</ul>
 		</li>
 		<li>Your <a href="{% url 'profile_edit' %}">profile</a> will be deleted.</li>
-		<li>All your <a href="{% url 'messages_inbox' %}">private messages</a> will be deleted.
-		Messages you have send to other users will stay in their inbox, unless they delete them.</li>
+		<li>All your <a href="{% url 'messages_inbox' %}">private messages</a> will be moved into the <a href="{% url 'messages_trash' %}">trash</a>.
+		They stay there until the sender or recipient has also deleted them.</li>
 		<li>All your <a href="{% url 'notification_notices' %}">subscriptions</a> will be removed.</li>
 		<li>Your email address will be anonymized, so you will not recive any notification mails anymore.</li>
 		<li>Everything you posted (forum posts, comments and uploaded maps) will <b>not</b> be deleted. Instead of your users name the string "User_deleted" will be shown.</li>

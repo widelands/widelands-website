@@ -18,7 +18,7 @@ function show_reply_form(comment_id, url, depth) {
 						+ '</a>'
                 {% endif %}
 						+ '<br />'
-						+ '<span class="small">{{ user|user_link }}</span>'
+						+ '<span class="small">{{ user }}</span>'
 					+ '</td>'
 					+ '<td class="text">'
 						+ '<form method="POST" action="' + url + '?next={{object.get_absolute_url}}">'

@@ -22,7 +22,7 @@ Inbox - {{ block.super }}
 		<tbody>
 		{% for message in message_list %} 
 			<tr class="{% if message.new %}italic{% endif %}">
-				<td>{{ message.sender|user_link }}</td>
+				<td>m{{ message.sender.is_active }}m{{ message.sender|user_link }}</td>
 				<td>
 					{% if message.replied %}
 						<img src="{{ MEDIA_URL }}img/replied.png" alt="replied" title="replied" />

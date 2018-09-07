@@ -50,15 +50,18 @@ def do_delete(request):
         setting.send = False
         setting.save()
 
-    # Remove written PMs from outbox
+    # Put all PMs in the trash of the user. They stay as long in the trash until the sender or recipient
+    # has also put the message in the trash.
     from django_messages.models import Message
+    from datetime import datetime
+    messages = Message.objects.inbox_for(user)
+    for message in messages:
+        message.recipient_deleted_at = datetime.now()
+        message.save()
     messages = Message.objects.outbox_for(user)
     for message in messages:
-        message.delete()
-    # Remove PMs which are in the trash of sender and recipients
-    messages = Message.objects.trash_for(user)
-    for message in messages:
-        message.delete()
+        message.sender_deleted_at = datetime.now()
+        message.save()
     # TODO(franku): Prevend sending PMs to a deactivated user
 
     # Do some settings in Django
