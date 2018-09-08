@@ -30,8 +30,8 @@ View - {{ block.super }}
 			</td>
 		</tr>
 	</table>
-	{% ifequal message.recipient user %}
+	{% if message.recipient == user and message.sender.email != 'deleted@wl.org' %}
 		<button type="button" onclick="location.href='{% url 'messages_reply' message.id %}';">{% trans "Reply" %}</button>
-	{% endifequal %}
+	{% endif %}
 	<button type="button" onclick="location.href='{% url 'messages_delete' message.id %}';">{% trans "Delete" %}</button>
 {% endblock %}
