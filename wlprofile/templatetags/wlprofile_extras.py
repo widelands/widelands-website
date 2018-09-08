@@ -13,6 +13,7 @@ from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
+from django.conf import settings
 
 register = template.Library()
 
@@ -20,7 +21,7 @@ register = template.Library()
 @register.filter
 def user_link(user):
 
-    if not hasattr(user, 'email') or user.email == 'deleted@wl.org':
+    if not hasattr(user, 'email') or user.email == settings.DELETED_MAIL_ADDRESS:
         return 'User deleted'
     else:
         data = u'<a href="%s">%s</a>' % (

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from forms import EditProfileForm
 import settings
@@ -68,7 +69,7 @@ def do_delete(request):
     user.is_active = False
     user.is_staff = False
     user.is_superuser = False
-    user.email = 'deleted@wl.org'
+    user.email = settings.DELETED_MAIL_ADDRESS
     user.save()
     #return redirect('delete_me')
     return redirect('mainpage')

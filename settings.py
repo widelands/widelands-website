@@ -143,6 +143,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
                 'mainpage.context_processors.settings_for_templates',
+                'wlprofile.context_processors.deleted_email_address',
             ],
         },
     },
@@ -325,6 +326,14 @@ PAGINATION_DEFAULT_WINDOW = 2
 ONLINE_THRESHOLD = 60 * 15
 # Number of stored users
 ONLINE_MAX = 25
+
+###################################
+# Email address for deleted users #
+# Do not change this during a     #
+# lifetime of the project!        #
+###################################
+
+DELETED_MAIL_ADDRESS = 'deleted@wl.org'
 
 try:
     from local_settings import *
