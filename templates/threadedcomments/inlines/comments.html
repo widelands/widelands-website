@@ -20,7 +20,7 @@
 						</a>
 						<br />
 						{% endif %}
-						<span class="small">{{ comment.user }}</span>
+						<span class="small">{{ comment.user|user_link }}</span>
 					</td>
 					<td class="text">
 						{% auto_transform_markup comment %}

@@ -19,8 +19,8 @@ register = template.Library()
 
 @register.filter
 def user_link(user):
-    print('isinstance', user, isinstance(user, User))
-    if user.email == 'deleted@wl.org':
+
+    if not hasattr(user, 'email') or user.email == 'deleted@wl.org':
         return 'User deleted'
     else:
         data = u'<a href="%s">%s</a>' % (
