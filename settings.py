@@ -329,10 +329,10 @@ ONLINE_MAX = 25
 
 ###################################
 # Email address for deleted users #
-# Do not change this during a     #
-# lifetime of the project!        #
+# This is used to indentfy a user #
+# who deleted themselfs. So do    #
+# not change this, once it is set!#
 ###################################
-
 DELETED_MAIL_ADDRESS = 'deleted@wl.org'
 
 try:

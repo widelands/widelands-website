@@ -23,11 +23,11 @@ def delete_me(request):
     return render(request, 'wlprofile/delete_me.html',
                   context)
 
-
+@login_required
 def do_delete(request):
     """Delete user specific data.
 
-    We can't delete a user but do some cleanup.  
+    We can't delete a user but do some cleanup.
     """
 
     from django.contrib.auth.models import User
@@ -63,15 +63,13 @@ def do_delete(request):
     for message in messages:
         message.sender_deleted_at = datetime.now()
         message.save()
-    # TODO(franku): Prevend sending PMs to a deactivated user
 
-    # Do some settings in Django
+    # Do some settings in django.auth.User
     user.is_active = False
     user.is_staff = False
     user.is_superuser = False
     user.email = settings.DELETED_MAIL_ADDRESS
     user.save()
-    #return redirect('delete_me')
     return redirect('mainpage')
 
 
