@@ -143,7 +143,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
                 'mainpage.context_processors.settings_for_templates',
-                'wlprofile.context_processors.deleted_email_address',
+                'wlprofile.context_processors.deleted_user_data',
             ],
         },
     },
@@ -327,13 +327,16 @@ ONLINE_THRESHOLD = 60 * 15
 # Number of stored users
 ONLINE_MAX = 25
 
-###################################
-# Email address for deleted users #
-# This is used to indentfy a user #
-# who deleted themselfs. So do    #
-# not change this, once it is set!#
-###################################
+#####################################
+# Settings for deleted users:       #
+# Those are used to indentfy a user #
+# who deleted themself.             #
+#####################################
+
+# Once set, don't change the DELETED_MAIL_ADDRESS! It is used to indentify deleted users for
+# showing the DELETED_USERNAME
 DELETED_MAIL_ADDRESS = 'deleted@wl.org'
+DELETED_USERNAME = 'Deleted'
 
 try:
     from local_settings import *

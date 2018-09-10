@@ -81,13 +81,13 @@ import time
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
-def pybb_last_posts(context, number=5):
+def pybb_last_posts(context, number=10):
     last_posts = Post.objects.filter(hidden=False).order_by(
         '-created').select_related()[:45]
     check = []
     answer = []
     for post in last_posts:
-        if (post.topic_id not in check) and len(check) < 5:
+        if (post.topic_id not in check) and len(check) < number:
             check = check + [post.topic_id]
             answer = answer + [post]
     return {

@@ -1,6 +1,7 @@
 {% extends "wlprofile/base.html" %}
 
 {% load i18n %}
+{% load wlprofile_extras %}
 
 {% block title %}
 {% trans "Delete me" %} - {{ block.super }}
@@ -24,13 +25,13 @@
 		<li>All your <a href="{% url 'messages_inbox' %}">private messages</a> will be moved into the <a href="{% url 'messages_trash' %}">trash</a>.
 		They stay there until the sender or recipient has also deleted them.</li>
 		<li>All your <a href="{% url 'notification_notices' %}">subscriptions</a> will be removed.</li>
-		<li>Your email address will be anonymized, so you will not recive any notification mails anymore.</li>
-		<li>Everything you posted (forum posts, comments and uploaded maps) will <b>not</b> be deleted. Instead of your users name the string "User_deleted" will be shown.</li>
+		<li>Your email address will be anonymized, so you will not receive any notification mails anymore.</li>
+		<li>Everything you posted (forum posts, comments and uploaded maps) will <b>not</b> be deleted. Instead of your users name the string "{{ DELETED_USERNAME }}" will be shown.</li>
 	</ul>
 	<p class="errormessage"><b>This step can't be undone!</b></p>
 	<p>
-		<button><a href="{% url 'do_delete' %}">I am sure, please delete me</a></button>
-		<button><a href="{% url 'profile_edit' %}">Cancel</a></button>
+		<button type="button"><a href="{% url 'do_delete' %}"><b>I am sure, please delete me</b></a></button>
+		<button type="button"><a href="{% url 'profile_edit' %}">Cancel</a></button>
 	</p>
 </div>
 {% endblock %}

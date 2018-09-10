@@ -23,11 +23,14 @@ def delete_me(request):
     return render(request, 'wlprofile/delete_me.html',
                   context)
 
+
 @login_required
 def do_delete(request):
     """Delete user specific data.
 
-    We can't delete a user but do some cleanup.
+    We can't really delete a user who has posted some valid posts (no spam) because otherwise
+    we have foreign keys constraints in the database. All we can do is to do some cleanup and
+    anonymization.
     """
 
     from django.contrib.auth.models import User

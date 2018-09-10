@@ -22,7 +22,7 @@ register = template.Library()
 def user_link(user):
 
     if not hasattr(user, 'email') or user.email == settings.DELETED_MAIL_ADDRESS:
-        return 'User deleted'
+        return settings.DELETED_USERNAME
     else:
         data = u'<a href="%s">%s</a>' % (
             reverse('profile_view', args=[user.username]), user.username)
