@@ -142,7 +142,6 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
-                'mainpage.context_processors.settings_for_templates',
             ],
         },
     },
@@ -274,9 +273,6 @@ THUMBNAIL_SIZE = (160, 160)
 # Maps #
 ########
 MAPS_PER_PAGE = 10
-
-
-USE_GOOGLE_ANALYTICS = False
 
 ##############################################
 ## Recipient(s) who get an email if someone ##
