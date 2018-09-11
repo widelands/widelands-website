@@ -14,7 +14,7 @@ class RegistrationWithCaptchaForm(RegistrationForm):
 
 
 class ContactForm(forms.Form):
-    surname = forms.CharField(max_length=80)
-    forename = forms.CharField(max_length=80)
+    surname = forms.CharField(max_length=80, required=False)
+    forename = forms.CharField(max_length=80, required=False)
     email = forms.EmailField()
     inquiry = forms.CharField(widget=forms.Textarea)

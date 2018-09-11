@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 
 from forms import EditProfileForm
-import settings
 
 
 @login_required
@@ -33,24 +32,33 @@ def do_delete(request):
     anonymization.
     """
 
-    from django.contrib.auth.models import User
     from django.contrib.auth import logout
+    from wlprofile.models import Profile
+    from notification.models import NoticeSetting
 
     user = get_object_or_404(User, username=request.user)
 
-    # Log the user out. This must be done as early as possible but after
+    # Log the user out. We do this as early as possible but after
     # we get the User object.
     logout(request)
 
-    # Deleting the profile removes private settings, e.g. the avatar
-    # TODO(franku): Delete also the image file (not the anonymus.png)
+    # Clean the profile
     profile = user.wlprofile
+    upload_to = Profile._meta.get_field('avatar').upload_to
+    
+    if upload_to in profile.avatar.name:
+        # Delete the avatar file
+        profile.avatar.delete()
+    
+    # Delete the profile and recreate it to get a clean profile page
+    # We do this to have the anymous.png as avatar which get automatically assigned
     profile.delete()
+    profile = Profile(user=user)
+    profile.save()
 
     # Deactivate all subscriptions
-    from notification.models import NoticeSetting
-    settings = NoticeSetting.objects.filter(user=user)
-    for setting in settings:
+    notice_settings = NoticeSetting.objects.filter(user=user)
+    for setting in notice_settings:
         setting.send = False
         setting.save()
 

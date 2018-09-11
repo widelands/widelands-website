@@ -81,7 +81,7 @@ import time
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
-def pybb_last_posts(context, number=10):
+def pybb_last_posts(context, number=8):
     last_posts = Post.objects.filter(hidden=False).order_by(
         '-created').select_related()[:45]
     check = []
