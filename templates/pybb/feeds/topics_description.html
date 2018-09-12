@@ -1,2 +1,6 @@
-{{ obj.head.user }}:<br>
+{% if obj.head.user.email == DELETED_MAIL_ADDRESS %}
+    {{ DELETED_USERNAME }}
+{% else %}
+    {{ obj.head.user }}
+{% endif %}wrote:<br>
 {{ obj.head.body_html|safe }}

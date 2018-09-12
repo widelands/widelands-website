@@ -19,18 +19,11 @@ class RssHistoryFeed(Feed):
 
     def item_pubdate(self, item):
         """Return the item's pubdate.
-
+    
         It's this modified date
-
+    
         """
         return item.modified
-
-    def item_author_name(self, item):
-        """Takes the object returned by items(), and returns the feeds's
-        auhor's name as a Python string."""
-        if item.is_anonymous_change():
-            return 'Anonymous'
-        return item.editor.username
 
 # Validated through http://validator.w3.org/feed/
 
@@ -84,10 +77,3 @@ class AtomArticleHistoryFeed(RssArticleHistoryFeed):
 
     def item_updateddate(self, item):
         return item.modified
-
-    def item_author_name(self, item):
-        """Takes the object returned by items(), and returns the feeds's
-        auhor's name as a Python string."""
-        if item.is_anonymous_change():
-            return 'Anonymous'
-        return item.editor.username
