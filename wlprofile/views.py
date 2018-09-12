@@ -42,6 +42,14 @@ def do_delete(request):
     # we get the User object.
     logout(request)
 
+    # Clean the Online gaming password
+    from wlggz.models import GGZAuth
+    try:
+        ggz_user = GGZAuth.objects.get(user=user)
+        ggz_user.delete()
+    except:
+        pass
+
     # Clean the profile
     profile = user.wlprofile
     upload_to = Profile._meta.get_field('avatar').upload_to
@@ -51,7 +59,7 @@ def do_delete(request):
         profile.avatar.delete()
     
     # Delete the profile and recreate it to get a clean profile page
-    # We do this to have the anymous.png as avatar which get automatically assigned
+    # We create a new one to have the anymous.png as avatar
     profile.delete()
     profile = Profile(user=user)
     profile.save()
