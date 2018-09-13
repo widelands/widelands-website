@@ -1,4 +1,4 @@
-{% if obj.user.email == DELETED_MAIL_ADDRESS %}
+{% if obj.user.wlprofile.deleted %}
     {{ DELETED_USERNAME }}
 {% else %}
     {{ obj.user }}

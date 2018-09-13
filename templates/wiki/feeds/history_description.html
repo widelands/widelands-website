@@ -1,6 +1,6 @@
 {% load i18n %}
 
-{% trans "Edited by user" %} {% if obj.editor.email == DELETED_MAIL_ADDRESS %}
+{% trans "Edited by user" %} {% if obj.editor.wlprofile.deleted %}
         {{ DELETED_USERNAME }}
     {% else %}
         {{ obj.editor.username }}

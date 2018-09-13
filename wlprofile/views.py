@@ -61,7 +61,7 @@ def do_delete(request):
     # Delete the profile and recreate it to get a clean profile page
     # We create a new one to have the anymous.png as avatar
     profile.delete()
-    profile = Profile(user=user)
+    profile = Profile(user=user, deleted=True)
     profile.save()
 
     # Deactivate all subscriptions

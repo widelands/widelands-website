@@ -21,7 +21,7 @@ register = template.Library()
 @register.filter
 def user_link(user):
 
-    if not hasattr(user, 'email') or user.email == settings.DELETED_MAIL_ADDRESS:
+    if user.is_authenticated and user.wlprofile.deleted :
         return settings.DELETED_USERNAME
     else:
         data = u'<a href="%s">%s</a>' % (

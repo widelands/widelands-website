@@ -21,5 +21,5 @@ urlpatterns = [
         NewsList.as_view(template_name='news/post_list.html'),
         name='news_index'),
     # Feed
-    url(r'^feeds/news/$', NewsPostsFeed()),
+    url(r'^feed/$', NewsPostsFeed())
 ]

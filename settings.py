@@ -323,14 +323,10 @@ ONLINE_THRESHOLD = 60 * 15
 # Number of stored users
 ONLINE_MAX = 25
 
-#####################################
-# Settings for deleted users:       #
-# Those are used to indentfy a user #
-# who deleted themself.             #
-#####################################
+###########################################
+# Settings for users who deleted themself #
+###########################################
 
-# Once set, don't change the DELETED_MAIL_ADDRESS! It is used to indentify deleted users for
-# showing the DELETED_USERNAME
 DELETED_MAIL_ADDRESS = 'deleted@wl.org'
 DELETED_USERNAME = 'Deleted'
 

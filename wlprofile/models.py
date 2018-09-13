@@ -48,6 +48,7 @@ class Profile(models.Model):
                                 upload_to='wlprofile/avatars/', width=settings.AVATAR_WIDTH, height=settings.AVATAR_HEIGHT)
     show_signatures = models.BooleanField(
         _('Show signatures'), blank=True, default=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('Profile')

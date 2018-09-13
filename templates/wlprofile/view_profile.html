@@ -4,7 +4,7 @@
 {% load custom_date %}
 
 {% block title %}
-	{% if profile.user.email != DELETED_MAIL_ADDRESS %}
+	{% if not profile.deleted %}
 		{{ profile.user.username }}'s
 	{% else %}
 		Deleted Users Profile
@@ -19,7 +19,7 @@
 		<a class="invertedColor" href="{% url 'profile_edit' %}">Edit Profile</a>
 	{% endifequal %}
 </div>
-<h1>{% if profile.user.email != DELETED_MAIL_ADDRESS %}
+<h1>{% if not profile.deleted %}
 		{{ profile.user.username }}'s
 	{% else %}
 		Deleted Users
@@ -28,7 +28,7 @@
 </h1>
 
 <div class="blogEntry">
-	{% if profile.user.email != DELETED_MAIL_ADDRESS %}
+	{% if not profile.deleted %}
 		<table>
 			<tr>
 				<td>
