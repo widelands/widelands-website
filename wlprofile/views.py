@@ -42,6 +42,15 @@ def do_delete(request):
     # we get the User object.
     logout(request)
 
+    # Clean possible Playtime availabilities
+    from wlscheduling.models import Availabilities
+    try:
+        events = Availabilities.objects.filter(user=user)
+        for event in events:
+            event.delete()
+    except:
+        pass
+            
     # Clean the Online gaming password
     from wlggz.models import GGZAuth
     try:
@@ -89,6 +98,7 @@ def do_delete(request):
     user.is_superuser = False
     user.email = settings.DELETED_MAIL_ADDRESS
     user.save()
+
     return redirect('mainpage')
 
 
