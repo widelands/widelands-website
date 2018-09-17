@@ -327,7 +327,7 @@ ONLINE_MAX = 25
 # Settings for users who deleted themself #
 ###########################################
 
-DELETED_MAIL_ADDRESS = 'deleted@wl.org'
+DELETED_MAIL_ADDRESS = ''
 DELETED_USERNAME = 'Deleted'
 
 try:
