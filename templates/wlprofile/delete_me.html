@@ -17,16 +17,19 @@
 	<ul>
 		<li>Your account will be deactivated. This means:
 			<ul>
-				<li>You will immediately logged out and can't log in anymore.</li>
-				<li>The Username "{{ user }}" is preserved and can't be used anymore.</li>
+				<li>You will be immediately logged out and unable to log in again.</li>
+				<li>The Username "{{ user }}" will continue to be reserved, so registering again with that username will not be possible.</li>
 			</ul>
 		</li>
-		<li>Your <a href="{% url 'profile_edit' %}">profile</a> will be deleted and your currently used image of the avatar will be deleted.</li>
-		<li>All your <a href="{% url 'messages_inbox' %}">private messages</a> will be moved into the <a href="{% url 'messages_trash' %}">trash</a>.
-		They stay there until the sender or recipient has also deleted them.</li>
+		<li>Your <a href="{% url 'profile_edit' %}">profile</a> will be deleted and your currently used avatar image will be deleted.</li>
+		<li>
+			All your <a href="{% url 'messages_inbox' %}">private messages</a> will be moved into the <a href="{% url 'messages_trash' %}">trash</a>.
+			They will stay there until such time that the sender or recipient will also delete them.</li>
 		<li>All your <a href="{% url 'notification_notices' %}">subscriptions</a> will be removed.</li>
-		<li>Your email address will be anonymized, so you will not receive any notification mails anymore.</li>
-		<li>Everything you posted (forum posts, comments and uploaded maps) will <b>not</b> be deleted. Instead of your users name the string "{{ DELETED_USERNAME }}" will be shown.</li>
+		<li>Your email address will be removed, so you will not receive any notification mails anymore.</li>
+		<li>
+			<b>Nothing</b> that you have posted (forum posts, comments and uploaded maps) will be deleted.
+			Instead of your user name, the string "{{ DELETED_USERNAME }}" will be shown.</li>
 		<li>Your online gaming password will be reset.</li>
 		<li>All dates given in the <a href="{% url 'scheduling_scheduling' %}">Playtime scheduler</a> will be deleted</li>
 	</ul>
