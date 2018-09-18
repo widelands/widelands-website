@@ -31,7 +31,7 @@ class ImageAdmin(admin.ModelAdmin):
     actions = [delete_with_file]
     fieldsets = (
         (None, {'fields': ('image', 'name', 'date_submitted', 'revision')}),
-        (_('Upload data:'), {'fields': ('user', 'editor_ip')}),
+        (_('Uploaded by:'), {'fields': ('user',)}),
         (_('Content object:'), {
          'fields': (('content_type', 'content_object'), 'object_id')}),
     )
