@@ -53,8 +53,6 @@ class Article(models.Model):
                               null=True, blank=True)
     creator = models.ForeignKey(User, verbose_name=_('Article Creator'),
                                 null=True)
-    creator_ip = models.GenericIPAddressField(_('IP Address of the Article Creator'),
-                                              blank=True, null=True)
     created_at = models.DateTimeField(default=datetime.now)
     last_update = models.DateTimeField(blank=True, null=True)
 
@@ -93,7 +91,7 @@ class Article(models.Model):
         return self.images.all()
 
     def new_revision(self, old_content, old_title, old_markup,
-                     comment, editor_ip, editor):
+                     comment, editor):
         """Create a new ChangeSet with the old content."""
 
         content_diff = diff(self.content, old_content)
@@ -101,7 +99,6 @@ class Article(models.Model):
         cs = ChangeSet.objects.create(
             article=self,
             comment=comment,
-            editor_ip=editor_ip,
             editor=editor,
             old_title=old_title,
             old_markup=old_markup,
@@ -109,10 +106,10 @@ class Article(models.Model):
 
         return cs
 
-    def revert_to(self, revision, editor_ip, editor=None):
+    def revert_to(self, revision, editor=None):
         """Revert the article to a previuos state, by revision number."""
         changeset = self.changeset_set.get(revision=revision)
-        changeset.reapply(editor_ip, editor)
+        changeset.reapply(editor)
 
     def compare(self, from_revision, to_revision):
         """Compares to revisions of this article."""
@@ -139,10 +136,9 @@ class ChangeSet(models.Model):
 
     article = models.ForeignKey(Article, verbose_name=_(u"Article"))
 
-    # Editor identification -- logged or anonymous
+    # Editor identification -- logged
     editor = models.ForeignKey(User, verbose_name=_(u'Editor'),
                                null=True)
-    editor_ip = models.GenericIPAddressField(_(u"IP Address of the Editor"))
 
     # Revision number, starting from 1
     revision = models.IntegerField(_(u"Revision Number"))
@@ -185,7 +181,7 @@ class ChangeSet(models.Model):
     def is_anonymous_change(self):
         return self.editor is None
 
-    def reapply(self, editor_ip, editor):
+    def reapply(self, editor):
         """Return the Article to this revision."""
 
         # XXX Would be better to exclude reverted revisions
@@ -218,7 +214,8 @@ class ChangeSet(models.Model):
             old_content=old_content, old_title=old_title,
             old_markup=old_markup,
             comment='Reverted to revision #%s' % self.revision,
-            editor_ip=editor_ip, editor=editor)
+            editor=editor
+            )
 
         self.save()
 
