@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 
 from models import Image
-from wl_utils import get_real_ip
 from forms import UploadImageForm
 
 
