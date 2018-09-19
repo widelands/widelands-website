@@ -15,7 +15,7 @@ def get_usernames(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
 
-        usernames = User.objects.filter(username__icontains=q)
+        usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)
         results = []
         for user in usernames:
             name_json = {'value': user.username}
