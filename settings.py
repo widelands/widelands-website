@@ -142,6 +142,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
+                'wlprofile.context_processors.deleted_user_data',
             ],
         },
     },
@@ -321,6 +322,13 @@ PAGINATION_DEFAULT_WINDOW = 2
 ONLINE_THRESHOLD = 60 * 15
 # Number of stored users
 ONLINE_MAX = 25
+
+###########################################
+# Settings for users who deleted themself #
+###########################################
+
+DELETED_MAIL_ADDRESS = ''
+DELETED_USERNAME = 'Ex-Member'
 
 try:
     from local_settings import *

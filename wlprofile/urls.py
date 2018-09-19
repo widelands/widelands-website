@@ -14,6 +14,8 @@ import views
 
 urlpatterns = [
     url(r'^edit/$', views.edit, name='profile_edit'),
+    url(r'^delete/$', views.delete_me, name='delete_me'),
+    url(r'^do_delete/$', views.do_delete, name='do_delete'),
     url(r'^(?P<user>.*)/$', views.view, name='profile_view'),
     url(r'^$', views.view, name='profile_view'),
 ]
