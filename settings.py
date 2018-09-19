@@ -328,7 +328,7 @@ ONLINE_MAX = 25
 ###########################################
 
 DELETED_MAIL_ADDRESS = ''
-DELETED_USERNAME = 'Deleted'
+DELETED_USERNAME = 'Ex-Member'
 
 try:
     from local_settings import *
