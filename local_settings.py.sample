@@ -13,6 +13,9 @@ bd = os.getcwd() # Better make this a static path
 STATIC_MEDIA_PATH = os.path.join(bd, 'media')
 MEDIA_ROOT = os.path.join(bd, 'media/')
 
+# Uncomment for testing at home where you have no https
+#SESSION_COOKIE_SECURE = False
+
 # If you are using the developer version of widelands from Launchpad
 # set WIDELANDS_SVN_DIR to the correct path. See also:
 # https://wl.widelands.org/wiki/BzrPrimer/
