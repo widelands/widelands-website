@@ -4,7 +4,6 @@ from django.conf.urls import *
 from django.contrib import admin
 admin.autodiscover()
 
-from news.feeds import NewsPostsFeed
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from django.contrib.syndication.views import Feed
@@ -27,9 +26,6 @@ urlpatterns = [
         form_class=RegistrationWithCaptchaForm), name='registration_register'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url('^', include('django.contrib.auth.urls')),
-
-    # Feed for news
-    url(r'^feeds/news/$', NewsPostsFeed()),
 
     # Formerly 3rd party
     url(r'^notification/', include('notification.urls')),

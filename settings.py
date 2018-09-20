@@ -142,7 +142,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
-                'mainpage.context_processors.settings_for_templates',
+                'wlprofile.context_processors.deleted_user_data',
             ],
         },
     },
@@ -275,9 +275,6 @@ THUMBNAIL_SIZE = (160, 160)
 ########
 MAPS_PER_PAGE = 10
 
-
-USE_GOOGLE_ANALYTICS = False
-
 ##############################################
 ## Recipient(s) who get an email if someone ##
 ## uses the form on legal notice page       ##
@@ -325,6 +322,13 @@ PAGINATION_DEFAULT_WINDOW = 2
 ONLINE_THRESHOLD = 60 * 15
 # Number of stored users
 ONLINE_MAX = 25
+
+###########################################
+# Settings for users who deleted themself #
+###########################################
+
+DELETED_MAIL_ADDRESS = ''
+DELETED_USERNAME = 'Ex-Member'
 
 try:
     from local_settings import *
