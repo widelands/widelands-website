@@ -333,10 +333,9 @@ DELETED_USERNAME = 'Ex-Member'
 ###################
 # Cookie settings #
 ###################
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#sessions
 
-CSRF_USE_SESSIONS = True      # Store csrf in the session cookie
-SESSION_COOKIE_SECURE = True  # Allow only https
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#sessions
+CSRF_COOKIE_AGE = None
 
 try:
     from local_settings import *
