@@ -170,7 +170,10 @@ def urlize(data):
 
 def quote_text(text, user, markup):
     """Quote message using selected markup."""
-    text = '*' + user.username + ' wrote:*\n\n' + text
+
+    quoted_username = settings.DELETED_USERNAME if user.wlprofile.deleted else user.username
+
+    text = '*' + quoted_username + ' wrote:*\n\n' + text
 
     if markup == 'markdown':
         # Inserting a space after ">" will not change the generated HTML,
