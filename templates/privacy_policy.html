@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load wl_markdown %}
+
+{% block title %}Privacy policy{{ block.super }}{% endblock %}
+
+{% block extra_head %}
+{{ block.super}}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
+{% endblock %}
+
+{% block content %}
+<h1>Privacy Policy</h1>
+
+<div class="blogEntry">
+        {{ text|wl_markdown }}
+</div>
+{% endblock %}
