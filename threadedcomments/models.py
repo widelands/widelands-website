@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-#from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -16,13 +15,11 @@ DEFAULT_MAX_COMMENT_DEPTH = getattr(settings, 'DEFAULT_MAX_COMMENT_DEPTH', 8)
 MARKDOWN = 1
 TEXTILE = 2
 REST = 3
-#HTML = 4
 PLAINTEXT = 5
 MARKUP_CHOICES = (
     (MARKDOWN, _('markdown')),
     (TEXTILE, _('textile')),
     (REST, _('restructuredtext')),
-    #    (HTML, _("html")),
     (PLAINTEXT, _('plaintext')),
 )
 
@@ -238,117 +235,6 @@ class ThreadedComment(models.Model):
         ordering = ('-date_submitted',)
         verbose_name = _('Threaded Comment')
         verbose_name_plural = _('Threaded Comments')
-        get_latest_by = 'date_submitted'
-
-
-class FreeThreadedComment(models.Model):
-    """
-    A threaded comment which need not be associated with an instance of 
-    ``django.contrib.auth.models.User``.  Instead, it requires minimally a name,
-    and maximally a name, website, and e-mail address.  It is given its hierarchy
-    by a nullable relationship back on itself named ``parent``.
-
-    This ``FreeThreadedComment`` supports several kinds of markup languages,
-    including Textile, Markdown, and ReST.
-
-    It also includes two Managers: ``objects``, which is the same as the normal
-    ``objects`` Manager with a few added utility functions (see above), and
-    ``public``, which has those same utility functions but limits the QuerySet to
-    only those values which are designated as public (``is_public=True``).
-    """
-    # Generic Foreign Key Fields
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField(_('object ID'))
-    content_object = GenericForeignKey()
-
-    # Hierarchy Field
-    parent = models.ForeignKey(
-        'self', null=True, blank=True, default=None, related_name='children')
-
-    # User-Replacement Fields
-    name = models.CharField(_('name'), max_length=128)
-    website = models.URLField(_('site'), blank=True)
-    email = models.EmailField(_('e-mail address'), blank=True)
-
-    # Date Fields
-    date_submitted = models.DateTimeField(
-        _('date/time submitted'), default=datetime.now)
-    date_modified = models.DateTimeField(
-        _('date/time modified'), default=datetime.now)
-    date_approved = models.DateTimeField(
-        _('date/time approved'), default=None, null=True, blank=True)
-
-    # Meat n' Potatoes
-    comment = models.TextField(_('comment'))
-    markup = models.IntegerField(
-        choices=MARKUP_CHOICES, default=DEFAULT_MARKUP, null=True, blank=True)
-
-    # Status Fields
-    is_public = models.BooleanField(_('is public'), default=True)
-    is_approved = models.BooleanField(_('is approved'), default=False)
-
-    # Extra Field
-    ip_address = models.GenericIPAddressField(
-        _('IP address'), null=True, blank=True)
-
-    objects = ThreadedCommentManager()
-    public = PublicThreadedCommentManager()
-
-    def __unicode__(self):
-        if len(self.comment) > 50:
-            return self.comment[:50] + '...'
-        return self.comment[:50]
-
-    def save(self, **kwargs):
-        if not self.markup:
-            self.markup = DEFAULT_MARKUP
-        self.date_modified = datetime.now()
-        if not self.date_approved and self.is_approved:
-            self.date_approved = datetime.now()
-        super(FreeThreadedComment, self).save()
-
-    def get_content_object(self, **kwargs):
-        """Wrapper around the GenericForeignKey due to compatibility reasons
-        and due to ``list_display`` limitations."""
-        return self.content_object
-
-    def get_base_data(self, show_dates=True):
-        """Outputs a Python dictionary representing the most useful bits of
-        information about this particular object instance.
-
-        This is mostly useful for testing purposes, as the output from
-        the serializer changes from run to run.  However, this may end
-        up being useful for JSON and/or XML data exchange going forward
-        and as the serializer system is changed.
-
-        """
-        markup = 'plaintext'
-        for markup_choice in MARKUP_CHOICES:
-            if self.markup == markup_choice[0]:
-                markup = markup_choice[1]
-                break
-        to_return = {
-            'content_object': self.content_object,
-            'parent': self.parent,
-            'name': self.name,
-            'website': self.website,
-            'email': self.email,
-            'comment': self.comment,
-            'is_public': self.is_public,
-            'is_approved': self.is_approved,
-            'ip_address': self.ip_address,
-            'markup': force_unicode(markup),
-        }
-        if show_dates:
-            to_return['date_submitted'] = self.date_submitted
-            to_return['date_modified'] = self.date_modified
-            to_return['date_approved'] = self.date_approved
-        return to_return
-
-    class Meta:
-        ordering = ('-date_submitted',)
-        verbose_name = _('Free Threaded Comment')
-        verbose_name_plural = _('Free Threaded Comments')
         get_latest_by = 'date_submitted'
 
 

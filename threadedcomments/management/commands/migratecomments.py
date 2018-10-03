@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.comments.models import Comment, FreeComment
-from threadedcomments.models import ThreadedComment, FreeThreadedComment
+from threadedcomments.models import ThreadedComment
 
 
 class Command(BaseCommand):
@@ -10,31 +10,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Converts all legacy ``Comment`` and ``FreeComment`` objects into
-        ``ThreadedComment`` and ``FreeThreadedComment`` objects,
+        ``ThreadedComment`` objects,
         respectively."""
-        self.handle_free_comments()
         self.handle_comments()
-
-    def handle_free_comments(self):
-        """Converts all legacy ``FreeComment`` objects into
-        ``FreeThreadedComment`` objects."""
-        comments = FreeComment.objects.all()
-        for c in comments:
-            new = FreeThreadedComment(
-                content_type=c.content_type,
-                object_id=c.object_id,
-                comment=c.comment,
-                name=c.person_name,
-                website='',
-                email='',
-                date_submitted=c.submit_date,
-                date_modified=c.submit_date,
-                date_approved=c.submit_date,
-                is_public=c.is_public,
-                ip_address=c.ip_address,
-                is_approved=c.approved
-            )
-            new.save()
 
     def handle_comments(self):
         """Converts all legacy ``Comment`` objects into ``ThreadedComment``

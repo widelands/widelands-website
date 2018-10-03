@@ -4,8 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
-from threadedcomments.models import ThreadedComment, FreeThreadedComment
-from threadedcomments.forms import ThreadedCommentForm, FreeThreadedCommentForm
+from threadedcomments.models import ThreadedComment
+from threadedcomments.forms import ThreadedCommentForm
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 # Regular expressions for getting rid of newlines and witespace
@@ -78,64 +78,8 @@ def get_comment_url_xml(content_object, parent=None):
     return ''
 
 
-def get_free_comment_url(content_object, parent=None):
-    """Given an object and an optional parent, this tag gets the URL to POST to
-    for the creation of new ``FreeThreadedComment`` objects."""
-    kwargs = get_contenttype_kwargs(content_object)
-    if parent:
-        if not isinstance(parent, FreeThreadedComment):
-            raise template.TemplateSyntaxError, 'get_free_comment_url requires its parent object to be of type FreeThreadedComment'
-        kwargs.update({'parent_id': getattr(
-            parent, 'pk', getattr(parent, 'id'))})
-        return reverse('tc_free_comment_parent', kwargs=kwargs)
-    else:
-        return reverse('tc_free_comment', kwargs=kwargs)
-
-
-def get_free_comment_url_ajax(content_object, parent=None, ajax_type='json'):
-    """Given an object and an optional parent, this tag gets the URL to POST to
-    for the creation of new ``FreeThreadedComment`` objects.
-
-    It returns the latest created object in the AJAX form of the user's
-    choosing (json or xml).
-
-    """
-    kwargs = get_contenttype_kwargs(content_object)
-    kwargs.update({'ajax': ajax_type})
-    if parent:
-        if not isinstance(parent, FreeThreadedComment):
-            raise template.TemplateSyntaxError, 'get_free_comment_url_ajax requires its parent object to be of type FreeThreadedComment'
-        kwargs.update({'parent_id': getattr(
-            parent, 'pk', getattr(parent, 'id'))})
-        return reverse('tc_free_comment_parent_ajax', kwargs=kwargs)
-    else:
-        return reverse('tc_free_comment_ajax', kwargs=kwargs)
-
-
-def get_free_comment_url_json(content_object, parent=None):
-    """
-    Wraps ``get_free_comment_url_ajax`` with ``ajax_type='json'``
-    """
-    try:
-        return get_free_comment_url_ajax(content_object, parent, ajax_type='json')
-    except template.TemplateSyntaxError:
-        raise template.TemplateSyntaxError, 'get_free_comment_url_json requires its parent object to be of type FreeThreadedComment'
-    return ''
-
-
-def get_free_comment_url_xml(content_object, parent=None):
-    """
-    Wraps ``get_free_comment_url_ajax`` with ``ajax_type='xml'``
-    """
-    try:
-        return get_free_comment_url_ajax(content_object, parent, ajax_type='xml')
-    except template.TemplateSyntaxError:
-        raise template.TemplateSyntaxError, 'get_free_comment_url_xml requires its parent object to be of type FreeThreadedComment'
-    return ''
-
-
 def auto_transform_markup(comment):
-    """Given a comment (``ThreadedComment`` or ``FreeThreadedComment``), this
+    """Given a comment, this
     tag simply returns the comment after wl_markdown runs over it.
 
     """
@@ -190,24 +134,6 @@ def do_get_threaded_comment_tree(parser, token):
         raise template.TemplateSyntaxError(error_string)
 
 
-def do_get_free_threaded_comment_tree(parser, token):
-    """Gets a tree (list of objects ordered by traversing tree in preorder, and
-    with an additional ``depth`` integer attribute annotated onto each
-    ``FreeThreadedComment.``"""
-    error_string = '%r tag must be of format {%% get_free_threaded_comment_tree for OBJECT [TREE_ROOT] as CONTEXT_VARIABLE %%}' % token.contents.split()[
-        0]
-    try:
-        split = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError(error_string)
-    if len(split) == 5:
-        return FreeCommentTreeNode(split[2], split[4], split[3])
-    elif len(split) == 6:
-        return FreeCommentTreeNode(split[2], split[5], split[3])
-    else:
-        raise template.TemplateSyntaxError(error_string)
-
-
 class CommentTreeNode(template.Node):
 
     def __init__(self, content_object, context_name, tree_root):
@@ -229,31 +155,6 @@ class CommentTreeNode(template.Node):
                 except ValueError:
                     tree_root = self.tree_root_str
         context[self.context_name] = ThreadedComment.public.get_tree(
-            content_object, root=tree_root)
-        return ''
-
-
-class FreeCommentTreeNode(template.Node):
-
-    def __init__(self, content_object, context_name, tree_root):
-        self.content_object = template.Variable(content_object)
-        self.tree_root = template.Variable(tree_root)
-        self.tree_root_str = tree_root
-        self.context_name = context_name
-
-    def render(self, context):
-        content_object = self.content_object.resolve(context)
-        try:
-            tree_root = self.tree_root.resolve(context)
-        except template.VariableDoesNotExist:
-            if self.tree_root_str == 'as':
-                tree_root = None
-            else:
-                try:
-                    tree_root = int(self.tree_root_str)
-                except ValueError:
-                    tree_root = self.tree_root_str
-        context[self.context_name] = FreeThreadedComment.public.get_tree(
             content_object, root=tree_root)
         return ''
 
@@ -285,33 +186,6 @@ class ThreadedCommentCountNode(template.Node):
         return ''
 
 
-def do_get_free_comment_count(parser, token):
-    """Gets a count of how many FreeThreadedComment objects are attached to the
-    given object."""
-    error_message = '%r tag must be of format {%% %r for OBJECT as CONTEXT_VARIABLE %%}' % (
-        token.contents.split()[0], token.contents.split()[0])
-    try:
-        split = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError, error_message
-    if split[1] != 'for' or split[3] != 'as':
-        raise template.TemplateSyntaxError, error_message
-    return FreeThreadedCommentCountNode(split[2], split[4])
-
-
-class FreeThreadedCommentCountNode(template.Node):
-
-    def __init__(self, content_object, context_name):
-        self.content_object = template.Variable(content_object)
-        self.context_name = context_name
-
-    def render(self, context):
-        content_object = self.content_object.resolve(context)
-        context[self.context_name] = FreeThreadedComment.public.all_for_object(
-            content_object).count()
-        return ''
-
-
 def oneline(value):
     """Takes some HTML and gets rid of newlines and spaces between tags,
     rendering the result all on one line."""
@@ -333,24 +207,18 @@ def do_get_threaded_comment_form(parser, token):
         raise template.TemplateSyntaxError, error_message
     if len(split) != 3:
         raise template.TemplateSyntaxError, error_message
-    if 'free' in split[0]:
-        is_free = True
-    else:
-        is_free = False
-    return ThreadedCommentFormNode(split[2], free=is_free)
+    
+    return ThreadedCommentFormNode(split[2])
 
 
 class ThreadedCommentFormNode(template.Node):
 
-    def __init__(self, context_name, free=False):
+    def __init__(self, context_name):
         self.context_name = context_name
-        self.free = free
+
 
     def render(self, context):
-        if self.free:
-            form = FreeThreadedCommentForm()
-        else:
-            form = ThreadedCommentForm()
+        form = ThreadedCommentForm()
         context[self.context_name] = form
         return ''
 
@@ -367,26 +235,18 @@ def do_get_latest_comments(parser, token):
         raise template.TemplateSyntaxError, error_message
     if split[2] != 'as':
         raise template.TemplateSyntaxError, error_message
-    if 'free' in split[0]:
-        is_free = True
-    else:
-        is_free = False
-    return LatestCommentsNode(split[1], split[3], free=is_free)
+
+    return LatestCommentsNode(split[1], split[3])
 
 
 class LatestCommentsNode(template.Node):
 
-    def __init__(self, num, context_name, free=False):
+    def __init__(self, num, context_name):
         self.num = num
         self.context_name = context_name
-        self.free = free
 
     def render(self, context):
-        if self.free:
-            comments = FreeThreadedComment.objects.order_by(
-                '-date_submitted')[:self.num]
-        else:
-            comments = ThreadedComment.objects.order_by(
+        comments = ThreadedComment.objects.order_by(
                 '-date_submitted')[:self.num]
         context[self.context_name] = comments
         return ''
@@ -402,6 +262,7 @@ def do_get_user_comments(parser, token):
         raise template.TemplateSyntaxError, error_message
     if len(split) != 5:
         raise template.TemplateSyntaxError, error_message
+
     return UserCommentsNode(split[2], split[4])
 
 
@@ -427,6 +288,7 @@ def do_get_user_comment_count(parser, token):
         raise template.TemplateSyntaxError, error_message
     if len(split) != 5:
         raise template.TemplateSyntaxError, error_message
+
     return UserCommentCountNode(split[2], split[4])
 
 
@@ -445,21 +307,13 @@ register = template.Library()
 register.simple_tag(get_comment_url)
 register.simple_tag(get_comment_url_json)
 register.simple_tag(get_comment_url_xml)
-register.simple_tag(get_free_comment_url)
-register.simple_tag(get_free_comment_url_json)
-register.simple_tag(get_free_comment_url_xml)
 
 register.filter('oneline', oneline)
 
 register.tag('auto_transform_markup', do_auto_transform_markup)
-register.tag('get_threaded_comment_tree', do_get_threaded_comment_tree)
-register.tag('get_free_threaded_comment_tree',
-             do_get_free_threaded_comment_tree)
 register.tag('get_comment_count', do_get_comment_count)
-register.tag('get_free_comment_count', do_get_free_comment_count)
-register.tag('get_free_threaded_comment_form', do_get_threaded_comment_form)
+register.tag('get_threaded_comment_tree', do_get_threaded_comment_tree)
 register.tag('get_threaded_comment_form', do_get_threaded_comment_form)
 register.tag('get_latest_comments', do_get_latest_comments)
-register.tag('get_latest_free_comments', do_get_latest_comments)
 register.tag('get_user_comments', do_get_user_comments)
 register.tag('get_user_comment_count', do_get_user_comment_count)

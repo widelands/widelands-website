@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, Context, Template
 from django.utils.http import urlquote
 from django.conf import settings
-from threadedcomments.forms import FreeThreadedCommentForm, ThreadedCommentForm
-from threadedcomments.models import ThreadedComment, FreeThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
+from threadedcomments.forms import ThreadedCommentForm
+from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.utils import JSONResponse, XMLResponse
 from wl_utils import get_real_ip
 
@@ -59,7 +59,7 @@ def _preview(request, context_processors, extra_context, form_class=ThreadedComm
                   )
 
 
-def free_comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, model=FreeThreadedComment, form_class=FreeThreadedCommentForm, context_processors=[], extra_context={}):
+def free_comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, model=ThreadedComment, form_class=ThreadedCommentForm, context_processors=[], extra_context={}):
     """Receives POST data and either creates a new ``ThreadedComment`` or
     ``FreeThreadedComment``, or edits an old one based upon the specified
     parameters.
@@ -134,6 +134,7 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
 def comment(*args, **kwargs):
     """Thin wrapper around free_comment which adds login_required status and
     also assigns the ``model`` to be ``ThreadedComment``."""
+    print("franku: in threadedcomments comment()")
     kwargs['model'] = ThreadedComment
     kwargs['form_class'] = ThreadedCommentForm
     return free_comment(*args, **kwargs)
