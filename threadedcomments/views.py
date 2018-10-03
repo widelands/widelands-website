@@ -59,10 +59,10 @@ def _preview(request, context_processors, extra_context, form_class=ThreadedComm
                   )
 
 
-def free_comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, model=ThreadedComment, form_class=ThreadedCommentForm, context_processors=[], extra_context={}):
-    """Receives POST data and either creates a new ``ThreadedComment`` or
-    ``FreeThreadedComment``, or edits an old one based upon the specified
-    parameters.
+@login_required
+def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, context_processors=[], extra_context={}):
+    """Receives POST data and creates a new ``ThreadedComment``, or
+    edits an old one based upon the specified parameters.
 
     If there is a 'preview' key in the POST request, a preview will be forced and the
     comment will not be saved until a 'preview' key is no longer in the POST request.
@@ -74,6 +74,8 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
     where the comment may be edited until it does not contain errors.
 
     """
+    form_class = ThreadedCommentForm
+    model = ThreadedComment
     if not edit_id and not (content_type and object_id):
         raise Http404  # Must specify either content_type and object_id or edit_id
     if 'preview' in request.POST:
@@ -91,21 +93,16 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
             new_comment.content_type = get_object_or_404(
                 ContentType, id=int(content_type))
             new_comment.object_id = int(object_id)
-        if model == ThreadedComment:
-            new_comment.user = request.user
+
+        new_comment.user = request.user
+
         if parent_id:
             new_comment.parent = get_object_or_404(model, id=int(parent_id))
         new_comment.save()
-        if model == ThreadedComment:
-            if add_messages:
+        if add_messages:
                 request.user.message_set.create(
                     message='Your message has been posted successfully.')
-        else:
-            request.session['successful_data'] = {
-                'name': form.cleaned_data['name'],
-                'website': form.cleaned_data['website'],
-                'email': form.cleaned_data['email'],
-            }
+
         if ajax == 'json':
             return JSONResponse([new_comment, ])
         elif ajax == 'xml':
@@ -131,17 +128,6 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
         return _preview(request, context_processors, extra_context, form_class=form_class)
 
 
-def comment(*args, **kwargs):
-    """Thin wrapper around free_comment which adds login_required status and
-    also assigns the ``model`` to be ``ThreadedComment``."""
-    print("franku: in threadedcomments comment()")
-    kwargs['model'] = ThreadedComment
-    kwargs['form_class'] = ThreadedCommentForm
-    return free_comment(*args, **kwargs)
-# Require login to be required, as request.user must exist and be valid.
-comment = login_required(comment)
-
-
 def can_delete_comment(comment, user):
     """Default callback function to determine wether the given user has the
     ability to delete the given comment."""
@@ -153,8 +139,7 @@ def can_delete_comment(comment, user):
 
 # Todo: Next one is not used so far and may need adjustments to the render()
 def comment_delete(request, object_id, model=ThreadedComment, extra_context={}, context_processors=[], permission_callback=can_delete_comment):
-    """Deletes the specified comment, which can be either a
-    ``FreeThreadedComment`` or a ``ThreadedComment``.
+    """Deletes the specified comment.
 
     If it is a POST request, then the comment will be deleted outright,
     however, if it is a GET request, a confirmation page will be shown.

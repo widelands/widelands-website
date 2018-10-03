@@ -175,10 +175,6 @@ class ThreadedComment(models.Model):
     is_public = models.BooleanField(_('is public'), default=True)
     is_approved = models.BooleanField(_('is approved'), default=False)
 
-    # Extra Field
-    ip_address = models.GenericIPAddressField(
-        _('IP address'), null=True, blank=True)
-
     objects = ThreadedCommentManager()
     public = PublicThreadedCommentManager()
 
@@ -236,11 +232,3 @@ class ThreadedComment(models.Model):
         verbose_name = _('Threaded Comment')
         verbose_name_plural = _('Threaded Comments')
         get_latest_by = 'date_submitted'
-
-
-class TestModel(models.Model):
-    """This model is simply used by this application's test suite as a model to
-    which to attach comments."""
-    name = models.CharField(max_length=5)
-    is_public = models.BooleanField(default=True)
-    date = models.DateTimeField(default=datetime.now)
