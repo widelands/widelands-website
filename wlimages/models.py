@@ -24,7 +24,7 @@ class ImageManager(models.Manager):
     def create(self, **keyw):
         """Makes sure that no image/revision pair is already in the
         database."""
-        print('franku in create')
+
         if 'name' not in keyw or 'revision' not in keyw:
             raise IntegrityError('needs name and revision as keywords')
 
