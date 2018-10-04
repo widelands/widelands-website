@@ -21,11 +21,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ('title',)
     ordering = ['-last_update']
     fieldsets = (
-        (None, {'fields': ('title', 'content', 'markup')}),
-        ('Creator', {'fields': ('creator', 'creator_ip'),
-                     'classes': ('collapse', 'wide')}),
-        # ('Group', {'fields': ('object_id', 'content_type'),
-        #              'classes': ('collapse', 'wide')}),
+        (None, {'fields': ('title', 'content', 'creator', 'markup')}),
     )
     raw_id_fields = ('creator',)
     inlines = [InlineImages]
@@ -41,13 +37,11 @@ class ChangeSetAdmin(admin.ModelAdmin):
     list_filter = ('article__title',)
     ordering = ('-modified',)
     fieldsets = (
-        ('Article', {'fields': ('article',)}),
+        ('Article', {'fields': ('article', 'editor')}),
         ('Differences', {'fields': ('old_title', 'old_markup',
                                     'content_diff')}),
         ('Other', {'fields': ('comment', 'modified', 'revision', 'reverted'),
                    'classes': ('collapse', 'wide')}),
-        ('Editor', {'fields': ('editor', 'editor_ip'),
-                    'classes': ('collapse', 'wide')}),
     )
     raw_id_fields = ('editor',)
 
