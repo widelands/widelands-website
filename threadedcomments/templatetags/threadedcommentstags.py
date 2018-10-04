@@ -196,7 +196,7 @@ def oneline(value):
 
 
 def do_get_threaded_comment_form(parser, token):
-    """Gets a FreeThreadedCommentForm and inserts it into the context."""
+    """Gets a ThreadedCommentForm and inserts it into the context."""
     error_message = '%r tag must be of format {%% %r as CONTEXT_VARIABLE %%}' % (
         token.contents.split()[0], token.contents.split()[0])
     try:
