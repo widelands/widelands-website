@@ -196,37 +196,6 @@ class ThreadedComment(models.Model):
         and due to ``list_display`` limitations."""
         return self.content_object
 
-    def get_base_data(self, show_dates=True):
-        """Outputs a Python dictionary representing the most useful bits of
-        information about this particular object instance.
-
-        This is mostly useful for testing purposes, as the output from
-        the serializer changes from run to run.  However, this may end
-        up being useful for JSON and/or XML data exchange going forward
-        and as the serializer system is changed.
-
-        """
-        markup = 'plaintext'
-        for markup_choice in MARKUP_CHOICES:
-            if self.markup == markup_choice[0]:
-                markup = markup_choice[1]
-                break
-        to_return = {
-            'content_object': self.content_object,
-            'parent': self.parent,
-            'user': self.user,
-            'comment': self.comment,
-            'is_public': self.is_public,
-            'is_approved': self.is_approved,
-            'ip_address': self.ip_address,
-            'markup': force_unicode(markup),
-        }
-        if show_dates:
-            to_return['date_submitted'] = self.date_submitted
-            to_return['date_modified'] = self.date_modified
-            to_return['date_approved'] = self.date_approved
-        return to_return
-
     class Meta:
         ordering = ('-date_submitted',)
         verbose_name = _('Threaded Comment')

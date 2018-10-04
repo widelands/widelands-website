@@ -89,7 +89,6 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
     if form.is_valid():
         new_comment = form.save(commit=False)
         if not edit_id:
-            new_comment.ip_address = get_real_ip(request)
             new_comment.content_type = get_object_or_404(
                 ContentType, id=int(content_type))
             new_comment.object_id = int(object_id)
