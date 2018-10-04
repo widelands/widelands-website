@@ -300,15 +300,13 @@ def edit_article(request, title,
             return redirect(new_article)
 
     elif request.method == 'GET':
-        user_ip = get_real_ip(request)
 
         # TODO(Franku): Never worked IMHO
         # lock = cache.get(title, None)
         # if lock is None:
         #     lock = ArticleEditLock(title, request)
         # lock.create_message(request)
-
-        initial = {'user_ip': user_ip}
+        initial = {}
         if group_slug is not None:
             initial.update({'content_type': group_ct.id,
                             'object_id': group.id})
@@ -493,9 +491,9 @@ def revert_to_revision(request, title,
         except Article.DoesNotExist:
             # No existing article found -> reverting possible
             if request.user.is_authenticated:
-                article.revert_to(revision, get_real_ip(request), request.user)
+                article.revert_to(revision, request.user)
             else:
-                article.revert_to(revision, get_real_ip(request))
+                article.revert_to(revision)
             return redirect(article)
         # An article with this name exists
         messages.error(
