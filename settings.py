@@ -331,6 +331,13 @@ ONLINE_MAX = 25
 DELETED_MAIL_ADDRESS = ''
 DELETED_USERNAME = 'Ex-Member'
 
+###################
+# Cookie settings #
+###################
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-age
+CSRF_COOKIE_AGE = None
+
 try:
     from local_settings import *
 except ImportError:

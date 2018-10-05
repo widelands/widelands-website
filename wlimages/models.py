@@ -24,6 +24,7 @@ class ImageManager(models.Manager):
     def create(self, **keyw):
         """Makes sure that no image/revision pair is already in the
         database."""
+
         if 'name' not in keyw or 'revision' not in keyw:
             raise IntegrityError('needs name and revision as keywords')
 
@@ -32,12 +33,12 @@ class ImageManager(models.Manager):
 
         return super(ImageManager, self).create(**keyw)
 
-    def create_and_save_image(self, user, image, content_type, object_id, ip):
+    def create_and_save_image(self, user, image, content_type, object_id):
         # Use Django's get_valid_name() to get a safe filename
         storage = FileSystemStorage()
         safe_filename = storage.get_valid_name(image.name)
         im = self.create(content_type=content_type, object_id=object_id,
-                         user=user, revision=1, name=image.name, editor_ip=ip)
+                         user=user, revision=1, name=image.name)
         path = '%swlimages/%s' % (MEDIA_ROOT, safe_filename)
 
         destination = open(path, 'wb')
@@ -69,8 +70,6 @@ class Image(models.Model):
 
     # User Field
     user = models.ForeignKey(User)
-    editor_ip = models.GenericIPAddressField(
-        _('IP address'), null=True, blank=True)
 
     # Date Fields
     date_submitted = models.DateTimeField(

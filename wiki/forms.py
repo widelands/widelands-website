@@ -22,7 +22,6 @@ class ArticleForm(forms.ModelForm):
     summary = forms.CharField(widget=forms.Textarea)
 
     comment = forms.CharField(required=False)
-    user_ip = forms.CharField(widget=forms.HiddenInput)
 
     content_type = forms.ModelChoiceField(
         queryset=ContentType.objects.all(),
@@ -35,8 +34,7 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        exclude = ('creator', 'creator_ip',
-                   'group', 'created_at', 'last_update')
+        exclude = ('creator', 'group', 'created_at', 'last_update')
 
     def clean_title(self):
         """Check for some errors regarding the title:
@@ -92,7 +90,6 @@ class ArticleForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         # 0 - Extra data
-        editor_ip = self.cleaned_data['user_ip']
         comment = self.cleaned_data['comment']
 
         # 2 - Save the Article
@@ -102,7 +99,6 @@ class ArticleForm(forms.ModelForm):
         editor = getattr(self, 'editor', None)
         group = getattr(self, 'group', None)
         if self.is_new:
-            article.creator_ip = editor_ip
             if editor is not None:
                 article.creator = editor
                 article.group = group
@@ -113,6 +109,6 @@ class ArticleForm(forms.ModelForm):
         # 4 - Create new revision
         changeset = article.new_revision(
             self.old_content, self.old_title, self.old_markup,
-            comment, editor_ip, editor)
+            comment, editor)
 
         return article, changeset

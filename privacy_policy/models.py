@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.urls import reverse
 
 
 class PrivacyPolicy(models.Model):
@@ -14,3 +15,6 @@ class PrivacyPolicy(models.Model):
 
     class Meta:
         ordering = ['language']
+
+    def get_absolute_url(self):
+        return reverse('policy_translated', kwargs={'lang': self.language})

@@ -25,7 +25,6 @@ class AddPostForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         self.topic = kwargs.pop('topic', None)
         self.forum = kwargs.pop('forum', None)
-        self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
         if self.topic:
@@ -54,7 +53,7 @@ class AddPostForm(forms.ModelForm):
             topic_is_new = False
             topic = self.topic
 
-        post = Post(topic=topic, user=self.user, user_ip=self.ip,
+        post = Post(topic=topic, user=self.user,
                     markup=self.cleaned_data['markup'],
                     body=self.cleaned_data['body'])
         post.save(*args, **kwargs)

@@ -203,7 +203,6 @@ class Post(RenderableItem):
     body = models.TextField(_('Message'))
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
-    user_ip = models.GenericIPAddressField(_('User IP'), default='')
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
     class Meta:

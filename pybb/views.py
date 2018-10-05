@@ -20,7 +20,6 @@ from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 
-from wl_utils import get_real_ip
 from check_input.models import SuspiciousInput
 
 try:
@@ -154,7 +153,7 @@ def add_post_ctx(request, forum_id, topic_id):
         quote = quote_text(post.body, post.user, 'markdown')
 
     form = build_form(AddPostForm, request, topic=topic, forum=forum,
-                      user=request.user, ip=get_real_ip(request),
+                      user=request.user,
                       initial={'markup': 'markdown', 'body': quote})
 
     if form.is_valid():

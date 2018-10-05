@@ -3,4 +3,5 @@ from privacy_policy import views
 
 urlpatterns = [
     url(r'^$', views.privacy_policy, name='privacy_policy'),
+    url(r'^(?P<lang>[-\w]+)/', views.privacy_policy, name='policy_translated'),
 ]
