@@ -8,8 +8,6 @@ urlpatterns = [
         views.comment, name='tc_comment'),
     url(r'^comment/(?P<content_type>\d+)/(?P<object_id>\d+)/(?P<parent_id>\d+)/$',
         views.comment, name='tc_comment_parent'),
-    url(r'^comment/(?P<object_id>\d+)/delete/$',
-        views.comment_delete, name='tc_comment_delete'),
     url(r'^comment/(?P<edit_id>\d+)/edit/$',
         views.comment, name='tc_comment_edit'),
 
