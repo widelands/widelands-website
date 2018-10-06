@@ -3,23 +3,35 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from privacy_policy.models import PrivacyPolicy
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def _format_text(language, text):
     return '[TOC]\n\n#{}\n{}'.format(language, text)
     
     
-def privacy_policy(request, lang='English'):
-    """Creates the text of a policy and prepare them for markdown."""
+def privacy_policy(request, *args, **kwargs):
+    """Creates the text of a policy and prepare it for markdown."""
+
+    # Defaults to 'English'
+    lang = kwargs.pop('lang', 'English')
+    policies = PrivacyPolicy.objects.all()
 
     try:
-        policies = PrivacyPolicy.objects.all()
         policy = policies.get(language=lang)
+    except ObjectDoesNotExist:
+        # Lets try to find a valid policy
+        try:
+            policy = policies.all()[0]
+        except IndexError:
+            policy = None
+            text = 'No Policy created yet!'
+            languages = ''
+
+    if policy:
         text = _format_text(policy.language, policy.policy_text)
         languages = [x.language for x in policies.exclude(language=lang)]
-    except:
-        text = 'Missing policy'
-        languages = ''
-
+        
     context = {
         'text': text,
         'languages': languages,
