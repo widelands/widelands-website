@@ -27,56 +27,6 @@
 
 {% block content_main %}
 <div class="blogEntry">
-	<table>
-		{% if profile.avatar %}
-		<tr>
-			<td>
-				<img class="posLeft" src="{{ profile.avatar.url }}" alt="Avatar" />
-			</td>
-		</tr>
-		{% endif %}
-		<tr>
-			<td class="grey">Joined:</td>
-			<td>{{ profile.user.date_joined|custom_date:user|title }}</td>
-		</tr>
-		<tr>
-			<td class="grey">Forum Posts:</td>
-			<td>{{ profile.post_count }}</td>
-		</tr>
-		<tr>
-			<td class="grey">Website:</td>
-			<td><a href="{{profile.site}}">{{ profile.site }}</a></td>
-		</tr>
-		<tr>
-			<td class="grey">Location:</td>
-			<td>{{ profile.location }}</td>
-		</tr>
-		<tr>
-			<td class="grey">Jabber:</td>
-			<td>{{ profile.jabber }}</td>
-		</tr>
-		<tr>
-			<td class="grey">ICQ:</td>
-			<td>{{ profile.icq }}</td>
-		</tr>
-		<tr>
-			<td class="grey">MSN:</td>
-			<td>{{ profile.msn }}</td>
-		</tr>
-		<tr>
-			<td class="grey">AIM:</td>
-			<td>{{ profile.aim }}</td>
-		</tr>
-		<tr>
-			<td class="grey">Yahoo:</td>
-			<td>{{ profile.yahoo }}</td>
-		</tr>
-		<tr>
-			<td class="grey">Signature:</td>
-			<td>{{ profile.signature|urlize|linebreaks }}</td>
-		</tr>
-	</table>
-=======
 	{% if not profile.deleted %}
 		<table>
 			<tr>
@@ -138,7 +88,6 @@
 	{% else %}
 		<p>This user has deleted his data ...</p>
 	{% endif %}
->>>>>>> MERGE-SOURCE
 </div>
 
 {% endblock %}

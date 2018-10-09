@@ -486,6 +486,7 @@ div.blogEntry .posRight{
 	display: flex;
 	flex-direction: row;
 	list-style: none;
+	height: 20px;
 }
 
 .tab-list a {

@@ -14,11 +14,7 @@
 
 {% block content_tabbing %}
 	<ul class="tab-list small">
-	{% if profile.user and user != profile.user %}
-		<li>
-			<a {% block send_pm %}{% endblock %} href="{% url 'messages_compose_to' profile.user %}">Send PM</a>
-		</li>
-	{% else %}
+	{% if profile.user and user == profile.user %}
 		<li>
 			<a {% block profile %}{% endblock %} href="{% url 'profile_view' %}">Profile</a>
 		</li>
@@ -34,6 +30,10 @@
 				<li><a href="{% url 'scheduling_scheduling' %}">Define your playtime</a></li>
 				<li><a href="{% url 'scheduling_find' %}">Show playtimes</a></li>
 			</ul>
+		</li>
+	{% elif not profile.deleted %}
+		<li>
+			<a {% block send_pm %}{% endblock %} href="{% url 'messages_compose_to' profile.user %}">Send PM</a>
 		</li>
 	{% endif %}
 	</ul>
