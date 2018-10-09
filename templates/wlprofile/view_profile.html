@@ -36,12 +36,7 @@
 				{% endif %}
 				</td>
 				<td>
-				{% ifnotequal user profile.user %}
-					<button onclick="window.location.href='{% url 'messages_compose_to' profile.user %}';">
-						<img src="{{ MEDIA_URL }}forum/img/send_pm.png" alt ="" class="middle" />
-						<span class="middle">{% trans "Send PM" %}</span>
-					</button>
-				{% endifnotequal %}
+
 				</td>
 			</tr>
 			<tr>
