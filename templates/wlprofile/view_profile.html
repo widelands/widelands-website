@@ -4,13 +4,25 @@
 {% load custom_date %}
 
 {% block title %}
-{{ profile.user.username }}'s Profile - {{ block.super }}
+	{% if not profile.deleted %}
+		{{ profile.user.username }}'s
+	{% else %}
+		Deleted Users Profile
+	{% endif %}
+	- Profile
+	{{ block.super }}
 {% endblock %}
 
 {% block profile %}class="active"{% endblock %}
 
 {% block content_header %}
-	<h1>{{ profile.user.username }}'s Profile</h1>
+	<h1>{% if not profile.deleted %}
+		{{ profile.user.username }}'s
+	{% else %}
+		Deleted User
+	{% endif %}
+	Profile
+	</h1>
 {% endblock %}
 
 {% block content_main %}
@@ -64,6 +76,69 @@
 			<td>{{ profile.signature|urlize|linebreaks }}</td>
 		</tr>
 	</table>
+=======
+	{% if not profile.deleted %}
+		<table>
+			<tr>
+				<td>
+				{% if profile.avatar %}
+					<img src="{{ profile.avatar.url }}" alt="Avatar" />
+				{% endif %}
+				</td>
+				<td>
+				{% ifnotequal user profile.user %}
+					<button onclick="window.location.href='{% url 'messages_compose_to' profile.user %}';">
+						<img src="{{ MEDIA_URL }}forum/img/send_pm.png" alt ="" class="middle" />
+						<span class="middle">{% trans "Send PM" %}</span>
+					</button>
+				{% endifnotequal %}
+				</td>
+			</tr>
+			<tr>
+				<td class="grey">Joined:</td>
+				<td>{{ profile.user.date_joined|custom_date:user|title }}</td>
+			</tr>
+			<tr>
+				<td class="grey">Forum Posts:</td>
+				<td>{{ profile.post_count }}</td>
+			</tr>
+			<tr>
+				<td class="grey">Website:</td>
+				<td><a href="{{profile.site}}">{{ profile.site }}</a></td>
+			</tr>
+			<tr>
+				<td class="grey">Location:</td>
+				<td>{{ profile.location }}</td>
+			</tr>
+			<tr>
+				<td class="grey">Jabber:</td>
+				<td>{{ profile.jabber }}</td>
+			</tr>
+			<tr>
+				<td class="grey">ICQ:</td>
+				<td>{{ profile.icq }}</td>
+			</tr>
+			<tr>
+				<td class="grey">MSN:</td>
+				<td>{{ profile.msn }}</td>
+			</tr>
+			<tr>
+				<td class="grey">AIM:</td>
+				<td>{{ profile.aim }}</td>
+			</tr>
+			<tr>
+				<td class="grey">Yahoo:</td>
+				<td>{{ profile.yahoo }}</td>
+			</tr>
+			<tr>
+				<td class="grey">Signature:</td>
+				<td>{{ profile.signature|urlize|linebreaks }}</td>
+			</tr>
+		</table>
+	{% else %}
+		<p>This user has deleted his data ...</p>
+	{% endif %}
+>>>>>>> MERGE-SOURCE
 </div>
 
 {% endblock %}

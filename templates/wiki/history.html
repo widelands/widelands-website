@@ -101,11 +101,7 @@
 					{{ change.modified|custom_date:user }}
 				</td>
 				<td>
-				{% if change.is_anonymous_change %}
-					{{ change.editor_ip }}
-				{% else %}
 					{{ change.editor|user_link }}
-				{% endif %}
 				</td>
 				<td class="italic">
 					{% if change.comment %}'{{ change.comment }}'{% endif %}

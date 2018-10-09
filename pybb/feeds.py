@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.feedgenerator import Atom1Feed
 from pybb.models import Post, Topic, Forum
+from django.conf import settings
 
 
 class PybbFeed(Feed):
@@ -60,11 +61,6 @@ class LastPosts(PybbFeed):
     def items_for_object(self, obj):
         return Post.objects.filter(hidden=False, topic__forum=obj).order_by('-created')[:15]
 
-    def item_author_name(self, item):
-        """Takes the object returned by get_object and returns the feeds's
-        auhor's name as a Python string."""
-        return item.user.username
-
 # Validated through http://validator.w3.org/feed/
 
 
@@ -78,8 +74,3 @@ class LastTopics(PybbFeed):
 
     def items_for_object(self, item):
         return Topic.objects.exclude(posts__hidden=True).filter(forum=item).order_by('-created')[:15]
-
-    def item_author_name(self, item):
-        """Takes the object returned by get_object and returns the feeds's
-        auhor's name as a Python string."""
-        return item.user.username

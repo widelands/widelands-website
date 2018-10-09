@@ -45,17 +45,12 @@
 		<input type="submit" value="{% trans "Save" %}" />
 		{% csrf_token %}
 	</form>
-	<br />
-	<br />
-	<p>
-		<a href="{% url 'auth_password_change' %}">Change website password</a>
-		<br />
-		You will be redirected to an encrypted connection. The website password is <strong>not</strong> transmitted in cleartext.
-	</p>
-	<p>
-		<a href="{% url 'wlggz_changepw' %}">Change online gaming password</a>
-		<br />
-		<strong class="errormessage">WARNING: The online gaming password is transmitted in cleartext. Do not use your website password!</strong>
-	</p>
+
+	<h2>Other options:</h2>
+	<ul>
+		<li><a href="{% url 'auth_password_change' %}">Change website password</a></li>
+		<li><a href="{% url 'wlggz_changepw' %}">Change online gaming password</a></li>
+		<li><a href="{% url 'delete_me' %}">Delete me</a></li>
+	</ul>
 </div>
 {% endblock %}
