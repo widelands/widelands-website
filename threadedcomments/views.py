@@ -99,8 +99,8 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
             new_comment.parent = get_object_or_404(model, id=int(parent_id))
         new_comment.save()
         if add_messages:
-                request.user.message_set.create(
-                    message='Your message has been posted successfully.')
+            request.user.message_set.create(
+                message='Your message has been posted successfully.')
 
         if ajax == 'json':
             return JSONResponse([new_comment, ])
