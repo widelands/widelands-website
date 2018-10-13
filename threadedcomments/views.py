@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, Context, Template
 from django.utils.http import urlquote
 from django.conf import settings
-from threadedcomments.forms import FreeThreadedCommentForm, ThreadedCommentForm
-from threadedcomments.models import ThreadedComment, FreeThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
+from threadedcomments.forms import ThreadedCommentForm
+from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.utils import JSONResponse, XMLResponse
 from wl_utils import get_real_ip
 
@@ -59,10 +59,10 @@ def _preview(request, context_processors, extra_context, form_class=ThreadedComm
                   )
 
 
-def free_comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, model=FreeThreadedComment, form_class=FreeThreadedCommentForm, context_processors=[], extra_context={}):
-    """Receives POST data and either creates a new ``ThreadedComment`` or
-    ``FreeThreadedComment``, or edits an old one based upon the specified
-    parameters.
+@login_required
+def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, context_processors=[], extra_context={}):
+    """Receives POST data and creates a new ``ThreadedComment``, or
+    edits an old one based upon the specified parameters.
 
     If there is a 'preview' key in the POST request, a preview will be forced and the
     comment will not be saved until a 'preview' key is no longer in the POST request.
@@ -74,6 +74,8 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
     where the comment may be edited until it does not contain errors.
 
     """
+    form_class = ThreadedCommentForm
+    model = ThreadedComment
     if not edit_id and not (content_type and object_id):
         raise Http404  # Must specify either content_type and object_id or edit_id
     if 'preview' in request.POST:
@@ -87,25 +89,19 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
     if form.is_valid():
         new_comment = form.save(commit=False)
         if not edit_id:
-            new_comment.ip_address = get_real_ip(request)
             new_comment.content_type = get_object_or_404(
                 ContentType, id=int(content_type))
             new_comment.object_id = int(object_id)
-        if model == ThreadedComment:
-            new_comment.user = request.user
+
+        new_comment.user = request.user
+
         if parent_id:
             new_comment.parent = get_object_or_404(model, id=int(parent_id))
         new_comment.save()
-        if model == ThreadedComment:
-            if add_messages:
-                request.user.message_set.create(
-                    message='Your message has been posted successfully.')
-        else:
-            request.session['successful_data'] = {
-                'name': form.cleaned_data['name'],
-                'website': form.cleaned_data['website'],
-                'email': form.cleaned_data['email'],
-            }
+        if add_messages:
+            request.user.message_set.create(
+                message='Your message has been posted successfully.')
+
         if ajax == 'json':
             return JSONResponse([new_comment, ])
         elif ajax == 'xml':
@@ -129,60 +125,3 @@ def free_comment(request, content_type=None, object_id=None, edit_id=None, paren
         return XMLResponse(response_str, is_iterable=False)
     else:
         return _preview(request, context_processors, extra_context, form_class=form_class)
-
-
-def comment(*args, **kwargs):
-    """Thin wrapper around free_comment which adds login_required status and
-    also assigns the ``model`` to be ``ThreadedComment``."""
-    kwargs['model'] = ThreadedComment
-    kwargs['form_class'] = ThreadedCommentForm
-    return free_comment(*args, **kwargs)
-# Require login to be required, as request.user must exist and be valid.
-comment = login_required(comment)
-
-
-def can_delete_comment(comment, user):
-    """Default callback function to determine wether the given user has the
-    ability to delete the given comment."""
-    if user.is_staff or user.is_superuser:
-        return True
-    if hasattr(comment, 'user') and comment.user == user:
-        return True
-    return False
-
-# Todo: Next one is not used so far and may need adjustments to the render()
-def comment_delete(request, object_id, model=ThreadedComment, extra_context={}, context_processors=[], permission_callback=can_delete_comment):
-    """Deletes the specified comment, which can be either a
-    ``FreeThreadedComment`` or a ``ThreadedComment``.
-
-    If it is a POST request, then the comment will be deleted outright,
-    however, if it is a GET request, a confirmation page will be shown.
-
-    """
-    tc = get_object_or_404(model, id=int(object_id))
-    if not permission_callback(tc, request.user):
-        login_url = settings.LOGIN_URL
-        current_url = urlquote(request.get_full_path())
-        return HttpResponseRedirect('%s?next=%s' % (login_url, current_url))
-    if request.method == 'POST':
-        tc.delete()
-        return HttpResponseRedirect(_get_next(request))
-    else:
-        if model == ThreadedComment:
-            is_free_threaded_comment = False
-            is_threaded_comment = True
-        else:
-            is_free_threaded_comment = True
-            is_threaded_comment = False
-
-        extra_context.update(
-            {'comment': tc,
-             'is_free_threaded_comment': is_free_threaded_comment,
-             'is_threaded_comment': is_threaded_comment,
-             'next': _get_next(request),
-             }
-            )
-        return render(request,
-                      'threadedcomments/confirm_delete.html',
-                      extra_context,
-                      )

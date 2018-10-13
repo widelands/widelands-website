@@ -1,5 +1,5 @@
 from django.db.models import signals
-from threadedcomments.models import ThreadedComment, FreeThreadedComment, MARKUP_CHOICES
+from threadedcomments.models import ThreadedComment, MARKUP_CHOICES
 from threadedcomments.models import DEFAULT_MAX_COMMENT_LENGTH, DEFAULT_MAX_COMMENT_DEPTH
 from comment_utils import moderation
 
@@ -37,9 +37,8 @@ class CommentModerator(moderation.CommentModerator):
 class Moderator(moderation.Moderator):
 
     def connect(self):
-        for model in (ThreadedComment, FreeThreadedComment):
-            signals.pre_save.connect(self.pre_save_moderation, sender=model)
-            signals.post_save.connect(self.post_save_moderation, sender=model)
+        signals.pre_save.connect(self.pre_save_moderation, sender=ThreadedComment)
+        signals.post_save.connect(self.post_save_moderation, sender=ThreadedComment)
 
     # THE FOLLOWING ARE HACKS UNTIL django-comment-utils GETS UPDATED SIGNALS
     # ####
