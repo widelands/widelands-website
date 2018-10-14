@@ -55,7 +55,9 @@
 
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
-	<h1>News</h1>
+    <div id="content_header">
+        <h1>News</h1>
+    </div>
 	{% for object in latest_posts_list %}
 		{% include "news/inlines/post_detail.html" %}
 	{% endfor %}

@@ -4,8 +4,11 @@
 Not found - {{ block.super}}
 {% endblock %}
 
+{% block content_header %}
+    <h1>Not found...</h1>
+{% endblock %}
+
 {% block content_main %} 
-<h1>Not found...</h1>
 <div class="blogEntry">
 	<p>
 		The document you requested was not found....<br />

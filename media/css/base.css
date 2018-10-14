@@ -134,6 +134,10 @@ div.blogEntry h1, h2, h3, h4, h5, h6 {
 	margin: 0.8em 0em 0.5em 0em;
 }
 
+#content_header h1 {
+    display: inline-block;
+}
+
 svg {
 	text-shadow: none;
 }
