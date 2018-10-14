@@ -10,6 +10,10 @@
 {{ forum.name }} - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+	<h1>Forum: {{ forum }}</h1>
+{% endblock %}
+
 {% block extra_head %}
 <link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url 'pybb_feed_posts' %}{{forum.id}}/"  />
 <link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url 'pybb_feed_topics' %}{{forum.id}}/" />
@@ -17,7 +21,6 @@
 {% endblock %}
 
 {% block content_tabbing %}
-	<h1>Forum: {{ forum }}</h1>
 	<ul class="tab-list small">
 		<li>
 		<a href="{% url 'pybb_add_topic' forum.id %}">New Topic</a>

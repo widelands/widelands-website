@@ -2,9 +2,11 @@
 
 {% block title %}{{ month|date:"F - Y" }} - {{block.super}} {% endblock %}
 
-{% block content_main %}
+{% block content_header %}
+    <h1>News Archive: {{ month|date:"F" }} {{ month|date:"Y" }}</h1>
+{% endblock %}
 
-<h1>News Archive: {{ month|date:"F" }} {{ month|date:"Y" }}</h1>
+{% block content_main %}
 <div class="linksBox">
 <a href="{% url 'news_index' %}">News Archiv</a> &#187; 
 <a href="{% url 'news_index' %}{{ month|date:"Y" }}/">{{ month|date:"Y" }}</a> &#187; 

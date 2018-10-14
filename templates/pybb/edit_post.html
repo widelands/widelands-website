@@ -6,11 +6,11 @@
 {% trans "Edit Reply" %} - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+    <h1>{% trans "Edit Reply" %}</h1>
+{% endblock %}
 
 {% block content_main %}
-
-<h1>{% trans "Edit Reply" %}</h1>
-
 <div class="blogEntry">
 	<a href="{% url 'pybb_index' %}">Forums</a> &#187;
 	{% pybb_link post.topic.forum.category %} &#187; 

@@ -4,9 +4,11 @@
 Login - {{ block.super }}
 {% endblock %}
 
-{% block content_main %}
+{% block content_header %}
+    <h1>Login</h1>
+{% endblock %}
 
-<h1>Login</h1>
+{% block content_main %}
 <div class="blogEntry">
 {% if form.errors %}
 	<p class="errormessage">

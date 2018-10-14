@@ -2,9 +2,11 @@
 
 {% block title %}{{ year|date:"Y" }} - {{ block.super }}{% endblock %}
 
-{% block content_main %}
+{% block content_header %}
+    <h1>News Archive: {{ year|date:"Y" }}</h1>
+{% endblock %}
 
-<h1>News Archive: {{ year|date:"Y" }}</h1>
+{% block content_main %}
 <div class="linksBox">
 <a href="{% url 'news_index' %}">News Archiv </a>&#187;
 <a href="{% url 'news_index' %}{{ year|date:"Y" }}">{{ year|date:"Y" }}</a> : 

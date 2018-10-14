@@ -7,8 +7,11 @@ vim:ft=htmldjango:
 Registration - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+    <h1>Registration</h1>
+{% endblock %}
+
 {% block content_main %}
-<h1>Registration</h1>
 <div class="blogEntry">
 	<p>
 		Thank you for signing up. An email with the activation code has been sent to your inbox. 

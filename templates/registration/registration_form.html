@@ -8,8 +8,11 @@ Registration - {{ block.super }}
 {% endblock %}
 {{ form.non_field_errors }} 
 
+{% block content_header %}
+	<h1>Registration</h1>
+{% endblock %}
+
 {% block content_main %}
-<h1>Registration</h1>
 <div class="blogEntry">
 	<form action="." method="POST">
 		<table>

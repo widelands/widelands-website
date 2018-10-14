@@ -7,8 +7,10 @@
 {{ building.displayname }} - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+	<h1>{{ tribe.displayname }}: {{ building.displayname }}</h1>
+{% endblock %}
 {% block content_main %}
-<h1>{{ tribe.displayname }}: {{ building.displayname }}</h1>
 <div class="blogEntry">
 	<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
 	<a href="{% url 'wlhelp_buildings' tribe.name %}">{{ tribe.displayname }} Buildings</a> &#187;

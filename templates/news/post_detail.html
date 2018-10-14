@@ -15,8 +15,11 @@ Base view to show a news post in the archive
 	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/comments.css" />
 {% endblock %}
 
-{% block content_main %}
+{% block content_header %}
 	<h1>News: {{ object.title }}</h1>
+{% endblock %}
+
+{% block content_main %}
 	<div class="linksBox">
 		<a href="{% url 'news_index' %}">News Archive: </a>
 		{% if object.get_previous_by_publish %}

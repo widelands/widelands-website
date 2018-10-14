@@ -47,11 +47,11 @@
 				</div>
 				<div id="content">
 				<!-- all below navigation on the left -->
+					<div id="content_header">
 					{% block content_header %}
-						<!-- used for tabbed pages where particular
-							 tabs point to different sites-->
+						<!-- the header of each page -->
 					{% endblock %}
-					
+					</div>
 					{% block content_tabbing %}
 					<!-- used to display tabs on pages. For tabs which point to
 						 other pages, use it in base.html of the main page -->

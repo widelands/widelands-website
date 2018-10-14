@@ -7,8 +7,11 @@
 Workers - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+	<h1>{{ tribe.displayname }}: Workers</h1>
+{% endblock %}
+
 {% block content_main %}
-<h1>{{ tribe.displayname }}: Workers</h1>
 <div class="blogEntry">
 	<div class="posRight">
 		{% include 'wlhelp/inlines/js_form_scripting.html' %}

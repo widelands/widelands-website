@@ -288,11 +288,8 @@ div#footer {
 
 #header .header_boxes li {
 	border: 1px solid rgba(90, 74, 49, 0.84);
-	/*z-index: 0;*/
 	padding: 2px 5px 2px 5px;
-	/*display: block;*/
 	text-align: center;
-	/*align-self: center;*/
 }
 
 #header .header_boxes img {
@@ -301,7 +298,6 @@ div#footer {
 
 #header li.loginBox {
 	background-image: url("../img/black20.png");
-	/*padding: 4px;*/
 	border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
 	-khtml-border-radius: 4px 4px 0px 0px;
@@ -311,8 +307,6 @@ div#footer {
 #header p {	
 	padding: 0px;
 	margin: 0px;
-	/*padding-left: 4px;
-	padding-right: 4px;*/
 }
 
 #header img {

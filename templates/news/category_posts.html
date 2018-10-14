@@ -5,8 +5,11 @@
 
 {% block title %} Category: {{ cur_category }} - {{ block.super }}{% endblock %}
 
+{% block content_header %}
+    <h1>Posts for Category: {{ cur_category }}</h1>
+{% endblock %}
+
 {% block content_main %}
-<h1>Posts for Category: {{ cur_category }}</h1>
 <div>
 	<div class="linksBox">
 		<a href="{% url 'news_index' %}">News Archive</a>

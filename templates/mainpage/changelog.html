@@ -7,8 +7,11 @@
 {{ block.super}}
 {% endblock %}
 
+{% block content_header %}
+    <h1>Changelog</h1>
+{% endblock %}
+
 {% block content_main %}
-<h1>Changelog</h1>
 <div class="blogEntry">
 	{{ changelog|wl_markdown }}
 </div>

@@ -5,8 +5,11 @@
 {% trans "Delete Post" %} - {{ block.super }}
 {% endblock %}
 
+{% block content_header %}
+    <h1>{% trans "Delete Post" %}</h1>
+{% endblock %}
+
 {% block content_main %}
-<h1>{% trans "Delete Post" %}</h1>
 <div class="blogEntry">
 	<h3>{% trans "Are you sure you want to delete this message?" %}</h3>
 	<div class="preview-box">

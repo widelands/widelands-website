@@ -9,8 +9,11 @@
 
 {% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
 
-{% block content_tabbing %}
+{% block content_header %}
 	<h1>Poll: {{ object.name }}</h1>
+{% endblock %}
+
+{% block content_tabbing %}
 	{% if perms.wlpoll %}
 	<ul class="small tab-list">
 		{% if perms.wlpoll.add_poll %}

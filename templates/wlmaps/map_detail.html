@@ -32,8 +32,10 @@ $(function() {
 {% endif %}
 {% endblock %}
 
+{% block content_header %}
+    <h1>Map: {{ map.name }}</h1>
+{% endblock %}
 {% block content_main %}
-<h1 class="no_tabs">Map: {{ map.name }}</h1>
 <div class="blogEntry" style="padding-bottom: 3em">
 	<div>
 		<a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}

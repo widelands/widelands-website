@@ -9,8 +9,10 @@
 {% load threadedcommentstags %}
 {% load pagination_tags %}
 
-{% block content_tabbing %}
+{% block content_header %}
 	<h1>Maps</h1>
+{% endblock %}
+{% block content_tabbing %}
 	<ul class="tab-list small">
 		<li>
 			<a href="{% url 'wlmaps_upload' %}">Upload a new map</a>

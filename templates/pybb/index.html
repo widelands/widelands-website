@@ -1,9 +1,11 @@
 {% extends 'pybb/base.html' %}
 {% load pybb_extras %}
 
-{% block content_main %}
-<h1>Forums</h1>
+{% block content_header %}
+    <h1>Forums</h1>
+{% endblock %}
 
+{% block content_main %}
 {% for category in cats %}
 <div class="blogEntry">
 	<h3><a href="{{category.get_absolute_url}}" class="invertedColor">{{category.name}}</a></h3>

@@ -15,8 +15,10 @@
 <link rel="alternate" type="application/rss+xml" title="Widelands News" href="news/feed/" />
 
 {{ block.super}}{% endblock %}
+{% block content_header %}
+	<h1>Welcome to Widelands.org</h1>
+{% endblock %}
 {% block content_main %}
-<h1>Welcome to Widelands.org</h1>
 <div class="blogEntry" style="min-height: 380px;">
 	<img class="landing posRight" src="{{ MEDIA_URL }}img/welcome.jpg" alt="Welcome!" />
 	<p>
