@@ -21,4 +21,4 @@ class PrivacyPolicy(models.Model):
         return self.language
     
     def get_absolute_url(self):
-        return reverse('policy_translated', kwargs={'lang': self.language})
+        return reverse('policy_translated', kwargs={'slug': self.slug})
