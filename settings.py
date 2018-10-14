@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'wlscheduling',
     'check_input.apps.CheckInput',
     'documentation',
+    'privacy_policy.apps.PrivacyPolicyConfig',
     'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps

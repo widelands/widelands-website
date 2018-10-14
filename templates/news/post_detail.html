@@ -30,7 +30,7 @@ Base view to show a news post in the archive
 	{% include "news/inlines/post_detail.html" %}
 
 	<div class="blogEntry">
-		<h3>Comments on this Post:</h3>
+		<h3 id="comment_anchor">Comments on this Post:</h3>
 		{% include "threadedcomments/inlines/comments.html" %}
 	</div>
 {% endblock %}
