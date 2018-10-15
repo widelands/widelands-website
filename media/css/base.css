@@ -34,7 +34,7 @@ a {
 }
 
 a:visited {
-  color: #C8BE93;
+  color: #e0d7b0;
 }
 
 a.missingLink {
@@ -315,14 +315,6 @@ div#footer {
 
 #header img {
 	vertical-align: middle; /* to prevent a space below */
-}
-
-#header input.donate {
-	border: none;
-	background: none;
-	padding: 0px;
-	margin: 0px;
-	border-radius: 0px;
 }
 
 /****************/
