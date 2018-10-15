@@ -6,18 +6,18 @@
 {% load custom_date %}
 {% load pagination_tags %}
 
+{% block extra_head %}
+<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url 'pybb_feed_posts' %}{{forum.id}}/"  />
+<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url 'pybb_feed_topics' %}{{forum.id}}/" />
+{{ block.super }}
+{% endblock %}
+
 {% block title %}
 {{ forum.name }} - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
 	<h1>Forum: {{ forum }}</h1>
-{% endblock %}
-
-{% block extra_head %}
-<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url 'pybb_feed_posts' %}{{forum.id}}/"  />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url 'pybb_feed_topics' %}{{forum.id}}/" />
-{{ block.super }}
 {% endblock %}
 
 {% block content_tabbing %}
