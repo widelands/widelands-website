@@ -7,6 +7,11 @@
 	"Widelands Logo"></a>
 </div>
 <ul class="header_boxes">
+    <li class="small">
+        <a href="{% url 'wlscreens_index' %}" title="Screenshots">Screenshots<br />
+        <img src="{{ MEDIA_URL }}/img/camera.png" alt="Screenshots" />
+        </a>
+    </li>
 	<li class="small">
 		<a href="{% url 'wiki_article' "Download" %}" title="Download">Download<br />
 		<img src="{{ MEDIA_URL }}/img/download.png" alt="Get Widelands" />
