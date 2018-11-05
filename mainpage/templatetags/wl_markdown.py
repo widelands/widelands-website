@@ -38,8 +38,7 @@ except ImportError:
 
 # We will also need the site domain
 from django.contrib.sites.models import Site
-from settings import SITE_ID, SMILEYS, SMILEY_DIR, \
-    SMILEY_PREESCAPING
+from settings import SITE_ID, SMILEYS, SMILEY_DIR
 
 try:
     _domain = Site.objects.get(pk=SITE_ID).domain
@@ -76,6 +75,7 @@ def _insert_smileys(text):
         for i, word in enumerate(words):
             smiley = ""
             for sc, img in SMILEYS:
+                print(sc)
                 if word == sc:
                     smiley = img
             if smiley:
@@ -87,15 +87,6 @@ def _insert_smileys(text):
                 tmp_content.append(NavigableString(word))
     # Changing the main bs4-soup directly here -> no return value
     text.parent.contents = [x for x in tmp_content]
-
-
-
-def _insert_smiley_preescaping(text):
-    """This searches for smiley symbols in the current text and replaces them
-    with the correct images."""
-    for before, after in SMILEY_PREESCAPING:
-        text = text.replace(before, after)
-    return text
 
 
 def _classify_link(tag):
@@ -177,9 +168,10 @@ def _clickable_image(tag):
             return new_link
     return None
 
+
 FORBIDDEN_TAGS = ['code', 'pre',]
 def find_smileyable_strings(bs4_string):
-    ''' Find strings that contain a smiley symbol'''
+    """Find strings that contain a smiley symbol"""
 
     if bs4_string.parent.name.lower() in FORBIDDEN_TAGS:
         return False
@@ -198,12 +190,12 @@ def find_smileyable_strings(bs4_string):
 md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 
 def do_wl_markdown(value, *args, **keyw):
-    # Do Preescaping for markdown, so that some things stay intact
-    # This is currently only needed for this smiley ">:-)"
-
-    value = _insert_smiley_preescaping(value)
+    """Apply wl specific things, like smileys or colored links"""
+    
+    # If custom==False omit applying some things to speed up rendering
     custom = keyw.pop('custom', True)
     html = smart_str(markdown(value, extensions=md_extensions))
+    print(html)
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
@@ -218,24 +210,25 @@ def do_wl_markdown(value, *args, **keyw):
         # well, empty soup. Return it
         return unicode(soup)
 
-    # Insert smileys
-    smiley_text = soup.find_all(string=find_smileyable_strings)
-    for text in smiley_text:
-        _insert_smileys(text)
-        
-    # Classify links
-    for tag in soup.find_all('a'):
-        rv = _classify_link(tag)
-        if rv:
-            for attribute in rv.iterkeys():
-                tag[attribute] = rv.get(attribute)
-
-    # All external images gets clickable
-    # This applies only in forum
-    for tag in soup.find_all('img'):
-        link = _clickable_image(tag)
-        if link:
-            tag.replace_with(link)
+    if custom:
+        # Insert smileys
+        smiley_text = soup.find_all(string=find_smileyable_strings)
+        for text in smiley_text:
+            _insert_smileys(text)
+            
+        # Classify links
+        for tag in soup.find_all('a'):
+            rv = _classify_link(tag)
+            if rv:
+                for attribute in rv.iterkeys():
+                    tag[attribute] = rv.get(attribute)
+    
+        # All external images gets clickable
+        # This applies only in forum
+        for tag in soup.find_all('img'):
+            link = _clickable_image(tag)
+            if link:
+                tag.replace_with(link)
 
     return unicode(soup)
 
