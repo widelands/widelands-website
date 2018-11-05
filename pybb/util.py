@@ -3,7 +3,7 @@ import random
 import traceback
 import json
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse

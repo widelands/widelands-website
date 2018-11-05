@@ -25,7 +25,7 @@ import re
 import urllib
 import bleach
 
-from BeautifulSoup import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup, NavigableString
 
 # If we can import a Wiki module with Articles, we
 # will check for internal wikipages links in all internal
@@ -59,18 +59,30 @@ register = template.Library()
 
 def _insert_smileys(text):
     """This searches for smiley symbols in the current text and replaces them
-    with the correct images.
-
-    Only replacing if smiley symbols aren't in a word (e.g. http://....)
-
-    """
-    words = text.split(' ')
-    for sc, img in SMILEYS:
-        if sc in words:
-            words[words.index(
-                sc)] = "<img src='%s%s' alt='%s' />" % (SMILEY_DIR, img, img)
-    text = ' '.join(words)
-    return text
+    with the correct images."""
+    
+    tmp_content = []
+    for content in text.parent.contents:
+        try:
+            # if this fails, content is probably a tag, eg: <br />
+            words = content.split(' ')
+        except:
+            # apply the unsplittable content and continue
+            tmp_content.append(content)
+            continue
+        
+        for i, word in enumerate(words):
+            smiley = ""
+            for sc, img in SMILEYS:
+                if word == sc:
+                    smiley = img
+            if smiley:
+                tmp_content.append(BeautifulSoup(features="lxml").new_tag('img', src="{}{}".format(SMILEY_DIR, smiley)))
+            else:
+                if i < (len(words) - 1):
+                    word = word + ' '
+                tmp_content.append(NavigableString(word))
+    text.parent.contents = [x for x in tmp_content]
 
 
 def _insert_smiley_preescaping(text):
@@ -156,6 +168,21 @@ def _clickable_image(tag):
             return text
     return None
 
+FORBIDDEN_TAGS = ['code', 'pre',]
+def find_smileyable_strings(bs4_string):
+    ''' Find strings that contain a smiley symbol'''
+
+    if bs4_string.parent.name.lower() in FORBIDDEN_TAGS:
+        return False
+
+    # A BS4 Tag consists of a list called contents if the tag contains another tag:
+    # E.G.the contents of the p-tag: <p>Foo<br />bar</p> is
+    # ['Foo', <br />, 'bar']
+    for element in bs4_string.parent.contents:
+        for sc, img in SMILEYS:
+            if sc in bs4_string:
+                return True
+    return False
 
 # Predefine the markdown extensions here to have a clean code in
 # do_wl_markdown()
@@ -164,6 +191,7 @@ md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 def do_wl_markdown(value, *args, **keyw):
     # Do Preescaping for markdown, so that some things stay intact
     # This is currently only needed for this smiley ">:-)"
+
     value = _insert_smiley_preescaping(value)
     custom = keyw.pop('custom', True)
     html = smart_str(markdown(value, extensions=md_extensions))
@@ -173,38 +201,21 @@ def do_wl_markdown(value, *args, **keyw):
         html = mark_safe(bleach.clean(
             html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
 
-    # Since we only want to do replacements outside of tags (in general) and not between
-    # <a> and </a> we partition our site accordingly
-    # BeautifoulSoup does all the heavy lifting
-    soup = BeautifulSoup(html)
+    # Prepare the html and apply smileys and classes
+    # BeautifulSoup objects are all references, so changing a taken variable will
+    # have directly effect on the html!
+    soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
 
-    for text in soup.findAll(text=True):
-        # Do not replace inside a link
-        if text.parent.name == 'a':
-            continue
-
-        # We do our own small preprocessing of the stuff we got, after markdown
-        # went over it General consensus is to avoid replacing anything in
-        # links [blah](blkf)
-        if custom:
-            rv = text
-            # Replace smileys; only outside "code-tags"
-            if not text.parent.name == 'code':
-                rv = _insert_smileys(rv)
-
-            text.replaceWith(rv)
-
-    # This call slows the whole function down...
-    # unicode->reparsing.
-    # The function goes from .5 ms to 1.5ms on my system
-    # Well, for our site with it's little traffic it's maybe not so important...
-    # What a waste of cycles :(
-    soup = BeautifulSoup(unicode(soup))
-    # We have to go over this to classify links
-    for tag in soup.findAll('a'):
+    # Insert smileys
+    smiley_text = soup.find_all(string=find_smileyable_strings)
+    for text in smiley_text:
+        _insert_smileys(text)
+        
+    # Classify links
+    for tag in soup.find_all('a'):
         rv = _classify_link(tag)
         if rv:
             for attribute in rv.iterkeys():
@@ -212,7 +223,7 @@ def do_wl_markdown(value, *args, **keyw):
 
     # All external images gets clickable
     # This applies only in forum
-    for tag in soup.findAll('img'):
+    for tag in soup.find_all('img'):
         link = _clickable_image(tag)
         if link:
             tag.replaceWith(link)
