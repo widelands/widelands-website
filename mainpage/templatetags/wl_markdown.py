@@ -59,7 +59,9 @@ register = template.Library()
 
 def _insert_smileys(text):
     """This searches for smiley symbols in the current text and replaces them
-    with the correct images."""
+    with the correct images.
+    
+    Then we have to reassemble the whole contents..."""
     
     tmp_content = []
     for content in text.parent.contents:
@@ -80,9 +82,12 @@ def _insert_smileys(text):
                 tmp_content.append(BeautifulSoup(features="lxml").new_tag('img', src="{}{}".format(SMILEY_DIR, smiley)))
             else:
                 if i < (len(words) - 1):
+                    # Apply a space after each word, except the last word
                     word = word + ' '
                 tmp_content.append(NavigableString(word))
+    # Changing the main bs4-soup directly here -> no return value
     text.parent.contents = [x for x in tmp_content]
+
 
 
 def _insert_smiley_preescaping(text):
@@ -160,12 +165,16 @@ def _classify_link(tag):
 def _clickable_image(tag):
     # is external link?
     if tag['src'].startswith('http'):
-        # is allways a link?
+        # is allready a link?
         if tag.parent.name != 'a':
             # add link to image
-            text = '<a href=' + tag['src'] + \
-                '><img src=' + tag['src'] + '></a>'
-            return text
+            new_link = BeautifulSoup(features="lxml").new_tag('a')
+            new_link['href'] = tag['src']
+            new_img = BeautifulSoup(features="lxml").new_tag('img')
+            new_img['src'] = tag['src']
+            new_img['alt'] = tag['alt']
+            new_link.append(new_img)
+            return new_link
     return None
 
 FORBIDDEN_TAGS = ['code', 'pre',]
@@ -202,7 +211,7 @@ def do_wl_markdown(value, *args, **keyw):
             html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
 
     # Prepare the html and apply smileys and classes
-    # BeautifulSoup objects are all references, so changing a taken variable will
+    # BeautifulSoup objects are all references, so changing an assigned variable will
     # have directly effect on the html!
     soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
@@ -226,7 +235,7 @@ def do_wl_markdown(value, *args, **keyw):
     for tag in soup.find_all('img'):
         link = _clickable_image(tag)
         if link:
-            tag.replaceWith(link)
+            tag.replace_with(link)
 
     return unicode(soup)
 
