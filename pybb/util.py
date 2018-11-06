@@ -174,15 +174,15 @@ def urlize(data):
     soup = BeautifulSoup(data, 'lxml')
     for text in soup.find_all(string=find_strings_to_urlize):
         new_content = []
-        parts = EXT_LINKS_RE.split(text)
-        for part in parts:
-            if part.startswith('http'):
+        elements = EXT_LINKS_RE.split(text)
+        for element in elements:
+            if element.startswith('http'):
                 tag = soup.new_tag('a')
-                tag['href'] = part
-                tag.string = part
+                tag['href'] = element
+                tag.string = element
                 tag['nofollow'] = 'true'
             else:
-                tag = NavigableString(part)
+                tag = NavigableString(element)
             new_content.append(tag)
         text.parent.contents = new_content
 
