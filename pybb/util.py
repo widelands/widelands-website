@@ -172,10 +172,9 @@ def urlize(data):
     """
 
     soup = BeautifulSoup(data, 'lxml')
-    texts = soup.find_all(string=find_strings_to_urlize)
-    for text in soup.find_all(string=find_strings_to_urlize):#texts:
-        parts = EXT_LINKS_RE.split(text)
+    for text in soup.find_all(string=find_strings_to_urlize):
         new_content = []
+        parts = EXT_LINKS_RE.split(text)
         for part in parts:
             if part.startswith('http'):
                 tag = soup.new_tag('a')
