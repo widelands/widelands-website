@@ -75,7 +75,6 @@ def _insert_smileys(text):
         for i, word in enumerate(words):
             smiley = ""
             for sc, img in SMILEYS:
-                print(sc)
                 if word == sc:
                     smiley = img
             if smiley:
@@ -176,7 +175,7 @@ def find_smileyable_strings(bs4_string):
     if bs4_string.parent.name.lower() in FORBIDDEN_TAGS:
         return False
 
-    # A BS4 Tag consists of a list called contents if the tag contains another tag:
+    # A BS4 Tag has a list called 'contents'.
     # E.G.the contents of the p-tag: <p>Foo<br />bar</p> is
     # ['Foo', <br />, 'bar']
     for element in bs4_string.parent.contents:
@@ -189,13 +188,13 @@ def find_smileyable_strings(bs4_string):
 # do_wl_markdown()
 md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 
+import time
 def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links"""
-    
+    start = time.time()
     # If custom==False omit applying some things to speed up rendering
     custom = keyw.pop('custom', True)
     html = smart_str(markdown(value, extensions=md_extensions))
-    print(html)
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
@@ -229,7 +228,7 @@ def do_wl_markdown(value, *args, **keyw):
             link = _clickable_image(tag)
             if link:
                 tag.replace_with(link)
-
+    print("Elapsed time for rendering: ", time.time() - start)
     return unicode(soup)
 
 

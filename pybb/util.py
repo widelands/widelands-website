@@ -2,8 +2,9 @@ import os.path
 import random
 import traceback
 import json
+import re
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -145,6 +146,24 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     return form
 
 
+EXT_LINKS_RE = re.compile(r'(https?:[\d\w+/.-:~-]+)')
+def find_strings_to_urlize(bs4_string):
+    """Find all strings which contains pastet links."""
+    
+    # Don't catch if this is already a link or inside code tags
+    if bs4_string.parent.name.lower() == 'a' or bs4_string.parent.name.lower() == 'code':
+        return False
+    
+    for element in bs4_string.parent.contents:
+        try:
+            # Match fails if the element just contain e.g. '\n' or <br />
+            if EXT_LINKS_RE.search(element):
+                return True
+        except:
+            pass
+    return False
+
+
 def urlize(data):
     """Urlize plain text links in the HTML contents.
 
@@ -152,18 +171,21 @@ def urlize(data):
 
     """
 
-    soup = BeautifulSoup(data)
-    for chunk in soup.findAll(text=True):
-        islink = False
-        ptr = chunk.parent
-        while ptr.parent:
-            if ptr.name == 'a' or ptr.name == 'code':
-                islink = True
-                break
-            ptr = ptr.parent
-        if not islink:
-            # Using unescape to prevent conversation of f.e. &gt; to &amp;gt;
-            chunk = chunk.replaceWith(django_urlize(unicode(unescape(chunk))))
+    soup = BeautifulSoup(data, 'lxml')
+    texts = soup.find_all(string=find_strings_to_urlize)
+    for text in soup.find_all(string=find_strings_to_urlize):#texts:
+        parts = EXT_LINKS_RE.split(text)
+        new_content = []
+        for part in parts:
+            if part.startswith('http'):
+                tag = soup.new_tag('a')
+                tag['href'] = part
+                tag.string = part
+                tag['nofollow'] = 'true'
+            else:
+                tag = NavigableString(part)
+            new_content.append(tag)
+        text.parent.contents = new_content
 
     return unicode(soup)
 
