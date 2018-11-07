@@ -158,7 +158,7 @@ def _classify_link(tag):
 def _clickable_image(tag):
     # is external link?
     if tag['src'].startswith('http'):
-        # is allready a link?
+        # Do not change if it is allready a link
         if tag.parent.name != 'a':
             # add link to image
             new_link = BeautifulSoup(features="lxml").new_tag('a')
