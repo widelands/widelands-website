@@ -158,7 +158,6 @@ def find_strings_to_urlize(bs4_string):
         try:
             # Match fails if the element just contain e.g. '\n' or <br />
             if EXT_LINKS_RE.search(element):
-                #print("Found link in : ", element)
                 return True
         except:
             pass
@@ -181,17 +180,20 @@ def urlize(data):
                 splitted_strings = EXT_LINKS_RE.split(string_or_tag)
                 for string in splitted_strings:
                     if string.startswith('http'):
-                        print("franku found link")
+                        # Apply an a-Tag
                         tag = soup.new_tag('a')
                         tag['href'] = string
                         tag.string = string
                         tag['nofollow'] = 'true'
                         new_content.append(tag)
                     else:
+                        # This is just a string, apply a bs4-string
                         new_content.append(NavigableString(string))
             except:
+                # Regex failed, so this is a tag
                 new_content.append(string_or_tag)
 
+        # Apply the new content
         found_string.parent.contents = new_content
 
     return unicode(soup)
