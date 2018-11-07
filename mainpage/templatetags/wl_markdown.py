@@ -78,7 +78,10 @@ def _insert_smileys(text):
                 if word == sc:
                     smiley = img
             if smiley:
-                tmp_content.append(BeautifulSoup(features="lxml").new_tag('img', src="{}{}".format(SMILEY_DIR, smiley)))
+                img_tag = BeautifulSoup(features="lxml").new_tag('img')
+                img_tag['src'] = "{}{}".format(SMILEY_DIR, smiley)
+                img_tag['alt'] = smiley
+                tmp_content.append(img_tag)
             else:
                 if i < (len(words) - 1):
                     # Apply a space after each word, except the last word
@@ -169,7 +172,7 @@ def _clickable_image(tag):
 
 
 FORBIDDEN_TAGS = ['code', 'pre',]
-def find_smileyable_strings(bs4_string):
+def find_smiley_Strings(bs4_string):
     """Find strings that contain a smiley symbol"""
 
     if bs4_string.parent.name.lower() in FORBIDDEN_TAGS:
@@ -179,8 +182,8 @@ def find_smileyable_strings(bs4_string):
     # E.G.the contents of the p-tag: <p>Foo<br />bar</p> is
     # ['Foo', <br />, 'bar']
     for element in bs4_string.parent.contents:
-        for sc, img in SMILEYS:
-            if sc in bs4_string:
+        for sc in SMILEYS:
+            if sc[0] in bs4_string:
                 return True
     return False
 
@@ -211,7 +214,7 @@ def do_wl_markdown(value, *args, **keyw):
 
     if custom:
         # Insert smileys
-        smiley_text = soup.find_all(string=find_smileyable_strings)
+        smiley_text = soup.find_all(string=find_smiley_Strings)
         for text in smiley_text:
             _insert_smileys(text)
             

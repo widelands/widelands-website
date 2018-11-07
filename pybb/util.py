@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os.path
 import random
 import traceback
@@ -153,11 +154,11 @@ def find_strings_to_urlize(bs4_string):
     # Don't catch if this is already a link or inside code tags
     if bs4_string.parent.name.lower() == 'a' or bs4_string.parent.name.lower() == 'code':
         return False
-    
     for element in bs4_string.parent.contents:
         try:
             # Match fails if the element just contain e.g. '\n' or <br />
             if EXT_LINKS_RE.search(element):
+                #print("Found link in : ", element)
                 return True
         except:
             pass
@@ -172,19 +173,26 @@ def urlize(data):
     """
 
     soup = BeautifulSoup(data, 'lxml')
-    for text in soup.find_all(string=find_strings_to_urlize):
+    for found_string in soup.find_all(string=find_strings_to_urlize):
         new_content = []
-        elements = EXT_LINKS_RE.split(text)
-        for element in elements:
-            if element.startswith('http'):
-                tag = soup.new_tag('a')
-                tag['href'] = element
-                tag.string = element
-                tag['nofollow'] = 'true'
-            else:
-                tag = NavigableString(element)
-            new_content.append(tag)
-        text.parent.contents = new_content
+        strings_or_tags = found_string.parent.contents
+        for string_or_tag in strings_or_tags:
+            try:
+                splitted_strings = EXT_LINKS_RE.split(string_or_tag)
+                for string in splitted_strings:
+                    if string.startswith('http'):
+                        print("franku found link")
+                        tag = soup.new_tag('a')
+                        tag['href'] = string
+                        tag.string = string
+                        tag['nofollow'] = 'true'
+                        new_content.append(tag)
+                    else:
+                        new_content.append(NavigableString(string))
+            except:
+                new_content.append(string_or_tag)
+
+        found_string.parent.contents = new_content
 
     return unicode(soup)
 
