@@ -1,4 +1,3 @@
-from __future__ import print_function
 import os.path
 import random
 import traceback
@@ -13,7 +12,6 @@ from django.utils.functional import Promise
 from django.utils.translation import check_for_language
 from django.utils.encoding import force_unicode
 from django import forms
-from django.template.defaultfilters import urlize as django_urlize
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
 from pybb import settings as pybb_settings
@@ -147,9 +145,9 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     return form
 
 
-EXT_LINKS_RE = re.compile(r'(https?:[\d\w+/.-:~-]+)')
+PLAIN_LINK_RE = re.compile(r'(https?:[\d\w+/.-:~-]+)')
 def find_strings_to_urlize(bs4_string):
-    """Find all strings which contains pastet links."""
+    """Find all strings which contains plain text links."""
     
     # Don't catch if this is already a link or inside code tags
     if bs4_string.parent.name.lower() == 'a' or bs4_string.parent.name.lower() == 'code':
@@ -157,7 +155,7 @@ def find_strings_to_urlize(bs4_string):
     for element in bs4_string.parent.contents:
         try:
             # Match fails if the element just contain e.g. '\n' or <br />
-            if EXT_LINKS_RE.search(element):
+            if PLAIN_LINK_RE.search(element):
                 return True
         except:
             pass
@@ -177,8 +175,7 @@ def urlize(data):
         strings_or_tags = found_string.parent.contents
         for string_or_tag in strings_or_tags:
             try:
-                splitted_strings = EXT_LINKS_RE.split(string_or_tag)
-                for string in splitted_strings:
+                for string in PLAIN_LINK_RE.split(string_or_tag):
                     if string.startswith('http'):
                         # Apply an a-Tag
                         tag = soup.new_tag('a')
@@ -190,9 +187,9 @@ def urlize(data):
                         # This is just a string, apply a bs4-string
                         new_content.append(NavigableString(string))
             except:
-                # Regex failed, so this is a tag
+                # Regex failed, so apply what ever it is
                 new_content.append(string_or_tag)
-
+    
         # Apply the new content
         found_string.parent.contents = new_content
 
