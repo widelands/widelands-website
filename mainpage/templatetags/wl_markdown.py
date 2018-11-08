@@ -89,7 +89,7 @@ def _insert_smileys(text):
                     # Apply a space after each word, except the last word
                     word = word + ' '
                 tmp_content.append(NavigableString(word))
-    # Changing the main bs4-soup directly here -> no return value
+
     text.parent.contents = [x for x in tmp_content]
 
 
@@ -101,8 +101,8 @@ def _classify_link(tag):
 
     """
     # No class change for image links
-    if tag.findChild('img') != None:
-        return None
+    if tag.next_element.name == 'img':
+        return
 
     try:
         href = tag['href'].lower()
@@ -117,10 +117,14 @@ def _classify_link(tag):
                 external = False
                 break
         if external:
-            return {'class': 'externalLink', 'title': 'This link refers to outer space'}
+            tag['class'] = "externalLink"
+            tag['title'] = "This link refers to outer space"
+            return
 
     if '/profile/' in (tag['href']):
-        return {'class': 'userLink', 'title': 'This link refers to a userpage'}
+        tag['class'] = "userLink"
+        tag['title'] = "This link refers to a userpage"
+        return
 
     if check_for_missing_wikipages and href.startswith('/wiki/'):
 
@@ -129,11 +133,14 @@ def _classify_link(tag):
         pn = urllib.unquote(tag['href'][6:].split('/', 1)[0])
 
         if not len(pn):  # Wiki root link is not a page
-            return {'class': 'wrongLink', 'title': 'This Link misses an articlename'}
+            tag['class'] = "wrongLink"
+            tag['title'] = "This Link misses an articlename"
+            return
 
         # Wiki special pages are also not counted
         if pn in ['list', 'search', 'history', 'feeds', 'observe', 'edit']:
-            return {'class': 'specialLink'}
+            tag['class'] = "specialLink"
+            return
 
         # Check for a redirect
         try:
@@ -144,20 +151,22 @@ def _classify_link(tag):
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
             if pn != act_t:
-                return {'title': "This is a redirect and points to \"" + act_t + "\""}
+                tag['title'] = "This is a redirect and points to \"" + act_t + "\""
+                return
             else:
-                return None
+                return
         except IndexError:
             pass
 
         # article missing (or misspelled)
         if Article.objects.filter(title=pn).count() == 0:
-            return {'class': 'missingLink', 'title': 'This Link is misspelled or missing. Click to create it anyway.'}
+            tag['class'] = "missingLink"
+            tag['title'] = "This Link is misspelled or missing. Click to create it anyway."
+            return
+    return
 
-    return None
 
-
-def _clickable_image(tag):
+def _make_clickable_images(tag):
     # is external link?
     if tag['src'].startswith('http'):
         # Do not change if it is allready a link
@@ -169,8 +178,8 @@ def _clickable_image(tag):
             new_img['src'] = tag['src']
             new_img['alt'] = tag['alt']
             new_link.append(new_img)
-            return new_link
-    return None
+            tag.replace_with(new_link)
+    return
 
 
 FORBIDDEN_TAGS = ['code', 'pre',]
@@ -195,10 +204,12 @@ md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 
 import time
 def do_wl_markdown(value, *args, **keyw):
-    """Apply wl specific things, like smileys or colored links"""
+    """Apply wl specific things, like smileys or colored links.
+    
+    If something get modified, it is mostky done directly in the subfunctions"""
+
     start = time.time()
-    # If custom==False omit applying some things to speed up rendering
-    custom = keyw.pop('custom', True)
+    beautify = keyw.pop('beautify', True)
     html = smart_str(markdown(value, extensions=md_extensions))
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
@@ -206,15 +217,15 @@ def do_wl_markdown(value, *args, **keyw):
         html = mark_safe(bleach.clean(
             html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
 
-    # Prepare the html and apply smileys and classes
-    # BeautifulSoup objects are all references, so changing an assigned variable will
-    # have directly effect on the html!
+    # Prepare the html and apply smileys and classes.
+    # BeautifulSoup objects are all references, so changing a variable
+    # derived from the soup will take effect on the soup itself.
     soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
 
-    if custom:
+    if beautify:
         # Insert smileys
         smiley_text = soup.find_all(string=find_smiley_Strings)
         for text in smiley_text:
@@ -222,18 +233,14 @@ def do_wl_markdown(value, *args, **keyw):
             
         # Classify links
         for tag in soup.find_all('a'):
-            rv = _classify_link(tag)
-            if rv:
-                for attribute in rv.iterkeys():
-                    tag[attribute] = rv.get(attribute)
-    
+            _classify_link(tag)
+
         # All external images gets clickable
         # This applies only in forum
         for tag in soup.find_all('img'):
-            link = _clickable_image(tag)
-            if link:
-                tag.replace_with(link)
-    print("Elapsed time for rendering: ", time.time() - start)
+            _make_clickable_images(tag)
+
+    print("Elapsed time for rendering: ", '{:.3f} sec.'.format(time.time() - start))
     return unicode(soup)
 
 
