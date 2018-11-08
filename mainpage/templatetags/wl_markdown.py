@@ -97,7 +97,7 @@ def _classify_link(tag):
     """Returns a classname to insert if this link is in any way special
     (external or missing wikipages)
 
-    tag to classify for
+    tag: classify for this tag
 
     """
     # No class change for image links
@@ -189,9 +189,6 @@ def find_smiley_Strings(bs4_string):
     if bs4_string.parent.name.lower() in FORBIDDEN_TAGS:
         return False
 
-    # A BS4 Tag has a list called 'contents'.
-    # E.G.the contents of the p-tag: <p>Foo<br />bar</p> is
-    # ['Foo', <br />, 'bar']
     for element in bs4_string.parent.contents:
         for sc in SMILEYS:
             if sc[0] in bs4_string:
@@ -220,6 +217,7 @@ def do_wl_markdown(value, *args, **keyw):
     # Prepare the html and apply smileys and classes.
     # BeautifulSoup objects are all references, so changing a variable
     # derived from the soup will take effect on the soup itself.
+    # Because of that the called functions will modify the soup directly.
     soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
         # well, empty soup. Return it
