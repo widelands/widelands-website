@@ -65,7 +65,7 @@ def _insert_smileys(text):
     tmp_content = []
     for content in text.parent.contents:
         try:
-            # if this fails, content is probably a tag, eg: <br />
+            # If this fails, content is probably '\n' or not a string, e.g.  <br />
             words = content.split(' ')
         except:
             # apply the unsplittable content and continue
@@ -82,6 +82,8 @@ def _insert_smileys(text):
                 img_tag['src'] = "{}{}".format(SMILEY_DIR, smiley)
                 img_tag['alt'] = smiley
                 tmp_content.append(img_tag)
+                # Apply a space after the smiley
+                tmp_content.append(NavigableString(' '))
             else:
                 if i < (len(words) - 1):
                     # Apply a space after each word, except the last word

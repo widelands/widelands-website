@@ -145,22 +145,7 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     return form
 
 
-PLAIN_LINK_RE = re.compile(r'(https?:[\d\w+/.-:~-]+)')
-def find_strings_to_urlize(bs4_string):
-    """Find all strings which contains plain text links."""
-    
-    # Don't catch if this is already a link or inside code tags
-    if bs4_string.parent.name.lower() == 'a' or bs4_string.parent.name.lower() == 'code':
-        return False
-    for element in bs4_string.parent.contents:
-        try:
-            # Match fails if the element just contain e.g. '\n' or <br />
-            if PLAIN_LINK_RE.search(element):
-                return True
-        except:
-            pass
-    return False
-
+PLAIN_LINK_RE = re.compile(r'(http[s]?:\/\/.+[-a-zA-Z0-9@:%._\+~#=/?]+)')
 
 def urlize(data):
     """Urlize plain text links in the HTML contents.
@@ -170,7 +155,7 @@ def urlize(data):
     """
 
     soup = BeautifulSoup(data, 'lxml')
-    for found_string in soup.find_all(string=find_strings_to_urlize):
+    for found_string in soup.find_all(string=PLAIN_LINK_RE):
         new_content = []
         strings_or_tags = found_string.parent.contents
         for string_or_tag in strings_or_tags:
@@ -189,7 +174,7 @@ def urlize(data):
             except:
                 # Regex failed, so apply what ever it is
                 new_content.append(string_or_tag)
-    
+
         # Apply the new content
         found_string.parent.contents = new_content
 
