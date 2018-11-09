@@ -94,7 +94,7 @@ def _insert_smileys(text):
 
 
 def _classify_link(tag):
-    """Returns a classname to insert if this link is in any way special
+    """Applies a classname if this link is in any way special
     (external or missing wikipages)
 
     tag: classify for this tag
@@ -130,15 +130,15 @@ def _classify_link(tag):
 
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
-        pn = urllib.unquote(tag['href'][6:].split('/', 1)[0])
+        article_name = urllib.unquote(tag['href'][6:].split('/', 1)[0])
 
-        if not len(pn):  # Wiki root link is not a page
+        if not len(article_name):  # Wiki root link is not a page
             tag['class'] = "wrongLink"
             tag['title'] = "This Link misses an articlename"
             return
 
         # Wiki special pages are also not counted
-        if pn in ['list', 'search', 'history', 'feeds', 'observe', 'edit']:
+        if article_name in ['list', 'search', 'history', 'feeds', 'observe', 'edit']:
             tag['class'] = "specialLink"
             return
 
@@ -146,11 +146,11 @@ def _classify_link(tag):
         try:
             # try to get the article id; if this fails an IndexError is raised
             a_id = ChangeSet.objects.filter(
-                old_title=pn).values_list('article_id')[0]
+                old_title=article_name).values_list('article_id')[0]
 
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
-            if pn != act_t:
+            if article_name != act_t:
                 tag['title'] = "This is a redirect and points to \"" + act_t + "\""
                 return
             else:
@@ -159,7 +159,7 @@ def _classify_link(tag):
             pass
 
         # article missing (or misspelled)
-        if Article.objects.filter(title=pn).count() == 0:
+        if Article.objects.filter(title=article_name).count() == 0:
             tag['class'] = "missingLink"
             tag['title'] = "This Link is misspelled or missing. Click to create it anyway."
             return
