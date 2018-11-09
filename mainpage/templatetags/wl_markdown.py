@@ -107,7 +107,7 @@ def _classify_link(tag):
     try:
         href = tag['href'].lower()
     except KeyError:
-        return None
+        return
 
     # Check for external link
     if href.startswith('http'):
@@ -182,17 +182,16 @@ def _make_clickable_images(tag):
     return
 
 
-FORBIDDEN_TAGS = ['code', 'pre',]
 def find_smiley_Strings(bs4_string):
     """Find strings that contain a smiley symbol"""
 
-    if bs4_string.parent.name.lower() in FORBIDDEN_TAGS:
+    if bs4_string.parent.name.lower() == 'code':
         return False
 
-    for element in bs4_string.parent.contents:
-        for sc in SMILEYS:
-            if sc[0] in bs4_string:
-                return True
+    #for element in bs4_string.parent.contents:
+    for sc in SMILEYS:
+        if sc[0] in bs4_string:
+            return True
     return False
 
 # Predefine the markdown extensions here to have a clean code in
@@ -205,7 +204,6 @@ def do_wl_markdown(value, *args, **keyw):
     
     If something get modified, it is mostky done directly in the subfunctions"""
 
-    start = time.time()
     beautify = keyw.pop('beautify', True)
     html = smart_str(markdown(value, extensions=md_extensions))
 
@@ -238,7 +236,6 @@ def do_wl_markdown(value, *args, **keyw):
         for tag in soup.find_all('img'):
             _make_clickable_images(tag)
 
-    print("Elapsed time for rendering: ", '{:.3f} sec.'.format(time.time() - start))
     return unicode(soup)
 
 
