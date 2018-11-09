@@ -166,7 +166,6 @@ def urlize(data):
     for found_string in soup.find_all(string=exclude_code_tag):
         new_content = []
         strings_or_tags = found_string.parent.contents
-        print(found_string.parent)
         for string_or_tag in strings_or_tags:
             try:
                 for string in PLAIN_LINK_RE.split(string_or_tag):
