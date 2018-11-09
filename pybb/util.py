@@ -145,7 +145,7 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     return form
 
 
-PLAIN_LINK_RE = re.compile(r'(http[s]?:\/\/.+[-a-zA-Z0-9@:%._\+~#=/?]+)')
+PLAIN_LINK_RE = re.compile(r'(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?]+)')
 
 def urlize(data):
     """Urlize plain text links in the HTML contents.
