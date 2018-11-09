@@ -198,7 +198,6 @@ def find_smiley_Strings(bs4_string):
 # do_wl_markdown()
 md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 
-import time
 def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links.
     

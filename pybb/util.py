@@ -146,6 +146,14 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
 
 
 PLAIN_LINK_RE = re.compile(r'(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?]+)')
+def exclude_code_tag(bs4_string):
+    if bs4_string.parent.name == 'code':
+        return False
+    m = PLAIN_LINK_RE.search(bs4_string)
+    if m:
+        return True
+    return False
+
 
 def urlize(data):
     """Urlize plain text links in the HTML contents.
@@ -155,9 +163,10 @@ def urlize(data):
     """
 
     soup = BeautifulSoup(data, 'lxml')
-    for found_string in soup.find_all(string=PLAIN_LINK_RE):
+    for found_string in soup.find_all(string=exclude_code_tag):
         new_content = []
         strings_or_tags = found_string.parent.contents
+        print(found_string.parent)
         for string_or_tag in strings_or_tags:
             try:
                 for string in PLAIN_LINK_RE.split(string_or_tag):
