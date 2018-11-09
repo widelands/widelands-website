@@ -5,12 +5,11 @@
 {% trans "Changes in" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<div class="posRight small">
-	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
-	| <a href="{% url 'wiki_article_history' article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
-</div>
-<h1>{% trans "Changes in" %} {{ article.title }}</h1>
+{% block content_header %}
+	<h1>{% trans "Changes in" %} {{ article.title }}</h1>
+{% endblock %}
+
+{% block content_main %}
 
 <div class="blogEntry">
 	{% if changeset.old_title != article.title %}

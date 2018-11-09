@@ -1,5 +1,3 @@
-{% load wl_extras %}
-
 <!DOCTYPE html>
 {% comment %}
  vim:ft=htmldjango:
@@ -19,7 +17,7 @@
 		<link href="{{ MEDIA_URL }}favicon.ico" rel="icon" />
 
 		<!--  CSS --> 
-		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/base.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/base.css?v1" />
 		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/navigation.css" />
 		<!--[if lt IE 9]>
 		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base_ielt9.css" />
@@ -37,10 +35,7 @@
 		<a id="top"></a>
 		<div id="wrapper">
 			<div id="header">
-				<div class="loginBox posRight">
-					{% include "login_box.html" %}
-				</div>
-				<a href="{% url 'mainpage' %}"><img src="{{ MEDIA_URL }}img/{% wl_logo %}" class="posLeft" alt="Widelands Logo" /></a>
+				{% include "header.html" %}
 			</div>
 			<div id="topmenu">
 				<!-- Navigation -->
@@ -48,11 +43,23 @@
 			</div>
 			<div id="main" class="clear">
 				<div id="rightColumn" class="posRight">
+                    <!-- below navigation: right side -->
 					{% include "right_boxes.html" %}
 				</div>
 				<div id="content">
-					{% block content %}
-						No Content here!
+				<!-- below navigation: left side -->
+					<div id="content_header">
+					{% block content_header %}
+						<!-- the header of each page -->
+					{% endblock %}
+					</div>
+					{% block content_tabbing %}
+					<!-- used to display tabs on pages. For tabs which point to
+						 other pages, use it in base.html of the main page -->
+					{% endblock %}
+				
+					{% block content_main %}
+						<!-- all in div blogEntry -->
 					{% endblock %}
 				</div>
 			</div>

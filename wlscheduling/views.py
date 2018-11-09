@@ -16,6 +16,7 @@ TIME_FORMAT = '%Y-%m-%dT%H'
 #########
 # Views #
 #########
+@login_required
 def scheduling_main (request):
     return render(request, 'wlscheduling/main.html')
 

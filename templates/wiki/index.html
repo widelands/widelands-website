@@ -4,8 +4,11 @@
 
 {% block title %}Wiki Index - {{ block.super }}{% endblock %}
 
-{% block content %}
-<h1>Wiki: Index</h1>
+{% block content_header %}
+	<h1>Wiki: Index</h1>
+{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	{% if articles %}
 		<p> There are {{ articles|length }} articles in this wiki:</p>

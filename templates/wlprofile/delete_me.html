@@ -7,9 +7,10 @@
 {% trans "Delete me" %} - {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<h1>{% trans "Delete your account" %}</h1>
-
+{% block content_header %}
+	<h1>{% trans "Delete your account" %}</h1>
+{% endblock %}
+{% block content_main %}
 <div class="blogEntry">
 	<h3>Hi {{ user }},</h3>
 	<p>we are sorry that you want to leave our community <img src="/wlmedia/img/smileys/face-sad.png" alt="Sad smiley"></p>

@@ -3,7 +3,7 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content %}
+{% block content_main %}
 	<div class="blogEntry"
 		<form  enctype="multipart/form-data" action="/images/upload/" method="POST">
 		{{ upload_form.imagename.errors }}
