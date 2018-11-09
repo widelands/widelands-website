@@ -199,9 +199,7 @@ def find_smiley_Strings(bs4_string):
 md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
 
 def do_wl_markdown(value, *args, **keyw):
-    """Apply wl specific things, like smileys or colored links.
-    
-    If something get modified, it is mostky done directly in the subfunctions"""
+    """Apply wl specific things, like smileys or colored links."""
 
     beautify = keyw.pop('beautify', True)
     html = smart_str(markdown(value, extensions=md_extensions))
