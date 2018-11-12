@@ -59,9 +59,11 @@ register = template.Library()
 def _insert_smileys(text):
     """This searches for smiley symbols in the current text and replaces them
     with the correct images.
-    
-    Then we have to reassemble the whole contents..."""
-    
+
+    Contents get splitted into words and after this the whole contents must be
+    reassembled.
+    """
+
     tmp_content = []
     for content in text.parent.contents:
         try:
@@ -71,18 +73,18 @@ def _insert_smileys(text):
             # apply the unsplittable content and continue
             tmp_content.append(content)
             continue
-        
+
         for i, word in enumerate(words):
-            smiley = ""
+            smiley = ''
             for sc, img in SMILEYS:
                 if word == sc:
                     smiley = img
             if smiley:
-                img_tag = BeautifulSoup(features="lxml").new_tag('img')
-                img_tag['src'] = "{}{}".format(SMILEY_DIR, smiley)
+                img_tag = BeautifulSoup(features='lxml').new_tag('img')
+                img_tag['src'] = '{}{}'.format(SMILEY_DIR, smiley)
                 img_tag['alt'] = smiley
                 tmp_content.append(img_tag)
-                # Apply a space after the smiley
+                # apply a space after the smiley
                 tmp_content.append(NavigableString(' '))
             else:
                 if i < (len(words) - 1):
@@ -117,13 +119,13 @@ def _classify_link(tag):
                 external = False
                 break
         if external:
-            tag['class'] = "externalLink"
-            tag['title'] = "This link refers to outer space"
+            tag['class'] = 'externalLink'
+            tag['title'] = 'This link refers to outer space'
             return
 
     if '/profile/' in (tag['href']):
-        tag['class'] = "userLink"
-        tag['title'] = "This link refers to a userpage"
+        tag['class'] = 'userLink'
+        tag['title'] = 'This link refers to a userpage'
         return
 
     if check_for_missing_wikipages and href.startswith('/wiki/'):
@@ -133,13 +135,13 @@ def _classify_link(tag):
         article_name = urllib.unquote(tag['href'][6:].split('/', 1)[0])
 
         if not len(article_name):  # Wiki root link is not a page
-            tag['class'] = "wrongLink"
-            tag['title'] = "This Link misses an articlename"
+            tag['class'] = 'wrongLink'
+            tag['title'] = 'This Link misses an articlename'
             return
 
         # Wiki special pages are also not counted
         if article_name in ['list', 'search', 'history', 'feeds', 'observe', 'edit']:
-            tag['class'] = "specialLink"
+            tag['class'] = 'specialLink'
             return
 
         # Check for a redirect
@@ -151,7 +153,7 @@ def _classify_link(tag):
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
             if article_name != act_t:
-                tag['title'] = "This is a redirect and points to \"" + act_t + "\""
+                tag['title'] = 'This is a redirect and points to \"" + act_t + "\"'
                 return
             else:
                 return
@@ -160,8 +162,8 @@ def _classify_link(tag):
 
         # article missing (or misspelled)
         if Article.objects.filter(title=article_name).count() == 0:
-            tag['class'] = "missingLink"
-            tag['title'] = "This Link is misspelled or missing. Click to create it anyway."
+            tag['class'] = 'missingLink'
+            tag['title'] = 'This Link is misspelled or missing. Click to create it anyway.'
             return
     return
 
@@ -169,12 +171,12 @@ def _classify_link(tag):
 def _make_clickable_images(tag):
     # is external link?
     if tag['src'].startswith('http'):
-        # Do not change if it is allready a link
+        # Do not change if it is already a link
         if tag.parent.name != 'a':
             # add link to image
-            new_link = BeautifulSoup(features="lxml").new_tag('a')
+            new_link = BeautifulSoup(features='lxml').new_tag('a')
             new_link['href'] = tag['src']
-            new_img = BeautifulSoup(features="lxml").new_tag('img')
+            new_img = BeautifulSoup(features='lxml').new_tag('img')
             new_img['src'] = tag['src']
             new_img['alt'] = tag['alt']
             new_link.append(new_img)
@@ -183,16 +185,21 @@ def _make_clickable_images(tag):
 
 
 def find_smiley_Strings(bs4_string):
-    """Find strings that contain a smiley symbol"""
+    """Find strings that contain a smiley symbol.
+
+    Don't find a smiley in code tags.
+    Attention: This returns also True for ':/' in 'http://'. This get
+    fixed in _insert_smileys().
+    """
 
     if bs4_string.parent.name.lower() == 'code':
         return False
 
-    #for element in bs4_string.parent.contents:
     for sc in SMILEYS:
         if sc[0] in bs4_string:
             return True
     return False
+
 
 # Predefine the markdown extensions here to have a clean code in
 # do_wl_markdown()
@@ -213,7 +220,7 @@ def do_wl_markdown(value, *args, **keyw):
     # BeautifulSoup objects are all references, so changing a variable
     # derived from the soup will take effect on the soup itself.
     # Because of that the called functions will modify the soup directly.
-    soup = BeautifulSoup(html, features="lxml")
+    soup = BeautifulSoup(html, features='lxml')
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return unicode(soup)
@@ -223,7 +230,7 @@ def do_wl_markdown(value, *args, **keyw):
         smiley_text = soup.find_all(string=find_smiley_Strings)
         for text in smiley_text:
             _insert_smileys(text)
-            
+
         # Classify links
         for tag in soup.find_all('a'):
             _classify_link(tag)
