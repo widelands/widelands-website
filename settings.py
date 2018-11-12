@@ -213,7 +213,7 @@ SMILEYS = [
     (':))', 'face-smile-big.png'),
     (':-)', 'face-smile.png'),
     (':)', 'face-smile.png'),
-    ('>:-)', 'face-devilish.png'),
+    (']:-)', 'face-devilish.png'),
     ('8-)', 'face-glasses.png'),
     ('8)', 'face-glasses.png'),
     (':-D', 'face-grin.png'),
