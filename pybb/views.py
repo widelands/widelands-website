@@ -107,7 +107,7 @@ def show_topic_ctx(request, topic_id):
                   request.user in topic.subscribers.all())
 
     posts = topic.posts.exclude(hidden=True).select_related()
-
+ 
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))

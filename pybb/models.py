@@ -131,12 +131,7 @@ class Topic(models.Model):
     # If the first post of this topic is hidden, the topic is hidden
     @property
     def is_hidden(self):
-        try:
-            p = self.posts.order_by('created').filter(
-                hidden=False).select_related()[0]
-        except IndexError:
-            return True
-        return False
+        return self.posts.first().hidden
 
     @property
     def post_count(self):
