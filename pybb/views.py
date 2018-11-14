@@ -106,7 +106,11 @@ def show_topic_ctx(request, topic_id):
     subscribed = (request.user.is_authenticated and
                   request.user in topic.subscribers.all())
 
-    posts = topic.posts.exclude(hidden=True).select_related()
+    if topic.is_hidden:
+        # An empty list indicates a hidden topic in the template
+        posts = []
+    else:
+        posts = topic.posts.exclude(hidden=True).select_related()
  
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
