@@ -4,9 +4,11 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+{% block content_header %}
+    <h1>Multiplayer</h1>
+{% endblock %}
 
-
-{% block content %}
+{% block content_main %}
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function(){ 
     var calendar = createCalendar();
@@ -20,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 }, false);
 </script>
-
-<h1>Multiplayer</h1>
 
 <div class="blogEntry">
     <h2>Select the dates you'll be available on</h2>

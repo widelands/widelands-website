@@ -12,32 +12,20 @@
 {{ block.super}}
 {% endblock %}
 
-{% block content %}
-<div class="posRight small">
-	{% if article.id %}
-		<a class="invertedColor" href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
-		|
-		<a class="invertedColor" href="{% url 'wiki_article_history' article.title %}">{% trans "Editing history" %}</a>
-		|
-		<a class="invertedColor" href="{% url 'backlinks' article.title %}">{% trans "Backlinks" %}</a>
-		{% if can_observe %}
-			| 
-			{% if is_observing %} 
-			<a class="invertedColor" href="{% url 'wiki_stop_observing' article.title %}">{% trans "Stop observing" %}</a>
-			{% else %}
-			<a class="invertedColor" href="{% url 'wiki_observe' article.title %}">{% trans "Observe" %}</a>
-			{% endif %}
-		{% endif %}
-	{% endif %}
-</div>
-<h1>{{ article.title }}</h1>
+{% block content_header %}
+	<h1>{{ article.title }}</h1>
+{% endblock %}
 
+{# add the wanted classes to the tabs #}
+{% block class_wiki_back %}class="hidden"{% endblock %}
+{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
+
+{% block content_main %}
 	{% if messages %}
 	    {% for message in messages %}
 	    <p class="errormessage">{{ message }}</p>
 	    {% endfor %}
 	{% endif %}
-
 <div class="blogEntry">
 	{% if not article.id %}
 		<p>

@@ -9,9 +9,19 @@
 {% load threadedcommentstags %}
 {% load pagination_tags %}
 
-{% block content %}
-<a href="{% url 'wlmaps_upload' %}" class="posRight invertedColor small">Upload a new map</a>
-<h1>Maps</h1>
+{% block content_header %}
+	<h1>Maps</h1>
+{% endblock %}
+{% block content_tabbing %}
+	<ul class="tab-list small">
+		<li>
+			<a href="{% url 'wlmaps_upload' %}">Upload a new map</a>
+		</li>
+	</ul>
+{% endblock %}
+
+{% block content_main %}
+
 <div class="blogEntry">
 	<p>
 	The map files have to be placed in the Widelands map directory to be found by the game. Check the <a href="/wiki/Technical%20FAQ/#where_are_my_maps_and_savegames_stored">Technical FAQ</a> to find the map directory.
@@ -70,7 +80,7 @@
 						<td class="spacer"></td>
 						<td colspan="2">
 							<a class="button" href="{% url 'wlmaps_download' map.slug %}">
-								<img src="{{ MEDIA_URL }}img/download.png" alt ="" class="middle" />
+								<img src="{{ MEDIA_URL }}img/arrow_down_short.png" alt ="" class="middle" />
 								<span class="middle">Direct Download</span>
 							</a>
 						</td>
