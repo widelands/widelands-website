@@ -83,7 +83,8 @@ class Forum(models.Model):
 
     @property
     def posts(self):
-        return Post.objects.filter(topic__forum=self).exclude(hidden=True).select_related()
+        hidden_topics = Post.hidden_topics.all()
+        return Post.objects.exclude(topic__in=list(hidden_topics)).filter(topic__forum=self).exclude(hidden=True).select_related()
 
     @property
     def post_count(self):
@@ -126,7 +127,7 @@ class Topic(models.Model):
 
     @property
     def last_post(self):
-        return self.posts.exclude(hidden=True).order_by('-created').select_related()[0]
+        return self.posts.order_by('-created').select_related()[0]
 
     # If the first post of this topic is hidden, the topic is hidden
     @property
@@ -195,7 +196,7 @@ class HiddenTopicsManager(models.Manager):
 
     Post.objects.exclude(topic__in=Post.hiddden_topics.all()).filter(...)
 
-    Use this with caution, because it can have effect on performance.
+    Use this with caution, because it effects performance.
     """
 
     def get_queryset(self, *args, **kwargs):

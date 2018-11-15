@@ -44,6 +44,7 @@
 		<tbody>
 		{% for topic in object_list %}
 		<tr class="{% cycle 'odd' 'even' %}">
+			{% if not topic.is_hidden %}
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
 				<img src="{{ MEDIA_URL }}forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
@@ -67,6 +68,9 @@
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
+			{% elif moderator %}
+				<td colspan="4" class="center">Hidden Topic: <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
+			{% endif %}
 		</tr>
 		{% endfor %}
 		</tbody>

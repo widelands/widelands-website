@@ -68,12 +68,17 @@ def show_forum_ctx(request, forum_id):
              [:pybb_settings.QUICK_POSTS_NUMBER],
              }
 
+    moderator = (request.user.is_superuser or
+                 request.user in forum.moderators.all())
+
     topics = forum.topics.order_by(
-        '-sticky', '-updated').exclude(posts__hidden=True).select_related()
+        '-sticky', '-updated').select_related()
+
     return {'forum': forum,
             'topics': topics,
             'quick': quick,
             'page_size': pybb_settings.FORUM_PAGE_SIZE,
+            'moderator': moderator,
             }
 show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
