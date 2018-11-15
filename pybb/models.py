@@ -193,18 +193,20 @@ class HiddenTopicsManager(models.Manager):
     This manager returns the hidden topics and can be used to filter them out
     like so:
 
-    Post.objects.exclude(topic__in=Post.hiddden_topics.all())
+    Post.objects.exclude(topic__in=Post.hiddden_topics.all()).filter(...)
+
+    Use this with caution, because it can have effect on performance.
     """
 
     def get_queryset(self, *args, **kwargs):
         qs = super(HiddenTopicsManager,
                    self).get_queryset().filter(hidden=True)
 
-        hid_topics = []
+        hidden_topics = []
         for post in qs:
             if post.topic.is_hidden:
-                hid_topics.append(post.topic)
-        return hid_topics
+                hidden_topics.append(post.topic)
+        return hidden_topics
 
 
 class Post(RenderableItem):

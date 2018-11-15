@@ -10,7 +10,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.db import connection
 from django.utils import translation
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
@@ -70,7 +70,6 @@ def show_forum_ctx(request, forum_id):
 
     topics = forum.topics.order_by(
         '-sticky', '-updated').exclude(posts__hidden=True).select_related()
-
     return {'forum': forum,
             'topics': topics,
             'quick': quick,
@@ -397,3 +396,15 @@ def post_ajax_preview(request):
 
 def pybb_moderate_info(request):
     return render(request, 'pybb/pybb_moderate_info.html')
+
+
+def toggle_hidden_topic(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    first_post = topic.posts.all()[0]
+    if first_post.hidden:
+        first_post.hidden = False
+    else:
+        first_post.hidden = True
+    first_post.save()
+    
+    return redirect(topic)
