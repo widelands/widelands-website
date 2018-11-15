@@ -59,7 +59,6 @@ select.selection option {
 div#topmenu {
 	position: relative;
 	z-index: 5;
-	top: -8px;
 	clear: both;
 	height: 50px;
 	margin-bottom: 22px;

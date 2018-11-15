@@ -1,9 +1,11 @@
 {% extends 'pybb/base.html' %}
 {% load pybb_extras %}
 
-{% block content %}
-<h1>Category: {{category.name}}</h1>
+{% block content_header %}
+    <h1>Category: {{category.name}}</h1>
+{% endblock %}
 
+{% block content_main %}
 <div class="blogEntry">
 	<a href="{% url 'pybb_index' %}">Forums</a> &#187; {{category.name}}
 	<br /><br />

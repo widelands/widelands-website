@@ -13,20 +13,19 @@
 	{{ block.super }}
 {% endblock %}
 
-{% block content %}
-<div class="posRight small">
-	{% ifequal user profile.user %}
-		<a class="invertedColor" href="{% url 'profile_edit' %}">Edit Profile</a>
-	{% endifequal %}
-</div>
-<h1>{% if not profile.deleted %}
+{% block profile %}class="active"{% endblock %}
+
+{% block content_header %}
+	<h1>{% if not profile.deleted %}
 		{{ profile.user.username }}'s
 	{% else %}
 		Deleted User
 	{% endif %}
 	Profile
-</h1>
+	</h1>
+{% endblock %}
 
+{% block content_main %}
 <div class="blogEntry">
 	{% if not profile.deleted %}
 		<table>
@@ -37,12 +36,7 @@
 				{% endif %}
 				</td>
 				<td>
-				{% ifnotequal user profile.user %}
-					<button onclick="window.location.href='{% url 'messages_compose_to' profile.user %}';">
-						<img src="{{ MEDIA_URL }}forum/img/send_pm.png" alt ="" class="middle" />
-						<span class="middle">{% trans "Send PM" %}</span>
-					</button>
-				{% endifnotequal %}
+
 				</td>
 			</tr>
 			<tr>
@@ -92,3 +86,4 @@
 </div>
 
 {% endblock %}
+

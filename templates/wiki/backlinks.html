@@ -1,15 +1,20 @@
 {% extends 'wiki/base.html' %}
 {% load wiki_extras %}
 {% load i18n %}
+
 {% block title %}
 {{ name }} - Backlinks - {{block.super}}
 {% endblock %}
 
-{% block content %}
-<div class="posRight small">
-	<a class="invertedColor" href="{% url 'wiki_article' name %}">Back to article</a>
-</div>
-<h1>{% trans "Backlinks of " %} {{ name }}</h1>
+{% block content_header %}
+	<h1>{% trans "Backlinks of " %} {{ name }}</h1>
+{% endblock %}
+
+{% block class_wiki_backl %}class="active"{% endblock %}
+{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
+{% block class_wiki_edit %}class="hidden"{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	{% if found_links or found_old_links %}
 		{% if found_links %}

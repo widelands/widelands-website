@@ -4,11 +4,12 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content %}
+{% block content_header %}
+<h1>Welcome to the scheduling module!</h1>
+{% endblock %}
 
-
+{% block content_main %}
 <div class="blogEntry">
-    <h1>Welcome in the scheduling module!</h1>
     <div id="main-choices" class="main-choices">
         <a href="{% url 'scheduling_scheduling' %}" >
             <button title="You know when you will be available to play and want to display when you're available and find other players that will be available at these hours">Define your playtime and find a game</button>

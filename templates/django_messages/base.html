@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "wlprofile/base.html" %}
 {% load i18n %}  
 {% block bodyclass %}about{% endblock %}
 
@@ -6,12 +6,17 @@
 	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/messages.css" />
 {{ block.super}}{% endblock %}
 
+{% block messages %}class="active"{% endblock %}
+
 {% block title %}
 Messages - {{block.super}}
 {% endblock %}
 
-{% block content %}
-<h1>Messages: {% block msg_title %}{% endblock %}</h1>
+{% block content_header %}
+    <h1>Messages: {% block msg_title %}{% endblock %}</h1>
+{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	{% if messages %}
 		{% for message in messages %}
