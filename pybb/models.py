@@ -186,6 +186,27 @@ class RenderableItem(models.Model):
         self.body_html = urlize(self.body_html)
 
 
+class HiddenTopicsManager(models.Manager):
+    """Find all hidden topics by posts.
+
+    A whole topic is hidden, if the first post is hidden.
+    This manager returns the hidden topics and can be used to filter them out
+    like so:
+
+    Post.objects.exclude(topic__in=Post.hiddden_topics.all())
+    """
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(HiddenTopicsManager,
+                   self).get_queryset().filter(hidden=True)
+
+        hid_topics = []
+        for post in qs:
+            if post.topic.is_hidden:
+                hid_topics.append(post.topic)
+        return hid_topics
+
+
 class Post(RenderableItem):
     topic = models.ForeignKey(
         Topic, related_name='posts', verbose_name=_('Topic'))
@@ -199,6 +220,9 @@ class Post(RenderableItem):
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
+
+    objects = models.Manager() # Normal manager 
+    hidden_topics = HiddenTopicsManager() # Custom manager
 
     class Meta:
         ordering = ['created']
