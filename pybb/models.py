@@ -17,6 +17,8 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from django.contrib.auth.models import User
+from check_input.models import SuspiciousInput
+
 
 try:
     from notification import models as notification
@@ -91,9 +93,7 @@ class Forum(models.Model):
 
     @property
     def last_post(self):
-        hidden_topics = Post.hidden_topics.all()
-        posts = self.posts.exclude(topic__in=list(hidden_topics))
-        posts = posts.exclude(hidden=True).order_by(
+        posts = self.posts.exclude(hidden=True).order_by(
             '-created').select_related()
         try:
             return posts[0]
@@ -195,7 +195,7 @@ class HiddenTopicsManager(models.Manager):
     This manager returns the hidden topics and can be used to filter them out
     like so:
 
-    Post.objects.exclude(topic__in=Post.hiddden_topics.all()).filter(...)
+    Post.objects.exclude(topic__in=Post.hidden_topics.all()).filter(...)
 
     Use this with caution, because it effects performance, see:
     https://docs.djangoproject.com/en/dev/ref/models/querysets/#in
@@ -283,6 +283,14 @@ class Post(RenderableItem):
 
         if self_id == head_post_id:
             self.topic.delete()
+
+    def is_spam(self):
+        try:
+            SuspiciousInput.objects.get(object_id = self.pk)
+            return True
+        except:
+            pass
+        return False
 
 
 class Read(models.Model):

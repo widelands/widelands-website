@@ -86,9 +86,13 @@ def show_topic_ctx(request, topic_id):
     subscribed = (request.user.is_authenticated and
                   request.user in topic.subscribers.all())
 
+
+    is_spam = False
     if topic.is_hidden:
-        # An empty list indicates a hidden topic in the template
-        posts = []
+            is_spam = topic.posts.first().is_spam()
+
+    if moderator:
+        posts = topic.posts.select_related()
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
  
@@ -111,6 +115,7 @@ def show_topic_ctx(request, topic_id):
             'posts': posts,
             'page_size': pybb_settings.TOPIC_PAGE_SIZE,
             'form_url': reverse('pybb_add_post', args=[topic.id]),
+            'is_spam': is_spam,
             }
 show_topic = render_to('pybb/topic.html')(show_topic_ctx)
 
@@ -382,7 +387,6 @@ def pybb_moderate_info(request):
 def toggle_hidden_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     first_post = topic.posts.all()[0]
-    spams = SuspiciousInput.objects.all()
     if first_post.hidden:
         first_post.hidden = False
     else:
