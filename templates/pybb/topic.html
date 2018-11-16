@@ -17,8 +17,11 @@
 {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<h1>Topic: {{ topic }} </h1>
+{% block content_header %}
+    <h1>Topic: {{ topic }} </h1>
+{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	{% if not posts %}
 		<p>This thread is hidden. Either it waits for a review, or it was hid by a moderator intentionally.</p>

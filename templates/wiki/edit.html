@@ -36,16 +36,15 @@
 {{ block.super }}
 {% endblock %}
 
-{% block content %}
-{% if not new_article %} 
-<div class="posRight small">
-	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
-	|
-	<a href="{% url 'wiki_article_history' article.title %}" class="invertedColor">{% trans "Editing history" %}</a>
-</div>
-{% endif %}
-<h1>{% trans "Editing" %} {{ article.title }}</h1>
+{% block content_header %}
+	<h1>{% trans "Editing" %} {{ article.title }}</h1>
+{% endblock %}
 
+{# add the wanted classes to the tabs #}
+{% block class_wiki_edit %}class="hidden"{% endblock %}
+{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	<p>
 	You can edit the wiki pages contents using the syntax described on the <a href="/wiki/WikiSyntax">WikiSyntax</a>.

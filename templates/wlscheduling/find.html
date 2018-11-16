@@ -3,16 +3,18 @@
    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content %}
+{% block content_header %}
+    <h1>Scheduling: Other users' playtimes</h1>
+{% endblock %}
+
+{% block content_main %}
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function(){ 
     addTimeZoneWarningIfNeeded();
     addOtherUsersAvailabilities();
 }, false);
 </script>
-
 <div class="blogEntry">
-    <h1>Times other players are available</h1>
     {% include "wlscheduling/timezone-msg.html" %}
     <div id="other-users-wrapper"></div>
     <div id="no-user-to-display" hidden="hidden">Sorry currently there isn't anybody who has scheduled a gaming session. Don't hesitate to signal to other when you'll be available <a href="{% url 'scheduling_scheduling' %}">here</a></div>
