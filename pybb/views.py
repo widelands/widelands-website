@@ -29,44 +29,21 @@ except ImportError:
 
 
 def index_ctx(request):
-    quick = {'posts': Post.objects.count(),
-             'topics': Topic.objects.count(),
-             'users': User.objects.count(),
-             'last_topics': Topic.objects.all().select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': Post.objects.order_by('-created').select_related()[:pybb_settings.QUICK_POSTS_NUMBER],
-             }
-
     cats = Category.objects.all().select_related()
 
-    return {'cats': cats,
-            'quick': quick,
-            }
+    return {'cats': cats }
 index = render_to('pybb/index.html')(index_ctx)
 
 
 def show_category_ctx(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    quick = {'posts': category.posts.count(),
-             'topics': category.topics.count(),
-             'last_topics': category.topics.select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': category.posts.order_by('-created').select_related()
-             [:pybb_settings.QUICK_POSTS_NUMBER],
-             }
-    return {'category': category,
-            'quick': quick,
-            }
+
+    return {'category': category }
 show_category = render_to('pybb/category.html')(show_category_ctx)
 
 
 def show_forum_ctx(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
-
-    quick = {'posts': forum.post_count,
-             'topics': forum.topics.count(),
-             'last_topics': forum.topics.all().select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': forum.posts.order_by('-created').select_related()
-             [:pybb_settings.QUICK_POSTS_NUMBER],
-             }
 
     moderator = (request.user.is_superuser or
                  request.user in forum.moderators.all())
@@ -76,7 +53,6 @@ def show_forum_ctx(request, forum_id):
 
     return {'forum': forum,
             'topics': topics,
-            'quick': quick,
             'page_size': pybb_settings.FORUM_PAGE_SIZE,
             'moderator': moderator,
             }
@@ -406,6 +382,7 @@ def pybb_moderate_info(request):
 def toggle_hidden_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     first_post = topic.posts.all()[0]
+    spams = SuspiciousInput.objects.all()
     if first_post.hidden:
         first_post.hidden = False
     else:

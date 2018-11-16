@@ -76,7 +76,7 @@
 				{% endif %}
 			</td>
 			{% elif moderator %}
-				<td colspan="4" class="center">Hidden Topic: <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
+				<td colspan="4" class="center errormessage">Hidden Topic: <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
 			{% endif %}
 		</tr>
 		{% endfor %}

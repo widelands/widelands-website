@@ -24,12 +24,12 @@
 {% block content_main %}
 <div class="blogEntry">
 	{% if not posts %}
-		<p>This thread is hidden. Either it waits for a review, or it was hid by a moderator intentionally.</p>
+		<p>This topic is hidden. Either it waits for a review, or it was hid by a moderator intentionally.</p>
 		<div class="posRight">
 		{% if moderator %}
 			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
 				{#<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />#}
-				<span class="middle">{% trans "Hide/Unhide Topic" %}</span>
+				<span class="middle">{% trans "Toggle Visibility" %}</span>
 			</a>
 		{% endif %}
 	{% else %}
@@ -265,6 +265,10 @@
 
 			<div class="posRight">
 			{% if moderator %}
+                <a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+				{#<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />#}
+				<span class="middle">{% trans "Toggle Visibility" %}</span>
+                </a>
 				{% if topic.sticky %}
 				<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
 					<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />
