@@ -92,7 +92,7 @@ def _insert_smileys(text):
                     word = word + ' '
                 tmp_content.append(NavigableString(word))
 
-    text.parent.contents = [x for x in tmp_content]
+    text.parent.contents = tmp_content
 
 
 def _classify_link(tag):
