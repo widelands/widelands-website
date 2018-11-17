@@ -93,8 +93,16 @@ class Forum(models.Model):
 
     @property
     def last_post(self):
-        posts = self.posts.exclude(hidden=True).order_by(
+        # This is performanter than using the posts manager hidden_topics
+        # We search only for the last 10 topics
+        topics = self.topics.order_by('-updated')[:10]
+        for topic in topics:
+            if topic.is_hidden:
+                continue
+            posts = topic.posts.exclude(hidden=True).order_by(
             '-created').select_related()
+            break
+
         try:
             return posts[0]
         except IndexError:
