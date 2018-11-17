@@ -23,31 +23,30 @@
 
 {% block content_main %}
 <div class="blogEntry">
-	{% if topic.is_hidden %}
-		<p>This topic is hidden. Either it waits for a review, or it was hid by a moderator intentionally.</p>
-		{% if posts.0.is_spam and moderator %}
-			<p>This topics first post is possible spam. Toggle visibilty to show the post. If this is spam, consider to delete the user:</p>
-			<p>To delete the user:<a href="/admin/auth/user/{{posts.0.user.pk}}/change/"> Admin user-page for the posts author</a></p>
-		{% endif %}
-		<div class="posRight">
-		{% if moderator %}
-			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-				{#<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />#}
-				<span class="middle">{% trans "Toggle Visibility" %}</span>
-			</a>
-		{% endif %}
-	{% else %}
-		<div class="breadCrumb">
+	<div class="breadCrumb">
 		<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
 		{% pybb_link topic.forum.category %} &#187; 
 		<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
 		{{ topic }}
 		</div>
-	
+	{% if topic.is_hidden %}
+		<p>This topic is hidden. Either it waits for a review, or it was hid by a moderator intentionally.</p>
+		{% if posts.0.is_spam and moderator %}
+			<p>This topics first post is possible spam. Toggle visibilty to show the post. If this is spam, consider to delete the user:</p>
+			<p>To delete the user, go to:<a href="/admin/auth/user/{{posts.0.user.pk}}/change/"> Admin user-page for the posts author</a></p>
+		{% endif %}
 		<div class="posRight">
 		{% if moderator %}
 			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-				{#<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />#}
+				<img src="{{ MEDIA_URL }}forum/img/topic_show.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Toggle Visibility" %}</span>
+			</a>
+		{% endif %}
+	{% else %}
+		<div class="posRight">
+		{% if moderator %}
+			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/topic_hide.png" alt ="" class="middle" />
 				<span class="middle">{% trans "Toggle Visibility" %}</span>
 			</a>
 			{% if topic.sticky %}
@@ -125,7 +124,7 @@
 						<div class="post">
 							{{ post.body_html|safe }}
 						</div>
-		
+
 						{% if post.attachment_cache %}
 							{% for attach in post.attachment_cache %}
 								{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
@@ -269,10 +268,10 @@
 
 			<div class="posRight">
 			{% if moderator %}
-                <a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-				{#<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />#}
-				<span class="middle">{% trans "Toggle Visibility" %}</span>
-                </a>
+			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/topic_hide.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Toggle Visibility" %}</span>
+				</a>
 				{% if topic.sticky %}
 				<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
 					<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />
