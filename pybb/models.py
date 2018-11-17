@@ -124,16 +124,22 @@ class Topic(models.Model):
 
     @property
     def head(self):
-        return self.posts.all().order_by('created').select_related()[0]
+        try:
+            return self.posts.all().order_by('created').select_related()[0]
+        except:
+            return None
 
     @property
     def last_post(self):
         return self.posts.exclude(hidden=True).order_by('-created').select_related()[0]
 
-    # If the first post of this topic is hidden, the topic is hidden
     @property
     def is_hidden(self):
-        return self.posts.first().hidden
+        # If the first post of this topic is hidden, the topic is hidden
+        try:
+            return self.posts.first().hidden
+        except:
+            return False
 
     @property
     def post_count(self):
