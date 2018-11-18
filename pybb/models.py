@@ -17,6 +17,8 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from django.contrib.auth.models import User
+from check_input.models import SuspiciousInput
+
 
 try:
     from notification import models as notification
@@ -91,8 +93,16 @@ class Forum(models.Model):
 
     @property
     def last_post(self):
-        posts = self.posts.exclude(hidden=True).order_by(
+        # This has better performance than using the posts manager hidden_topics
+        # We search only for the last 10 topics
+        topics = self.topics.order_by('-updated')[:10]
+        for topic in topics:
+            if topic.is_hidden:
+                continue
+            posts = topic.posts.exclude(hidden=True).order_by(
             '-created').select_related()
+            break
+
         try:
             return posts[0]
         except IndexError:
@@ -122,21 +132,22 @@ class Topic(models.Model):
 
     @property
     def head(self):
-        return self.posts.all().order_by('created').select_related()[0]
+        try:
+            return self.posts.all().order_by('created').select_related()[0]
+        except:
+            return None
 
     @property
     def last_post(self):
         return self.posts.exclude(hidden=True).order_by('-created').select_related()[0]
 
-    # If the first post of this topic is hidden, the topic is hidden
     @property
     def is_hidden(self):
+        # If the first post of this topic is hidden, the topic is hidden
         try:
-            p = self.posts.order_by('created').filter(
-                hidden=False).select_related()[0]
-        except IndexError:
-            return True
-        return False
+            return self.posts.first().hidden
+        except:
+            return False
 
     @property
     def post_count(self):
@@ -191,6 +202,30 @@ class RenderableItem(models.Model):
         self.body_html = urlize(self.body_html)
 
 
+class HiddenTopicsManager(models.Manager):
+    """Find all hidden topics by posts.
+
+    A whole topic is hidden, if the first post is hidden.
+    This manager returns the hidden topics and can be used to filter them out
+    like so:
+
+    Post.objects.exclude(topic__in=Post.hidden_topics.all()).filter(...)
+
+    Use this with caution, because it affects performance, see:
+    https://docs.djangoproject.com/en/dev/ref/models/querysets/#in
+    """
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(HiddenTopicsManager,
+                   self).get_queryset().filter(hidden=True)
+
+        hidden_topics = []
+        for post in qs:
+            if post.topic.is_hidden:
+                hidden_topics.append(post.topic)
+        return hidden_topics
+
+
 class Post(RenderableItem):
     topic = models.ForeignKey(
         Topic, related_name='posts', verbose_name=_('Topic'))
@@ -204,6 +239,9 @@ class Post(RenderableItem):
     body_html = models.TextField(_('HTML version'))
     body_text = models.TextField(_('Text version'))
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
+
+    objects = models.Manager() # Normal manager 
+    hidden_topics = HiddenTopicsManager() # Custom manager
 
     class Meta:
         ordering = ['created']
@@ -259,6 +297,14 @@ class Post(RenderableItem):
 
         if self_id == head_post_id:
             self.topic.delete()
+
+    def is_spam(self):
+        try:
+            SuspiciousInput.objects.get(object_id = self.pk)
+            return True
+        except:
+            pass
+        return False
 
 
 class Read(models.Model):
