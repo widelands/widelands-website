@@ -24,31 +24,6 @@ def index(request):
                                })
 
 
-def rate(request, map_slug):
-    """Rate a given map."""
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['post'])
-
-    m = get_object_or_404(models.Map, slug=map_slug)
-
-    if not 'vote' in request.POST:
-        return HttpResponseBadRequest()
-    try:
-        val = int(request.POST['vote'])
-    except ValueError:
-        return HttpResponseBadRequest()
-
-    if not (0 < val <= 10):
-        return HttpResponseBadRequest()
-
-    m.rating.add(score=val, user=request.user,
-                 ip_address=get_real_ip(request))
-
-    # m.save() is called in djangoratings.fields.add for each instance
-
-    return HttpResponseRedirect(reverse('wlmaps_view', kwargs= {'map_slug': m.slug}))
-
-
 def download(request, map_slug):
     """Very simple view that just returns the binary data of this map and
     increases the download count."""
