@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% comment %}
    vim:ft=htmldjango
@@ -7,6 +8,8 @@
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/forum.css" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/maps.css" />
+<link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+<script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
 {{block.super}}
 {% endblock %}
 

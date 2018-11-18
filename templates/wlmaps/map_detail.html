@@ -9,6 +9,7 @@
 {% load threadedcommentstags %}
 {% load wl_markdown %}
 
+{% load ratings %}
 {% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
@@ -29,6 +30,7 @@ $(function() {
         });
 });
 </script>
+
 {% endif %}
 {% endblock %}
 
@@ -92,13 +94,15 @@ $(function() {
 			</tr>
 			<tr>
 				<td class="grey">Rating:</td>
-				<td>
+				<td>{% ratings map template_name='star_rating/rate.html' %}
+                {% comment %}
 					{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)
 					{% if not user.is_anonymous %}
 					<span id="vote"></span>
 					{% else %}
 					- Login to vote
 					{% endif %}
+                {% endcomment %}
 				</td>
 			</tr>
 			<tr>

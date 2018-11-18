@@ -8,7 +8,7 @@
 {% load wlmaps_extra %}
 {% load threadedcommentstags %}
 {% load pagination_tags %}
-
+{% load ratings %}
 {% block content %}
 <a href="{% url 'wlmaps_upload' %}" class="posRight invertedColor small">Upload a new map</a>
 <h1>Maps</h1>
@@ -45,7 +45,7 @@
 					</tr>
 					<tr>
 						<td class="grey">Rating:</td>
-						<td>{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)</td>
+						<td>{% ratings map read_only template_name='star_rating/average.html' %}{#{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)#}</td>
 						<td class="spacer"></td>
 						{% get_comment_count for map as ccount %}
 						<td class="grey">Comments:</td><td>{{ ccount }}</td>
