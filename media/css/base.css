@@ -109,7 +109,7 @@ input, button, textarea, .button {
 }
 
 .star-ratings input, button {
-	padding: inherit
+	padding: inherit;
 }
 
 textarea {

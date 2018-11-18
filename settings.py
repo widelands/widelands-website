@@ -111,7 +111,7 @@ INSTALLED_APPS = [
     'dj_pagination',
     'tagging',
     'star_ratings',
-    #'djangoratings',    # included as wlapp
+    'djangoratings',    # included as wlapp
 ]
 
 MIDDLEWARE = [
@@ -343,8 +343,8 @@ CSRF_COOKIE_AGE = None
 # star_rarting configuration #
 ##############################
 
-STAR_RATINGS_STAR_HEIGHT = 12
-STAR_RATINGS_STAR_WIDTH = 12
+STAR_RATINGS_STAR_HEIGHT = 14
+STAR_RATINGS_STAR_WIDTH = 14
 STAR_RATINGS_RANGE = 10
 
 try:

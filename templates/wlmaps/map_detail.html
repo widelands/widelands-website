@@ -8,8 +8,9 @@
 {% load wlprofile_extras %}
 {% load threadedcommentstags %}
 {% load wl_markdown %}
-
 {% load ratings %}
+{% load ratings_old %}
+
 {% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
@@ -97,14 +98,12 @@ $(function() {
 			<tr>
 				<td class="grey">Rating:</td>
 				<td>{% ratings map template_name='star_rating/rate.html' %}
-                {% comment %}
 					{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)
 					{% if not user.is_anonymous %}
 					<span id="vote"></span>
 					{% else %}
 					- Login to vote
 					{% endif %}
-                {% endcomment %}
 				</td>
 			</tr>
 			<tr>
