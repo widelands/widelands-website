@@ -93,7 +93,7 @@ class Forum(models.Model):
 
     @property
     def last_post(self):
-        # This is performanter than using the posts manager hidden_topics
+        # This has better performance than using the posts manager hidden_topics
         # We search only for the last 10 topics
         topics = self.topics.order_by('-updated')[:10]
         for topic in topics:
@@ -211,7 +211,7 @@ class HiddenTopicsManager(models.Manager):
 
     Post.objects.exclude(topic__in=Post.hidden_topics.all()).filter(...)
 
-    Use this with caution, because it effects performance, see:
+    Use this with caution, because it affects performance, see:
     https://docs.djangoproject.com/en/dev/ref/models/querysets/#in
     """
 

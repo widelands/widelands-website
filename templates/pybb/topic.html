@@ -30,10 +30,10 @@
 		{{ topic }}
 		</div>
 	{% if topic.is_hidden %}
-		<p>This topic is hidden. Either it waits for a review, or it was hid by a moderator intentionally.</p>
+		<p>This topic is hidden. It is either waiting for a review or was hidden by a moderator.</p>
 		{% if posts.0.is_spam and moderator %}
-			<p>This topics first post is possible spam. Toggle visibilty to show the post. If this is spam, consider to delete the user:</p>
-			<p>To delete the user, go to:<a href="/admin/auth/user/{{posts.0.user.pk}}/change/"> Admin user-page for the posts author</a></p>
+			<p>This topic's first post is possible spam. Toggle the visibility to show the post. If it is indeed spam, consider deleting the user:</p>
+			<p>To delete the user, go to the <a href="/admin/auth/user/{{posts.0.user.pk}}/change/">admin user-page for the post's author</a></p>
 		{% endif %}
 		<div class="posRight">
 		{% if moderator %}
