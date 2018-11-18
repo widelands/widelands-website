@@ -339,9 +339,9 @@ DELETED_USERNAME = 'Ex-Member'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-age
 CSRF_COOKIE_AGE = None
 
-##############################
-# star_rarting configuration #
-##############################
+#############################
+# star_rating configuration #
+#############################
 
 STAR_RATINGS_STAR_HEIGHT = 14
 STAR_RATINGS_STAR_WIDTH = 14
