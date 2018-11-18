@@ -1,0 +1,27 @@
+{% extends "star_ratings/widget_base.html" %}
+{% load i18n %}
+
+{% block rating_detail %}
+{% if not user.is_authenticated and not anonymous_ratings and not read_only %}
+    <p>
+        {{ rating.average|floatformat:"-2" }} ({{ rating.count }} Vote{{ rating.count|pluralize }})
+        <a href="{% url 'auth_login' %}?next={{ request.path }}">{% trans 'Please log in to vote.' %}</a>
+    </p>
+{% else %}
+    {% block rating_user %}
+    <p class="star-ratings-rating-user">
+        {{ rating.average|floatformat:"-2" }} ({{ rating.count }} Vote{{ rating.count|pluralize }}) - 
+        {% trans 'You voted: ' %}
+        <span class='star-ratings-rating-value'>
+        {% if user_rating %}
+            {{ user_rating.score }}
+        {% else %}
+            {% trans 'Not voted' %}
+        {% endif %}
+        </span>
+    </p>
+    {% endblock rating_user %}
+    <p class="star-ratings-errors"><p>
+{% endif %}
+{% endblock rating_detail %}
+
