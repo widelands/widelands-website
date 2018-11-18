@@ -213,8 +213,7 @@ SMILEYS = [
     (':))', 'face-smile-big.png'),
     (':-)', 'face-smile.png'),
     (':)', 'face-smile.png'),
-    # Hack around markdown replacement. see also SMILEY_PREESCAPING
-    ('&gt;:-)', 'face-devilish.png'),
+    (']:-)', 'face-devilish.png'),
     ('8-)', 'face-glasses.png'),
     ('8)', 'face-glasses.png'),
     (':-D', 'face-grin.png'),
@@ -242,10 +241,6 @@ SMILEYS = [
     (':S', 'face-upset.png'),
     (';-)', 'face-wink.png'),
     (';)', 'face-wink.png'),
-]
-# This needs to be done to keep some stuff hidden from markdown
-SMILEY_PREESCAPING = [
-    ('>:-)', '\>:-)')
 ]
 
 #################

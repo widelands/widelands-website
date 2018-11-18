@@ -126,7 +126,7 @@ def developers(request):
     except IOError:
         txt = txt + "Couldn't find developer file!"
 
-    txt = do_wl_markdown(txt, custom=False)
+    txt = do_wl_markdown(txt, beautify=False)
 
     return render(request, 'mainpage/developers.html',
                   {'developers': txt}
