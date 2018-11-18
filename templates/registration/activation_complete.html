@@ -7,8 +7,11 @@ vim:ft=htmldjango:
 Activation - {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<h1>Activation</h1>
+{% block content_header %}
+    <h1>Activation</h1>
+{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	<p>
 		You are now activated and can <a href="{% url 'auth_login' %}">log in</a>.

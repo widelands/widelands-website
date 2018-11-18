@@ -17,285 +17,309 @@
 {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<h1>Topic: {{ topic }} </h1>
+{% block content_header %}
+    <h1>Topic: {{ topic }} </h1>
+{% endblock %}
+
+{% block content_main %}
 <div class="blogEntry">
 	<div class="breadCrumb">
-	<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
-	{% pybb_link topic.forum.category %} &#187; 
-	<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
-	{{ topic }}
-	</div>
-
-	<div class="posRight">
-	{% if moderator %}
-		{% if topic.sticky %}
-		<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Unstick Topic" %}</span>
-		</a>
-		{% else %}
-		<a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Stick Topic" %}</span>
-		</a>
+		<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
+		{% pybb_link topic.forum.category %} &#187; 
+		<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
+		{{ topic }}
+		</div>
+	{% if topic.is_hidden %}
+		<p>This topic is hidden. It is either waiting for a review or was hidden by a moderator.</p>
+		{% if posts.0.is_spam and moderator %}
+			<p>This topic's first post is possible spam. Toggle the visibility to show the post. If it is indeed spam, consider deleting the user:</p>
+			<p>To delete the user, go to the <a href="/admin/auth/user/{{posts.0.user.pk}}/change/">admin user-page for the post's author</a></p>
 		{% endif %}
-		{% if topic.closed %}
-		<a class="button" href="{% url 'pybb_open_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/open.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Open Topic" %}</span>
-		</a>
-		{% else %}
-		<a class="button" href="{% url 'pybb_close_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/closed.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Close Topic" %}</span>
-		</a>
+		<div class="posRight">
+		{% if moderator %}
+			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/topic_show.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Toggle Visibility" %}</span>
+			</a>
 		{% endif %}
-	{% endif %}
-	{% if user.is_authenticated %}
-		{% if subscribed %}
-		<a class="button" href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
-			<img src="{{ MEDIA_URL }}forum/img/unsubscribe.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Unsubscribe" %}</span>
-		</a>
-		{% else %}
-		<a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/subscribe.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Subscribe" %}</span>
-		</a>
+	{% else %}
+		<div class="posRight">
+		{% if moderator %}
+			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/topic_hide.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Toggle Visibility" %}</span>
+			</a>
+			{% if topic.sticky %}
+			<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Unstick Topic" %}</span>
+			</a>
+			{% else %}
+			<a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Stick Topic" %}</span>
+			</a>
+			{% endif %}
+			{% if topic.closed %}
+			<a class="button" href="{% url 'pybb_open_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/open.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Open Topic" %}</span>
+			</a>
+			{% else %}
+			<a class="button" href="{% url 'pybb_close_topic' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/closed.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Close Topic" %}</span>
+			</a>
+			{% endif %}
 		{% endif %}
-		<a class="button" href="{% url 'pybb_add_post' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
-			<span class="middle">{% trans "New Reply" %}</span>
-		</a>
-	{% endif %}
-	</div>
-	{% autopaginate posts page_size as object_list %}
-	{% paginate using "pagination/pagination_mod.html" %}
-
-{% if first_post %}
-	{% ifnotequal first_post posts.0 %}
-		{% with first_post as post %}
-	{% trans "First Post" %}:
-	<table class="forum">
-		<tbody>
-		<tr class="odd">
-			<td class="author">
-				{{ post.user|user_link }}<br />
-				{% if post.user.wlprofile_extras.avatar %}
-				<a href="{% url 'profile_view' post.user %}">
-					<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
-				</a>
-				{% endif %}
-				<div class="authorStats">
-				<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
-				<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
-				<img src="{{ MEDIA_URL }}img/{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
-				<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
-				{% if post.user.wlprofile.location %}
-				<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
-				{% endif %}
-				</div>
-			</td>
-			<td class="post">
-				<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
-				<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
-				<hr />
-				<div class="post">
-					{{ post.body_html|safe }}
-				</div>
-
-				{% if post.attachment_cache %}
-					{% for attach in post.attachment_cache %}
-						{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
-					{% endfor %}
-				{% endif %}
-
-				{% if post.updated %}
-					<span class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</span>
-				{% endif %}
-				<hr />
-				{% if user.is_authenticated %}
-					{% ifequal user.wlprofile.show_signatures 1 %}
-						{% if post.user.wlprofile.signature %}
-							{{ post.user.wlprofile.signature|urlize|linebreaks }}
+		{% if user.is_authenticated %}
+			{% if subscribed %}
+			<a class="button" href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
+				<img src="{{ MEDIA_URL }}forum/img/unsubscribe.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Unsubscribe" %}</span>
+			</a>
+			{% else %}
+			<a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/subscribe.png" alt ="" class="middle" />
+				<span class="middle">{% trans "Subscribe" %}</span>
+			</a>
+			{% endif %}
+			<a class="button" href="{% url 'pybb_add_post' topic.id %}">
+				<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
+				<span class="middle">{% trans "New Reply" %}</span>
+			</a>
+		{% endif %}
+			</div>
+			{% autopaginate posts page_size as object_list %}
+			{% paginate using "pagination/pagination_mod.html" %}
+		
+		{% if first_post %}
+			{% ifnotequal first_post posts.0 %}
+				{% with first_post as post %}
+			{% trans "First Post" %}:
+			<table class="forum">
+				<tbody>
+				<tr class="odd">
+					<td class="author">
+						{{ post.user|user_link }}<br />
+						{% if post.user.wlprofile_extras.avatar %}
+						<a href="{% url 'profile_view' post.user %}">
+							<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
+						</a>
 						{% endif %}
-					{% endifequal %}
-				{% else %}
-					{% if post.user.wlprofile.signature %}
-						{{ post.user.wlprofile.signature|urlize|linebreaks }}
-					{% endif %}
-				{% endif %}
-
-				<button onclick="window.location.href='#top';" class="posRight">
-					<img src="{{ MEDIA_URL }}forum/img/top.png" alt ="" class="middle" />
-					<span class="middle">{% trans "Top" %}</span>
-				</button>
-
-				<button onclick="window.location.href='{% url 'pybb_add_post' topic.id %}?quote_id={{ post.id }}';">
-					<img src="{{ MEDIA_URL }}forum/img/quote.png" alt ="" class="middle" />
-					<span class="middle">{% trans "Quote" %}</span>
-				</button>
-				{% if moderator or post|pybb_posted_by:user %}
-					<button onclick="window.location.href='{% url 'pybb_edit_post' post.id %}';">
-						<img src="{{ MEDIA_URL }}forum/img/edit.png" alt ="" class="middle" />
-						<span class="middle">{% trans "Edit" %}</span>
-					</button>
-					{% if moderator or post|pybb_equal_to:last_post %}
-					<button onclick="window.location.href='{% url 'pybb_delete_post' post.id %}';">
-						<img src="{{ MEDIA_URL }}forum/img/delete.png" alt ="" class="middle" />
-						<span class="middle">{% trans "Delete" %}</span>
-					</button>
-					{% endif %}
-				{% endif %}
-			</td>
-		</tr>
-		</tbody>
-	</table>
-	<br /><hr /><br />
-		{% endwith %}
-	{% endifnotequal %}
-{% endif %}
-
-	<table class="forum">
-		<tbody>
-	{% for post in object_list %}
-		{% comment %}
-		TODO (Franku): use
-		{% include 'pybb/inlines/post.html' %}
-		{% endcomment %}
-		<tr class="{% cycle 'odd' 'even' %}">
-			<td class="author">
-				{{ post.user|user_link }}<br />
-				{% if post.user.wlprofile.avatar %}
-				<a href="{% url 'profile_view' post.user %}">
-					<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
-				</a>
-				{% endif %}
-				<div class="authorStats">
-				<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
-				<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
-				<img src="{{ MEDIA_URL }}img/{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
-				<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
-				{% if post.user.wlprofile.location %}
-				<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
-				{% endif %}
-				</div>
-			</td>
-			<td class="post">
-				<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
-				<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
-				<hr />
-				<div class="post">
-					{{ post.body_html|safe }}
-				</div>
-
-				{% if post.attachment_cache %}
-					{% for attach in post.attachment_cache %}
-						{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
-					{% endfor %}
-				{% endif %}
-
-				{% if post.updated %}
-					<span class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</span>
-				{% endif %}
-				<hr />
-				{% if user.is_authenticated %}
-					{% ifequal user.wlprofile.show_signatures 1 %}
-						{% if post.user.wlprofile.signature %}
-							{{ post.user.wlprofile.signature|urlize|linebreaks }}
+						<div class="authorStats">
+						<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
+						<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+						<img src="{{ MEDIA_URL }}img/{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
+						<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
+						{% if post.user.wlprofile.location %}
+						<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
 						{% endif %}
-					{% endifequal %}
+						</div>
+					</td>
+					<td class="post">
+						<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
+						<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
+						<hr />
+						<div class="post">
+							{{ post.body_html|safe }}
+						</div>
+
+						{% if post.attachment_cache %}
+							{% for attach in post.attachment_cache %}
+								{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
+							{% endfor %}
+						{% endif %}
+
+						{% if post.updated %}
+							<span class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</span>
+						{% endif %}
+						<hr />
+						{% if user.is_authenticated %}
+							{% ifequal user.wlprofile.show_signatures 1 %}
+								{% if post.user.wlprofile.signature %}
+									{{ post.user.wlprofile.signature|urlize|linebreaks }}
+								{% endif %}
+							{% endifequal %}
+						{% else %}
+							{% if post.user.wlprofile.signature %}
+								{{ post.user.wlprofile.signature|urlize|linebreaks }}
+							{% endif %}
+						{% endif %}
+
+						<button onclick="window.location.href='#top';" class="posRight">
+							<img src="{{ MEDIA_URL }}forum/img/top.png" alt ="" class="middle" />
+							<span class="middle">{% trans "Top" %}</span>
+						</button>
+
+						<button onclick="window.location.href='{% url 'pybb_add_post' topic.id %}?quote_id={{ post.id }}';">
+							<img src="{{ MEDIA_URL }}forum/img/quote.png" alt ="" class="middle" />
+							<span class="middle">{% trans "Quote" %}</span>
+						</button>
+						{% if moderator or post|pybb_posted_by:user %}
+							<button onclick="window.location.href='{% url 'pybb_edit_post' post.id %}';">
+								<img src="{{ MEDIA_URL }}forum/img/edit.png" alt ="" class="middle" />
+								<span class="middle">{% trans "Edit" %}</span>
+							</button>
+							{% if moderator or post|pybb_equal_to:last_post %}
+							<button onclick="window.location.href='{% url 'pybb_delete_post' post.id %}';">
+								<img src="{{ MEDIA_URL }}forum/img/delete.png" alt ="" class="middle" />
+								<span class="middle">{% trans "Delete" %}</span>
+							</button>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			<br /><hr /><br />
+				{% endwith %}
+			{% endifnotequal %}
+		{% endif %}
+		
+			<table class="forum">
+				<tbody>
+			{% for post in object_list %}
+				{% comment %}
+				TODO (Franku): use
+				{% include 'pybb/inlines/post.html' %}
+				{% endcomment %}
+				<tr class="{% cycle 'odd' 'even' %}" {% if post.is_spam %} style="background-color: gray" {% endif %}>
+					<td class="author">
+						{{ post.user|user_link }}<br />
+						{% if post.user.wlprofile.avatar %}
+						<a href="{% url 'profile_view' post.user %}">
+							<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
+						</a>
+						{% endif %}
+						<div class="authorStats">
+						<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
+						<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+						<img src="{{ MEDIA_URL }}img/{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
+						<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
+						{% if post.user.wlprofile.location %}
+						<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
+						{% endif %}
+						</div>
+					</td>
+					<td class="post">
+						<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
+						<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
+						<hr />
+						<div class="post">
+							{{ post.body_html|safe }}
+						</div>
+
+						{% if post.attachment_cache %}
+							{% for attach in post.attachment_cache %}
+								{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
+							{% endfor %}
+						{% endif %}
+
+						{% if post.updated %}
+							<span class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</span>
+						{% endif %}
+						<hr />
+						{% if user.is_authenticated %}
+							{% ifequal user.wlprofile.show_signatures 1 %}
+								{% if post.user.wlprofile.signature %}
+									{{ post.user.wlprofile.signature|urlize|linebreaks }}
+								{% endif %}
+							{% endifequal %}
+						{% else %}
+							{% if post.user.wlprofile.signature %}
+								{{ post.user.wlprofile.signature|urlize|linebreaks }}
+							{% endif %}
+						{% endif %}
+
+						<a class="button posRight" href="#top">
+							<img src="{{ MEDIA_URL }}forum/img/top.png" alt ="" class="middle" />
+							<span class="middle">{% trans "Top" %}</span>
+						</a>
+
+						<a class="button" href="{% url 'pybb_add_post' topic.id %}?quote_id={{ post.id }}">
+							<img src="{{ MEDIA_URL }}forum/img/quote.png" alt ="" class="middle" />
+							<span class="middle">{% trans "Quote" %}</span>
+						</a>
+						{% if moderator or post|pybb_posted_by:user %}
+							<a class="button" href="{% url 'pybb_edit_post' post.id %}">
+								<img src="{{ MEDIA_URL }}forum/img/edit.png" alt ="" class="middle" />
+								<span class="middle">{% trans "Edit" %}</span>
+							</a>
+							{% if moderator or post|pybb_equal_to:last_post %}
+							<a class="button" href="{% url 'pybb_delete_post' post.id %}">
+								<img src="{{ MEDIA_URL }}forum/img/delete.png" alt ="" class="middle" />
+								<span class="middle">{% trans "Delete" %}</span>
+							</a>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				{% if not forloop.last %}
+				{# no spacer at end of table #}
+				<tr class="spacer">
+					<td></td>
+					<td></td>
+				</tr>
+				{% endif %}
+			{% endfor %}
+				</tbody>
+			</table>
+
+			<div class="posRight">
+			{% if moderator %}
+			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/topic_hide.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Toggle Visibility" %}</span>
+				</a>
+				{% if topic.sticky %}
+				<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Unstick Topic" %}</span>
+				</a>
 				{% else %}
-					{% if post.user.wlprofile.signature %}
-						{{ post.user.wlprofile.signature|urlize|linebreaks }}
-					{% endif %}
-				{% endif %}
-
-				<a class="button posRight" href="#top">
-					<img src="{{ MEDIA_URL }}forum/img/top.png" alt ="" class="middle" />
-					<span class="middle">{% trans "Top" %}</span>
+				<a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Stick Topic" %}</span>
 				</a>
-
-				<a class="button" href="{% url 'pybb_add_post' topic.id %}?quote_id={{ post.id }}">
-					<img src="{{ MEDIA_URL }}forum/img/quote.png" alt ="" class="middle" />
-					<span class="middle">{% trans "Quote" %}</span>
-				</a>
-				{% if moderator or post|pybb_posted_by:user %}
-					<a class="button" href="{% url 'pybb_edit_post' post.id %}">
-						<img src="{{ MEDIA_URL }}forum/img/edit.png" alt ="" class="middle" />
-						<span class="middle">{% trans "Edit" %}</span>
-					</a>
-					{% if moderator or post|pybb_equal_to:last_post %}
-					<a class="button" href="{% url 'pybb_delete_post' post.id %}">
-						<img src="{{ MEDIA_URL }}forum/img/delete.png" alt ="" class="middle" />
-						<span class="middle">{% trans "Delete" %}</span>
-					</a>
-					{% endif %}
 				{% endif %}
-			</td>
-		</tr>
-		{% if not forloop.last %}
-		{# no spacer at end of table #}
-		<tr class="spacer">
-			<td></td>
-			<td></td>
-		</tr>
-		{% endif %}
-	{% endfor %}
-		</tbody>
-	</table>
+				{% if topic.closed %}
+				<a class="button" href="{% url 'pybb_open_topic' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/open.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Open Topic" %}</span>
+				</a>
+				{% else %}
+				<a class="button" href="{% url 'pybb_close_topic' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/closed.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Close Topic" %}</span>
+				</a>
+				{% endif %}
+			{% endif %}
+			{% if user.is_authenticated %}
+				{% if subscribed %}
+				<a class="button" href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
+					<img src="{{ MEDIA_URL }}forum/img/unsubscribe.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Unsubscribe" %}</span>
+				</a>
+				{% else %}
+				<a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/subscribe.png" alt ="" class="middle" />
+					<span class="middle">{% trans "Subscribe" %}</span>
+				</a>
+				{% endif %}
+				<a class="button" href="{% url 'pybb_add_post' topic.id %}">
+					<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
+					<span class="middle">{% trans "New Reply" %}</span>
+				</a>
+			{% endif %}
+			</div>
+			{% paginate %}
+		</div>
 
-	<div class="posRight">
-	{% if moderator %}
-		{% if topic.sticky %}
-		<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/unstick.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Unstick Topic" %}</span>
-		</a>
-		{% else %}
-		<a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/sticky.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Stick Topic" %}</span>
-		</a>
-		{% endif %}
-		{% if topic.closed %}
-		<a class="button" href="{% url 'pybb_open_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/open.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Open Topic" %}</span>
-		</a>
-		{% else %}
-		<a class="button" href="{% url 'pybb_close_topic' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/closed.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Close Topic" %}</span>
-		</a>
+		{% if user.is_authenticated %}
+			{% if not topic.closed %}
+				{% include "pybb/inlines/add_post_form.html" %}
+			{% endif %}
 		{% endif %}
 	{% endif %}
-	{% if user.is_authenticated %}
-		{% if subscribed %}
-		<a class="button" href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
-			<img src="{{ MEDIA_URL }}forum/img/unsubscribe.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Unsubscribe" %}</span>
-		</a>
-		{% else %}
-		<a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/subscribe.png" alt ="" class="middle" />
-			<span class="middle">{% trans "Subscribe" %}</span>
-		</a>
-		{% endif %}
-		<a class="button" href="{% url 'pybb_add_post' topic.id %}">
-			<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
-			<span class="middle">{% trans "New Reply" %}</span>
-		</a>
-	{% endif %}
-	</div>
-	{% paginate %}
-</div>
-
-{% if user.is_authenticated %}
-	{% if not topic.closed %}
-		{% include "pybb/inlines/add_post_form.html" %}
-	{% endif %}
-{% endif %}
-
 {% endblock %}

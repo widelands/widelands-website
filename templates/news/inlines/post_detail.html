@@ -7,18 +7,25 @@
 {% load threadedcommentstags %}
 {% load wl_markdown wlprofile_extras custom_date %}
 
+{% block content_tabbing %}
+	{% if perms.news %}
+		<ul class="small tab-list">
+            <li>
+                {% if perms.news.add_post %}<a href="/admin/news/post/add/">Add New News</a>{% endif %}
+            </li>
+            <li>
+                {% if perms.news.change_post %}<a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
+            </li>
+		</ul>
+    {% endif %}
+{% endblock %}
 <div class="blogEntry">
 	{% if object.has_image %}
 		<a href="{% url 'category_posts' slug=object.get_category_slug %}">
 			<img class="title posLeft" src="{{MEDIA_URL}}{{ object.image|urlencode }}" alt="{{ object.image_alt }}">
 		</a>
 	{% endif %}
-	{% if perms.news %}
-		<div class="small posRight invertedColor">
-		{% if perms.news.add_post %}<a href="/admin/news/post/add/">Add New News</a>{% endif %}
-		{% if perms.news.change_post %}| <a href="/admin/news/post/{{object.id}}/">Edit</a>{% endif %}
-		</div>
-    {% endif %}
+
 	
 	<h2><a href="{{ object.get_absolute_url }}" style="color: inherit;">{{ object.title }}</a></h2>
 	
@@ -26,6 +33,6 @@
 	
 	<hr />
 	{% get_comment_count for object as ccount %}
-	<span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comment{{ ccount|pluralize }}</a></span>
+	<span class="small posLeft"><a href="{{ object.get_absolute_url }}#comment_anchor">{{ ccount }} comment{{ ccount|pluralize }}</a></span>
 	<span class="small posRight">Posted by {{object.author|user_link}} on {{ object.publish|custom_date:user }}</span>
 </div>

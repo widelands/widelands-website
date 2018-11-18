@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load wl_markdown %}
+
+{% block title %}Privacy policy {{ cur_lang }} {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+{{ block.super}}
+<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
+{% endblock %}
+
+{% block content_header %}
+    <h1>Privacy Policy</h1>
+{% endblock %}
+{% block content_main %}
+<div class="blogEntry">
+    {% with languages|length as count %}
+    {% if count > 0 %}
+    <p>
+        This page is also available as:
+        {% for lang, slug in languages %}
+            {# The if statement has to be directly after the link, otherwise we have unwanted spaces #}
+            <a href="{% url 'policy_translated' slug %}">{{ lang }}</a>{% if count > 1  and forloop.revcounter0 == 1 %} and
+        {% elif count > 1 and forloop.revcounter0 != 0 %}, {% endif %}
+        {% endfor %}
+    </p>
+    {% endif %}
+    {% endwith %}
+    
+    {{ text|wl_markdown }}
+</div>
+{% endblock %}

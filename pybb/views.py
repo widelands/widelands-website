@@ -10,7 +10,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.db import connection
 from django.utils import translation
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
@@ -29,52 +29,32 @@ except ImportError:
 
 
 def index_ctx(request):
-    quick = {'posts': Post.objects.count(),
-             'topics': Topic.objects.count(),
-             'users': User.objects.count(),
-             'last_topics': Topic.objects.all().select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': Post.objects.order_by('-created').select_related()[:pybb_settings.QUICK_POSTS_NUMBER],
-             }
-
     cats = Category.objects.all().select_related()
 
-    return {'cats': cats,
-            'quick': quick,
-            }
+    return {'cats': cats }
 index = render_to('pybb/index.html')(index_ctx)
 
 
 def show_category_ctx(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    quick = {'posts': category.posts.count(),
-             'topics': category.topics.count(),
-             'last_topics': category.topics.select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': category.posts.order_by('-created').select_related()
-             [:pybb_settings.QUICK_POSTS_NUMBER],
-             }
-    return {'category': category,
-            'quick': quick,
-            }
+
+    return {'category': category }
 show_category = render_to('pybb/category.html')(show_category_ctx)
 
 
 def show_forum_ctx(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
 
-    quick = {'posts': forum.post_count,
-             'topics': forum.topics.count(),
-             'last_topics': forum.topics.all().select_related()[:pybb_settings.QUICK_TOPICS_NUMBER],
-             'last_posts': forum.posts.order_by('-created').select_related()
-             [:pybb_settings.QUICK_POSTS_NUMBER],
-             }
+    moderator = (request.user.is_superuser or
+                 request.user in forum.moderators.all())
 
     topics = forum.topics.order_by(
-        '-sticky', '-updated').exclude(posts__hidden=True).select_related()
+        '-sticky', '-updated').select_related()
 
     return {'forum': forum,
             'topics': topics,
-            'quick': quick,
             'page_size': pybb_settings.FORUM_PAGE_SIZE,
+            'moderator': moderator,
             }
 show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
@@ -106,8 +86,16 @@ def show_topic_ctx(request, topic_id):
     subscribed = (request.user.is_authenticated and
                   request.user in topic.subscribers.all())
 
-    posts = topic.posts.exclude(hidden=True).select_related()
 
+    is_spam = False
+    if topic.is_hidden:
+            is_spam = topic.posts.first().is_spam()
+
+    if moderator:
+        posts = topic.posts.select_related()
+    else:
+        posts = topic.posts.exclude(hidden=True).select_related()
+ 
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
@@ -127,6 +115,7 @@ def show_topic_ctx(request, topic_id):
             'posts': posts,
             'page_size': pybb_settings.TOPIC_PAGE_SIZE,
             'form_url': reverse('pybb_add_post', args=[topic.id]),
+            'is_spam': is_spam,
             }
 show_topic = render_to('pybb/topic.html')(show_topic_ctx)
 
@@ -393,3 +382,15 @@ def post_ajax_preview(request):
 
 def pybb_moderate_info(request):
     return render(request, 'pybb/pybb_moderate_info.html')
+
+
+def toggle_hidden_topic(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    first_post = topic.posts.all()[0]
+    if first_post.hidden:
+        first_post.hidden = False
+    else:
+        first_post.hidden = True
+    first_post.save()
+    
+    return redirect(topic)

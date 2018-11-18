@@ -12,7 +12,7 @@ body {
 	font-size: 0.88em;
 	line-height: 1.4em;
 	color: #ffffee;
-    text-shadow: 1px 1px 0px #000000;
+	text-shadow: 1px 1px 0px #000000;
 }
 
 /*+++++++++++++++++++++++++*/
@@ -34,7 +34,7 @@ a {
 }
 
 a:visited {
-  color: #C8BE93;
+	color: #e0d7b0;
 }
 
 a.missingLink {
@@ -138,6 +138,10 @@ div.blogEntry h1, h2, h3, h4, h5, h6 {
 	margin: 0.8em 0em 0.5em 0em;
 }
 
+#content_header h1 {
+    	display: inline-block;
+}
+
 svg {
 	text-shadow: none;
 }
@@ -164,7 +168,7 @@ td {
 }
 
 .right  {
-       text-align: right;
+	text-align: right;
 }
 
 .middle {
@@ -202,6 +206,10 @@ a.small {
 	background-image: url("../img/black50.png");
 }
 
+.hidden {
+	display: none;
+}
+
 .placeholder {
   color: #aaa !important;
 }
@@ -235,6 +243,8 @@ div #main {
 
 div#content {
 	margin-right: 240px;
+	display: flex;
+	flex-direction: column;
 }
 
 div#footer {
@@ -254,59 +264,61 @@ div#footer {
 /**********/
 /* Header */
 /**********/
-
-div#header  img{
-	position: relative;
-	z-index: 0;
+#logo img {
+	width: 100%;
 }
 
-div.loginBox {
-	width: 320px;
-	height: 71px;
-	border: 1px solid black;
-	background-color: #332f29;
-	background-image: url("../img/but1.png");
-	-moz-border-radius: 4px 4px 0px 0px;
-	-webkit-border-radius: 4px 4px 0px 0px;
-	-khtml-border-radius: 4px 4px 0px 0px;
-	border-radius: 4px 4px 0px 0px;
-	position: relative;
-	z-index: 0;
-	padding: 15px;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+#header {
+	display: flex;
+	display: -webkit-flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+	align-items: center;
 }
 
-div.loginBox div.right{
-	width: 120px;
+#header .header_boxes li a, .header_boxes p {
+	font-weight: bold;
 }
 
-div.loginBox ul {
+#header .header_boxes {
+	display: flex;
+	flex-flow: row wrap;
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
-	line-height: 1.5em;
+	border: 1px solid #474444;
+	-webkit-border-radius: 4px 4px 0px 0px;
+	-khtml-border-radius: 4px 4px 0px 0px;
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	background-image: url("../img/wood.png");
 }
 
-div.loginBox h4 {
-	margin-bottom: 5px;
-	margin-top: 0px;
+#header .header_boxes li {
+	border: 1px solid rgba(90, 74, 49, 0.84);
+	padding: 2px 5px 2px 5px;
+	text-align: center;
 }
 
-div.loginBox input {
-	width: 100px;
+#header .header_boxes img {
+	margin: 0 2px 0 2px;
 }
 
-div.loginBox button {
-	margin: 0px;
+#header li.loginBox {
+	background-image: url("../img/black20.png");
+	border: 1px solid #474444;
+	-webkit-border-radius: 4px 4px 0px 0px;
+	-khtml-border-radius: 4px 4px 0px 0px;
+	border-radius: 4px 4px 4px 4px;
+}
+
+#header p {	
 	padding: 0px;
-	border: 1px solid black;
-	width: 60px;
-	height: 20px;
-	border-radius: 10px;
-	background: none;
-	background-image: url("../img/black50.png");
-	outline: none;
-	color: #ffffff;
+	margin: 0px;
+}
+
+#header img {
+	vertical-align: middle; /* to prevent a space below */
 }
 
 /****************/
@@ -323,7 +335,7 @@ div.columnModule {
 
 div.columnModule h3 {
 	margin-bottom: 10px;
-	margin-top: 8px;	/* Correction for donatebox */
+	margin-top: 8px;	/* Correction for first box */
 }
 
 div.columnModuleBox {
@@ -392,21 +404,6 @@ div.columnModuleBox ul li:first-child {
 	border-top: none;
 }
 
-div.columnModuleBox ul.socialMediaList {
-	height: 55px;
-}
-
-div.columnModuleBox ul.socialMediaList li {
-	float: left;
-	border: none;
-	padding: 9px;
-}
-
-input.donate {
-	border: none;
-	background: none;
-}
-
 /* News Posts */
 
 img.landing {
@@ -469,4 +466,82 @@ div.blogEntry .posRight{
 
 .pagination .summary{
 	margin-right: 1em;
+}
+
+/****************/
+/* Tabbed views */
+/****************/
+
+.tab-list {
+	align-self: flex-end;
+	margin-bottom: 0px;
+	margin-top: -18px; /* Fix the margin of the header*/
+	z-index: 2;
+	display: flex;
+	flex-direction: row;
+	list-style: none;
+	height: 20px;
+}
+
+.tab-list a {
+	background-color: #332f29;
+	background-image: url("../img/but1.png");
+	border-radius: 4px;
+	border: 1px solid black;
+	padding: 0.5em;
+	margin: 0 0 0 0.4em;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	font-size: 0.83em;
+}
+
+.tab-list a:hover {
+	border-bottom: none;
+	box-shadow: none;
+}
+
+.tab-list .active {
+	border-bottom: none;
+	box-shadow: none;
+}
+
+.tab-list li ul {
+	position: absolute;
+	list-style: none;
+	padding-left: 0px;
+	display: none;
+}
+
+.tab-list li:hover ul{
+	display: block;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
+.tab-list li ul li{
+	border-top: 1px solid black;
+}
+
+.tab-list li ul li:first-child{
+	border-top: none;
+}
+
+.tab-list li ul li a{
+  border: none;
+  margin: 0 0 0 1px;
+	display: block;
+	box-shadow: none;
+	border-radius: 0px;
+	padding: 2px 4px 2px 4px;
+}
+
+/* The max-width has to be adjusted
+   depending on the width of the logo*/
+@media (max-width: 1000px) {
+	#header {
+		justify-content: center;
+	}
+	.header_boxes {
+		justify-content: center;
+		margin-bottom: 10px !important;
+	}
 }

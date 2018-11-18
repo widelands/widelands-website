@@ -1,7 +1,8 @@
 <div>
-	<img class="posLeft icon" src="{{ tribe.icon_url }}" alt="" />
+	<img class="posLeft icon" src="{{ tribe.icon_url }}" alt="Tribe's Icon" />
 	<p>{{ tribe.descr }}</p>
 </div>
+
 <ul>
 	<li><a href="{% url 'wlhelp_buildings' tribe.name %}">Buildings</a></li>
 	<li><a href="{% url 'wlhelp_wares' tribe.name %}">Wares</a></li>

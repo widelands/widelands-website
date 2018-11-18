@@ -1,0 +1,46 @@
+{% load wlprofile_extras %}
+{% load wl_extras %}
+
+<div id="logo">
+	<a href="{% url 'mainpage' %}"><img src=
+	"{{ MEDIA_URL }}img/{% wl_logo %}" alt=
+	"Widelands Logo"></a>
+</div>
+<ul class="header_boxes">
+    <li class="small">
+        <a href="{% url 'wlscreens_index' %}" title="Screenshots">Screenshots<br />
+        <img src="{{ MEDIA_URL }}/img/camera.png" alt="Screenshots" />
+        </a>
+    </li>
+	<li class="small">
+		<a href="{% url 'wiki_article' "Download" %}" title="Download">Download<br />
+		<img src="{{ MEDIA_URL }}/img/download.png" alt="Get Widelands" />
+		</a>
+	</li>
+	<li class="small">
+		<a href="{% url 'wlmaps_index' %}" title="Get new maps">Maps<br />
+		<img src="{{ MEDIA_URL }}img/maps.png" alt="Get Free Maps" />
+		</a>
+	</li>
+	<li class="small">
+		<p>Social Media</p>
+		<a href="https://www.facebook.com/WidelandsOfficial" target="_blank">
+			<img src="{{ MEDIA_URL }}img/socialmedia/facebook.png" alt="Facebook" />
+		</a>
+	</li>
+	<li class="loginBox small">
+	<!-- Login form / User information -->
+		{% if user.is_authenticated %}
+			<a href="{% url 'profile_view' %}" title="You are logged in as {{ user }}">Your Profile</a>
+			{% if messages_inbox_count > 0 %}
+				<a href="{% url 'messages_inbox' %}" title="Number of Private Messages">({{ messages_inbox_count }})</a>
+			{% endif %}
+			<br />
+			<a href="{% url 'scheduling_find' %}?next={{ request.path|iriencode }}" title="Show other users playtimes">Playtimes</a>
+			<br />
+			<a href="{% url 'auth_logout' %}?next={{ request.path|iriencode }}">Logout</a>
+		{% else %}
+			<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Login/Register</a>
+		{% endif %}
+	</li>
+</ul>

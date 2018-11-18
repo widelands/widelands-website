@@ -2,7 +2,6 @@
 
 BeautifulSoup==3.2.0
 Django==1.11.12
-django-contrib-comments==1.8.0
 django-haystack==2.8.1
 # django-messages is very old on pypi
 # Do not install newer versions because our notifications app is affected

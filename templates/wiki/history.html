@@ -7,7 +7,15 @@
 {% trans "Article History of" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
-{% block content %}
+{% block content_header %}
+	<h1>{% trans "Article History of" %} {{ article.title }}</h1>
+{% endblock %}
+
+{# add the wanted classes to the tabs #}
+{% block class_wiki_edit %}class="hidden"{% endblock %}
+{% block class_wiki_hist %}class="hidden"{% endblock %}
+
+{% block content_main %}
 {% if changes|length > 1 %}
 <script type="text/javascript">
 	function check() {
@@ -55,12 +63,6 @@
 </script>
 {% endif %}
 
-<div class="posRight small">
-	<a href="{% url 'wiki_article' article.title %}" class="invertedColor">{% trans "Back to article" %}</a>
-	| <a href="{% url 'wiki_article_history_feed_atom' article.title %}"  class="invertedColor">Atom Feed</a>
-</div>
-<h1>{% trans "Article History of" %} {{ article.title }}</h1>
-
 <div class="blogEntry">
 	<form action="{% url 'wiki_revert_to_revision' article.title %}" method="post" onsubmit="return check(this);">
 		<table class="history_list">
@@ -71,8 +73,8 @@
 				<th colspan="2">{% trans "Compare" %}</th>
 				{% endif %}
 				<th>{% trans "Revert" %}</th>
-				<th>{% trans "At" %}</th>
-				<th>{% trans "User" %}</th>
+				<th class="at">{% trans "At" %}</th>
+				<th class="user">{% trans "User" %}</th>
 				<th>{% trans "Comment" %}</th>
 			</tr>
 		</thead>

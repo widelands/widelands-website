@@ -5,8 +5,10 @@
 
 {% block title %}Upload - {{ block.super }}{% endblock %}
 
-{% block content %}
-<h1>Map Upload</h1>
+{% block content_header %}
+	<h1>Map Upload</h1>
+{% endblock %}
+{% block content_main %}
 <div class="blogEntry">
 	<div class="breadCrumb">
 		<a href="{% url 'wlmaps_index' %}">Maps</a> &#187; Upload

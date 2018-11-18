@@ -6,18 +6,28 @@
 {% load custom_date %}
 {% load pagination_tags %}
 
-{% block title %}
-{{ forum.name }} - {{ block.super }}
-{% endblock %}
-
 {% block extra_head %}
 <link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url 'pybb_feed_posts' %}{{forum.id}}/"  />
 <link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url 'pybb_feed_topics' %}{{forum.id}}/" />
 {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<h1>Forum: {{ forum }}</h1>
+{% block title %}
+{{ forum.name }} - {{ block.super }}
+{% endblock %}
+
+{% block content_header %}
+	<h1>Forum: {{ forum }}</h1>
+{% endblock %}
+
+{% block content_tabbing %}
+	<ul class="tab-list small">
+		<li>
+		<a href="{% url 'pybb_add_topic' forum.id %}">New Topic</a>
+		</li>
+	</ul>
+{% endblock %}
+{% block content_main %}
 
 <div class="blogEntry">
 	<div class="breadCrumb">
@@ -25,10 +35,7 @@
 	{% pybb_link forum.category %} &#187; 
 	{{ forum }}
 	</div>
-	<a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
-		<img src="{{ MEDIA_URL }}forum/img/new_topic.png" alt ="{% trans "New Topic" %}" class="middle" />
-		<span class="middle">{% trans "New Topic" %}</span>
-	</a>
+
 	{% autopaginate topics page_size as object_list %}
 	{% paginate using "pagination/pagination_mod.html" %}
 
@@ -44,6 +51,7 @@
 		<tbody>
 		{% for topic in object_list %}
 		<tr class="{% cycle 'odd' 'even' %}">
+			{% if not topic.is_hidden %}
 			<td class="forumIcon center">
 				{% if topic|pybb_has_unreads:user %}
 				<img src="{{ MEDIA_URL }}forum/img/doc_big_work_star.png" style="margin: 0px;" alt="" class="middle" />
@@ -67,6 +75,9 @@
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
+			{% elif moderator %}
+				<td colspan="4" class="center errormessage">Hidden Topic: <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
+			{% endif %}
 		</tr>
 		{% endfor %}
 		</tbody>

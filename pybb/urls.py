@@ -30,6 +30,8 @@ urlpatterns = [
         views.close_topic, name='pybb_close_topic'),
     url('^topic/(?P<topic_id>\d+)/open/$',
         views.open_topic, name='pybb_open_topic'),
+    url('^topic/(?P<topic_id>\d+)/unhide/$',
+        views.toggle_hidden_topic, name='pybb_toggle_hid_topic'),
 
     # Post
     url('^topic/(?P<topic_id>\d+)/post/add/$', views.add_post,

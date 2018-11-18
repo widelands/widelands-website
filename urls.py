@@ -59,6 +59,7 @@ urlpatterns = [
     url(r'^ggz/', include('wlggz.urls')),
     url(r'^moderated/', include('check_input.urls')),
     url(r'^scheduling/', include('wlscheduling.urls')),
+    url(r'^privacy/', include('privacy_policy.urls')),
 ]
 
 try:
