@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     'django_messages_wl.apps.WLDjangoMessagesConfig',
     'dj_pagination',
     'tagging',
+    'star_ratings',
     'djangoratings',    # included as wlapp
 ]
 
@@ -332,6 +333,14 @@ DELETED_USERNAME = 'Ex-Member'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-age
 CSRF_COOKIE_AGE = None
+
+#############################
+# star_rating configuration #
+#############################
+
+STAR_RATINGS_STAR_HEIGHT = 14
+STAR_RATINGS_STAR_WIDTH = 14
+STAR_RATINGS_RANGE = 10
 
 try:
     from local_settings import *

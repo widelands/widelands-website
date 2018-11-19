@@ -12,4 +12,4 @@ def average_rating(rating):
         avg = '%.1f' % (float(rating.score) / rating.votes)
     else:
         avg = '0.0'
-    return avg
+    return 'Old: {}'.format(avg)

@@ -1,0 +1,7 @@
+{% extends "star_ratings/widget_base.html" %}
+{% block rating_stars %}
+    {# No stars here #}
+{% endblock %}
+{% block rating_detail %}
+{{ rating.average|floatformat:"-2" }} ({{ rating.count }} Vote{{ rating.count|pluralize }})
+{% endblock %}

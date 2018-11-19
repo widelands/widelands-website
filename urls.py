@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url('^', include('django.contrib.auth.urls')),
 
+    url(r'^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
     # Formerly 3rd party
     url(r'^notification/', include('notification.urls')),
     
