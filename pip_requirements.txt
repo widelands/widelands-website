@@ -1,6 +1,6 @@
 # Python requirements for widelands-website at 22.06.2017
 
-BeautifulSoup==3.2.0
+beautifulsoup4==4.6.3
 Django==1.11.12
 django-haystack==2.8.1
 # django-messages is very old on pypi
@@ -12,6 +12,7 @@ dj-pagination==2.3.2
 django-registration==2.4.1
 django-tagging==0.4.5
 gunicorn==19.7.1
+lxml==4.2.5
 Markdown==2.6.8
 mysqlclient==1.3.10
 numpy==1.13.0

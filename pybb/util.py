@@ -2,8 +2,9 @@ import os.path
 import random
 import traceback
 import json
+import re
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -11,7 +12,6 @@ from django.utils.functional import Promise
 from django.utils.translation import check_for_language
 from django.utils.encoding import force_unicode
 from django import forms
-from django.template.defaultfilters import urlize as django_urlize
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
 from pybb import settings as pybb_settings
@@ -145,6 +145,16 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     return form
 
 
+PLAIN_LINK_RE = re.compile(r'(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?]+)')
+def exclude_code_tag(bs4_string):
+    if bs4_string.parent.name == 'code':
+        return False
+    m = PLAIN_LINK_RE.search(bs4_string)
+    if m:
+        return True
+    return False
+
+
 def urlize(data):
     """Urlize plain text links in the HTML contents.
 
@@ -152,18 +162,29 @@ def urlize(data):
 
     """
 
-    soup = BeautifulSoup(data)
-    for chunk in soup.findAll(text=True):
-        islink = False
-        ptr = chunk.parent
-        while ptr.parent:
-            if ptr.name == 'a' or ptr.name == 'code':
-                islink = True
-                break
-            ptr = ptr.parent
-        if not islink:
-            # Using unescape to prevent conversation of f.e. &gt; to &amp;gt;
-            chunk = chunk.replaceWith(django_urlize(unicode(unescape(chunk))))
+    soup = BeautifulSoup(data, 'lxml')
+    for found_string in soup.find_all(string=exclude_code_tag):
+        new_content = []
+        strings_or_tags = found_string.parent.contents
+        for string_or_tag in strings_or_tags:
+            try:
+                for string in PLAIN_LINK_RE.split(string_or_tag):
+                    if string.startswith('http'):
+                        # Apply an a-Tag
+                        tag = soup.new_tag('a')
+                        tag['href'] = string
+                        tag.string = string
+                        tag['nofollow'] = 'true'
+                        new_content.append(tag)
+                    else:
+                        # This is just a string, apply a bs4-string
+                        new_content.append(NavigableString(string))
+            except:
+                # Regex failed, so apply what ever it is
+                new_content.append(string_or_tag)
+
+        # Apply the new content
+        found_string.parent.contents = new_content
 
     return unicode(soup)
 

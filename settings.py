@@ -213,8 +213,7 @@ SMILEYS = [
     (':))', 'face-smile-big.png'),
     (':-)', 'face-smile.png'),
     (':)', 'face-smile.png'),
-    # Hack around markdown replacement. see also SMILEY_PREESCAPING
-    ('&gt;:-)', 'face-devilish.png'),
+    (']:-)', 'face-devilish.png'),
     ('8-)', 'face-glasses.png'),
     ('8)', 'face-glasses.png'),
     (':-D', 'face-grin.png'),
@@ -242,10 +241,6 @@ SMILEYS = [
     (':S', 'face-upset.png'),
     (';-)', 'face-wink.png'),
     (';)', 'face-wink.png'),
-]
-# This needs to be done to keep some stuff hidden from markdown
-SMILEY_PREESCAPING = [
-    ('>:-)', '\>:-)')
 ]
 
 #################
@@ -338,9 +333,9 @@ DELETED_USERNAME = 'Ex-Member'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-age
 CSRF_COOKIE_AGE = None
 
-##############################
-# star_rarting configuration #
-##############################
+#############################
+# star_rating configuration #
+#############################
 
 STAR_RATINGS_STAR_HEIGHT = 14
 STAR_RATINGS_STAR_WIDTH = 14
