@@ -99,6 +99,17 @@ following table:
 
 Now everything should work.
 
+Runnning with DBUG=False
+------------------------
+In case you want to test the site with the setting DEBUG=False, you might
+notice that at least the admin site misses all css. To fix this run:
+
+  $ ./manage.py collectstatic -l
+
+This will create symbolic links (-l) to static contents of third party apps in
+the folder defined by STATIC_ROOT. See:
+https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#collectstatic
+
 Accessing the website from other machines
 -----------------------------------------
 

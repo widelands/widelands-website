@@ -6,16 +6,21 @@ from os import path
 # Don't use this file on the server!
 
 local_urlpatterns = [
+   # wl specific static files (css, js) and user media (images, maps)   
    url(r'^wlmedia/(?P<path>.*)$',
        serve,
        {'document_root': settings.STATIC_MEDIA_PATH},
        name='static_media'),
-   url(r'^media/(?P<path>.*)$',
+   # Static files from third party apps.
+   url(r'^static/(?P<path>.*)$',
        serve,
-       {'document_root': settings.STATIC_MEDIA_PATH},
-       name='static_media_pybb'),
+       {'document_root': settings.STATIC_ROOT},
+       name='static_media_foreign'),
+   # HTML documentation created by ./manage.py create_docs
    url(r'^documentation/(?P<path>.*)$',
        serve,
-       {'document_root': path.join(settings.STATIC_MEDIA_PATH, 'documentation/html')},
-       name='documentation'),
+       {'document_root': path.join(
+         settings.STATIC_MEDIA_PATH, 'documentation/html')},
+       name='documentation')
 ]
+

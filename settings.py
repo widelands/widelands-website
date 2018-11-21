@@ -55,6 +55,15 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/wlmedia/'
 
+# Absoltute path where static files from thirdparty apps will be collected using
+# the command: ./manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'media/static/')
+
+# URL to use when referring to static files located in STATIC_ROOT.
+# Must be different than MEDIA_URL!
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+STATIC_URL = '/static/'
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu'
 
@@ -149,10 +158,6 @@ TEMPLATES = [
         },
     },
 ]
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = '/media/'
 
 ############################
 # Activation configuration #
