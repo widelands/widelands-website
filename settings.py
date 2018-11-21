@@ -57,7 +57,7 @@ MEDIA_URL = '/wlmedia/'
 
 # Absoltute path where static files from thirdparty apps will be collected using
 # the command: ./manage.py collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, 'media/static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'media/static_foreign/')
 
 # URL to use when referring to static files located in STATIC_ROOT.
 # Must be different than MEDIA_URL!
@@ -120,7 +120,6 @@ INSTALLED_APPS = [
     'dj_pagination',
     'tagging',
     'star_ratings',
-    'djangoratings',    # included as wlapp
 ]
 
 MIDDLEWARE = [

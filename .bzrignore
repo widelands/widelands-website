@@ -13,4 +13,4 @@ media/wlimages/*
 whoosh_index
 media/map_object_info
 media/wlhelp
-media/static/*
+media/static_foreign/*

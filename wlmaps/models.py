@@ -11,8 +11,6 @@ try:
 except ImportError:
     notification = None
 
-from djangoratings.fields import AnonymousRatingField
-
 
 class Map(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -38,7 +36,6 @@ class Map(models.Model):
     nr_downloads = models.PositiveIntegerField(
         verbose_name='Download count', default=0)
 
-    rating = AnonymousRatingField(range=10, can_change_vote=True)
 
     class Meta:
         ordering = ('-pub_date',)

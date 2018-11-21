@@ -108,7 +108,7 @@ input, button, textarea, .button {
 	font-weight: bold;
 }
 
-.star-ratings input, button {
+.star-ratings input, .star-ratings button {
 	padding: inherit;
 }
 

@@ -4,35 +4,16 @@
 {% endcomment %}
 
 {% load custom_date %}
-{% load wlmaps_extra %}
 {% load wlprofile_extras %}
 {% load threadedcommentstags %}
 {% load wl_markdown %}
 {% load ratings %}
-{% load ratings_old %}
 
 {% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
 {{ block.super }}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/comments.css" />
-{% if not user.is_anonymous %}
-<script src="{{ MEDIA_URL}}/js/jquery.sexy-vote.js" type="text/javascript"></script>
-<script type="text/javascript">
-$(function() {
-    $('#vote').sexyVote( {
-        activeImageSrc: "{{ MEDIA_URL }}img/active_star.gif",
-        passiveImageSrc: "{{ MEDIA_URL }}img/passive_star.gif",
-        maxScore: 10,
-        messages: ["","","","","","","","","",""],
-        fn: function(e, score) {
-            $.post("{% url 'wlmaps_rate' map.slug %}",{ vote: score });
-            }
-        });
-});
-</script>
-
-{% endif %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/comments.css" />
 {% endblock %}
 
 {% block content_header %}
@@ -97,13 +78,8 @@ $(function() {
 			</tr>
 			<tr>
 				<td class="grey">Rating:</td>
-				<td>{% ratings map template_name='star_rating/rate.html' %}
-					{{ map.rating|average_rating }} ({{ map.rating.votes }} Votes)
-					{% if not user.is_anonymous %}
-					<span id="vote"></span>
-					{% else %}
-					- Login to vote
-					{% endif %}
+				<td>
+					{% ratings map template_name='star_rating/rate.html' %}
 				</td>
 			</tr>
 			<tr>
