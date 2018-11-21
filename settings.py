@@ -111,7 +111,6 @@ INSTALLED_APPS = [
     'dj_pagination',
     'tagging',
     'star_ratings',
-    'djangoratings',    # included as wlapp
 ]
 
 MIDDLEWARE = [
