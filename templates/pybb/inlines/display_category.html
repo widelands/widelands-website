@@ -31,15 +31,15 @@
 			Posts: {{ forum.posts.count }}
 		</td>
 		<td class="lastPost">
-		{% with last_post=forum.last_post %}
 		{% if last_post %}
-			<a href="{{last_post.get_absolute_url}}">{{ last_post.topic.name }}</a><br />
-			<span class="small">by {{ last_post.user|user_link }}<br />
-			on {{ last_post.created|custom_date:user}}</span>
+			{% with last_post=forum.last_post %}
+				<a href="{{last_post.get_absolute_url}}">{{ last_post.topic.name }} öhm</a><br />
+				<span class="small">by {{ last_post.user|user_link }}<br />
+				on {{ last_post.created|custom_date:user}}</span>
+			{% endwith %}
 		{% else %}
 			&nbsp;
 		{% endif %}
-		{% endwith %}
 		</td>
 	</tr>
 	{% endfor %}
