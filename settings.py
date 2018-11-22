@@ -73,7 +73,6 @@ ROOT_URLCONF = 'urls'
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
@@ -111,7 +110,6 @@ INSTALLED_APPS = [
     # Modified 3rd party apps
     'wiki.apps.WikiConfig',  # This is based on wikiapp, but has some local modifications
     'news',  # This is based on simple-blog, but has some local modifications
-    'news.managers',
     'pybb.apps.PybbConfig',  # Feature enriched version of pybb
 
     # Thirdparty apps
