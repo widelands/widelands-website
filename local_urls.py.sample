@@ -11,7 +11,7 @@ local_urlpatterns = [
        serve,
        {'document_root': settings.MEDIA_ROOT},
        name='static_media'),
-   # Static files. Use the 'collectstatic' command to fetch them
+   # Static files if DEBUG=False. Use the 'collectstatic' command to fetch them
    url(r'^static/(?P<path>.*)$',
        serve,
        {'document_root': settings.STATIC_ROOT},
