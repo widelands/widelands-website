@@ -1,4 +1,5 @@
 {% extends "wlmaps/base.html" %}
+{% load static %}
 
 {% block content_header %}
     <h1>Edit comment: {{ map.name }}</h1>
@@ -10,7 +11,7 @@
         {{ form.uploader_comment.label_tag }}
 			<span class="posRight">
 				<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
-					<img src="{{ MEDIA_URL }}img/menu_help.png" alt="Help on Syntax" class="middle">
+					<img src="{% static 'img/menu_help.png' %}" alt="Help on Syntax" class="middle">
 					Help on Syntax
 				</a>
 			</span>
@@ -21,7 +22,7 @@
 		{% endif %}
 		{% csrf_token %}
         <button type="submit">
-            <img src="{{ MEDIA_URL }}forum/img/send.png" alt ="Submit" class="middle" />
+            <img src="{% static 'forum/img/send.png' %}" alt ="Submit" class="middle" />
             <span class="middle">Submit</span>
         </button>
 	</form>

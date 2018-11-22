@@ -6,13 +6,14 @@ Base view to show a news post in the archive
 
 
 {% load threadedcommentstags %}
+{% load static %}
 
 {% block title %}{{ object.title }} - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
 {{ block.super }}
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/news.css" />
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/comments.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}" />
+	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/comments.css' %}" />
 {% endblock %}
 
 {% block content_header %}

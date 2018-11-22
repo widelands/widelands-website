@@ -1,31 +1,32 @@
 {% load wlprofile_extras %}
 {% load wl_extras %}
+{% load static %}
 
 <div id="logo">
 	<a href="{% url 'mainpage' %}"><img src=
-	"{{ MEDIA_URL }}img/{% wl_logo %}" alt=
+	"{% static 'img/'%}{% wl_logo %}" alt=
 	"Widelands Logo"></a>
 </div>
 <ul class="header_boxes">
     <li class="small">
         <a href="{% url 'wlscreens_index' %}" title="Screenshots">Screenshots<br />
-        <img src="{{ MEDIA_URL }}/img/camera.png" alt="Screenshots" />
+        <img src="{% static '/img/camera.png' %}" alt="Screenshots" />
         </a>
     </li>
 	<li class="small">
 		<a href="{% url 'wiki_article' "Download" %}" title="Download">Download<br />
-		<img src="{{ MEDIA_URL }}/img/download.png" alt="Get Widelands" />
+		<img src="{% static '/img/download.png' %}" alt="Get Widelands" />
 		</a>
 	</li>
 	<li class="small">
 		<a href="{% url 'wlmaps_index' %}" title="Get new maps">Maps<br />
-		<img src="{{ MEDIA_URL }}img/maps.png" alt="Get Free Maps" />
+		<img src="{% static 'img/maps.png' %}" alt="Get Free Maps" />
 		</a>
 	</li>
 	<li class="small">
 		<p>Social Media</p>
 		<a href="https://www.facebook.com/WidelandsOfficial" target="_blank">
-			<img src="{{ MEDIA_URL }}img/socialmedia/facebook.png" alt="Facebook" />
+			<img src="{% static 'img/socialmedia/facebook.png' %}" alt="Facebook" />
 		</a>
 	</li>
 	<li class="loginBox small">

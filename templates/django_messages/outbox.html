@@ -2,6 +2,7 @@
 {% load i18n %} 
 {% load custom_date %}
 {% load wlprofile_extras %}
+{% load static %}
 
 {% block title %}
 Outbox - {{ block.super }}
@@ -28,7 +29,7 @@ Outbox - {{ block.super }}
 				<td>{{ message.sent_at|custom_date:user }}</td>
 				<td>
 					<a href="{% url 'messages_delete' message.id %}?next={{ request.path|iriencode }}">
-						<img src="{{ MEDIA_URL }}img/delete.png" alt="delete" title="delete" />
+						<img src="{% static 'img/delete.png' %}" alt="delete" title="delete" />
 					</a>
 				</td>
 			</tr>

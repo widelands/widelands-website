@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}
 Wiki - {{ block.super }}
@@ -9,7 +10,7 @@ Wiki - {{ block.super }}
 {{ block.super}}
 <link rel="alternate" type="application/rss+xml" title="Wiki History (RSS)" href="{% url 'wiki_history_feed_rss' %}" />
 <link rel="alternate" type="application/atom+xml" title="Wiki History (Atom)" href="{% url 'wiki_history_feed_atom' %}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
 {% endblock %}
 
 {# Define all(!) tabs for the wiki here (all in one place).

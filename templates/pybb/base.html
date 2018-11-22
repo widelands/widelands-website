@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}
 Forum - {{ block.super }}
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/forum.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/forum.css' %}" />
 
 <link rel="alternate" type="application/atom+xml" title="Latest Posts on all forums" href="{% url 'pybb_feed_posts' %}" />
 <link rel="alternate" type="application/atom+xml" title="Latest Topics on all forums" href="{% url 'pybb_feed_topics' %}" />
