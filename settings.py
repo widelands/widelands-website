@@ -58,7 +58,7 @@ MEDIA_URL = '/wlmedia/'
 
 # Absoltute path where static files from thirdparty apps will be collected using
 # the command: ./manage.py collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, 'media/static_foreign/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'media/static_collected/')
 
 # URL to use when referring to static files located in STATIC_ROOT.
 # Must be different than MEDIA_URL!
