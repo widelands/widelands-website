@@ -8,12 +8,9 @@ from __future__ import unicode_literals
 import os
 import re
 
-# Base path for content uploaded by users, like avatars, maps or images
-# Better make this a static path
-USER_MEDIA_BASE_PATH = os.getcwd()
-
-# Absolute path where to store files uploaded by users
-MEDIA_ROOT = os.path.join(USER_MEDIA_BASE_PATH, 'media/')
+# Absolute path for uploaded files, e.g.:
+# images for avatars, wiki, wlscreens, news cathegories and also mapfiles 
+MEDIA_ROOT = os.path.join(os.getcwd(), 'media/')
 
 # If you are using the developer version of widelands from Launchpad
 # set WIDELANDS_SVN_DIR to the correct path. See also:
@@ -90,7 +87,7 @@ MAX_HIDDEN_POSTS = 5
 #        'logfile': {
 #            'level':'DEBUG',
 #            'class':'logging.FileHandler',
-#            'filename': USER_MEDIA_BASE_PATH + "/log.txt",
+#            'filename': os.getcwd() + "/log.txt",
 #        },
 #    },
 #    'root': {
