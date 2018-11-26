@@ -56,7 +56,7 @@ MEDIA_ROOT = ''
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/wlmedia/'
 
-# Absoltute path where static files from thirdparty apps will be collected using
+# Absolute path where static files from thirdparty apps will be collected using
 # the command: ./manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'media/static_collected/')
 
@@ -202,7 +202,7 @@ LOCAL_DOMAINS = [
     'xoops.widelands.org'
 ]
 
-SMILEY_DIR = MEDIA_URL + 'img/smileys/'
+SMILEY_DIR = STATIC_URL + 'img/smileys/'
 # Keep this list ordered by length of smileys
 SMILEYS = [
     ('O:-)', 'face-angel.png'),

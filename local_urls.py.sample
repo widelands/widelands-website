@@ -15,7 +15,7 @@ local_urlpatterns = [
    url(r'^static/(?P<path>.*)$',
        serve,
        {'document_root': settings.STATIC_ROOT},
-       name='static_media_foreign'),
+       name='static_media_collected'),
    # HTML documentation created by ./manage.py create_docs
    url(r'^documentation/(?P<path>.*)$',
        serve,
