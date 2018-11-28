@@ -31,9 +31,10 @@
 	<li class="loginBox small">
 	<!-- Login form / User information -->
 		{% if user.is_authenticated %}
-			<a href="{% url 'profile_view' %}" title="You are logged in as {{ user }}">Your Profile</a>
-			{% if messages_inbox_count > 0 %}
-				<a href="{% url 'messages_inbox' %}" title="Number of Private Messages">({{ messages_inbox_count }})</a>
+			{% if messages_inbox_count %}
+				<a href="{% url 'messages_inbox' %}" title="Show Inbox">Your Profile ({{ messages_inbox_count }})</a>
+			{% else %}
+				<a href="{% url 'profile_view' %}" title="Show Profile">Your Profile</a>
 			{% endif %}
 			<br />
 			<a href="{% url 'scheduling_find' %}?next={{ request.path|iriencode }}" title="Show other users playtimes">Playtimes</a>
