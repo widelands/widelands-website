@@ -220,10 +220,13 @@ class HiddenTopicsManager(models.Manager):
                    self).get_queryset().filter(hidden=True)
 
         hidden_topics = []
-        for post in qs:
-            if post.topic.is_hidden:
-                hidden_topics.append(post.topic)
-        return hidden_topics
+        try:
+            for post in qs:
+                if post.topic.is_hidden:
+                    hidden_topics.append(post.topic)
+            return hidden_topics
+        except:
+            return []
 
 
 class Post(RenderableItem):

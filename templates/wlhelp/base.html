@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Encyclopedia - {{ block.super }}
 {% endblock %}
 
 {% block extra_head %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/encyclopedia.css" />
-	<script src="{{ MEDIA_URL }}js/encyclopedia.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/encyclopedia.css' %}" />
+	<script src="{% static 'js/encyclopedia.js' %}"></script>
 {{ block.super}}
 {% endblock %}

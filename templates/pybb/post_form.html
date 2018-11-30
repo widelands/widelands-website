@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 
 {% comment %}
 This template is used to prevent using same code
@@ -6,7 +7,7 @@ in different parent templates.
 {% endcomment %}
 
 {% block extra_head %}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/disableOnSubmit.js"></script>
+<script type="text/javascript" src="{% static 'js/disableOnSubmit.js' %}"></script>
 <script type="text/javascript">
 	$(function() {
 		$('form').disableOnSubmit();
@@ -45,7 +46,7 @@ in different parent templates.
 
 	<div class="posRight">
 		<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
-			<img src="{{ MEDIA_URL }}img/menu_help.png" alt="Help on Syntax" class="middle">
+			<img src="{% static 'img/menu_help.png' %}" alt="Help on Syntax" class="middle">
 			Help on Syntax
 		</a>
 	</div>
@@ -54,11 +55,11 @@ in different parent templates.
 	{{ form.as_p }}
 	{% csrf_token %}
 	<button type="submit">
-		<img src="{{ MEDIA_URL }}forum/img/send.png" alt ="" class="middle" />
+		<img src="{% static 'forum/img/send.png' %}" alt ="" class="middle" />
 		<span class="middle">{% trans "Send" %}</span>
 	</button>
 	<button type="button" class="preview-button">
-		<img src="{{ MEDIA_URL }}forum/img/preview.png" alt ="" class="middle" />
+		<img src="{% static 'forum/img/preview.png' %}" alt ="" class="middle" />
 		<span class="middle">{% trans "Preview" %}</span>
 	</button>
 	</form>

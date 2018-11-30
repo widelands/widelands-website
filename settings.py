@@ -48,12 +48,22 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
+# Overwritten in local_settings.py
 MEDIA_ROOT = ''
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/wlmedia/'
+
+# Absolute path where static files from thirdparty apps will be collected using
+# the command: ./manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'media/static_collected/')
+
+# URL to use when referring to static files located in STATIC_ROOT.
+# Must be different than MEDIA_URL!
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+STATIC_URL = '/static/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu'
@@ -63,7 +73,6 @@ ROOT_URLCONF = 'urls'
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
@@ -101,7 +110,6 @@ INSTALLED_APPS = [
     # Modified 3rd party apps
     'wiki.apps.WikiConfig',  # This is based on wikiapp, but has some local modifications
     'news',  # This is based on simple-blog, but has some local modifications
-    'news.managers',
     'pybb.apps.PybbConfig',  # Feature enriched version of pybb
 
     # Thirdparty apps
@@ -149,10 +157,6 @@ TEMPLATES = [
     },
 ]
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = '/media/'
-
 ############################
 # Activation configuration #
 ############################
@@ -198,7 +202,7 @@ LOCAL_DOMAINS = [
     'xoops.widelands.org'
 ]
 
-SMILEY_DIR = MEDIA_URL + 'img/smileys/'
+SMILEY_DIR = STATIC_URL + 'img/smileys/'
 # Keep this list ordered by length of smileys
 SMILEYS = [
     ('O:-)', 'face-angel.png'),

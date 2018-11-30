@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}News Archive {% endblock %}
 
 {% block extra_head %}
 <link rel="alternate" type="application/rss+xml" title="Widelands News" href="/feeds/news/" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/news.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}" />
 {{ block.super}}{% endblock %}

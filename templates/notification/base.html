@@ -1,5 +1,6 @@
 {% extends "wlprofile/base.html" %}
+{% load static %}
 
 {% block extra_head %}
-    <link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/notice.css" />{{ block.super}}
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/notice.css' %}" />{{ block.super}}
 {% endblock %}

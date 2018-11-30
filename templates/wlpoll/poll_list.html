@@ -3,9 +3,11 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+{% load static %}
+
 {% block extra_head %}
 {{ block.super}}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
 {% endblock %}
 
 {% load threadedcommentstags custom_date %}

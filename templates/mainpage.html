@@ -7,11 +7,12 @@
  they reach our homepage
 
 {% endcomment %}
-
+{% load static %}
 {% load news_extras %}
+
 {% block extra_head %}
 <meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/news.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}" />
 <link rel="alternate" type="application/rss+xml" title="Widelands News" href="news/feed/" />
 
 {{ block.super}}{% endblock %}
@@ -20,7 +21,7 @@
 {% endblock %}
 {% block content_main %}
 <div class="blogEntry" style="min-height: 380px;">
-	<img class="landing posRight" src="{{ MEDIA_URL }}img/welcome.jpg" alt="Welcome!" />
+	<img class="landing posRight" src="{% static 'img/welcome.jpg' %}" alt="Welcome!" />
 	<p>
 	<a href="{% url 'wiki_article' "Description" %}">Widelands</a> is a 
 	<a href="{% url 'wiki_article' "The Widelands Project" %}">free, open source</a>

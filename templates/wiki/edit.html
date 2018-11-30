@@ -1,13 +1,14 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
 {% load wlimages_extras %}
+{% load static %}
 
 {% block title %}
 {% trans "Editing" %} {{ article.title }} - {{ block.super }}
 {% endblock %}
 
 {% block extra_head %}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/disableOnSubmit.js"></script>
+<script type="text/javascript" src="{% static 'js/disableOnSubmit.js' %}"></script>
 <script type="text/javascript">
 	$(function() {
 		$('form').disableOnSubmit();

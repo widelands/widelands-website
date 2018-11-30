@@ -3,6 +3,8 @@
    vim:ft=htmldjango
 {% endcomment %}
 
+{% load static %}
+
 {% block title %}Upload - {{ block.super }}{% endblock %}
 
 {% block content_header %}
@@ -22,7 +24,7 @@
 		{{ form.uploader_comment.label_tag }}
 			<span class="posRight">
 				<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
-					<img src="{{ MEDIA_URL }}img/menu_help.png" alt="Help on Syntax" class="middle">
+					<img src="{% static 'img/menu_help.png' %}" alt="Help on Syntax" class="middle">
 					Help on Syntax
 				</a>
 			</span>

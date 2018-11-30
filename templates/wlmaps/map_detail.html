@@ -8,12 +8,13 @@
 {% load threadedcommentstags %}
 {% load wl_markdown %}
 {% load ratings %}
+{% load static %}
 
 {% block title %}{{ map.name }} - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
 {{ block.super }}
-	<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/comments.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/comments.css' %}" />
 {% endblock %}
 
 {% block content_header %}
@@ -41,7 +42,7 @@
 		<div>{{ map.uploader_comment|wl_markdown:"bleachit" }}</div>
 		{% if user == map.uploader %}
 			<a class="button posLeft" href="{% url 'wlmaps_edit_comment' map.slug %}">
-				<img alt="Edit" title="Edit your comment" class="middle" src="{{ MEDIA_URL }}forum/img/edit.png">
+				<img alt="Edit" title="Edit your comment" class="middle" src="{% static 'forum/img/edit.png' %}">
 				<span class="middle">Edit</span>
 			</a>
 		{% endif %}
@@ -102,7 +103,7 @@
 	
 	<div style="margin: 1em 0px 1em 0px">
 	<a class="button posLeft" href="{% url 'wlmaps_download' map.slug %}">
-		<img src="{{ MEDIA_URL }}img/arrow_down_short.png" alt ="" class="middle" />
+		<img src="{% static 'img/arrow_down_short.png' %}" alt ="" class="middle" />
 		<span class="middle">Download this map</span>
 	</a>
 	</div>

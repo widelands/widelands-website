@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load wl_markdown %}
-
+{% load static %}
 {% block title %}Privacy policy {{ cur_lang }} {{ block.super }}{% endblock %}
 
 {% block extra_head %}
 {{ block.super}}
-<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/wiki.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
 {% endblock %}
 
 {% block content_header %}

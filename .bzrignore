@@ -13,12 +13,4 @@ media/wlimages/*
 whoosh_index
 media/map_object_info
 media/wlhelp
-media/static_foreign/admin
-media/static_foreign/basic.css
-media/static_foreign/black20.png
-media/static_foreign/but1.png
-media/static_foreign/parchment.png
-media/static_foreign/pygments.css
-media/static_foreign/star-ratings
-media/static_foreign/widelands.css
-media/static_foreign/wood.png
+media/static_collected/*

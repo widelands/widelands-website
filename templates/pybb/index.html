@@ -1,5 +1,6 @@
 {% extends 'pybb/base.html' %}
 {% load pybb_extras %}
+{% load static %}
 
 {% block content_header %}
     <h1>Forums</h1>
@@ -14,9 +15,9 @@
 {% endfor %}
 
 <div class="center green">
-	<img src="{{ MEDIA_URL }}forum/img/folder_big_work_star.png" style="width: 48px; height:48px; margin: 0px;" alt="" class="middle" />
+	<img src="{% static 'forum/img/folder_big_work_star.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" class="middle" />
 	= Unread posts
-	<img src="{{ MEDIA_URL }}forum/img/folder_big_work.png" style="width: 48px; height:48px; margin: 0px;" alt="" class="middle" /> 
+	<img src="{% static 'forum/img/folder_big_work.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" class="middle" /> 
 	= No unread posts
 </div>
 
@@ -24,20 +25,20 @@
 <table class="legend">
   <tr>
      <td>
-        <img src="{{ MEDIA_URL }}forum/img/folder_new_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
+        <img src="{% static 'forum/img/folder_new_big.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
      </td>
      <td>= Unread posts</td>
      <td>
-         <img src="{{ MEDIA_URL }}forum/img/folder_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" /> 
+         <img src="{% static 'forum/img/folder_big.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" /> 
      </td><td>= No unread posts</td>
   </tr>
 
   <tr>
       <td>
-          <img src="{{ MEDIA_URL }}forum/img/folder_locked_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
+          <img src="{% static 'forum/img/folder_locked_big.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
       </td><td>= Locked topic</td>
       <td>
-          <img src="{{ MEDIA_URL }}forum/img/folder_new_locked_big.png" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
+          <img src="{% static 'forum/img/folder_new_locked_big.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
       </td><td>= Unread posts in locked topic</td>
   </tr>
 </table>

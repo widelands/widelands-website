@@ -6,16 +6,21 @@ from os import path
 # Don't use this file on the server!
 
 local_urlpatterns = [
+   # Files uploaded by users   
    url(r'^wlmedia/(?P<path>.*)$',
        serve,
-       {'document_root': settings.STATIC_MEDIA_PATH},
+       {'document_root': settings.MEDIA_ROOT},
        name='static_media'),
-   url(r'^media/(?P<path>.*)$',
+   # Static files if DEBUG=False. Use the 'collectstatic' command to fetch them
+   url(r'^static/(?P<path>.*)$',
        serve,
-       {'document_root': settings.STATIC_MEDIA_PATH},
-       name='static_media_pybb'),
+       {'document_root': settings.STATIC_ROOT},
+       name='static_media_collected'),
+   # HTML documentation created by ./manage.py create_docs
    url(r'^documentation/(?P<path>.*)$',
        serve,
-       {'document_root': path.join(settings.STATIC_MEDIA_PATH, 'documentation/html')},
-       name='documentation'),
+       {'document_root': path.join(
+         settings.MEDIA_ROOT, 'documentation/html')},
+       name='documentation')
 ]
+

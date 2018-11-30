@@ -5,6 +5,7 @@
  This file is extended by all other files which are not
  included here
 {% endcomment %}
+{% load static %}
 <html lang="en">
 
 	<head>
@@ -14,20 +15,20 @@
       <meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y" />
 
 		<title>{% block title %}Widelands.org{% endblock %}</title> 
-		<link href="{{ MEDIA_URL }}favicon.ico" rel="icon" />
+		<link href="{% static 'favicon.ico' %}" rel="icon" />
 
 		<!--  CSS --> 
-		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/base.css?v1" />
-		<link rel="stylesheet" type="text/css" media="all" href="{{ MEDIA_URL }}css/navigation.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/base.css' %}?v1" />
+		<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/navigation.css' %}" />
 		<!--[if lt IE 9]>
-		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/base_ielt9.css" />
+		<link rel="stylesheet" type="text/css" href="{% static 'css/base_ielt9.css' %}" />
 		<![endif]-->
 
 		<!-- Javascript Bread & Butter Scripts -->
-		<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-3.2.1.js"></script>
-		<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery_csrf_ajax.js"></script>
-		<script type="text/javascript" src="{{ MEDIA_URL }}js/search.js"></script>
+		<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery_csrf_ajax.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/search.js' %}"></script>
 		{% block extra_head %}{% endblock %}
 	</head>
 

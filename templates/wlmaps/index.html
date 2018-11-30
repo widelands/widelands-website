@@ -8,6 +8,7 @@
 {% load threadedcommentstags %}
 {% load pagination_tags %}
 {% load ratings %}
+{% load static %}
 
 {% block content_header %}
 	<h1>Maps</h1>
@@ -82,7 +83,7 @@
 						<td class="spacer"></td>
 						<td colspan="2">
 							<a class="button" href="{% url 'wlmaps_download' map.slug %}">
-								<img src="{{ MEDIA_URL }}img/arrow_down_short.png" alt ="" class="middle" />
+								<img src="{% static 'img/arrow_down_short.png' %}" alt ="" class="middle" />
 								<span class="middle">Direct Download</span>
 							</a>
 						</td>
