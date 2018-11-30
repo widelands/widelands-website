@@ -103,6 +103,11 @@ def _classify_link(tag):
 
     """
 
+    # No class change for image links
+    if tag.next_element and tag.next_element.name == 'img':
+        return
+
+
     try:
         href = tag['href'].lower()
         if not tag.string:
@@ -112,10 +117,6 @@ def _classify_link(tag):
     except KeyError:
         return
 
-    # No class change for image links
-    if tag.next_element.name == 'img':
-        return
-    
     # Check for external link
     if href.startswith('http'):
         for domain in LOCAL_DOMAINS:
