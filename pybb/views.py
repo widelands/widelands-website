@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render, redirect
-
+from django.core.exceptions import PermissionDenied
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -27,16 +27,27 @@ try:
 except ImportError:
     notification = None
 
+def is_allowed(user):
+    if user.is_superuser or user.groups.filter(name='Forum Admin').exists():
+        return True
+    return False
 
 def index_ctx(request):
-    cats = Category.objects.all().select_related()
+    if is_allowed(request.user):
+        cats = Category.objects.all().select_related()
+    else:
+        cats = Category.exclude_internal.all().select_related()
 
     return {'cats': cats }
 index = render_to('pybb/index.html')(index_ctx)
 
 
 def show_category_ctx(request, category_id):
+    
     category = get_object_or_404(Category, pk=category_id)
+    
+    if not category.official and not is_allowed(request.user):
+        raise PermissionDenied
 
     return {'category': category }
 show_category = render_to('pybb/category.html')(show_category_ctx)
@@ -45,6 +56,10 @@ show_category = render_to('pybb/category.html')(show_category_ctx)
 def show_forum_ctx(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
 
+    if not forum.category.official and not is_allowed(request.user):
+        raise PermissionDenied
+
+    # Todo Franku: change forum.moderators into groups
     moderator = (request.user.is_superuser or
                  request.user in forum.moderators.all())
 
@@ -86,6 +101,9 @@ def show_topic_ctx(request, topic_id):
     subscribed = (request.user.is_authenticated and
                   request.user in topic.subscribers.all())
 
+
+    if not topic.forum.category.official and not is_allowed(request.user):
+        raise PermissionDenied
 
     is_spam = False
     if topic.is_hidden:
@@ -166,8 +184,22 @@ def add_post_ctx(request, forum_id, topic_id):
         if notification:
             if not topic:
                 # Inform subscribers of a new topic
-                subscribers = notification.get_observers_for('forum_new_topic',
+                if not post.topic.forum.category.official:
+                    # Inform only users which are in this Group and superusers
+                    # Such a user has to enable 'forum_new_topic' in the notification settings
+                    subscribers = User.objects.filter(
+                        groups__name='Forum Admin').exclude(
+                        username=request.user.username)
+                    superusers = User.objects.filter(
+                        is_superuser=True).exclude(
+                        username=request.user.username)
+                    # Combine the querysets, excluding double entrys.
+                    subscribers = subscribers.union(superusers)
+                else:
+                    # Inform normal users
+                    subscribers = notification.get_observers_for('forum_new_topic',
                                                              excl_user=request.user)
+
                 notification.send(subscribers, 'forum_new_topic',
                                   {'topic': post.topic,
                                    'post': post,

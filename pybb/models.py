@@ -31,10 +31,20 @@ MARKUP_CHOICES = (
     ('bbcode', 'bbcode'),
 )
 
+class PybbExcludeInternal(models.Manager):
+    def get_queryset(self):
+        return super(PybbExcludeInternal, self).get_queryset().exclude(official=False)
+
 
 class Category(models.Model):
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
+    official = models.BooleanField(default=True, verbose_name=_('Official Category'),
+                                   help_text=_('If unset this category is only visible for group Forum Admin or superusers')
+                                   )
+
+    objects = models.Manager()
+    exclude_internal = PybbExcludeInternal()
 
     class Meta:
         ordering = ['position']
@@ -96,6 +106,7 @@ class Forum(models.Model):
         # This has better performance than using the posts manager hidden_topics
         # We search only for the last 10 topics
         topics = self.topics.order_by('-updated')[:10]
+        posts = []
         for topic in topics:
             if topic.is_hidden:
                 continue

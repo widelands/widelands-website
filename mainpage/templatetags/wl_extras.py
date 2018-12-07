@@ -23,21 +23,6 @@ def wl_logo():
     return settings.LOGO_FILE
 
 
-@register.inclusion_tag('mainpage/forum_navigation.html')
-def forum_navigation():
-    """Makes the forum list available to the navigation.
-
-    Ordering:
-    1.: value of 'Position' in pybb.Category
-    2.: value of 'Position' of pybb.Forum.
-
-    """
-
-    from pybb.models import Category
-    categories = Category.objects.all()
-    return {'categories': categories}
-
-
 @register.filter
 def get_model_name(object):
     """Returns the name of an objects model."""

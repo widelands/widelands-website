@@ -83,7 +83,9 @@ import time
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
 def pybb_last_posts(context, number=8):
 
-    last_posts = Post.objects.filter(hidden=False).order_by(
+ 
+    last_posts = Post.objects.filter(
+        hidden=False, topic__forum__category__official=True).order_by(
         '-created').select_related()[:45]
 
     check = []
@@ -249,6 +251,25 @@ def pybb_render_post(post, mode='html'):
     body = getattr(post, 'body_%s' % mode)
     re_tag = re.compile(r'@@@AUTOJOIN-(\d+)@@@')
     return re_tag.sub(render_autojoin_message, body)
+
+
+@register.inclusion_tag('mainpage/forum_navigation.html', takes_context=True)
+def forum_navigation(context):
+    """Makes the forum list available to the navigation.
+
+    Ordering:
+    1.: value of 'Position' in pybb.Category
+    2.: value of 'Position' of pybb.Forum.
+
+    """
+
+    from pybb.models import Forum
+    if context.request.user.is_superuser or context.request.user.groups.filter(name='Forum Admin').exists():
+        forums = Forum.objects.all()
+    else:
+        forums = Forum.objects.filter(category__official=True)
+    return {'forums': forums.order_by('category', 'position')}
+
 
 """
 Spielwiese, Playground, Cour de récréati ;)
