@@ -29,20 +29,14 @@ except ImportError:
     notification = None
 
 
-def access_perm(user):
+def allowed_for(user):
     """Check if a user has the permission to enter internal Forums."""
-
-    access_perm = "{}.{}".format(
-            Category._meta.app_label,
-            Category._meta.permissions[0][0]
-            )
-    if access_perm in user.get_all_permissions():
-        return True
-    return False
+    
+    return user.has_perm('pybb.can_access_internal')
 
 
 def index_ctx(request):
-    if access_perm(request.user):
+    if allowed_for(request.user):
         cats = Category.objects.all().select_related()
     else:
         cats = Category.exclude_internal.all().select_related()
@@ -55,7 +49,7 @@ def show_category_ctx(request, category_id):
     
     category = get_object_or_404(Category, pk=category_id)
     
-    if category.internal and not access_perm(request.user): #is_allowed(request.user, category):
+    if category.internal and not allowed_for(request.user):
         raise PermissionDenied
 
     return {'category': category }
@@ -65,7 +59,7 @@ show_category = render_to('pybb/category.html')(show_category_ctx)
 def show_forum_ctx(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
 
-    if forum.category.internal and not access_perm(request.user): # is_allowed(request.user, forum):
+    if forum.category.internal and not allowed_for(request.user):
         return redirect('/forum/')#raise PermissionDenied
 
     user_is_mod = pybb_moderated_by(forum, request.user)
@@ -87,7 +81,7 @@ def show_topic_ctx(request, topic_id):
     except Topic.DoesNotExist:
         raise Http404()
 
-    if topic.forum.category.internal and not access_perm(request.user):
+    if topic.forum.category.internal and not allowed_for(request.user):
         return redirect('/forum/')#raise PermissionDenied
 
     topic.views += 1
