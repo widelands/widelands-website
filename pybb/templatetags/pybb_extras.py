@@ -12,7 +12,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils import dateformat
 
-from pybb.models import Post, Forum, Topic, Read, PrivateMessage
+from pybb.models import Post, Forum, Topic, Read, Category
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
 
@@ -77,16 +77,13 @@ def pybb_pagination(context, label):
             'paginator': paginator,
             'label': label,
             }
-import time
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
 def pybb_last_posts(context, number=8):
-
- 
     last_posts = Post.objects.filter(
-        hidden=False, topic__forum__category__official=True).order_by(
-        '-created').select_related()[:45]
+        hidden=False, topic__forum__category__internal=False).order_by(
+        '-created')[:45]
 
     check = []
     answer = []
@@ -158,10 +155,20 @@ def pybb_setting(name):
 
 
 @register.filter
-def pybb_moderated_by(topic, user):
+def pybb_moderated_by(instance, user):
     """Check if user is moderator of topic's forum."""
-
-    return user.is_superuser or user in topic.forum.moderators.all()
+    try:
+        if isinstance(instance, Forum):
+            return user.is_superuser or user in instance.moderator_group.user_set.all()
+        if isinstance(instance, Topic):
+            return user.is_superuser or user in instance.forum.moderator_group.user_set.all()
+        if isinstance(instance, Post):
+            return user.is_superuser or user in instance.topic.forum.moderator_group.user_set.all()
+    except:
+        pass
+    
+    return None
+    
 
 
 @register.filter
@@ -172,7 +179,7 @@ def pybb_editable_by(post, user):
         return True
     if post.user == user:
         return True
-    if user in post.topic.forum.moderators.all():
+    if user in post.topic.forum.moderator_group.user_set.all():
         return True
     return False
 
@@ -194,15 +201,6 @@ def pybb_equal_to(obj1, obj2):
 @register.filter
 def pybb_unreads(qs, user):
     return cache_unreads(qs, user)
-
-
-@register.filter
-@stringfilter
-def pybb_cut_string(value, arg):
-    if len(value) > arg:
-        return value[0:arg - 3] + '...'
-    else:
-        return value
 
 
 @register.filter
@@ -264,10 +262,23 @@ def forum_navigation(context):
     """
 
     from pybb.models import Forum
-    if context.request.user.is_superuser or context.request.user.groups.filter(name='Forum Admin').exists():
-        forums = Forum.objects.all()
+    from django.db.models import Q
+    
+    forums = Forum.objects.all()
+    
+    if context.request.user.is_anonymous:
+        # Don't show internal forums
+        forums = forums.filter(category__internal=False)
+    elif context.request.user.is_superuser:
+        # Show all forums to superusers
+        pass
     else:
-        forums = Forum.objects.filter(category__official=True)
+        # Show all forums with no group associated OR
+        # the forums where the group matches the users group(s) 
+        user_groups = context.request.user.groups.all()
+        forums = forums.filter(
+            Q(moderator_group=None) | Q(moderator_group__in=user_groups))
+
     return {'forums': forums.order_by('category', 'position')}
 
 

@@ -38,7 +38,7 @@ class ForumAdmin(admin.ModelAdmin):
     search_fields = ['name', 'category__name']
     fieldsets = (
         (None, {
-            'fields': ('category', 'name', 'updated')
+            'fields': ('category', 'name', 'updated', 'moderator_group',)
         }
         ),
         (_('Additional options'), {

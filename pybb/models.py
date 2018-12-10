@@ -16,7 +16,7 @@ from pybb import settings as pybb_settings
 
 from django.conf import settings
 from notification.models import send
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from check_input.models import SuspiciousInput
 
 
@@ -33,15 +33,23 @@ MARKUP_CHOICES = (
 
 class PybbExcludeInternal(models.Manager):
     def get_queryset(self):
-        return super(PybbExcludeInternal, self).get_queryset().exclude(official=False)
+        return super(PybbExcludeInternal, self).get_queryset().exclude(internal=True)
 
 
 class Category(models.Model):
+    """The base model of pybb.
+    
+    If 'internal' is set to True, the category is only visible for superusers and
+    users which have the permission 'can_access_internal'.
+    """
+    
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
-    official = models.BooleanField(default=True, verbose_name=_('Official Category'),
-                                   help_text=_('If unset this category is only visible for group Forum Admin or superusers')
-                                   )
+    internal = models.BooleanField(
+        default=False,
+        verbose_name=_('Internal Category'),
+        help_text=_('If set, this category is only visible for special users.')
+        )
 
     objects = models.Manager()
     exclude_internal = PybbExcludeInternal()
@@ -50,6 +58,7 @@ class Category(models.Model):
         ordering = ['position']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
+        permissions = (("can_access_internal", "Can access Internal Forums"),)
 
     def __unicode__(self):
         return self.name
@@ -78,6 +87,14 @@ class Forum(models.Model):
     moderators = models.ManyToManyField(
         User, blank=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
+    moderator_group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        default=None,
+        help_text='Users in this Group will have administrative permissions in this Forum.',
+    )
 
     class Meta:
         ordering = ['position']
