@@ -262,22 +262,14 @@ def forum_navigation(context):
     """
 
     from pybb.models import Forum
-    from django.db.models import Q
     
     forums = Forum.objects.all()
     
-    if context.request.user.is_anonymous:
-        # Don't show internal forums
-        forums = forums.filter(category__internal=False)
-    elif context.request.user.is_superuser:
-        # Show all forums to superusers
+    if context.request.user.is_superuser or context.request.user.has_perm('pybb.can_access_internal'):
         pass
     else:
-        # Show all forums with no group associated OR
-        # the forums where the group matches the users group(s) 
-        user_groups = context.request.user.groups.all()
-        forums = forums.filter(
-            Q(moderator_group=None) | Q(moderator_group__in=user_groups))
+        # Don't show internal forums
+        forums = forums.filter(category__internal=False)
 
     return {'forums': forums.order_by('category', 'position')}
 
