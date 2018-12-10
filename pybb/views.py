@@ -12,6 +12,7 @@ from django.db import connection
 from django.utils import translation
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -28,11 +29,12 @@ try:
 except ImportError:
     notification = None
 
+INTERNAL_PERM='pybb.can_access_internal'
 
 def allowed_for(user):
     """Check if a user has the permission to enter internal Forums."""
     
-    return user.has_perm('pybb.can_access_internal')
+    return user.has_perm(INTERNAL_PERM)
 
 
 def index_ctx(request):
@@ -185,11 +187,14 @@ def add_post_ctx(request, forum_id, topic_id):
             if not topic:
                 # Inform subscribers of a new topic
                 if post.topic.forum.category.internal:
-                    # Inform only users which are in this Group and superusers
-                    # Such a user has to enable 'forum_new_topic' in the notification settings
+                    # Inform only users which have the permission to enter the
+                    # internal forum and superusers. Those users have to:
+                    # - enable 'forum_new_topic' in the notification settings, or
+                    # - subscribe to an existing topic
                     subscribers = User.objects.filter(
-                        groups__name='Forum Admin').exclude(
-                        username=request.user.username)
+                        Q(groups__permissions__codename=INTERNAL_PERM) |
+                        Q(user_permissions__codename=INTERNAL_PERM)
+                        ).exclude(username=request.user.username)
                     superusers = User.objects.filter(
                         is_superuser=True).exclude(
                         username=request.user.username)
