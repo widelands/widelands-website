@@ -13,6 +13,7 @@ from django.utils import translation
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.http import Http404
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -52,7 +53,7 @@ def show_category_ctx(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     
     if category.internal and not allowed_for(request.user):
-        raise PermissionDenied
+        raise Http404
 
     return {'category': category }
 show_category = render_to('pybb/category.html')(show_category_ctx)
@@ -62,7 +63,7 @@ def show_forum_ctx(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
 
     if forum.category.internal and not allowed_for(request.user):
-        return redirect('/forum/')#raise PermissionDenied
+        raise Http404
 
     user_is_mod = pybb_moderated_by(forum, request.user)
 
@@ -84,7 +85,7 @@ def show_topic_ctx(request, topic_id):
         raise Http404()
 
     if topic.forum.category.internal and not allowed_for(request.user):
-        return redirect('/forum/')#raise PermissionDenied
+        raise Http404
 
     topic.views += 1
     topic.save()
