@@ -61,6 +61,7 @@ class LastPosts(PybbFeed):
         topic__in=Post.hidden_topics.all()).filter(hidden=False)
 
     def items_for_object(self, obj):
+        # Latest posts for forum 'xy' 
         return Post.objects.exclude(
             topic__in=Post.hidden_topics.all()).filter(
             hidden=False, topic__forum=obj).order_by('-created')[:15]
@@ -78,6 +79,7 @@ class LastTopics(PybbFeed):
         forum__category__internal=True).exclude(posts__hidden=True)
 
     def items_for_object(self, item):
+        # Latest topics on forum 'xy'
         return Topic.objects.exclude(
             forum__category__internal=True).exclude(
             posts__hidden=True).filter(forum=item).order_by('-created')[:15]
