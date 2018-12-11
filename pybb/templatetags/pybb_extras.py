@@ -15,6 +15,7 @@ from django.utils import dateformat
 from pybb.models import Post, Forum, Topic, Read, Category
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
+import pybb.views
 
 register = template.Library()
 
@@ -265,7 +266,7 @@ def forum_navigation(context):
     
     forums = Forum.objects.all()
     
-    if context.request.user.is_superuser or context.request.user.has_perm('pybb.can_access_internal'):
+    if context.request.user.is_superuser or pybb.views.allowed_for(context.request.user):
         pass
     else:
         # Don't show internal forums
