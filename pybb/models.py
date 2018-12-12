@@ -5,6 +5,7 @@ import hashlib
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
@@ -16,7 +17,6 @@ from pybb import settings as pybb_settings
 
 from django.conf import settings
 from notification.models import send
-from django.contrib.auth.models import Group
 from check_input.models import SuspiciousInput
 
 
@@ -58,6 +58,7 @@ class Category(models.Model):
         ordering = ['position']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
+        # See also pybb/views
         permissions = (("can_access_internal", "Can access Internal Forums"),)
 
     def __unicode__(self):

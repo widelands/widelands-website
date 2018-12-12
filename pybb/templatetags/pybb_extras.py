@@ -157,7 +157,7 @@ def pybb_setting(name):
 
 @register.filter
 def pybb_moderated_by(instance, user):
-    """Check if user is moderator of topic's forum."""
+    """Check if user is superuser or moderator in this forum."""
     try:
         if isinstance(instance, Forum):
             return user.is_superuser or user in instance.moderator_group.user_set.all()
@@ -168,7 +168,7 @@ def pybb_moderated_by(instance, user):
     except:
         pass
     
-    return None
+    return False
     
 
 

@@ -11,7 +11,6 @@ from django.urls import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render, redirect
-from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 
@@ -30,6 +29,7 @@ try:
 except ImportError:
     notification = None
 
+# The permission string derived from pybb.models.category
 INTERNAL_PERM='pybb.can_access_internal'
 
 def allowed_for(user):
