@@ -82,9 +82,15 @@ def pybb_pagination(context, label):
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
 def pybb_last_posts(context, number=8):
-    last_posts = Post.objects.filter(
-        hidden=False, topic__forum__category__internal=False).order_by(
-        '-created')[:45]
+    if pybb.views.allowed_for(context.request.user):
+        last_posts = Post.objects.filter(
+            hidden=False).order_by(
+            '-created')[:45]
+    else:
+        last_posts = Post.objects.filter(
+            hidden=False, topic__forum__category__internal=False).order_by(
+            '-created')[:45]
+            
 
     check = []
     answer = []

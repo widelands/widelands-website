@@ -194,6 +194,7 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 PYBB_ATTACHMENT_ENABLE = False  # disable gzip middleware when enabling attachments
 PYBB_DEFAULT_MARKUP = 'markdown'
 PYBB_FREEZE_FIRST_POST = False
+INTERNAL_PERM='pybb.can_access_internal' # The permission string derived from pybb.models.category
 
 ##############################################
 # Link classification and other Markup stuff #

@@ -29,13 +29,11 @@ try:
 except ImportError:
     notification = None
 
-# The permission string derived from pybb.models.category
-INTERNAL_PERM='pybb.can_access_internal'
 
 def allowed_for(user):
     """Check if a user has the permission to enter internal Forums."""
     
-    return user.has_perm(INTERNAL_PERM)
+    return user.is_superuser or user.has_perm(settings.INTERNAL_PERM)
 
 
 def index_ctx(request):
@@ -193,8 +191,8 @@ def add_post_ctx(request, forum_id, topic_id):
                     # - enable 'forum_new_topic' in the notification settings, or
                     # - subscribe to an existing topic
                     subscribers = User.objects.filter(
-                        Q(groups__permissions__codename=INTERNAL_PERM) |
-                        Q(user_permissions__codename=INTERNAL_PERM)
+                        Q(groups__permissions__codename=settings.INTERNAL_PERM) |
+                        Q(user_permissions__codename=settings.INTERNAL_PERM)
                         ).exclude(username=request.user.username)
                     superusers = User.objects.filter(
                         is_superuser=True).exclude(
