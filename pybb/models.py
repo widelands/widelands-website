@@ -58,7 +58,7 @@ class Category(models.Model):
         ordering = ['position']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
-        # See also pybb/views
+        # See also settings.INTERNAL_PERM
         permissions = (("can_access_internal", "Can access Internal Forums"),)
 
     def __unicode__(self):
