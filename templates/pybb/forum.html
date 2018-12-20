@@ -76,7 +76,7 @@
 				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
-			{% elif moderator %}
+			{% elif user_is_mod %}
 				<td colspan="4" class="center errormessage">Hidden Topic: <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
 			{% endif %}
 		</tr>

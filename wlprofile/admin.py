@@ -39,18 +39,3 @@ class ProfileAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Profile, ProfileAdmin)
-
-
-class CustomUserAdmin(UserAdmin):
-    """Partly overwritten admin page for django auth.user.
-
-    Replaces in users list: 'first_name' with 'date_joined' and
-    'last_name' with 'is_active'. Added column: 'last_login'.
-
-    """
-    list_display = ('username', 'email', 'date_joined', 'last_login',
-                    'is_active', 'is_staff')
-    ordering = ('-date_joined',)
-
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
