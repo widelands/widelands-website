@@ -9,66 +9,13 @@ from django.utils.safestring import mark_safe
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
-from django.utils.translation import ugettext as _
-from django.utils import dateformat
 
-from pybb.models import Post, Forum, Topic, Read, Category
+from pybb.models import Post, Forum, Topic, Read
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
 import pybb.views
 
 register = template.Library()
-
-
-@register.tag
-def pybb_time(parser, token):
-    print("Franku in pybb_time: ", parser)
-    try:
-        tag, time = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError(
-            'pybb_time requires single argument')
-    else:
-        return PybbTimeNode(time)
-
-
-class PybbTimeNode(template.Node):
-
-    def __init__(self, time):
-        self.time = template.Variable(time)
-
-    def render(self, context):
-        time = self.time.resolve(context)
-
-        delta = datetime.now() - time
-        today = datetime.now().replace(hour=0, minute=0, second=0)
-        yesterday = today - timedelta(days=1)
-
-        if delta.days == 0:
-            if delta.seconds < 60:
-                if context['LANGUAGE_CODE'].startswith('ru'):
-                    msg = _('seconds ago,seconds ago,seconds ago')
-                    import pytils
-                    msg = pytils.numeral.choose_plural(delta.seconds, msg)
-                else:
-                    msg = _('seconds ago')
-                return u'%d %s' % (delta.seconds, msg)
-
-            elif delta.seconds < 3600:
-                minutes = int(delta.seconds / 60)
-                if context['LANGUAGE_CODE'].startswith('ru'):
-                    msg = _('minutes ago,minutes ago,minutes ago')
-                    import pytils
-                    msg = pytils.numeral.choose_plural(minutes, msg)
-                else:
-                    msg = _('minutes ago')
-                return u'%d %s' % (minutes, msg)
-        if time > today:
-            return _('today, %s') % time.strftime('%H:%M')
-        elif time > yesterday:
-            return _('yesterday, %s') % time.strftime('%H:%M')
-        else:
-            return dateformat.format(time, 'd M, Y H:i')
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
@@ -230,7 +177,7 @@ def forum_navigation(context):
     
     forums = Forum.objects.all()
     
-    if context.request.user.is_superuser or pybb.views.allowed_for(context.request.user):
+    if pybb.views.allowed_for(context.request.user):
         pass
     else:
         # Don't show internal forums
