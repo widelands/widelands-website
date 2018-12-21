@@ -7,7 +7,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from pybb.models import Topic, Post, PrivateMessage, Attachment
+from pybb.models import Topic, Post, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
 

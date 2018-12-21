@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.http import Http404
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
-from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
+from pybb.models import Category, Forum, Topic, Post, Attachment,\
     MARKUP_CHOICES
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings

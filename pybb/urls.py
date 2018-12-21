@@ -40,7 +40,6 @@ urlpatterns = [
     url('^post/(?P<post_id>\d+)/edit/$', views.edit_post, name='pybb_edit_post'),
     url('^post/(?P<post_id>\d+)/delete/$',
         views.delete_post, name='pybb_delete_post'),
-    url('pybb_moderate_info/$', views.pybb_moderate_info),
 
     # Attachment
     url('^attachment/(?P<hash>\w+)/$',
