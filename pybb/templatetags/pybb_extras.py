@@ -22,6 +22,7 @@ register = template.Library()
 
 @register.tag
 def pybb_time(parser, token):
+    print("Franku in pybb_time: ", parser)
     try:
         tag, time = token.split_contents()
     except ValueError:
@@ -68,16 +69,6 @@ class PybbTimeNode(template.Node):
             return _('yesterday, %s') % time.strftime('%H:%M')
         else:
             return dateformat.format(time, 'd M, Y H:i')
-
-
-@register.inclusion_tag('pybb/pagination.html', takes_context=True)
-def pybb_pagination(context, label):
-    page = context['page']
-    paginator = context['paginator']
-    return {'page': page,
-            'paginator': paginator,
-            'label': label,
-            }
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
