@@ -349,22 +349,6 @@ def open_topic(request, topic_id):
     return HttpResponseRedirect(topic.get_absolute_url())
 
 
-@render_to('pybb/users.html')
-def users_ctx(request):
-    users = User.objects.order_by('username')
-    form = UserSearchForm(request.GET)
-    users = form.filter(users)
-
-    page, paginator = paginate(users, request, pybb_settings.USERS_PAGE_SIZE)
-
-    return {'users': page.object_list,
-            'page': page,
-            'paginator': paginator,
-            'form': form,
-            }
-users = render_to('pybb/users.html')(users_ctx)
-
-
 @login_required
 def delete_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
@@ -408,10 +392,6 @@ def post_ajax_preview(request):
 
     html = urlize(html)
     return {'content': html}
-
-
-def pybb_moderate_info(request):
-    return render(request, 'pybb/pybb_moderate_info.html')
 
 
 def toggle_hidden_topic(request, topic_id):

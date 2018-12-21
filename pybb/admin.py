@@ -44,7 +44,7 @@ class ForumAdmin(admin.ModelAdmin):
         (_('Additional options'), {
             'description': 'Position is the position inside the category. \
             This has effect on ordering in forums overview and the navigation bar.',
-            'fields': ('position', 'description', 'moderators')
+            'fields': ('position', 'description')
         }
         ),
     )

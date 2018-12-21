@@ -12,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from pybb.markups import mypostmarkup
-from pybb.util import urlize, memoize_method, unescape
+from pybb.util import urlize, unescape
 from pybb import settings as pybb_settings
 
 from django.conf import settings
@@ -85,8 +85,6 @@ class Forum(models.Model):
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
     description = models.TextField(_('Description'), blank=True, default='')
-    moderators = models.ManyToManyField(
-        User, blank=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
     moderator_group = models.ForeignKey(
         Group,
@@ -359,48 +357,6 @@ class Read(models.Model):
 
     def __unicode__(self):
         return u'T[%d], U[%d]: %s' % (self.topic.id, self.user.id, unicode(self.time))
-
-
-class PrivateMessage(RenderableItem):
-
-    dst_user = models.ForeignKey(User, verbose_name=_(
-        'Recipient'), related_name='dst_users')
-    src_user = models.ForeignKey(User, verbose_name=_(
-        'Author'), related_name='src_users')
-    read = models.BooleanField(_('Read'), blank=True, default=False)
-    created = models.DateTimeField(_('Created'), blank=True)
-    markup = models.CharField(_('Markup'), max_length=15,
-                              default=pybb_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
-    subject = models.CharField(_('Subject'), max_length=255)
-    body = models.TextField(_('Message'))
-    body_html = models.TextField(_('HTML version'))
-    body_text = models.TextField(_('Text version'))
-
-    class Meta:
-        ordering = ['-created']
-        verbose_name = _('Private message')
-        verbose_name_plural = _('Private messages')
-
-    # TODO: summary and part of the save method is the same as in the Post model
-    # move to common functions
-    def summary(self):
-        LIMIT = 50
-        tail = len(self.body) > LIMIT and '...' or ''
-        return self.body[:LIMIT] + tail
-
-    def __unicode__(self):
-        return self.subject
-
-    def save(self, *args, **kwargs):
-        if self.created is None:
-            self.created = datetime.now()
-        self.render()
-
-        new = self.id is None
-        super(PrivateMessage, self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse('pybb_show_pm', args=[self.id])
 
 
 class Attachment(models.Model):
