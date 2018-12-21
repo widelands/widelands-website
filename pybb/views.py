@@ -91,10 +91,6 @@ def show_topic_ctx(request, topic_id):
     if request.user.is_authenticated:
         topic.update_read(request.user)
 
-    if pybb_settings.FREEZE_FIRST_POST:
-        first_post = topic.posts.order_by('created')[0]
-    else:
-        first_post = None
     last_post = topic.posts.order_by('-created')[0]
 
     initial = {}
@@ -127,7 +123,6 @@ def show_topic_ctx(request, topic_id):
 
     return {'topic': topic,
             'last_post': last_post,
-            'first_post': first_post,
             'form': form,
             'user_is_mod': user_is_mod,
             'subscribed': subscribed,
