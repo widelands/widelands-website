@@ -3,21 +3,21 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb.markups import mypostmarkup
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.urls import reverse
 from django.db import connection
 from django.utils import translation
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.db.models import Q
 from django.http import Http404
 
 from pybb.util import render_to, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, Attachment,\
     MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
+from pybb.forms import AddPostForm, EditPostForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import pybb_moderated_by
@@ -33,7 +33,7 @@ except ImportError:
 def allowed_for(user):
     """Check if a user has the permission to enter internal Forums."""
     
-    return user.is_superuser or user.has_perm(settings.INTERNAL_PERM)
+    return user.is_superuser or user.has_perm(pybb_settings.INTERNAL_PERM)
 
 
 def index_ctx(request):
@@ -191,8 +191,8 @@ def add_post_ctx(request, forum_id, topic_id):
                     # - enable 'forum_new_topic' in the notification settings, or
                     # - subscribe to an existing topic
                     subscribers = User.objects.filter(
-                        Q(groups__permissions__codename=settings.INTERNAL_PERM) |
-                        Q(user_permissions__codename=settings.INTERNAL_PERM)
+                        Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM) |
+                        Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
                         ).exclude(username=request.user.username)
                     superusers = User.objects.filter(
                         is_superuser=True).exclude(
