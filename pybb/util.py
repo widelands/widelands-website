@@ -164,10 +164,6 @@ def quote_text(text, user, markup):
         return text
 
 
-def absolute_url(path):
-    return 'http://%s%s' % (pybb_settings.HOST, path)
-
-
 def unescape(text):
     """Do reverse escaping."""
 

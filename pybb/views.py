@@ -233,15 +233,6 @@ def add_post_ctx(request, forum_id, topic_id):
 add_post = render_to('pybb/add_post.html')(add_post_ctx)
 
 
-def user_ctx(request, username):
-    user = get_object_or_404(User, username=username)
-    topic_count = Topic.objects.filter(user=user).count()
-    return {'profile': user,
-            'topic_count': topic_count,
-            }
-user = render_to('pybb/user.html')(user_ctx)
-
-
 def show_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
