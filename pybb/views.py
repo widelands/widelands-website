@@ -14,7 +14,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.http import Http404
 
-from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
+from pybb.util import render_to, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, Attachment,\
     MARKUP_CHOICES
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
