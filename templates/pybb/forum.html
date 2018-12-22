@@ -43,10 +43,10 @@
 	<table class="forum">
 		<thead>
 			<tr>
-				<td class="forumIcon"></td>
-				<td class="forumTitle small">Title</td>
-				<td class="forumCount"></td>
-				<td class="lastPost small">Last Post by</td>
+				<th class="forumIcon"></th>
+				<th class="forumTitle small">Topic</th>
+				<th class="forumCount"></th>
+				<th class="lastPost small">Last Post</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -71,9 +71,9 @@
 				Views: {{ topic.views }}
 			</td>
 			<td class="lastPost">
-				{%if topic.last_post %}
-				{{ topic.last_post.user|user_link }} <a href="{{ topic.last_post.get_absolute_url }}">&#187;</a><br />
-				<span class="small">on {{ topic.last_post.created|custom_date:user }}</span>
+				{% if topic.last_post %}
+				<a href="{{ topic.last_post.get_absolute_url }}">{{ topic.last_post|truncatechars:30 }}</a><br />
+				<span class="small">by {{ topic.last_post.user|user_link }} at {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
 			{% elif user_is_mod %}
