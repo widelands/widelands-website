@@ -77,6 +77,7 @@ Setting up the database
 Now creating the tables in the database:
 
    $ ./manage.py migrate
+   $ ./manage.py createcachetable
 
 Create a superuser:
 
