@@ -11,7 +11,6 @@ from django.http import (Http404, HttpResponseRedirect,
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
-from django.template.defaultfilters import urlencode
 
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
@@ -22,6 +21,8 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import WIKILINK_RE
 
 from wl_utils import get_real_ip
+from wl_utils import get_valid_cache_key
+
 import re
 import urllib
 
@@ -283,10 +284,10 @@ def edit_article(request, title,
 
             new_article, changeset = form.save()
 
-            lock = cache.get(urlencode(title))
+            lock = cache.get(get_valid_cache_key(title))
             if lock is not None:
                 # Clean the lock
-                cache.delete(urlencode(title))
+                cache.delete(get_valid_cache_key(title))
             
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
@@ -303,11 +304,9 @@ def edit_article(request, title,
             return redirect(new_article)
 
     elif request.method == 'GET':
-        # Using urlencode to get a valid key when using a memory based cache
-        # e.g. 'Main Page' will become 'Main%20Page'
-        lock = cache.get(urlencode(title))
+        lock = cache.get(get_valid_cache_key(title))
         if lock is None:
-            lock = ArticleEditLock(urlencode(title), request)
+            lock = ArticleEditLock(get_valid_cache_key(title), request)
         lock.create_message(request)
         initial = {}
         if group_slug is not None:
