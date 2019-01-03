@@ -126,7 +126,7 @@ def developers(request):
                             txt = txt + '* ' + name + '\n'
                     if 'translate' in entry.keys():
                         for transl in entry['translate']:
-                            txt = txt + '* ' + transl + '\n\n'
+                            txt = txt + '* ' + transl + '\n'
 
     except IOError:
         txt = txt + "Couldn't find developer file!"
