@@ -124,8 +124,9 @@ def developers(request):
                     if 'members' in entry.keys():
                         for name in entry['members']:
                             txt = txt + '* ' + name + '\n'
-            if 'epilog' in head:
-                txt = txt + '\n' + head['epilog'] + '\n'
+                    if 'translate' in entry.keys():
+                        for transl in entry['translate']:
+                            txt = txt + '* ' + transl + '\n\n'
 
     except IOError:
         txt = txt + "Couldn't find developer file!"
