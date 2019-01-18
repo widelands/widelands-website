@@ -17,7 +17,7 @@ from django.contrib.auth.admin import UserAdmin
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'time_zone', 'location']
+    list_display = ['user', 'time_zone', 'location', 'deleted']
     list_per_page = 20
     ordering = ['-user']
     search_fields = ['user__username', 'user__first_name', 'user__last_name']

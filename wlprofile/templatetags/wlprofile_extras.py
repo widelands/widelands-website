@@ -14,6 +14,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 register = template.Library()
 
@@ -28,3 +30,22 @@ def user_link(user):
         data = u'<a href="%s">%s</a>' % (
             reverse('profile_view', args=[user.username]), user.username)
     return mark_safe(data)
+
+
+@register.filter
+def user_status(user):
+    """Check if user has deleted himself.
+
+    When using the search, the user is just a string, so we need to get
+    the userobject.
+    """
+
+    if not isinstance(user, User):
+        user_obj = get_object_or_404(User, username=user)
+    else:
+        user_obj = user
+
+    if user_obj.wlprofile.deleted:
+        return settings.DELETED_USERNAME
+
+    return user

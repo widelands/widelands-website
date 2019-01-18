@@ -1,6 +1,3 @@
-{% if obj.user.wlprofile.deleted %}
-    {{ DELETED_USERNAME }}
-{% else %}
-    {{ obj.user }}
-{% endif %}wrote:<br>
+{% load wlprofile_extras %}
+{{ obj.user|user_status }} wrote:<br>
 {{ obj.body_html|safe }}
