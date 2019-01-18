@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load wlprofile_extras %}
+{% load static %}
 
 {% block title %}
 {% trans "Delete me" %} - {{ block.super }}
@@ -13,7 +14,7 @@
 {% block content_main %}
 <div class="blogEntry">
 	<h3>Hi {{ user }},</h3>
-	<p>we are sorry that you want to leave our community <img src="/wlmedia/img/smileys/face-sad.png" alt="Sad smiley"></p>
+	<p>we are sorry that you want to leave our community <img src="{% static 'img/smileys/face-sad.png' %}" alt="Sad smiley"></p>
 	<h3>What deleting yourself means:</h3>
 	<ul>
 		<li>Your account will be deactivated. This means:
