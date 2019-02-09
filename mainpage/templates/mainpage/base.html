@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% comment %}
+ vim:ft=htmldjango:
+ 
+ This file is extended by all other files which are not
+ included here
+{% endcomment %}
+{% load static %}
+<html lang="en">
+
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+
+      <!-- Google Webmaster Site Verification token -->
+      <meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y" />
+
+		<title>{% block title %}Widelands.org{% endblock %}</title> 
+		<link href="{% static 'favicon.ico' %}" rel="icon" />
+
+		<!--  CSS --> 
+		<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/base.css' %}?v1" />
+		<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/navigation.css' %}" />
+		<!--[if lt IE 9]>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/base_ielt9.css' %}" />
+		<![endif]-->
+
+		<!-- Javascript Bread & Butter Scripts -->
+		<script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery_csrf_ajax.js' %}"></script>
+		{% block extra_head %}{% endblock %}
+	</head>
+
+	<body>
+		<a id="top"></a>
+		<div id="wrapper">
+			<div id="header">
+				{% include "mainpage/header.html" %}
+			</div>
+			<div id="topmenu">
+				<!-- Navigation -->
+				{% include "mainpage/navigation.html" %}
+			</div>
+			<div id="main" class="clear">
+				<div id="rightColumn" class="posRight">
+                    <!-- below navigation: right side -->
+					{% include "mainpage/right_boxes.html" %}
+				</div>
+				<div id="content">
+				<!-- below navigation: left side -->
+					<div id="content_header">
+					{% block content_header %}
+						<!-- the header of each page -->
+					{% endblock %}
+					</div>
+					{% block content_tabbing %}
+					<!-- used to display tabs on pages. For tabs which point to
+						 other pages, use it in base.html of the main page -->
+					{% endblock %}
+				
+					{% block content_main %}
+						<!-- all in div blogEntry -->
+					{% endblock %}
+				</div>
+			</div>
+			<div class="clear"></div>
+
+		<!-- Footer -->
+		{% include "mainpage/footer.html" %}
+
+		</div>
+	</body>
+</html>

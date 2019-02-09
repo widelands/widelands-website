@@ -20,15 +20,3 @@ $( function() {
         }
     });
 });
-
-/* Change the placeholder to show which section to search for */
-$( function() {
-      $("#selector").change(function() {
-        input = $('#id_nav_search');
-        /* Run the search if a search string is already given */
-        if ( input[0].value !== "") {
-          input[0].form.submit();
-        }
-        input.attr("placeholder", "Search "+this.value);
-      });
-});
