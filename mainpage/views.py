@@ -14,7 +14,7 @@ import codecs
 
 
 def mainpage(request):
-    return render(request, 'mainpage.html',)
+    return render(request, 'mainpage/mainpage.html',)
 
 
 def legal_notice(request):

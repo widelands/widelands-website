@@ -5,6 +5,7 @@ import hashlib
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
@@ -16,7 +17,6 @@ from pybb import settings as pybb_settings
 
 from django.conf import settings
 from notification.models import send
-from django.contrib.auth.models import User
 from check_input.models import SuspiciousInput
 
 
@@ -31,15 +31,35 @@ MARKUP_CHOICES = (
     ('bbcode', 'bbcode'),
 )
 
+class PybbExcludeInternal(models.Manager):
+    def get_queryset(self):
+        return super(PybbExcludeInternal, self).get_queryset().exclude(internal=True)
+
 
 class Category(models.Model):
+    """The base model of pybb.
+    
+    If 'internal' is set to True, the category is only visible for superusers and
+    users which have the permission 'can_access_internal'.
+    """
+    
     name = models.CharField(_('Name'), max_length=80)
     position = models.IntegerField(_('Position'), blank=True, default=0)
+    internal = models.BooleanField(
+        default=False,
+        verbose_name=_('Internal Category'),
+        help_text=_('If set, this category is only visible for special users.')
+        )
+
+    objects = models.Manager()
+    exclude_internal = PybbExcludeInternal()
 
     class Meta:
         ordering = ['position']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
+        # See also settings.INTERNAL_PERM
+        permissions = (("can_access_internal", "Can access Internal Forums"),)
 
     def __unicode__(self):
         return self.name
@@ -68,6 +88,14 @@ class Forum(models.Model):
     moderators = models.ManyToManyField(
         User, blank=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), null=True)
+    moderator_group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        default=None,
+        help_text='Users in this Group will have administrative permissions in this Forum.',
+    )
 
     class Meta:
         ordering = ['position']
@@ -96,6 +124,7 @@ class Forum(models.Model):
         # This has better performance than using the posts manager hidden_topics
         # We search only for the last 10 topics
         topics = self.topics.order_by('-updated')[:10]
+        posts = []
         for topic in topics:
             if topic.is_hidden:
                 continue

@@ -1,0 +1,117 @@
+{% comment %}
+   vim:ft=htmldjango:
+{% endcomment %}
+
+{% load i18n %}
+{% load humanize %}
+{% load pybb_extras %}
+{% load wiki_extras %}
+{% load wlprofile_extras %}
+{% load custom_date %}
+{% load static %}
+   <a name="post-{{ post.id }}"></a>
+   <table class="{% cycle "odd" "even" %}" width="100%">
+      <tr>
+         <td class="author">{{ post.user|user_link }}</td>
+         <td width="85%" class="at">
+            <table width="100%" cellpadding="0" cellspacing="0" style="table-layout: fixed; border: 0px;">
+               <tr>
+                  <td style="text-align: left; border: 0px;">
+                     <a href="{{post.get_absolute_url}}">
+                        <img src="{% static 'forum/img/en/permalink.png' %}" height="25" alt ="{% trans "Permalink" %}" />
+                     </a>
+                  </td>
+                  <td style="text-align: right; border: 0px;">
+                     <strong>Posted at:</strong> {{ post.created|custom_date:user}}
+                  </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+      <tr>
+         <td class="userinfo">
+            <div class="userinfo">
+                {% if post.user.wlprofile.avatar %}
+                <div class="avatar">
+                    <a href="{% url 'profile_view' post.user %}">
+                    <img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
+                    </a>
+                </div>
+                {% endif %}
+                <strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
+                <strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+                <img src="{% static 'img/{{ post.user.wlprofile.user_status.image }}" alt="Ranking" />
+                <br />
+                <strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
+                {% if post.user.wlprofile.location %}
+                <strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
+                {% endif %}
+            </div>
+         </td>
+         <td width="85%" class="content top">
+            {{ post.body_html|safe }}
+            {% if user.is_authenticated %}
+                {% ifequal user.wlprofile.show_signatures 1 %}
+                    {% if post.user.wlprofile.signature %}
+            <div class="signature">
+                <span class="line">__________________</span>
+                {{ post.user.wlprofile.signature|urlize|linebreaks }}
+            </div>
+                    {% endif %}
+                {% endifequal %}
+            {% else %}
+                {% if post.user.wlprofile.signature %}
+            <div class="signature">
+                <span class="line">__________________</span>
+                {{ post.user.wlprofile.signature|urlize|linebreaks }}
+            </div>
+                {% endif %}
+            {% endif %}
+            {% if post.updated %}
+            <div class="updated-message"><strong>{% trans "Edited" %}:</strong> {{ post.updated|custom_date:user|title}}</div>
+            {% endif %}
+
+            {% if post.attachment_cache %}
+            {% for attach in post.attachment_cache %}
+            {% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
+            {% endfor %}
+            {% endif %}
+         </td>
+      </tr>
+      <tr>
+         <td class="toplink">
+            <a href="#top">
+                <img src="{% static 'forum/img/en/top.png' %}" height="25" alt ="{% trans "Top" %}" />
+            </a>
+         </td>
+
+         <td>
+            <div class="tools" style="float: left;">
+                  {% if user.is_authenticated %}
+                  {% ifnotequal user post.user %}
+                  <a href="{% url 'messages_compose_to' post.user %}">
+                     <img src="{% static 'forum/img/en/send_pm.png' %}" height="25" alt ="{% trans "Send PM" %}" />
+                  </a>
+                  {% endifnotequal %}
+                  {% endif %}
+                  {% if user_is_mod or post|pybb_posted_by:user %}
+                  <a href="{% url 'pybb_edit_post' post.id %}">
+                    <img src="{% static 'forum/img/en/edit.png' %}" height="25" alt ="{% trans "Edit" %}" />
+                  </a>
+                  {% endif %}
+                  {% if user_is_mod or post|pybb_equal_to:last_post %}
+                  {% if user_is_mod or post.user|pybb_equal_to:user %}
+                  <a href="{% url 'pybb_delete_post' post.id %}">
+                     <img src="{% static 'forum/img/en/delete.png' %}" height="25" alt ="{% trans "Delete" %}" />
+                  </a>
+                  {% endif %}
+            </div>
+            <div class="tools" style="float: right;">
+                <a href="{% url 'pybb_add_post' topic.id %}?quote_id={{ post.id }}">
+                     <img src="{% static 'forum/img/en/quote.png' %}" height="25" alt ="{% trans "Quote" %}" />
+                  </a>
+                  {% endif %}
+            </div>
+         </td>
+      </tr>
+   </table>

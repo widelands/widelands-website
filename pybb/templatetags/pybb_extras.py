@@ -12,9 +12,10 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils import dateformat
 
-from pybb.models import Post, Forum, Topic, Read, PrivateMessage
+from pybb.models import Post, Forum, Topic, Read, Category
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
+import pybb.views
 
 register = template.Library()
 
@@ -77,14 +78,19 @@ def pybb_pagination(context, label):
             'paginator': paginator,
             'label': label,
             }
-import time
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
 def pybb_last_posts(context, number=8):
-
-    last_posts = Post.objects.filter(hidden=False).order_by(
-        '-created').select_related()[:45]
+    if pybb.views.allowed_for(context.request.user):
+        last_posts = Post.objects.filter(
+            hidden=False).order_by(
+            '-created')[:45]
+    else:
+        last_posts = Post.objects.filter(
+            hidden=False, topic__forum__category__internal=False).order_by(
+            '-created')[:45]
+            
 
     check = []
     answer = []
@@ -156,10 +162,20 @@ def pybb_setting(name):
 
 
 @register.filter
-def pybb_moderated_by(topic, user):
-    """Check if user is moderator of topic's forum."""
-
-    return user.is_superuser or user in topic.forum.moderators.all()
+def pybb_moderated_by(instance, user):
+    """Check if user is superuser or moderator in this forum."""
+    try:
+        if isinstance(instance, Forum):
+            return user.is_superuser or user in instance.moderator_group.user_set.all()
+        if isinstance(instance, Topic):
+            return user.is_superuser or user in instance.forum.moderator_group.user_set.all()
+        if isinstance(instance, Post):
+            return user.is_superuser or user in instance.topic.forum.moderator_group.user_set.all()
+    except:
+        pass
+    
+    return False
+    
 
 
 @register.filter
@@ -170,7 +186,7 @@ def pybb_editable_by(post, user):
         return True
     if post.user == user:
         return True
-    if user in post.topic.forum.moderators.all():
+    if user in post.topic.forum.moderator_group.user_set.all():
         return True
     return False
 
@@ -192,15 +208,6 @@ def pybb_equal_to(obj1, obj2):
 @register.filter
 def pybb_unreads(qs, user):
     return cache_unreads(qs, user)
-
-
-@register.filter
-@stringfilter
-def pybb_cut_string(value, arg):
-    if len(value) > arg:
-        return value[0:arg - 3] + '...'
-    else:
-        return value
 
 
 @register.filter
@@ -249,6 +256,30 @@ def pybb_render_post(post, mode='html'):
     body = getattr(post, 'body_%s' % mode)
     re_tag = re.compile(r'@@@AUTOJOIN-(\d+)@@@')
     return re_tag.sub(render_autojoin_message, body)
+
+
+@register.inclusion_tag('mainpage/forum_navigation.html', takes_context=True)
+def forum_navigation(context):
+    """Makes the forum list available to the navigation.
+
+    Ordering:
+    1.: value of 'Position' in pybb.Category
+    2.: value of 'Position' of pybb.Forum.
+
+    """
+
+    from pybb.models import Forum
+    
+    forums = Forum.objects.all()
+    
+    if context.request.user.is_superuser or pybb.views.allowed_for(context.request.user):
+        pass
+    else:
+        # Don't show internal forums
+        forums = forums.filter(category__internal=False)
+
+    return {'forums': forums.order_by('category', 'position')}
+
 
 """
 Spielwiese, Playground, Cour de récréati ;)

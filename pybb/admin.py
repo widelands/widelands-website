@@ -32,13 +32,13 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class ForumAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'position', 'topic_count']
+    list_display = ['name', 'category', 'position', 'topic_count', 'moderator_group']
     list_per_page = 20
     ordering = ['category__position', 'position']
     search_fields = ['name', 'category__name']
     fieldsets = (
         (None, {
-            'fields': ('category', 'name', 'updated')
+            'fields': ('category', 'name', 'updated', 'moderator_group',)
         }
         ),
         (_('Additional options'), {

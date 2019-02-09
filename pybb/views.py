@@ -11,7 +11,8 @@ from django.urls import reverse
 from django.db import connection
 from django.utils import translation
 from django.shortcuts import render, redirect
-
+from django.db.models import Q
+from django.http import Http404
 
 from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
@@ -19,6 +20,7 @@ from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment
 from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
+from pybb.templatetags.pybb_extras import pybb_moderated_by
 
 from check_input.models import SuspiciousInput
 
@@ -28,15 +30,28 @@ except ImportError:
     notification = None
 
 
+def allowed_for(user):
+    """Check if a user has the permission to enter internal Forums."""
+    
+    return user.is_superuser or user.has_perm(settings.INTERNAL_PERM)
+
+
 def index_ctx(request):
-    cats = Category.objects.all().select_related()
+    if allowed_for(request.user):
+        cats = Category.objects.all().select_related()
+    else:
+        cats = Category.exclude_internal.all().select_related()
 
     return {'cats': cats }
 index = render_to('pybb/index.html')(index_ctx)
 
 
 def show_category_ctx(request, category_id):
+    
     category = get_object_or_404(Category, pk=category_id)
+    
+    if category.internal and not allowed_for(request.user):
+        raise Http404
 
     return {'category': category }
 show_category = render_to('pybb/category.html')(show_category_ctx)
@@ -45,8 +60,10 @@ show_category = render_to('pybb/category.html')(show_category_ctx)
 def show_forum_ctx(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
 
-    moderator = (request.user.is_superuser or
-                 request.user in forum.moderators.all())
+    if forum.category.internal and not allowed_for(request.user):
+        raise Http404
+
+    user_is_mod = pybb_moderated_by(forum, request.user)
 
     topics = forum.topics.order_by(
         '-sticky', '-updated').select_related()
@@ -54,7 +71,7 @@ def show_forum_ctx(request, forum_id):
     return {'forum': forum,
             'topics': topics,
             'page_size': pybb_settings.FORUM_PAGE_SIZE,
-            'moderator': moderator,
+            'user_is_mod': user_is_mod,
             }
 show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
@@ -64,6 +81,10 @@ def show_topic_ctx(request, topic_id):
         topic = Topic.objects.select_related().get(pk=topic_id)
     except Topic.DoesNotExist:
         raise Http404()
+
+    if topic.forum.category.internal and not allowed_for(request.user):
+        raise Http404
+
     topic.views += 1
     topic.save()
 
@@ -81,17 +102,15 @@ def show_topic_ctx(request, topic_id):
         initial = {'markup': 'markdown'}
     form = AddPostForm(topic=topic, initial=initial)
 
-    moderator = (request.user.is_superuser or
-                 request.user in topic.forum.moderators.all())
+    user_is_mod = pybb_moderated_by(topic, request.user)
     subscribed = (request.user.is_authenticated and
                   request.user in topic.subscribers.all())
-
 
     is_spam = False
     if topic.is_hidden:
             is_spam = topic.posts.first().is_spam()
 
-    if moderator:
+    if user_is_mod:
         posts = topic.posts.select_related()
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
@@ -110,7 +129,7 @@ def show_topic_ctx(request, topic_id):
             'last_post': last_post,
             'first_post': first_post,
             'form': form,
-            'moderator': moderator,
+            'user_is_mod': user_is_mod,
             'subscribed': subscribed,
             'posts': posts,
             'page_size': pybb_settings.TOPIC_PAGE_SIZE,
@@ -166,8 +185,25 @@ def add_post_ctx(request, forum_id, topic_id):
         if notification:
             if not topic:
                 # Inform subscribers of a new topic
-                subscribers = notification.get_observers_for('forum_new_topic',
+                if post.topic.forum.category.internal:
+                    # Inform only users which have the permission to enter the
+                    # internal forum and superusers. Those users have to:
+                    # - enable 'forum_new_topic' in the notification settings, or
+                    # - subscribe to an existing topic
+                    subscribers = User.objects.filter(
+                        Q(groups__permissions__codename=settings.INTERNAL_PERM) |
+                        Q(user_permissions__codename=settings.INTERNAL_PERM)
+                        ).exclude(username=request.user.username)
+                    superusers = User.objects.filter(
+                        is_superuser=True).exclude(
+                        username=request.user.username)
+                    # Combine the querysets, excluding double entrys.
+                    subscribers = subscribers.union(superusers)
+                else:
+                    # Inform normal users
+                    subscribers = notification.get_observers_for('forum_new_topic',
                                                              excl_user=request.user)
+
                 notification.send(subscribers, 'forum_new_topic',
                                   {'topic': post.topic,
                                    'post': post,
@@ -242,7 +278,6 @@ edit_post = render_to('pybb/edit_post.html')(edit_post_ctx)
 
 @login_required
 def stick_topic(request, topic_id):
-    from pybb.templatetags.pybb_extras import pybb_moderated_by
 
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
@@ -254,7 +289,6 @@ def stick_topic(request, topic_id):
 
 @login_required
 def unstick_topic(request, topic_id):
-    from pybb.templatetags.pybb_extras import pybb_moderated_by
 
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
@@ -270,8 +304,7 @@ def delete_post_ctx(request, post_id):
     last_post = post.topic.posts.order_by('-created')[0]
 
     allowed = False
-    if request.user.is_superuser or\
-            request.user in post.topic.forum.moderators.all() or \
+    if pybb_moderated_by(post, request.user) or \
             (post.user == request.user and post == last_post):
         allowed = True
 
@@ -297,8 +330,6 @@ delete_post = render_to('pybb/delete_post.html')(delete_post_ctx)
 
 @login_required
 def close_topic(request, topic_id):
-    from pybb.templatetags.pybb_extras import pybb_moderated_by
-
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
         if not topic.closed:
@@ -309,7 +340,6 @@ def close_topic(request, topic_id):
 
 @login_required
 def open_topic(request, topic_id):
-    from pybb.templatetags.pybb_extras import pybb_moderated_by
 
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):

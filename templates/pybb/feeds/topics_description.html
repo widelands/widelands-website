@@ -1,6 +1,0 @@
-{% if obj.head.user.wlprofile.deleted %}
-    {{ DELETED_USERNAME }}
-{% else %}
-    {{ obj.head.user }}
-{% endif %}wrote:<br>
-{{ obj.head.body_html|safe }}

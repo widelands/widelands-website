@@ -1,9 +1,11 @@
-{% extends 'base.html' %}
+{% extends "mainpage/base.html" %}
 {% load custom_date %}
 {% load static %}
 
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/search.css' %}" />
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/search.js' %}"></script>
 {{block.super}}
 {% endblock %}
 

@@ -1,0 +1,21 @@
+{% load i18n %} 
+{% load wlprofile_extras %} 
+{% load custom_date %} 
+{% load pybb_extras %}
+
+{% if posts %}
+<div class="columnModule">
+	<h3>Latest Posts</h3>
+	<div class="columnModuleBox">
+		<ul>
+			{% for post in posts %}
+				<li>
+					{{ post.topic.forum.name }}<br />
+					<a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|truncatechars:30 }}</a><br />
+					by {{ post.user|user_link }} {{ post.created|minutes }} ago
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endif %}
