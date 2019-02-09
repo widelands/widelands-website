@@ -1,0 +1,19 @@
+{% extends "mainpage/base.html" %}
+{% load wl_markdown %}
+
+{% block title %}Changelog - {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+{{ block.super}}
+{% endblock %}
+
+{% block content_header %}
+    <h1>Changelog</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+	{{ changelog|wl_markdown }}
+</div>
+{% endblock %}
+
