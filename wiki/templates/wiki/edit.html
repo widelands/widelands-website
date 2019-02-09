@@ -47,6 +47,11 @@
 
 {% block content_main %}
 <div class="blogEntry">
+	{% if messages %}
+	    {% for message in messages %}
+		    <p class="errormessage">{{ message }}</p>
+	    {% endfor %}
+	{% endif %}
 	<p>
 	You can edit the wiki pages contents using the syntax described on the <a href="/wiki/WikiSyntax">WikiSyntax</a>.
 	</p>

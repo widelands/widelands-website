@@ -11,6 +11,7 @@ from django.http import (Http404, HttpResponseRedirect,
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
 
@@ -20,6 +21,8 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import WIKILINK_RE
 
 from wl_utils import get_real_ip
+from wl_utils import get_valid_cache_key
+
 import re
 import urllib
 
@@ -70,33 +73,29 @@ def get_url(urlname, group=None, args=None, kw=None):
 
 class ArticleEditLock(object):
     """A soft lock to edting an article."""
-    # TODO(Franku): This Class is currently not used
-    # If we want this it has to be checked for the changes
-    # related to django 1.8.
-    # A javascript alert box is maybe a better solution
     def __init__(self, title, request, message_template=None):
         self.title = title
-        self.user_ip = get_real_ip(request)
-        self.created_at = datetime.now()
+        self.user = request.user
+        self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         if message_template is None:
             message_template = ('Possible edit conflict:'
-                                ' another user started editing this article at %s')
+                                ' Another user started editing this article at %s')
 
         self.message_template = message_template
-
         cache.set(title, self, WIKI_LOCK_DURATION * 60)
 
     def create_message(self, request):
-        """Send a message to the user if there is another user editing this
+        """Show a message to the user if there is another user editing this
         article."""
         if not self.is_mine(request):
             user = request.user
-            user.message_set.create(
-                message=self.message_template % self.created_at)
+            messages.add_message(request,
+                                 messages.INFO,
+                                 self.message_template % self.created_at)
 
     def is_mine(self, request):
-        return self.user_ip == get_real_ip(request)
+        return self.user == request.user
 
 
 def has_read_perm(user, group, is_member, is_private):
@@ -284,6 +283,11 @@ def edit_article(request, title,
                 form.group = group
 
             new_article, changeset = form.save()
+
+            lock = cache.get(get_valid_cache_key(title))
+            if lock is not None:
+                # Clean the lock
+                cache.delete(get_valid_cache_key(title))
             
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
@@ -300,12 +304,10 @@ def edit_article(request, title,
             return redirect(new_article)
 
     elif request.method == 'GET':
-
-        # TODO(Franku): Never worked IMHO
-        # lock = cache.get(title, None)
-        # if lock is None:
-        #     lock = ArticleEditLock(title, request)
-        # lock.create_message(request)
+        lock = cache.get(get_valid_cache_key(title))
+        if lock is None:
+            lock = ArticleEditLock(get_valid_cache_key(title), request)
+        lock.create_message(request)
         initial = {}
         if group_slug is not None:
             initial.update({'content_type': group_ct.id,

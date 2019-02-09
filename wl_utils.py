@@ -50,3 +50,10 @@ class AutoOneToOneField(OneToOneField):
     def contribute_to_related_class(self, cls, related):
         setattr(cls, related.get_accessor_name(),
                 AutoReverseOneToOneDescriptor(related))
+
+
+# Memory based cache does not allow whitespace or control characters in keys
+# We are using a database cache atm, so this is just a forethought to
+# prevent failures when switching to a memory based cache
+def get_valid_cache_key(key):
+    return key.replace(' ', '_')
