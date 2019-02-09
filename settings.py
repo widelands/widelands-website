@@ -151,7 +151,6 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
-                'wlprofile.context_processors.deleted_user_data',
             ],
         },
     },
