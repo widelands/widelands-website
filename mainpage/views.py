@@ -104,25 +104,30 @@ def developers(request):
             json_data = json.load(f)['developers']
 
         for head in json_data:
-            # Add first header
-            txt = txt + '##' + head['heading'] + '\n'
-            # Inserting Translators if there was no error
-            if head['heading'] == 'Translators' and 'KeyError' not in transl_list:
-                for values in (transl_list):
-                    # Add subheader for locale
-                    txt = txt + '### ' + \
-                        values['your-language-name-in-english'] + '\n'
-                    # Prepaire the names for wl_markdown
-                    txt = txt + '* ' + \
-                        values['translator-list'].replace('\n', '\n* ') + '\n'
+            if 'heading' in head:
+                # Add first header
+                txt = txt + '##' + head['heading'] + '\n'
+                # Inserting Translators if there was no error
+                if head['heading'] == 'Translators' and 'KeyError' not in transl_list:
+                    for values in (transl_list):
+                        # Add subheader for locale
+                        txt = txt + '### ' + \
+                            values['your-language-name-in-english'] + '\n'
+                        # Prepaire the names for wl_markdown
+                        txt = txt + '* ' + \
+                            values['translator-list'].replace('\n', '\n* ') + '\n'
 
-            # Add a subheader or/and the member(s)
-            for entry in head['entries']:
-                if 'subheading' in entry.keys():
-                    txt = txt + '###' + entry['subheading'] + '\n'
-                if 'members' in entry.keys():
-                    for name in entry['members']:
-                        txt = txt + '* ' + name + '\n'
+                # Add a subheader or/and the member(s)
+                for entry in head['entries']:
+                    if 'subheading' in entry.keys():
+                        txt = txt + '###' + entry['subheading'] + '\n'
+                    if 'members' in entry.keys():
+                        for name in entry['members']:
+                            txt = txt + '* ' + name + '\n'
+                    if 'translate' in entry.keys():
+                        for transl in entry['translate']:
+                            txt = txt + '* ' + transl + '\n'
+
     except IOError:
         txt = txt + "Couldn't find developer file!"
 
