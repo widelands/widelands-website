@@ -28,7 +28,15 @@ List all news in a table
 				<td><a href="{{object.get_absolute_url}}">{{ object.title }}</a></td>
 				<td align="center">{{ object.publish|custom_date:user }}</td>
 				<td align="center">{{ ccount }}</td>
-				<td align="right"><a href=" {% url 'category_posts' slug=object.get_category_slug %}"> {{ object.get_category_slug|title }}</a></td>
+				<td align="right">
+				<a href=" {% url 'category_posts' slug=object.get_category_slug %}">
+				{% if object.categories.all %}
+				    {{ object.categories.all.0|title }}
+				{% else %}
+				    None
+				{% endif %}
+				</a>
+				</td>
 			</tr>
 	    	{% endfor %}
 		</tbody>
