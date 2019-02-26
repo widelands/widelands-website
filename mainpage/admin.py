@@ -36,6 +36,11 @@ def persons(self):
 persons.allow_tags = True
 
 
+def deleted(self):
+    return '' if self.wlprofile.deleted==False else 'Yes'
+deleted.short_description = u'Deleted himself'
+
+
 class GroupAdmin(GroupAdmin):
     list_display = ['name', persons]
     list_display_links = ['name']
@@ -47,7 +52,7 @@ admin.site.register(Group, GroupAdmin)
 
 class UserAdmin(UserAdmin):
     list_display = ('username', 'email', 'date_joined', 'last_login',
-                    'is_active', 'is_staff', roles)
+                    'is_active', deleted, 'is_staff', roles)
     ordering = ('-date_joined',)
 
 

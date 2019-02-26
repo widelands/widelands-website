@@ -1,0 +1,30 @@
+{% extends "mainpage/base.html" %}
+
+{% load threadedcommentstags %}
+{% load static %}
+
+{% block extra_head %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/comments.css' %}" />
+{% endblock %}
+
+{% block content_header %}
+    <h1>Comment</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+	{% if comment %}
+		<h3>Preview:</h3>
+		<div id="comment_preview">{% auto_transform_markup comment %}</div>
+	{% endif %}
+	<form method="POST" action=".">
+		<span class="errormessage">{{ form.comment.errors }}</span>
+		{{ form.comment }}
+		<br />
+		<input type="hidden" name="markup" value="1" />
+		<input type="submit" value="Submit Comment" />
+		{% csrf_token %}
+	</form>
+</div>
+{% endblock %}

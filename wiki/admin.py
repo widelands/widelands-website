@@ -17,7 +17,7 @@ class ArticleAdmin(admin.ModelAdmin):
     # Do not show 'Action' to prevent deleting:
     actions = None
     search_fields = ['title']
-    list_display = ('title', 'creator', 'last_update',)
+    list_display = ('title', 'creator', 'last_update')
     list_filter = ('title',)
     ordering = ['-last_update']
     fieldsets = (

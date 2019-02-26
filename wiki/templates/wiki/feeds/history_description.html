@@ -1,0 +1,6 @@
+{% load i18n %}
+{% load wlprofile_extras %}
+
+{% trans "Edited by user" %} {{ obj.editor.username|user_status }}
+    {% trans "at"%} {{ obj.modified }}<br>
+{{ obj.comment }}

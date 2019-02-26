@@ -151,7 +151,6 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django_messages.context_processors.inbox',
-                'wlprofile.context_processors.deleted_user_data',
             ],
         },
     },
@@ -345,6 +344,19 @@ CSRF_COOKIE_AGE = None
 STAR_RATINGS_STAR_HEIGHT = 14
 STAR_RATINGS_STAR_WIDTH = 14
 STAR_RATINGS_RANGE = 10
+
+###############
+# Set a cache #
+###############
+# See https://docs.djangoproject.com/en/1.11/topics/cache/
+# The cache is used for 'Online users' and the wiki edit lock
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'wl_cache',
+    }
+}
 
 try:
     from local_settings import *

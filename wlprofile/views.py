@@ -17,7 +17,8 @@ def delete_me(request):
     """Show a page to inform the user what deleting means."""
 
     context = {
-        'user': request.user
+        'user': request.user,
+        'deleted_name': settings.DELETED_USERNAME,
     }
     return render(request, 'wlprofile/delete_me.html',
                   context)

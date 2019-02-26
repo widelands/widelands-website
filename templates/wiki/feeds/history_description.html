@@ -1,9 +1,0 @@
-{% load i18n %}
-
-{% trans "Edited by user" %} {% if obj.editor.wlprofile.deleted %}
-        {{ DELETED_USERNAME }}
-    {% else %}
-        {{ obj.editor.username }}
-    {% endif %}
-    {% trans "at"%} {{ obj.modified }}<br>
-{{ obj.comment }}
