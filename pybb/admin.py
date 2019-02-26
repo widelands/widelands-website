@@ -49,9 +49,6 @@ class ForumAdmin(admin.ModelAdmin):
         ),
     )
     
-class SubscribersInline(admin.TabularInline):
-    model = Topic.subscribers.through
-
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'forum', 'created', 'head', 'is_hidden']
     list_per_page = 20
@@ -67,7 +64,6 @@ class TopicAdmin(admin.ModelAdmin):
             'fields': (('views',), ('sticky', 'closed'),)
         }),
     )
-    inlines = [ SubscribersInline, ]
 
 
 class PostAdmin(admin.ModelAdmin):
