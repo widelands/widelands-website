@@ -8,7 +8,9 @@ Showing the forum navigation ordered by category position and forum position
 			<a href="{% url 'pybb_forum' forum.id %}" style="color: rgba(254, 234, 138, 1);">{{ forum.name }}</a>
 		</li>
 	{% else %}
-		<li><a href="{% url 'pybb_forum' forum.id %}">{{ forum.name }}</a></li>
+		<li>
+			<a href="{% url 'pybb_forum' forum.id %}">{{ forum.name }}</a>
+		</li>
 	{% endif %}
 {% endfor %}
 </ul>

@@ -48,7 +48,8 @@ class ForumAdmin(admin.ModelAdmin):
         }
         ),
     )
-    
+
+
 class PostInline(admin.TabularInline):
     model = Post
     readonly_fields = ('user', 'markup', 'created',)
