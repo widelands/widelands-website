@@ -73,7 +73,7 @@
 			<td class="lastPost">
 				{% if topic.last_post %}
 				<a href="{{ topic.last_post.get_absolute_url }}">{{ topic.last_post|truncatechars:30 }}</a><br />
-				<span class="small">by {{ topic.last_post.user|user_link }} at {{ topic.last_post.created|custom_date:user }}</span>
+				<span class="small">by {{ topic.last_post.user|user_link }} on {{ topic.last_post.created|custom_date:user }}</span>
 				{% endif %}
 			</td>
 			{% elif user_is_mod %}

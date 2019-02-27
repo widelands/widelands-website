@@ -17,7 +17,7 @@
 			<th class="forumIcon"></th>
 			<th class="forumTitle small">Forum</th>
 			<th class="forumCount"></th>
-			<th class="lastPost small">Last Post</th>
+			<th class="lastPost small">Last Post on Topic</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,7 +43,7 @@
 			{% if forum.last_post %}
 				{% with last_post=forum.last_post %}
 					<a href="{{last_post.get_absolute_url}}">{{ last_post.topic.name|truncatechars:30 }}</a><br />
-					<span class="small">by {{ last_post.user|user_link }} at {{ last_post.created|custom_date:user}}</span>
+					<span class="small">by {{ last_post.user|user_link }} on {{ last_post.created|custom_date:user}}</span>
 				{% endwith %}
 			{% else %}
 				&nbsp;

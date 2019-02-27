@@ -24,9 +24,11 @@
 .forum thead tr {
 	border: none;
 }
+
 .forum th {
 	font-weight: normal;
 }
+
 .forum td {
 	vertical-align: middle;
 	padding: 8px;

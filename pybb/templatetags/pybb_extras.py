@@ -173,10 +173,8 @@ def forum_navigation(context):
 
     """
 
-    from pybb.models import Forum
-    
     forums = Forum.objects.all()
-    
+
     if pybb.views.allowed_for(context.request.user):
         pass
     else:
