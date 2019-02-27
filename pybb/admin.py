@@ -49,12 +49,21 @@ class ForumAdmin(admin.ModelAdmin):
         ),
     )
     
+class PostInline(admin.TabularInline):
+    model = Post
+    readonly_fields = ('user', 'markup', 'created',)
+    exclude = ('created', 'updated', 'body',)
+    ordering = ('-created',)
+
+
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'forum', 'created', 'head', 'is_hidden']
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['name']
+    #list_select_related = True
+    inlines = [PostInline,]
     fieldsets = (
         (None, {
             'fields': ('forum', 'name', 'user', ('created', 'updated'))
@@ -71,7 +80,8 @@ class PostAdmin(admin.ModelAdmin):
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'
-    search_fields = ['body']
+    search_fields = ['body', 'topic__name']
+    list_select_related = True
     actions = [delete_selected, unhide_post]
     fieldsets = (
         (None, {
