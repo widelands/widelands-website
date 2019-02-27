@@ -63,7 +63,6 @@ class TopicAdmin(admin.ModelAdmin):
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['name']
-    #list_select_related = True
     inlines = [PostInline,]
     fieldsets = (
         (None, {
@@ -82,7 +81,6 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['body', 'topic__name']
-    list_select_related = True
     actions = [delete_selected, unhide_post]
     fieldsets = (
         (None, {
