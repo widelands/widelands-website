@@ -53,11 +53,11 @@
 		{% for topic in object_list %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			{% if not topic.is_hidden %}
-			<td class="forumIcon center">
+			<td class="center">
 				{% if topic|pybb_has_unreads:user %}
-				<img src="{% static 'forum/img/doc_big_work_star.png' %}" style="margin: 0px;" alt="" class="middle" />
+				<img src="{% static 'forum/img/doc_big_work_star.png' %}" alt="Has unread posts" class="middle" />
 				{% else %}
-				<img src="{% static 'forum/img/doc_big_work.png' %}" style="margin: 0px;" alt="" class="middle" />
+				<img src="{% static 'forum/img/doc_big_work.png' %}" alt="Hasn't unread posts" class="middle" />
 				{% endif %}
 			</td>
 			<td class="forumTitle">

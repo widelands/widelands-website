@@ -23,11 +23,11 @@
 	<tbody>
 		{% for forum in category.forums.all %}
 		<tr class="{% cycle 'odd' 'even' %}">
-			<td class="forumIcon center">
+			<td class="center">
 			{% if forum|pybb_has_unreads:user %}
-				<img src="{% static 'forum/img/folder_big_work_star.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" />
+				<img src="{% static 'forum/img/folder_big_work_star.png' %}" alt="Has unread posts" />
 			{% else %}
-				<img src="{% static 'forum/img/folder_big_work.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" />
+				<img src="{% static 'forum/img/folder_big_work.png' %}" alt="Hasn't unread posts" />
 			{% endif %}
 			</td>
 			<td class="forumTitle">

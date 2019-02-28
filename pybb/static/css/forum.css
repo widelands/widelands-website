@@ -39,7 +39,11 @@
 /********************/
 
 .forumIcon {
-	width: 50px;
+	width: 64px;
+}
+
+.forumIcon img {
+	padding: 0px;
 }
 
 .forumTitle {
