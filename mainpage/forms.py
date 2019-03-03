@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from django import forms
-from registration.forms import RegistrationForm
+from django_registration.forms import RegistrationForm
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 from wlprofile.models import Profile as wlprofile
 

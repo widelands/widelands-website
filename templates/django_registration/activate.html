@@ -1,4 +1,4 @@
-{% extends "registration/base.html" %}
+{% extends "django_registration/base.html" %}
 {% comment %}
 vim:ft=htmldjango: 
 {% endcomment %}
@@ -15,7 +15,7 @@ Activation - {{ block.super }}
 <div class="blogEntry">
 	<p class="errormessage">
 		An error occured: Either this account has already been activated or activation key is invalid.<br />
-		Try <a href="{% url 'auth_login' %}">logging in</a>.
+		Try <a href="{% url 'login' %}">logging in</a>.
 	</p>
 </div>
 {% endblock %}

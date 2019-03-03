@@ -1,19 +1,20 @@
-{% extends "registration/base.html" %}
+{% extends "mainpage/base.html" %}
 {% comment %}
 vim:ft=htmldjango: 
 {% endcomment %}
 
 {% block title %}
-Registration - {{ block.super }}
+Activation - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Registration</h1>
+    <h1>Activation</h1>
 {% endblock %}
 
 {% block content_main %}
 <div class="blogEntry">
 	<p>
-		Thank you for signing up. An email with the activation code has been sent to your inbox. 
+		You are now activated and can <a href="{% url 'login' %}">log in</a>.
 	</p>
+</div>
 {% endblock %}

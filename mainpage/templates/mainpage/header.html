@@ -40,9 +40,9 @@
 			<br />
 			<a href="{% url 'scheduling_find' %}?next={{ request.path|iriencode }}" title="Show other users playtimes">Playtimes</a>
 			<br />
-			<a href="{% url 'auth_logout' %}?next=/">Logout</a>
+			<a href="{% url 'logout' %}?next=/">Logout</a>
 		{% else %}
-			<a href="{% url 'auth_login' %}?next={{ request.path|iriencode }}">Login/Register</a>
+			<a href="{% url 'login' %}?next={{ request.path|iriencode }}">Login/Register</a>
 		{% endif %}
 	</li>
 </ul>
