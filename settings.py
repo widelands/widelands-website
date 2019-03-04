@@ -358,6 +358,14 @@ CACHES = {
     }
 }
 
+#########################
+# Notification settings #
+#########################
+# where to send notificationa immediately
+
+NOTIFICATION_QUEUE_ALL = False
+
+
 try:
     from local_settings import *
 except ImportError:

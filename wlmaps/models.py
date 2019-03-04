@@ -69,6 +69,6 @@ class Map(models.Model):
                                'user': self.uploader,
                                'uploader_comment': self.uploader_comment
                                },
-                              queue=True)
+                              )
 
         return map
