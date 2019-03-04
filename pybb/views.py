@@ -3,21 +3,18 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb.markups import mypostmarkup
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from django.urls import reverse
-from django.db import connection
-from django.utils import translation
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.db.models import Q
 from django.http import Http404
 
-from pybb.util import render_to, paged, build_form, quote_text, ajax, urlize
-from pybb.models import Category, Forum, Topic, Post, PrivateMessage, Attachment,\
+from pybb.util import render_to, build_form, quote_text, ajax, urlize
+from pybb.models import Category, Forum, Topic, Post, Attachment,\
     MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm, UserSearchForm
+from pybb.forms import AddPostForm, EditPostForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import pybb_moderated_by
@@ -33,7 +30,7 @@ except ImportError:
 def allowed_for(user):
     """Check if a user has the permission to enter internal Forums."""
     
-    return user.is_superuser or user.has_perm(settings.INTERNAL_PERM)
+    return user.is_superuser or user.has_perm(pybb_settings.INTERNAL_PERM)
 
 
 def index_ctx(request):
@@ -91,10 +88,6 @@ def show_topic_ctx(request, topic_id):
     if request.user.is_authenticated:
         topic.update_read(request.user)
 
-    if pybb_settings.FREEZE_FIRST_POST:
-        first_post = topic.posts.order_by('created')[0]
-    else:
-        first_post = None
     last_post = topic.posts.order_by('-created')[0]
 
     initial = {}
@@ -127,7 +120,6 @@ def show_topic_ctx(request, topic_id):
 
     return {'topic': topic,
             'last_post': last_post,
-            'first_post': first_post,
             'form': form,
             'user_is_mod': user_is_mod,
             'subscribed': subscribed,
@@ -191,8 +183,8 @@ def add_post_ctx(request, forum_id, topic_id):
                     # - enable 'forum_new_topic' in the notification settings, or
                     # - subscribe to an existing topic
                     subscribers = User.objects.filter(
-                        Q(groups__permissions__codename=settings.INTERNAL_PERM) |
-                        Q(user_permissions__codename=settings.INTERNAL_PERM)
+                        Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM) |
+                        Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
                         ).exclude(username=request.user.username)
                     superusers = User.objects.filter(
                         is_superuser=True).exclude(
@@ -231,15 +223,6 @@ def add_post_ctx(request, forum_id, topic_id):
             'form_url': form_url,
             }
 add_post = render_to('pybb/add_post.html')(add_post_ctx)
-
-
-def user_ctx(request, username):
-    user = get_object_or_404(User, username=username)
-    topic_count = Topic.objects.filter(user=user).count()
-    return {'profile': user,
-            'topic_count': topic_count,
-            }
-user = render_to('pybb/user.html')(user_ctx)
 
 
 def show_post(request, post_id):
@@ -349,22 +332,6 @@ def open_topic(request, topic_id):
     return HttpResponseRedirect(topic.get_absolute_url())
 
 
-@render_to('pybb/users.html')
-def users_ctx(request):
-    users = User.objects.order_by('username')
-    form = UserSearchForm(request.GET)
-    users = form.filter(users)
-
-    page, paginator = paginate(users, request, pybb_settings.USERS_PAGE_SIZE)
-
-    return {'users': page.object_list,
-            'page': page,
-            'paginator': paginator,
-            'form': form,
-            }
-users = render_to('pybb/users.html')(users_ctx)
-
-
 @login_required
 def delete_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
@@ -408,10 +375,6 @@ def post_ajax_preview(request):
 
     html = urlize(html)
     return {'content': html}
-
-
-def pybb_moderate_info(request):
-    return render(request, 'pybb/pybb_moderate_info.html')
 
 
 def toggle_hidden_topic(request, topic_id):

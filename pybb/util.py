@@ -48,48 +48,6 @@ def render_to(template_path):
     return decorator
 
 
-def paged(paged_list_name, per_page):  # , per_page_var='per_page'):
-    """Parse page from GET data and pass it to view.
-
-    Split the query set returned from view.
-
-    """
-
-    def decorator(func):
-        def wrapper(request, *args, **kwargs):
-            result = func(request, *args, **kwargs)
-            if not isinstance(result, dict):
-                return result
-            try:
-                page = int(request.GET.get('page', 1))
-            except ValueError:
-                page = 1
-
-            real_per_page = per_page
-
-            # if per_page_var:
-            # try:
-            #value = int(request.GET[per_page_var])
-            # except (ValueError, KeyError):
-            # pass
-            # else:
-            # if value > 0:
-            #real_per_page = value
-
-            from django.core.paginator import Paginator
-            paginator = Paginator(result['paged_qs'], real_per_page)
-            result[paged_list_name] = paginator.page(page).object_list
-            result['page'] = page
-            result['page_list'] = range(1, paginator.num_pages + 1)
-            result['pages'] = paginator.num_pages
-            result['per_page'] = real_per_page
-            result['request'] = request
-            return result
-        return wrapper
-
-    return decorator
-
-
 def ajax(func):
     """Checks request.method is POST. Return error in JSON in other case.
 
@@ -204,27 +162,6 @@ def quote_text(text, user, markup):
         return '[quote]\n%s\n[/quote]\n' % text
     else:
         return text
-
-
-def absolute_url(path):
-    return 'http://%s%s' % (pybb_settings.HOST, path)
-
-
-def memoize_method(func):
-    """Cached result of function call."""
-
-    def wrapper(self, *args, **kwargs):
-        CACHE_NAME = '__memcache'
-        try:
-            cache = getattr(self, CACHE_NAME)
-        except AttributeError:
-            cache = {}
-            setattr(self, CACHE_NAME, cache)
-        key = (func, tuple(args), frozenset(kwargs.items()))
-        if key not in cache:
-            cache[key] = func(self, *args, **kwargs)
-        return cache[key]
-    return wrapper
 
 
 def unescape(text):

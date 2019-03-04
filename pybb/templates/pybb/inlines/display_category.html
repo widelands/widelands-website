@@ -12,35 +12,44 @@
 
 <table class="forum">
 	{# List all forums #}
-	{% for forum in category.forums.all %}
-	<tr class="{% cycle 'odd' 'even' %}">
-		<td class="forumIcon center">
-		{% if forum|pybb_has_unreads:user %}
-			<img src="{% static 'forum/img/folder_big_work_star.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" />
-		{% else %}
-			<img src="{% static 'forum/img/folder_big_work.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" />
-		{% endif %}
-		</td>
-		<td class="forumTitle">
-			<a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
-			<br />
-			<span class="small">{{ forum.description }}</span>
-		</td>
-		<td class="forumCount center small" style="width: 120px;">
-			Topics: {{ forum.topics.count }}<br/>
-			Posts: {{ forum.posts.count }}
-		</td>
-		<td class="lastPost">
-		{% if forum.last_post %}
-			{% with last_post=forum.last_post %}
-				<a href="{{last_post.get_absolute_url}}">{{ last_post.topic.name }}</a><br />
-				<span class="small">by {{ last_post.user|user_link }}<br />
-				on {{ last_post.created|custom_date:user}}</span>
-			{% endwith %}
-		{% else %}
-			&nbsp;
-		{% endif %}
-		</td>
-	</tr>
+	<thead>
+		<tr>
+			<th class="forumIcon"></th>
+			<th class="forumTitle small">Forum</th>
+			<th class="forumCount"></th>
+			<th class="lastPost small">Last Post on Topic</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for forum in category.forums.all %}
+		<tr class="{% cycle 'odd' 'even' %}">
+			<td class="center">
+			{% if forum|pybb_has_unreads:user %}
+				<img src="{% static 'forum/img/folder_big_work_star.png' %}" alt="Has unread posts" />
+			{% else %}
+				<img src="{% static 'forum/img/folder_big_work.png' %}" alt="Hasn't unread posts" />
+			{% endif %}
+			</td>
+			<td class="forumTitle">
+				<a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
+				<br />
+				<span class="small">{{ forum.description }}</span>
+			</td>
+			<td class="forumCount center small" style="width: 120px;">
+				Topics: {{ forum.topics.count }}<br/>
+				Posts: {{ forum.posts.count }}
+			</td>
+			<td class="lastPost">
+			{% if forum.last_post %}
+				{% with last_post=forum.last_post %}
+					<a href="{{last_post.get_absolute_url}}">{{ last_post.topic.name|truncatechars:30 }}</a><br />
+					<span class="small">by {{ last_post.user|user_link }} on {{ last_post.created|custom_date:user}}</span>
+				{% endwith %}
+			{% else %}
+				&nbsp;
+			{% endif %}
+			</td>
+		</tr>
 	{% endfor %}
+	</tbody>
 </table>
