@@ -361,7 +361,8 @@ CACHES = {
 #########################
 # Notification settings #
 #########################
-# where to send notificationa immediately
+# When set to True, one has to run ./manage.py emit_notices
+# for sending emails
 
 NOTIFICATION_QUEUE_ALL = False
 
