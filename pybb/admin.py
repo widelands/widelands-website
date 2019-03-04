@@ -44,13 +44,18 @@ class ForumAdmin(admin.ModelAdmin):
         (_('Additional options'), {
             'description': 'Position is the position inside the category. \
             This has effect on ordering in forums overview and the navigation bar.',
-            'fields': ('position', 'description', 'moderators')
+            'fields': ('position', 'description')
         }
         ),
     )
-    
-class SubscribersInline(admin.TabularInline):
-    model = Topic.subscribers.through
+
+
+class PostInline(admin.TabularInline):
+    model = Post
+    readonly_fields = ('user', 'markup', 'created',)
+    exclude = ('created', 'updated', 'body',)
+    ordering = ('-created',)
+
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'forum', 'created', 'head', 'is_hidden']
@@ -58,6 +63,7 @@ class TopicAdmin(admin.ModelAdmin):
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['name']
+    inlines = [PostInline,]
     fieldsets = (
         (None, {
             'fields': ('forum', 'name', 'user', ('created', 'updated'))
@@ -67,7 +73,6 @@ class TopicAdmin(admin.ModelAdmin):
             'fields': (('views',), ('sticky', 'closed'),)
         }),
     )
-    inlines = [ SubscribersInline, ]
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -75,7 +80,7 @@ class PostAdmin(admin.ModelAdmin):
     list_per_page = 20
     ordering = ['-created']
     date_hierarchy = 'created'
-    search_fields = ['body']
+    search_fields = ['body', 'topic__name']
     actions = [delete_selected, unhide_post]
     fieldsets = (
         (None, {
