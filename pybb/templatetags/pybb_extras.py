@@ -9,75 +9,13 @@ from django.utils.safestring import mark_safe
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
-from django.utils.translation import ugettext as _
-from django.utils import dateformat
 
-from pybb.models import Post, Forum, Topic, Read, Category
+from pybb.models import Post, Forum, Topic, Read
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
 import pybb.views
 
 register = template.Library()
-
-
-@register.tag
-def pybb_time(parser, token):
-    try:
-        tag, time = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError(
-            'pybb_time requires single argument')
-    else:
-        return PybbTimeNode(time)
-
-
-class PybbTimeNode(template.Node):
-
-    def __init__(self, time):
-        self.time = template.Variable(time)
-
-    def render(self, context):
-        time = self.time.resolve(context)
-
-        delta = datetime.now() - time
-        today = datetime.now().replace(hour=0, minute=0, second=0)
-        yesterday = today - timedelta(days=1)
-
-        if delta.days == 0:
-            if delta.seconds < 60:
-                if context['LANGUAGE_CODE'].startswith('ru'):
-                    msg = _('seconds ago,seconds ago,seconds ago')
-                    import pytils
-                    msg = pytils.numeral.choose_plural(delta.seconds, msg)
-                else:
-                    msg = _('seconds ago')
-                return u'%d %s' % (delta.seconds, msg)
-
-            elif delta.seconds < 3600:
-                minutes = int(delta.seconds / 60)
-                if context['LANGUAGE_CODE'].startswith('ru'):
-                    msg = _('minutes ago,minutes ago,minutes ago')
-                    import pytils
-                    msg = pytils.numeral.choose_plural(minutes, msg)
-                else:
-                    msg = _('minutes ago')
-                return u'%d %s' % (minutes, msg)
-        if time > today:
-            return _('today, %s') % time.strftime('%H:%M')
-        elif time > yesterday:
-            return _('yesterday, %s') % time.strftime('%H:%M')
-        else:
-            return dateformat.format(time, 'd M, Y H:i')
-
-
-@register.inclusion_tag('pybb/pagination.html', takes_context=True)
-def pybb_pagination(context, label):
-    page = context['page']
-    paginator = context['paginator']
-    return {'page': page,
-            'paginator': paginator,
-            'label': label,
-            }
 
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
@@ -225,39 +163,6 @@ def pybb_output_bbcode(post):
     return pprint(post)
 
 
-@register.simple_tag
-def pybb_render_post(post, mode='html'):
-    """Process post contents and replace special tags with human readeable
-    messages.
-
-    Arguments:
-        post - the ``Post`` instance
-        mode - "html" or "text". Control which field to use ``body_html`` or ``body_text``
-
-    Currently following tags are supported:
-
-        @@@AUTOJOIN-(SECONDS)@@@ - autojoin message
-
-    """
-
-    def render_autojoin_message(match):
-        time_diff = int(match.group(1)) / 60
-
-        join_message = ungettext(u"Added after %s minute",
-                                 u"Added after %s minutes",
-                                 time_diff)
-        join_message %= time_diff
-
-        if mode == 'html':
-            return u'<div class="autojoin-message">%s</div>' % join_message
-        else:
-            return join_message
-
-    body = getattr(post, 'body_%s' % mode)
-    re_tag = re.compile(r'@@@AUTOJOIN-(\d+)@@@')
-    return re_tag.sub(render_autojoin_message, body)
-
-
 @register.inclusion_tag('mainpage/forum_navigation.html', takes_context=True)
 def forum_navigation(context):
     """Makes the forum list available to the navigation.
@@ -268,81 +173,12 @@ def forum_navigation(context):
 
     """
 
-    from pybb.models import Forum
-    
     forums = Forum.objects.all()
-    
-    if context.request.user.is_superuser or pybb.views.allowed_for(context.request.user):
+
+    if pybb.views.allowed_for(context.request.user):
         pass
     else:
         # Don't show internal forums
         forums = forums.filter(category__internal=False)
 
     return {'forums': forums.order_by('category', 'position')}
-
-
-"""
-Spielwiese, Playground, Cour de récréati ;)
-"""
-
-
-@register.filter
-@stringfilter
-def pybb_trim_string(value, arg):
-    """
-    Mit "arg" ist es moeglich 1 oder mehr Werte der Funtion zu Uebergeben. Wenn
-    mehr als 1 Wert genutzt werden soll wird es durch "-" getrennt. Jeder Wert
-    kann entweder die Beschraenkung fuer die Zeichen oder Woerter beinhalten.
-    Um das eindeutig zu identifizieren Wort "w" und Zeichen "z".
-    Beispiel:
-    1. w:10         -> Auf 10 Worte beschraenken
-    2. z:250        -> Auf 250 Zeichen beschraenken
-    3. w:10-z:250   -> Auf 10 Worte und 250 Zeichen beschraenken
-
-    Beim spaeteren drueber nachdenken ist das mit den Worten eig. egal und
-    koennte wieder entfernt werden, aber vllt findet ja einer noch einen nutzen
-    dafuer ;)
-    """
-    _iWord = ''
-    _iSign = ''
-    _lArguments = arg.split('-')
-    _sOption = _lArguments[0].split(':')[0]
-    _iValue = _lArguments[0].split(':')[1]
-    if len(_lArguments) == 1:
-        if _sOption == 'w':
-            _iWord = int(_iValue)
-        elif _sOption == 'z':
-            _iSign = int(_iValue)
-        else:
-            pass
-    elif len(_lArguments) == 2:
-        if _sOption == 'w':
-            _iWord = int(_iValue)
-            _iSign = int(_lArguments[1].split(':')[1])
-        elif _sOption == 'z':
-            _iSign = int(_iValue)
-            _iWord = int(_lArguments[1].split(':')[1])
-        else:
-            pass
-    else:
-        pass
-    if _iWord != '' or _iSign != '':
-        _iWordCount = int(len(value.split(' ')))
-        _iSignCount = int(len(value))
-        """
-        Hier waere noch die Ueberlegung wenn 2 Werte gesetzt das man dann
-        wirklich nur ganze Woerter anzeigen laesst ohne sie zu beschneiden
-        """
-        if _iWord != '' and _iSign != '' and _iSignCount >= _iSign:
-            return value[0:_iSign] + '...'
-        elif _iWord != '' and _iSign == '' and _iWordCount >= _iWord:
-            return ' '.join(value.split(' ')[0:_iWord]) + '...'
-        elif _iWord == '' and _iSign != '' and _iSignCount >= _iSign:
-            return value[0:_iSign] + '...'
-        else:
-            return value
-            # return " " + str(len(value)) + " " + str(len(value.split(" "))) +
-            # " " + str(arg) + " " + str(_iWord) + ":" + str(_iWordCount) + " "
-            # + str(_iSign) + ":" + str(_iSignCount)
-    else:
-        return value

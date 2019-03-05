@@ -54,9 +54,6 @@ class Profile(models.Model):
         verbose_name = _('Profile')
         verbose_name_plural = _('Profiles')
 
-    def unread_pm_count(self):
-        return PrivateMessage.objects.filter(dst_user=self, read=False).count()
-
     def post_count(self):
         """Return the nr of posts the user has.
 

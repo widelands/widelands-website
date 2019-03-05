@@ -7,7 +7,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from pybb.models import Topic, Post, PrivateMessage, Attachment
+from pybb.models import Topic, Post, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
 
@@ -87,14 +87,3 @@ class EditPostForm(forms.ModelForm):
         post.updated = datetime.now()
         post.save(*args, **kwargs)
         return post
-
-
-class UserSearchForm(forms.Form):
-    query = forms.CharField(required=False, label='')
-
-    def filter(self, qs):
-        if self.is_valid():
-            query = self.cleaned_data['query']
-            return qs.filter(username__contains=query)
-        else:
-            return qs

@@ -29,7 +29,7 @@ class EditGGZForm(forms.ModelForm):
 
     def clean_password(self):
         pw = self.cleaned_data['password']
-        pw_hash = hashlib.sha1(pw).digest()
+        pw_hash = hashlib.sha1(pw.encode('utf-8')).digest()
         pw_base64 = base64.standard_b64encode(pw_hash)
         return pw_base64
 

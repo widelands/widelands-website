@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
-from pybb.models import Post, PrivateMessage
+from pybb.models import Post
 
 
 def post_saved(instance, **kwargs):
