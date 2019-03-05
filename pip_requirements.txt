@@ -10,7 +10,7 @@ django-haystack==2.8.1
 django-nocaptcha-recaptcha==0.0.20
 django-star-ratings==0.7.0
 dj-pagination==2.4.0
-django-registration==2.4.1
+django-registration==3.0
 django-tagging==0.4.6
 gunicorn==19.9.0
 lxml==4.3.2
