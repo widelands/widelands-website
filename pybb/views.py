@@ -201,14 +201,14 @@ def add_post_ctx(request, forum_id, topic_id):
                                    'post': post,
                                    'user': post.topic.user
                                    },
-                                  queue = True)
+                                  )
                 # Topics author is subscriber for all new posts in his topic
                 post.topic.subscribers.add(request.user)
 
             else:
                 # Send mails about a new post to topic subscribers
                 notification.send(post.topic.subscribers.exclude(username=post.user), 'forum_new_post',
-                                  {'post': post, 'topic': topic, 'user': post.user}, queue = True)
+                                  {'post': post, 'topic': topic, 'user': post.user},)
 
         return HttpResponseRedirect(post.get_absolute_url())
 

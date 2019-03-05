@@ -358,6 +358,15 @@ CACHES = {
     }
 }
 
+#########################
+# Notification settings #
+#########################
+# When set to True, one has to run ./manage.py emit_notices
+# for sending emails
+
+NOTIFICATION_QUEUE_ALL = False
+
+
 try:
     from local_settings import *
 except ImportError:
