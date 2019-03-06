@@ -25,14 +25,16 @@ untokenize==0.1.1
 Whoosh==2.7.4
 
 # Automatically installed dependencies
-# Dependencies for django-regitration:
+
+# Dependencies for django-registration:
     # confusable-homoglyphs=3.0
+
 # Dependencies for Sphinx:
     # snowballstemmer==1.2.1
     # alabaster==0.7.10
     # sphinxcontrib-websupport==1.0.1
     # Pygments==2.2.0
-    #  requests==2.18.1, installs: idna, urllib3, chardet, certifi
+    # requests==2.18.1, installs: idna, urllib3, chardet, certifi
     # Babel==2.4.0, installs: pytz
     # docutils==0.13.1
     # Jinja2==2.9.6, installs: MarkupSafe
