@@ -52,7 +52,7 @@
 	</form>
 	{% else %}
 	<p>
-		<a href="{% url 'auth_login' %}?next={{ request.path }}">Log in</a> to post comments!
+		<a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to post comments!
 	</p>
 	{% endif %}
 

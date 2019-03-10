@@ -37,10 +37,9 @@ DATABASES = {
    }
 }
 
-# The following are just dummy values, but needed defined
-# To use the registration you have to create an API key pair
-# See https://developers.google.com/recaptcha/docs/start
-# You have to use 'localhost' as Domain
+# If you want to test the registration, you will need these keys.
+# For testing purposes, grab the values from:
+# https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha-v2-what-should-i-do
 NORECAPTCHA_SITE_KEY = 'dummy'
 NORECAPTCHA_SECRET_KEY = 'dummy'
 

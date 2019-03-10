@@ -7,7 +7,7 @@ admin.autodiscover()
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from django.contrib.syndication.views import Feed
-from registration.backends.hmac.views import RegistrationView
+from django_registration.backends.activation.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
 
@@ -23,8 +23,8 @@ urlpatterns = [
     # Django builtin / Registration
     # overwrite registration with own implementation
     url(r'^accounts/register/$', RegistrationView.as_view(
-        form_class=RegistrationWithCaptchaForm), name='registration_register'),
-    url(r'^accounts/', include('registration.backends.hmac.urls')),
+        form_class=RegistrationWithCaptchaForm), name='django_registration_register'),
+    url(r'^accounts/', include('django_registration.backends.activation.urls')),
     url('^', include('django.contrib.auth.urls')),
 
     url(r'^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
