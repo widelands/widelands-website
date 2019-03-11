@@ -1,0 +1,17 @@
+{% extends 'mainpage/base.html' %}
+
+{% block title %}
+Registration - {{ block.super }}
+{% endblock %}
+
+{% block content_header %}
+    <h1>Registration failed</h1>
+{% endblock %}
+    
+{% block content_main %}
+    <div class="blogEntry">
+        <p>
+            An error occured during activation: {{ activation_error.message }}
+        </p>
+    </div>
+ {% endblock %}
