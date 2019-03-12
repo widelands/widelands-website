@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^accounts/register/$', RegistrationView.as_view(
         form_class=RegistrationWithCaptchaForm), name='django_registration_register'),
     url(r'^accounts/', include('django_registration.backends.activation.urls')),
-    url('^', include('django.contrib.auth.urls')),
+    url(r'^', include('django.contrib.auth.urls')),
 
     url(r'^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
     # Formerly 3rd party
