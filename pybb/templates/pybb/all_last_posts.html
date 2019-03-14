@@ -1,0 +1,34 @@
+{% extends 'pybb/base.html' %}
+{% load custom_date %}
+{% load wlprofile_extras %}
+
+{% block title %}
+Latest posts - {{ block.super }}
+{% endblock title %}
+
+
+{% block content_header %}
+    <h1>Latest Posts</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+    <p>This list shows the last posts created 365 days before today. The list is sorted by the posts date and the topics name.</p>
+    
+    {% regroup posts by topic as topic_list %}
+    
+    {% for topic in topic_list %}
+        <h2>{{ topic.grouper }}</h2>
+        <p>At forum: <a href="{% url 'pybb_forum' topic.list.0.topic.forum.id %}">{{ topic.list.0.topic.forum }}</a></p>
+        <ul>
+            {% for post in topic.list %}
+                <li>
+                    {{post.topic.updated|custom_date:user}}:
+                    {{ post.user|user_link }} wrote:
+                    <a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:100}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</div>
+{% endblock %}

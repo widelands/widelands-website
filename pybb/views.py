@@ -20,6 +20,8 @@ from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import pybb_moderated_by
 
 from check_input.models import SuspiciousInput
+from datetime import date, timedelta
+
 
 try:
     from notification import models as notification
@@ -387,3 +389,18 @@ def toggle_hidden_topic(request, topic_id):
     first_post.save()
     
     return redirect(topic)
+
+
+def all_latest_posts(request):
+    search_date = date.today() - timedelta(365)
+    last_posts = Post.objects.filter(created__gte=search_date).order_by('topic', '-created')
+
+    if allowed_for(request.user):
+        last_posts = last_posts.filter(
+            hidden=False)
+    else:
+        last_posts = last_posts.filter(
+            hidden=False, topic__forum__category__internal=False)
+    
+    return {'posts': last_posts}
+all_latest=render_to('pybb/all_last_posts.html')(all_latest_posts)
