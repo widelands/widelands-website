@@ -17,7 +17,8 @@
     The list is sorted by the posts date and grouped by the topics name.</p>
     <form action="." method="post">
         {% csrf_token %}
-        {{ form }}
+        <span class="errormessage">{{ form.days.errors }}</span>
+        {{ form.days.label_tag }} {{form.days}}
         <input type="submit" value="Submit" />
     </form>
     

@@ -398,6 +398,8 @@ def all_latest_posts(request, days=30):
         if form.is_valid():
             days = form.cleaned_data['days']
             return HttpResponseRedirect(reverse('all_latest_posts', args=[days]))
+    else:
+        form = LastPostsDayForm(initial={'days':days})
 
 
     # For min/max values see the LastPostsDayForm
@@ -415,7 +417,6 @@ def all_latest_posts(request, days=30):
             if p.topic.is_hidden:
                 last_posts = last_posts.exclude(pk=p.pk)
     
-    form = LastPostsDayForm(initial={'days':days})
     
     return {
         'posts': last_posts,
