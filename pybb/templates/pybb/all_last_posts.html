@@ -24,9 +24,12 @@
     {% regroup posts by topic as topic_list %}
     
     {% for topic in topic_list %}
-        <h2>{{ topic.grouper }}</h2>
+        <h2>{{ topic.grouper }}
+        </h2>
         <p>At forum:
         <a href="{% url 'pybb_forum' topic.list.0.topic.forum.id %}">{{ topic.list.0.topic.forum }}</a>
+        {% if topic.list.0.topic.forum.category.internal %} (Internal forum) {% endif %}
+        {% if topic.list.0.topic.is_hidden %} (Hidden topic) {% endif %}
         </p>
         <ul>
             {% for post in topic.list %}

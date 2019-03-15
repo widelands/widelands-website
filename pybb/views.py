@@ -397,8 +397,8 @@ def all_latest_posts(request, days=30):
         form = LastPostsDayForm(request.POST)
         if form.is_valid():
             days = form.cleaned_data['days']
-    else: # 'GET'
-        form = LastPostsDayForm()
+            return HttpResponseRedirect(reverse('all_latest_posts', args=[days]))
+
 
     # For min/max values see the LastPostsDayForm
     search_date = date.today() - timedelta(int(days))
@@ -410,6 +410,10 @@ def all_latest_posts(request, days=30):
     else:
         last_posts = last_posts.filter(
             hidden=False, topic__forum__category__internal=False)
+        # also exclude hidden topics
+        for p in last_posts:
+            if p.topic.is_hidden:
+                last_posts = last_posts.exclude(pk=p.pk)
     
     form = LastPostsDayForm(initial={'days':days})
     
