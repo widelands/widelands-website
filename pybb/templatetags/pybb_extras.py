@@ -42,6 +42,7 @@ def pybb_last_posts(context, number=8):
                 answer = answer + [post]
     return {
         'posts': answer,
+        'last_posts_days': pybb_settings.LAST_POSTS_DAYS,
     }
 
 

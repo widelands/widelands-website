@@ -87,3 +87,11 @@ class EditPostForm(forms.ModelForm):
         post.updated = datetime.now()
         post.save(*args, **kwargs)
         return post
+
+
+class LastPostsDayForm(forms.Form):
+    days = forms.IntegerField(
+        max_value = 1000,
+        min_value = 1,
+        label = 'Show posts created these days before today:'
+        )

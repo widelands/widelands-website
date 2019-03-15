@@ -14,7 +14,7 @@ from django.http import Http404
 from pybb.util import render_to, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, Attachment,\
     MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm
+from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import pybb_moderated_by
@@ -391,8 +391,17 @@ def toggle_hidden_topic(request, topic_id):
     return redirect(topic)
 
 
-def all_latest_posts(request):
-    search_date = date.today() - timedelta(pybb_settings.LAST_POSTS_DAYS)
+def all_latest_posts(request, days=30):
+    
+    if request.method == 'POST':
+        form = LastPostsDayForm(request.POST)
+        if form.is_valid():
+            days = form.cleaned_data['days']
+    else: # 'GET'
+        form = LastPostsDayForm()
+
+    # For min/max values see the LastPostsDayForm
+    search_date = date.today() - timedelta(int(days))
     last_posts = Post.objects.filter(created__gte=search_date).order_by('topic', '-created')
 
     if allowed_for(request.user):
@@ -402,8 +411,11 @@ def all_latest_posts(request):
         last_posts = last_posts.filter(
             hidden=False, topic__forum__category__internal=False)
     
+    form = LastPostsDayForm(initial={'days':days})
+    
     return {
         'posts': last_posts,
-        'last_posts_days': pybb_settings.LAST_POSTS_DAYS,
+        'last_posts_days': days,
+        'form': form,
             }
 all_latest=render_to('pybb/all_last_posts.html')(all_latest_posts)
