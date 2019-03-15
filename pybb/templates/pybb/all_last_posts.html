@@ -3,7 +3,7 @@
 {% load wlprofile_extras %}
 
 {% block title %}
-Latest posts - {{ block.super }}
+    Latest posts - {{ block.super }}
 {% endblock title %}
 
 
@@ -13,19 +13,21 @@ Latest posts - {{ block.super }}
 
 {% block content_main %}
 <div class="blogEntry">
-    <p>This list shows the last posts created 365 days before today. The list is sorted by the posts date and the topics name.</p>
+    <p>This list shows the last posts created {{ last_posts_days }} days before today. The list is sorted by the posts date and the topics name.</p>
     
     {% regroup posts by topic as topic_list %}
     
     {% for topic in topic_list %}
         <h2>{{ topic.grouper }}</h2>
-        <p>At forum: <a href="{% url 'pybb_forum' topic.list.0.topic.forum.id %}">{{ topic.list.0.topic.forum }}</a></p>
+        <p>At forum:
+        <a href="{% url 'pybb_forum' topic.list.0.topic.forum.id %}">{{ topic.list.0.topic.forum }}</a>
+        </p>
         <ul>
             {% for post in topic.list %}
                 <li>
                     {{post.topic.updated|custom_date:user}}:
                     {{ post.user|user_link }} wrote:
-                    <a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:100}}</a>
+                    "<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"
                 </li>
             {% endfor %}
         </ul>

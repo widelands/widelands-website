@@ -392,7 +392,7 @@ def toggle_hidden_topic(request, topic_id):
 
 
 def all_latest_posts(request):
-    search_date = date.today() - timedelta(365)
+    search_date = date.today() - timedelta(pybb_settings.LAST_POSTS_DAYS)
     last_posts = Post.objects.filter(created__gte=search_date).order_by('topic', '-created')
 
     if allowed_for(request.user):
@@ -402,5 +402,8 @@ def all_latest_posts(request):
         last_posts = last_posts.filter(
             hidden=False, topic__forum__category__internal=False)
     
-    return {'posts': last_posts}
+    return {
+        'posts': last_posts,
+        'last_posts_days': pybb_settings.LAST_POSTS_DAYS,
+            }
 all_latest=render_to('pybb/all_last_posts.html')(all_latest_posts)
