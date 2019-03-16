@@ -391,36 +391,54 @@ def toggle_hidden_topic(request, topic_id):
     return redirect(topic)
 
 
-def all_latest_posts(request, days=30):
+def all_latest_posts(request):
+
+    days = pybb_settings.LAST_POSTS_DAYS
+    sort_by = 'topic'
     
     if request.method == 'POST':
         form = LastPostsDayForm(request.POST)
         if form.is_valid():
             days = form.cleaned_data['days']
-            return HttpResponseRedirect(reverse('all_latest_posts', args=[days]))
+            sort_by = form.cleaned_data['sort_by']
+            url = '{}?days={days}&sort_by={sort_by}'.format(
+                reverse('all_latest_posts'),
+                days=days, sort_by=sort_by
+                )
+
+            return HttpResponseRedirect(url)
+            
     else:
-        form = LastPostsDayForm(initial={'days':days})
+        # Initialize on first call and if the values are given in the url
+        # If no values are given, use defaults
+        days = request.GET.get('days', 30)
+        sort_by = request.GET.get('sort_by', 'topic')
+        # Create a bound form, so error messages are shown if
+        # the given values don't validate against the form
+        form = LastPostsDayForm({
+            'days': request.GET.get('days', 30),
+            'sort_by': request.GET.get('sort_by', 'topic'),
+            }
+            )
+        # if not form.is_valid():
+        #     # Apply default
+        #     days = pybb_settings.LAST_POSTS_DAYS
 
-
-    # For min/max values see the LastPostsDayForm
+    # Excuted during initialization and after changes in form
     search_date = date.today() - timedelta(int(days))
-    last_posts = Post.objects.filter(created__gte=search_date).order_by('topic', '-created')
 
-    if allowed_for(request.user):
-        last_posts = last_posts.filter(
-            hidden=False)
-    else:
-        last_posts = last_posts.filter(
-            hidden=False, topic__forum__category__internal=False)
-        # also exclude hidden topics
-        for p in last_posts:
-            if p.topic.is_hidden:
-                last_posts = last_posts.exclude(pk=p.pk)
-    
-    
+    last_posts = Post.objects.filter(
+        created__gte=search_date, hidden=False).order_by('-created')
+    # also exclude hidden topics
+    for p in last_posts:
+        if p.topic.is_hidden:
+            last_posts = last_posts.exclude(pk=p.pk)
+
     return {
         'posts': last_posts,
-        'last_posts_days': days,
         'form': form,
-            }
-all_latest=render_to('pybb/all_last_posts.html')(all_latest_posts)
+        'sort_by': sort_by
+    }
+
+
+all_latest = render_to('pybb/all_last_posts.html')(all_latest_posts)

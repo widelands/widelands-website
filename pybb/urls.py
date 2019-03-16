@@ -40,7 +40,7 @@ urlpatterns = [
     url('^post/(?P<post_id>\d+)/edit/$', views.edit_post, name='pybb_edit_post'),
     url('^post/(?P<post_id>\d+)/delete/$',
         views.delete_post, name='pybb_delete_post'),
-    url(r'^latest_posts/(?P<days>\d+)/$', views.all_latest, name='all_latest_posts'),
+    url(r'^latest_posts/$', views.all_latest, name='all_latest_posts'),
 
     # Attachment
     url('^attachment/(?P<hash>\w+)/$',

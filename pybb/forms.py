@@ -95,3 +95,9 @@ class LastPostsDayForm(forms.Form):
         min_value = 5,
         label = 'Show posts created these days before today:'
         )
+    
+    sort_by = forms.ChoiceField(
+        #widget = forms.RadioSelect,
+        choices = [('forum','Forum'),('topic', 'Topic'),],
+        label = 'Sort by:',
+        )

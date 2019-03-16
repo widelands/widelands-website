@@ -14,26 +14,59 @@
 {% block content_main %}
 <div class="blogEntry">
     <p>This list shows the last posts created {{ last_posts_days }} days before today.
-    The list is sorted by the posts date and grouped by the topics name.</p>
-    <form action="." method="post">
+    The list is sorted by the posts date and grouped by the topics name. {{ sort_by }}</p>
+    <form action="." method="post" novalidate>
         {% csrf_token %}
         <span class="errormessage">{{ form.days.errors }}</span>
-        {{ form.days.label_tag }} {{form.days}}
+        {{ form.days.label_tag }} {{ form.days }}
+        <span class="errormessage">{{ form.sort_by.errors }}</span>
+        {{ form.sort_by.label_tag }} {{ form.sort_by }}
         <input type="submit" value="Submit" />
     </form>
     
-    {% regroup posts by topic as topic_list %}
+    {% if sort_by == 'topic' %}
+        {% regroup posts by topic as object_list %}
+    {% else %}
+        {% regroup posts by topic.forum as object_list %}
+    {% endif %}
     
-    {% for topic in topic_list %}
-        <h2>{{ topic.grouper }}
-        </h2>
+    {% for object in object_list %}
+    
+    <table>
+        <thead>
+            <tr>
+                <td>{{ sort_by }}</td>
+                <td>Forum</td>
+                <td>Latest Posts</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ object.grouper }}</td>
+                <td>
+                    <a href="{% url 'pybb_forum' object.list.0.topic.forum.id %}">{{ object.list.0.topic.forum }}</a>
+                </td>
+                <td>
+                    <table>
+                        {% for post in object.list %}
+                        <tr>
+                            <td>{{ post.user|user_link }} wrote:
+                                "<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+        <h2>{{ object.grouper }}</h2>
         <p>At forum:
-        <a href="{% url 'pybb_forum' topic.list.0.topic.forum.id %}">{{ topic.list.0.topic.forum }}</a>
-        {% if topic.list.0.topic.forum.category.internal %} (Internal forum) {% endif %}
-        {% if topic.list.0.topic.is_hidden %} (Hidden topic) {% endif %}
+        <a href="{% url 'pybb_forum' object.list.0.topic.forum.id %}">{{ object.list.0.topic.forum }}</a>
         </p>
         <ul>
-            {% for post in topic.list %}
+            {% for post in object.list %}
                 <li>
                     {{post.topic.updated|custom_date:user}}:
                     {{ post.user|user_link }} wrote:
