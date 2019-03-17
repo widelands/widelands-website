@@ -407,10 +407,11 @@ def all_latest_posts(request):
                 )
 
             return HttpResponseRedirect(url)
-            
+        else:
+            days=30
+            sort_by='topic'
     else:
         # Initialize on first call and if the values are given in the url
-        # If no values are given, use defaults
         days = request.GET.get('days', 30)
         sort_by = request.GET.get('sort_by', 'topic')
         # Create a bound form, so error messages are shown if
@@ -420,15 +421,25 @@ def all_latest_posts(request):
             'sort_by': request.GET.get('sort_by', 'topic'),
             }
             )
-        # if not form.is_valid():
-        #     # Apply default
-        #     days = pybb_settings.LAST_POSTS_DAYS
+        if not form.is_valid():
+            # I we are here, the user has likely modified the url and
+            # we apply defaults
+            days = pybb_settings.LAST_POSTS_DAYS
+            sort_by = 'topic'
 
     # Excuted during initialization and after changes in form
     search_date = date.today() - timedelta(int(days))
 
     last_posts = Post.objects.filter(
-        created__gte=search_date, hidden=False).order_by('-created')
+        created__gte=search_date, hidden=False)
+
+    if sort_by == 'topic':
+        last_posts = last_posts.order_by('-created', 'topic')
+    elif sort_by == 'forum':
+        last_posts = last_posts.order_by('-created', 'topic__forum')
+    else:
+        last_posts = []
+
     # also exclude hidden topics
     for p in last_posts:
         if p.topic.is_hidden:

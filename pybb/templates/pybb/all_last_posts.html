@@ -13,8 +13,7 @@
 
 {% block content_main %}
 <div class="blogEntry">
-    <p>This list shows the last posts created {{ last_posts_days }} days before today.
-    The list is sorted by the posts date and grouped by the topics name. {{ sort_by }}</p>
+
     <form action="." method="post" novalidate>
         {% csrf_token %}
         <span class="errormessage">{{ form.days.errors }}</span>
@@ -23,59 +22,71 @@
         {{ form.sort_by.label_tag }} {{ form.sort_by }}
         <input type="submit" value="Submit" />
     </form>
-    
+    <p>The list is always sorted by the most recent post first</p>
+    <hr>
     {% if sort_by == 'topic' %}
-        {% regroup posts by topic as object_list %}
-    {% else %}
-        {% regroup posts by topic.forum as object_list %}
-    {% endif %}
-    
-    {% for object in object_list %}
-    
-    <table>
+      {% regroup posts by topic as topic_list %}
+      {% for topic, posts in topic_list %}
+      <h2>{{ topic }}</h2>
+      <p>At Forum:
+      <a href="{% url 'pybb_forum' posts.0.topic.forum.id %}">{{ posts.0.topic.forum }}</a>
+      </p>
+      <table class='forum'>
         <thead>
-            <tr>
-                <td>{{ sort_by }}</td>
-                <td>Forum</td>
-                <td>Latest Posts</td>
-            </tr>
+          <tr>
+            <th style="text-align: left;">Date</th>
+            <th style="text-align: left;">User</th>
+            <th style="text-align: left;">Post{{posts|length|pluralize}}</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>{{ object.grouper }}</td>
-                <td>
-                    <a href="{% url 'pybb_forum' object.list.0.topic.forum.id %}">{{ object.list.0.topic.forum }}</a>
-                </td>
-                <td>
-                    <table>
-                        {% for post in object.list %}
-                        <tr>
-                            <td>{{ post.user|user_link }} wrote:
-                                "<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </td>
-            </tr>
-            
+          {% for post in posts %}
+          <tr class="{% cycle 'odd' 'even' %}">
+            <td class='post'>{{ post.created|custom_date:user }}</td>
+            <td class='post'>{{ post.user|user_link }}</td>
+            <td class='post'>"<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
-        <h2>{{ object.grouper }}</h2>
-        <p>At forum:
-        <a href="{% url 'pybb_forum' object.list.0.topic.forum.id %}">{{ object.list.0.topic.forum }}</a>
-        </p>
-        <ul>
-            {% for post in object.list %}
-                <li>
+      </table>
+      {% endfor %}
+    {% else %} {# sort by forum #}
+      {% regroup posts by topic.forum as forum_list %}
+ 
+      {% for forum, posts in forum_list %}
+        <h2>{{ forum }}</h2>
+        <table class='forum'>
+          <thead>
+            <tr>
+              <th style="text-align: left;">Topic</th>
+              <th style="text-align: left;">Posts</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% regroup posts by topic as topic_list %}
+          {% for topic, posts in topic_list %}
+            <tr class={% cycle 'odd' 'even' %}>
+              <td class='post'>
+                <a href="{% url 'pybb_topic' posts.0.topic.id %}">{{ posts.0.topic }}</a>
+              </td>
+              <td class='post'>
+                <ul>
+                {% for post in posts %}
+                  <li>
                     {{post.topic.updated|custom_date:user}}:
                     {{ post.user|user_link }} wrote:
                     "<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"
-                </li>
+                  </li>
+                {% endfor %}
+                </ul>
+              </td>
+            </tr>
             {% endfor %}
-        </ul>
+          </tbody>
+        </table>
         {% empty %}
         <p>Sorry, no posts found...</p>
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}
