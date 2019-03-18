@@ -42,7 +42,7 @@
 			<br />
 			<a href="{% url 'logout' %}?next=/">Logout</a>
 		{% else %}
-			<a href="{% url 'login' %}?next={{ request.path|iriencode }}">Login/Register</a>
+			<a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login/Register</a>
 		{% endif %}
 	</li>
 </ul>
