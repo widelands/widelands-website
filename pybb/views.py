@@ -394,10 +394,12 @@ def toggle_hidden_topic(request, topic_id):
 def all_latest_posts(request):
     """Provide a view to show more latest posts."""
 
-    sort_by = 'topic'
-    days = pybb_settings.LAST_POSTS_DAYS
+    # default values
+    sort_by_default = 'topic'
+    days_default = pybb_settings.LAST_POSTS_DAYS
 
     if request.method == 'POST':
+        # Executed if the form get submitted
         form = LastPostsDayForm(request.POST)
         if form.is_valid():
             days = form.cleaned_data['days']
@@ -410,10 +412,10 @@ def all_latest_posts(request):
             return HttpResponseRedirect(url)
 
     else: # request GET
-        # Initialize if no values are given and if the
+        # Initialize if no values are given or if the
         # values are given in the url
-        days = request.GET.get('days', pybb_settings.LAST_POSTS_DAYS)
-        sort_by = request.GET.get('sort_by', 'topic')
+        days = request.GET.get('days', days_default)
+        sort_by = request.GET.get('sort_by', sort_by_default)
 
         # Create a bound form, so error messages are shown if
         # the given values don't validate against the form
@@ -426,9 +428,9 @@ def all_latest_posts(request):
 
         if not form.is_valid():
             # I we are here, the user has likely modified the url with invalid
-            # values and we apply defaults
-            days = pybb_settings.LAST_POSTS_DAYS
-            sort_by = 'topic'
+            # values and we apply defaults for the database query
+            days = days_default
+            sort_by = sort_by_default
 
     # Executed on every request (POST and GET)
     search_date = date.today() - timedelta(int(days))
