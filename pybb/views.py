@@ -392,7 +392,11 @@ def toggle_hidden_topic(request, topic_id):
 
 
 def all_latest_posts(request):
-    
+    """Provide a view to show more latest posts."""
+
+    sort_by = 'topic'
+    days = pybb_settings.LAST_POSTS_DAYS
+
     if request.method == 'POST':
         form = LastPostsDayForm(request.POST)
         if form.is_valid():
@@ -404,12 +408,11 @@ def all_latest_posts(request):
                 )
 
             return HttpResponseRedirect(url)
-        else:
-            days=30
-            sort_by='topic'
-    else: # GET
-        # Initialize on first call and if the values are given in the url
-        days = request.GET.get('days', 30)
+
+    else: # request GET
+        # Initialize if no values are given and if the
+        # values are given in the url
+        days = request.GET.get('days', pybb_settings.LAST_POSTS_DAYS)
         sort_by = request.GET.get('sort_by', 'topic')
 
         # Create a bound form, so error messages are shown if
@@ -430,7 +433,8 @@ def all_latest_posts(request):
     # Executed on every request (POST and GET)
     search_date = date.today() - timedelta(int(days))
 
-    last_posts = Post.objects.filter(
+    last_posts = Post.objects.exclude(
+        topic__forum__category__internal=True).filter(
         created__gte=search_date, hidden=False)
     
     if sort_by == 'topic':
@@ -441,7 +445,7 @@ def all_latest_posts(request):
         last_posts = []
 
     # exclude hidden topics
-    last_posts = [ p for p in last_posts if not p.topic.is_hidden ]
+    last_posts = [p for p in last_posts if not p.topic.is_hidden]
 
     return {
         'posts': last_posts,
