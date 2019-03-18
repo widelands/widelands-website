@@ -1,11 +1,8 @@
 {% extends 'pybb/base.html' %}
-{% load custom_date %}
-{% load wlprofile_extras %}
 
 {% block title %}
     Latest posts - {{ block.super }}
 {% endblock title %}
-
 
 {% block content_header %}
     <h1>Latest Posts</h1>
@@ -21,64 +18,49 @@
         <span class="errormessage">{{ form.sort_by.errors }}</span>
         {{ form.sort_by.label_tag }} {{ form.sort_by }}
         <input type="submit" value="Submit" />
+        {% if form.errors %}
+          <p class="errormessage">
+            An error occured, some default values are used.
+            Please correct the erros above to get valuable results.
+          </p>
+        {% else %}
+          <p>
+            Found {{ posts|length }} posts. The list is always sorted by the most recent post first.
+          </p>
+        {% endif %}
     </form>
-    <p>The list is always sorted by the most recent post first</p>
+
     <hr>
+
     {% if sort_by == 'topic' %}
       {% regroup posts by topic as topic_list %}
       {% for topic, posts in topic_list %}
-      <h2>{{ topic }}</h2>
-      <p>At Forum:
-      <a href="{% url 'pybb_forum' posts.0.topic.forum.id %}">{{ posts.0.topic.forum }}</a>
-      </p>
-      <table class='forum'>
-        <thead>
-          <tr>
-            <th style="text-align: left;">Date</th>
-            <th style="text-align: left;">User</th>
-            <th style="text-align: left;">Post{{posts|length|pluralize}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for post in posts %}
-          <tr class="{% cycle 'odd' 'even' %}">
-            <td class='post'>{{ post.created|custom_date:user }}</td>
-            <td class='post'>{{ post.user|user_link }}</td>
-            <td class='post'>"<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+        <h2>{{ topic }}</h2>
+        <p>At Forum:
+          <a href="{% url 'pybb_forum' posts.0.topic.forum.id %}">{{ posts.0.topic.forum }}</a>
+        </p>
+        {% include 'pybb/inlines/latest_posts_table.html'%}
       {% endfor %}
     {% else %} {# sort by forum #}
       {% regroup posts by topic.forum as forum_list %}
- 
-      {% for forum, posts in forum_list %}
+       {% for forum, posts in forum_list %}
         <h2>{{ forum }}</h2>
+        {% regroup posts by topic as topic_list %}
         <table class='forum'>
           <thead>
             <tr>
-              <th style="text-align: left;">Topic</th>
-              <th style="text-align: left;">Posts</th>
+              <th style="text-align: left; width: 30%;">Topic{{ topic_list|length|pluralize }}</th>
+              <th style="text-align: left;">Post{{ posts|length|pluralize }}</th>
             </tr>
           </thead>
           <tbody>
-          {% regroup posts by topic as topic_list %}
           {% for topic, posts in topic_list %}
             <tr class={% cycle 'odd' 'even' %}>
               <td class='post'>
                 <a href="{% url 'pybb_topic' posts.0.topic.id %}">{{ posts.0.topic }}</a>
               </td>
-              <td class='post'>
-                <ul>
-                {% for post in posts %}
-                  <li>
-                    {{post.topic.updated|custom_date:user}}:
-                    {{ post.user|user_link }} wrote:
-                    "<a href="{{post.get_absolute_url}}">{{ post.body_text|truncatechars:80}}</a>"
-                  </li>
-                {% endfor %}
-                </ul>
+              <td>
+                  {% include 'pybb/inlines/latest_posts_table.html'%}
               </td>
             </tr>
             {% endfor %}

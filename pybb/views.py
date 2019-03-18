@@ -392,9 +392,6 @@ def toggle_hidden_topic(request, topic_id):
 
 
 def all_latest_posts(request):
-
-    days = pybb_settings.LAST_POSTS_DAYS
-    sort_by = 'topic'
     
     if request.method == 'POST':
         form = LastPostsDayForm(request.POST)
@@ -410,29 +407,32 @@ def all_latest_posts(request):
         else:
             days=30
             sort_by='topic'
-    else:
+    else: # GET
         # Initialize on first call and if the values are given in the url
         days = request.GET.get('days', 30)
         sort_by = request.GET.get('sort_by', 'topic')
+
         # Create a bound form, so error messages are shown if
         # the given values don't validate against the form
-        form = LastPostsDayForm({
-            'days': request.GET.get('days', 30),
-            'sort_by': request.GET.get('sort_by', 'topic'),
+        form = LastPostsDayForm(
+            {
+                'days': days,
+                'sort_by': sort_by,
             }
             )
+
         if not form.is_valid():
-            # I we are here, the user has likely modified the url and
-            # we apply defaults
+            # I we are here, the user has likely modified the url with invalid
+            # values and we apply defaults
             days = pybb_settings.LAST_POSTS_DAYS
             sort_by = 'topic'
 
-    # Excuted during initialization and after changes in form
+    # Executed on every request (POST and GET)
     search_date = date.today() - timedelta(int(days))
 
     last_posts = Post.objects.filter(
         created__gte=search_date, hidden=False)
-
+    
     if sort_by == 'topic':
         last_posts = last_posts.order_by('-created', 'topic')
     elif sort_by == 'forum':
@@ -440,10 +440,8 @@ def all_latest_posts(request):
     else:
         last_posts = []
 
-    # also exclude hidden topics
-    for p in last_posts:
-        if p.topic.is_hidden:
-            last_posts = last_posts.exclude(pk=p.pk)
+    # exclude hidden topics
+    last_posts = [ p for p in last_posts if not p.topic.is_hidden ]
 
     return {
         'posts': last_posts,
