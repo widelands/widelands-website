@@ -14,14 +14,15 @@
     <form action="." method="post" novalidate>
         {% csrf_token %}
         <span class="errormessage">{{ form.days.errors }}</span>
-        {{ form.days.label_tag }} {{ form.days }}
+        <label for="id_days">Show posts created up to 
+            {{ form.days }} days ago. </label>
         <span class="errormessage">{{ form.sort_by.errors }}</span>
         {{ form.sort_by.label_tag }} {{ form.sort_by }}
         <input type="submit" value="Submit" />
         {% if form.errors %}
           <p class="errormessage">
             An error occured, some default values are used.
-            Please correct the erros above to get valuable results.
+            Please correct the errors above to get valuable results.
           </p>
         {% else %}
           <p>

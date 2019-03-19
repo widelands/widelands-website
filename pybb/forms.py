@@ -93,7 +93,6 @@ class LastPostsDayForm(forms.Form):
     days = forms.IntegerField(
         max_value = 1000,
         min_value = 5,
-        label = 'Show posts created these days before today:'
         )
     
     sort_by = forms.ChoiceField(

@@ -399,7 +399,7 @@ def all_latest_posts(request):
     days_default = pybb_settings.LAST_POSTS_DAYS
 
     if request.method == 'POST':
-        # Executed if the form get submitted
+        # Executed when the form is submitted
         form = LastPostsDayForm(request.POST)
         if form.is_valid():
             days = form.cleaned_data['days']
@@ -427,8 +427,8 @@ def all_latest_posts(request):
             )
 
         if not form.is_valid():
-            # I we are here, the user has likely modified the url with invalid
-            # values and we apply defaults for the database query
+            # If we are here, the user has likely modified the query in the url
+            # with invalid values and we apply defaults for the database query
             days = days_default
             sort_by = sort_by_default
 
