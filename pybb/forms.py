@@ -96,7 +96,6 @@ class LastPostsDayForm(forms.Form):
         )
     
     sort_by = forms.ChoiceField(
-        #widget = forms.RadioSelect,
         choices = [('forum','Forum'),('topic', 'Topic'),],
-        label = 'Sort by:',
+        label = 'Group by:',
         )
