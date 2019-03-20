@@ -1,4 +1,5 @@
 import math
+from collections import OrderedDict
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb.markups import mypostmarkup
 
@@ -435,22 +436,48 @@ def all_latest_posts(request):
     # Executed on every request (POST and GET)
     search_date = date.today() - timedelta(int(days))
 
-    last_posts = Post.objects.exclude(
-        topic__forum__category__internal=True).filter(
-        created__gte=search_date, hidden=False)
-    
-    if sort_by == 'topic':
-        last_posts = last_posts.order_by('-created', 'topic')
-    elif sort_by == 'forum':
-        last_posts = last_posts.order_by('-created', 'topic__forum')
-    else:
-        last_posts = []
+    # Create a QuerySet ordered by date
+    last_posts = Post.objects.filter(
+        created__gte=search_date,
+        hidden=False,
+        topic__forum__category__internal=False
+        ).order_by('-created')
 
-    # exclude hidden topics
+    # Exclude hidden topics. After this operation last_posts isn't a
+    # type of QuerySet anymore and django queries will not work
     last_posts = [p for p in last_posts if not p.topic.is_hidden]
 
+    posts_count = len(last_posts)
+
+    if sort_by == 'topic':
+        # The use of an OrderedDict makes sure the ordering of
+        # last_posts get not arbitrary
+        topics = OrderedDict()
+        for post in last_posts:
+            if post.topic not in topics:
+                # Create a new key with a list as value
+                topics[post.topic] = [post]
+            else:
+                # key exists, just add the post
+                topics[post.topic].append(post)
+
+        object_list = topics
+
+    elif sort_by == 'forum':
+        forums = OrderedDict()
+        for post in last_posts:
+            if post.topic.forum.name not in forums:
+                forums[post.topic.forum.name] = OrderedDict({post.topic: [post]})
+            elif post.topic not in forums[post.topic.forum.name]:
+                forums[post.topic.forum.name].update({post.topic: [post]})
+            else:
+                forums[post.topic.forum.name][post.topic].append(post)
+
+        object_list = forums
+
     return {
-        'posts': last_posts,
+        'object_list': object_list,
+        'posts_count': posts_count,
         'form': form,
         'sort_by': sort_by
     }
