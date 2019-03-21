@@ -20,15 +20,18 @@ register = template.Library()
 
 @register.inclusion_tag('pybb/last_posts.html', takes_context=True)
 def pybb_last_posts(context, number=8):
+
+    # Create a Queryset
+    last_posts = Post.objects.all().order_by(
+            '-created')
+
+    # Permission dependent Queryset filtering
     if pybb.views.allowed_for(context.request.user):
-        last_posts = Post.objects.filter(
-            hidden=False).order_by(
-            '-created')[:45]
+        last_posts = last_posts.filter(
+            hidden=False)[:100]
     else:
-        last_posts = Post.objects.filter(
-            hidden=False, topic__forum__category__internal=False).order_by(
-            '-created')[:45]
-            
+        last_posts = last_posts.filter(
+            hidden=False, topic__forum__category__internal=False)[:100]
 
     check = []
     answer = []
@@ -39,7 +42,7 @@ def pybb_last_posts(context, number=8):
                 answer = answer + [post]
     return {
         'posts': answer,
-    }
+        }
 
 
 @register.simple_tag

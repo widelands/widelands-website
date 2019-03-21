@@ -87,3 +87,15 @@ class EditPostForm(forms.ModelForm):
         post.updated = datetime.now()
         post.save(*args, **kwargs)
         return post
+
+
+class LastPostsDayForm(forms.Form):
+    days = forms.IntegerField(
+        max_value = 1000,
+        min_value = 5,
+        )
+    
+    sort_by = forms.ChoiceField(
+        choices = [('forum','Forum'),('topic', 'Topic'),],
+        label = 'Group by:',
+        )

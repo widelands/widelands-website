@@ -15,6 +15,9 @@
 					by {{ post.user|user_link }} {{ post.created|minutes }} ago
 				</li>
 			{% endfor %}
+			<li class="small">
+				<a href="{% url 'all_latest_posts' %}">More latest posts</a>
+			</li>
 		</ul>
 	</div>
 </div>

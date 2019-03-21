@@ -1,4 +1,5 @@
 import math
+from collections import OrderedDict
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb.markups import mypostmarkup
 
@@ -14,12 +15,14 @@ from django.http import Http404
 from pybb.util import render_to, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, Attachment,\
     MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm
+from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb import settings as pybb_settings
 from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import pybb_moderated_by
 
 from check_input.models import SuspiciousInput
+from datetime import date, timedelta
+
 
 try:
     from notification import models as notification
@@ -387,3 +390,97 @@ def toggle_hidden_topic(request, topic_id):
     first_post.save()
     
     return redirect(topic)
+
+
+def all_latest_posts(request):
+    """Provide a view to show more latest posts."""
+
+    # default values
+    sort_by_default = 'topic'
+    days_default = pybb_settings.LAST_POSTS_DAYS
+
+    if request.method == 'POST':
+        # Executed when the form is submitted
+        form = LastPostsDayForm(request.POST)
+        if form.is_valid():
+            days = form.cleaned_data['days']
+            sort_by = form.cleaned_data['sort_by']
+            url = '{}?days={days}&sort_by={sort_by}'.format(
+                reverse('all_latest_posts'),
+                days=days, sort_by=sort_by
+                )
+
+            return HttpResponseRedirect(url)
+
+    else: # request GET
+        # Initialize if no values are given or if the
+        # values are given in the url
+        days = request.GET.get('days', days_default)
+        sort_by = request.GET.get('sort_by', sort_by_default)
+
+        # Create a bound form, so error messages are shown if
+        # the given values don't validate against the form
+        form = LastPostsDayForm(
+            {
+                'days': days,
+                'sort_by': sort_by,
+            }
+            )
+
+        if not form.is_valid():
+            # If we are here, the user has likely modified the query in the url
+            # with invalid values and we apply defaults for the database query
+            days = days_default
+            sort_by = sort_by_default
+
+    # Executed on every request (POST and GET)
+    search_date = date.today() - timedelta(int(days))
+
+    # Create a QuerySet ordered by date
+    last_posts = Post.objects.filter(
+        created__gte=search_date,
+        hidden=False,
+        topic__forum__category__internal=False
+        ).order_by('-created')
+
+    # Exclude hidden topics. After this operation last_posts isn't a
+    # type of QuerySet anymore and django queries will not work
+    last_posts = [p for p in last_posts if not p.topic.is_hidden]
+
+    posts_count = len(last_posts)
+
+    if sort_by == 'topic':
+        # The use of an OrderedDict makes sure the ordering of
+        # last_posts get not arbitrary
+        topics = OrderedDict()
+        for post in last_posts:
+            if post.topic not in topics:
+                # Create a new key with a list as value
+                topics[post.topic] = [post]
+            else:
+                # key exists, just add the post
+                topics[post.topic].append(post)
+
+        object_list = topics
+
+    elif sort_by == 'forum':
+        forums = OrderedDict()
+        for post in last_posts:
+            if post.topic.forum.name not in forums:
+                forums[post.topic.forum.name] = OrderedDict({post.topic: [post]})
+            elif post.topic not in forums[post.topic.forum.name]:
+                forums[post.topic.forum.name].update({post.topic: [post]})
+            else:
+                forums[post.topic.forum.name][post.topic].append(post)
+
+        object_list = forums
+
+    return {
+        'object_list': object_list,
+        'posts_count': posts_count,
+        'form': form,
+        'sort_by': sort_by
+    }
+
+
+all_latest = render_to('pybb/all_last_posts.html')(all_latest_posts)

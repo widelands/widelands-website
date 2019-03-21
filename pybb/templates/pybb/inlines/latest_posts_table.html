@@ -1,0 +1,21 @@
+{% load custom_date %}
+{% load wlprofile_extras %}
+
+<table class='forum'>
+  <thead>
+    <tr>
+      <th style="text-align: left; width: 20%;">Date</th>
+      <th style="text-align: left; width: 20%;">User</th>
+      <th style="text-align: left;">Post{{posts|length|pluralize}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for post in posts %}
+    <tr class="{% cycle 'odd' 'even' %}">
+      <td class='post'>{{ post.created|custom_date:user }}</td>
+      <td class='post'>{{ post.user|user_link }}</td>
+      <td class='post'><a href="{{post.get_absolute_url}}">"{{ post.body_text|truncatechars:80}}"</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
