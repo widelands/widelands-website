@@ -56,15 +56,11 @@ class LastPosts(PybbFeed):
     title_template = 'pybb/feeds/posts_title.html'
     description_template = 'pybb/feeds/posts_description.html'
 
-    all_objects = Post.objects.exclude(
-        topic__forum__category__internal=True).exclude(
-        topic__in=Post.hidden_topics.all()).filter(hidden=False)
+    all_objects = Post.objects.official()
 
     def items_for_object(self, obj):
-        # Latest posts for forum 'xy' 
-        return Post.objects.exclude(
-            topic__in=Post.hidden_topics.all()).filter(
-            hidden=False, topic__forum=obj).order_by('-created')[:15]
+        # Latest posts for forum 'xy'
+        return Post.objects.official(limit=15)
 
 # Validated through http://validator.w3.org/feed/
 
