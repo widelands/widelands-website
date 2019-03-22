@@ -266,7 +266,6 @@ class OfficialPosts(models.Manager):
 
         limit:     Slice the QuerySet [:limit].
         date_from: Gathers all posts from this day until today.
-
         """
 
         qs = self.get_queryset().filter(
