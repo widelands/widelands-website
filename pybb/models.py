@@ -255,6 +255,38 @@ class HiddenTopicsManager(models.Manager):
         except:
             return []
 
+class OfficialPosts(models.Manager):
+
+    def official(self, limit=None, date_from=None):
+        """Get official posts.
+
+        That are all posts which shouldn't be visible to normal
+        visitors. The result is always orderd by the posts
+        creation time, Descending. Optional arguments 
+        limit:     Slice the QuerySet [:limit].
+                   The return value is of type List then.
+        date_from: Gathers all posts from this day until today.
+                   The return value is of type QuerySet then.
+
+        """
+
+        import time
+        start = time.clock()
+
+        qs = self.get_queryset().filter(
+            topic__forum__category__internal=False, hidden=False).exclude(
+            topic__in=Post.hidden_topics.all()).order_by(
+            '-created')
+        
+        if date_from:
+            qs = qs.filter(created__gte=date_from)
+        if limit:
+            # qs will be a List after this operation
+            qs = qs[:limit]
+
+        print('Franku time: {:.2} sec.'.format(time.clock() - start))
+        return qs
+
 
 class Post(RenderableItem):
     topic = models.ForeignKey(
@@ -270,7 +302,7 @@ class Post(RenderableItem):
     body_text = models.TextField(_('Text version'))
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
-    objects = models.Manager() # Normal manager 
+    objects = OfficialPosts() # Normal manager 
     hidden_topics = HiddenTopicsManager() # Custom manager
 
     class Meta:

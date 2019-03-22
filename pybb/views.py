@@ -437,15 +437,7 @@ def all_latest_posts(request):
     search_date = date.today() - timedelta(int(days))
 
     # Create a QuerySet ordered by date
-    last_posts = Post.objects.filter(
-        created__gte=search_date,
-        hidden=False,
-        topic__forum__category__internal=False
-        ).order_by('-created')
-
-    # Exclude hidden topics. After this operation last_posts isn't a
-    # type of QuerySet anymore and django queries will not work
-    last_posts = [p for p in last_posts if not p.topic.is_hidden]
+    last_posts = Post.objects.official(date_from=search_date)
 
     posts_count = len(last_posts)
 
