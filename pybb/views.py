@@ -436,7 +436,7 @@ def all_latest_posts(request):
     # Executed on every request (POST and GET)
     search_date = date.today() - timedelta(int(days))
 
-    # Create a QuerySet ordered by date
+    # Create a QuerySet with only official posts
     last_posts = Post.objects.official(date_from=search_date)
 
     posts_count = len(last_posts)

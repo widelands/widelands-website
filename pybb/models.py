@@ -262,16 +262,12 @@ class OfficialPosts(models.Manager):
 
         That are all posts which shouldn't be visible to normal
         visitors. The result is always orderd by the posts
-        creation time, Descending. Optional arguments 
+        creation time, Descending. Optional arguments:
+
         limit:     Slice the QuerySet [:limit].
-                   The return value is of type List then.
         date_from: Gathers all posts from this day until today.
-                   The return value is of type QuerySet then.
 
         """
-
-        import time
-        start = time.clock()
 
         qs = self.get_queryset().filter(
             topic__forum__category__internal=False, hidden=False).exclude(
@@ -281,10 +277,8 @@ class OfficialPosts(models.Manager):
         if date_from:
             qs = qs.filter(created__gte=date_from)
         if limit:
-            # qs will be a List after this operation
             qs = qs[:limit]
 
-        print('Franku time: {:.2} sec.'.format(time.clock() - start))
         return qs
 
 
