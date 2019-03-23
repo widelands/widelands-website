@@ -255,10 +255,10 @@ class HiddenTopicsManager(models.Manager):
         except:
             return []
 
-class OfficialPosts(models.Manager):
+class PublicPostsManager(models.Manager):
 
-    def official(self, limit=None, date_from=None):
-        """Get official posts.
+    def public(self, limit=None, date_from=None):
+        """Get public posts.
 
         That are all posts which shouldn't be visible to normal
         visitors. The result is always orderd by the posts
@@ -295,8 +295,8 @@ class Post(RenderableItem):
     body_text = models.TextField(_('Text version'))
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
-    objects = OfficialPosts() # Normal manager 
-    hidden_topics = HiddenTopicsManager() # Custom manager
+    objects = PublicPostsManager()  # Normal manager, extendet
+    hidden_topics = HiddenTopicsManager()  # Custom manager
 
     class Meta:
         ordering = ['created']

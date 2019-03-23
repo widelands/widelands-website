@@ -26,9 +26,9 @@ def pybb_last_posts(context, number=8):
     # Create permission dependent Querysets
     if pybb.views.allowed_for(context.request.user):
         last_posts = Post.objects.filter(
-            hidden=False)[:BASE_COUNT]
+            hidden=False).order_by('-created')[:BASE_COUNT]
     else:
-        last_posts = Post.objects.official(limit=BASE_COUNT)
+        last_posts = Post.objects.public(limit=BASE_COUNT)
 
     check = []
     answer = []

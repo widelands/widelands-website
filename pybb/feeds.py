@@ -56,11 +56,11 @@ class LastPosts(PybbFeed):
     title_template = 'pybb/feeds/posts_title.html'
     description_template = 'pybb/feeds/posts_description.html'
 
-    all_objects = Post.objects.official()
+    all_objects = Post.objects.public()
 
     def items_for_object(self, obj):
         # Latest posts for forum 'xy'
-        return Post.objects.official(limit=15)
+        return Post.objects.public(limit=15)
 
 # Validated through http://validator.w3.org/feed/
 
