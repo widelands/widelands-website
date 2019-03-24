@@ -255,6 +255,31 @@ class HiddenTopicsManager(models.Manager):
         except:
             return []
 
+class PublicPostsManager(models.Manager):
+
+    def public(self, limit=None, date_from=None):
+        """Get public posts.
+
+        Filters out all posts which shouldn't be visible to
+        normal visitors. The result is always orderd by the
+        posts creation time, Descending. Optional arguments:
+
+        limit:     Slice the QuerySet [:limit].
+        date_from: Gathers all posts from this day until today.
+        """
+
+        qs = self.get_queryset().filter(
+            topic__forum__category__internal=False, hidden=False).exclude(
+            topic__in=Post.hidden_topics.all()).order_by(
+            '-created')
+        
+        if date_from:
+            qs = qs.filter(created__gte=date_from)
+        if limit:
+            qs = qs[:limit]
+
+        return qs
+
 
 class Post(RenderableItem):
     topic = models.ForeignKey(
@@ -270,8 +295,8 @@ class Post(RenderableItem):
     body_text = models.TextField(_('Text version'))
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
-    objects = models.Manager() # Normal manager 
-    hidden_topics = HiddenTopicsManager() # Custom manager
+    objects = PublicPostsManager()  # Normal manager, extended
+    hidden_topics = HiddenTopicsManager()  # Custom manager
 
     class Meta:
         ordering = ['created']
