@@ -260,9 +260,9 @@ class PublicPostsManager(models.Manager):
     def public(self, limit=None, date_from=None):
         """Get public posts.
 
-        That are all posts which shouldn't be visible to normal
-        visitors. The result is always orderd by the posts
-        creation time, Descending. Optional arguments:
+        Filters out all posts which shouldn't be visible to
+        normal visitors. The result is always orderd by the
+        posts creation time, Descending. Optional arguments:
 
         limit:     Slice the QuerySet [:limit].
         date_from: Gathers all posts from this day until today.
@@ -295,7 +295,7 @@ class Post(RenderableItem):
     body_text = models.TextField(_('Text version'))
     hidden = models.BooleanField(_('Hidden'), blank=True, default=False)
 
-    objects = PublicPostsManager()  # Normal manager, extendet
+    objects = PublicPostsManager()  # Normal manager, extended
     hidden_topics = HiddenTopicsManager()  # Custom manager
 
     class Meta:
