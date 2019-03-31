@@ -6,7 +6,6 @@ from tagging.fields import TagField
 from news.managers import PublicManager
 from django.urls import reverse
 import datetime
-import settings
 import tagging
 
 

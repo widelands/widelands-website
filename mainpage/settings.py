@@ -3,7 +3,7 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 ADMINS = (
@@ -39,6 +39,7 @@ LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
+#LOGIN_URL = '/registration/login/'
 # Where should logged in user go by default?
 LOGIN_REDIRECT_URL = '/'
 
@@ -68,7 +69,7 @@ STATIC_URL = '/static/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu'
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'mainpage.urls'
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -132,7 +133,7 @@ MIDDLEWARE = [
     
     # Foreign middleware
     'dj_pagination.middleware.PaginationMiddleware',
-    'online_users_middleware.OnlineNowMiddleware',
+    'mainpage.online_users_middleware.OnlineNowMiddleware',
 ]
 
 TEMPLATES = [

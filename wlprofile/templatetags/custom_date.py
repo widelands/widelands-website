@@ -18,7 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
-from settings import DEFAULT_TIME_ZONE, DEFAULT_TIME_DISPLAY
+from django.conf import settings
 
 register = template.Library()
 
@@ -132,12 +132,12 @@ def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
     a sane default."""
     if not user.is_authenticated:
-        return do_custom_date(DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE))
+        return do_custom_date(settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE))
     try:
         userprofile = User.objects.get(username=user).wlprofile
         return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
     except ObjectDoesNotExist:
-        return do_custom_date(DEFAULT_TIME_DISPLAY, date, float(DEFAULT_TIME_ZONE))
+        return do_custom_date(settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE))
 
 custom_date.is_safe = False
 

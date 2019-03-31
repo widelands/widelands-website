@@ -1,7 +1,7 @@
 from ...models import Tribe as TribeModel
 
 from django.core.management.base import BaseCommand, CommandError
-from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
+from django.conf import settings
 
 import os
 import shutil
@@ -17,7 +17,7 @@ class Command(BaseCommand):
     help =\
         """Update the overview pdfs of all tribes in a current checkout"""
 
-    def handle(self, json_directory=os.path.normpath(MEDIA_ROOT + '/map_object_info'), **kwargs):
+    def handle(self, json_directory=os.path.normpath(settings.MEDIA_ROOT + '/map_object_info'), **kwargs):
         source_file = open(os.path.normpath(
             json_directory + '/tribes.json'), 'r')
         tribesinfo = json.load(source_file)
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             pdffile = path.join(gdir, tribename + '.pdf')
             giffile = path.join(gdir, tribename + '.gif')
 
-            targetdir = path.normpath(path.join(MEDIA_ROOT, 'wlhelp',
+            targetdir = path.normpath(path.join(settings.MEDIA_ROOT, 'wlhelp',
                                                 'network_graphs', tribename))
 
             try:
@@ -45,9 +45,9 @@ class Command(BaseCommand):
             tribe = Tribe.objects.get(name=tribename)
             if tribe:
                 tribe.network_pdf_url = path.normpath(
-                    '%s/%s/%s' % (MEDIA_URL, targetdir[len(MEDIA_ROOT):], tribename + '.pdf'))
+                    '%s/%s/%s' % (settings.MEDIA_URL, targetdir[len(settings.MEDIA_ROOT):], tribename + '.pdf'))
                 tribe.network_gif_url = path.normpath(
-                    '%s/%s/%s' % (MEDIA_URL, targetdir[len(MEDIA_ROOT):], tribename + '.gif'))
+                    '%s/%s/%s' % (settings.MEDIA_URL, targetdir[len(settings.MEDIA_ROOT):], tribename + '.gif'))
                 tribe.save()
             else:
                 print 'Could not set tribe urls'

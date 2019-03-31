@@ -9,7 +9,7 @@
 # Last Modified: $Date$
 #
 
-from settings import THUMBNAIL_SIZE
+from django.conf import settings
 from django.test import TestCase as DjangoTest
 from django.db import IntegrityError
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -71,7 +71,7 @@ class TestScreenshotAdding(_ScreenshotBase):
                                       screenshot=self.img,
                                       comment='This rockz!')
         self.assertEqual(i.pk, 1)
-        self.assertEqual(i.thumbnail.width, THUMBNAIL_SIZE[0])
+        self.assertEqual(i.thumbnail.width, settings.THUMBNAIL_SIZE[0])
 
 
 class TestScreenshot(_ScreenshotBase):

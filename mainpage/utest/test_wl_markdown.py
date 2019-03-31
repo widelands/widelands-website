@@ -17,9 +17,9 @@ sys.path.append('..')
 import unittest
 from wiki.models import Article
 from django.contrib.sites.models import Site
-from settings import SITE_ID
+from django.conf import settings
 from django.test import TestCase as DBTestCase
-_domain = Site.objects.get(pk=SITE_ID).domain
+_domain = Site.objects.get(pk=settings.SITE_ID).domain
 
 from templatetags.wl_markdown import do_wl_markdown
 

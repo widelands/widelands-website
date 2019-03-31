@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from fields import ExtendedImageField
-from wl_utils import AutoOneToOneField
+from mainpage.wl_utils import AutoOneToOneField
 from django.utils.translation import ugettext_lazy as _
 from pybb.models import Post
 
-import settings
+from django.conf import settings
 
 TZ_CHOICES = [(float(x[0]), x[1]) for x in (
     (-12, '-12'), (-11, '-11'), (-10, '-10'), (-9.5, '-09.5'), (-9, '-09'),

@@ -13,7 +13,7 @@ from django import template
 from django.conf import settings
 from django.utils.encoding import smart_str, force_unicode
 from django.utils.safestring import mark_safe
-from settings import BLEACH_ALLOWED_TAGS, BLEACH_ALLOWED_ATTRIBUTES
+from django.conf import settings
 from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import SemanticWikiLinkExtension
 
 # Try to get a not so fully broken markdown module
@@ -38,17 +38,17 @@ except ImportError:
 
 # We will also need the site domain
 from django.contrib.sites.models import Site
-from settings import SITE_ID, SMILEYS, SMILEY_DIR
+from django.conf import settings
 
 try:
-    _domain = Site.objects.get(pk=SITE_ID).domain
+    _domain = Site.objects.get(pk=settings.SITE_ID).domain
 except:
     _domain = ''
 
 # Getting local domain lists
 try:
-    from settings import LOCAL_DOMAINS as _LOCAL_DOMAINS
-    LOCAL_DOMAINS = [_domain] + _LOCAL_DOMAINS
+    from django.conf import settings
+    LOCAL_DOMAINS = [_domain] + settings.LOCAL_DOMAINS
 except ImportError:
     LOCAL_DOMAINS = [_domain]
 
@@ -76,12 +76,12 @@ def _insert_smileys(text):
 
         for i, word in enumerate(words):
             smiley = ''
-            for sc, img in SMILEYS:
+            for sc, img in settings.SMILEYS:
                 if word == sc:
                     smiley = img
             if smiley:
                 img_tag = BeautifulSoup(features='lxml').new_tag('img')
-                img_tag['src'] = '{}{}'.format(SMILEY_DIR, smiley)
+                img_tag['src'] = '{}{}'.format(settings.SMILEY_DIR, smiley)
                 img_tag['alt'] = smiley
                 tmp_content.append(img_tag)
                 # apply a space after the smiley
@@ -204,7 +204,7 @@ def find_smiley_Strings(bs4_string):
     if bs4_string.parent.name.lower() == 'code':
         return False
 
-    for sc in SMILEYS:
+    for sc in settings.SMILEYS:
         if sc[0] in bs4_string:
             return True
     return False
@@ -223,7 +223,7 @@ def do_wl_markdown(value, *args, **keyw):
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
         html = mark_safe(bleach.clean(
-            html, tags=BLEACH_ALLOWED_TAGS, attributes=BLEACH_ALLOWED_ATTRIBUTES))
+            html, tags=settings.BLEACH_ALLOWED_TAGS, attributes=settings.BLEACH_ALLOWED_ATTRIBUTES))
 
     # Prepare the html and apply smileys and classes.
     # BeautifulSoup objects are all references, so changing a variable

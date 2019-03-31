@@ -3,8 +3,6 @@ from django.template import RequestContext
 from django.http import HttpResponse
 from .models import Worker, Ware, Building, Tribe
 
-from settings import WIDELANDS_SVN_DIR, MEDIA_ROOT
-
 
 def index(request):
     tribes = Tribe.objects.all().order_by('displayname')

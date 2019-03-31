@@ -22,7 +22,7 @@ sys.path.append(parent_dir(code_directory))
 sys.path.append(code_directory)
 sys.path.append(os.path.join(code_directory, 'widelands'))
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'widelands.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mainpage.settings'
 
 if os.path.exists('/usr/games'):
     os.environ['PATH'] += ':/usr/games'

@@ -1,4 +1,4 @@
-from settings import WIDELANDS_SVN_DIR, INQUIRY_RECIPIENTS
+from django.conf import settings
 from templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
 from django.core.mail import send_mail
@@ -33,7 +33,7 @@ def legal_notice(request):
 
             # get email addresses which are in form of ('name','email'),
             recipients = []
-            for recipient in INQUIRY_RECIPIENTS:
+            for recipient in settings.INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
 
             send_mail(subject, message, sender,
@@ -46,7 +46,7 @@ def legal_notice(request):
 
     return render(request, 'mainpage/legal_notice.html', {
         'form': form,
-        'inquiry_recipients': INQUIRY_RECIPIENTS,
+        'inquiry_recipients': settings.INQUIRY_RECIPIENTS,
     })
 
 
@@ -67,7 +67,7 @@ def developers(request):
     txt = '[TOC]\n\n'
     transl_files = []
     transl_list = []
-    path = os.path.normpath(WIDELANDS_SVN_DIR + 'data/i18n/locales/')
+    path = os.path.normpath(settings.WIDELANDS_SVN_DIR + 'data/i18n/locales/')
     try:
         transl_files = os.listdir(path)
         if transl_files:
@@ -100,7 +100,7 @@ def developers(request):
     # Get other developers, put in the translators list
     # at given position and prepare all for wl_markdown
     try:
-        with open(WIDELANDS_SVN_DIR + 'data/txts/developers.json', 'r') as f:
+        with open(settings.WIDELANDS_SVN_DIR + 'data/txts/developers.json', 'r') as f:
             json_data = json.load(f)['developers']
 
         for head in json_data:
@@ -145,7 +145,7 @@ def changelog(request):
     This replaces the wiki changelog
 
     """
-    data = codecs.open(WIDELANDS_SVN_DIR + 'ChangeLog', encoding='utf-8', mode='r').read()
+    data = codecs.open(settings.WIDELANDS_SVN_DIR + 'ChangeLog', encoding='utf-8', mode='r').read()
     return render(request, 'mainpage/changelog.html',
                   {'changelog': data},
                   )

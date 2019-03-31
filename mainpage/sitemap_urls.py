@@ -1,6 +1,5 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-from mainpage.views import mainpage
 from django.contrib.sitemaps.views import sitemap
 from static_sitemap import StaticViewSitemap
 from wiki.sitemap import *
