@@ -39,7 +39,6 @@ LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
-#LOGIN_URL = '/registration/login/'
 # Where should logged in user go by default?
 LOGIN_REDIRECT_URL = '/'
 
