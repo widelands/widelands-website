@@ -161,7 +161,7 @@ Widelands executables are needed to:
 * Create the Encylopdia
 
 Either install widelands as a program to your operating system, or create the 
-binarys by compiling the source code. If you want to compile, run:
+binaries by compiling the source code. If you want to compile, run:
 
    $ ./compile.sh -r
 

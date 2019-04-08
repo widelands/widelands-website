@@ -1,8 +1,9 @@
+{% load static %}
 <div id="other-user-template" class="other-user-div" hidden="hidden">
     <div class="title">
         <p></p>
         <button>
-            <img src="/wlmedia/forum/img/send_pm.png" alt="" class="middle"><span class="middle">Send PM</span>
+        <img src="{% static 'forum/img/send_pm.png'%}" alt="" class="middle"><span class="middle">Send PM</span>
         </button>
     </div>
     <div class="other-days-container"></div>
