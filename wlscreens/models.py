@@ -65,11 +65,24 @@ class Screenshot(models.Model):
         editable=False,
         storage=OverwriteStorage(),
     )
-    comment = models.TextField(null=True, blank=True)
-    category = models.ForeignKey(Category, related_name='screenshots')
+    comment = models.TextField(
+        null=True,
+        blank=True
+    )
+    category = models.ForeignKey(
+        Category,
+        related_name='screenshots'
+    )
+    position = models.IntegerField(
+        null=True,
+        blank=True,
+        default=0,
+        help_text='The position inside the category',
+    )
 
     class Meta:
         unique_together = ('name', 'category')
+        ordering = ['position',]
 
     def save(self, *args, **kwargs):
         # Open original screenshot which we want to thumbnail using PIL's Image

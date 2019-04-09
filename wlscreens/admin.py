@@ -4,11 +4,14 @@
 from models import Category, Screenshot
 from django.contrib import admin
 
-
+class ScreenshotsInline(admin.TabularInline):
+    model = Screenshot
+    
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name']
     list_display = ['name']
+    inlines = [ScreenshotsInline,]
 
 admin.site.register(Category, CategoryAdmin)
 
