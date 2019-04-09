@@ -7,11 +7,10 @@ from subprocess import check_call, CalledProcessError
 from django import forms
 from django.forms import ModelForm
 from django.core.files.storage import default_storage
+from django.conf import settings
 
-from settings import MEDIA_ROOT
 from wlmaps.models import Map
 import os
-from settings import WIDELANDS_SVN_DIR
 
 class UploadMapForm(ModelForm):
     """
@@ -46,7 +45,7 @@ class UploadMapForm(ModelForm):
         try:
             # Try to make a safe filename
             safe_name = default_storage.get_valid_name(mem_file_obj.name)
-            file_path = MEDIA_ROOT + 'wlmaps/maps/' + safe_name
+            file_path = settings.MEDIA_ROOT + 'wlmaps/maps/' + safe_name
             saved_file = default_storage.save(file_path, mem_file_obj)
         except UnicodeEncodeError:
             self._errors['file'] = self.error_class(
@@ -57,7 +56,7 @@ class UploadMapForm(ModelForm):
         try:
             # call map info tool to generate minimap and json info file
             old_cwd = os.getcwd()
-            os.chdir(WIDELANDS_SVN_DIR)
+            os.chdir(settings.WIDELANDS_SVN_DIR)
             check_call(['wl_map_info', saved_file])
 
             # TODO(shevonar): delete file because it will be saved again when
@@ -90,7 +89,7 @@ class UploadMapForm(ModelForm):
 
         # mapinfo["minimap"] is an absolute path.
         # We partition it to get the correct file path
-        minimap_path = mapinfo['minimap'].partition(MEDIA_ROOT)[2]
+        minimap_path = mapinfo['minimap'].partition(settings.MEDIA_ROOT)[2]
         self.instance.minimap = '/' + minimap_path
 
         # the json file is no longer needed

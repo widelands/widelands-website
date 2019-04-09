@@ -20,8 +20,8 @@ from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import WIKILINK_RE
 
-from wl_utils import get_real_ip
-from wl_utils import get_valid_cache_key
+from mainpage.wl_utils import get_real_ip
+from mainpage.wl_utils import get_valid_cache_key
 
 import re
 import urllib

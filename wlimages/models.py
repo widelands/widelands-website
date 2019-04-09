@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
-from settings import MEDIA_ROOT, MEDIA_URL
+from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
 
@@ -39,7 +39,7 @@ class ImageManager(models.Manager):
         safe_filename = storage.get_valid_name(image.name)
         im = self.create(content_type=content_type, object_id=object_id,
                          user=user, revision=1, name=image.name)
-        path = '%swlimages/%s' % (MEDIA_ROOT, safe_filename)
+        path = '%swlimages/%s' % (settings.MEDIA_ROOT, safe_filename)
 
         destination = open(path, 'wb')
         for chunk in image.chunks():

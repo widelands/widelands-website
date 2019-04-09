@@ -43,4 +43,4 @@ def privacy_policy(request, *args, **kwargs):
         'cur_lang': current_lang,
     }
 
-    return render(request, 'mainpage/privacy_policy.html', context)
+    return render(request, 'privacy_policy/privacy_policy.html', context)

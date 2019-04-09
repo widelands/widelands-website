@@ -8,7 +8,7 @@ from django.conf import settings
 from threadedcomments.forms import ThreadedCommentForm
 from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.utils import JSONResponse, XMLResponse
-from wl_utils import get_real_ip
+from mainpage.wl_utils import get_real_ip
 
 
 def _adjust_max_comment_length(form, field_name='comment'):

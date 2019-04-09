@@ -57,6 +57,7 @@ Installation via pip should work like this::
 
 This will take a while. If no errors are shown we should be fine.
 
+
 Setting up the website
 ======================
 
@@ -68,8 +69,8 @@ local_urls.py.sample to settings_local.py and local_urls.py. Take a look at
 those files and modify them to your needs - most likely everything works
 directly, but you might want to edit the bd variable in local_settings.py::
 
-   $ ln -s local_urls.py.sample local_urls.py
-   $ ln -s local_settings.py.sample local_settings.py
+   $ ln -s local_urls.py.sample mainpage/local_urls.py
+   $ ln -s local_settings.py.sample mainpage/local_settings.py
 
 Setting up the database
 -----------------------
@@ -125,60 +126,63 @@ production environments, only for development/testing.
 See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
 for further details.
 
+
 Dependencies between website and widelands source code
 ======================================================
 
-Some parts of the website need access to the source code of widelands:
+Some parts of the website need access to the source code of widelands, other 
+parts need some widelands executables.
 
-* Online help/Encyclopedia
-* Possibility to upload a map onto the local website
-* Source code documentation
+Source code only
+----------------
 
-You will need the widelands source code for this, see
+The documentation is made out of the source code. To get a copy, see:
 
 https://wl.widelands.org/wiki/BzrPrimer/
 
 After the source code is downloaded, adjust the path of 
 
-WIDELANDS_SVN_DIR
+WIDELANDS_SVN_DIR = '/path/to/widelands/trunk'
 
-in local_settings.py to the path where the widelands source code is found.
-
-Setting up the online help / encyclopedia
------------------------------------------
-
-You will need graphviz to generate the graphs for the online help. On Ubuntu run:
-
-   $ sudo apt-get install graphviz
-
-To generate the online help database switch to your local environment and run:
-
-   $ ./manage.py update_help
-
-After that you can create the overview pdf files with
-
-   $ ./manage.py update_help_pdf
-
-Setting up widelands source code documentation
-----------------------------------------------
-
-There is a small helper script to get the documenation. Be sure
-you have set WIDELANDS_SVN_DIR set in local_settings.py. Run:
+in mainpage/local_settings.py to the path where the widelands source code can be
+found. Then run:
 
    $ ./manage.py create_docs
 
 After finishing without errors, type localhost:8000/documentation/index.html
 in your browsers addressbar or click on "Development -> Documentation".
 
+Widelands executables
+---------------------
 
-Uploading a map to the local website
-------------------------------------
+Widelands executables are needed to:
 
-Compile the widelands binaries by using the compile.sh script
+* Upload maps to the website
+* Create the Encylopdia
 
-   $ ./compile.sh
+Either install widelands as a program to your operating system, or create the 
+binaries by compiling the source code. If you want to compile, run:
 
-Now you should be able to upload a map onto your local website.
+   $ ./compile.sh -r
+
+inside of the WIDELANDS_SVN_DIR to create a release build.
+
+Uploading maps should work now.
+
+Creating the encyclopdia needs graphviz to generate the graphs. On Ubuntu run:
+
+   $ sudo apt-get install graphviz
+
+To generate the online help switch to your local environment and run:
+
+   $ ./manage.py update_help
+
+Now you can create the economy graphs:
+
+   $ ./manage.py update_help_pdf
+
+You can access the encyclopdia by clicking on 'The Game -> Encyclopedia' now.
+
 
 Contact
 =======

@@ -4,8 +4,8 @@
 import os.path as p
 import json
 try:
-    from settings import WIDELANDS_SVN_DIR
-    basedir = WIDELANDS_SVN_DIR
+    from django.conf import settings
+    basedir = settings.WIDELANDS_SVN_DIR
 except:
     basedir = p.join(p.dirname(__file__), p.pardir, p.pardir)
 
@@ -20,7 +20,7 @@ class BaseDescr(object):
 
     @property
     def image(self):
-        return p.abspath(p.join(WIDELANDS_SVN_DIR, 'data', self._json['icon']))
+        return p.abspath(p.join(settings.WIDELANDS_SVN_DIR, 'data', self._json['icon']))
 
 
 class Ware(BaseDescr):

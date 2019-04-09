@@ -26,7 +26,7 @@ import json
 import subprocess
 import collections
 
-from settings import MEDIA_ROOT, WIDELANDS_SVN_DIR, MEDIA_URL
+from django.conf import settings
 
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_all_subgraphs
@@ -45,8 +45,8 @@ class TribeParser(object):
         self._delete_old_media_dir(
             name)  # You can deactivate this line if you don't need to clean house.
 
-        base_directory = os.path.normpath(WIDELANDS_SVN_DIR + '/data')
-        json_directory = os.path.normpath(MEDIA_ROOT + '/map_object_info')
+        base_directory = os.path.normpath(settings.WIDELANDS_SVN_DIR + '/data')
+        json_directory = os.path.normpath(settings.MEDIA_ROOT + '/map_object_info')
 
         tribeinfo_file = open(os.path.normpath(
             json_directory + '/tribe_' + name + '.json'), 'r')
@@ -59,7 +59,7 @@ class TribeParser(object):
         self._to.descr = tribeinfo['tooltip']
         # copy icon
         dn = os.path.normpath('%s/wlhelp/img/%s/' %
-                              (MEDIA_ROOT, tribeinfo['name']))
+                              (settings.MEDIA_ROOT, tribeinfo['name']))
         try:
             os.makedirs(dn)
         except OSError, o:
@@ -69,7 +69,7 @@ class TribeParser(object):
         file = os.path.normpath(base_directory + '/' + tribeinfo['icon'])
         shutil.copy(file, new_name)
         self._to.icon_url = path.normpath(
-            '%s/%s' % (MEDIA_URL, new_name[len(MEDIA_ROOT):]))
+            '%s/%s' % (settings.MEDIA_URL, new_name[len(settings.MEDIA_ROOT):]))
         self._to.save()
 
     def parse(self, tribename, base_directory, json_directory):
@@ -117,7 +117,7 @@ class TribeParser(object):
 
         print('Deleting old media files...')
         sdir = os.path.normpath(os.path.join(
-            MEDIA_ROOT, 'wlhelp/img', tribename))
+            settings.MEDIA_ROOT, 'wlhelp/img', tribename))
         if os.path.exists(sdir):
             shutil.rmtree(sdir)
 
@@ -144,7 +144,7 @@ class TribeParser(object):
 
         """
         dn = os.path.normpath('%s/wlhelp/img/%s/%s/' %
-                              (MEDIA_ROOT, self._to.name, name))
+                              (settings.MEDIA_ROOT, self._to.name, name))
         try:
             os.makedirs(dn)
         except OSError, o:
@@ -153,7 +153,7 @@ class TribeParser(object):
         new_name = path.join(dn, fname)
         shutil.copy(file, new_name)
 
-        return '%s%s' % (MEDIA_URL, new_name[len(MEDIA_ROOT):])
+        return '%s%s' % (settings.MEDIA_URL, new_name[len(settings.MEDIA_ROOT):])
 
     def _parse_workers(self, base_directory, workersinfo):
         """Put the workers into the database."""
@@ -283,9 +283,9 @@ class Command(BaseCommand):
     help =\
         '''Regenerates and parses the json files in a current checkout. '''
 
-    def handle(self, directory=os.path.normpath(WIDELANDS_SVN_DIR + '/data'), **kwargs):
+    def handle(self, directory=os.path.normpath(settings.WIDELANDS_SVN_DIR + '/data'), **kwargs):
 
-        json_directory = os.path.normpath(MEDIA_ROOT + '/map_object_info')
+        json_directory = os.path.normpath(settings.MEDIA_ROOT + '/map_object_info')
 
         if not os.path.exists(json_directory):
             os.makedirs(json_directory)
@@ -295,7 +295,7 @@ class Command(BaseCommand):
         # First, we make sure that JSON files have been generated.
         current_dir = os.path.dirname(os.path.realpath(__file__))
         is_json_valid = False
-        os.chdir(WIDELANDS_SVN_DIR)
+        os.chdir(settings.WIDELANDS_SVN_DIR)
         try:
             subprocess.check_call(
                 [os.path.normpath('wl_map_object_info'), json_directory])
@@ -306,7 +306,7 @@ class Command(BaseCommand):
 
         # Now we validate that they are indeed JSON files (syntax check only)
         validator_script = os.path.normpath(
-            WIDELANDS_SVN_DIR + '/utils/validate_json.py')
+            settings.WIDELANDS_SVN_DIR + '/utils/validate_json.py')
         if not os.path.isfile(validator_script):
             print("Wrong path for 'utils/validate_json.py': " +
                   validator_script + ' does not exist!')

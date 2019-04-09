@@ -9,7 +9,7 @@
 from django import forms
 from models import Profile
 
-import settings
+from django.conf import settings
 import re
 
 

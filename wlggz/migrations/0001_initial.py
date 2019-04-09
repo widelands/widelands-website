@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import wl_utils
+import mainpage.wl_utils as wl_utils
 
 
 class Migration(migrations.Migration):

@@ -7,7 +7,7 @@ from cStringIO import StringIO
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.files.storage import FileSystemStorage
 import os
-from settings import THUMBNAIL_SIZE, MEDIA_ROOT
+from django.conf import settings
 from django.urls import reverse
 
 
@@ -21,7 +21,7 @@ class OverwriteStorage(FileSystemStorage):
         # If the filename already exists, remove it as if it was a true file
         # system
         if self.exists(name):
-            os.remove(os.path.join(MEDIA_ROOT, name))
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
 
 
@@ -80,7 +80,7 @@ class Screenshot(models.Model):
         if image.mode not in ('L', 'RGB'):
             image = image.convert('RGB')
 
-        image.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
+        image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
 
         # Save the thumbnail
         temp_handle = StringIO()

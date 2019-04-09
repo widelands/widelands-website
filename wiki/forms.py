@@ -7,14 +7,15 @@ from django.utils.translation import ugettext_lazy as _
 
 from wiki.models import Article
 from wiki.models import ChangeSet
-from settings import WIKI_WORD_RE
+from django.conf import settings
+
 try:
     from notification import models as notification
 except:
     notification = None
 
 
-wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
+wikiword_pattern = re.compile('^' + settings.WIKI_WORD_RE + '$')
 
 
 class ArticleForm(forms.ModelForm):

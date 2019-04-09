@@ -11,8 +11,6 @@ from wlmaps.models import *
 
 import os
 
-from settings import MEDIA_ROOT
-
 elven_forests = os.path.dirname(__file__) + '/data/Elven Forests.wmf'
 
 ###########

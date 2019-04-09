@@ -1,6 +1,7 @@
 {% extends 'wiki/base.html' %}
 {% load wiki_extras %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}
 {{ name }} - Backlinks - {{block.super}}
@@ -36,7 +37,7 @@
 		{% endif %}
 	{% else %}
 		<p><span class="errormessage">Every Wikipage must be linked from at least one another page.</span>
-		Please link it <img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png"> See <a href="/wiki/WikiSyntax/#links">Wiki Syntax</a> for help.</p></p>
+		Please link it <img src="{% static 'img/smileys/face-smile.png' %}" alt="face-smile.png"> See <a href="/wiki/WikiSyntax/#links">Wiki Syntax</a> for help.</p></p>
 	{% endif %}
 </div>
 {% endblock %}
