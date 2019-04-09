@@ -35,9 +35,6 @@ class Category(models.Model):
 
         return super(Category, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('wlscreens_category', kwargs={'category_slug': self.slug})
-
     def __unicode__(self):
         return u"%s" % self.name
 
@@ -87,26 +84,32 @@ class Screenshot(models.Model):
     def save(self, *args, **kwargs):
         # Open original screenshot which we want to thumbnail using PIL's Image
         # object
-        image = Image.open(self.screenshot)
+        try:
+            image = Image.open(self.screenshot)
+    
+            # Convert to RGB if necessary
+            if image.mode not in ('L', 'RGB'):
+                image = image.convert('RGB')
+    
+            image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
+    
+            # Save the thumbnail
+            temp_handle = StringIO()
+            image.save(temp_handle, 'png')
+            temp_handle.seek(0)
+    
+            # Save to the thumbnail field
+            suf = SimpleUploadedFile(os.path.split(self.screenshot.name)[-1],
+                                     temp_handle.read(), content_type='image/png')
+            self.thumbnail.save(suf.name + '.png', suf, save=False)
+    
+            # Save this photo instance
+            super(Screenshot, self).save(*args, **kwargs)
+        except IOError:
+            # Likely we have a screenshot in the database which didn't exist
+            # on the filesystem at the given path. Ignore it.            
+            pass
 
-        # Convert to RGB if necessary
-        if image.mode not in ('L', 'RGB'):
-            image = image.convert('RGB')
-
-        image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
-
-        # Save the thumbnail
-        temp_handle = StringIO()
-        image.save(temp_handle, 'png')
-        temp_handle.seek(0)
-
-        # Save to the thumbnail field
-        suf = SimpleUploadedFile(os.path.split(self.screenshot.name)[-1],
-                                 temp_handle.read(), content_type='image/png')
-        self.thumbnail.save(suf.name + '.png', suf, save=False)
-
-        # Save this photo instance
-        super(Screenshot, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u"%s:%s" % (self.category.name, self.name)
