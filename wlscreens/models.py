@@ -29,6 +29,9 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
+    class Meta:
+        ordering = ['-name']
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -79,7 +82,7 @@ class Screenshot(models.Model):
 
     class Meta:
         unique_together = ('name', 'category')
-        ordering = ['position',]
+        ordering = ['-category__name', 'position']
 
     def save(self, *args, **kwargs):
         # Open original screenshot which we want to thumbnail using PIL's Image
