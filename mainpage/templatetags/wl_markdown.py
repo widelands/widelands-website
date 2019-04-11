@@ -218,7 +218,7 @@ def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""
 
     beautify = keyw.pop('beautify', True)
-    html = smart_bytes(markdown(value, extensions=md_extensions))
+    html = markdown(value, extensions=md_extensions)
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
