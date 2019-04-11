@@ -29,7 +29,7 @@ class Category(models.Model):
         db_table = 'news_categories'
         ordering = ('title',)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.title
 
     def get_absolute_url(self):
@@ -65,7 +65,7 @@ class Post(models.Model):
         ordering = ('-publish',)
         get_latest_by = 'publish'
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.title
 
     #########

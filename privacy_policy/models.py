@@ -17,7 +17,7 @@ class PrivacyPolicy(models.Model):
     class Meta:
         ordering = ['language']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.language
     
     def get_absolute_url(self):

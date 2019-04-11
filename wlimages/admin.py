@@ -24,7 +24,7 @@ delete_with_file.short_description = 'Delete Image including File'
 
 class ImageAdmin(admin.ModelAdmin):
     readonly_fields = ('content_object', 'content_type', 'object_id')
-    list_display = ('__unicode__', 'date_submitted', 'content_type', 'user')
+    list_display = ('__str__', 'date_submitted', 'content_type', 'user')
     list_filter = ('date_submitted',)
     date_hierarchy = 'date_submitted'
     search_fields = ('image', 'user__username')

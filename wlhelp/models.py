@@ -13,7 +13,7 @@ class Tribe(models.Model):
         ordering = ['name']
 
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.name
 
 
@@ -38,7 +38,7 @@ class Worker(models.Model):
         ordering = ['name']
 
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.name
 
 
@@ -59,7 +59,7 @@ class Ware(models.Model):
         ordering = ['name']
 
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s' % self.name
 
 
@@ -203,5 +203,5 @@ class Building(models.Model):
         for c, w in zip(count, self.store_wares.all()):
             yield [w] * c
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s/%s" % (self.tribe.name, self.name)

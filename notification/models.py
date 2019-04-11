@@ -48,7 +48,7 @@ class NoticeType(models.Model):
     # number
     default = models.IntegerField(_('default'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:

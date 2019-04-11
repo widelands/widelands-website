@@ -1,7 +1,7 @@
 from django import template
 from django.conf import settings
 from django.template.defaultfilters import stringfilter
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_bytes
 from django.utils.safestring import mark_safe
 from hashlib import md5 as md5_constructor
 import urllib.request, urllib.parse, urllib.error
@@ -50,7 +50,7 @@ def get_gravatar_url(parser, token):
         name = name.lower()
         if name not in ('rating', 'size', 'default', 'as'):
             raise template.TemplateSyntaxError('%r tag: Invalid argument %r.' % tagname).with_traceback(name)
-        args[smart_str(name)] = value
+        args[smart_bytes(name)] = value
     return GravatarUrlNode(**args)
 
 

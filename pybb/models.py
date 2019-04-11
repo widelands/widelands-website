@@ -61,7 +61,7 @@ class Category(models.Model):
         # See also settings.INTERNAL_PERM
         permissions = (("can_access_internal", "Can access Internal Forums"),)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def forum_count(self):
@@ -100,7 +100,7 @@ class Forum(models.Model):
         verbose_name = _('Forum')
         verbose_name_plural = _('Forums')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def topic_count(self):
@@ -154,7 +154,7 @@ class Topic(models.Model):
         verbose_name = _('Topic')
         verbose_name_plural = _('Topics')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -308,7 +308,7 @@ class Post(RenderableItem):
         tail = len(self.body) > LIMIT and '...' or ''
         return self.body[:LIMIT] + tail
 
-    __unicode__ = summary
+    __str__ = summary
 
     def save(self, *args, **kwargs):
         if self.created is None:
@@ -380,7 +380,7 @@ class Read(models.Model):
             self.time = datetime.now()
         super(Read, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return 'T[%d], U[%d]: %s' % (self.topic.id, self.user.id, str(self.time))
 
 
@@ -401,7 +401,7 @@ class Attachment(models.Model):
                 str(self.id) + settings.SECRET_KEY).hexdigest()
         super(Attachment, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):

@@ -38,7 +38,7 @@ class Category(models.Model):
 
         return super(Category, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s" % self.name
 
 
@@ -114,5 +114,5 @@ class Screenshot(models.Model):
             pass
 
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s:%s" % (self.category.name, self.name)

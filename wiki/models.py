@@ -116,7 +116,7 @@ class Article(models.Model):
         changeset = self.changeset_set.get(revision=to_revision)
         return changeset.compare_to(from_revision)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -163,7 +163,7 @@ class ChangeSet(models.Model):
         ordering = ('-revision',)
         app_label = 'wiki'
 
-    def __unicode__(self):
+    def __str__(self):
         return '#%s' % self.revision
 
     def get_absolute_url(self):

@@ -37,7 +37,7 @@ def upload(request, content_type, object_id, next='/'):
 
     # Get the App (model) to which this image belongs to:
     app = ContentType.objects.get(id=content_type)
-    # Get the current object's name (provided by __unicode__()) from this model
+    # Get the current object's name (provided by __str__()) from this model
     name = app.get_object_for_this_type(id=object_id)
 
     return render(request, 'wlimages/upload.html', {

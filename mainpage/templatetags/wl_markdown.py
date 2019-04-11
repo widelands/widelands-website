@@ -11,7 +11,7 @@
 
 from django import template
 from django.conf import settings
-from django.utils.encoding import smart_str, force_unicode
+from django.utils.encoding import smart_bytes, force_text
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import SemanticWikiLinkExtension
@@ -218,7 +218,7 @@ def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""
 
     beautify = keyw.pop('beautify', True)
-    html = smart_str(markdown(value, extensions=md_extensions))
+    html = smart_bytes(markdown(value, extensions=md_extensions))
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:

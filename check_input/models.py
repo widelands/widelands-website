@@ -31,7 +31,7 @@ class SuspiciousInput(models.Model):
         ordering = ['content_type_id']
         default_permissions = ('change', 'delete',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
 
     def clean(self):

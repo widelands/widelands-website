@@ -37,7 +37,7 @@ class Poll(models.Model):
     def get_absolute_url(self):
         return reverse('wlpoll_detail', kwargs={'pk': self.id})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -46,7 +46,7 @@ class Choice(models.Model):
     choice = models.CharField(max_length=256)
     votes = models.PositiveIntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%i:%s" % (self.votes, self.choice)
 
 
