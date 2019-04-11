@@ -6,8 +6,8 @@ import os
 import os.path
 import warnings
 import logging
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 from datetime import datetime, timedelta
 import shutil
 import socket
@@ -28,24 +28,24 @@ def fetch_gravatar(email):
 
     hash = md5(email).hexdigest()
     size = max(pybb_settings.AVATAR_WIDTH, pybb_settings.AVATAR_HEIGHT)
-    default = urllib.quote('http://spam.egg/')
+    default = urllib.parse.quote('http://spam.egg/')
 
     url = 'http://www.gravatar.com/avatar/%s?s=%d&d=%s' % (hash, size, default)
     fname = os.tmpnam()
 
-    class RedirectHandler(urllib2.HTTPRedirectHandler):
+    class RedirectHandler(urllib.request.HTTPRedirectHandler):
 
         def http_error_302(*args):
             raise IOError('Redirect found')
 
     timeout = socket.getdefaulttimeout()
     socket.setdefaulttimeout(10)
-    opener = urllib2.build_opener(RedirectHandler())
+    opener = urllib.request.build_opener(RedirectHandler())
     socket.setdefaulttimeout(timeout)
 
     try:
         file(fname, 'wb').write(opener.open(url, fname).read())
-    except IOError, ex:
+    except IOError as ex:
         # logging.error(ex)
         return None
     else:

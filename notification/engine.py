@@ -5,7 +5,7 @@ import logging
 import traceback
 
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 
@@ -14,7 +14,7 @@ from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 
-from lockfile import FileLock, AlreadyLocked, LockTimeout
+from .lockfile import FileLock, AlreadyLocked, LockTimeout
 
 from notification.models import NoticeQueueBatch
 from notification import models as notification

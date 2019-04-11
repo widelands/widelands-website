@@ -24,7 +24,7 @@ from mainpage.wl_utils import get_real_ip
 from mainpage.wl_utils import get_valid_cache_key
 
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 # Settings
 #  lock duration in minutes
@@ -662,7 +662,7 @@ def backlinks(request, title):
         for regexp in search_title:
             # Need to unqoute the content to match
             # e.g. [[ Back | Title%20of%20Page ]]
-            match = regexp.search(urllib.unquote(article.content))
+            match = regexp.search(urllib.parse.unquote(article.content))
             if match:
                 found_links.append({'title': article.title})
 

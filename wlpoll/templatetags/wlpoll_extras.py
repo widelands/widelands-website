@@ -4,7 +4,7 @@
 
 from wlpoll.models import Choice, Poll
 from django import template
-from urllib import urlencode, quote
+from urllib.parse import urlencode, quote
 
 register = template.Library()
 
@@ -69,7 +69,7 @@ def do_display_poll(parser, token):
     try:
         tag_name, poll_var = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, '%r tag requires a single argument' % token.contents.split()[0]
+        raise template.TemplateSyntaxError('%r tag requires a single argument' % token.contents.split()[0])
 
     return DisplayPollNode(poll_var)
 
@@ -95,7 +95,7 @@ def do_get_open_polls(parser, token):
     try:
         tag_name, as_name, variable = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, 'required: %r as <variable name>' % token.contents.split()[0]
+        raise template.TemplateSyntaxError('required: %r as <variable name>' % token.contents.split()[0])
 
     return GetOpenPolls(variable)
 

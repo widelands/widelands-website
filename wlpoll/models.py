@@ -47,7 +47,7 @@ class Choice(models.Model):
     votes = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
-        return u"%i:%s" % (self.votes, self.choice)
+        return "%i:%s" % (self.votes, self.choice)
 
 
 class Vote(models.Model):

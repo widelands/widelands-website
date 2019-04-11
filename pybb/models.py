@@ -215,7 +215,7 @@ class RenderableItem(models.Model):
         if self.markup == 'bbcode':
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == 'markdown':
-            self.body_html = unicode(do_wl_markdown(
+            self.body_html = str(do_wl_markdown(
                 self.body, 'bleachit'))
         else:
             raise Exception('Invalid markup property: %s' % self.markup)
@@ -381,7 +381,7 @@ class Read(models.Model):
         super(Read, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'T[%d], U[%d]: %s' % (self.topic.id, self.user.id, unicode(self.time))
+        return 'T[%d], U[%d]: %s' % (self.topic.id, self.user.id, str(self.time))
 
 
 class Attachment(models.Model):

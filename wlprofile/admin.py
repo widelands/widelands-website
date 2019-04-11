@@ -11,7 +11,7 @@
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from models import Profile
+from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 

@@ -1,4 +1,4 @@
-from StringIO import StringIO
+from io import StringIO
 from django.db import models
 import logging
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -42,7 +42,7 @@ class ExtendedImageField(models.ImageField):
                     y = int(round((oldh - oldw) / 2.0))
                     image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
                 image = image.resize((width, height), resample=Image.ANTIALIAS)
-        except Exception, err:
+        except Exception as err:
             logging.error(err)
             return ''
 

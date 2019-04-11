@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from forms import WlSearchForm
+from .forms import WlSearchForm
 from pybb.models import Topic
 from pybb.models import Post as ForumPost
 from wiki.models import Article
@@ -33,7 +33,7 @@ def search(request):
             section = choices.get(request.POST['section'], 'all')
             if section == 'all':
                 # Add initial values of all the form fields
-                for field, v in form.fields.iteritems():
+                for field, v in form.fields.items():
                     if field == 'q':
                         # Don't change the query string
                         continue

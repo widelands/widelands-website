@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 
-from models import Map
+from .models import Map
 from django.contrib import admin
 
 

@@ -365,7 +365,7 @@ def post_ajax_preview(request):
     content = request.POST.get('content')
     markup = request.POST.get('markup')
 
-    if not markup in dict(MARKUP_CHOICES).keys():
+    if not markup in list(dict(MARKUP_CHOICES).keys()):
         return {'error': 'Invalid markup'}
 
     if not content:
@@ -374,7 +374,7 @@ def post_ajax_preview(request):
     if markup == 'bbcode':
         html = mypostmarkup.markup(content, auto_urls=False)
     elif markup == 'markdown':
-        html = unicode(do_wl_markdown(content, 'bleachit'))
+        html = str(do_wl_markdown(content, 'bleachit'))
 
     html = urlize(html)
     return {'content': html}

@@ -36,7 +36,7 @@ class OnlineNowMiddleware(MiddlewareMixin):
 
         # Perform the multiget on the individual online uid keys
         online_keys = ['online-%s' % (u,) for u in uids]
-        fresh = cache.get_many(online_keys).keys()
+        fresh = list(cache.get_many(online_keys).keys())
         online_now_ids = [int(k.replace('online-', '')) for k in fresh]
 
         # If the user is authenticated, add their id to the list

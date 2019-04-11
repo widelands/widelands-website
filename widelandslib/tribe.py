@@ -55,7 +55,7 @@ class Building(BaseDescr):
     def base_building(self):
         if not self.enhanced_building:
             return None
-        bases = [b for b in self.tribe.buildings.values()
+        bases = [b for b in list(self.tribe.buildings.values())
                  if b.enhancement == self.name]
         if len(bases) == 0 and self.enhanced_building:
             raise Exception('Building %s has no bases in tribe %s' %

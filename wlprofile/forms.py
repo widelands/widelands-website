@@ -7,7 +7,7 @@
 #
 
 from django import forms
-from models import Profile
+from .models import Profile
 
 from django.conf import settings
 import re

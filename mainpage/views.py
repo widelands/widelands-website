@@ -1,5 +1,5 @@
 from django.conf import settings
-from templatetags.wl_markdown import do_wl_markdown
+from .templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
 from django.core.mail import send_mail
 from mainpage.forms import ContactForm
@@ -119,12 +119,12 @@ def developers(request):
 
                 # Add a subheader or/and the member(s)
                 for entry in head['entries']:
-                    if 'subheading' in entry.keys():
+                    if 'subheading' in list(entry.keys()):
                         txt = txt + '###' + entry['subheading'] + '\n'
-                    if 'members' in entry.keys():
+                    if 'members' in list(entry.keys()):
                         for name in entry['members']:
                             txt = txt + '* ' + name + '\n'
-                    if 'translate' in entry.keys():
+                    if 'translate' in list(entry.keys()):
                         for transl in entry['translate']:
                             txt = txt + '* ' + transl + '\n'
 

@@ -14,5 +14,5 @@ class Command(BaseCommand):
 
         for count, post in enumerate(Post.objects.all()):
             if count and not count % 1000:
-                print count
+                print(count)
             post.save()

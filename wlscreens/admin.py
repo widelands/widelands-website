@@ -1,7 +1,7 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 
-from models import Category, Screenshot
+from .models import Category, Screenshot
 from django.contrib import admin
 
 

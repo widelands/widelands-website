@@ -30,7 +30,7 @@ class Category(models.Model):
         ordering = ('title',)
 
     def __unicode__(self):
-        return u'%s' % self.title
+        return '%s' % self.title
 
     def get_absolute_url(self):
         return reverse('category_posts', args=(self.slug,))
@@ -66,7 +66,7 @@ class Post(models.Model):
         get_latest_by = 'publish'
 
     def __unicode__(self):
-        return u'%s' % self.title
+        return '%s' % self.title
 
     #########
     # IMAGE #

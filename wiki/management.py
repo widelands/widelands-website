@@ -14,4 +14,4 @@ try:
                                         _('an article you observe has changed'))
 
 except ImportError:
-    print 'Skipping creation of NoticeTypes as notification app not found'
+    print('Skipping creation of NoticeTypes as notification app not found')

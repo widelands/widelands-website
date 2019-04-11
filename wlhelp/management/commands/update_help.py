@@ -62,7 +62,7 @@ class TribeParser(object):
                               (settings.MEDIA_ROOT, tribeinfo['name']))
         try:
             os.makedirs(dn)
-        except OSError, o:
+        except OSError as o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, 'icon.png')
@@ -106,9 +106,9 @@ class TribeParser(object):
                     inst.imagemap = self.map_mouseover_pattern.sub(
                         r"\1Show the \2 \3\4", inst.imagemap)
                     inst.save()
-                except Exception, e:
-                    print 'Exception while handling', cls, 'of', self._tribe.name, ':', inst.name
-                    print type(e), e, repr(e)
+                except Exception as e:
+                    print('Exception while handling', cls, 'of', self._tribe.name, ':', inst.name)
+                    print(type(e), e, repr(e))
 
         shutil.rmtree(tdir)
 
@@ -147,7 +147,7 @@ class TribeParser(object):
                               (settings.MEDIA_ROOT, self._to.name, name))
         try:
             os.makedirs(dn)
-        except OSError, o:
+        except OSError as o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, fname)
@@ -157,10 +157,10 @@ class TribeParser(object):
 
     def _parse_workers(self, base_directory, workersinfo):
         """Put the workers into the database."""
-        print '  parsing workers'
+        print('  parsing workers')
 
         for worker in workersinfo['workers']:
-            print '    ' + worker['name']
+            print('    ' + worker['name'])
             nn = self._copy_picture(os.path.normpath(
                 base_directory + '/' + worker['icon']), worker['name'], 'menu.png')
 
@@ -187,10 +187,10 @@ class TribeParser(object):
             workero.save()
 
     def _parse_wares(self, base_directory, waresinfo):
-        print '  parsing wares'
+        print('  parsing wares')
 
         for ware in waresinfo['wares']:
-            print '    ' + ware['name']
+            print('    ' + ware['name'])
             nn = self._copy_picture(os.path.normpath(
                 base_directory + '/' + ware['icon']), ware['name'], 'menu.png')
 
@@ -213,16 +213,16 @@ class TribeParser(object):
             # be made, e.g. build_cost and build_wares in 
             # models.get_build_cost() and other functions over there.
             element_set = collections.OrderedDict(sorted(element_set.items()))
-            counts = ' '.join(element_set.values())
+            counts = ' '.join(list(element_set.values()))
             objects = [objtype.objects.get_or_create(name=w, tribe=self._to)[
-                0] for w in element_set.keys()]
+                0] for w in list(element_set.keys())]
             return counts, objects
 
         enhancement_hierarchy = []
-        print '  parsing buildings'
+        print('  parsing buildings')
 
         for building in buildingsinfo['buildings']:
-            print '    ' + building['name']
+            print('    ' + building['name'])
             b = BuildingModel.objects.get_or_create(
                 tribe=self._to, name=building['name'])[0]
             b.displayname = building['descname']
@@ -274,7 +274,7 @@ class TribeParser(object):
             try:
                 b.enhancement = BuildingModel.objects.get(
                     name=tgt, tribe=self._to)
-            except Exception, e:
+            except Exception as e:
                 raise
             b.save()
 
@@ -290,7 +290,7 @@ class Command(BaseCommand):
         if not os.path.exists(json_directory):
             os.makedirs(json_directory)
 
-        print('JSON files will be written to: ' + json_directory)
+        print(('JSON files will be written to: ' + json_directory))
 
         # First, we make sure that JSON files have been generated.
         current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -308,8 +308,8 @@ class Command(BaseCommand):
         validator_script = os.path.normpath(
             settings.WIDELANDS_SVN_DIR + '/utils/validate_json.py')
         if not os.path.isfile(validator_script):
-            print("Wrong path for 'utils/validate_json.py': " +
-                  validator_script + ' does not exist!')
+            print(("Wrong path for 'utils/validate_json.py': " +
+                  validator_script + ' does not exist!'))
             sys.exit(1)
         try:
             subprocess.check_call(
@@ -330,7 +330,7 @@ class Command(BaseCommand):
 
             for t in tribesinfo['tribes']:
                 tribename = t['name']
-                print 'updating help for tribe ', tribename
+                print('updating help for tribe ', tribename)
                 p = TribeParser(tribename)
                 p.parse(tribename, directory, json_directory)
                 p.graph()

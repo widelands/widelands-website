@@ -42,8 +42,8 @@ class AtomHistoryFeed(RssHistoryFeed):
 
 class RssArticleHistoryFeed(Feed):
     feed_type = Rss201rev2Feed
-    title_template = u'wiki/feeds/history_title.html'
-    description_template = u'wiki/feeds/history_description.html'
+    title_template = 'wiki/feeds/history_title.html'
+    description_template = 'wiki/feeds/history_description.html'
 
     def get_object(self, request, *args, **kwargs):
         return Article.objects.get(title=kwargs['title'])

@@ -17,7 +17,7 @@ import sys
 sys.path.append('..')
 
 import PIL
-from cStringIO import StringIO
+from io import StringIO
 
 from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
@@ -27,10 +27,10 @@ from django.test.client import Client
 from django.urls import reverse
 from django.db import IntegrityError
 
-from models import Image
-from forms import UploadImageForm
+from .models import Image
+from .forms import UploadImageForm
 
-from views import upload
+from .views import upload
 
 
 class _TestUploadingBase(TestCase):

@@ -11,7 +11,7 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from models import Image
+from .models import Image
 
 
 def delete_with_file(modeladmin, request, queryset):

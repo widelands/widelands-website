@@ -28,7 +28,7 @@ def get_comment_url(content_object, parent=None):
     kwargs = get_contenttype_kwargs(content_object)
     if parent:
         if not isinstance(parent, ThreadedComment):
-            raise template.TemplateSyntaxError, 'get_comment_url requires its parent object to be of type ThreadedComment'
+            raise template.TemplateSyntaxError('get_comment_url requires its parent object to be of type ThreadedComment')
         kwargs.update({'parent_id': getattr(
             parent, 'pk', getattr(parent, 'id'))})
         return reverse('tc_comment_parent', kwargs=kwargs)
@@ -48,7 +48,7 @@ def get_comment_url_ajax(content_object, parent=None, ajax_type='json'):
     kwargs.update({'ajax': ajax_type})
     if parent:
         if not isinstance(parent, ThreadedComment):
-            raise template.TemplateSyntaxError, 'get_comment_url_ajax requires its parent object to be of type ThreadedComment'
+            raise template.TemplateSyntaxError('get_comment_url_ajax requires its parent object to be of type ThreadedComment')
         kwargs.update({'parent_id': getattr(
             parent, 'pk', getattr(parent, 'id'))})
         return reverse('tc_comment_parent_ajax', kwargs=kwargs)
@@ -63,7 +63,7 @@ def get_comment_url_json(content_object, parent=None):
     try:
         return get_comment_url_ajax(content_object, parent, ajax_type='json')
     except template.TemplateSyntaxError:
-        raise template.TemplateSyntaxError, 'get_comment_url_json requires its parent object to be of type ThreadedComment'
+        raise template.TemplateSyntaxError('get_comment_url_json requires its parent object to be of type ThreadedComment')
     return ''
 
 
@@ -74,7 +74,7 @@ def get_comment_url_xml(content_object, parent=None):
     try:
         return get_comment_url_ajax(content_object, parent, ajax_type='xml')
     except template.TemplateSyntaxError:
-        raise template.TemplateSyntaxError, 'get_comment_url_xml requires its parent object to be of type ThreadedComment'
+        raise template.TemplateSyntaxError('get_comment_url_xml requires its parent object to be of type ThreadedComment')
     return ''
 
 
@@ -92,13 +92,13 @@ def do_auto_transform_markup(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, '%r tag must be of format {%% %r COMMENT %%} or of format {%% %r COMMENT as CONTEXT_VARIABLE %%}' % (token.contents.split()[0], token.contents.split()[0], token.contents.split()[0])
+        raise template.TemplateSyntaxError('%r tag must be of format {%% %r COMMENT %%} or of format {%% %r COMMENT as CONTEXT_VARIABLE %%}' % (token.contents.split()[0], token.contents.split()[0], token.contents.split()[0]))
     if len(split) == 2:
         return AutoTransformMarkupNode(split[1])
     elif len(split) == 4:
         return AutoTransformMarkupNode(split[1], context_name=split[3])
     else:
-        raise template.TemplateSyntaxError, 'Invalid number of arguments for tag %r' % split[0]
+        raise template.TemplateSyntaxError('Invalid number of arguments for tag %r' % split[0])
 
 
 class AutoTransformMarkupNode(template.Node):
@@ -167,9 +167,9 @@ def do_get_comment_count(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if split[1] != 'for' or split[3] != 'as':
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     return ThreadedCommentCountNode(split[2], split[4])
 
 
@@ -202,11 +202,11 @@ def do_get_threaded_comment_form(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if split[1] != 'as':
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if len(split) != 3:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     
     return ThreadedCommentFormNode(split[2])
 
@@ -230,11 +230,11 @@ def do_get_latest_comments(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if len(split) != 4:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if split[2] != 'as':
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
 
     return LatestCommentsNode(split[1], split[3])
 
@@ -259,9 +259,9 @@ def do_get_user_comments(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if len(split) != 5:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
 
     return UserCommentsNode(split[2], split[4])
 
@@ -285,9 +285,9 @@ def do_get_user_comment_count(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if len(split) != 5:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
 
     return UserCommentCountNode(split[2], split[4])
 

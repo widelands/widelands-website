@@ -3,8 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 
-from models import Image
-from forms import UploadImageForm
+from .models import Image
+from .forms import UploadImageForm
 
 
 def display(request, image, revision):

@@ -3,7 +3,7 @@
 
 from wlevents.models import Event
 from django import template
-from urllib import urlencode, quote
+from urllib.parse import urlencode, quote
 
 import datetime
 

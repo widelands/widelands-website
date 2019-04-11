@@ -14,7 +14,7 @@ class Tribe(models.Model):
 
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return '%s' % self.name
 
 
 class Worker(models.Model):
@@ -39,7 +39,7 @@ class Worker(models.Model):
 
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return '%s' % self.name
 
 
 class Ware(models.Model):
@@ -60,7 +60,7 @@ class Ware(models.Model):
 
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return '%s' % self.name
 
 
 class BuildingManager(models.Manager):
@@ -168,7 +168,7 @@ class Building(models.Model):
     def get_build_cost(self):
         # Creating the relation between build_cost and build_wares
         # Querying the wares returns the wares in alphabetical order!
-        count = map(int, self.build_costs.split())
+        count = list(map(int, self.build_costs.split()))
         for c, w in zip(count, self.build_wares.all()):
             yield [w] * c
 
@@ -176,7 +176,7 @@ class Building(models.Model):
         return (self.workers_types.all().count() != 0)
 
     def get_workers(self):
-        count = map(int, self.workers_count.split())
+        count = list(map(int, self.workers_count.split()))
         for c, wor in zip(count, self.workers_types.all()):
             yield [wor] * c
 
@@ -199,9 +199,9 @@ class Building(models.Model):
         return (self.store_wares.all().count() != 0)
 
     def get_stored_wares(self):
-        count = map(int, self.store_count.split())
+        count = list(map(int, self.store_count.split()))
         for c, w in zip(count, self.store_wares.all()):
             yield [w] * c
 
     def __unicode__(self):
-        return u"%s/%s" % (self.tribe.name, self.name)
+        return "%s/%s" % (self.tribe.name, self.name)

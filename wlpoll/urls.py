@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 
-from models import Poll
+from .models import Poll
 from django.conf.urls import *
 from . import views
 from django.views.generic.dates import ArchiveIndexView

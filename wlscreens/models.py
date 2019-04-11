@@ -3,7 +3,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from PIL import Image
 from PIL.Image import core as _imaging
-from cStringIO import StringIO
+from io import StringIO
 from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
 from django.core.files.storage import FileSystemStorage
 import os
@@ -39,7 +39,7 @@ class Category(models.Model):
         return super(Category, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u"%s" % self.name
+        return "%s" % self.name
 
 
 def screenshot_path(instance, filename):
@@ -115,4 +115,4 @@ class Screenshot(models.Model):
 
 
     def __unicode__(self):
-        return u"%s:%s" % (self.category.name, self.name)
+        return "%s:%s" % (self.category.name, self.name)

@@ -3,7 +3,7 @@
 #
 
 from django.shortcuts import render
-from models import Availabilities
+from .models import Availabilities
 from django.contrib.auth.decorators import login_required
 import json
 from datetime import datetime, timedelta

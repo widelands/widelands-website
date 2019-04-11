@@ -42,7 +42,7 @@ def pybb_last_posts(context, number=8):
 
 
 @register.simple_tag
-def pybb_link(object, anchor=u''):
+def pybb_link(object, anchor=''):
     """Return A tag with link to object."""
 
     url = hasattr(

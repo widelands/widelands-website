@@ -1,1 +1,1 @@
-import pybb_notifications
+from . import pybb_notifications

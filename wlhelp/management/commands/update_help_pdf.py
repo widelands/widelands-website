@@ -22,11 +22,11 @@ class Command(BaseCommand):
             json_directory + '/tribes.json'), 'r')
         tribesinfo = json.load(source_file)
 
-        print 'updating pdf files for all tribes'
+        print('updating pdf files for all tribes')
 
         for t in tribesinfo['tribes']:
             tribename = t['name']
-            print '  updating pdf file for tribe ', tribename
+            print('  updating pdf file for tribe ', tribename)
             gdir = make_graph(tribename)
             pdffile = path.join(gdir, tribename + '.pdf')
             giffile = path.join(gdir, tribename + '.gif')
@@ -50,6 +50,6 @@ class Command(BaseCommand):
                     '%s/%s/%s' % (settings.MEDIA_URL, targetdir[len(settings.MEDIA_ROOT):], tribename + '.gif'))
                 tribe.save()
             else:
-                print 'Could not set tribe urls'
+                print('Could not set tribe urls')
 
             shutil.rmtree(gdir)

@@ -45,7 +45,7 @@ class Map(models.Model):
         return reverse('wlmaps_view', kwargs={'map_slug': self.slug})
 
     def __unicode__(self):
-        return u'%s by %s' % (self.name, self.author)
+        return '%s by %s' % (self.name, self.author)
 
     def save(self, *args, **kwargs):
         if not self.slug:

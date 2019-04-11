@@ -59,7 +59,7 @@ def ajax(func):
         if request.method == 'POST':
             try:
                 response = func(request, *args, **kwargs)
-            except Exception, ex:
+            except Exception as ex:
                 response = {'error': traceback.format_exc()}
         else:
             response = {'error': {'type': 403,
@@ -144,7 +144,7 @@ def urlize(data):
         # Apply the new content
         found_string.parent.contents = new_content
 
-    return unicode(soup)
+    return str(soup)
 
 
 def quote_text(text, user, markup):
