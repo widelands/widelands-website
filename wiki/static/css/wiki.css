@@ -136,3 +136,16 @@ img.center {
 	display: block;
 	margin: auto;
 }
+
+/*********************/
+/* diff_match_patch */
+/*********************/
+ins.inserted {
+	text-decoration: none;
+	color: #00FF00;
+}
+
+del.removed {
+	text-decoration: none;
+	color: #FF0000;
+}
