@@ -1,8 +1,7 @@
 Anmerkungen zum update auf python3:
 
-Kann nicht getestet werden, da nicht funktionsfähig:
-
-* gravatar (wird das überhaupt gebraucht?)
+Der code für die implementierung vom gravatar-service ist ungetestet, da es nie
+implementiert wurde.
 
 virtualenvironment
 ------------------
@@ -11,4 +10,24 @@ Installiere die richtige python Version (hier python3.6).
 Erstellen des virtualenvironments:
     
     $:> virtualenv --python=python3.6 wlwebsite
+
+Getestet
+========
+
+Wiki
+----
+- editieren, Vorschau, speichern
+- upload von Bildern
+- wiki-syntax
+- History: Diff anzeigen, Artikel wieder herstellen (Revert)
+- Backlinks
+- Artikel beobachten
+- Atom feed
+
+Registrierung
+-------------
+- Registrierung, Anmeldung
+- Passwortänderung
+- Passwort vergessen
+- Logout
 

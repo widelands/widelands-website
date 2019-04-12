@@ -159,7 +159,7 @@ def _classify_link(tag):
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
             if article_name != act_t:
-                tag['title'] = 'This is a redirect and points to \"" + act_t + "\"'
+                tag['title'] = 'This is a redirect and points to \"' + act_t + '\"'
                 return
             else:
                 return
