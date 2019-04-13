@@ -31,3 +31,10 @@ Registrierung
 - Passwort vergessen
 - Logout
 
+Maps
+----
+- Upload maps with comment
+- Edit uploader comment, also with polish characters
+- Rate a map
+- Make a threadedcomment on a map
+- Delete map
