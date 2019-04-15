@@ -410,9 +410,9 @@ img.landing {
 	margin-left: 20px;
 	margin-bottom: 15px;
 	border: 10px solid transparent;
-	border-image: url(../img/image_border.png) 20 repeat;
-	-webkit-border-image: url(../img/image_border.png) 20 repeat; /* Safari 3.1-5 */
-	-o-border-image: url(../img/image_border.png) 20 repeat; /* Opera 11-12.1 */
+	border-image: url(../img/image_border.png) 20 round;
+	-webkit-border-image: url(../img/image_border.png) 20 round; /* Safari 3.1-5 */
+	-o-border-image: url(../img/image_border.png) 20 round; /* Opera 11-12.1 */
 }
 
 div.blogEntry {
