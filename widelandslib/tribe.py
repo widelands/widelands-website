@@ -157,7 +157,7 @@ class Tribe(object):
         waresinfo = json.load(wares_file)
         self.wares = dict()
         for ware in waresinfo['wares']:
-            descname = ware['descname'].encode('ascii', 'xmlcharrefreplace')
+            descname = ware['descname']
             self.wares[ware['name']] = Ware(self, ware['name'], descname, ware)
 
         workers_file = open(p.normpath(
@@ -165,7 +165,7 @@ class Tribe(object):
         workersinfo = json.load(workers_file)
         self.workers = dict()
         for worker in workersinfo['workers']:
-            descname = worker['descname'].encode('ascii', 'xmlcharrefreplace')
+            descname = worker['descname']
             self.workers[worker['name']] = Worker(
                 self, worker['name'], descname, worker)
 
@@ -174,8 +174,7 @@ class Tribe(object):
         buildingsinfo = json.load(buildings_file)
         self.buildings = dict()
         for building in buildingsinfo['buildings']:
-            descname = building['descname'].encode(
-                'ascii', 'xmlcharrefreplace')
+            descname = building['descname']
             if building['type'] == 'productionsite':
                 self.buildings[building['name']] = ProductionSite(
                     self, building['name'], descname, building)
