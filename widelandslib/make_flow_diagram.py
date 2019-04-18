@@ -182,10 +182,9 @@ def make_graph(tribe_name):
     global tdir
     tdir = mkdtemp(prefix='widelands-help')
     json_directory = path.normpath(settings.MEDIA_ROOT + '/map_object_info')
-    tribeinfo_file = open(path.normpath(
-        json_directory + '/tribe_' + tribe_name + '.json'), 'r')
-
-    tribeinfo = json.load(tribeinfo_file)
+    with open(path.normpath(
+        json_directory + '/tribe_' + tribe_name + '.json'), 'r') as tribeinfo_file:
+        tribeinfo = json.load(tribeinfo_file)
 
     t = Tribe(tribeinfo, json_directory)
 

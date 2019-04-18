@@ -152,26 +152,26 @@ class Tribe(object):
     def __init__(self, tribeinfo, json_directory):
         self.name = tribeinfo['name']
 
-        wares_file = open(p.normpath(json_directory + '/' +
-                                     self.name + '_wares.json'), 'r')
-        waresinfo = json.load(wares_file)
+        with open(p.normpath(json_directory + '/' +
+                             self.name + '_wares.json'), 'r') as wares_file:
+            waresinfo = json.load(wares_file)
         self.wares = dict()
         for ware in waresinfo['wares']:
             descname = ware['descname']
             self.wares[ware['name']] = Ware(self, ware['name'], descname, ware)
 
-        workers_file = open(p.normpath(
-            json_directory + '/' + self.name + '_workers.json'), 'r')
-        workersinfo = json.load(workers_file)
+        with open(p.normpath(
+            json_directory + '/' + self.name + '_workers.json'), 'r') as workers_file:
+            workersinfo = json.load(workers_file)
         self.workers = dict()
         for worker in workersinfo['workers']:
             descname = worker['descname']
             self.workers[worker['name']] = Worker(
                 self, worker['name'], descname, worker)
 
-        buildings_file = open(p.normpath(
-            json_directory + '/' + self.name + '_buildings.json'), 'r')
-        buildingsinfo = json.load(buildings_file)
+        with open(p.normpath(
+            json_directory + '/' + self.name + '_buildings.json'), 'r') as buildings_file:
+            buildingsinfo = json.load(buildings_file)
         self.buildings = dict()
         for building in buildingsinfo['buildings']:
             descname = building['descname']
