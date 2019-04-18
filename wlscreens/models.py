@@ -97,6 +97,7 @@ class Screenshot(models.Model):
             # Save the thumbnail
             temp_handle = BytesIO()
             image.save(temp_handle, 'png')
+            image.close()
             temp_handle.seek(0)
     
             # Save to the thumbnail field
