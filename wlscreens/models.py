@@ -2,13 +2,11 @@ from django.db import models
 
 from django.template.defaultfilters import slugify
 from PIL import Image
-from PIL.Image import core as _imaging
-from io import StringIO
-from django.core.files.uploadedfile import SimpleUploadedFile, UploadedFile
+from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.storage import FileSystemStorage
 import os
 from django.conf import settings
-from django.urls import reverse
 
 
 # Taken from django snippet 976
@@ -97,7 +95,7 @@ class Screenshot(models.Model):
             image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
     
             # Save the thumbnail
-            temp_handle = StringIO()
+            temp_handle = BytesIO()
             image.save(temp_handle, 'png')
             temp_handle.seek(0)
     

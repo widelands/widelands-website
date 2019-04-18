@@ -43,3 +43,9 @@ WlHelp (Encyclopedia)
 ---------------------
 - Run ./manage.py update_help
 - Run ./manage.py update_help_pdf
+
+Screenshots
+-----------
+- upload a new screenshot
+- delete screenshot
+- delete category
