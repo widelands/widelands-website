@@ -48,9 +48,9 @@ class TribeParser(object):
         base_directory = os.path.normpath(settings.WIDELANDS_SVN_DIR + '/data')
         json_directory = os.path.normpath(settings.MEDIA_ROOT + '/map_object_info')
 
-        tribeinfo_file = open(os.path.normpath(
-            json_directory + '/tribe_' + name + '.json'), 'r')
-        tribeinfo = json.load(tribeinfo_file)
+        with open(os.path.normpath(
+            json_directory + '/tribe_' + name + '.json'), 'r') as tribeinfo_file:
+            tribeinfo = json.load(tribeinfo_file)
 
         self._tribe = Tribe(tribeinfo, json_directory)
         # Generate the Tribe
@@ -77,17 +77,17 @@ class TribeParser(object):
         self._delete_old_data(
             tribename)  # You can deactivate this line if you don't need to clean house.
 
-        wares_file = open(os.path.normpath(
-            json_directory + '/' + tribename + '_wares.json'), 'r')
-        self._parse_wares(base_directory, json.load(wares_file))
+        with open(os.path.normpath(
+            json_directory + '/' + tribename + '_wares.json'), 'r') as wares_file:
+            self._parse_wares(base_directory, json.load(wares_file))
 
-        workers_file = open(os.path.normpath(
-            json_directory + '/' + tribename + '_workers.json'), 'r')
-        self._parse_workers(base_directory, json.load(workers_file))
+        with open(os.path.normpath(
+            json_directory + '/' + tribename + '_workers.json'), 'r') as workers_file:
+            self._parse_workers(base_directory, json.load(workers_file))
 
-        buildings_file = open(os.path.normpath(
-            json_directory + '/' + tribename + '_buildings.json'), 'r')
-        self._parse_buildings(base_directory, json.load(buildings_file))
+        with open(os.path.normpath(
+            json_directory + '/' + tribename + '_buildings.json'), 'r') as buildings_file:
+            self._parse_buildings(base_directory, json.load(buildings_file))
 
     def graph(self):
         """Make all graphs."""
@@ -102,7 +102,8 @@ class TribeParser(object):
                     url = self._copy_picture(
                         path.join(fpath, 'menu.png'), inst.name, 'graph.png')
                     inst.graph_url = url
-                    inst.imagemap = open(path.join(fpath, 'map.map')).read()
+                    with open(path.join(fpath, 'map.map')) as map_file:
+                        inst.imagemap = map_file.read()
                     inst.imagemap = self.map_mouseover_pattern.sub(
                         r"\1Show the \2 \3\4", inst.imagemap)
                     inst.save()
@@ -324,9 +325,9 @@ class Command(BaseCommand):
         # We regenerate the encyclopedia only if the JSON files passed the
         # syntax check
         if is_json_valid:
-            source_file = open(os.path.normpath(
-                json_directory + '/tribes.json'), 'r')
-            tribesinfo = json.load(source_file)
+            with open(os.path.normpath(
+                json_directory + '/tribes.json'), 'r') as source_file:
+                tribesinfo = json.load(source_file)
 
             for t in tribesinfo['tribes']:
                 tribename = t['name']
