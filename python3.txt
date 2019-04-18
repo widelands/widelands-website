@@ -38,3 +38,8 @@ Maps
 - Rate a map
 - Make a threadedcomment on a map
 - Delete map
+
+WlHelp (Encyclopedia)
+---------------------
+- Run ./manage.py update_help
+- Run ./manage.py update_help_pdf

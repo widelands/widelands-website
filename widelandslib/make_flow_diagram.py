@@ -183,7 +183,7 @@ def make_graph(tribe_name):
     tdir = mkdtemp(prefix='widelands-help')
     json_directory = path.normpath(settings.MEDIA_ROOT + '/map_object_info')
     with open(path.normpath(
-        json_directory + '/tribe_' + tribe_name + '.json'), 'r') as tribeinfo_file:
+            json_directory + '/tribe_' + tribe_name + '.json'), 'r') as tribeinfo_file:
         tribeinfo = json.load(tribeinfo_file)
 
     t = Tribe(tribeinfo, json_directory)
@@ -357,6 +357,7 @@ def make_all_subgraphs(t):
 def add_bases(tribe, building, g):
     if b.enhanced_building:
         add_building()
+
 
 if __name__ == '__main__':
     make_all_subgraphs()

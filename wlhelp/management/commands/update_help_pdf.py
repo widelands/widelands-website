@@ -18,9 +18,9 @@ class Command(BaseCommand):
         """Update the overview pdfs of all tribes in a current checkout"""
 
     def handle(self, json_directory=os.path.normpath(settings.MEDIA_ROOT + '/map_object_info'), **kwargs):
-        source_file = open(os.path.normpath(
-            json_directory + '/tribes.json'), 'r')
-        tribesinfo = json.load(source_file)
+        with open(os.path.normpath(
+                json_directory + '/tribes.json'), 'r') as source_file:
+            tribesinfo = json.load(source_file)
 
         print('updating pdf files for all tribes')
 

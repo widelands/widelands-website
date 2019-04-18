@@ -161,7 +161,7 @@ class Tribe(object):
             self.wares[ware['name']] = Ware(self, ware['name'], descname, ware)
 
         with open(p.normpath(
-            json_directory + '/' + self.name + '_workers.json'), 'r') as workers_file:
+                json_directory + '/' + self.name + '_workers.json'), 'r') as workers_file:
             workersinfo = json.load(workers_file)
         self.workers = dict()
         for worker in workersinfo['workers']:
@@ -170,7 +170,7 @@ class Tribe(object):
                 self, worker['name'], descname, worker)
 
         with open(p.normpath(
-            json_directory + '/' + self.name + '_buildings.json'), 'r') as buildings_file:
+                json_directory + '/' + self.name + '_buildings.json'), 'r') as buildings_file:
             buildingsinfo = json.load(buildings_file)
         self.buildings = dict()
         for building in buildingsinfo['buildings']:
