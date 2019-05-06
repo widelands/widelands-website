@@ -474,5 +474,20 @@ def all_latest_posts(request):
         'sort_by': sort_by
     }
 
-
 all_latest = render_to('pybb/all_last_posts.html')(all_latest_posts)
+
+@login_required
+def all_user_posts(request, for_user=None):
+    """Get all posts of a user"""
+
+    if for_user:
+        posts = Post.objects.public().filter(user__username=for_user)
+    else:
+        posts = Post.objects.public().filter(user__username=request.user)
+
+    return {
+        'for_user':for_user,
+        'posts': posts,
+        }
+
+user_posts = render_to('pybb/all_user_posts.html')(all_user_posts)
