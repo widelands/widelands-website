@@ -69,3 +69,21 @@ Polls
 - create one
 - edit
 - deletion
+
+Webchat
+-------
+- connect
+
+Documentation
+-------------
+- run ./manage.py create_docs
+- views
+
+pybb
+----
+-
+
+Others
+------
+- changelog
+- developers
