@@ -41,7 +41,7 @@ urlpatterns = [
     url('^post/(?P<post_id>\d+)/delete/$',
         views.delete_post, name='pybb_delete_post'),
     url(r'^latest_posts/$', views.all_latest, name='all_latest_posts'),
-    url(r'^user_posts/(?P<for_user>\w+)/$', views.user_posts, name='all_user_posts'),
+    url(r'^user_posts/(?P<this_user>\w+)/$', views.user_posts, name='all_user_posts'),
 
     # Attachment
     url('^attachment/(?P<hash>\w+)/$',
