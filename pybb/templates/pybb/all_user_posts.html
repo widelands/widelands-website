@@ -2,7 +2,7 @@
 {% load custom_date %}
 {% load pagination_tags %}
 {% block title %}
-    Posts by {{ this_user }}- {{ block.super }}
+    Posts by {{ this_user }} - {{ block.super }}
 {% endblock title %}
 
 {% block content_header %}
@@ -11,7 +11,7 @@
 
 {% block content_main %}
 <div class="blogEntry">
-<p>{{ this_user }} had {{ posts|length }} post{{ posts|length|pluralize }} written.</p>
+<p>{{ this_user }} has written {{ posts|length }} post{{ posts|length|pluralize }}.</p>
 {% autopaginate posts 30 %}
 {% paginate %}
 <table class='forum'>
