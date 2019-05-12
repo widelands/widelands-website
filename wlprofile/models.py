@@ -62,7 +62,7 @@ class Profile(models.Model):
         to not be always calculated.
 
         """
-        return Post.objects.filter(user=self.user).count()
+        return Post.objects.public().filter(user=self.user).count()
 
     def user_status(self):
         nump = self.post_count()
