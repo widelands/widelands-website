@@ -157,7 +157,7 @@ def pluralize (value, name):
 
 @register.filter
 def elapsed_time(date):
-    """Calculate ellapsed time.
+    """Calculate elapsed time.
 
     Returns either minutes, hours or days
     """
