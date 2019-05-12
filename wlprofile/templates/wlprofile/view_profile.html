@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<td class="grey">Forum Posts:</td>
-				<td>{{ profile.post_count }}</td>
+				<td><a href="{% url 'all_user_posts' profile.user %}" title="Show all posts">{{ profile.post_count }}</a></td>
 			</tr>
 			<tr>
 				<td class="grey">Website:</td>
