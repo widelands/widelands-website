@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.contrib.sites.shortcuts import get_current_site
 
 from forms import EditGGZForm
 
@@ -17,6 +18,7 @@ def change_password(request):
     if request.method == 'POST':
         form = EditGGZForm(request.POST,
                            instance=instance, files=request.FILES)
+
         if form.is_valid():
             form.save()
 
@@ -27,6 +29,7 @@ def change_password(request):
     template_params = {
         'wlggz': instance,
         'ggz_form': form,
+        'help_site': request.build_absolute_uri('/wiki/GameHelpMultiplayer'),
     }
 
     return render(request, 'wlggz/edit_ggz.html',

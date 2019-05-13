@@ -13,7 +13,10 @@
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">    
+<div class="blogEntry">
+	<p>Here you can set a password for online gaming. For more information see
+	the manual at <a href="{{ help_site }}">Game help multiplayer</a>.</p>
+
 	<form method="post" enctype="multipart/form-data">
 		<table>
 		{% for field in ggz_form %}

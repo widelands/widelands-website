@@ -7,15 +7,15 @@
 #
 
 from django import forms
+#from django.core.exceptions import NON_FIELD_ERRORS
 from models import GGZAuth
 from django.utils.translation import ugettext_lazy as _
-
-import hashlib
-import base64
 
 
 class EditGGZForm(forms.ModelForm):
     password = forms.CharField(label=_(u'Online Gaming Password'),
+                               widget=forms.PasswordInput(render_value=False), required=True)
+    password2 = forms.CharField(label=_(u'Enter again'),
                                widget=forms.PasswordInput(render_value=False), required=True)
 
     class Meta:
@@ -27,11 +27,9 @@ class EditGGZForm(forms.ModelForm):
 
         super(EditGGZForm, self).__init__(instance=instance, *args, **kwargs)
 
-    def clean_password(self):
-        pw = self.cleaned_data['password']
-        pw_hash = hashlib.sha1(pw.encode('utf-8')).digest()
-        pw_base64 = base64.standard_b64encode(pw_hash)
-        return pw_base64
-
-    def save(self, *args, **kwargs):
-        super(EditGGZForm, self).save(*args, **kwargs)
+    def clean(self):
+        cleaned_data = super(EditGGZForm,self).clean()
+        pw = cleaned_data.get('password')
+        pw2 = cleaned_data.get('password2')
+        if pw != pw2:
+            self.add_error('password2', "The passwords didn't match")
