@@ -1,4 +1,4 @@
-{% extends "wlprofile/base.html" %}
+{% extends "mainpage/base.html" %}
 {% load i18n %}
 {% load static %}
 
@@ -8,8 +8,6 @@
 	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/messages.css' %}" />
 	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
 {{ block.super}}{% endblock %}
-
-{% block messages %}class="active"{% endblock %}
 
 {% block title %}
 Messages - {{block.super}}

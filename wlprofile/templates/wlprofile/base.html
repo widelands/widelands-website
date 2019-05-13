@@ -33,16 +33,6 @@
 			<a {% block notifications %}{% endblock %} href="{% url 'notification_notices' %}">E-Mail settings</a>
 		</li>
 		<li>
-			<a {% block scheduling %}{% endblock %} href="{% url 'scheduling_main' %}">Game Scheduler</a>
-			<ul>
-				<li><a href="{% url 'scheduling_scheduling' %}">Define your playtime</a></li>
-				<li><a href="{% url 'scheduling_find' %}">Show playtimes</a></li>
-			</ul>
-		</li>
-		<li>
-			<a {% block messages %}{% endblock %} href="{% url 'messages_inbox' %}" title="Your private messages">Messages</a>
-		</li>
-		<li>
 			<a {% block game_passwrd %}{% endblock %} href="{% url 'wlggz_changepw' %}" title="Online Gaming Password">Gaming password</a>
 		</li>
 	{% endif %}
