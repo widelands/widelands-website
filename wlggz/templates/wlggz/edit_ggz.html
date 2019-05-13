@@ -1,10 +1,12 @@
-{% extends "mainpage/base.html" %}
+{% extends "wlprofile/base.html" %}
 
 {% load i18n %}
 
 {% block title %}
 {% trans "Set Online Gaming Password" %} - {{ block.super }}
 {% endblock %}
+
+{% block game_passwrd %}class="active"{% endblock %}
 
 {% block content_header %}
 	<h1>{% trans "Set Online Gaming Password" %}</h1>
@@ -16,7 +18,7 @@
 		<table>
 		{% for field in ggz_form %}
 			<tr>
-				<td class="grey">{{ field.label_tag }}:</td>
+				<td class="grey">{{ field.label_tag }}</td>
 				<td>{{ field }}</td>
 				<td class="errormessage">{{ field.errors }}</td>
 			</tr>

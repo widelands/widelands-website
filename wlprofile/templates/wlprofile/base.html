@@ -42,6 +42,9 @@
 		<li>
 			<a {% block messages %}{% endblock %} href="{% url 'messages_inbox' %}" title="Your private messages">Messages</a>
 		</li>
+		<li>
+			<a {% block game_passwrd %}{% endblock %} href="{% url 'wlggz_changepw' %}" title="Online Gaming Password">Game password</a>
+		</li>
 	{% endif %}
 	</ul>
 {% endblock %}
