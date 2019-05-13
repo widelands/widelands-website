@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib.sites.shortcuts import get_current_site
 
 from forms import EditGGZForm
 

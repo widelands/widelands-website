@@ -7,7 +7,6 @@
 #
 
 from django import forms
-#from django.core.exceptions import NON_FIELD_ERRORS
 from models import GGZAuth
 from django.utils.translation import ugettext_lazy as _
 
