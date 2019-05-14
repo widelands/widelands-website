@@ -79,11 +79,26 @@ Documentation
 - run ./manage.py create_docs
 - views
 
+wlprofile
+---------
+- editing (Website/signature)
+
 pybb
 ----
--
+- create topic
+- create post
+- post with markdown/bbcode
+- quoting a post
+- edit own post
+- stick/unstick topic
+- close/open topic
+- subscribe to topic (emailing works, also then)
+- edit foreign posts by forum mod
+- delete post by forum mod
+- delete post by posts author
+
 
 Others
 ------
-- changelog
-- developers
+- changelog page
+- developers page
