@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 class EditGGZForm(forms.ModelForm):
     password = forms.CharField(label=_(u'Online Gaming Password'),
                                widget=forms.PasswordInput(render_value=False), required=True)
-    password2 = forms.CharField(label=_(u'Enter again'),
+    password2 = forms.CharField(label=_(u'Enter the password again'),
                                widget=forms.PasswordInput(render_value=False), required=True)
 
     class Meta:
