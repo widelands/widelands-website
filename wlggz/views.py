@@ -28,7 +28,6 @@ def change_password(request):
     template_params = {
         'wlggz': instance,
         'ggz_form': form,
-        'help_site': request.build_absolute_uri('/wiki/GameHelpMultiplayer'),
     }
 
     return render(request, 'wlggz/edit_ggz.html',
