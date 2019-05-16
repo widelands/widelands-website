@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from forms import EditGGZForm
 
@@ -20,6 +21,8 @@ def change_password(request):
 
         if form.is_valid():
             form.save()
+            messages.info(request,
+                          'Your password was saved successfully.')
 
             return HttpResponseRedirect(reverse('profile_view'))
     else:

@@ -27,6 +27,11 @@
 
 {% block content_main %}
 <div class="blogEntry">
+	{% if messages %}
+		{% for message in messages %}
+		<p style="text-align: center;">{{ message }}</p>
+		{% endfor %}
+	{% endif %}
 	{% if not profile.deleted %}
 		<table>
 			<tr>
