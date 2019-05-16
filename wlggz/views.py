@@ -21,7 +21,7 @@ def change_password(request):
         if form.is_valid():
             form.save()
 
-            return HttpResponseRedirect(reverse('profile_edit'))
+            return HttpResponseRedirect(reverse('profile_view'))
     else:
         form = EditGGZForm(instance=instance)
 
