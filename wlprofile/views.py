@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.contrib import messages
 
 from .forms import EditProfileForm
 
@@ -133,8 +134,10 @@ def edit(request):
                                instance=instance, files=request.FILES)
         if form.is_valid():
             form.save()
+            messages.info(request,
+                          'Your profile was changed successfully.')
 
-            return HttpResponseRedirect(reverse(view))
+            return HttpResponseRedirect(reverse('profile_view'))
     else:
         form = EditProfileForm(instance=instance)
 
