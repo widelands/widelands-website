@@ -13,6 +13,8 @@ from mainpage.wl_utils import AutoOneToOneField
 from django.utils.translation import ugettext_lazy as _
 from pybb.models import Post
 
+import hashlib
+import base64
 
 class GGZAuth(models.Model):
     user = AutoOneToOneField(
@@ -24,3 +26,11 @@ class GGZAuth(models.Model):
     class Meta:
         verbose_name = _('ggz')
         verbose_name_plural = _('ggz')
+
+    def save(self, *args, **kwargs):
+        # hash the password
+        pw_hash = hashlib.sha1(self.password.encode('utf-8')).digest()
+        pw_base64 = base64.standard_b64encode(pw_hash)
+        self.password = pw_base64
+        # Save into the database
+        super(GGZAuth, self).save(*args, **kwargs)
