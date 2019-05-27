@@ -50,7 +50,7 @@ def search(request):
         form = WlSearchForm()
         return render(request, 'search/search.html', {'form': form})
     
-    elif request.method == 'GET':
+    else:  # request.GET or other requests
         form = WlSearchForm(request.GET)
         if form.is_valid() and form.cleaned_data['q'] != '':
             context = {'form': form,
