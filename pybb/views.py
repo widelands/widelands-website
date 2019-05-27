@@ -434,39 +434,48 @@ def all_latest_posts(request):
             sort_by = sort_by_default
 
     # Executed on every request (POST and GET)
-    search_date = date.today() - timedelta(int(days))
+    # We need a try clause here, because one can set invalid values for
+    # days in the form.
+    try:
+        search_date = date.today() - timedelta(int(days))
 
-    # Create a QuerySet with only public posts
-    last_posts = Post.objects.public(date_from=search_date)
+        # Create a QuerySet with only public posts
+        last_posts = Post.objects.public(date_from=search_date)
 
-    posts_count = len(last_posts)
+        posts_count = len(last_posts)
 
-    if sort_by == 'topic':
-        # The use of an OrderedDict makes sure the ordering of
-        # last_posts get not arbitrary
-        topics = OrderedDict()
-        for post in last_posts:
-            if post.topic not in topics:
-                # Create a new key with a list as value
-                topics[post.topic] = [post]
-            else:
-                # key exists, just add the post
-                topics[post.topic].append(post)
+        if sort_by == 'topic':
+            # The use of an OrderedDict makes sure the ordering of
+            # last_posts get not arbitrary
+            topics = OrderedDict()
+            for post in last_posts:
+                if post.topic not in topics:
+                    # Create a new key with a list as value
+                    topics[post.topic] = [post]
+                else:
+                    # key exists, just add the post
+                    topics[post.topic].append(post)
 
-        object_list = topics
+            object_list = topics
 
-    elif sort_by == 'forum':
-        forums = OrderedDict()
-        for post in last_posts:
-            if post.topic.forum.name not in forums:
-                forums[post.topic.forum.name] = OrderedDict({post.topic: [post]})
-            elif post.topic not in forums[post.topic.forum.name]:
-                forums[post.topic.forum.name].update({post.topic: [post]})
-            else:
-                forums[post.topic.forum.name][post.topic].append(post)
+        elif sort_by == 'forum':
+            forums = OrderedDict()
+            for post in last_posts:
+                if post.topic.forum.name not in forums:
+                    forums[post.topic.forum.name] = OrderedDict({post.topic: [post]})
+                elif post.topic not in forums[post.topic.forum.name]:
+                    forums[post.topic.forum.name].update({post.topic: [post]})
+                else:
+                    forums[post.topic.forum.name][post.topic].append(post)
 
-        object_list = forums
+            object_list = forums
 
+    except UnboundLocalError:
+        # Needed variables
+        object_list = []
+        posts_count = 0
+        sort_by = sort_by_default
+        
     return {
         'object_list': object_list,
         'posts_count': posts_count,
