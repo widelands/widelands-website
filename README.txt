@@ -19,8 +19,8 @@ the dependencies for the website. Go and install them all.
 Example:
 On Ubuntu, installing all required tools and dependencies in two commands:
 
-   $ sudo apt-get install python3-virtualenv python3-pip bzr
-   $ sudo apt-get build-dep python-numpy
+   $ sudo apt-get install python3-virtualenv python3-pip bzr libmysqlclient-dev
+   $ sudo apt-get build-dep python3-numpy
 
 Setting up the local environment
 --------------------------------
