@@ -257,12 +257,12 @@ def send_now(users, label, extra_context=None, on_site=True):
 
             # get prerendered format messages and subjects
             messages = get_formatted_messages(formats, label, context)
-            
+
             # Create the subject
             # Use 'email_subject.txt' to add Strings in every emails subject
             subject = render_to_string('notification/email_subject.txt',
                                        {'message': messages['short.txt'],}).replace('\n', '')
-            
+
             # Strip leading newlines. Make writing the email templates easier:
             # Each linebreak in the templates results in a linebreak in the emails
             # If the first line in a template contains only template tags the 
@@ -275,8 +275,8 @@ def send_now(users, label, extra_context=None, on_site=True):
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
 
-            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
-        
+            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients, fail_silently=True)
+
         # reset environment to original language
         activate(current_language)
     except NoticeType.DoesNotExist:
