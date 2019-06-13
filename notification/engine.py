@@ -3,6 +3,7 @@ import sys
 import time
 import logging
 import traceback
+import codecs
 
 try:
     import pickle as pickle
@@ -46,7 +47,7 @@ def send_all():
         try:
             for queued_batch in NoticeQueueBatch.objects.all():
                 notices = pickle.loads(
-                    str(queued_batch.pickled_data).decode('base64'))
+                    codecs.decode(queued_batch.pickled_data.encode(), 'base64'))
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
                     # FrankU: commented, because not all users get e-mailed
