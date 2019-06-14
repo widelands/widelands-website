@@ -1,5 +1,5 @@
 from django.conf.urls import *
-from views import *
+from .views import *
 
 urlpatterns = [
     url(r'^upload/(?P<content_type>\d+)/(?P<object_id>\d+)/(?P<next>.*)$',

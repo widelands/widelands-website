@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
-from models import Poll, Choice, Vote
+from .models import Poll, Choice, Vote
 from django.views import generic
 
 

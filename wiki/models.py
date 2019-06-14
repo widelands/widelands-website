@@ -3,7 +3,7 @@ from django.urls import reverse
 
 # Google Diff Match Patch library
 # http://code.google.com/p/google-diff-match-patch
-from diff_match_patch import diff_match_patch
+from .diff_match_patch import diff_match_patch
 
 from django.db import models
 from django.conf import settings
@@ -35,20 +35,20 @@ try:
     markup_choices = settings.WIKI_MARKUP_CHOICES
 except AttributeError:
     markup_choices = (
-        ('crl', _(u'Creole')),
-        ('rst', _(u'reStructuredText')),
-        ('txl', _(u'Textile')),
-        ('mrk', _(u'Markdown')),
+        ('crl', _('Creole')),
+        ('rst', _('reStructuredText')),
+        ('txl', _('Textile')),
+        ('mrk', _('Markdown')),
     )
 
 
 class Article(models.Model):
     """A wiki page reflecting the actual revision."""
-    title = models.CharField(_(u"Title"), max_length=50, unique=True)
-    content = models.TextField(_(u"Content"))
-    summary = models.CharField(_(u"Summary"), max_length=150,
+    title = models.CharField(_("Title"), max_length=50, unique=True)
+    content = models.TextField(_("Content"))
+    summary = models.CharField(_("Summary"), max_length=150,
                                null=True, blank=True)
-    markup = models.CharField(_(u"Content Markup"), max_length=3,
+    markup = models.CharField(_("Content Markup"), max_length=3,
                               choices=markup_choices,
                               null=True, blank=True)
     creator = models.ForeignKey(User, verbose_name=_('Article Creator'),
@@ -65,8 +65,8 @@ class Article(models.Model):
     tags = TagField()
 
     class Meta:
-        verbose_name = _(u'Article')
-        verbose_name_plural = _(u'Articles')
+        verbose_name = _('Article')
+        verbose_name_plural = _('Articles')
         app_label = 'wiki'
         default_permissions = ('change', 'add',)
         ordering = ['title']
@@ -116,7 +116,7 @@ class Article(models.Model):
         changeset = self.changeset_set.get(revision=to_revision)
         return changeset.compare_to(from_revision)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -134,37 +134,37 @@ class ChangeSetManager(models.Manager):
 class ChangeSet(models.Model):
     """A report of an older version of some Article."""
 
-    article = models.ForeignKey(Article, verbose_name=_(u"Article"))
+    article = models.ForeignKey(Article, verbose_name=_("Article"))
 
     # Editor identification -- logged
-    editor = models.ForeignKey(User, verbose_name=_(u'Editor'),
+    editor = models.ForeignKey(User, verbose_name=_('Editor'),
                                null=True)
 
     # Revision number, starting from 1
-    revision = models.IntegerField(_(u"Revision Number"))
+    revision = models.IntegerField(_("Revision Number"))
 
     # How to recreate this version
-    old_title = models.CharField(_(u"Old Title"), max_length=50, blank=True)
-    old_markup = models.CharField(_(u"Article Content Markup"), max_length=3,
+    old_title = models.CharField(_("Old Title"), max_length=50, blank=True)
+    old_markup = models.CharField(_("Article Content Markup"), max_length=3,
                                   choices=markup_choices,
                                   null=True, blank=True)
-    content_diff = models.TextField(_(u"Content Patch"), blank=True)
+    content_diff = models.TextField(_("Content Patch"), blank=True)
 
-    comment = models.TextField(_(u"Editor comment"), blank=True)
-    modified = models.DateTimeField(_(u"Modified at"), default=datetime.now)
-    reverted = models.BooleanField(_(u"Reverted Revision"), default=False)
+    comment = models.TextField(_("Editor comment"), blank=True)
+    modified = models.DateTimeField(_("Modified at"), default=datetime.now)
+    reverted = models.BooleanField(_("Reverted Revision"), default=False)
 
     objects = ChangeSetManager()
 
     class Meta:
-        verbose_name = _(u'Change set')
-        verbose_name_plural = _(u'Change sets')
+        verbose_name = _('Change set')
+        verbose_name_plural = _('Change sets')
         get_latest_by = 'modified'
         ordering = ('-revision',)
         app_label = 'wiki'
 
-    def __unicode__(self):
-        return u'#%s' % self.revision
+    def __str__(self):
+        return '#%s' % self.revision
 
     def get_absolute_url(self):
         if self.article.group is None:
@@ -245,10 +245,10 @@ class ChangeSet(models.Model):
         return content
 
     def compare_to(self, revision_from):
-        other_content = u""
-        if revision_from > 0:
+        other_content = ""
+        if int(revision_from) > 0:
             other_content = ChangeSet.objects.filter(
                 article=self.article, revision__lte=revision_from).order_by('-revision')[0].get_content()
         diffs = dmp.diff_main(other_content, self.get_content())
-        dmp.diff_cleanupSemantic(diffs)
+        #dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)

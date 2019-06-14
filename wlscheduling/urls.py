@@ -1,7 +1,7 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 from django.conf.urls import *
-from views import scheduling, scheduling_main, scheduling_find
+from .views import scheduling, scheduling_main, scheduling_find
 
 urlpatterns = [
     url(r'^scheduling/$', scheduling, name='scheduling_scheduling'),

@@ -288,20 +288,20 @@ INQUIRY_RECIPIENTS = [
 ## Allowed tags/attributes for 'bleach' ##
 ## Used for sanitizing user input.      ##
 ##########################################
-BLEACH_ALLOWED_TAGS = [u'a',
-                       u'abbr',
-                       u'acronym',
-                       u'blockquote',
-                       u'br',
-                       u'em',  u'i',  u'strong', u'b',
-                       u'ul',  u'ol', u'li',
-                       u'div', u'p',
-                       u'h1',  u'h2', u'h3', u'h4', u'h5', u'h6',
-                       u'pre', u'code',
-                       u'img',
-                       u'hr',
-                       u'table', u'tbody', u'thead', u'th', u'tr', u'td',
-                       u'sup',
+BLEACH_ALLOWED_TAGS = ['a',
+                       'abbr',
+                       'acronym',
+                       'blockquote',
+                       'br',
+                       'em',  'i',  'strong', 'b',
+                       'ul',  'ol', 'li',
+                       'div', 'p',
+                       'h1',  'h2', 'h3', 'h4', 'h5', 'h6',
+                       'pre', 'code',
+                       'img',
+                       'hr',
+                       'table', 'tbody', 'thead', 'th', 'tr', 'td',
+                       'sup',
                        ]
 
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
@@ -368,6 +368,6 @@ NOTIFICATION_QUEUE_ALL = False
 
 
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     pass

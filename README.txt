@@ -1,6 +1,14 @@
 Installing the homepage
 =======================
 
+Used python version
+-------------------
+The website is tested with python 3.6. This README reflects setting up the
+website with this python version.
+
+Install prerequisites
+---------------------
+
 Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
 package manager. You will also need development tools (gcc or therelike), hg
@@ -11,16 +19,8 @@ the dependencies for the website. Go and install them all.
 Example:
 On Ubuntu, installing all required tools and dependencies in two commands:
 
-   $ sudo apt-get install python-dev python-virtualenv python-pip mercurial bzr subversion git-core sqlite3
-   $ sudo apt-get build-dep python-numpy
-
-Used python version
--------------------
-
-Currently, the website depends on python 2.7. In case you have python 3 as default (like on arch-linux),
-you have to adjust the python relevant commands to use python 2.7. E.g. 'virtualenv2 wlwebsite' creates
-a virtualenvironment using python 2.7. If the virtualenvironment is activated, python 2.7 will become
-standard for executing python code in this shell.
+   $ sudo apt-get install python3-virtualenv python3-pip bzr libmysqlclient-dev
+   $ sudo apt-get build-dep python3-numpy
 
 Setting up the local environment
 --------------------------------
@@ -33,7 +33,7 @@ This will make sure that your virtual environment is not tainted with python
 packages from your global site packages. Very important!
 Now, we create and activate our environment:
 
-   $ virtualenv wlwebsite
+   $ virtualenv --python=python3.6 wlwebsite
    $ cd wlwebsite
    $ source bin/activate
 

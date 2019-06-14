@@ -20,11 +20,11 @@ def do_get_upload_image_form(parser, token):
     try:
         split = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if split[1] != 'as':
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     if len(split) != 3:
-        raise template.TemplateSyntaxError, error_message
+        raise template.TemplateSyntaxError(error_message)
     return UploadFormNode(split[2])
 
 

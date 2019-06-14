@@ -12,7 +12,7 @@
 				<li>
 					{{ post.topic.forum.name }}<br />
 					<a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|truncatechars:30 }}</a><br />
-					by {{ post.user|user_link }} {{ post.created|minutes }} ago
+					by {{ post.user|user_link }} {{ post.created|elapsed_time }} ago
 				</li>
 			{% endfor %}
 			<li class="small">

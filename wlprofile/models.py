@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from fields import ExtendedImageField
+from .fields import ExtendedImageField
 from mainpage.wl_utils import AutoOneToOneField
 from django.utils.translation import ugettext_lazy as _
 from pybb.models import Post

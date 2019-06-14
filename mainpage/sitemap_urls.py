@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from django.contrib.sitemaps.views import sitemap
-from static_sitemap import StaticViewSitemap
+from .static_sitemap import StaticViewSitemap
 from wiki.sitemap import *
 from news.sitemap import *
 from pybb.sitemap import *

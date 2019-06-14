@@ -96,7 +96,7 @@ r"""
     :copyright: 2007-2008 by Armin Ronacher.
     license: BSD
 """
-from StringIO import StringIO
+from io import StringIO
 
 __author__ = 'Armin Ronacher <armin.ronacher@active-4.com>'
 __version__ = '1.1'
@@ -108,10 +108,10 @@ def dumps(data, charset='utf-8', errors='strict'):
     """
     def _serialize(obj, keypos):
         if keypos:
-            if isinstance(obj, (int, long, float, bool)):
+            if isinstance(obj, (int, float, bool)):
                 return 'i:%i;' % obj
-            if isinstance(obj, basestring):
-                if isinstance(obj, unicode):
+            if isinstance(obj, str):
+                if isinstance(obj, str):
                     obj = obj.encode(charset, errors)
                 return 's:%i:"%s";' % (len(obj), obj)
             if obj is None:
@@ -122,18 +122,18 @@ def dumps(data, charset='utf-8', errors='strict'):
                 return 'N;'
             if isinstance(obj, bool):
                 return 'b:%i;' % obj
-            if isinstance(obj, (int, long)):
+            if isinstance(obj, int):
                 return 'i:%s;' % obj
             if isinstance(obj, float):
                 return 'd:%s;' % obj
-            if isinstance(obj, basestring):
-                if isinstance(obj, unicode):
+            if isinstance(obj, str):
+                if isinstance(obj, str):
                     obj = obj.encode(charset, errors)
                 return 's:%i:"%s";' % (len(obj), obj)
             if isinstance(obj, (list, tuple, dict)):
                 out = []
                 if isinstance(obj, dict):
-                    iterable = obj.iteritems()
+                    iterable = iter(obj.items())
                 else:
                     iterable = enumerate(obj)
                 for key, value in iterable:
@@ -202,7 +202,7 @@ def load(fp, charset='utf-8', errors='strict', decode_strings=False):
             _expect('{')
             result = {}
             last_item = Ellipsis
-            for idx in xrange(items):
+            for idx in range(items):
                 item = _unserialize()
                 if last_item is Ellipsis:
                     last_item = item
@@ -238,7 +238,7 @@ def dump(data, fp, charset='utf-8', errors='strict'):
 def dict_to_list(d):
     """Converts an ordered dict into a list."""
     try:
-        return [d[x] for x in xrange(len(d))]
+        return [d[x] for x in range(len(d))]
     except KeyError:
         raise ValueError('dict is not a sequence')
 

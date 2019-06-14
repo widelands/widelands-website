@@ -3,7 +3,7 @@
 import unittest
 import datetime
 
-from templatetags.custom_date import do_custom_date
+from .templatetags.custom_date import do_custom_date
 
 
 class _CustomDate_Base(unittest.TestCase):
@@ -70,7 +70,7 @@ class TestCustomDate_NaturalDayReplacementTomorrow_ExceptCorrectResult(_CustomDa
 class TestCustomDate_NaturalDayReplacementYesterday_ExceptCorrectResult(_CustomDate_Base):
 
     def runTest(self):
-        now = datetime.datetime(2008, 4, 13, 00, 00, 01)
+        now = datetime.datetime(2008, 4, 13, 00, 00, 0o1)
         rv = do_custom_date('j.m.y: %ND(j.m.y)', self.date, 0, now)
         self.assertEqual('12.04.08: yesterday', rv)
 
@@ -78,7 +78,7 @@ class TestCustomDate_NaturalDayReplacementYesterday_ExceptCorrectResult(_CustomD
 class TestCustomDate_NaturalDayReplacementNoSpecialDay_ExceptCorrectResult(_CustomDate_Base):
 
     def runTest(self):
-        now = datetime.datetime(2011, 4, 13, 00, 00, 01)
+        now = datetime.datetime(2011, 4, 13, 00, 00, 0o1)
         rv = do_custom_date('j.m.y: %ND(j.m.Y)', self.date, 0, now)
         self.assertEqual('12.04.08: 12.04.2008', rv)
 
@@ -86,7 +86,7 @@ class TestCustomDate_NaturalDayReplacementNoSpecialDay_ExceptCorrectResult(_Cust
 class TestCustomDate_RecursiveReplacementNoHit_ExceptCorrectResult(_CustomDate_Base):
 
     def runTest(self):
-        now = datetime.datetime(2011, 4, 13, 00, 00, 01)
+        now = datetime.datetime(2011, 4, 13, 00, 00, 0o1)
         rv = do_custom_date('j.m.y%ND(: j.m%NY(.Y))', self.date, 0, now)
         self.assertEqual('12.04.08: 12.04.2008', rv)
 
@@ -94,7 +94,7 @@ class TestCustomDate_RecursiveReplacementNoHit_ExceptCorrectResult(_CustomDate_B
 class TestCustomDate_RecursiveReplacementMissDayHitYear_ExceptCorrectResult(_CustomDate_Base):
 
     def runTest(self):
-        now = datetime.datetime(2008, 9, 13, 00, 00, 01)
+        now = datetime.datetime(2008, 9, 13, 00, 00, 0o1)
         rv = do_custom_date('j.m.y: %ND(j.m.%NY(Y))', self.date, 0, now)
         self.assertEqual('12.04.08: 12.04.', rv)
 
@@ -102,7 +102,7 @@ class TestCustomDate_RecursiveReplacementMissDayHitYear_ExceptCorrectResult(_Cus
 class TestCustomDate_RecursiveReplacementHitDayTodayHitYear_ExceptCorrectResult(_CustomDate_Base):
 
     def runTest(self):
-        now = datetime.datetime(2008, 4, 12, 00, 00, 01)
+        now = datetime.datetime(2008, 4, 12, 00, 00, 0o1)
         rv = do_custom_date('j.m.y: %ND(j.m.%NY(Y))', self.date, 0, now)
         self.assertEqual('12.04.08: today', rv)
 

@@ -105,11 +105,11 @@ def do_custom_date(format, date, timezone, now=None):
         delta = ddate(date.year, date.month, date.day) - \
             ddate(now.year, now.month, now.day)
         if delta.days == 0:
-            return _(ur'\T\o\d\a\y')
+            return _(r'\T\o\d\a\y')
         elif delta.days == 1:
-            return _(ur'\T\o\m\o\r\r\o\w')
+            return _(r'\T\o\m\o\r\r\o\w')
         elif delta.days == -1:
-            return _(ur'\Y\e\s\t\e\r\d\a\y')
+            return _(r'\Y\e\s\t\e\r\d\a\y')
         else:
             return g.group(1)
     try:
@@ -142,29 +142,44 @@ def custom_date(date, user):
 custom_date.is_safe = False
 
 
-def total_seconds(td):
-    # Not defined in 2.6, so we redefine it.
-    return (td.microseconds + (td.seconds + td.days * 24. * 3600.) * 1000000.) / 1000000.
+def pluralize (value, name):
+    """Pluralize a name.
+
+    Depending on 'value', the 'name' will be pluralized or not. Negative
+    values get a minus sign.
+    """
+
+    if value > 1:
+        return '{:-.0f} {}'.format(value, name + 's')
+
+    return '{:-.0f} {}'.format(value, name)
 
 
 @register.filter
-def minutes(date):
+def elapsed_time(date):
+    """Calculate elapsed time.
+
+    Returns either minutes, hours or days
+    """
+
     today = datetime.today()
-    seconds = int(total_seconds(today - date))
-    sign = ''
-    if seconds < 0:
-        sign = '-'
-    seconds = abs(seconds)
-    minutes = seconds / 60
-    hours = minutes / 60
+    seconds = (today - date).total_seconds()
+
+    # Python3: Operator '//' = floor division (result is rounded down)
+    minutes = seconds // 60
+    hours = minutes // 60
+    days = hours // 24
+
     if hours == 0 and minutes <= 1:
-        return sign + '1 minute'
+        return pluralize(1, 'minute')
     elif hours == 0:
-        return sign + '%d minutes' % (minutes)
-    elif hours == 1:
-        return sign + '1 hour'
+        return pluralize(minutes, 'minute')
+    elif hours == 1 or days == 0:
+        return pluralize(hours, 'hour')
     else:
-        return sign + '%d hours' % (hours)
+        return pluralize(days, 'day')
+
+    return 'Failure'
 
 
 @register.simple_tag

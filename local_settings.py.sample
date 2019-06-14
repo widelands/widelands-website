@@ -3,8 +3,6 @@
 # The above leads python2.7 to read this file as utf-8
 # Needs to be directly after the python shebang
 
-# Treat all strings as unicode
-from __future__ import unicode_literals
 import os
 import re
 

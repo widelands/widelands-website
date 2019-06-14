@@ -1,7 +1,8 @@
 import datetime
+import base64
 
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 
@@ -48,7 +49,7 @@ class NoticeType(models.Model):
     # number
     default = models.IntegerField(_('default'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:
@@ -150,12 +151,12 @@ def create_notice_type(label, display, description, default=2, verbosity=1):
         if updated:
             notice_type.save()
             if verbosity > 1:
-                print 'Updated %s NoticeType' % label
+                print('Updated %s NoticeType' % label)
     except NoticeType.DoesNotExist:
         NoticeType(label=label, display=display,
                    description=description, default=default).save()
         if verbosity > 1:
-            print 'Created %s NoticeType' % label
+            print('Created %s NoticeType' % label)
 
 
 def get_notification_language(user):
@@ -222,8 +223,8 @@ def send_now(users, label, extra_context=None, on_site=True):
         notice_type = NoticeType.objects.get(label=label)
 
         current_site = Site.objects.get_current()
-        notices_url = u"http://%s%s" % (
-            unicode(current_site),
+        notices_url = "http://%s%s" % (
+            str(current_site),
             reverse('notification_notices'),
         )
 
@@ -257,12 +258,12 @@ def send_now(users, label, extra_context=None, on_site=True):
 
             # get prerendered format messages and subjects
             messages = get_formatted_messages(formats, label, context)
-            
+
             # Create the subject
             # Use 'email_subject.txt' to add Strings in every emails subject
             subject = render_to_string('notification/email_subject.txt',
                                        {'message': messages['short.txt'],}).replace('\n', '')
-            
+
             # Strip leading newlines. Make writing the email templates easier:
             # Each linebreak in the templates results in a linebreak in the emails
             # If the first line in a template contains only template tags the 
@@ -275,8 +276,8 @@ def send_now(users, label, extra_context=None, on_site=True):
             if should_send(user, notice_type, '1') and user.email:  # Email
                 recipients.append(user.email)
 
-            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
-        
+            send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, recipients, fail_silently=True)
+
         # reset environment to original language
         activate(current_language)
     except NoticeType.DoesNotExist:
@@ -322,8 +323,9 @@ def queue(users, label, extra_context=None, on_site=True):
     notices = []
     for user in users:
         notices.append((user, label, extra_context, on_site))
-    NoticeQueueBatch(pickled_data=pickle.dumps(
-        notices).encode('base64')).save()
+
+    NoticeQueueBatch(pickled_data=base64.b64encode(
+    	pickle.dumps(notices))).save()
 
 
 class ObservedItemManager(models.Manager):

@@ -1,0 +1,104 @@
+Anmerkungen zum update auf python3:
+
+Der code für die implementierung vom gravatar-service ist ungetestet, da es nie
+implementiert wurde.
+
+virtualenvironment
+------------------
+
+Installiere die richtige python Version (hier python3.6).
+Erstellen des virtualenvironments:
+    
+    $:> virtualenv --python=python3.6 wlwebsite
+
+Getestet
+========
+
+Wiki
+----
+- editieren, Vorschau, speichern
+- upload von Bildern
+- wiki-syntax
+- History: Diff anzeigen, Artikel wieder herstellen (Revert)
+- Backlinks
+- Artikel beobachten
+- Atom feed
+
+Registrierung
+-------------
+- Registrierung, Anmeldung
+- Passwortänderung
+- Passwort vergessen
+- Logout
+
+Maps
+----
+- Upload maps with comment
+- Edit uploader comment, also with polish characters
+- Rate a map
+- Make a threadedcomment on a map
+- Delete map
+
+WlHelp (Encyclopedia)
+---------------------
+- Run ./manage.py update_help
+- Run ./manage.py update_help_pdf
+- views
+
+Screenshots
+-----------
+- upload a new screenshot
+- delete screenshot
+- delete category
+
+Search
+------
+- update index
+- searching
+
+News
+----
+- create new News
+- public in future (not show)
+- edit News
+- deletion
+- commenting
+
+Polls
+-----
+- create one
+- edit
+- deletion
+
+Webchat
+-------
+- connect
+
+Documentation
+-------------
+- run ./manage.py create_docs
+- views
+
+wlprofile
+---------
+- editing (Website/signature)
+
+pybb
+----
+- create topic
+- create post
+- post with markdown/bbcode
+- quoting a post
+- edit own post
+- stick/unstick topic
+- close/open topic
+- subscribe to topic (emailing works, also then)
+- edit foreign posts by forum mod
+- delete post by forum mod
+- delete post by posts author
+
+
+Others
+------
+- changelog page
+- developers page

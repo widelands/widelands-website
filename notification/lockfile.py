@@ -48,7 +48,7 @@ Exceptions:
             NotMyLock - File was locked but not by the current thread/process
 """
 
-from __future__ import division
+
 
 import sys
 import socket
@@ -385,8 +385,8 @@ class SQLiteFileLock(LockBase):
 
     def __init__(self, path, threaded=True):
         LockBase.__init__(self, path, threaded)
-        self.lock_file = unicode(self.lock_file)
-        self.unique_name = unicode(self.unique_name)
+        self.lock_file = str(self.lock_file)
+        self.unique_name = str(self.unique_name)
 
         import sqlite3
         self.connection = sqlite3.connect(SQLiteFileLock.testdb)

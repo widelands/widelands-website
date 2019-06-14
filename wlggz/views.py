@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
-from forms import EditGGZForm
+from .forms import EditGGZForm
 
 
 @login_required

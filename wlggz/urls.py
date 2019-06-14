@@ -10,7 +10,7 @@
 #
 
 from django.conf.urls import *
-import views
+from . import views
 
 urlpatterns = [
     url(r'^changepw$', views.change_password, name='wlggz_changepw'),

@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 
-from models import Poll, Choice
+from .models import Poll, Choice
 from django.contrib import admin
 
 

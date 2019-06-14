@@ -29,8 +29,8 @@ class Category(models.Model):
         db_table = 'news_categories'
         ordering = ('title',)
 
-    def __unicode__(self):
-        return u'%s' % self.title
+    def __str__(self):
+        return '%s' % self.title
 
     def get_absolute_url(self):
         return reverse('category_posts', args=(self.slug,))
@@ -65,8 +65,8 @@ class Post(models.Model):
         ordering = ('-publish',)
         get_latest_by = 'publish'
 
-    def __unicode__(self):
-        return u'%s' % self.title
+    def __str__(self):
+        return '%s' % self.title
 
     #########
     # IMAGE #

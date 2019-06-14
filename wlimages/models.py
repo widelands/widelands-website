@@ -78,7 +78,7 @@ class Image(models.Model):
 
     objects = ImageManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_content_object(self):

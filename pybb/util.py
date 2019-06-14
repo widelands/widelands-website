@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.functional import Promise
 from django.utils.translation import check_for_language
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django import forms
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
@@ -59,7 +59,7 @@ def ajax(func):
         if request.method == 'POST':
             try:
                 response = func(request, *args, **kwargs)
-            except Exception, ex:
+            except Exception as ex:
                 response = {'error': traceback.format_exc()}
         else:
             response = {'error': {'type': 403,
@@ -76,7 +76,7 @@ class LazyJSONEncoder(json.JSONEncoder):
 
     def default(self, o):
         if isinstance(o, Promise):
-            return force_unicode(o)
+            return force_text(o)
         else:
             return super(LazyJSONEncoder, self).default(o)
 
@@ -144,7 +144,7 @@ def urlize(data):
         # Apply the new content
         found_string.parent.contents = new_content
 
-    return unicode(soup)
+    return str(soup)
 
 
 def quote_text(text, user, markup):

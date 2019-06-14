@@ -48,9 +48,9 @@ class TribeParser(object):
         base_directory = os.path.normpath(settings.WIDELANDS_SVN_DIR + '/data')
         json_directory = os.path.normpath(settings.MEDIA_ROOT + '/map_object_info')
 
-        tribeinfo_file = open(os.path.normpath(
-            json_directory + '/tribe_' + name + '.json'), 'r')
-        tribeinfo = json.load(tribeinfo_file)
+        with open(os.path.normpath(
+            json_directory + '/tribe_' + name + '.json'), 'r') as tribeinfo_file:
+            tribeinfo = json.load(tribeinfo_file)
 
         self._tribe = Tribe(tribeinfo, json_directory)
         # Generate the Tribe
@@ -62,7 +62,7 @@ class TribeParser(object):
                               (settings.MEDIA_ROOT, tribeinfo['name']))
         try:
             os.makedirs(dn)
-        except OSError, o:
+        except OSError as o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, 'icon.png')
@@ -77,17 +77,17 @@ class TribeParser(object):
         self._delete_old_data(
             tribename)  # You can deactivate this line if you don't need to clean house.
 
-        wares_file = open(os.path.normpath(
-            json_directory + '/' + tribename + '_wares.json'), 'r')
-        self._parse_wares(base_directory, json.load(wares_file))
+        with open(os.path.normpath(
+            json_directory + '/' + tribename + '_wares.json'), 'r') as wares_file:
+            self._parse_wares(base_directory, json.load(wares_file))
 
-        workers_file = open(os.path.normpath(
-            json_directory + '/' + tribename + '_workers.json'), 'r')
-        self._parse_workers(base_directory, json.load(workers_file))
+        with open(os.path.normpath(
+            json_directory + '/' + tribename + '_workers.json'), 'r') as workers_file:
+            self._parse_workers(base_directory, json.load(workers_file))
 
-        buildings_file = open(os.path.normpath(
-            json_directory + '/' + tribename + '_buildings.json'), 'r')
-        self._parse_buildings(base_directory, json.load(buildings_file))
+        with open(os.path.normpath(
+            json_directory + '/' + tribename + '_buildings.json'), 'r') as buildings_file:
+            self._parse_buildings(base_directory, json.load(buildings_file))
 
     def graph(self):
         """Make all graphs."""
@@ -102,13 +102,14 @@ class TribeParser(object):
                     url = self._copy_picture(
                         path.join(fpath, 'menu.png'), inst.name, 'graph.png')
                     inst.graph_url = url
-                    inst.imagemap = open(path.join(fpath, 'map.map')).read()
+                    with open(path.join(fpath, 'map.map')) as map_file:
+                        inst.imagemap = map_file.read()
                     inst.imagemap = self.map_mouseover_pattern.sub(
                         r"\1Show the \2 \3\4", inst.imagemap)
                     inst.save()
-                except Exception, e:
-                    print 'Exception while handling', cls, 'of', self._tribe.name, ':', inst.name
-                    print type(e), e, repr(e)
+                except Exception as e:
+                    print('Exception while handling', cls, 'of', self._tribe.name, ':', inst.name)
+                    print(type(e), e, repr(e))
 
         shutil.rmtree(tdir)
 
@@ -147,7 +148,7 @@ class TribeParser(object):
                               (settings.MEDIA_ROOT, self._to.name, name))
         try:
             os.makedirs(dn)
-        except OSError, o:
+        except OSError as o:
             if o.errno != 17:
                 raise
         new_name = path.join(dn, fname)
@@ -157,10 +158,10 @@ class TribeParser(object):
 
     def _parse_workers(self, base_directory, workersinfo):
         """Put the workers into the database."""
-        print '  parsing workers'
+        print('  parsing workers')
 
         for worker in workersinfo['workers']:
-            print '    ' + worker['name']
+            print('    ' + worker['name'])
             nn = self._copy_picture(os.path.normpath(
                 base_directory + '/' + worker['icon']), worker['name'], 'menu.png')
 
@@ -187,10 +188,10 @@ class TribeParser(object):
             workero.save()
 
     def _parse_wares(self, base_directory, waresinfo):
-        print '  parsing wares'
+        print('  parsing wares')
 
         for ware in waresinfo['wares']:
-            print '    ' + ware['name']
+            print('    ' + ware['name'])
             nn = self._copy_picture(os.path.normpath(
                 base_directory + '/' + ware['icon']), ware['name'], 'menu.png')
 
@@ -213,16 +214,16 @@ class TribeParser(object):
             # be made, e.g. build_cost and build_wares in 
             # models.get_build_cost() and other functions over there.
             element_set = collections.OrderedDict(sorted(element_set.items()))
-            counts = ' '.join(element_set.values())
+            counts = ' '.join(list(element_set.values()))
             objects = [objtype.objects.get_or_create(name=w, tribe=self._to)[
-                0] for w in element_set.keys()]
+                0] for w in list(element_set.keys())]
             return counts, objects
 
         enhancement_hierarchy = []
-        print '  parsing buildings'
+        print('  parsing buildings')
 
         for building in buildingsinfo['buildings']:
-            print '    ' + building['name']
+            print('    ' + building['name'])
             b = BuildingModel.objects.get_or_create(
                 tribe=self._to, name=building['name'])[0]
             b.displayname = building['descname']
@@ -274,7 +275,7 @@ class TribeParser(object):
             try:
                 b.enhancement = BuildingModel.objects.get(
                     name=tgt, tribe=self._to)
-            except Exception, e:
+            except Exception as e:
                 raise
             b.save()
 
@@ -290,7 +291,7 @@ class Command(BaseCommand):
         if not os.path.exists(json_directory):
             os.makedirs(json_directory)
 
-        print('JSON files will be written to: ' + json_directory)
+        print(('JSON files will be written to: ' + json_directory))
 
         # First, we make sure that JSON files have been generated.
         current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -308,8 +309,8 @@ class Command(BaseCommand):
         validator_script = os.path.normpath(
             settings.WIDELANDS_SVN_DIR + '/utils/validate_json.py')
         if not os.path.isfile(validator_script):
-            print("Wrong path for 'utils/validate_json.py': " +
-                  validator_script + ' does not exist!')
+            print(("Wrong path for 'utils/validate_json.py': " +
+                  validator_script + ' does not exist!'))
             sys.exit(1)
         try:
             subprocess.check_call(
@@ -324,13 +325,13 @@ class Command(BaseCommand):
         # We regenerate the encyclopedia only if the JSON files passed the
         # syntax check
         if is_json_valid:
-            source_file = open(os.path.normpath(
-                json_directory + '/tribes.json'), 'r')
-            tribesinfo = json.load(source_file)
+            with open(os.path.normpath(
+                json_directory + '/tribes.json'), 'r') as source_file:
+                tribesinfo = json.load(source_file)
 
             for t in tribesinfo['tribes']:
                 tribename = t['name']
-                print 'updating help for tribe ', tribename
+                print('updating help for tribe ', tribename)
                 p = TribeParser(tribename)
                 p.parse(tribename, directory, json_directory)
                 p.graph()

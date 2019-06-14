@@ -11,7 +11,7 @@
 
 from django import template
 from django.conf import settings
-from django.utils.encoding import smart_str, force_unicode
+from django.utils.encoding import smart_bytes, force_text
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import SemanticWikiLinkExtension
@@ -19,10 +19,10 @@ from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import SemanticW
 # Try to get a not so fully broken markdown module
 import markdown
 if markdown.version_info[0] < 2:
-    raise ImportError, 'Markdown library to old!'
+    raise ImportError('Markdown library to old!')
 from markdown import markdown
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import bleach
 
 from bs4 import BeautifulSoup, NavigableString
@@ -138,7 +138,7 @@ def _classify_link(tag):
 
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
-        article_name = urllib.unquote(tag['href'][6:].split('/', 1)[0])
+        article_name = urllib.parse.unquote(tag['href'][6:].split('/', 1)[0])
 
         if not len(article_name):  # Wiki root link is not a page
             tag['class'] = 'wrongLink'
@@ -159,7 +159,7 @@ def _classify_link(tag):
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
             if article_name != act_t:
-                tag['title'] = 'This is a redirect and points to \"" + act_t + "\"'
+                tag['title'] = 'This is a redirect and points to \"' + act_t + '\"'
                 return
             else:
                 return
@@ -218,7 +218,7 @@ def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""
 
     beautify = keyw.pop('beautify', True)
-    html = smart_str(markdown(value, extensions=md_extensions))
+    html = markdown(value, extensions=md_extensions)
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if 'bleachit' in args:
@@ -232,7 +232,7 @@ def do_wl_markdown(value, *args, **keyw):
     soup = BeautifulSoup(html, features='lxml')
     if len(soup.contents) == 0:
         # well, empty soup. Return it
-        return unicode(soup)
+        return str(soup)
 
     if beautify:
         # Insert smileys
@@ -249,7 +249,7 @@ def do_wl_markdown(value, *args, **keyw):
         for tag in soup.find_all('img'):
             _make_clickable_images(tag)
 
-    return unicode(soup)
+    return str(soup)
 
 
 @register.filter

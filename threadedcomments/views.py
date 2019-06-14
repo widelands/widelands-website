@@ -121,7 +121,7 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
 </errorlist>
         """
         response_str = Template(template_str).render(
-            Context({'errors': zip(form.errors.values(), form.errors.keys())}))
+            Context({'errors': list(zip(list(form.errors.values()), list(form.errors.keys())))}))
         return XMLResponse(response_str, is_iterable=False)
     else:
         return _preview(request, context_processors, extra_context, form_class=form_class)

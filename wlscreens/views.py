@@ -1,6 +1,6 @@
 # Create your views here.
 
-from models import Category
+from .models import Category
 from django.views.generic.list import ListView
 
 class CategoryList(ListView):

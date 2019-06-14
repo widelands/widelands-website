@@ -16,7 +16,7 @@ while current_dir != '/':
 if activate_this is None:
     raise RuntimeException('Could not find virtualenv to start up!')
 
-execfile(activate_this, dict(__file__=activate_this))
+exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
 
 sys.path.append(parent_dir(code_directory))
 sys.path.append(code_directory)

@@ -63,7 +63,7 @@ urlpatterns = [
 ]
 
 try:
-    from local_urls import *
+    from .local_urls import *
     urlpatterns += local_urlpatterns
 except ImportError:
     pass

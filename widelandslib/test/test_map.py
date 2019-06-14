@@ -8,7 +8,7 @@ sys.path.append('..')
 from numpy import *
 import unittest
 import base64
-from cStringIO import StringIO
+from io import StringIO
 from itertools import *
 
 from map import *
@@ -186,12 +186,12 @@ class TestTerrainReading_ValidInput_ExceptCorrectResult(_WLTerrain_Base):
     # }}}
 
     def test_R(self):
-        r = [i.name == j for i, j in izip(
+        r = [i.name == j for i, j in zip(
             self.m.ter_r.flat, self.ter_r_names.flat)]
         self.assertTrue(all(r))
 
     def test_D(self):
-        d = [i.name == j for i, j in izip(
+        d = [i.name == j for i, j in zip(
             self.m.ter_d.flat, self.ter_d_names.flat)]
         self.assertTrue(all(d))
 

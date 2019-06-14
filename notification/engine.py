@@ -3,9 +3,10 @@ import sys
 import time
 import logging
 import traceback
+import base64
 
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 
@@ -14,7 +15,7 @@ from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 
-from lockfile import FileLock, AlreadyLocked, LockTimeout
+from .lockfile import FileLock, AlreadyLocked, LockTimeout
 
 from notification.models import NoticeQueueBatch
 from notification import models as notification
@@ -46,7 +47,8 @@ def send_all():
         try:
             for queued_batch in NoticeQueueBatch.objects.all():
                 notices = pickle.loads(
-                    str(queued_batch.pickled_data).decode('base64'))
+                    base64.b64decode(queued_batch.pickled_data)
+                    )
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
                     # FrankU: commented, because not all users get e-mailed

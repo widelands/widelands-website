@@ -13,7 +13,7 @@ from django.conf import settings
 from django.test import TestCase as DjangoTest
 from django.db import IntegrityError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from cStringIO import StringIO
+from io import StringIO
 
 from unittest import TestCase
 

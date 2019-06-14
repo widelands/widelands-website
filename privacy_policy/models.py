@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import models
 from django.urls import reverse
@@ -17,7 +17,7 @@ class PrivacyPolicy(models.Model):
     class Meta:
         ordering = ['language']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.language
     
     def get_absolute_url(self):

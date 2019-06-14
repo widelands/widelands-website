@@ -7,12 +7,12 @@
 #
 
 from django import forms
-from models import GGZAuth
+from .models import GGZAuth
 from django.utils.translation import ugettext_lazy as _
 
 
 class EditGGZForm(forms.ModelForm):
-    password = forms.CharField(label=_(u'Online Gaming Password'),
+    password = forms.CharField(label=_('Online Gaming Password'),
                                widget=forms.PasswordInput(render_value=False), required=True)
     password2 = forms.CharField(label=_(u'Enter the password again'),
                                widget=forms.PasswordInput(render_value=False), required=True)

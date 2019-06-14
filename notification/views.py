@@ -29,5 +29,5 @@ def notice_settings(request):
 
     return render(request, 'notification/notice_settings.html', {
         'column_headers': [medium_display for medium_id, medium_display in NOTICE_MEDIA],
-        'app_tables': OrderedDict(sorted(app_tables.items(), key=lambda t: t[0]))
+        'app_tables': OrderedDict(sorted(list(app_tables.items()), key=lambda t: t[0]))
     })

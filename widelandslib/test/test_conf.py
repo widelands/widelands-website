@@ -13,7 +13,7 @@ import sys
 sys.path.append('..')
 
 import unittest
-from cStringIO import StringIO
+from io import StringIO
 
 from conf import WidelandsConfigParser
 

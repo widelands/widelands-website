@@ -1,7 +1,7 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 
-from models import Event
+from .models import Event
 from django.contrib import admin
 
 

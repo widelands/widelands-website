@@ -7,7 +7,7 @@ from pprint import pprint
 from django import template
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import stringfilter
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from django.utils.html import escape
 
 from pybb.models import Post, Forum, Topic, Read
@@ -42,12 +42,12 @@ def pybb_last_posts(context, number=8):
 
 
 @register.simple_tag
-def pybb_link(object, anchor=u''):
+def pybb_link(object, anchor=''):
     """Return A tag with link to object."""
 
     url = hasattr(
         object, 'get_absolute_url') and object.get_absolute_url() or None
-    anchor = anchor or smart_unicode(object)
+    anchor = anchor or smart_text(object)
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
 
 

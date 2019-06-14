@@ -44,8 +44,8 @@ class Map(models.Model):
     def get_absolute_url(self):
         return reverse('wlmaps_view', kwargs={'map_slug': self.slug})
 
-    def __unicode__(self):
-        return u'%s by %s' % (self.name, self.author)
+    def __str__(self):
+        return '%s by %s' % (self.name, self.author)
 
     def save(self, *args, **kwargs):
         if not self.slug:

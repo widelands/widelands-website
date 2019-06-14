@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib import messages
 
-from forms import EditProfileForm
+from .forms import EditProfileForm
 
 
 @login_required

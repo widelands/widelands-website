@@ -28,7 +28,7 @@ def roles(self):
         text += ['has perm.']
     value = ', '.join(text)
     return value
-roles.short_description = u'Groups/Permissions'
+roles.short_description = 'Groups/Permissions'
 
 
 def persons(self):
@@ -38,7 +38,7 @@ persons.allow_tags = True
 
 def deleted(self):
     return '' if self.wlprofile.deleted==False else 'Yes'
-deleted.short_description = u'Deleted himself'
+deleted.short_description = 'Deleted himself'
 
 
 class GroupAdmin(GroupAdmin):

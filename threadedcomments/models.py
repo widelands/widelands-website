@@ -6,7 +6,7 @@ from datetime import datetime
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 DEFAULT_MAX_COMMENT_LENGTH = getattr(
     settings, 'DEFAULT_MAX_COMMENT_LENGTH', 1000)
@@ -178,7 +178,7 @@ class ThreadedComment(models.Model):
     objects = ThreadedCommentManager()
     public = PublicThreadedCommentManager()
 
-    def __unicode__(self):
+    def __str__(self):
         if len(self.comment) > 50:
             return self.comment[:50] + '...'
         return self.comment[:50]

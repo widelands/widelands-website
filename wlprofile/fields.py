@@ -1,4 +1,4 @@
-from StringIO import StringIO
+from io import BytesIO
 from django.db import models
 import logging
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -30,7 +30,7 @@ class ExtendedImageField(models.ImageField):
         """Resize image to fit it into (width, height) box."""
         from PIL import Image
 
-        image = Image.open(StringIO(rawdata))
+        image = Image.open(BytesIO(rawdata))
         try:
             oldw, oldh = image.size
 
@@ -42,10 +42,10 @@ class ExtendedImageField(models.ImageField):
                     y = int(round((oldh - oldw) / 2.0))
                     image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
                 image = image.resize((width, height), resample=Image.ANTIALIAS)
-        except Exception, err:
+        except Exception as err:
             logging.error(err)
             return ''
 
-        string = StringIO()
+        string = BytesIO()
         image.save(string, format='PNG')
         return string.getvalue()

@@ -10,4 +10,4 @@ try:
                                         _('A new Map is available'),
                                         _('a new map is available for download'), 1)
 except ImportError:
-    print 'Skipping creation of NoticeTypes as notification app not found'
+    print('Skipping creation of NoticeTypes as notification app not found')

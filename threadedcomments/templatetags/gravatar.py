@@ -1,16 +1,16 @@
 from django import template
 from django.conf import settings
 from django.template.defaultfilters import stringfilter
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_bytes
 from django.utils.safestring import mark_safe
 from hashlib import md5 as md5_constructor
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 GRAVATAR_MAX_RATING = getattr(settings, 'GRAVATAR_MAX_RATING', 'R')
 GRAVATAR_DEFAULT_IMG = getattr(settings, 'GRAVATAR_DEFAULT_IMG', 'img:blank')
 GRAVATAR_SIZE = getattr(settings, 'GRAVATAR_SIZE', 80)
 
-GRAVATAR_URL = u'http://www.gravatar.com/avatar.php?gravatar_id=%(hash)s&rating=%(rating)s&size=%(size)s&default=%(default)s'
+GRAVATAR_URL = 'http://www.gravatar.com/avatar.php?gravatar_id=%(hash)s&rating=%(rating)s&size=%(size)s&default=%(default)s'
 
 
 def get_gravatar_url(parser, token):
@@ -34,12 +34,12 @@ def get_gravatar_url(parser, token):
     words = token.contents.split()
     tagname = words.pop(0)
     if len(words) < 2:
-        raise template.TemplateSyntaxError, '%r tag: At least one argument should be provided.' % tagname
+        raise template.TemplateSyntaxError('%r tag: At least one argument should be provided.' % tagname)
     if words.pop(0) != 'for':
-        raise template.TemplateSyntaxError, '%r tag: Syntax is {% get_gravatar_url for myemailvar rating 'R" size 80 default img:blank as gravatar_url %}, where everything after myemailvar is optional."
+        raise template.TemplateSyntaxError('%r tag: Syntax is {% get_gravatar_url for myemailvar rating 'R" size 80 default img:blank as gravatar_url %}, where everything after myemailvar is optional.")
     email = words.pop(0)
     if len(words) % 2 != 0:
-        raise template.TemplateSyntaxError, '%r tag: Imbalanced number of arguments.' % tagname
+        raise template.TemplateSyntaxError('%r tag: Imbalanced number of arguments.' % tagname)
     args = {
         'email': email,
         'rating': GRAVATAR_MAX_RATING,
@@ -49,8 +49,8 @@ def get_gravatar_url(parser, token):
     for name, value in zip(words[::2], words[1::2]):
         name = name.lower()
         if name not in ('rating', 'size', 'default', 'as'):
-            raise template.TemplateSyntaxError, '%r tag: Invalid argument %r.' % tagname, name
-        args[smart_str(name)] = value
+            raise template.TemplateSyntaxError('%r tag: Invalid argument %r.' % tagname).with_traceback(name)
+        args[smart_bytes(name)] = value
     return GravatarUrlNode(**args)
 
 
@@ -93,7 +93,7 @@ class GravatarUrlNode(template.Node):
             'hash': md5_constructor(email).hexdigest(),
             'rating': rating,
             'size': size,
-            'default': urllib.quote_plus(default),
+            'default': urllib.parse.quote_plus(default),
         }
         url = GRAVATAR_URL % gravatargs
         if 'as' in self.other_kwargs:
@@ -112,7 +112,7 @@ def gravatar(email):
         'hash': hashed_email,
         'rating': GRAVATAR_MAX_RATING,
         'size': GRAVATAR_SIZE,
-        'default': urllib.quote_plus(GRAVATAR_DEFAULT_IMG),
+        'default': urllib.parse.quote_plus(GRAVATAR_DEFAULT_IMG),
     })
 gravatar = stringfilter(gravatar)
 

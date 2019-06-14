@@ -12,7 +12,7 @@ class ThreadedCommentAdmin(admin.ModelAdmin):
                                 'date_modified', 'date_approved', 'is_approved')}),
     )
     list_display = ('user', 'date_submitted', 'content_type',
-                    'get_content_object', 'parent', '__unicode__')
+                    'get_content_object', 'parent', '__str__')
     list_filter = ('date_submitted',)
     date_hierarchy = 'date_submitted'
     search_fields = ('comment', 'user__username')

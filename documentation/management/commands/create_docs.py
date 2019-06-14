@@ -10,7 +10,7 @@ Needed dependency: Sphinx
 
 """
 
-from __future__ import print_function
+
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from subprocess import check_call, CalledProcessError

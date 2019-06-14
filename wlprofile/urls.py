@@ -10,7 +10,7 @@
 #
 
 from django.conf.urls import *
-import views
+from . import views
 
 urlpatterns = [
     url(r'^edit/$', views.edit, name='profile_edit'),
