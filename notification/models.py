@@ -1,5 +1,5 @@
 import datetime
-import codecs
+import base64
 
 try:
     import pickle as pickle
@@ -323,8 +323,9 @@ def queue(users, label, extra_context=None, on_site=True):
     notices = []
     for user in users:
         notices.append((user, label, extra_context, on_site))
-    NoticeQueueBatch(pickled_data=codecs.encode(
-    	pickle.dumps(notices), 'base64').decode()).save()
+
+    NoticeQueueBatch(pickled_data=base64.b64encode(
+    	pickle.dumps(notices))).save()
 
 
 class ObservedItemManager(models.Manager):
