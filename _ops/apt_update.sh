@@ -15,11 +15,9 @@ fi
 sudo apt update
 
 sudo systemctl stop wl-website
-sudo systemctl start wl-bauarbeiten
 
 sudo apt dist-upgrade
 
-sudo systemctl stop wl-bauarbeiten
 sudo systemctl start wl-website
 
 sudo apt autoremove -y
