@@ -17,17 +17,17 @@ function createCalendar() {
 
 
 // Add warning in case of disparency between browser and profil timezone
-function addTimeZoneWarningIfNeeded() {
+function addTimeZoneInfo() {
     var userTimeZone = document.getElementById('django-data').getAttribute('user-time-zone')
     var browserTimeZone = - new Date().getTimezoneOffset()/60
     if ( browserTimeZone != userTimeZone) {
         document.getElementById('timezone-error').removeAttribute("hidden");
-        profilTime = document.getElementsByClassName('profil-time');
-        for (var element in profilTime) {
-            profilTime[element].innerHTML = cleanAndAddSign(userTimeZone);
-        }
-        document.getElementById('browser-time').innerHTML = cleanAndAddSign(browserTimeZone);
     }
+    profilTime = document.getElementsByClassName('profil-time');
+    for (var element in profilTime) {
+        profilTime[element].innerHTML = cleanAndAddSign(userTimeZone);
+    }
+    document.getElementById('browser-time').innerHTML = cleanAndAddSign(browserTimeZone);
 }
 
 function addPreviousDateFromUser(calendar) {
