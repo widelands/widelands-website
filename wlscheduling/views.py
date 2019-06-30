@@ -69,7 +69,7 @@ def scheduling(request):
             for a in Availabilities.objects.filter(user=current_user, avail_time=utc_dt_avail_time):
                 avail_time_already_exist = True
             
-            if not avail_time_already_exist:
+            if not avail_time_already_exist and datetime.utcnow() < utc_dt_avail_time :
                 a = Availabilities.objects.create(
                     user=current_user,
                     avail_time=utc_dt_avail_time
