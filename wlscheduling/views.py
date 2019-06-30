@@ -26,7 +26,7 @@ def scheduling_find (request):
     other_users_availabilities = {}
     for a in Availabilities.objects.exclude(user=current_user).order_by('avail_time'):
         user_utc_dt_avail_time = a.avail_time
-        if datetime.now() < user_utc_dt_avail_time:
+        if datetime.utcnow() < user_utc_dt_avail_time:
             other_user = a.user
             current_user_timezone = current_user.wlprofile.time_zone
             user_dt_avail_time = user_utc_dt_avail_time + timedelta(hours= current_user_timezone)
@@ -63,7 +63,7 @@ def scheduling(request):
         
         for request_avail_time in request_avail_times:
             dt_avail_time = datetime.strptime(request_avail_time, TIME_FORMAT)
-            # Actual change of timezone, we got back to UTC
+            # Actual change of timezone, we go back to UTC
             utc_dt_avail_time =  dt_avail_time + timedelta(hours= - user_timezone)
             avail_time_already_exist = False
             for a in Availabilities.objects.filter(user=current_user, avail_time=utc_dt_avail_time):
