@@ -17,17 +17,17 @@ function createCalendar() {
 
 
 // Add warning in case of disparency between browser and profil timezone
-function addTimeZoneWarningIfNeeded() {
+function addTimeZoneInfo() {
     var userTimeZone = document.getElementById('django-data').getAttribute('user-time-zone')
     var browserTimeZone = - new Date().getTimezoneOffset()/60
     if ( browserTimeZone != userTimeZone) {
         document.getElementById('timezone-error').removeAttribute("hidden");
-        profilTime = document.getElementsByClassName('profil-time');
-        for (var element in profilTime) {
-            profilTime[element].innerHTML = cleanAndAddSign(userTimeZone);
-        }
-        document.getElementById('browser-time').innerHTML = cleanAndAddSign(browserTimeZone);
     }
+    profilTime = document.getElementsByClassName('profil-time');
+    for (var element in profilTime) {
+        profilTime[element].innerHTML = cleanAndAddSign(userTimeZone);
+    }
+    document.getElementById('browser-time').innerHTML = cleanAndAddSign(browserTimeZone);
 }
 
 function addPreviousDateFromUser(calendar) {
@@ -171,6 +171,7 @@ function displayHourForDate(date, hour, user) {
 }
 
 function createUserDivOrUpdateIt(user, availTime) {
+    // Create User div
     if (!document.getElementById("user-" + user)){
         var original = document.getElementById('other-user-template');
         // We clone the date and fix different attributes
@@ -201,10 +202,8 @@ function createUserDivOrUpdateIt(user, availTime) {
     } else {
         otherUser = document.getElementById("user-" + user);
     }
+    // get exact hour from string 
     var dtavailTime = new Date(availTime + ":00:00");
-    // Remove timezone offset which js automatically add...
-    js_offset = dtavailTime.getTimezoneOffset()/60
-    dtavailTime = dtavailTime.addHours(js_offset);
     textDate = dtavailTime.toDateString();
     var dateFormated = dtavailTime.getFullYear() + "-" + dtavailTime.getMonth() + '-' + dtavailTime.getDay()
     var availTimeFormated = dtavailTime.getHours()
