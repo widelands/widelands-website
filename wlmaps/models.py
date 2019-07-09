@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.db.models.signals import pre_delete
+from .signals import delete_files
 
 import datetime
 try:
@@ -73,3 +75,5 @@ class Map(models.Model):
                               )
 
         return map
+
+pre_delete.connect(delete_files)
