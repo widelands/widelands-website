@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+
 import datetime
 try:
     from notification import models as notification
