@@ -61,7 +61,7 @@ class UploadMapForm(ModelForm):
             os.chdir(settings.WIDELANDS_SVN_DIR)
             check_call(['wl_map_info', saved_file])
 
-            # Delting the file because it will be saved again when
+            # Deleting the file because it will be saved again when
             # the model is saved.
             default_storage.delete(saved_file)
             os.chdir(old_cwd)
@@ -89,14 +89,14 @@ class UploadMapForm(ModelForm):
         self.instance.hint = mapinfo['hint']
         self.instance.world_name = mapinfo['world_name']
 
-        # mapinfo["minimap"] is the absolute path where it is saved, extract
-        # the name
+        # mapinfo["minimap"] is the absolute path containing the path where it
+        # is saved, extract the name
         minimap_name = mapinfo['minimap'].rpartition('/')[2]
         minimap_upload_to = self.instance._meta.get_field('minimap').upload_to
         # Set the destination relative to MEDIA_ROOT
         minimap_path = os.path.join(minimap_upload_to, minimap_name)
         self.instance.minimap = minimap_path
-        # Move the minimap png file from wlmaps/maps to wlmaps/minimaps
+        # Move the minimap file (.png) from wlmaps/maps to wlmaps/minimaps
         shutil.move(mapinfo['minimap'], os.path.join(
             settings.MEDIA_ROOT, minimap_path))
 
