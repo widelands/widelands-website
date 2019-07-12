@@ -88,6 +88,7 @@ class UploadMapForm(ModelForm):
         self.instance.descr = mapinfo['description']
         self.instance.hint = mapinfo['hint']
         self.instance.world_name = mapinfo['world_name']
+        self.instance.wl_version_after = mapinfo['needs_widelands_version_after']
 
         # mapinfo["minimap"] is the absolute path containing the path where it
         # is saved, extract the name
