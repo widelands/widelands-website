@@ -6,9 +6,10 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.db.models.signals import pre_delete
-from .signals import delete_files
+from django.conf import settings
 
 import datetime
+import os
 try:
     from notification import models as notification
 except ImportError:
@@ -40,9 +41,8 @@ class Map(models.Model):
         verbose_name='Download count', default=0)
     wl_version_after = models.PositiveIntegerField(
         verbose_name='WL version after',
-        null = True,
-        blank = True)
-
+        null=True,
+        blank=True)
 
     class Meta:
         ordering = ('-pub_date',)
@@ -80,4 +80,10 @@ class Map(models.Model):
 
         return map
 
-pre_delete.connect(delete_files)
+    def delete(self, *args, **kwargs):
+        """Delete also corresponding map files."""
+
+        # For some reason this throws no error if a file didn't exist
+        self.minimap.delete()
+        self.file.delete()
+        super(Map, self).delete(*args, **kwargs)
