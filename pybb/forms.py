@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-import os.path
+import os
 
 from django import forms
 from django.conf import settings
@@ -71,7 +71,10 @@ class AddPostForm(forms.ModelForm):
                                pybb_settings.ATTACHMENT_UPLOAD_TO)
             fname = '%d.0' % post.id
             path = os.path.join(dir, fname)
-            file(path, 'w').write(memfile.read())
+            if not os.path.exists(os.path.dirname(path)):
+                os.makedirs(os.path.dirname(path))
+            with open(path, 'wb') as f:
+                f.write(memfile.read())
             obj.path = fname
             obj.save()
 

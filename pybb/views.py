@@ -355,9 +355,10 @@ def add_subscription(request, topic_id):
 @login_required
 def show_attachment(request, hash):
     attachment = get_object_or_404(Attachment, hash=hash)
-    file_obj = file(attachment.get_absolute_path())
-    return HttpResponse(file_obj, content_type=attachment.content_type)
-
+    
+    with open(attachment.get_absolute_path(), 'rb') as file_obj:
+        return HttpResponse(file_obj, content_type=attachment.content_type)
+    return HTTP404
 
 @login_required
 @ajax
