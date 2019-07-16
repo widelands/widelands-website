@@ -345,7 +345,11 @@ class Post(RenderableItem):
     def delete(self, *args, **kwargs):
         self_id = self.id
         head_post_id = self.topic.posts.order_by('created')[0].id
-        
+
+        if self.attachments.all():
+            for attach in self.attachments.all():
+                attach.delete()
+
         super(Post, self).delete(*args, **kwargs)
 
         self.topic.save()
@@ -353,8 +357,6 @@ class Post(RenderableItem):
 
         if self_id == head_post_id:
             self.topic.delete()
-        
-        #attachment = self.attachments
 
     def is_spam(self):
         try:
@@ -414,6 +416,9 @@ class Attachment(models.Model):
         return os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO,
                             self.path)
 
+    def delete(self, *args, **kwargs):
+        os.remove(self.get_absolute_path())
+        super(Attachment, self).delete(*args, **kwargs)
 
 if notification is not None:
     signals.post_save.connect(notification.handle_observations, sender=Post)
