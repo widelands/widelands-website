@@ -192,6 +192,7 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # See also pybb defaults in pybb.settings.py
 PYBB_ATTACHMENT_ENABLE = True
+PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*5  #5MB
 PYBB_DEFAULT_MARKUP = 'markdown'
 INTERNAL_PERM='pybb.can_access_internal' # The permission string derived from pybb.models.category
 

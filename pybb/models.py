@@ -345,6 +345,7 @@ class Post(RenderableItem):
     def delete(self, *args, **kwargs):
         self_id = self.id
         head_post_id = self.topic.posts.order_by('created')[0].id
+        
         super(Post, self).delete(*args, **kwargs)
 
         self.topic.save()
@@ -352,6 +353,8 @@ class Post(RenderableItem):
 
         if self_id == head_post_id:
             self.topic.delete()
+        
+        #attachment = self.attachments
 
     def is_spam(self):
         try:
@@ -406,15 +409,6 @@ class Attachment(models.Model):
 
     def get_absolute_url(self):
         return reverse('pybb_attachment', args=[self.hash])
-
-    def size_display(self):
-        size = self.size
-        if size < 1024:
-            return '%b' % size
-        elif size < 1024 * 1024:
-            return '%dKb' % int(size / 1024)
-        else:
-            return '%.2fMb' % (size / float(1024 * 1024))
 
     def get_absolute_path(self):
         return os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO,

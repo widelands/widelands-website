@@ -16,6 +16,9 @@
 		<div class="content post">
 		{{ post.body_html|safe }}
 		</div>
+		{% if post.attachments.all %}
+			{% include 'pybb/inlines/attachment.html' %}
+		{% endif %}
 	</div>
 	<form method="post">
 		<div class="info_line">

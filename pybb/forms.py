@@ -69,12 +69,15 @@ class AddPostForm(forms.ModelForm):
                              name=memfile.name, post=post)
             dir = os.path.join(settings.MEDIA_ROOT,
                                pybb_settings.ATTACHMENT_UPLOAD_TO)
-            fname = '%d.0' % post.id
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+
+            fname = '{}.0'.format(post.id)
             path = os.path.join(dir, fname)
-            if not os.path.exists(os.path.dirname(path)):
-                os.makedirs(os.path.dirname(path))
+
             with open(path, 'wb') as f:
                 f.write(memfile.read())
+
             obj.path = fname
             obj.save()
 

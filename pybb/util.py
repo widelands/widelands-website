@@ -31,7 +31,6 @@ def render_to(template_path):
             output = func(request, *args, **kwargs)
             if not isinstance(output, dict):
                 return output
-            
 
             # TODO(Franku): 'MIME_TYPE' is never in output as i can see for now.
             # But if, this should maybe 'content_type' instead

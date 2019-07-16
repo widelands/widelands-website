@@ -34,9 +34,7 @@
 	</div>
 
 	{% if post.attachment_cache %}
-		{% for attach in post.attachment_cache %}
-			{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
-		{% endfor %}
+		{% include 'pybb/inlines/attachment.html' %}
 	{% endif %}
 
 	{% if post.updated %}

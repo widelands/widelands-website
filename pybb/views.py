@@ -297,7 +297,7 @@ def delete_post_ctx(request, post_id):
     if not allowed:
         return HttpResponseRedirect(post.get_absolute_url())
 
-    if 'POST' == request.method:
+    if request.method == 'POST':
         topic = post.topic
         forum = post.topic.forum
         post.delete()
