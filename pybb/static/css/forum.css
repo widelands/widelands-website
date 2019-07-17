@@ -132,6 +132,10 @@ div.blogEntry .post p {
 	border: 1px solid #474444;
 }
 
+.attachment {
+	display: inline-block
+}
+
 /*****************/
 /* Edit/add Post */
 /*   related     */
