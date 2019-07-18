@@ -352,7 +352,6 @@ def add_subscription(request, topic_id):
     return HttpResponseRedirect(reverse('pybb_topic', args=[topic.id]))
 
 
-#@login_required
 def show_attachment(request, hash):
     attachment = get_object_or_404(Attachment, hash=hash)
     
