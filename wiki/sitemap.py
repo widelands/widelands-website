@@ -5,6 +5,7 @@ from wiki.models import Article
 class WikiSitemap(Sitemap):
     changefreq = 'yearly'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         return Article.objects.all()

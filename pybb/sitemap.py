@@ -5,6 +5,7 @@ from pybb.models import Forum
 class ForumSitemap(Sitemap):
     changefreq = 'monthly'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         return Forum.objects.all()

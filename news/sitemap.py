@@ -7,6 +7,7 @@ from datetime import timedelta
 class NewsSitemap(Sitemap):
     changefreq = 'never'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         start_date = datetime.today() - timedelta(days=365 * 2)

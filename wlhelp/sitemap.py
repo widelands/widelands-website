@@ -5,6 +5,7 @@ from wlhelp.models import Tribe, Building, Ware, Worker
 class WlHelpTribeSitemap(Sitemap):
     changefreq = 'yearly'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         return Tribe.objects.all()
@@ -16,6 +17,7 @@ class WlHelpTribeSitemap(Sitemap):
 class WlHelpBuildingSitemap(Sitemap):
     changefreq = 'yearly'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         return Building.objects.all()
@@ -27,6 +29,7 @@ class WlHelpBuildingSitemap(Sitemap):
 class WlHelpWareSitemap(Sitemap):
     changefreq = 'yearly'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         return Ware.objects.all()
@@ -38,6 +41,7 @@ class WlHelpWareSitemap(Sitemap):
 class WlHelpWorkerSitemap(Sitemap):
     changefreq = 'yearly'
     priority = 0.5
+    protocol = 'https'
 
     def items(self):
         return Worker.objects.all()
