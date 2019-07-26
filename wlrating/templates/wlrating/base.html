@@ -1,0 +1,12 @@
+{% extends "mainpage/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link  rel="stylesheet" type="text/css" href="{% static 'css/rating.css' %}" >
+<link  rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}" >
+{% endblock %}
+
+{% block title %}
+    Rating - {{block.super}}
+{% endblock %}
+

@@ -1,0 +1,24 @@
+{% extends "wlrating/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block content_header %}
+<h1>Widelands players rating</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+    <div id="main-choices" class="main-choices">
+        {% if is_super_user %}
+        <a href="{% url 'arbiter' %}" >
+            <button title="Arbiter">Arbiter</button>
+        </a>
+        {% endif %}
+        <a href="{% url 'scheduling_find' %}" >
+            <button title="You just want to know when everybody is going to be playing" >Show other users playtime</button>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "wlrating/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block content_header %}
+<h1>Widelands players rating</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry post">
+    <table id="arbiter-table">
+        <tr>
+            <th>Start date</th>
+            <th>Type of game</th> 
+            <th>Map</th>
+            <th>Players</th>
+            <th>Result</th>
+            <th>Submitted by</th>
+            <th>link</th>
+            <th>Action</th>
+        </tr>
+        {% for game in game_list %}
+        <tr>
+            <td>{{ game.start_date }}</td>
+            <td>{{ game.game_type }}</td>
+            <td>{{ game.game_map }}</td>
+            <td>{{ game.players }}</td>
+            <td>{{ game.result }}</td>
+            <td>{{ game.submitter }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <form method="post" action="/rating/arbiter/">
+                <td><input type="text" name="startDate"></td>
+                <td><input type="text" name="game_type"></td> 
+                <td><input type="text" name="game_map"></td>
+                <td><input type="text" name="players"></td>
+                <td><input type="text" name="result"></td>
+                <td><input type="text" name="submitter"></td>
+                <td><input type="text" name="link"></td>
+                <td><input type="submit"></td>
+                {% csrf_token %}
+            </form>
+        </tr>
+    </table>
+    <table id="current-score">
+        <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Score</th>
+            <th>Standard deviation</th>
+        </tr>
+    </table>
+</div>
+
+<div></div>
+{% endblock %}

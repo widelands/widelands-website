@@ -102,6 +102,7 @@ INSTALLED_APPS = [
     'wlscreens',
     'wlggz',
     'wlscheduling',
+    'wlrating',
     'check_input.apps.CheckInput',
     'documentation',
     'privacy_policy.apps.PrivacyPolicyConfig',
