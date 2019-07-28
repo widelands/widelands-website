@@ -1,11 +1,10 @@
-from django.contrib.sitemaps import Sitemap
 from wiki.models import Article
+from mainpage.sitemaps import SitemapHTTPS
 
 
-class WikiSitemap(Sitemap):
+class WikiSitemap(SitemapHTTPS):
     changefreq = 'yearly'
     priority = 0.5
-    protocol = 'https'
 
     def items(self):
         return Article.objects.all()

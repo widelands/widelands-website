@@ -1,11 +1,10 @@
-from django.contrib.sitemaps import Sitemap
 from wlhelp.models import Tribe, Building, Ware, Worker
+from mainpage.sitemaps import SitemapHTTPS
 
 
-class WlHelpTribeSitemap(Sitemap):
+class WlHelpTribeSitemap(SitemapHTTPS):
     changefreq = 'yearly'
     priority = 0.5
-    protocol = 'https'
 
     def items(self):
         return Tribe.objects.all()
@@ -14,10 +13,9 @@ class WlHelpTribeSitemap(Sitemap):
         return '/encyclopedia/%s' % obj.name
 
 
-class WlHelpBuildingSitemap(Sitemap):
+class WlHelpBuildingSitemap(SitemapHTTPS):
     changefreq = 'yearly'
     priority = 0.5
-    protocol = 'https'
 
     def items(self):
         return Building.objects.all()
@@ -26,10 +24,9 @@ class WlHelpBuildingSitemap(Sitemap):
         return '/encyclopedia/%s/buildings/%s' % (obj.tribe.name, obj.name)
 
 
-class WlHelpWareSitemap(Sitemap):
+class WlHelpWareSitemap(SitemapHTTPS):
     changefreq = 'yearly'
     priority = 0.5
-    protocol = 'https'
 
     def items(self):
         return Ware.objects.all()
@@ -38,10 +35,9 @@ class WlHelpWareSitemap(Sitemap):
         return '/encyclopedia/%s/wares/%s' % (obj.tribe.name, obj.name)
 
 
-class WlHelpWorkerSitemap(Sitemap):
+class WlHelpWorkerSitemap(SitemapHTTPS):
     changefreq = 'yearly'
     priority = 0.5
-    protocol = 'https'
 
     def items(self):
         return Worker.objects.all()

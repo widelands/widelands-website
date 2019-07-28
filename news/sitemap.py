@@ -1,13 +1,12 @@
-from django.contrib.sitemaps import Sitemap
 from .models import Post
 from datetime import datetime
 from datetime import timedelta
+from mainpage.sitemaps import SitemapHTTPS
 
 
-class NewsSitemap(Sitemap):
-    changefreq = 'never'
+class NewsSitemap(SitemapHTTPS):
+    changefreq = 'yearly'
     priority = 0.5
-    protocol = 'https'
 
     def items(self):
         start_date = datetime.today() - timedelta(days=365 * 2)
