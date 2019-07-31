@@ -30,9 +30,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('player', models.CharField(max_length=255)),
-                ('rating', models.DecimalField(max_digits=5, decimal_places=2)),
-                ('standard_deviation', models.DecimalField(max_digits=4, decimal_places=2)),
-                ('volatility', models.DecimalField(max_digits=15, decimal_places=10)),
+                ('rating', models.DecimalField(max_digits=10, decimal_places=2)),
+                ('standard_deviation', models.DecimalField(max_digits=10, decimal_places=2)),
+                ('volatility', models.DecimalField(max_digits=10, decimal_places=5)),
             ],
         ),
     ]

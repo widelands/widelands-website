@@ -1,0 +1,21 @@
+{% extends "wlrating/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block content_header %}
+<h1>Widelands players rating</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+    <table id="current-score">
+        <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Score</th>
+            <th>Standard deviation</th>
+        </tr>
+    </table>
+</div>
+{% endblock %}
