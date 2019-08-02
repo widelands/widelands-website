@@ -48,10 +48,10 @@
           {% endfor %}
         </ul>
       {% else %}
-        <h3>Forum/Topic{{ object_list|length|pluralize }}</h3>
+        <h3>Forum/Topics</h3>
           <ul>
           {% for forum, topics in object_list.items %}
-            {# no access to forum.pk here #}
+            {# no access to forum.pk here, slugifying should be safe #}
             <li><a href="#{{ forum|slugify }}">{{ forum }}</a>
             <ul>
               {% for topic in topics %}
