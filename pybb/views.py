@@ -77,6 +77,8 @@ show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
 
 def show_topic_ctx(request, topic_id):
+    """View of posts including a form to add a Post."""
+
     try:
         topic = Topic.objects.select_related().get(pk=topic_id)
     except Topic.DoesNotExist:
@@ -96,7 +98,11 @@ def show_topic_ctx(request, topic_id):
     initial = {}
     if request.user.is_authenticated:
         initial = {'markup': 'markdown'}
-    form = AddPostForm(topic=topic, initial=initial)
+
+    form = AddPostForm(topic=topic,
+                       initial=initial,
+                       user=request.user,
+                       )
 
     user_is_mod = pybb_moderated_by(topic, request.user)
     subscribed = (request.user.is_authenticated and
@@ -136,6 +142,8 @@ show_topic = render_to('pybb/topic.html')(show_topic_ctx)
 
 @login_required
 def add_post_ctx(request, forum_id, topic_id):
+    """ Standalone view for adding posts."""
+
     forum = None
     topic = None
 
