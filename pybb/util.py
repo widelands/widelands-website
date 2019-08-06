@@ -16,7 +16,9 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
 from pybb import settings as pybb_settings
 import magic
+import zipfile
 from PIL import Image
+
 
 
 def render_to(template_path):
@@ -187,8 +189,9 @@ def validate_file(attachment):
         return {'maintype': main, 'subtype': sub}
     
     def _is_image():
+        # Use PIL to determine if it is a valid image file
         try:
-            im = Image.open(tmp_file_path)
+            Image.open(tmp_file_path)
         except IOError:
             return False
         return True
@@ -196,21 +199,39 @@ def validate_file(attachment):
     def _values_even(value1, value2):
         return value1 == value2
 
+    def _zip_contains(zip_parts):
+        # Check if each entry in zip_parts is inside the attachment
+        # TODO: Check if it is a zip file at all
+        zip_obj = zipfile.ZipFile(tmp_file_path)
+        try:
+            for obj in zip_parts:
+                zip_obj.getinfo(obj)
+        except KeyError:
+            return False
+        return True
+
+
     # Main part of file checks
     
-    # Check extension
+    # Checks by file extension
     ext = attachment.name.rpartition('.')
     if ext[0] == '':
+        # Not sure if we need this
         return 'We do not allow uploading files without an extension.'
+
     ext = ext[2]
-    if ext == 'wmf':
-        return 'This seems to be a widelands map file. Please upload it at our maps section.'
-    
     if not ext in settings.ALLOWED_EXTENSIONS:
         return 'This type of file is not allowed: *.{}'.format(ext)
         #raise ValidationError('This type of file is not allowed.')
 
+    if ext == 'wmf':
+        return 'This seems to be a widelands map file. Please upload it at our maps section.'
 
+    elif ext == 'wgf':
+        if not _zip_contains(['/binary/', '/map/', '/minimap.png', '/preload']):
+            return 'This is not a valid widelands savegame.'
+
+    # Check MimeType
     # Get MIME-Type from python-magic
     magic_mime = magic.from_file(tmp_file_path, mime=True)
     magic_mime = _split_mime(magic_mime)
@@ -221,10 +242,10 @@ def validate_file(attachment):
     if not _values_even(magic_mime['maintype'], upl_mime['maintype']):
         return 'The file "{}" looks like: {}, but we think it is: {}'.format(attachment.name, upl_mime['maintype'], magic_mime['maintype'])
 
+    # Check for valid image file. Use te Mime-Type provided by python-magic!
     if magic_mime['maintype'] == 'image':
         if not _is_image():
             return 'This is not a valid image: {}'.format(attachment.name)
 
-
-    # all tests passed    
+    # all tests passed
     return ''
