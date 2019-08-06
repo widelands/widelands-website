@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from pybb.models import Topic, Post, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
+from .util import validate_file
 
 
 class AddPostForm(forms.ModelForm):
@@ -20,6 +21,9 @@ class AddPostForm(forms.ModelForm):
         model = Post
         # Listing fields again to get the the right order; See also the TODO
         fields = ['name', 'body', 'markup', 'attachment', ]
+        widgets = {
+            'body': forms.Textarea(attrs={'cols': 80, 'rows': 15}),
+        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -41,6 +45,13 @@ class AddPostForm(forms.ModelForm):
             memfile = self.cleaned_data['attachment']
             if memfile.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
                 raise forms.ValidationError(_('Attachment is too big'))
+
+
+            # Validate the attachment
+            result = validate_file(memfile)
+            if not result == '':
+                raise forms.ValidationError(result)
+
         return self.cleaned_data['attachment']
 
     def save(self, *args, **kwargs):

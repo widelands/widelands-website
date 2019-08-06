@@ -125,7 +125,8 @@ def show_topic_ctx(request, topic_id):
     # for post in page.object_list:
     #     post.user.pybb_profile = profiles[post.user.id]
 
-    load_related(posts, Attachment.objects.all(), 'post')
+    if pybb_settings.PYBB_ATTACHMENT_ENABLE:
+        load_related(posts, Attachment.objects.all(), 'post')
 
     return {'topic': topic,
             'last_post': last_post,

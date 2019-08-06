@@ -15,6 +15,8 @@ from django import forms
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
 from pybb import settings as pybb_settings
+import magic
+from PIL import Image
 
 
 def render_to(template_path):
@@ -172,3 +174,56 @@ def unescape(text):
     text = text.replace('&quot;', '"')
     text = text.replace('&#39;', '\'')
     return text
+
+
+#from django.core.exceptions import ValidationError
+def validate_file(attachment):
+
+    tmp_file_path = attachment.temporary_file_path()
+
+    ext = attachment.name.rpartition('.')[2]
+    if ext:
+        if ext == 'wmf':
+            return 'This seems to be a widelands map file. Please upload it at our maps section.'
+        
+        if not ext in settings.ALLOWED_EXTENSIONS:
+            return 'This type of file is not allowed: *.{}'.format(ext)
+            #raise ValidationError('This type of file is not allowed.')
+    else:
+        return 'We do not allow uploading files without an extension.'
+
+    def _split_mime(mime_type):
+        main, sub = mime_type.split('/', maxsplit=1)
+        return {'maintype': main, 'subtype': sub}
+    
+    def _is_image():
+        try:
+            im = Image.open(tmp_file_path)
+        except IOError:
+            return False
+        return True
+
+    def _compare_values(value1, value2):
+        if value1 != value2:
+            return False
+        else:
+            return True
+
+    # Get MIME-Type from python-magic
+    magic_mime = magic.from_file(tmp_file_path, mime=True)
+    magic_mime = _split_mime(magic_mime)
+    upl_mime = _split_mime(attachment.content_type)
+
+    # Compare Mime type send by browser and Mime type from python-magic
+    # We only compare the main type (the first part)
+    if not _compare_values(magic_mime['maintype'], upl_mime['maintype']):
+        return 'The file looks like: {}, but we think it is: {}'.format(upl_mime['maintype'], magic_mime['maintype'])
+
+    if magic_mime['maintype'] == 'image':
+        if not _is_image():
+            return 'This is not a valid image: {}'.format(attachment.name)
+
+
+    
+    # all tests passed    
+    return ''

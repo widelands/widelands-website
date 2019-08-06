@@ -18,7 +18,7 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from check_input.models import SuspiciousInput
-
+import magic
 
 try:
     from notification import models as notification
@@ -419,6 +419,17 @@ class Attachment(models.Model):
     def delete(self, *args, **kwargs):
         os.remove(self.get_absolute_path())
         super(Attachment, self).delete(*args, **kwargs)
+
+
+    # TODO Franku: Maybe remove this after attachment validation has finished
+    def get_mime_type(self):
+        f = self.get_absolute_path()
+        try:
+            file_mime = magic.from_file(f, mime=True)
+            return 'python-magic: {}'.format(file_mime)
+        except FileNotFoundError:
+            return 'File not found'
+
 
 if notification is not None:
     signals.post_save.connect(notification.handle_observations, sender=Post)

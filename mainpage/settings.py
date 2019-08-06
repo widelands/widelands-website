@@ -194,7 +194,19 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 PYBB_ATTACHMENT_ENABLE = True
 PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*5  #5MB
 PYBB_DEFAULT_MARKUP = 'markdown'
-INTERNAL_PERM='pybb.can_access_internal' # The permission string derived from pybb.models.category
+INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from pybb.models.category
+
+###################
+# Uploading files #
+###################
+
+# Use only this handler to get real file in /tmp
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+    ]
+
+ALLOWED_EXTENSIONS = ['wgf', 'jpg', 'jpeg', 'gif', 'png', 'ogg', 'lua',
+                      'ods', 'zip', 'json', 'txt']
 
 ##############################################
 # Link classification and other Markup stuff #

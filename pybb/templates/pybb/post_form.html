@@ -52,7 +52,31 @@ in different parent templates.
 	</div>
 
 	<form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
-	{{ form.as_p }}
+		{% if not form.name.is_hidden %}
+		<p>
+			<p class="errormessage">{{ form.name.errors.as_text }}</p>
+			{{ form.name.label }}:
+			{{ form.name }}
+		</p>
+		{% endif %}
+		<p>
+			<p class="errormessage">{{ form.body.errors.as_text }}</p>
+			{{ form.body.label }}:
+			{{ form.body }}
+		</p>
+		<p>
+			<p class="errormessage">{{ form.markup.errors.as_text }}</p>
+			{{ form.markup.label }}:
+			{{ form.markup }}
+		</p>
+		{% if not form.attachment.is_hidden %}
+		<p>
+			<p class="errormessage">{{ form.attachment.errors.as_text }}</p>
+			{{ form.attachment.label }}
+			{{ form.attachment }}
+		</p>
+		{% endif %}
+
 	{% csrf_token %}
 	<button type="submit">
 		<img src="{% static 'forum/img/send.png' %}" alt ="" class="middle" />
