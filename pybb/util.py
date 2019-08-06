@@ -181,17 +181,7 @@ def validate_file(attachment):
 
     tmp_file_path = attachment.temporary_file_path()
 
-    ext = attachment.name.rpartition('.')[2]
-    if ext:
-        if ext == 'wmf':
-            return 'This seems to be a widelands map file. Please upload it at our maps section.'
-        
-        if not ext in settings.ALLOWED_EXTENSIONS:
-            return 'This type of file is not allowed: *.{}'.format(ext)
-            #raise ValidationError('This type of file is not allowed.')
-    else:
-        return 'We do not allow uploading files without an extension.'
-
+    # Helper functions
     def _split_mime(mime_type):
         main, sub = mime_type.split('/', maxsplit=1)
         return {'maintype': main, 'subtype': sub}
@@ -203,11 +193,23 @@ def validate_file(attachment):
             return False
         return True
 
-    def _compare_values(value1, value2):
-        if value1 != value2:
-            return False
-        else:
-            return True
+    def _values_even(value1, value2):
+        return value1 == value2
+
+    # Main part of file checks
+    
+    # Check extension
+    ext = attachment.name.rpartition('.')
+    if ext[0] == '':
+        return 'We do not allow uploading files without an extension.'
+    ext = ext[2]
+    if ext == 'wmf':
+        return 'This seems to be a widelands map file. Please upload it at our maps section.'
+    
+    if not ext in settings.ALLOWED_EXTENSIONS:
+        return 'This type of file is not allowed: *.{}'.format(ext)
+        #raise ValidationError('This type of file is not allowed.')
+
 
     # Get MIME-Type from python-magic
     magic_mime = magic.from_file(tmp_file_path, mime=True)
@@ -216,14 +218,13 @@ def validate_file(attachment):
 
     # Compare Mime type send by browser and Mime type from python-magic
     # We only compare the main type (the first part)
-    if not _compare_values(magic_mime['maintype'], upl_mime['maintype']):
-        return 'The file looks like: {}, but we think it is: {}'.format(upl_mime['maintype'], magic_mime['maintype'])
+    if not _values_even(magic_mime['maintype'], upl_mime['maintype']):
+        return 'The file "{}" looks like: {}, but we think it is: {}'.format(attachment.name, upl_mime['maintype'], magic_mime['maintype'])
 
     if magic_mime['maintype'] == 'image':
         if not _is_image():
             return 'This is not a valid image: {}'.format(attachment.name)
 
 
-    
     # all tests passed    
     return ''
