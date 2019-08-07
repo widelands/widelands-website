@@ -11,6 +11,8 @@ from django.conf import settings
 
 from wlmaps.models import Map
 import os
+import shutil
+
 
 class UploadMapForm(ModelForm):
     """
@@ -59,8 +61,8 @@ class UploadMapForm(ModelForm):
             os.chdir(settings.WIDELANDS_SVN_DIR)
             check_call(['wl_map_info', saved_file])
 
-            # TODO(shevonar): delete file because it will be saved again when
-            # the model is saved. File should not be saved twice
+            # Deleting the file because it will be saved again when
+            # the model is saved.
             default_storage.delete(saved_file)
             os.chdir(old_cwd)
         except CalledProcessError:
@@ -86,11 +88,18 @@ class UploadMapForm(ModelForm):
         self.instance.descr = mapinfo['description']
         self.instance.hint = mapinfo['hint']
         self.instance.world_name = mapinfo['world_name']
+        self.instance.wl_version_after = mapinfo['needs_widelands_version_after']
 
-        # mapinfo["minimap"] is an absolute path.
-        # We partition it to get the correct file path
-        minimap_path = mapinfo['minimap'].partition(settings.MEDIA_ROOT)[2]
-        self.instance.minimap = '/' + minimap_path
+        # mapinfo["minimap"] is the absolute path containing the path where it
+        # is saved, extract the name
+        minimap_name = mapinfo['minimap'].rpartition('/')[2]
+        minimap_upload_to = self.instance._meta.get_field('minimap').upload_to
+        # Set the destination relative to MEDIA_ROOT
+        minimap_path = os.path.join(minimap_upload_to, minimap_name)
+        self.instance.minimap = minimap_path
+        # Move the minimap file (.png) from wlmaps/maps to wlmaps/minimaps
+        shutil.move(mapinfo['minimap'], os.path.join(
+            settings.MEDIA_ROOT, minimap_path))
 
         # the json file is no longer needed
         default_storage.delete(saved_file + '.json')
