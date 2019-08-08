@@ -191,8 +191,9 @@ def validate_file(attachment):
     def _is_image():
         # Use PIL to determine if it is a valid image file
         try:
-            Image.open(tmp_file_path)
-        except IOError:
+            with Image.open(tmp_file_path) as im:
+                im.verify()
+        except:
             return False
         return True
 
