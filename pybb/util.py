@@ -232,21 +232,25 @@ def validate_file(attachment):
         if not _zip_contains(['/binary/', '/map/', '/minimap.png', '/preload']):
             return 'This is not a valid widelands savegame.'
 
-    # Check MimeType
+    # Checks by MimeType
     # Get MIME-Type from python-magic
     magic_mime = magic.from_file(tmp_file_path, mime=True)
     magic_mime = _split_mime(magic_mime)
-    upl_mime = _split_mime(attachment.content_type)
+    send_mime = _split_mime(attachment.content_type)
 
-    # Compare Mime type send by browser and Mime type from python-magic
-    # We only compare the main type (the first part)
-    if not _values_even(magic_mime['maintype'], upl_mime['maintype']):
+    # Compare Mime type send by browser and Mime type from python-magic.
+    # We only compare the main type (the first part) because the second
+    # part may not be recoginzed correctly. E.g. for .lua the submitted
+    # type is 'text/x-lua' but 'x-lua' is not official at all. See:
+    # https://www.iana.org/assignments/media-types/media-types.xhtml
+    if not _values_even(magic_mime['maintype'], send_mime['maintype']):
         return 'The file "{}" looks like: {}, but we think it is: {}'.format(attachment.name, upl_mime['maintype'], magic_mime['maintype'])
 
     # Check for valid image file. Use te Mime-Type provided by python-magic!
     if magic_mime['maintype'] == 'image':
         if not _is_image():
             return 'This is not a valid image: {}'.format(attachment.name)
+
 
     # all tests passed
     return ''
