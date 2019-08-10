@@ -15,11 +15,14 @@ from .util import validate_file
 
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
-    attachment = forms.FileField(label=_('Attachment'), required=False)
+    attachment = forms.FileField(
+        label=_('Attachment'),
+        required=False,
+        validators=[validate_file,])
 
     class Meta:
         model = Post
-        # Listing fields again to get the the right order; See also the TODO
+        # Listing fields again to get the the right order
         fields = ['name', 'body', 'markup', 'attachment', ]
         widgets = {
             'body': forms.Textarea(attrs={'cols': 80, 'rows': 15}),
@@ -39,20 +42,6 @@ class AddPostForm(forms.ModelForm):
             if not pybb_settings.ATTACHMENT_ENABLE or self.user.wlprofile.post_count() < settings.MAX_HIDDEN_POSTS:
                 self.fields['attachment'].widget = forms.HiddenInput()
                 self.fields['attachment'].required = False
-
-    def clean_attachment(self):
-        if self.cleaned_data['attachment']:
-            memfile = self.cleaned_data['attachment']
-            if memfile.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
-                raise forms.ValidationError(_('Attachment is too big'))
-
-
-            # Validate the attachment
-            result = validate_file(memfile)
-            if not result == '':
-                raise forms.ValidationError(result)
-
-        return self.cleaned_data['attachment']
 
     def save(self, *args, **kwargs):
         if self.forum:
