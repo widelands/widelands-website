@@ -207,7 +207,14 @@ FILE_UPLOAD_HANDLERS = [
     ]
 
 ALLOWED_EXTENSIONS = ['wgf', 'jpg', 'jpeg', 'gif', 'png', 'ogg', 'lua',
-                      'ods', 'zip', 'json', 'txt', 'csv']
+                      'ods', 'zip', 'json', 'txt', 'csv', 'wai']
+# Do not check mime type for these extensions
+SKIP_MIME_EXTENSIONS = ['wai',]
+ALLOWED_WAI_SECTIONS = ['magic_numbers', 'neuron_values',
+                        'neuron_functions', 'fneurons',
+                        ]
+
+UPLOAD_WIKI_PAGE = 'Attachments'
 
 ##############################################
 # Link classification and other Markup stuff #

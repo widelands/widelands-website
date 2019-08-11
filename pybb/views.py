@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.http import Http404
+from django.conf import settings
 
 from pybb.util import render_to, build_form, quote_text, ajax, urlize
 from pybb.models import Category, Forum, Topic, Post, Attachment,\
@@ -137,6 +138,7 @@ def show_topic_ctx(request, topic_id):
             'page_size': pybb_settings.TOPIC_PAGE_SIZE,
             'form_url': reverse('pybb_add_post', args=[topic.id]),
             'is_spam': is_spam,
+            'wikipage': settings.UPLOAD_WIKI_PAGE,
             }
 show_topic = render_to('pybb/topic.html')(show_topic_ctx)
 
@@ -233,6 +235,7 @@ def add_post_ctx(request, forum_id, topic_id):
             'topic': topic,
             'forum': forum,
             'form_url': form_url,
+            'wikipage': settings.UPLOAD_WIKI_PAGE,
             }
 add_post = render_to('pybb/add_post.html')(add_post_ctx)
 
