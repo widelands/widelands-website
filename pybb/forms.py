@@ -38,10 +38,9 @@ class AddPostForm(forms.ModelForm):
             self.fields['name'].widget = forms.HiddenInput()
             self.fields['name'].required = False
 
-        if self.user.is_authenticated:
-            if not pybb_settings.ATTACHMENT_ENABLE or self.user.wlprofile.post_count() < settings.MAX_HIDDEN_POSTS:
-                self.fields['attachment'].widget = forms.HiddenInput()
-                self.fields['attachment'].required = False
+        if not pybb_settings.ATTACHMENT_ENABLE or self.user.wlprofile.post_count() < settings.ALLOW_ATTACHMENTS_AFTER:
+            self.fields['attachment'].widget = forms.HiddenInput()
+            self.fields['attachment'].required = False
 
     def save(self, *args, **kwargs):
         if self.forum:

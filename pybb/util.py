@@ -231,9 +231,7 @@ def validate_file(attachment):
 
     # Checks by file extension
     splitted_fn = attachment.name.rsplit('.', maxsplit=2)
-    print("Franku ext: ", splitted_fn)
     if len(splitted_fn) == 1:
-        # Not sure if we need this
         raise ValidationError(
             'We do not allow uploading files without an extension.'
             )

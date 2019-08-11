@@ -78,10 +78,12 @@ show_forum = render_to('pybb/forum.html')(show_forum_ctx)
 
 
 def show_topic_ctx(request, topic_id):
-    """View of posts including a form to add a Post."""
+    """View of topic posts including a form to add a Post."""
 
+    context = {}
     try:
         topic = Topic.objects.select_related().get(pk=topic_id)
+        context.update({'topic': topic})
     except Topic.DoesNotExist:
         raise Http404()
 
@@ -95,29 +97,37 @@ def show_topic_ctx(request, topic_id):
         topic.update_read(request.user)
 
     last_post = topic.posts.order_by('-created')[0]
+    context.update({'last_post': last_post})
 
     initial = {}
+    user_is_mod = False
     if request.user.is_authenticated:
         initial = {'markup': 'markdown'}
 
-    form = AddPostForm(topic=topic,
-                       initial=initial,
-                       user=request.user,
-                       )
+        form = AddPostForm(topic=topic,
+                           initial=initial,
+                           user=request.user,
+                           )
+        context.update({'form': form})
 
-    user_is_mod = pybb_moderated_by(topic, request.user)
-    subscribed = (request.user.is_authenticated and
-                  request.user in topic.subscribers.all())
-
-    is_spam = False
-    if topic.is_hidden:
-            is_spam = topic.posts.first().is_spam()
+        user_is_mod = pybb_moderated_by(topic, request.user)
+        context.update({'user_is_mod': user_is_mod})
+        
+        subscribed = (request.user.is_authenticated and
+                      request.user in topic.subscribers.all())
+        context.update({'subscribed': subscribed})
+    
+        is_spam = False
+        if topic.is_hidden:
+                is_spam = topic.posts.first().is_spam()
+        context.update({'is_spam': is_spam})
 
     if user_is_mod:
         posts = topic.posts.select_related()
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
- 
+    context.update({'posts': posts})
+
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
@@ -129,17 +139,14 @@ def show_topic_ctx(request, topic_id):
     if pybb_settings.PYBB_ATTACHMENT_ENABLE:
         load_related(posts, Attachment.objects.all(), 'post')
 
-    return {'topic': topic,
-            'last_post': last_post,
-            'form': form,
-            'user_is_mod': user_is_mod,
-            'subscribed': subscribed,
-            'posts': posts,
-            'page_size': pybb_settings.TOPIC_PAGE_SIZE,
-            'form_url': reverse('pybb_add_post', args=[topic.id]),
-            'is_spam': is_spam,
-            'wikipage': settings.UPLOAD_WIKI_PAGE,
-            }
+    context.update({
+        'page_size': pybb_settings.TOPIC_PAGE_SIZE,
+        'form_url': reverse('pybb_add_post', args=[topic.id]),
+        'wikipage': settings.ATTACHMENT_DESCR_PAGE,
+    })
+
+    return context
+
 show_topic = render_to('pybb/topic.html')(show_topic_ctx)
 
 
@@ -235,7 +242,7 @@ def add_post_ctx(request, forum_id, topic_id):
             'topic': topic,
             'forum': forum,
             'form_url': form_url,
-            'wikipage': settings.UPLOAD_WIKI_PAGE,
+            'wikipage': settings.ATTACHMENT_DESCR_PAGE,
             }
 add_post = render_to('pybb/add_post.html')(add_post_ctx)
 
