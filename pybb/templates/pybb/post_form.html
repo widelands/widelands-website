@@ -71,6 +71,11 @@ in different parent templates.
 		</p>
 		{% if not form.attachment.is_hidden %}
 		<p>
+			<p>
+				Please refer to the wiki page
+				<a href="{{ site }}/wiki/{{ wikipage }}">{{ wikipage }}</a>
+				for pointers.
+			</p>
 			<p class="errormessage">{{ form.attachment.errors.as_text }}</p>
 			{{ form.attachment.label }}
 			{{ form.attachment }}

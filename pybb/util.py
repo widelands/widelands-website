@@ -14,10 +14,13 @@ from django.utils.encoding import force_text
 from django import forms
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from pybb import settings as pybb_settings
 import magic
 import zipfile
+import configparser
 from PIL import Image
+
 
 
 
@@ -178,7 +181,6 @@ def unescape(text):
     return text
 
 
-#from django.core.exceptions import ValidationError
 def validate_file(attachment):
 
     tmp_file_path = attachment.temporary_file_path()
@@ -187,9 +189,10 @@ def validate_file(attachment):
     def _split_mime(mime_type):
         main, sub = mime_type.split('/', maxsplit=1)
         return {'maintype': main, 'subtype': sub}
-    
+
     def _is_image():
         # Use PIL to determine if it is a valid image file
+        # works not for corrupted jpg
         try:
             with Image.open(tmp_file_path) as im:
                 im.verify()
@@ -197,56 +200,122 @@ def validate_file(attachment):
             return False
         return True
 
-    def _values_even(value1, value2):
-        return value1 == value2
+    def _is_zip():
+        try:
+            zip_obj = zipfile.ZipFile(tmp_file_path)
+        except zipfile.BadZipfile:
+            return None
+        return zip_obj
 
     def _zip_contains(zip_parts):
         # Check if each entry in zip_parts is inside the attachment
-        # TODO: Check if it is a zip file at all
-        zip_obj = zipfile.ZipFile(tmp_file_path)
-        try:
-            for obj in zip_parts:
-                zip_obj.getinfo(obj)
-        except KeyError:
-            return False
+        zip_obj = _is_zip()
+        if zip_obj:
+            try:
+                for obj in zip_parts:
+                    zip_obj.getinfo(obj)
+            except KeyError:
+                return False
         return True
 
 
     # Main part of file checks
-    
+    # File size
+    if attachment.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
+        raise ValidationError(
+            'Attachment is too big. We allow max %(size)s Mb',
+            params = {
+                'size': pybb_settings.ATTACHMENT_SIZE_LIMIT/1024/1024,
+            }
+            )
+
     # Checks by file extension
-    ext = attachment.name.rpartition('.')
-    if ext[0] == '':
-        # Not sure if we need this
-        return 'We do not allow uploading files without an extension.'
+    splitted_fn = attachment.name.rsplit('.', maxsplit=2)
+    if len(splitted_fn) == 1:
+        raise ValidationError(
+            'We do not allow uploading files without an extension.'
+            )
 
-    ext = ext[2]
+    ext = splitted_fn[-1]
     if not ext in settings.ALLOWED_EXTENSIONS:
-        return 'This type of file is not allowed: *.{}'.format(ext)
-        #raise ValidationError('This type of file is not allowed.')
+        raise ValidationError(
+            'This type of file is not allowed.'
+            )
 
+    # Widelands map file
     if ext == 'wmf':
-        return 'This seems to be a widelands map file. Please upload it at our maps section.'
+        raise ValidationError(
+            'This seems to be a widelands map file. Please upload \
+            it at our maps section.'
+        )
 
-    elif ext == 'wgf':
+    # Widelands savegame (*.wgf) and widelands replay (*.wrpl.wgf)
+    # are not the same.
+    if ext == 'wgf' and not splitted_fn[-2] == 'wrpl':
         if not _zip_contains(['/binary/', '/map/', '/minimap.png', '/preload']):
-            return 'This is not a valid widelands savegame.'
+            raise ValidationError(
+                'This is not a valid widelands savegame.'
+            )
 
-    # Check MimeType
+    # Widelands replay
+    if ext == 'wrpl':
+        raise ValidationError(
+            'This file is part of a replay. Please zip it together with \
+            the corresponding .wrpl.wgf file and upload again.'
+        )
+
+    if ext == 'zip':
+        if _is_zip():
+            raise ValidationError(
+                'This is not a valid zip file.'
+            )
+
+    if ext == 'wai':
+        wai = configparser.ConfigParser()
+        try:
+            wai.read(tmp_file_path)
+            wai_sections = wai.sections()
+            if len(settings.ALLOWED_WAI_SECTIONS) == len(wai_sections):
+                for section in settings.ALLOWED_WAI_SECTIONS:
+                    if section not in wai_sections:
+                        raise
+            else:
+                raise
+        except:
+            raise ValidationError(
+                'This not a valid wai file.'
+                )
+
+    # Checks by MimeType
     # Get MIME-Type from python-magic
     magic_mime = magic.from_file(tmp_file_path, mime=True)
     magic_mime = _split_mime(magic_mime)
-    upl_mime = _split_mime(attachment.content_type)
+    send_mime = _split_mime(attachment.content_type)
 
-    # Compare Mime type send by browser and Mime type from python-magic
-    # We only compare the main type (the first part)
-    if not _values_even(magic_mime['maintype'], upl_mime['maintype']):
-        return 'The file "{}" looks like: {}, but we think it is: {}'.format(attachment.name, upl_mime['maintype'], magic_mime['maintype'])
-
-    # Check for valid image file. Use te Mime-Type provided by python-magic!
+    # Check for valid image file. Use te mime-type provided by python-magic,
+    # because for a renamed image the wrong mime-type is send by the browser.
     if magic_mime['maintype'] == 'image':
         if not _is_image():
-            return 'This is not a valid image: {}'.format(attachment.name)
+            raise ValidationError(
+                'This is not a valid image: %(file)s',
+                params={'file': attachment.name}
+            )
 
-    # all tests passed
-    return ''
+    # Compare Mime type send by browser and Mime type from python-magic.
+    # We only compare the main type (the first part) because the second
+    # part may not be recoginzed correctly. E.g. for .lua the submitted
+    # type is 'text/x-lua' but 'x-lua' is not official at all. See:
+    # https://www.iana.org/assignments/media-types/media-types.xhtml
+    # Unrecoginzed extension are always send with mime type
+    # 'application/octet-stream'. Skip if we know them. 
+    if not ext in settings.SKIP_MIME_EXTENSIONS:
+        if not magic_mime['maintype'] == send_mime['maintype']:
+            raise ValidationError(
+                'The file %(file)s looks like %(send_mime)s, \
+                but we think it is %(magic_mime)s',
+                params={
+                    'file': attachment.name,
+                    'send_mime': send_mime['maintype'],
+                    'magic_mime': magic_mime['maintype'],
+                    },
+            )

@@ -200,13 +200,30 @@ INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from 
 # Uploading files #
 ###################
 
-# Use only this handler to get real file in /tmp
+# Use only this handler to get real a file in /tmp
+# Some validation checks needs a real file
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
     ]
 
-ALLOWED_EXTENSIONS = ['wgf', 'jpg', 'jpeg', 'gif', 'png', 'ogg', 'lua',
-                      'ods', 'zip', 'json', 'txt']
+ALLOWED_EXTENSIONS = [
+    'wgf', 'jpg', 'jpeg', 'gif', 'png', 'ogg', 'lua',
+    'ods', 'zip', 'json', 'txt', 'csv', 'wai',
+    ]
+
+# Do not check mime type for these extensions
+SKIP_MIME_EXTENSIONS = ['wai',]
+
+ALLOWED_WAI_SECTIONS = [
+    'magic_numbers', 'neuron_values',
+    'neuron_functions', 'fneurons',
+    ]
+
+# Allow attachments only after this amount of posts
+ALLOW_ATTACHMENTS_AFTER = 5
+
+# Page describing uploads
+ATTACHMENT_DESCR_PAGE = 'Attachments'
 
 ##############################################
 # Link classification and other Markup stuff #
