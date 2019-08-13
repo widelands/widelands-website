@@ -33,6 +33,11 @@ in different parent templates.
 			
 		});
 	});
+	$(document).ready(function() {
+		$('#btn-file-reset').on('click', function() {
+			$('#id_attachment').val('');
+	});
+});
 </script>
 {% endblock %}
 
@@ -79,6 +84,10 @@ in different parent templates.
 			<p class="errormessage">{{ form.attachment.errors.as_text }}</p>
 			{{ form.attachment.label }}
 			{{ form.attachment }}
+			<button id="btn-file-reset" type="button">
+				<img src="{% static 'img/delete.png' %}" alt ="" class="middle" />
+				<span class="middle">{% trans "Reset" %}</span>
+			</button>
 		</p>
 		{% endif %}
 
