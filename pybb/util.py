@@ -3,6 +3,7 @@ import random
 import traceback
 import json
 import re
+import subprocess
 
 from bs4 import BeautifulSoup, NavigableString
 from datetime import datetime
@@ -242,6 +243,17 @@ def validate_file(attachment):
             'This type of file is not allowed.'
             )
 
+    # Scan for viruses with clamav
+    try:
+        compl = subprocess.run(['clamdscan',
+                                '--multiscan',
+                                '--fdpass',
+                                tmp_file_path])
+        if compl.returncode == 1:
+            raise ValidationError('Virus found')
+    except:
+        raise ValidationError('Some error occured while processing the file')
+
     # Widelands map file
     if ext == 'wmf':
         raise ValidationError(
@@ -265,7 +277,7 @@ def validate_file(attachment):
         )
 
     if ext == 'zip':
-        if _is_zip():
+        if _is_zip() == None:
             raise ValidationError(
                 'This is not a valid zip file.'
             )
