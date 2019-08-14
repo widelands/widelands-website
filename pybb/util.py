@@ -243,17 +243,6 @@ def validate_file(attachment):
             'This type of file is not allowed.'
             )
 
-    # Scan for viruses with clamav
-    try:
-        compl = subprocess.run(['clamdscan',
-                                '--multiscan',
-                                '--fdpass',
-                                tmp_file_path])
-        if compl.returncode == 1:
-            raise ValidationError('Virus found')
-    except:
-        raise ValidationError('Some error occured while processing the file')
-
     # Widelands map file
     if ext == 'wmf':
         raise ValidationError(
@@ -264,7 +253,7 @@ def validate_file(attachment):
     # Widelands savegame (*.wgf) and widelands replay (*.wrpl.wgf)
     # are not the same.
     if ext == 'wgf' and not splitted_fn[-2] == 'wrpl':
-        if not _zip_contains(['/binary/', '/map/', '/minimap.png', '/preload']):
+        if not _zip_contains(settings.WGF_CONTENT_CHECK):
             raise ValidationError(
                 'This is not a valid widelands savegame.'
             )
@@ -282,6 +271,7 @@ def validate_file(attachment):
                 'This is not a valid zip file.'
             )
 
+    # Widelands AI configuration
     if ext == 'wai':
         wai = configparser.ConfigParser()
         try:

@@ -211,6 +211,9 @@ ALLOWED_EXTENSIONS = [
     'ods', 'zip', 'json', 'txt', 'csv', 'wai',
     ]
 
+# Widelands Savegame should contain at least these entries
+WGF_CONTENT_CHECK = ['/binary/', '/map/', '/minimap.png', '/preload',]
+
 # Do not check mime type for these extensions
 SKIP_MIME_EXTENSIONS = ['wai',]
 
