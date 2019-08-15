@@ -11,7 +11,7 @@ from pybb.models import Topic, Post, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
 from .util import validate_file
-from mainpage import validators
+from mainpage.validators import virus_scan
 
 
 class AddPostForm(forms.ModelForm):
@@ -19,7 +19,7 @@ class AddPostForm(forms.ModelForm):
     attachment = forms.FileField(
         label=_('Attachment'),
         required=False,
-        validators=[validators.virus_scan, validate_file, ])
+        validators=[virus_scan, validate_file, ])
 
     class Meta:
         model = Post

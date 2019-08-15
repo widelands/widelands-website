@@ -10,7 +10,6 @@ def virus_scan(uploaded_file):
     # Only check if clamav is installed
     if shutil.which('clamdscan'):
         tmp_file_path = uploaded_file.temporary_file_path()
-#        try:
         process_compl = subprocess.run(['clamdscan',
                                         '--multiscan',
                                         '--fdpass',
@@ -23,9 +22,3 @@ def virus_scan(uploaded_file):
             raise ValidationError(
                 'Some error occured during virus scannning...'
             )
-
-        # except ValidationError as err:
-        #     raise ValidationError(err)
-        # 
-        # except SubprocessError as err:
-        #     raise ValidationError(err)

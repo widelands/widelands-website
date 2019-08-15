@@ -162,7 +162,7 @@ TEMPLATES = [
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
 
-# Franku: SHA1 Needed as compatibility for old passwords
+# SHA1 Needed as compatibility for old passwords
 # https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -190,9 +190,12 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-# See also pybb defaults in pybb.settings.py
+
 PYBB_ATTACHMENT_ENABLE = True
-PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*5  #5MB
+
+# To prevent sending errors from the webserver, keep
+# this below the webserver settings 
+PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*4
 PYBB_DEFAULT_MARKUP = 'markdown'
 INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from pybb.models.category
 
