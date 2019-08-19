@@ -224,7 +224,7 @@ def validate_file(attachment):
     # File size
     if attachment.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
         raise ValidationError(
-            'Attachment is too big. We allow max %(size)s Mb',
+            'Attachment is too big. We allow max %(size)s MiB',
             params = {
                 'size': pybb_settings.ATTACHMENT_SIZE_LIMIT/1024/1024,
             }
