@@ -417,7 +417,10 @@ class Attachment(models.Model):
                             self.path)
 
     def delete(self, *args, **kwargs):
-        os.remove(self.get_absolute_path())
+        try:
+            os.remove(self.get_absolute_path())
+        except FileNotFoundError:
+            pass
         super(Attachment, self).delete(*args, **kwargs)
 
 
