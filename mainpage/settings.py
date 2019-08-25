@@ -1,4 +1,5 @@
-# Django settings for widelands project.
+# Django default settings for widelands project.
+# Overwrite these settings in local_settings.py!
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -199,9 +200,9 @@ PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*4
 PYBB_DEFAULT_MARKUP = 'markdown'
 INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from pybb.models.category
 
-###################
-# Uploading files #
-###################
+##################################
+# Uploading files and validation #
+##################################
 
 # Use only this handler to get real a file in /tmp
 # Some validation checks needs a real file
@@ -230,6 +231,10 @@ ALLOW_ATTACHMENTS_AFTER = 5
 
 # Page describing uploads
 ATTACHMENT_DESCR_PAGE = 'Attachments'
+
+# If clamav including clamdscan is installed and running
+# set this to True
+VIRUS_CHECK = False
 
 ##############################################
 # Link classification and other Markup stuff #

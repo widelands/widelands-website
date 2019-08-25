@@ -1,14 +1,14 @@
+from django.core.exceptions import ValidationError
+from django.conf import settings
+
 import shutil
 import subprocess
-
-from django.core.exceptions import ValidationError
 
 
 def virus_scan(uploaded_file):
     '''Scan uploaded_file for viruses with clamav.'''
 
-    # Only check if clamav is installed
-    if shutil.which('clamdscan'):
+    if settings.VIRUS_CHECK:
         tmp_file_path = uploaded_file.temporary_file_path()
         process_compl = subprocess.run(['clamdscan',
                                         '--multiscan',
