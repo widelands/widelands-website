@@ -9,13 +9,39 @@
 
 {% block content_main %}
 <div class="blogEntry">
-    <table id="current-score">
+    <h2>Ratio score</h2>
+    <table class="score-table">
         <tr>
             <th>Rank</th>
             <th>Player</th>
-            <th>Score</th>
-            <th>Standard deviation</th>
+            <th>Number of games</th>
+            <th>Win ratio</th>
         </tr>
+        {% for score in win_ratio_board %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ score.username }}</td>
+            <td>{{ score.nb_of_games }}</td>
+            <td>{{ score.win }}/{{ score.nb_of_games }} ({{ score.win_ratio }} % )</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Glicko2 score</h2>
+    <table class="score-table">
+        <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Rating</th>
+            <th>Deviation</th>
+        </tr>
+        {% for score in glicko2_board %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ score.username }}</td>
+            <td>{{ score.rating }}</td>
+            <td>{{ score.deviation }}</td>
+        </tr>
+        {% endfor %}
     </table>
 </div>
 {% endblock %}

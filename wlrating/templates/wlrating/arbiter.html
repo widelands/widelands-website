@@ -15,6 +15,7 @@
             <th>Type of game</th> 
             <th>Map</th>
             <th>Players</th>
+            <th>Tribes</th>
             <th>Result</th>
             <th>Submitted by</th>
             <th>link</th>
@@ -26,6 +27,7 @@
             <td>{{ game.game_type }}</td>
             <td>{{ game.game_map }}</td>
             <td>{{ game.players }}</td>
+            <td>{{ game.tribes }}</td>
             <td>{{ game.result }}</td>
             <td>{{ game.submitter }}</td>
             <td></td>
@@ -34,10 +36,11 @@
         {% endfor %}
         <tr>
             <form method="post" action="/rating/arbiter/">
-                <td><input type="text" name="startDate"></td>
+                <td><input type="text" name="start_date"></td>
                 <td><input type="text" name="game_type"></td> 
                 <td><input type="text" name="game_map"></td>
                 <td><input type="text" name="players"></td>
+                <td><input type="text" name="tribes"></td>
                 <td><input type="text" name="result"></td>
                 <td><input type="text" name="submitter"></td>
                 <td><input type="text" name="link"></td>
