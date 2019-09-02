@@ -403,7 +403,7 @@ class Attachment(models.Model):
         super(Attachment, self).save(*args, **kwargs)
         if not self.hash:
             self.hash = hashlib.sha1(
-                str(self.id).encode('utf-8') + settings.SECRET_KEY.encode('utf-8')).hexdigest()
+                bytes(self.id) + settings.SECRET_KEY.encode('utf-8')).hexdigest()
         super(Attachment, self).save(*args, **kwargs)
 
     def __str__(self):
