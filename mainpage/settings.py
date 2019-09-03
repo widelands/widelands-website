@@ -1,4 +1,5 @@
-# Django settings for widelands project.
+# Django default settings for widelands project.
+# Overwrite these settings in local_settings.py!
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -162,7 +163,7 @@ TEMPLATES = [
 DEFAULT_FROM_EMAIL = 'noreply@widelands.org'
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
 
-# Franku: SHA1 Needed as compatibility for old passwords
+# SHA1 Needed as compatibility for old passwords
 # https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -190,10 +191,50 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-# See also pybb defaults in pybb.settings.py
-PYBB_ATTACHMENT_ENABLE = False  # disable gzip middleware when enabling attachments
+
+PYBB_ATTACHMENT_ENABLE = True
+
+# To prevent sending errors from the webserver, keep
+# this below the webserver settings 
+PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*4
 PYBB_DEFAULT_MARKUP = 'markdown'
-INTERNAL_PERM='pybb.can_access_internal' # The permission string derived from pybb.models.category
+INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from pybb.models.category
+
+##################################
+# Uploading files and validation #
+##################################
+
+# Use only this handler to get real a file in /tmp
+# Some validation checks needs a real file
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+    ]
+
+ALLOWED_EXTENSIONS = [
+    'wgf', 'jpg', 'jpeg', 'gif', 'png', 'ogg', 'lua',
+    'ods', 'zip', 'json', 'txt', 'csv', 'wai',
+    ]
+
+# Widelands Savegame should contain at least these entries
+WGF_CONTENT_CHECK = ['/binary/', '/map/', '/minimap.png', '/preload',]
+
+# Do not check mime type for these extensions
+SKIP_MIME_EXTENSIONS = ['wai',]
+
+ALLOWED_WAI_SECTIONS = [
+    'magic_numbers', 'neuron_values',
+    'neuron_functions', 'fneurons',
+    ]
+
+# Allow attachments only after this amount of posts
+ALLOW_ATTACHMENTS_AFTER = 5
+
+# Page describing uploads
+ATTACHMENT_DESCR_PAGE = 'Attachments'
+
+# If clamav including clamdscan is installed and running
+# set this to True
+VIRUS_CHECK = False
 
 ##############################################
 # Link classification and other Markup stuff #

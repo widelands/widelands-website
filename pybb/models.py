@@ -18,7 +18,7 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from check_input.models import SuspiciousInput
-
+import magic
 
 try:
     from notification import models as notification
@@ -345,6 +345,11 @@ class Post(RenderableItem):
     def delete(self, *args, **kwargs):
         self_id = self.id
         head_post_id = self.topic.posts.order_by('created')[0].id
+
+        if self.attachments.all():
+            for attach in self.attachments.all():
+                attach.delete()
+
         super(Post, self).delete(*args, **kwargs)
 
         self.topic.save()
@@ -398,7 +403,7 @@ class Attachment(models.Model):
         super(Attachment, self).save(*args, **kwargs)
         if not self.hash:
             self.hash = hashlib.sha1(
-                str(self.id) + settings.SECRET_KEY).hexdigest()
+                bytes(self.id) + settings.SECRET_KEY.encode('utf-8')).hexdigest()
         super(Attachment, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -407,18 +412,16 @@ class Attachment(models.Model):
     def get_absolute_url(self):
         return reverse('pybb_attachment', args=[self.hash])
 
-    def size_display(self):
-        size = self.size
-        if size < 1024:
-            return '%b' % size
-        elif size < 1024 * 1024:
-            return '%dKb' % int(size / 1024)
-        else:
-            return '%.2fMb' % (size / float(1024 * 1024))
-
     def get_absolute_path(self):
         return os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO,
                             self.path)
+
+    def delete(self, *args, **kwargs):
+        try:
+            os.remove(self.get_absolute_path())
+        except FileNotFoundError:
+            pass
+        super(Attachment, self).delete(*args, **kwargs)
 
 
 if notification is not None:

@@ -29,19 +29,16 @@
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
 	<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
 	<hr />
-	<div class="post">
 		{{ post.body_html|safe }}
-	</div>
-
-	{% if post.attachment_cache %}
-		{% for attach in post.attachment_cache %}
-			{% trans "Attachment" %}: <a href="{{ attach.get_absolute_url }}">{{ attach.name }}</a> ({{ attach.size_display }})
-		{% endfor %}
-	{% endif %}
 
 	{% if post.updated %}
-		<span class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</span>
+		<div class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</div>
 	{% endif %}
+
+	{% if post.attachment_cache %}
+		{% include 'pybb/inlines/attachment.html' %}
+	{% endif %}
+
 	<hr />
 	{% if user.is_authenticated %}
 		{% ifequal user.wlprofile.show_signatures 1 %}
@@ -54,7 +51,6 @@
 			{{ post.user.wlprofile.signature|urlize|linebreaks }}
 		{% endif %}
 	{% endif %}
-
 	<a class="button posRight" href="#top">
 		<img src="{% static 'forum/img/top.png' %}" alt ="" class="middle" />
 		<span class="middle">{% trans "Top" %}</span>
