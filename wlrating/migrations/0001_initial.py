@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('win_team',  models.IntegerField()),
                 ('game_status',  models.IntegerField()),
                 ('game_breaks', models.IntegerField()),
-    
+                ('counted_in_score', models.BooleanField(default=False))
             ],
         ),
         migrations.CreateModel(

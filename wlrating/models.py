@@ -18,7 +18,7 @@ class Temporary_user(models.Model):
 class Game(models.Model):
 
     CHOICES_GAME_TYPE = ((1, 'Autocrat'), (2, 'Wood gnome'))
-    GAME_STATUS = [('0', 'unfinished'), ('1', 'winner_team'), ('2', 'tie')]
+    GAME_STATUS = [(0, 'unfinished'), (1, 'winner_team'), (2, 'tie')]
 
     start_date = models.DateTimeField()
     game_type = models.IntegerField(choices=CHOICES_GAME_TYPE)
@@ -26,12 +26,14 @@ class Game(models.Model):
     win_team = models.IntegerField()
     game_status = models.IntegerField(choices=GAME_STATUS)
     game_breaks = models.IntegerField()
+
+    counted_in_score = models.BooleanField(default=False)
     # here we can think about expanding to FK to uploaded maps too:
     # map_link = models.ForeignKey('?maps.map?', null=True, blank=True)
     # game_link
 
 class Participant(models.Model):
-    TRIBE_TYPE = [('1', 'empire'), ('2', 'barbarian'), ('3', 'atlantean'), ('4', 'frisian')]
+    TRIBE_TYPE = [(1, 'empire'), (2, 'barbarian'), (3, 'atlantean'), (4, 'frisian')]
 
     user = models.ForeignKey(Temporary_user, related_name='user')
     game = models.ForeignKey(Game, related_name='participants')
@@ -40,7 +42,7 @@ class Participant(models.Model):
     tribe = models.IntegerField(choices=TRIBE_TYPE)
 
 class Player_Rating(models.Model):
-    CHOICES_TYPE = [('1', 'simple'), ('2', 'Elo'), ('3', 'Glicko')]
+    CHOICES_TYPE = [(1, 'simple'), (2, 'Elo'), (3, 'Glicko')]
 
     user = models.ForeignKey(Temporary_user, related_name='temp_user')
     rating_type = models.IntegerField(choices=CHOICES_TYPE )

@@ -4,3 +4,15 @@ td input {
     margin: 0;
     border-radius: 0;
 }
+
+.post td.table_inside_table {
+    padding: 0;
+    margin: 0;
+}
+
+.table_inside_table table {
+    width:100%;
+}
+.to_hide {
+    display: none;
+}

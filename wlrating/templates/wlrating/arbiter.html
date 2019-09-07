@@ -7,49 +7,105 @@
 <h1>Widelands players rating</h1>
 {% endblock %}
 
+{% load static %}
+
 {% block content_main %}
 <div class="blogEntry post">
-    <table id="arbiter-table">
+    <table id="arbiter-table"  cellspacing="0" cellpadding="0">
         <tr>
             <th>Start date</th>
             <th>Type of game</th> 
             <th>Map</th>
             <th>Players</th>
-            <th>Tribes</th>
-            <th>Result</th>
+            <th>Winner team</th>
             <th>Submitted by</th>
             <th>link</th>
             <th>Action</th>
         </tr>
         {% for game in game_list %}
         <tr>
-            <td>{{ game.start_date }}</td>
-            <td>{{ game.game_type }}</td>
-            <td>{{ game.game_map }}</td>
-            <td>{{ game.players }}</td>
-            <td>{{ game.tribes }}</td>
-            <td>{{ game.result }}</td>
-            <td>{{ game.submitter }}</td>
-            <td></td>
-            <td></td>
+            <tr>
+                <td>{{ game.start_date }}</td>
+                <td>{{ game.game_type }}</td>
+                <td>{{ game.game_map }}</td>
+                <td  class="table_inside_table" >
+                    <table >
+                        <tr>
+                            <th>Player</th>
+                            <th>Tribe</th> 
+                            <th>Team</th>
+                        </tr>
+                        {% for player in game.players %}
+                        <tr>
+                            <td>{{ player.username }}</td>
+                            <td>{{ player.tribe }}</td>
+                            <td>{{ player.team }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+                <td>{{ game.win_team }}</td>
+                <td>{{ game.submitter }}</td>
+                <td></td>
+                <td>
+                    <form name="Remove" method="post" action="/rating/arbiter/">
+                        <input type="hidden" name="is_remove_btn" value= '{{ forloop.counter0 }}' />
+                        <input type="hidden" name="supporttype" />
+                        <input type="submit" value="Remove" />
+                        {% csrf_token %}
+                    </form>
+                </td>
+            </tr>
         </tr>
         {% endfor %}
-        <tr>
-            <form method="post" action="/rating/arbiter/">
+        <form method="post" action="/rating/arbiter/">    
+            <tr>
                 <td><input type="text" name="start_date"></td>
                 <td><input type="text" name="game_type"></td> 
                 <td><input type="text" name="game_map"></td>
-                <td><input type="text" name="players"></td>
-                <td><input type="text" name="tribes"></td>
+                <td class="table_inside_table">
+                    <table>
+                        <tbody id="add_player_table">
+                            <tr>
+                                <th>Player</th>
+                                <th>Tribe</th> 
+                                <th>Team</th>
+                            </tr>
+                            {% for i in '01234567'|make_list %}
+                            <tr>
+                                <td><input type="text" name="player_{{ i }}"></td>
+                                <td><input type="text" name="tribe_{{ i }}"></td>
+                                <td><input type="text" name="team_{{ i }}"></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                <input type="hidden" name="is_add_game_btn" />
                 <td><input type="text" name="result"></td>
                 <td><input type="text" name="submitter"></td>
                 <td><input type="text" name="link"></td>
                 <td><input type="submit"></td>
                 {% csrf_token %}
-            </form>
-        </tr>
+            </tr>
+        </form>
     </table>
+    <div>
+        <form name="Calculate scores" method="post" action="/rating/arbiter/">
+        <input type="hidden" name="is_calculate_btn" />
+        <input type="hidden" name="supporttype" />
+        <input type="submit" value="Calculate scores" />
+        {% csrf_token %}
+        </form>
+    </div>
+    <div>
+    <form name="Add test data" method="post" action="/rating/arbiter/">
+        <input type="hidden" name="is_create_test_data_btn" />
+        <input type="hidden" name="supporttype" />
+        <input type="submit" value="Add test data" />
+        {% csrf_token %}
+        </form>
+    </div>
 </div>
-
-<div></div>
 {% endblock %}
+
