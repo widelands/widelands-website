@@ -8,22 +8,24 @@ import pprint #Temporary
 #############
 # constants #
 #############
-STARTING_SCORE = Decimal(1500).quantize(Decimal('1.00'))
-STANDARD_DEVIATION = Decimal(300).quantize(Decimal('1.00'))
-VOLATILITY = Decimal(0.06).quantize(Decimal('1.00000'))
-TAU = 0.2
+STARTING_SCORE = 1500
+STANDARD_DEVIATION = 300
+VOLATILITY = 0.06
+TAU = 1
 EPISLON = 0.000001
-ITERATION_LIMIT = 15
+ITERATION_LIMIT = 2
+GAME_PER_ROUND = 10
 
 
 class Glicko_rating ():
     def __init__ (self):
-        self.starting_score = STARTING_SCORE
-        self.standard_deviation = STANDARD_DEVIATION
-        self.volatility = VOLATILITY
+        self.starting_score = Decimal(STARTING_SCORE).quantize(Decimal('1.00'))
+        self.standard_deviation = Decimal(STANDARD_DEVIATION).quantize(Decimal('1.00'))
+        self.volatility = Decimal(VOLATILITY).quantize(Decimal('1.00000'))
         self.tau = TAU
         self.epsilon = EPISLON
         self.iteration_limit = ITERATION_LIMIT
+        self.game_per_round = GAME_PER_ROUND
 
     def calculate_all_games(self, season_name):
         games = []
@@ -44,7 +46,7 @@ class Glicko_rating ():
         round_games = 0
         games_until_last = total_games
         for g in games_of_season_list:
-            if round_games < 10:
+            if round_games < self.game_per_round:
                 games.append(g)
                 round_games+=1
             else:
@@ -61,8 +63,8 @@ class Glicko_rating ():
 
 
     def calculate_round(self, games, s):
+        print ("NEW ROUND")
         for g in games:
-            print ("new round")
             print (g.start_date)
             print (g.game_map)
 
@@ -71,8 +73,8 @@ class Glicko_rating ():
         pprint.pprint(data, width=1)
         for player in data:
             # step 3 to 8
+            
             rating, deviation, volatility = self.glicko_process(player)
-            print (rating, deviation, volatility)
             tu = Temporary_user.objects.get(
                 username = player['username']
             )
@@ -92,31 +94,27 @@ class Glicko_rating ():
         sigma = player['volatility']
         nu = self.step3_nu(player['games'], mu)
 
-        print ("step3", nu)
-
         ## Step 4
         Delta = self.step4_Delta(player['games'], mu, nu)
-        print ("step4", Delta)
 
         ## Step 5
         sigma_prime = self.step5_sigma(Delta, phi, nu, sigma)
-        print ("step5", sigma_prime)
+        print (sigma_prime)
+        print ('yOOOOO?')
 
         ## Step 6
         phi_star = self.step6_phi_star(phi, sigma_prime)
-        print ("step6", phi_star)
 
         ## Step 7
         phi_prime = self.step7_phi_prime(phi_star,nu)
         mu_prime = self.step7_mu_prime(player['games'], mu, phi_prime)
-        print ("step7", phi_prime, mu_prime)
 
         ## Step 8
         final_score = self.step8_rating(mu_prime)
         final_deviation = self.step8_deviation(phi_prime)
         final_volatility = sigma_prime
-        print ("step8", final_score, final_deviation, final_volatility)
 
+        print ('final_volatility', final_volatility)
         return final_score, final_deviation, final_volatility
 
     # step1
@@ -196,9 +194,7 @@ class Glicko_rating ():
             E = self.step3_E(mu, game['competitor']['score'], game['competitor']['deviation'])
             g = self.step3_g(game['competitor']['deviation'])
             total_sum += g*(game['is_winner'] - E)
-            print (g, E)
         Delta = nu*total_sum
-        print (Delta, nu, total_sum)
         return Delta
 
     def step5_function_f(self, x, Delta, phi, nu, sigma):
@@ -209,7 +205,7 @@ class Glicko_rating ():
         denominator1 *= Decimal(2)
 
         a = Decimal(2)*Decimal(math.log(sigma))
-        numerator2 = x - a
+        numerator2 = Decimal(x) - Decimal(a)
         denominator2 = Decimal(self.tau)**Decimal(2)
 
         result = numerator1 / denominator1
@@ -219,23 +215,23 @@ class Glicko_rating ():
     def step5_sigma(self, Delta, phi, nu, sigma):
         epsilon = self.epsilon
         a = Decimal(2)*Decimal(math.log(sigma))
-        A = a
+        A = Decimal(a)
 
         if Delta**Decimal(2) > phi**Decimal(2) + nu:
-            B = math.log(Delta**Decimal(2) - phi**Decimal(2) - v)
+            B = Decimal(math.log(Delta**Decimal(2) - phi**Decimal(2) - nu))
         else:
             k = Decimal(1)
             iteration_num = 0
             while self.step5_function_f(a - Decimal(k)*Decimal(self.tau), Delta, phi, nu, sigma) and iteration_num < self.iteration_limit:
                 k += Decimal(1)
                 iteration_num += 1
-            B = a - k*Decimal(self.tau)
+            B = Decimal(a - k*Decimal(self.tau))
 
         f_A = self.step5_function_f(A, Delta, phi, nu, sigma)
         f_B = self.step5_function_f(B, Delta, phi, nu, sigma)
 
         iteration_num = 0
-        while abs(B-A) > epsilon and iteration_num < self.iteration_limit:
+        while Decimal(abs(B-A)) > Decimal(epsilon) and iteration_num < self.iteration_limit:
             proportion = f_A / (f_B - f_A)  
             C = A + (A - B) * proportion
             f_C = self.step5_function_f(C, Delta, phi, nu, sigma)

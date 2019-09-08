@@ -24,101 +24,132 @@ def rating_main (request):
 @login_required
 def arbiter (request):
     if request.user.is_superuser:
-        
         if request.method == 'POST':
             #to remove
             current_user = request.user
 
             r = request.POST
-            print (r)
-            is_remove_btn = False
-            is_calculate_btn= False
-            is_create_test_data_btn = False
-            is_add_game_btn = False
-            for inputs in r:
-                if inputs == 'is_remove_btn':
-                    is_remove_btn = True
-            for inputs in r:
-                if inputs == 'is_calculate_btn':
-                    is_calculate_btn = True
 
-            for inputs in r:
-                if inputs == 'is_create_test_data_btn':
-                    is_create_test_data_btn = True
+            p_data = process_data_from_html(r)
+            
+            g = Game.objects.create(
+                start_date = r.get('start_date'),
+                game_type = type_to_int(r.get('game_type')),
+                game_map = r.get('game_map'),
+                win_team = r.get('result'),
+                game_status = 1, #todo when working on user submissions
+                game_breaks = 0, #todo when working on user submissions
+            )
+            g.save()
 
-            for inputs in r:
-                if inputs == 'is_add_game_btn':
-                    is_add_game_btn = True
+            for participant in p_data:       
+                tu, is_new_user = Temporary_user.objects.get_or_create(username=participant['user'])
 
-            if is_remove_btn:
-                index = 0
-                for g in Game.objects.order_by('start_date'):
-                    if index == int(r['is_remove_btn']):
-                        for p in Participant.objects.filter(game=g):
-                            p.delete()
-                        g.delete()
-                    index += 1
-
-            if is_calculate_btn:
-                calculate_new_scores()
-
-            if is_create_test_data_btn:
-                create_test_data()
-
-            if is_add_game_btn :
-                p_data = process_data_from_html(r)
-                
-                g = Game.objects.create(
-                    start_date = r.get('start_date'),
-                    game_type = type_to_int(r.get('game_type')),
-                    game_map = r.get('game_map'),
-                    win_team = r.get('result'),
-                    game_status = 1, #todo when working on user submissions
-                    game_breaks = 0, #todo when working on user submissions
+                p = Participant.objects.create(
+                    user = tu,
+                    game = g,
+                    team = participant['team'],
+                    submitter = participant['submitter'],
+                    tribe = participant['tribe'],
                 )
-                g.save()
-                
-                print (p_data)
+                p.save()
 
-                for participant in p_data['participations']:               
-                    tu, is_new_user = Temporary_user.objects.get_or_create(username=participant['user'])
-
-                    p = Participant.objects.create(
-                        user = tu,
-                        game = g,
-                        team = participant['team'],
-                        submitter = participant['submitter'],
-                        tribe = participant['tribe'],
-                    )
-                    p.save()
-
-        game_list = []
-        for g in Game.objects.order_by('start_date'):
-            game_data = {}
-            game_data['start_date'] = datetime.strftime(g.start_date, TIME_FORMAT)
-            game_data['game_type'] = g.game_type
-            game_data['game_map'] = g.game_map
-            game_data['win_team'] = g.win_team
-            
-            game_list.append(game_data)
-
-            tribes_string = ''
-
-            players = []
-            for p in Participant.objects.filter(game = g):
-                player = {}
-                player['tribe'] =  int_to_string(p.tribe)
-                player['username'] = p.user.username
-                player['team'] = p.team
-                players.append(player)
-            
-            game_data['tribes'] = tribes_string
-            game_data['players']  = players
-
-        return render(request, 'wlrating/arbiter.html', {'game_list': game_list})
+        return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
 
         
+@login_required
+def remove_btn (request, game_id):
+    g = Game.objects.get(id=game_id)
+    for p in Participant.objects.filter(game=g):
+        p.delete()
+    g.delete()
+    
+    return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+    
+@login_required
+def calculate_scores (request):
+    s, created = Season.objects.get_or_create(
+        start_date= '2019-06-01',
+        end_date='2019-12-01',
+        name='Season I: The season of many builds'
+    )
+    if created:
+        s.save()
+    
+    for g in Game.objects.all():
+        g.counted_in_score = False
+        g.save()
 
+    for pr in Player_Rating.objects.all():
+        pr.delete()
+
+    for tu in Temporary_user.objects.all():
+        nb_of_games = 0
+        win= 0
+        print (tu.username) 
+
+        for p in Participant.objects.filter(user = tu):
+            nb_of_games += 1
+            g = Game.objects.get(id = p.game.id)
+            win = win + 1  if g.win_team == p.team else win
+
+        if nb_of_games > 0:
+            try:
+                pr = Player_Rating.objects.get(
+                    user = tu,
+                    rating_type = 1,
+                )
+            except Player_Rating.DoesNotExist:
+                pr = Player_Rating.objects.create(
+                    user = tu,
+                    rating_type = 1,
+                    decimal1 = nb_of_games,
+                    decimal2 = win,
+                    decimal3 = Decimal(win/nb_of_games).quantize(Decimal('1.00000')),
+                    season = s,
+                )
+                pr.save()
+            pr.decimal1 = nb_of_games
+            pr.decimal2 = win
+            pr.decimal3 = Decimal(win/nb_of_games).quantize(Decimal('1.00000'))
+            pr.season = s
+            pr.save()
+
+
+    new_rating = Glicko_rating()
+    new_rating.calculate_all_games('Season I: The season of many builds')
+
+    return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+    
+
+@login_required
+def add_test_data (request):
+    create_test_data()
+    return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+    
+
+def get_arbiter_list():
+    game_list = []
+    for g in Game.objects.order_by('start_date'):
+        game_data = {}
+        game_data['start_date'] = datetime.strftime(g.start_date, TIME_FORMAT)
+        game_data['game_type'] = g.game_type
+        game_data['game_map'] = g.game_map
+        game_data['win_team'] = g.win_team
+        game_data['game_id'] = g.id
+
+        players = []
+        for p in Participant.objects.filter(game = g):
+            player = {}
+            player['tribe'] =  int_to_string(p.tribe)
+            player['username'] = p.user.username
+            player['team'] = p.team
+            players.append(player)
+
+        game_data['players']  = players
+
+        game_list.append(game_data)
+    return game_list
 
 @login_required
 def score (request):
@@ -173,8 +204,7 @@ def process_data_from_html(r):
                 player_list[num]['team'] = value
                 print (player_list[num])
 
-    data = {}
-    data['participations'] = []
+    data = []
 
     print (player_list)
 
@@ -184,53 +214,11 @@ def process_data_from_html(r):
         participation['team'] = player_list[dict_property]['team']
         participation['submitter'] = False
         participation['tribe'] = type_to_int(player_list[dict_property]['tribe'])
-        data['participations'].append(participation)
+        data.append(participation)
     return data
 
-def calculate_new_scores():
-    s, created = Season.objects.get_or_create(
-        start_date= '2019-06-01',
-        end_date='2019-12-01',
-        name='Season I: The season of many builds'
-    )
-    if created:
-        s.save()
-    
-    for tu in Temporary_user.objects.all():
-        nb_of_games = 0
-        win= 0
-        print (tu.username) 
 
-        for p in Participant.objects.filter(user = tu):
-            nb_of_games += 1
-            g = Game.objects.get(id = p.game.id)
-            win = win + 1  if g.win_team == p.team else win
-
-        if nb_of_games > 0:
-            try:
-                pr = Player_Rating.objects.get(
-                    user = tu,
-                    rating_type = 1,
-                )
-            except Player_Rating.DoesNotExist:
-                pr = Player_Rating.objects.create(
-                    user = tu,
-                    rating_type = 1,
-                    decimal1 = nb_of_games,
-                    decimal2 = win,
-                    decimal3 = Decimal(win/nb_of_games).quantize(Decimal('1.00000')),
-                    season = s,
-                )
-                pr.save()
-            pr.decimal1 = nb_of_games
-            pr.decimal2 = win
-            pr.decimal3 = Decimal(win/nb_of_games).quantize(Decimal('1.00000'))
-            pr.season = s
-            pr.save()
-
-    new_rating = Glicko_rating()
-    new_rating.calculate_all_games('Season I: The season of many builds')
-
+# Utilities
 def clean_list(l):
     for num, i in enumerate(l):
         if isinstance(i, str):
@@ -248,6 +236,10 @@ def type_to_int(word):
         return 2
     if word == 'collectors':
         return 3
+    if word == 'territorial lord':
+        return 4
+    if word == 'artifacts':
+        return 5
     if word == 'empire':
         return 1
     if word == 'barbarian':

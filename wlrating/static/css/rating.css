@@ -13,6 +13,9 @@ td input {
 .table_inside_table table {
     width:100%;
 }
+
+
+/* utilities for js */
 .to_hide {
     display: none;
 }
