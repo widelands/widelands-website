@@ -180,3 +180,5 @@ Contact
 =======
 
 Contact user 'kaputtnik' on the homepage for more information and problems.
+
+-- vim:ft=rst:
