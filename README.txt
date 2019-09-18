@@ -80,7 +80,7 @@ Create the tables in the database::
    ./manage.py migrate
    ./manage.py createcachetable
 
-Create a superuser:
+Create a superuser::
 
    ./manage.py createsuperuser
 
