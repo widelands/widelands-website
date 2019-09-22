@@ -8,7 +8,7 @@ written applications.
 
 # License
 
-Our own written applicatiosn are published under GPL v2+.
+Our own written applications are published under GPL v2+.
 For adapted third party applications see the respective folders.
 
 # You would like to contribute?
