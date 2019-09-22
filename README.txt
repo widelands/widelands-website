@@ -40,7 +40,7 @@ Next, we download the website source code::
 
    $ mkdir code
    $ cd code
-   $ git clone lp:widelands-website widelands
+   $ git clone https://github.com/widelands/widelands-website widelands
    $ cd widelands
 
 All fine and good. Now we have to install all the third party modules the
