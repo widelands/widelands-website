@@ -27,8 +27,8 @@
     {% for post in posts %}
     <tr class="{% cycle 'odd' 'even' %}">
       <td class='post'>{{ post.created|custom_date:user }}</td>
-      <td class='post'><a href="{% url 'pybb_topic' post.topic.id %}">{{ post.topic.forum }}</a></td>
-      <td class='post'><a href="{% url 'pybb_forum' post.topic.forum.id %}">{{ post.topic }}</a></td>
+      <td class='post'><a href="{% url 'pybb_forum' post.topic.forum.id %}">{{ post.topic.forum }}</a></td>
+      <td class='post'><a href="{% url 'pybb_topic' post.topic.id %}">{{ post.topic }}</a></td>
       <td class='post'><a href="{{ post.get_absolute_url }}">"{{ post.body_text|truncatechars:80 }}"</a></td>
     </tr>
     {% endfor %}

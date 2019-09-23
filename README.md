@@ -2,7 +2,7 @@
 
 This the source of the [Widelands Website](https://www.widelands.org)
 
-The website is runnning using the Django framwork. It uses some third party
+The website is runnning using the Django framework. It uses some third party
 aplications which are adapted to fit our needs, but contains also some own
 written applications.
 
