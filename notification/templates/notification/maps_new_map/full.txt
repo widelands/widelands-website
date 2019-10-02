@@ -5,5 +5,5 @@ Mapname: {{ mapname }}
 Description: {{ uploader_comment }}
 
 -------------------------
-Link to map: http://{{ current_site }}{{ url }}
+Link to map: https://{{ current_site }}{{ url }}
 {% endblocktrans %}{% endautoescape %}

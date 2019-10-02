@@ -6,5 +6,5 @@
 {{ message_body }}
 
 -------------------------
-Link to Message: http://{{ current_site }}{{ message_url }}
-Reply directly: http://{{ current_site }}/messages/reply/{{ message_id }}/{% endblocktrans %}{% endautoescape %}
+Link to Message: https://{{ current_site }}{{ message_url }}
+Reply directly: https://{{ current_site }}/messages/reply/{{ message_id }}/{% endblocktrans %}{% endautoescape %}

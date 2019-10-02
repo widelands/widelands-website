@@ -5,5 +5,5 @@ Comment for this revision: "{{ rev_comment }}"
 
 -------------------------
 A diff is available at: http://{{ current_site }}{{ diff_url }}
-Link to article: http://{{ current_site }}{{ article_url }}
+Link to article: https://{{ current_site }}{{ article_url }}
 {% endblocktrans %}{% endautoescape %}
