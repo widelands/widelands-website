@@ -223,7 +223,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         notice_type = NoticeType.objects.get(label=label)
 
         current_site = Site.objects.get_current()
-        notices_url = "http://%s%s" % (
+        notices_url = "https://%s%s" % (
             str(current_site),
             reverse('notification_notices'),
         )
@@ -266,7 +266,7 @@ def send_now(users, label, extra_context=None, on_site=True):
 
             # Strip leading newlines. Make writing the email templates easier:
             # Each linebreak in the templates results in a linebreak in the emails
-            # If the first line in a template contains only template tags the 
+            # If the first line in a template contains only template tags the
             # email will contain an empty line at the top.
             body = render_to_string('notification/email_body.txt', {
                 'message': messages['full.txt'],
@@ -370,7 +370,7 @@ class ObservedItem(models.Model):
     def send_notice(self):
         send([self.user], self.notice_type.label,
              {'observed': self.observed_object})
-        
+
     def get_content_object(self):
         """
         taken from threadedcomments:
