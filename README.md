@@ -6,7 +6,7 @@ The website is runnning using the Django framework. It uses some third party
 aplications which are adapted to fit our needs, but contains also some own
 written applications.
 
-# License
+# License [![License](https://img.shields.io/github/license/widelands/widelands-website.svg?color=blue)](LICENCE)
 
 Our own written applications are published under GPL v2+.
 For adapted third party applications see the respective folders.
