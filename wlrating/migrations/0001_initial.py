@@ -22,45 +22,66 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='rating_user',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('user', models.ForeignKey(verbose_name=b'related user', to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='tribe',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='map',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='gametype',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+            ],
+        ),
+        migrations.CreateModel(
             name='game',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('start_date', models.DateTimeField(default=0, verbose_name=b'one hour of availability')),
-                ('game_type', models.IntegerField()),
-                ('game_map', models.CharField(max_length=255)),
+                ('game_type', models.ForeignKey(to='gametype')),
+                ('game_map', models.ForeignKey(to='map')),
                 ('win_team',  models.IntegerField()),
                 ('game_status',  models.IntegerField()),
                 ('game_breaks', models.IntegerField()),
+                ('submitter', models.ForeignKey(to='rating_user')),
                 ('counted_in_score', models.BooleanField(default=False))
-            ],
-        ),
-        migrations.CreateModel(
-            name='temporary_user',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('username', models.CharField(max_length=255, blank=True, default='')),
             ],
         ),
         migrations.CreateModel(
             name='participant',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('user', models.ForeignKey(to='temporary_user')),
+                ('user', models.ForeignKey(to='rating_user')),
                 ('game', models.ForeignKey(to='game')),
                 ('team', models.IntegerField()),
-                ('submitter', models.BooleanField(default=False)),
-                ('tribe', models.IntegerField()),
+                ('tribe', models.ForeignKey(to='tribe')),
             ],
         ),
         migrations.CreateModel(
             name='player_rating',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('user', models.ForeignKey(to='temporary_user')),
+                ('user', models.ForeignKey(to='rating_user')),
                 ('rating_type', models.IntegerField()),
-                ('decimal1', models.DecimalField(max_digits=10, decimal_places=5)),
-                ('decimal2', models.DecimalField(max_digits=10, decimal_places=5)), 
-                ('decimal3', models.DecimalField(max_digits=10, decimal_places=5)), 
+                ('decimal1', models.DecimalField(max_digits=15, decimal_places=10)),
+                ('decimal2', models.DecimalField(max_digits=15, decimal_places=10)), 
+                ('decimal3', models.DecimalField(max_digits=15, decimal_places=10)), 
                 ('season', models.ForeignKey(to='season')),
             ],
         ),

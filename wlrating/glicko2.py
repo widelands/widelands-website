@@ -1,35 +1,22 @@
 import math
-from .models import Game, Participant, Player_Rating, Temporary_user, Season
+from django.contrib.auth.models import User
+from .models import Game, Participant, Player_Rating, Rating_user, Season
 from decimal import getcontext, Decimal
 from datetime import datetime, timedelta
-
-import pprint #Temporary
-
-#############
-# constants #
-#############
-STARTING_SCORE = 1500
-STANDARD_DEVIATION = 300
-VOLATILITY = 0.06
-TAU = 1
-EPISLON = 0.000001
-ITERATION_LIMIT = 2
-GAME_PER_ROUND = 10
-
+from django.conf import settings
 
 class Glicko_rating ():
     def __init__ (self):
-        self.starting_score = Decimal(STARTING_SCORE).quantize(Decimal('1.00'))
-        self.standard_deviation = Decimal(STANDARD_DEVIATION).quantize(Decimal('1.00'))
-        self.volatility = Decimal(VOLATILITY).quantize(Decimal('1.00000'))
-        self.tau = TAU
-        self.epsilon = EPISLON
-        self.iteration_limit = ITERATION_LIMIT
-        self.game_per_round = GAME_PER_ROUND
+        self.starting_score = Decimal(settings.STARTING_SCORE).quantize(Decimal('1.00'))
+        self.standard_deviation = Decimal(settings.STANDARD_DEVIATION).quantize(Decimal('1.00'))
+        self.volatility = Decimal(settings.VOLATILITY).quantize(Decimal('1.00000'))
+        self.tau = settings.TAU
+        self.epsilon = settings.EPISLON
+        self.iteration_limit = settings.ITERATION_LIMIT
+        self.game_per_round = settings.GAME_PER_ROUND
 
     def calculate_all_games(self, season_name):
         games = []
-        print ("OK glicko")
         s = Season.objects.get(
             name = season_name
         )
@@ -55,7 +42,6 @@ class Glicko_rating ():
                 round_games = 0
                 games = []
             games_until_last -= 1
-            print (games_until_last)
             if games_until_last == 0:
                 self.calculate_round(games, s)
             g.counted_in_score= True
@@ -63,22 +49,15 @@ class Glicko_rating ():
 
 
     def calculate_round(self, games, s):
-        print ("NEW ROUND")
-        for g in games:
-            print (g.start_date)
-            print (g.game_map)
-
         # step 1 and 2
         data = self.get_data(games, s)
-        pprint.pprint(data, width=1)
         for player in data:
-            # step 3 to 8
-            
+            # step 3 to 8         
             rating, deviation, volatility = self.glicko_process(player)
-            tu = Temporary_user.objects.get(
-                username = player['username']
-            )
-            pr = Player_Rating.objects.get(user=tu, rating_type= 3)
+
+            u = User.objects.get(username=player['username'])
+            ru = Rating_user.objects.get(user=u)
+            pr = Player_Rating.objects.get(user=ru, rating_type= 3)
             pr.decimal1 = rating
             pr.decimal2 = deviation
             pr.decimal3 = volatility
@@ -86,7 +65,6 @@ class Glicko_rating ():
 
             
     def glicko_process(self, player):
-        print (player['username'])
 
         ## Step 3
         mu = player['score']
@@ -99,8 +77,6 @@ class Glicko_rating ():
 
         ## Step 5
         sigma_prime = self.step5_sigma(Delta, phi, nu, sigma)
-        print (sigma_prime)
-        print ('yOOOOO?')
 
         ## Step 6
         phi_star = self.step6_phi_star(phi, sigma_prime)
@@ -114,7 +90,6 @@ class Glicko_rating ():
         final_deviation = self.step8_deviation(phi_prime)
         final_volatility = sigma_prime
 
-        print ('final_volatility', final_volatility)
         return final_score, final_deviation, final_volatility
 
     # step1
@@ -123,11 +98,11 @@ class Glicko_rating ():
     # return a list of players with their games, and glicko data
     def get_data(self, games, season):
         data = []
-        for tu in Temporary_user.objects.all():
-            pr = self.create_pr_if_needed(tu, season)
+        for ru in Rating_user.objects.all():
+            pr = self.create_pr_if_needed(ru, season)
 
             player_data = {}
-            player_data['username'] = tu.username
+            player_data['username'] = ru.user.username
             player_data['score'] = self.step2_rating(pr.decimal1)
             player_data['deviation'] = self.step2_deviation(pr.decimal2)
             player_data['volatility'] = pr.decimal3
@@ -138,13 +113,13 @@ class Glicko_rating ():
 
                 participated_in_game = False
                 for p in Participant.objects.filter(game = g):
-                    if p.user == tu:
+                    if p.user == ru:
                         participated_in_game = True
                         game_data['is_winner'] = 1 if p.team == g.win_team else 0
 
                 if participated_in_game:
                     for p in Participant.objects.filter(game = g):
-                        if not p.user == tu:
+                        if not p.user == ru:
                             pr = self.create_pr_if_needed(p.user, season)
                             game_data['competitor'] = {}
                             game_data['competitor']['score'] = self.step2_rating(pr.decimal1)
@@ -156,6 +131,8 @@ class Glicko_rating ():
             if player_games:
                 player_data['games'] = player_games
                 data.append(player_data)
+            else:
+                print ("todo: handle standard deviation change for not participating users. User is: ", ru.user.username)
         return data
 
 

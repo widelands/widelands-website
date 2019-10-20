@@ -1,3 +1,10 @@
+/*********/
+/* Table */
+/*********/
+#arbiter-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
 
 td input {
     width: 100%;
@@ -14,8 +21,61 @@ td input {
     width:100%;
 }
 
+.result {
+    background-color: gray;
+    background-image: none;
+}
 
+.looser {
+    background-color: rgba(239, 41, 41, 0.65);
+}
+
+.winner {
+    background-color: rgba(17, 136, 17, 0.65);
+    
+}
+
+
+/*****************************/
+/* Styles for autocompletion */
+/*****************************/
+.ui-front {
+	z-index: 100;
+}
+
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	border-radius: 3px;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+}
+
+.ui-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	outline: none;
+}
+
+.ui-menu .ui-menu-item {
+	position: relative;
+	margin: 0;
+	padding: 3px 1em 3px .4em;
+	cursor: pointer;
+	min-height: 0;
+	font-size: 0.85em;
+	border-bottom: 1px solid black;
+}
+
+
+/********************/
 /* utilities for js */
+/********************/
 .to_hide {
     display: none;
 }

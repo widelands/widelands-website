@@ -4,10 +4,15 @@
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import Game, Participant, Player_Rating, Temporary_user, Season
+from django.contrib.auth.models import User
+from .models import Game, Participant, Player_Rating, Rating_user, Season, Tribe, Map, GameType
 from decimal import Decimal
 from .glicko2 import Glicko_rating
 from datetime import datetime
+from django.http import HttpResponse
+import json
+
+
 
 ###########
 # Options #
@@ -31,26 +36,38 @@ def arbiter (request):
             r = request.POST
 
             p_data = process_data_from_html(r)
-            
+            game_type = GameType.objects.get(name = r.get('game_type'))
+            game_map = Map.objects.get(name = r.get('game_map'))
+
+            submitter_user = User.objects.get(username = r.get('submitter'))
+            ru, is_new_user = Rating_user.objects.get_or_create(user= submitter_user)
+
+
             g = Game.objects.create(
                 start_date = r.get('start_date'),
-                game_type = type_to_int(r.get('game_type')),
-                game_map = r.get('game_map'),
+                game_type = game_type,
+                game_map = game_map,
                 win_team = r.get('result'),
+                submitter = ru,
                 game_status = 1, #todo when working on user submissions
                 game_breaks = 0, #todo when working on user submissions
             )
             g.save()
 
-            for participant in p_data:       
-                tu, is_new_user = Temporary_user.objects.get_or_create(username=participant['user'])
+            for participant in p_data:
+                user = User.objects.get(username = participant['user'])
+                ru, is_new_user = Rating_user.objects.get_or_create(user=user)
+                try:
+                    u = User.objects.get(username = participant['user'])
+                except:
+                    return
 
+                participant_tribe = Tribe.objects.get(name = participant['tribe'])
                 p = Participant.objects.create(
-                    user = tu,
+                    user = ru,
                     game = g,
                     team = participant['team'],
-                    submitter = participant['submitter'],
-                    tribe = participant['tribe'],
+                    tribe = participant_tribe,
                 )
                 p.save()
 
@@ -83,12 +100,11 @@ def calculate_scores (request):
     for pr in Player_Rating.objects.all():
         pr.delete()
 
-    for tu in Temporary_user.objects.all():
+    for ru in Rating_user.objects.all():
         nb_of_games = 0
         win= 0
-        print (tu.username) 
 
-        for p in Participant.objects.filter(user = tu):
+        for p in Participant.objects.filter(user = ru):
             nb_of_games += 1
             g = Game.objects.get(id = p.game.id)
             win = win + 1  if g.win_team == p.team else win
@@ -96,12 +112,12 @@ def calculate_scores (request):
         if nb_of_games > 0:
             try:
                 pr = Player_Rating.objects.get(
-                    user = tu,
+                    user = ru,
                     rating_type = 1,
                 )
             except Player_Rating.DoesNotExist:
                 pr = Player_Rating.objects.create(
-                    user = tu,
+                    user = ru,
                     rating_type = 1,
                     decimal1 = nb_of_games,
                     decimal2 = win,
@@ -133,17 +149,17 @@ def get_arbiter_list():
     for g in Game.objects.order_by('start_date'):
         game_data = {}
         game_data['start_date'] = datetime.strftime(g.start_date, TIME_FORMAT)
-        game_data['game_type'] = g.game_type
-        game_data['game_map'] = g.game_map
-        game_data['win_team'] = g.win_team
+        game_data['game_type'] = g.game_type.name
+        game_data['game_map'] = g.game_map.name
         game_data['game_id'] = g.id
 
         players = []
         for p in Participant.objects.filter(game = g):
             player = {}
-            player['tribe'] =  int_to_string(p.tribe)
-            player['username'] = p.user.username
+            player['tribe'] =  p.tribe.name
+            player['username'] = p.user.user.username
             player['team'] = p.team
+            player['win_status'] = 'winner' if g.win_team == p.team else 'looser'
             players.append(player)
 
         game_data['players']  = players
@@ -156,7 +172,7 @@ def score (request):
     win_ratio_board = []
     for pr in Player_Rating.objects.order_by('-decimal3').filter(rating_type= 1):
         player_data = {}
-        player_data['username'] = pr.user.username
+        player_data['username'] = pr.user.user.username
         player_data['nb_of_games'] = int(pr.decimal1)
         player_data['win'] = int(pr.decimal2)
         player_data['win_ratio'] = int(pr.decimal3* 100) 
@@ -167,7 +183,7 @@ def score (request):
     glicko_board = []
     for pr in Player_Rating.objects.order_by('-decimal1').filter(rating_type= 3):
         player_data = {}
-        player_data['username'] = pr.user.username
+        player_data['username'] = pr.user.user.username
         player_data['rating'] = int(pr.decimal1)
         player_data['deviation'] = int(pr.decimal2)
         player_data['volatility'] = int(pr.decimal3* 100) 
@@ -188,32 +204,30 @@ def process_data_from_html(r):
                 if not num in player_list:
                     player_list[num] = {} 
                 player_list[num]['player'] = value
-                print (player_list[num])
 
             if "tribe" in dict_property:
                 num = str(dict_property[-1])
                 if not num in player_list:
                     player_list[num] = {} 
                 player_list[num]['tribe'] = value
-                print (player_list[num])
             
             if "team" in dict_property:
                 num = str(dict_property[-1])
                 if not num in player_list:
                     player_list[num] = {} 
                 player_list[num]['team'] = value
-                print (player_list[num])
+
+    # Remove player which lack any property
+    for p in list(player_list):
+        if not 'player' in player_list[p] or not 'team' in player_list[p] or not 'tribe' in player_list[p]:
+            del player_list[p]
 
     data = []
-
-    print (player_list)
-
     for dict_property, player in player_list.items():
         participation = {}
         participation['user'] = player_list[dict_property]['player']
         participation['team'] = player_list[dict_property]['team']
-        participation['submitter'] = False
-        participation['tribe'] = type_to_int(player_list[dict_property]['tribe'])
+        participation['tribe'] = player_list[dict_property]['tribe']
         data.append(participation)
     return data
 
@@ -227,192 +241,45 @@ def clean_list(l):
     return l
 
 
-# Ugly, to fix. Maybe an array?
-def type_to_int(word):
-    word = word.lower()
-    if word == 'autocrat':
-        return 1
-    if word == 'wood gnome':
-        return 2
-    if word == 'collectors':
-        return 3
-    if word == 'territorial lord':
-        return 4
-    if word == 'artifacts':
-        return 5
-    if word == 'empire':
-        return 1
-    if word == 'barbarian':
-        return 2
-    if word == 'atlantean':
-        return 3
-    if word == 'frisian':
-        return 4
+##########
+## AJAX ##
+##########
+def get_ajax(request, model_to_get, property_to_get):
+    """AJAX Callback for JS autocomplete.
 
-def int_to_string(tribe):
-    if tribe == 1:
-        return 'empire'
-    if tribe == 2:
-        return 'barbarian'
-    if tribe == 3:
-        return 'atlantean'
-    if tribe == 4:
-        return 'frisian'
+    This is used for autocompletion of usernames when writing PMs.
+    The path.name of this function has to be used in each place:
+    1. Argument of source of the JS widget
+    2. urls.py
 
+    """
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        contain_filter = property_to_get + '__contains'
+        model_obj = model_to_get.objects.filter(**{ contain_filter: q } )
+        results = []
+        for o in model_obj:
+            name_json = {'value': getattr(o, property_to_get)}
+            results.append(name_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
 
-def create_test_data():
-    s, created = Season.objects.get_or_create(
-        start_date= '2019-06-01',
-        end_date='2019-12-01',
-        name='Season I: The season of many builds'
-    )
-    s.save()
+    return data, mimetype
 
-    g1, c1 = Game.objects.get_or_create(
-        start_date = '2019-08-08',
-        game_type = 1,
-        game_map = 'Crater',
-        win_team = 1,
-        game_status = 1, #todo when working on user submissions
-        game_breaks = 0, #todo when working on user submissions
-    )
-    if c1:
-        g1.save()
+def get_usernames(request):
+    data, mimetype = get_ajax(request, User, 'username')
+    return HttpResponse(data, mimetype)
+    
+def get_tribe(request):
+    data, mimetype = get_ajax(request, Tribe, 'name')
+    return HttpResponse(data, mimetype)
 
-    g2, c2 = Game.objects.get_or_create(
-        start_date = '2019-08-08',
-        game_type = 1,
-        game_map = 'Ice war',
-        win_team = 1,
-        game_status = 1, #todo when working on user submissions
-        game_breaks = 0, #todo when working on user submissions
-    )
-    if c2:
-        g2.save()
+def get_map(request):
+    data, mimetype = get_ajax(request, Map, 'name')
+    return HttpResponse(data, mimetype)
 
-    g3, c3 = Game.objects.get_or_create(
-        start_date = '2019-08-08',
-        game_type = 1,
-        game_map = 'Sea',
-        win_team = 1,
-        game_status = 1, #todo when working on user submissions
-        game_breaks = 0, #todo when working on user submissions
-    )
-    if c3:
-        g3.save()
-
-    tu1, c4 = Temporary_user.objects.get_or_create(
-        username = 'main_player'
-    )
-    if c4:
-        tu1.save()
-    tu2, c5 = Temporary_user.objects.get_or_create(
-        username = 'looser'
-    )
-    if c5:
-        tu2.save()
-    tu3, c6 = Temporary_user.objects.get_or_create(
-        username = 'winner1'
-    )
-    if c6:
-        tu3.save()
-    tu4, c7 = Temporary_user.objects.get_or_create(
-        username = 'winner2'
-    )
-    if c7:
-        tu4.save()
-
-    p1, c8 = Participant.objects.get_or_create(
-        user = tu1,
-        game = g1,
-        team = 1,
-        submitter = False,
-        tribe = 1,
-    )
-    p2, c9 = Participant.objects.get_or_create(
-        user = tu2,
-        game = g1,
-        team = 0,
-        submitter = False,
-        tribe = 1,
-    )
-    p3, c10 = Participant.objects.get_or_create(
-        user = tu1,
-        game = g2,
-        team = 0,
-        submitter = False,
-        tribe = 1,
-    )
-    p4, c11 = Participant.objects.get_or_create(
-        user = tu3,
-        game = g2,
-        team = 1,
-        submitter = False,
-        tribe = 1,
-    )
-    p5, c12 = Participant.objects.get_or_create(
-        user = tu1,
-        game = g3,
-        team = 0,
-        submitter = False,
-        tribe = 1,
-    )
-    p6, c13 = Participant.objects.get_or_create(
-        user = tu4,
-        game = g3,
-        team = 1,
-        submitter = False,
-        tribe = 1,
-    )
-    if c8:
-        p1.save()
-    if c9:
-        p2.save()
-    if c10:
-        p3.save()
-    if c11:
-        p4.save()
-    if c12:
-        p5.save()
-    if c13:
-        p6.save()
-    pr1, c14 = Player_Rating.objects.get_or_create(
-        user = tu1,
-        rating_type= 3,
-        decimal1 = 1500,
-        decimal2 = 200,
-        decimal3 = 0.06,
-        season = s,
-    )
-    pr2, c15 = Player_Rating.objects.get_or_create(
-        user = tu2,
-        rating_type= 3,
-        decimal1 = 1400,
-        decimal2 = 30,
-        decimal3 = 0.06,
-        season = s,
-    )
-    pr3, c16 = Player_Rating.objects.get_or_create(
-        user = tu3,
-        rating_type= 3,
-        decimal1 = 1550,
-        decimal2 = 100,
-        decimal3 = 0.06,
-        season = s,
-    )
-    pr4, c17 = Player_Rating.objects.get_or_create(
-        user = tu4,
-        rating_type= 3,
-        decimal1 = 1700,
-        decimal2 = 300,
-        decimal3 = 0.06,
-        season = s,
-    )
-    if c14:
-        pr1.save()
-    if c15:
-        pr2.save()
-    if c16:
-        pr3.save()
-    if c17:
-        pr4.save()
+def get_game_type(request):
+    data, mimetype = get_ajax(request, GameType, 'name')
+    return HttpResponse(data, mimetype)

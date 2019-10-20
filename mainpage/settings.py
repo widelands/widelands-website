@@ -372,3 +372,14 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+###################
+# Rating settings #
+###################
+STARTING_SCORE = 1500
+STANDARD_DEVIATION = 300
+VOLATILITY = 0.06
+TAU = 1
+EPISLON = 0.000001
+ITERATION_LIMIT = 3
+GAME_PER_ROUND = 50

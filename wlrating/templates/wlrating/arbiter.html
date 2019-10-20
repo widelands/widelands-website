@@ -11,20 +11,21 @@
 
 {% block content_main %}
 <script src="{% static 'js/arbiter.js' %}" type="text/javascript"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function(){ 
-        setAddPlayerBtn()
-    }, false);
+        setButtons();
+        setAutocompletes();
+    });
 </script>
 
 <div class="blogEntry post">
-    <table id="arbiter-table"  cellspacing="0" cellpadding="0">
+    <table id="arbiter-table">
         <tr>
             <th>Start date</th>
             <th>Type of game</th> 
             <th>Map</th>
             <th>Players</th>
-            <th>Winner team</th>
             <th>Submitted by</th>
             <th>link</th>
             <th>Action</th>
@@ -43,7 +44,7 @@
                             <th>Team</th>
                         </tr>
                         {% for player in game.players %}
-                        <tr>
+                        <tr class="{{ player.win_status }}">
                             <td>{{ player.username }}</td>
                             <td>{{ player.tribe }}</td>
                             <td>{{ player.team }}</td>
@@ -51,7 +52,6 @@
                         {% endfor %}
                     </table>
                 </td>
-                <td>{{ game.win_team }}</td>
                 <td>{{ game.submitter }}</td>
                 <td></td>
                 <td>
@@ -62,31 +62,36 @@
         {% endfor %}
         <form method="post" action="/rating/arbiter/">    
             <tr>
-                <td><input type="text" name="start_date"></td>
-                <td><input type="text" name="game_type"></td> 
-                <td><input type="text" name="game_map"></td>
+                <td><input type="date" name="start_date"></td>
+                <td><input type="text" class="game_type" name="game_type"></td> 
+                <td><input type="text"  class="player_map" name="game_map"></td>
                 <td class="table_inside_table">
                     <table>
-                        <tbody id="add_player_table">
+                        <thead>
                             <tr>
                                 <th>Player</th>
                                 <th>Tribe</th> 
                                 <th>Team</th>
                                 <th><button type="button" id="add_player_btn">Add</button></th>
                             </tr>
+                        </thead>
+                        <tbody id="add_player_table">
                             {% for i in '01234567'|make_list %}
                             <tr {% if forloop.counter > 2 %} class="to_hide" {% endif %}>
-                                <td><input type="text" name="player_{{ i }}"></td>
-                                <td><input type="text" name="tribe_{{ i }}"></td>
-                                <td><input type="text" name="team_{{ i }}"></td>
-                                <td><button type="button" class="remove_player_btn">Remove</button></td>
+                                <td><input type="text" class="player_username" name="player_{{ i }}"></td>
+                                <td><input type="text" class="player_tribe"  name="tribe_{{ i }}"></td>
+                                <td><input type="text" class="player_team" value="{{ i }}" name="team_{{ i }}"></td>
+                                <td>
+                                    <button type="button" class="remove_player_btn">Remove</button>
+                                    <button type="button" class="is_winner_btn">Win</button>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </td>
-                <td><input type="text" name="result"></td>
-                <td><input type="text" name="submitter"></td>
+                <input hidden="hidden" type="text" class="result" name="result" readonly="readonly">
+                <td><input type="text" class="player_username" name="submitter"></td>
                 <td><input type="text" name="link"></td>
                 <td><input type="submit" value="Add game"></td>
                 {% csrf_token %}
