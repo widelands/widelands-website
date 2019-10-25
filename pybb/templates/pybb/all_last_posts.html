@@ -1,5 +1,12 @@
 {% extends 'pybb/base.html' %}
 
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
+{{block.super}}
+{% endblock %}
+
 {% block title %}
     Latest posts - {{ block.super }}
 {% endblock title %}
@@ -30,44 +37,70 @@
   {% endif %}
   </form>
 
-    <hr>
+  <hr>
 
-{% if sort_by == 'topic' %}
-  {% for topic, posts in object_list.items %}
-    <h2>Topic: {{ topic }}</h2>
-    <p>
-      At Forum:
-      <a href="{% url 'pybb_forum' topic.forum.id %}">{{ topic.forum }}</a>
-    </p>
-    {% include 'pybb/inlines/latest_posts_table.html'%}
-  {% endfor %}
+    <div class="toc">
+      {% if sort_by == 'topic' %}
+        <h3>Topic{{ object_list|length|pluralize }}</h3>
+        <ul>
+          {% for topic in object_list %}
+            <li><a href="#{{ topic.pk }}">{{ topic }}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <h3>Forum/Topics</h3>
+          <ul>
+          {% for forum, topics in object_list.items %}
+            {# no access to forum.pk here, slugifying should be safe #}
+            <li><a href="#{{ forum|slugify }}">{{ forum }}</a>
+            <ul>
+              {% for topic in topics %}
+                <li><a href="#{{ topic.pk }}">{{ topic }}</a></li>
+              {% endfor %}
+            </ul>
+            </li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+    </div>
 
-{% else %} {# sort by forum #}
-  {% for forum, topics in object_list.items %}
-    <h2>Forum: {{ forum }}</h2>
-    <table class='forum'>
-      <thead>
-        <tr>
-          <th style="text-align: left; width: 30%;">Topic{{ topic_list|length|pluralize }}</th>
-          <th style="text-align: left;">Post{{ posts|length|pluralize }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for topic, posts in topics.items %}
-          <tr class={% cycle 'odd' 'even' %}>
-            <td class='post'>
-              <a href="{% url 'pybb_topic' topic.id %}">{{ topic }}</a>
-            </td>
-            <td>
-              {% include 'pybb/inlines/latest_posts_table.html'%}
-            </td>
+  <div style="display: table;">
+    {% if sort_by == 'topic' %}
+      {% for topic, posts in object_list.items %}
+        <h2 id="{{ topic.pk }}">Topic: {{ topic }}</h2>
+      <p>
+        At Forum:
+        <a href="{% url 'pybb_forum' topic.forum.id %}">{{ topic.forum }}</a>
+      </p>
+        {% include 'pybb/inlines/latest_posts_table.html'%}
+      {% endfor %}
+    {% else %} {# sort by forum #}
+      {% for forum, topics in object_list.items %}
+      <h2 id="{{ forum|slugify }}">Forum: {{ forum }}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: left; width: 30%;">Topic{{ topic_list|length|pluralize }}</th>
+            <th style="text-align: left;">Post{{ posts|length|pluralize }}</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% empty %}
-    <p>Sorry, no posts found...</p>
-  {% endfor %}
-{% endif %}
+        </thead>
+        <tbody>
+          {% for topic, posts in topics.items %}
+            <tr class={% cycle 'odd' 'even' %}>
+              <td class='post'>
+                <a href="{% url 'pybb_topic' topic.id %}" id="{{ topic.pk }}">{{ topic }}</a>
+              </td>
+              <td>
+                {% include 'pybb/inlines/latest_posts_table.html'%}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% empty %}
+      <p>Sorry, no posts found...</p>
+    {% endfor %}
+    {% endif %}
+    </div>
 </div>
 {% endblock %}

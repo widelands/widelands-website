@@ -1,0 +1,11 @@
+{% load i18n %}
+
+{% for attach in post.attachments.all %}
+	<div class="attachment">
+		<hr />
+		{% trans "Attachment" %}:
+		<a href="{{ attach.get_absolute_url }}" download="{{attach.name }}" type="{{attach.content_type}}">{{ attach.name }}</a>
+		({{ attach.size|filesizeformat }})
+	</div>
+{% endfor %}
+

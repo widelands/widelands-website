@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-import os.path
+import os
 
 from django import forms
 from django.conf import settings
@@ -10,16 +10,24 @@ from django.contrib.auth.models import User
 from pybb.models import Topic, Post, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
+from .util import validate_file
+from mainpage.validators import virus_scan
 
 
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(label=_('Subject'))
-    attachment = forms.FileField(label=_('Attachment'), required=False)
+    attachment = forms.FileField(
+        label=_('Attachment'),
+        required=False,
+        validators=[virus_scan, validate_file, ])
 
     class Meta:
         model = Post
-        # Listing fields again to get the the right order; See also the TODO
+        # Listing fields again to get the the right order
         fields = ['name', 'body', 'markup', 'attachment', ]
+        widgets = {
+            'body': forms.Textarea(attrs={'cols': 80, 'rows': 15}),
+        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -31,16 +39,9 @@ class AddPostForm(forms.ModelForm):
             self.fields['name'].widget = forms.HiddenInput()
             self.fields['name'].required = False
 
-        if not pybb_settings.ATTACHMENT_ENABLE:
+        if not pybb_settings.ATTACHMENT_ENABLE or self.user.wlprofile.post_count() < settings.ALLOW_ATTACHMENTS_AFTER:
             self.fields['attachment'].widget = forms.HiddenInput()
             self.fields['attachment'].required = False
-
-    def clean_attachment(self):
-        if self.cleaned_data['attachment']:
-            memfile = self.cleaned_data['attachment']
-            if memfile.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
-                raise forms.ValidationError(_('Attachment is too big'))
-        return self.cleaned_data['attachment']
 
     def save(self, *args, **kwargs):
         if self.forum:
@@ -69,9 +70,15 @@ class AddPostForm(forms.ModelForm):
                              name=memfile.name, post=post)
             dir = os.path.join(settings.MEDIA_ROOT,
                                pybb_settings.ATTACHMENT_UPLOAD_TO)
-            fname = '%d.0' % post.id
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+
+            fname = '{}.0'.format(post.id)
             path = os.path.join(dir, fname)
-            file(path, 'w').write(memfile.read())
+
+            with open(path, 'wb') as f:
+                f.write(memfile.read())
+
             obj.path = fname
             obj.save()
 

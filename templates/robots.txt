@@ -1,10 +1,12 @@
-# robots.txt for wl.widelands.org
+# robots.txt for www.widelands.org
 
 # These things should never be crawled
 User-agent: *
-Disallow: /profile
-Disallow: /admin
-Disallow: /accounts
+Disallow: /profile/
+Disallow: /admin/
+Disallow: /accounts/
+
+Crawl-delay: 10
 
 # url to sitemap
-Sitemap: https://wl.widelands.org/sitemap.xml/
+Sitemap: https://www.widelands.org/sitemap.xml/

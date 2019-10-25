@@ -1,7 +1,6 @@
 /local_settings.py
 /local_urls.py
 /dev.db
-/.bzr-repo
 
 # Uploaded images.
 media/news/*

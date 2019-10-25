@@ -33,6 +33,11 @@ in different parent templates.
 			
 		});
 	});
+	$(document).ready(function() {
+		$('#btn-file-reset').on('click', function() {
+			$('#id_attachment').val('');
+	});
+});
 </script>
 {% endblock %}
 
@@ -52,7 +57,40 @@ in different parent templates.
 	</div>
 
 	<form class="post-form" action="{{ form_url }}" method="post" enctype="multipart/form-data">
-	{{ form.as_p }}
+		{% if not form.name.is_hidden %}
+		<p>
+			<p class="errormessage">{{ form.name.errors.as_text }}</p>
+			{{ form.name.label }}:
+			{{ form.name }}
+		</p>
+		{% endif %}
+		<p>
+			<p class="errormessage">{{ form.body.errors.as_text }}</p>
+			{{ form.body.label }}:
+			{{ form.body }}
+		</p>
+		<p>
+			<p class="errormessage">{{ form.markup.errors.as_text }}</p>
+			{{ form.markup.label }}:
+			{{ form.markup }}
+		</p>
+		{% if not form.attachment.is_hidden %}
+		<p>
+			<p>
+				Please refer to the wiki page
+				<a href="{{ site }}/wiki/{{ wikipage }}">{{ wikipage }}</a>
+				for pointers.
+			</p>
+			<p class="errormessage">{{ form.attachment.errors.as_text }}</p>
+			{{ form.attachment.label }}
+			{{ form.attachment }}
+			<button id="btn-file-reset" type="button">
+				<img src="{% static 'img/delete.png' %}" alt ="" class="middle" />
+				<span class="middle">{% trans "Reset" %}</span>
+			</button>
+		</p>
+		{% endif %}
+
 	{% csrf_token %}
 	<button type="submit">
 		<img src="{% static 'forum/img/send.png' %}" alt ="" class="middle" />
