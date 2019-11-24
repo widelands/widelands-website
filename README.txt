@@ -63,13 +63,14 @@ Setting up the website
 Setting your local paths
 ------------------------
 
-Copy or symlink the two files settings_local.py.sample and
-local_urls.py.sample to settings_local.py and local_urls.py. Take a look at
-those files and modify them to your needs - most likely everything works
-directly, but you might want to edit the bd variable in local_settings.py::
+Copy the two files settings_local.py.sample and local_urls.py.sample to 
+settings_local.py and local_urls.py inside the mainpage folder. 
+Take a look at those files and modify them to your needs - most likely 
+everything works directly, but you might want to edit the bd variable 
+in mainpage/local_settings.py::
 
-   $ ln -s local_urls.py.sample mainpage/local_urls.py
-   $ ln -s local_settings.py.sample mainpage/local_settings.py
+   $ cp local_urls.py.sample mainpage/local_urls.py
+   $ cp local_settings.py.sample mainpage/local_settings.py
 
 Setting up the database
 -----------------------
