@@ -1,24 +1,25 @@
 /*********/
 /* Table */
 /*********/
-#arbiter-table {
-    border-spacing: 0;
-    border-collapse: collapse;
+table {
+    width: 100%;
 }
 
-td input {
+
+td input, td button {
     width: 100%;
-    margin: 0;
     border-radius: 0;
+    height: 19px;
+    margin: 1px;
 }
 
 .post td.table_inside_table {
     padding: 0;
-    margin: 0;
 }
 
-.table_inside_table table {
+.post .table_inside_table table {
     width:100%;
+    margin: 0;
 }
 
 .result {
@@ -35,6 +36,25 @@ td input {
     
 }
 
+.post td.one_line_btns {
+    display: flex;
+    padding: 0;
+}
+
+.one_line_btns button {
+    margin: 0 10px;
+}
+
+.table-title {
+    background-color: #695536;
+    background-image: url(../img/wood.png);
+}
+
+/* score */
+
+.score-table th {
+    text-align: left;
+}
 
 /*****************************/
 /* Styles for autocompletion */
@@ -72,6 +92,9 @@ td input {
 	border-bottom: 1px solid black;
 }
 
+.ui-helper-hidden-accessible {
+    display: none;
+}
 
 /********************/
 /* utilities for js */

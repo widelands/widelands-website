@@ -12,7 +12,6 @@ from datetime import datetime
 from django.http import HttpResponse
 import json
 
-
 ###########
 # Options #
 ###########
@@ -29,60 +28,118 @@ def rating_main(request):
 @login_required
 def arbiter(request):
     if request.user.is_superuser:
+        ru, is_new_user = Rating_user.objects.get_or_create(user=request.user)
+
         if request.method == 'POST':
-            # to remove
-            current_user = request.user
-
             r = request.POST
-
-            p_data = process_data_from_html(r)
-            game_type = GameType.objects.get(name=r.get('game_type'))
-            game_map = Map.objects.get(name=r.get('game_map'))
-
-            submitter_user = User.objects.get(username=r.get('submitter'))
-            ru, is_new_user = Rating_user.objects.get_or_create(
-                user=submitter_user)
-
-            g = Game.objects.create(
-                start_date=r.get('start_date'),
-                game_type=game_type,
-                game_map=game_map,
-                win_team=r.get('result'),
-                submitter=ru,
-                game_status=1,  # todo when working on user submissions
-                game_breaks=0,  # todo when working on user submissions
-            )
-            g.save()
-
-            for participant in p_data:
-                user = User.objects.get(username=participant['user'])
-                ru, is_new_user = Rating_user.objects.get_or_create(user=user)
-                try:
-                    u = User.objects.get(username=participant['user'])
-                except:
-                    return
-
-                participant_tribe = Tribe.objects.get(
-                    name=participant['tribe'])
-                p = Participant.objects.create(
-                    user=ru,
-                    game=g,
-                    team=participant['team'],
-                    tribe=participant_tribe,
-                )
-                p.save()
-
-        return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+            
+            # arbiter can choose who submit a game, otherwise he will be the default submitter
+            if r.get('submitter'):
+                submitter_user = User.objects.get(username=r.get('submitter'))
+                sru, is_new_user = Rating_user.objects.get_or_create(user=submitter_user)
+                add_game(r, sru)
+            else:
+                add_game(r, ru)
+        
+        return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
 
 @login_required
-def remove_btn(request, game_id):
-    g = Game.objects.get(id=game_id)
-    for p in Participant.objects.filter(game=g):
-        p.delete()
-    g.delete()
+def user_add_game (request):
+    submitter_user = User.objects.get(username=request.user)
+    ru, is_new_user = Rating_user.objects.get_or_create(user=submitter_user)
+    
+    if request.method == 'POST':
+        r = request.POST
+        add_game(r, ru)
+        
+    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
-    return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+
+@login_required
+def score(request):
+    win_ratio_board = []
+    for pr in Player_Rating.objects.order_by('-decimal3').filter(rating_type=1):
+        player_data = {}
+        player_data['username'] = pr.user.user.username
+        player_data['nb_of_games'] = int(pr.decimal1)
+        player_data['win'] = int(pr.decimal2)
+        player_data['win_ratio'] = int(pr.decimal3 * 100)
+        win_ratio_board.append(player_data)
+
+    glicko_board = []
+    for pr in Player_Rating.objects.order_by('-decimal1').filter(rating_type=3):
+        player_data = {}
+        player_data['username'] = pr.user.user.username
+        player_data['rating'] = int(pr.decimal1)
+        player_data['deviation'] = int(pr.decimal2)
+        player_data['volatility'] = int(pr.decimal3 * 100)
+        glicko_board.append(player_data)
+
+    return render(request, 'wlrating/score.html', {'win_ratio_board': win_ratio_board,
+                                                   'glicko2_board': glicko_board})
+
+
+def get_games(user, rating_user):
+    if user.is_superuser:
+        game_objects = Game.objects.order_by('start_date')
+    else:
+        game_objects = Game.objects.order_by('start_date').filter(submitter = rating_user)
+
+    game_list = []
+    for g in game_objects:
+        game_data = {}
+        game_data['start_date'] = datetime.strftime(g.start_date, TIME_FORMAT)
+        game_data['game_type'] = g.game_type.name
+        game_data['game_map'] = g.game_map.name
+        game_data['game_id'] = g.id
+        game_data['submitter'] = g.submitter.user.username
+
+        players = []
+        for p in Participant.objects.filter(game=g):
+            player = {}
+            player['tribe'] = p.tribe.name
+            player['username'] = p.user.user.username
+            player['team'] = p.team
+            player['win_status'] = 'winner' if g.win_team == p.team else 'looser'
+            players.append(player)
+
+        game_data['players'] = players
+
+        game_list.append(game_data)
+
+    return game_list
+
+def get_tribes():
+    tribes_list = []
+    for t in Tribe.objects.all():
+        tribes_list.append(t.name)
+    return tribes_list
+
+def get_game_types():
+    game_types_list = []
+    for t in GameType.objects.all():
+        game_types_list.append(t.name)
+    return game_types_list
+
+
+###############
+## modify db ##
+###############
+
+@login_required
+def remove_btn(request, game_id):
+    user = User.objects.get(username=request.user)
+    ru, is_new_user = Rating_user.objects.get_or_create(user=user)
+    
+    g = Game.objects.get(id=game_id)
+    # We don't want any player to remove any game
+    if g.submitter == ru or request.user.is_superuser:
+        for p in Participant.objects.filter(game=g):
+            p.delete()
+        g.delete()
+
+    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
 
 @login_required
@@ -137,62 +194,50 @@ def calculate_scores(request):
     new_rating = Glicko_rating()
     new_rating.calculate_all_games('Season I: The season of many builds')
 
-    return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
 
 @login_required
 def add_test_data(request):
     create_test_data()
-    return render(request, 'wlrating/arbiter.html', {'game_list': get_arbiter_list()})
+    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
+def add_game (r, ru):
+    p_data = process_data_from_html(r)
+    game_type = GameType.objects.get(name=r.get('game_type'))
+    game_map = Map.objects.get(name=r.get('game_map'))
+    g = Game.objects.create(
+        start_date=r.get('start_date'),
+        game_type=game_type,
+        game_map=game_map,
+        win_team=r.get('result'),
+        submitter=ru,
+        game_status=1,  # todo when working on game upload
+        game_breaks=0,  # todo when working on game upload
+    )
+    g.save()
 
-def get_arbiter_list():
-    game_list = []
-    for g in Game.objects.order_by('start_date'):
-        game_data = {}
-        game_data['start_date'] = datetime.strftime(g.start_date, TIME_FORMAT)
-        game_data['game_type'] = g.game_type.name
-        game_data['game_map'] = g.game_map.name
-        game_data['game_id'] = g.id
+    for participant in p_data:
+        user = User.objects.get(username=participant['user'])
+        ru, is_new_user = Rating_user.objects.get_or_create(user=user)
+        try:
+            u = User.objects.get(username=participant['user'])
+        except:
+            return
 
-        players = []
-        for p in Participant.objects.filter(game=g):
-            player = {}
-            player['tribe'] = p.tribe.name
-            player['username'] = p.user.user.username
-            player['team'] = p.team
-            player['win_status'] = 'winner' if g.win_team == p.team else 'looser'
-            players.append(player)
+        participant_tribe = Tribe.objects.get(
+            name=participant['tribe'])
+        p = Participant.objects.create(
+            user=ru,
+            game=g,
+            team=participant['team'],
+            tribe=participant_tribe,
+        )
+        p.save()
 
-        game_data['players'] = players
-
-        game_list.append(game_data)
-    return game_list
-
-
-@login_required
-def score(request):
-    win_ratio_board = []
-    for pr in Player_Rating.objects.order_by('-decimal3').filter(rating_type=1):
-        player_data = {}
-        player_data['username'] = pr.user.user.username
-        player_data['nb_of_games'] = int(pr.decimal1)
-        player_data['win'] = int(pr.decimal2)
-        player_data['win_ratio'] = int(pr.decimal3 * 100)
-        win_ratio_board.append(player_data)
-
-    glicko_board = []
-    for pr in Player_Rating.objects.order_by('-decimal1').filter(rating_type=3):
-        player_data = {}
-        player_data['username'] = pr.user.user.username
-        player_data['rating'] = int(pr.decimal1)
-        player_data['deviation'] = int(pr.decimal2)
-        player_data['volatility'] = int(pr.decimal3 * 100)
-        glicko_board.append(player_data)
-
-    return render(request, 'wlrating/score.html', {'win_ratio_board': win_ratio_board,
-                                                   'glicko2_board': glicko_board})
-
+###############
+## utilities ##
+###############
 
 # data html handling
 def process_data_from_html(r):
@@ -217,7 +262,7 @@ def process_data_from_html(r):
                     player_list[num] = {}
                 player_list[num]['team'] = value
 
-    # Remove player which lack any property
+    # Remove player which lack any property 
     for p in list(player_list):
         if not 'player' in player_list[p] or not 'team' in player_list[p] or not 'tribe' in player_list[p]:
             del player_list[p]
@@ -230,15 +275,6 @@ def process_data_from_html(r):
         participation['tribe'] = player_list[dict_property]['tribe']
         data.append(participation)
     return data
-
-
-# Utilities
-def clean_list(l):
-    for num, i in enumerate(l):
-        if isinstance(i, str):
-            l[num] = i.strip()
-
-    return l
 
 
 ##########

@@ -1,8 +1,11 @@
 from django.contrib import admin
-from .models import Game, Participant, Player_Rating, Rating_user, Season
+from .models import Game, Participant, Player_Rating, Rating_user, Season, Tribe, Map, GameType
 
 
 admin.site.register(Season)
+admin.site.register(Tribe)
+admin.site.register(Map)
+admin.site.register(GameType)
 
 
 class ParticipantAdmin(admin.ModelAdmin):

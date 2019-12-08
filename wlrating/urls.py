@@ -1,11 +1,12 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 from django.conf.urls import *
-from .view import rating_main, arbiter, score, remove_btn, calculate_scores, add_test_data, get_usernames, get_tribe, get_map, get_game_type
+from .view import rating_main, arbiter, score, remove_btn, calculate_scores, add_test_data, get_usernames, get_tribe, get_map, get_game_type, user_add_game
 
 urlpatterns = [
-    url(r'^main/$', rating_main, name='rating_main'),
+    url(r'^$', rating_main, name='rating_main'),
     url(r'^arbiter/$', arbiter, name='arbiter'),
+    url(r'^user_add_game/$', user_add_game, name='user_add_game'),
     url(r'^remove_btn/(?P<game_id>[0-9]+)$', remove_btn, name='remove_btn'),
     url(r'^calculate_scores/$', calculate_scores, name='calculate_scores'),
     url(r'^add_test_data/$', add_test_data, name='add_test_data'),

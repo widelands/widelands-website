@@ -4,7 +4,11 @@
 {% endcomment %}
 
 {% block content_header %}
+{% if user.is_superuser %}
 <h1>Widelands players rating</h1>
+{% else %}
+<h1>Sending a game</h1>
+{% endif %}
 {% endblock %}
 
 {% load static %}
@@ -20,13 +24,19 @@
 </script>
 
 <div class="blogEntry post">
-    <table id="arbiter-table">
+    <table>
+        <tr class="table-title"> 
+            <td colspan="7">Added games history</td>
+        </tr>
+        {% if game_list %}
         <tr>
             <th>Start date</th>
             <th>Type of game</th> 
             <th>Map</th>
             <th>Players</th>
+            {% if user.is_superuser %}
             <th>Submitted by</th>
+            {% endif %}
             <th>link</th>
             <th>Action</th>
         </tr>
@@ -52,7 +62,9 @@
                         {% endfor %}
                     </table>
                 </td>
+                {% if user.is_superuser %}
                 <td>{{ game.submitter }}</td>
+                {% endif %}
                 <td></td>
                 <td>
                     <a href="{% url 'remove_btn' game.game_id  %}"><button>Remove</button></a>
@@ -60,10 +72,43 @@
             </tr>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="7">
+                No game added yet!
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+    <table>
+        <tr  class="table-title"> 
+            <td colspan="7">Adding a new game</td>
+        </tr>
+        <tr>
+            <th>Start date</th>
+            <th>Type of game</th> 
+            <th>Map</th>
+            <th>Players</th>
+            {% if user.is_superuser %}
+            <th>Submitted by</th>
+            {% endif %}
+            <th>link</th>
+            <th>Action</th>
+        </tr>
+        {% if user.is_superuser %}
         <form method="post" action="/rating/arbiter/">    
+        {% else %}
+        <form method="post" action="/rating/user_add_game/">
+        {% endif %}
             <tr>
                 <td><input type="date" name="start_date"></td>
-                <td><input type="text" class="game_type" name="game_type"></td> 
+                <td>
+                    <select class="game_type" name="game_type">
+                    {% for type in game_type_list %}
+                        <option value="{{ type }}">{{ type }}</option>
+                    {% endfor %}
+                    </select>
+                </td>
                 <td><input type="text"  class="player_map" name="game_map"></td>
                 <td class="table_inside_table">
                     <table>
@@ -76,12 +121,19 @@
                             </tr>
                         </thead>
                         <tbody id="add_player_table">
+                            <!-- We create 8 players and hide 6, so no need to add inputs dynamically when adding/removing. Only hide/show -->
                             {% for i in '01234567'|make_list %}
                             <tr {% if forloop.counter > 2 %} class="to_hide" {% endif %}>
                                 <td><input type="text" class="player_username" name="player_{{ i }}"></td>
-                                <td><input type="text" class="player_tribe"  name="tribe_{{ i }}"></td>
-                                <td><input type="text" class="player_team" value="{{ i }}" name="team_{{ i }}"></td>
                                 <td>
+                                    <select class="player_tribe" name="tribe_{{ i }}">
+                                    {% for tribe in tribe_list %}
+                                        <option value="{{ tribe }}">{{ tribe }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </td>
+                                <td><input type="text" class="player_team" value="{{ i }}" name="team_{{ i }}"></td>
+                                <td class="one_line_btns">
                                     <button type="button" class="remove_player_btn">Remove</button>
                                     <button type="button" class="is_winner_btn">Win</button>
                                 </td>
@@ -91,16 +143,19 @@
                     </table>
                 </td>
                 <input hidden="hidden" type="text" class="result" name="result" readonly="readonly">
+                {% if user.is_superuser %}
                 <td><input type="text" class="player_username" name="submitter"></td>
+                {% endif %}
                 <td><input type="text" name="link"></td>
                 <td><input type="submit" value="Add game"></td>
                 {% csrf_token %}
-                
             </tr>
         </form>
     </table>
+    {% if user.is_superuser %}
     <a href="{% url 'calculate_scores' %}" ><button>Calculate scores</button></a>
     <a href="{% url 'add_test_data' %}" ><button>Add test data</button></a>
+    {% endif %}
 </div>
+    
 {% endblock %}
-

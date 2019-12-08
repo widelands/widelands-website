@@ -31,16 +31,8 @@ function setAutocompletes() {
         source: '/rating/get_usernames/',
         minLength: 3,
     });
-    $( ".player_tribe" ).autocomplete({
-        source: '/rating/get_tribe/',
-        minLength: 3,
-    });
     $( ".player_map" ).autocomplete({
         source: '/rating/get_map/',
-        minLength: 3,
-    });
-    $( ".game_type" ).autocomplete({
-        source: '/rating/get_game_type/',
         minLength: 3,
     });
 }
