@@ -32,27 +32,28 @@ def arbiter(request):
 
         if request.method == 'POST':
             r = request.POST
-            
+
             # arbiter can choose who submit a game, otherwise he will be the default submitter
             if r.get('submitter'):
                 submitter_user = User.objects.get(username=r.get('submitter'))
-                sru, is_new_user = Rating_user.objects.get_or_create(user=submitter_user)
+                sru, is_new_user = Rating_user.objects.get_or_create(
+                    user=submitter_user)
                 add_game(r, sru)
             else:
                 add_game(r, ru)
-        
+
         return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
 
 @login_required
-def user_add_game (request):
+def user_add_game(request):
     submitter_user = User.objects.get(username=request.user)
     ru, is_new_user = Rating_user.objects.get_or_create(user=submitter_user)
-    
+
     if request.method == 'POST':
         r = request.POST
         add_game(r, ru)
-        
+
     return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
 
@@ -84,7 +85,8 @@ def get_games(user, rating_user):
     if user.is_superuser:
         game_objects = Game.objects.order_by('start_date')
     else:
-        game_objects = Game.objects.order_by('start_date').filter(submitter = rating_user)
+        game_objects = Game.objects.order_by(
+            'start_date').filter(submitter=rating_user)
 
     game_list = []
     for g in game_objects:
@@ -110,11 +112,13 @@ def get_games(user, rating_user):
 
     return game_list
 
+
 def get_tribes():
     tribes_list = []
     for t in Tribe.objects.all():
         tribes_list.append(t.name)
     return tribes_list
+
 
 def get_game_types():
     game_types_list = []
@@ -131,7 +135,7 @@ def get_game_types():
 def remove_btn(request, game_id):
     user = User.objects.get(username=request.user)
     ru, is_new_user = Rating_user.objects.get_or_create(user=user)
-    
+
     g = Game.objects.get(id=game_id)
     # We don't want any player to remove any game
     if g.submitter == ru or request.user.is_superuser:
@@ -146,7 +150,7 @@ def remove_btn(request, game_id):
 def calculate_scores(request):
     s, created = Season.objects.get_or_create(
         start_date='2019-06-01',
-        end_date='2019-12-01',
+        end_date='2020-06-01',
         name='Season I: The season of many builds'
     )
     if created:
@@ -197,12 +201,7 @@ def calculate_scores(request):
     return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
 
 
-@login_required
-def add_test_data(request):
-    create_test_data()
-    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
-
-def add_game (r, ru):
+def add_game(r, ru):
     p_data = process_data_from_html(r)
     game_type = GameType.objects.get(name=r.get('game_type'))
     game_map = Map.objects.get(name=r.get('game_map'))
@@ -240,6 +239,8 @@ def add_game (r, ru):
 ###############
 
 # data html handling
+
+
 def process_data_from_html(r):
     player_list = {}
     for dict_property, value in r.items():
@@ -262,7 +263,7 @@ def process_data_from_html(r):
                     player_list[num] = {}
                 player_list[num]['team'] = value
 
-    # Remove player which lack any property 
+    # Remove player which lack any property
     for p in list(player_list):
         if not 'player' in player_list[p] or not 'team' in player_list[p] or not 'tribe' in player_list[p]:
             del player_list[p]
@@ -309,16 +310,6 @@ def get_usernames(request):
     return HttpResponse(data, mimetype)
 
 
-def get_tribe(request):
-    data, mimetype = get_ajax(request, Tribe, 'name')
-    return HttpResponse(data, mimetype)
-
-
 def get_map(request):
     data, mimetype = get_ajax(request, Map, 'name')
-    return HttpResponse(data, mimetype)
-
-
-def get_game_type(request):
-    data, mimetype = get_ajax(request, GameType, 'name')
     return HttpResponse(data, mimetype)

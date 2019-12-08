@@ -18,7 +18,7 @@
             <th>Win ratio</th>
         </tr>
         {% for score in win_ratio_board %}
-        <tr>
+        <tr {% if request.user.username == score.username %} class="current-user" {% endif %}>
             <td>{{ forloop.counter }}</td>
             <td>{{ score.username }}</td>
             <td>{{ score.nb_of_games }}</td>
@@ -35,7 +35,7 @@
             <th>Deviation</th>
         </tr>
         {% for score in glicko2_board %}
-        <tr>
+        <tr {% if request.user.username == score.username %} class="current-user" {% endif %}>
             <td>{{ forloop.counter }}</td>
             <td>{{ score.username }}</td>
             <td>{{ score.rating }}</td>

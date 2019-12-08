@@ -25,7 +25,7 @@ class Glicko_rating ():
             name=season_name
         )
 
-        # Select games in season and evaluate them by groups of ten. Change db at each of these "rounds"
+        # Select games in season and evaluate them by groups of ten. Change db at each of these rounds
         total_games = 0
         games_of_season_list = []
         for g in Game.objects.order_by('start_date').filter(counted_in_score=False):
@@ -33,7 +33,6 @@ class Glicko_rating ():
             if game_is_in_season:
                 total_games += 1
                 games_of_season_list.append(g)
-
         round_games = 0
         games_until_last = total_games
         for g in games_of_season_list:
@@ -101,42 +100,46 @@ class Glicko_rating ():
     def get_data(self, games, season):
         data = []
         for ru in Rating_user.objects.all():
-            pr = self.create_pr_if_needed(ru, season)
+            nb_of_games = 0
+            for p in Participant.objects.filter(user=ru):
+                nb_of_games += 1
 
-            player_data = {}
-            player_data['username'] = ru.user.username
-            player_data['score'] = self.step2_rating(pr.decimal1)
-            player_data['deviation'] = self.step2_deviation(pr.decimal2)
-            player_data['volatility'] = pr.decimal3
+            if nb_of_games > 0:
+                pr = self.create_pr_if_needed(ru, season)
+                player_data = {}
+                player_data['username'] = ru.user.username
+                player_data['score'] = self.step2_rating(pr.decimal1)
+                player_data['deviation'] = self.step2_deviation(pr.decimal2)
+                player_data['volatility'] = pr.decimal3
 
-            player_games = []
-            for g in games:
-                game_data = {}
+                player_games = []
+                for g in games:
+                    game_data = {}
 
-                participated_in_game = False
-                for p in Participant.objects.filter(game=g):
-                    if p.user == ru:
-                        participated_in_game = True
-                        game_data['is_winner'] = 1 if p.team == g.win_team else 0
-
-                if participated_in_game:
+                    participated_in_game = False
                     for p in Participant.objects.filter(game=g):
-                        if not p.user == ru:
-                            pr = self.create_pr_if_needed(p.user, season)
-                            game_data['competitor'] = {}
-                            game_data['competitor']['score'] = self.step2_rating(
-                                pr.decimal1)
-                            game_data['competitor']['deviation'] = self.step2_deviation(
-                                pr.decimal2)
-                            game_data['competitor']['volatility'] = pr.decimal3
+                        if p.user == ru:
+                            participated_in_game = True
+                            game_data['is_winner'] = 1 if p.team == g.win_team else 0
 
-                    player_games.append(game_data)
-            if player_games:
-                player_data['games'] = player_games
-                data.append(player_data)
-            else:
-                print(
-                    'todo: handle standard deviation change for not participating users. User is: ', ru.user.username)
+                    if participated_in_game:
+                        for p in Participant.objects.filter(game=g):
+                            if not p.user == ru:
+                                pr = self.create_pr_if_needed(p.user, season)
+                                game_data['competitor'] = {}
+                                game_data['competitor']['score'] = self.step2_rating(
+                                    pr.decimal1)
+                                game_data['competitor']['deviation'] = self.step2_deviation(
+                                    pr.decimal2)
+                                game_data['competitor']['volatility'] = pr.decimal3
+
+                        player_games.append(game_data)
+                if player_games:
+                    player_data['games'] = player_games
+                    data.append(player_data)
+                else:
+                    print(
+                        'todo: handle standard deviation change for not participating users. User is: ', ru.user.username)
         return data
 
     def step2_rating(self, r):
