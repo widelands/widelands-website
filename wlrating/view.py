@@ -21,11 +21,6 @@ TIME_FORMAT = '%Y-%m-%d'
 # Views #
 #########
 @login_required
-def rating_main(request):
-    return render(request, 'wlrating/main.html', {'is_super_user': request.user.is_superuser})
-
-
-@login_required
 def arbiter(request):
     if request.user.is_superuser:
         ru, is_new_user = Rating_user.objects.get_or_create(user=request.user)
@@ -42,8 +37,11 @@ def arbiter(request):
             else:
                 add_game(r, ru)
 
-        return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
-
+    return render(request, 'wlrating/manage_games.html', {
+        'game_list': get_games(request.user, ru), 
+        'tribe_list': get_tribes(), 
+        'game_type_list': get_game_types(),
+        })
 
 @login_required
 def user_add_game(request):
@@ -54,8 +52,11 @@ def user_add_game(request):
         r = request.POST
         add_game(r, ru)
 
-    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
-
+    return render(request, 'wlrating/manage_games.html', {
+        'game_list': get_games(request.user, ru), 
+        'tribe_list': get_tribes(), 
+        'game_type_list': get_game_types(),
+        })
 
 @login_required
 def score(request):
@@ -143,8 +144,11 @@ def remove_btn(request, game_id):
             p.delete()
         g.delete()
 
-    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
-
+    return render(request, 'wlrating/manage_games.html', {
+        'game_list': get_games(request.user, ru), 
+        'tribe_list': get_tribes(), 
+        'game_type_list': get_game_types(),
+        })
 
 @login_required
 def calculate_scores(request):
@@ -198,7 +202,11 @@ def calculate_scores(request):
     new_rating = Glicko_rating()
     new_rating.calculate_all_games('Season I: The season of many builds')
 
-    return render(request, 'wlrating/manage_games.html', {'game_list': get_games(request.user, ru), 'tribe_list': get_tribes(), 'game_type_list': get_game_types()})
+    return render(request, 'wlrating/manage_games.html', {
+        'game_list': get_games(request.user, ru), 
+        'tribe_list': get_tribes(), 
+        'game_type_list': get_game_types(),
+        })
 
 
 def add_game(r, ru):

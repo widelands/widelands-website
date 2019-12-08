@@ -1,10 +1,16 @@
+
+button {
+    border-radius: 0;
+    height: 26px;
+}
+
 /*********/
 /* Table */
 /*********/
 table {
     width: 100%;
+    border-collapse: collapse;
 }
-
 
 td input, td button {
     width: 100%;
@@ -27,13 +33,12 @@ td input, td button {
     background-image: none;
 }
 
-.looser {
-    background-color: rgba(239, 41, 41, 0.65);
+table tr.looser {
+    background-color: rgba(239, 41, 41, 0.4);
 }
 
-.winner {
-    background-color: rgba(17, 136, 17, 0.65);
-    
+table tr.winner {
+    background-color: rgba(17, 136, 17, 0.4);   
 }
 
 .post td.one_line_btns {
@@ -45,9 +50,10 @@ td input, td button {
     margin: 0 10px;
 }
 
-.table-title {
+table tr.table-title {
     background-color: #695536;
     background-image: url(../img/wood.png);
+    color: rgba(254, 234, 138, 1);
 }
 
 /* score */
@@ -56,8 +62,8 @@ td input, td button {
     text-align: left;
 }
 
-.current-user {
-    background-color: #181;
+table tr.current-user {
+    background-color: rgba(17, 136, 17, 0.4);
 }
 
 /*****************************/

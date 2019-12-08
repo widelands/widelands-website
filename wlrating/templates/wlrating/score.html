@@ -8,9 +8,11 @@
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-    <h2>Ratio score</h2>
-    <table class="score-table">
+<div class="blogEntry post">
+    <table class="score-table ">
+        <tr class="table-title"> 
+            <td colspan="7">Ratio score</td>
+        </tr>
         <tr>
             <th>Rank</th>
             <th>Player</th>
@@ -26,8 +28,10 @@
         </tr>
         {% endfor %}
     </table>
-    <h2>Glicko2 score</h2>
     <table class="score-table">
+        <tr class="table-title"> 
+                <td colspan="7">Glicko2 score</td>
+            </tr>
         <tr>
             <th>Rank</th>
             <th>Player</th>
@@ -44,4 +48,18 @@
         {% endfor %}
     </table>
 </div>
+<div class="blogEntry">
+    <div id="main-choices" class="main-choices">
+        {% if is_super_user %}
+        <a href="{% url 'arbiter' %}" >
+            <button title="Arbiter">Arbiter</button>
+        </a>
+        {% else %}
+        <a href="{% url 'user_add_game' %}" >
+            <button title="user_add_game">Add game</button>
+        </a>
+        {% endif %}
+    </div>
+</div>
+    
 {% endblock %}
