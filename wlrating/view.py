@@ -59,7 +59,7 @@ def user_add_game(request):
         })
 
 @login_required
-def score(request):
+def score_1vs1(request):
     win_ratio_board = []
     for pr in Player_Rating.objects.order_by('-decimal3').filter(rating_type=1):
         player_data = {}
@@ -78,8 +78,45 @@ def score(request):
         player_data['volatility'] = int(pr.decimal3 * 100)
         glicko_board.append(player_data)
 
-    return render(request, 'wlrating/score.html', {'win_ratio_board': win_ratio_board,
+    return render(request, 'wlrating/score_1vs1.html', {'win_ratio_board': win_ratio_board,
                                                    'glicko2_board': glicko_board})
+
+
+@login_required
+def score_team(request):
+    return render(request, 'wlrating/score_team.html')
+
+
+@login_required
+def score_stats(request):
+    tribe_score = {}
+    for t in Tribe.objects.all():
+        tribe_score[t.name] = {}
+        for ti in Tribe.objects.all():
+            tribe_score[t.name][ti.name] = [0,0,0]
+
+    for g in Game.objects.all():
+        nb_of_player = 0
+        for p in Participant.objects.filter(game=g):
+            nb_of_player += 1
+
+        if nb_of_player == 2:
+            for p in Participant.objects.filter(game= g):
+                other_player = Participant.objects.filter(game= g).exclude(id=p.id)[0]
+                print (other_player)
+                if p.team == g.win_team:
+                    tribe_score[p.tribe.name][other_player.tribe.name][0] += 1
+                else:
+                    tribe_score[p.tribe.name][other_player.tribe.name][1] += 1
+
+    for t, at in tribe_score.items():
+        for tribe, score in at.items():
+            if score[1] == 0:
+                score[2] = 100
+            else:
+                score[2] = int(score[0] / score[1])
+    
+    return render(request, 'wlrating/score_stats.html', {'tribe_score': tribe_score})
 
 
 def get_games(user, rating_user):

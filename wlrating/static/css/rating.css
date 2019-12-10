@@ -66,6 +66,10 @@ table tr.current-user {
     background-color: rgba(17, 136, 17, 0.4);
 }
 
+.same-compared {
+    background-color: rgba(17, 136, 17, 0.4);
+}
+
 /*****************************/
 /* Styles for autocompletion */
 /*****************************/

@@ -1,0 +1,19 @@
+{% extends "wlrating/base.html" %}
+{% comment %}
+   vim:ft=htmldjango
+{% endcomment %}
+
+{% block content_tabbing %}
+	<ul class="tab-list small">
+		<li>
+			<a {% block profile %}{% endblock %} href="{% url 'score_1vs1' %}">1vs1</a>
+		</li>
+		<li>
+			<a {% block edit_profile %}{% endblock %} href="{% url 'score_team' %}">Team</a>
+		</li>
+		<li>
+			<a {% block notifications %}{% endblock %} href="{% url 'score_stats' %}">General stats</a>
+		</li>
+	</ul>
+{% endblock %}
+

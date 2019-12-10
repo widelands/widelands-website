@@ -1,0 +1,33 @@
+{% extends "wlrating/score_base.html" %}
+{% block content_header %}
+<h1>Widelands players rating</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry post">
+    <table class="score-table ">
+        <tr class="table-title"> 
+            <td colspan="7">Tribes stats</td>
+        </tr>
+        <tr>
+            <th>Number of games</th>
+            {% for tribe, against_tribe in tribe_score.items %}
+            <th>{{ tribe }}</th>
+            {% endfor %}
+        </tr>
+        {% for tribe, against_tribes in tribe_score.items %}
+        <tr>
+            <td>Against {{ tribe }}</td>
+            {% for at, score in against_tribes.items %}
+            {% if at != tribe %}
+                <td> {{ score.0 }} / {{ score.1 }} ({{ score.2 }} %)</td>
+            {% else %}
+                <td class="same-compared"></td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% include 'wlrating/score_btn.html' %}
+{% endblock %}
