@@ -132,6 +132,10 @@ div.blogEntry .post p {
 	border: 1px solid #474444;
 }
 
+.attachment {
+	display: inline-block
+}
+
 /*****************/
 /* Edit/add Post */
 /*   related     */
@@ -145,7 +149,6 @@ div.blogEntry .post p {
 }
 
 .post-form #id_body {
-   height: 150px;
    width: 100%;
 }
 

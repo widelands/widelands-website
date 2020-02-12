@@ -1,0 +1,10 @@
+__pycache__/
+local_settings.py
+local_urls.py
+/dev.db
+*.pyc
+
+# Uploaded images.
+media/*
+!media/wlprofile/avatars/anonymous.png
+whoosh_index

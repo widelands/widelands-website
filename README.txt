@@ -11,15 +11,14 @@ Install prerequisites
 
 Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
-package manager. You will also need development tools (gcc or therelike), hg
-(mercurial), bzr, subversion and git. Finally you are going to need the
-build dependencies for numpy, which will be compiled as a part of getting
-the dependencies for the website. Go and install them all.
+package manager. To get the sources you will need to install git. Finally
+you are going to need the build dependencies for numpy, which will be compiled
+as a part of getting the dependencies for the website. Go and install them all.
 
 Example:
 On Ubuntu, installing all required tools and dependencies in two commands:
 
-   $ sudo apt-get install python3-virtualenv python3-pip bzr libmysqlclient-dev
+   $ sudo apt-get install python3-virtualenv python3-pip git libmysqlclient-dev
    $ sudo apt-get build-dep python3-numpy
 
 Setting up the local environment
@@ -41,7 +40,7 @@ Next, we download the website source code::
 
    $ mkdir code
    $ cd code
-   $ bzr branch lp:widelands-website widelands
+   $ git clone https://github.com/widelands/widelands-website widelands
    $ cd widelands
 
 All fine and good. Now we have to install all the third party modules the
@@ -64,13 +63,14 @@ Setting up the website
 Setting your local paths
 ------------------------
 
-Copy or symlink the two files settings_local.py.sample and
-local_urls.py.sample to settings_local.py and local_urls.py. Take a look at
-those files and modify them to your needs - most likely everything works
-directly, but you might want to edit the bd variable in local_settings.py::
+Copy the two files settings_local.py.sample and local_urls.py.sample to 
+settings_local.py and local_urls.py inside the mainpage folder. 
+Take a look at those files and modify them to your needs - most likely 
+everything works directly, but you might want to edit the bd variable 
+in mainpage/local_settings.py::
 
-   $ ln -s local_urls.py.sample mainpage/local_urls.py
-   $ ln -s local_settings.py.sample mainpage/local_settings.py
+   $ cp local_urls.py.sample mainpage/local_urls.py
+   $ cp local_settings.py.sample mainpage/local_settings.py
 
 Setting up the database
 -----------------------
@@ -189,5 +189,3 @@ Contact
 
 Contact user 'kaputtnik' on the homepage for more information and problems.
 
-
--- vim:ft=rst:

@@ -5,5 +5,5 @@
 {{ txt }}
 
 -------------------------
-Link to topic: http://{{ current_site }}{{ topic_url }}
+Link to topic: https://{{ current_site }}{{ topic_url }}
 {% endblocktrans %}{% endautoescape %}

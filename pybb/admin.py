@@ -1,7 +1,7 @@
 # -*- coding: utf-8
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from pybb.models import Category, Forum, Topic, Post, Read
+from pybb.models import Category, Forum, Topic, Post, Read, Attachment
 
 
 def delete_selected(modeladmin, request, queryset):
@@ -75,6 +75,12 @@ class TopicAdmin(admin.ModelAdmin):
     )
 
 
+class AttachmentInline(admin.StackedInline):
+    model = Attachment
+    extra = 0
+    exclude = ('hash',)
+
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ['summary', 'topic', 'user', 'created', 'hidden']
     list_per_page = 20
@@ -82,12 +88,13 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'created'
     search_fields = ['body', 'topic__name']
     actions = [delete_selected, unhide_post]
+    inlines = [AttachmentInline,]
     fieldsets = (
         (None, {
             'fields': ('topic', 'user', 'markup', 'hidden')
         }
         ),
-        (_('Additional options'), {
+        (_('Date and Time'), {
             'classes': ('collapse',),
             'fields': (('created', 'updated'),)
         }

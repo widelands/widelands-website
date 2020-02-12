@@ -55,7 +55,7 @@ class Command(BaseCommand):
                     # only needed on first run
                     os.mkdir(target_dir)
 
-                if os.path.exists(link_name):
+                if os.path.lexists(link_name):
                     # only needed if this script has already run
                     os.remove(link_name)
 

@@ -90,13 +90,7 @@
 		
 		{% if not map.world_name %}
 		<div>
-			<strong>This map requires a version of Widelands newer than build
-            {% if map.nr_players > 8 %}
-                19!
-            {% else %}
-                18!
-            {% endif %}
-            </strong>
+			{% include 'wlmaps/inlines/version_info.html'%}
 		</div>
 		{% endif %}
 	</div>

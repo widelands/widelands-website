@@ -1,8 +1,8 @@
-from django.contrib.sitemaps import Sitemap
 from pybb.models import Forum
+from mainpage.sitemaps import SitemapHTTPS
 
 
-class ForumSitemap(Sitemap):
+class ForumSitemap(SitemapHTTPS):
     changefreq = 'monthly'
     priority = 0.5
 
