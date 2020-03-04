@@ -6,7 +6,7 @@ from .views import *
 
 
 urlpatterns = [
-    url(r'^$', index, name='wlmaps_index'),
+    url(r'^$', MapList.as_view(), name='wlmaps_index'),
     url(r'^upload/$', upload, name='wlmaps_upload'),
 
     url(r'^(?P<map_slug>[-\w]+)/$',

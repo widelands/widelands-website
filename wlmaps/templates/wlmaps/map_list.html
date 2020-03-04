@@ -27,7 +27,17 @@
 	<p>
 	The map files have to be placed in the Widelands map directory to be found by the game. Check the <a href="/wiki/Technical%20FAQ/#where_are_my_maps_and_savegames_stored">Technical FAQ</a> to find the map directory.
 	</p>
-	{% autopaginate maps maps_per_page as object_list %}
+
+	<form method="get">
+		<table>
+			{{ filter.form.as_table }}
+			<tr>
+				<td></td>
+				<td class="right"><input type="submit" value="Apply filters"/></td>
+			</tr>
+		</table>
+	</form>
+	{% autopaginate map_list maps_per_page as object_list %}
 	{% paginate using "pagination/pagination_mod.html" %}
 	<br />
 	<table class="maps">

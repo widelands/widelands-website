@@ -3,12 +3,13 @@
 #
 
 from .forms import UploadMapForm, EditCommentForm
+from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
 from django.urls import reverse
 from django.conf import settings
-from . import models
+from . import filters, models
 
 from mainpage.wl_utils import get_real_ip
 import os
@@ -17,12 +18,30 @@ import os
 #########
 # Views #
 #########
-def index(request):
-    maps = models.Map.objects.all()
-    return render(request, 'wlmaps/index.html',
-                              {'maps': maps,
-                               'maps_per_page': settings.MAPS_PER_PAGE,
-                               })
+class MapList(ListView):
+    model = models.Map
+
+    @property
+    def filter(self):
+        if not hasattr(self, '_filter'):
+            get = self.request.GET.copy()
+            if not get.get('o'):
+                get['o'] = '-pub_date'
+
+            self._filter = filters.MapFilter(get, queryset=super().get_queryset())
+
+        return self._filter
+
+    def get_queryset(self):
+        return self.filter.qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update({
+            'maps_per_page': settings.MAPS_PER_PAGE,
+            'filter': self.filter,
+        })
+        return ctx
 
 
 def download(request, map_slug):
