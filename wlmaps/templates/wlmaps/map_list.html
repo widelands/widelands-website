@@ -37,14 +37,12 @@
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.author__iexact %}
             </tr>
             <tr>
-                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
-                <td class="spacer"></td>
-                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.wl_version_after %}
-            </tr>
-            <tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.w %}
                 <td class="spacer"></td>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.h %}
+            </tr>
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
             </tr>
 			<tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}
