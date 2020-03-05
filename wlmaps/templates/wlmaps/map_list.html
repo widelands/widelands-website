@@ -29,11 +29,26 @@
 	</p>
 
 	<form method="get">
+        {{ form.non_field_errors }}
 		<table>
-			{{ filter.form.as_table }}
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.name__icontains %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.author__iexact %}
+            </tr>
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.wl_version_after %}
+            </tr>
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.w %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.h %}
+            </tr>
 			<tr>
-				<td></td>
-				<td class="right"><input type="submit" value="Apply filters"/></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}
+				<td colspan="3" class="right"><input type="submit" value="Apply filters"/></td>
 			</tr>
 		</table>
 	</form>
