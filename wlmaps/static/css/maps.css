@@ -35,3 +35,12 @@ textarea {
 	color: #ff0000;
 	margin: 0;
 }
+
+#id_h_0, #id_w_0, #id_nr_players_0 {
+	width: 80px;
+}
+
+#id_h_1, #id_w_1, #id_nr_players_1 {
+	width: 80px;
+	margin-left: 5px;
+}
