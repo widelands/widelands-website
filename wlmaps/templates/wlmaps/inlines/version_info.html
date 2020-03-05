@@ -1,11 +1,12 @@
-<strong>This map requires a version of Widelands newer than build
+<strong>This map requires a version of Widelands build
     {% if map.wl_version_after %}
-    	{{ map.wl_version_after }}!
+    	{{ map.wl_version_after|add:1 }}
     {% else %}
     	{% if map.nr_players > 8 %}
-    		19!
+    		20x
     	{% else %}
-    		18!
+    		19x
     	{% endif %}
     {% endif %}
+or newer!
 </strong>
