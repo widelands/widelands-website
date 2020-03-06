@@ -45,7 +45,7 @@ class Map(models.Model):
         verbose_name='WL version after',
         null=True,
         blank=True)
-    ratings = GenericRelation(Rating, related_query_name='foos')
+    ratings = GenericRelation(Rating)
 
     class Meta:
         ordering = ('-pub_date',)
