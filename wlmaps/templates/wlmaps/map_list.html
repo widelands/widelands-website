@@ -21,6 +21,33 @@
 	</ul>
 {% endblock %}
 
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/messages.css' %}" />
+    <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script>
+        $(function() {
+            $( "#id_author__iexact" ).autocomplete({
+                source: function (request, response) {
+                    $.ajax('?' + $.param({f: 'author', 'q': request.term}), {
+                        dataType: 'json',
+                        method: 'OPTIONS',
+                    }).done(function (r) { response(r)})
+                },
+                minLength: 3,
+            });
+            $( "#id_uploader" ).autocomplete({
+                source: function (request, response) {
+                    $.ajax('?' + $.param({f: 'uploader', 'q': request.term}), {
+                        dataType: 'json',
+                        method: 'OPTIONS',
+                    }).done(function (r) { response(r)})
+                },
+                minLength: 3,
+            });
+        });
+    </script>
+{{ block.super}}{% endblock %}
+
 {% block content_main %}
 
 <div class="blogEntry">
@@ -34,16 +61,17 @@
             <tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.name__icontains %}
                 <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
+            </tr>
+            <tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.author__iexact %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.uploader %}
             </tr>
             <tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.w %}
                 <td class="spacer"></td>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.h %}
-            </tr>
-            <tr>
-                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
-                <td colspan="3"></td>
             </tr>
 			<tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}

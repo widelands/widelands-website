@@ -12,6 +12,7 @@ VERSION_CHOICES = (
 
 
 class MapFilter(django_filters.FilterSet):
+    uploader = django_filters.CharFilter(field_name='uploader__username', lookup_expr='iexact', label='Uploader')
     nr_players = django_filters.RangeFilter()
     w = django_filters.RangeFilter()
     h = django_filters.RangeFilter()

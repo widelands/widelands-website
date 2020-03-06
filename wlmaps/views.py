@@ -1,18 +1,19 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 #
+import os
 
 from .forms import UploadMapForm, EditCommentForm
 from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.urls import reverse
 from django.conf import settings
 from . import filters, models
 
 from mainpage.wl_utils import get_real_ip
-import os
 
 
 #########
@@ -42,6 +43,24 @@ class MapList(ListView):
             'filter': self.filter,
         })
         return ctx
+
+    def options(self, request, *args, **kwargs):
+        if request.is_ajax():
+            q = request.GET.get('q', '')
+            f = request.GET.get('f', '')
+
+            if f == 'uploader':
+                values = User.objects.exclude(is_active=False).filter(username__icontains=q).values_list('username')
+            elif f == 'author':
+                # convert to set and back to list because distinct is not supported with sqlite
+                values = list(set(models.Map.objects.filter(author__icontains=q).\
+                    order_by('author').values_list('author', flat=True)))
+            else:
+                return HttpResponseBadRequest()
+
+            return JsonResponse(list(map(lambda x: {'value': x}, values)), safe=False)
+        else:
+            return HttpResponseBadRequest()
 
 
 def download(request, map_slug):
