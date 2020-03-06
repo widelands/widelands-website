@@ -109,7 +109,14 @@ input, button, textarea, .button, select {
 }
 
 select {
-	padding: 2px;
+	padding: 2px 20px 2px 2px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background: rgba(0, 0, 0, 0.5) url("../img/select_arrow.png") no-repeat center right;
+}
+
+select:hover {
+	background: rgba(0, 0, 0, 0.2) url("../img/select_arrow.png") no-repeat center right;
 }
 
 select > option {
@@ -126,7 +133,7 @@ textarea {
 	font-size: 0.9em;
 }
 
-input:hover, button:hover, textarea:hover, select:hover {
+input:hover, button:hover, textarea:hover {
 	background-image: url("../img/black20.png");
 }
 

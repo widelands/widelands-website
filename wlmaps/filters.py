@@ -1,5 +1,6 @@
 import django_filters
 
+from django.forms import widgets
 from . import models
 
 
@@ -17,13 +18,12 @@ class MapFilter(django_filters.FilterSet):
     w = django_filters.RangeFilter()
     h = django_filters.RangeFilter()
     o = django_filters.OrderingFilter(
-        fields=('pub_date', 'name', 'author', 'w', 'h', 'ratings__average', 'nr_downloads'),
+        fields=('pub_date', 'w', 'h', 'ratings__average'),
         field_labels={
             'pub_date': 'Upload date',
             'w': 'Width',
             'h': 'Height',
-            'ratings__average': 'Average rating',
-            'nr_downloads': 'Downloads',
+            'ratings__average': 'Rating',
         }
     )
 
