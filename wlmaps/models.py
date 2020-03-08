@@ -7,6 +7,8 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.db.models.signals import pre_delete
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
+from star_ratings.models import Rating
 
 import datetime
 import os
@@ -43,6 +45,7 @@ class Map(models.Model):
         verbose_name='WL version after',
         null=True,
         blank=True)
+    ratings = GenericRelation(Rating)
 
     class Meta:
         ordering = ('-pub_date',)

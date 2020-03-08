@@ -1,4 +1,4 @@
-# Python requirements for widelands-website at July 2019
+# Python requirements for widelands-website at March 2020
 
 beautifulsoup4==4.7.1
 bleach==3.1.1
@@ -12,6 +12,7 @@ django-star-ratings==0.8.0
 dj-pagination==2.4.0
 django-registration==3.0.1
 django-tagging==0.4.6
+django-filter==2.2.0
 gunicorn==19.9.0
 lxml==4.3.2
 Markdown==3.1.1

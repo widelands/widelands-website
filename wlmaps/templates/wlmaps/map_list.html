@@ -21,13 +21,66 @@
 	</ul>
 {% endblock %}
 
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/messages.css' %}" />
+    <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script>
+        $(function() {
+            $( "#id_author__iexact" ).autocomplete({
+                source: function (request, response) {
+                    $.ajax('?' + $.param({f: 'author', 'q': request.term}), {
+                        dataType: 'json',
+                        method: 'OPTIONS',
+                    }).done(function (r) { response(r)})
+                },
+                minLength: 3,
+            });
+            $( "#id_uploader" ).autocomplete({
+                source: function (request, response) {
+                    $.ajax('?' + $.param({f: 'uploader', 'q': request.term}), {
+                        dataType: 'json',
+                        method: 'OPTIONS',
+                    }).done(function (r) { response(r)})
+                },
+                minLength: 3,
+            });
+        });
+    </script>
+{{ block.super}}{% endblock %}
+
 {% block content_main %}
 
 <div class="blogEntry">
 	<p>
 	The map files have to be placed in the Widelands map directory to be found by the game. Check the <a href="/wiki/Technical%20FAQ/#where_are_my_maps_and_savegames_stored">Technical FAQ</a> to find the map directory.
 	</p>
-	{% autopaginate maps maps_per_page as object_list %}
+
+	<form method="get">
+        {{ form.non_field_errors }}
+		<table class="maps-filter">
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.name__icontains %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
+            </tr>
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.author__iexact %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.uploader %}
+            </tr>
+            <tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.w %}
+                <td class="spacer"></td>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.h %}
+            </tr>
+			<tr>
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}
+                <td class="spacer" colspan="2"></td>
+				<td colspan="1" class="right"><input type="submit" value="Apply filters"/></td>
+			</tr>
+		</table>
+	</form>
+	{% autopaginate map_list maps_per_page as object_list %}
 	{% paginate using "pagination/pagination_mod.html" %}
 	<br />
 	<table class="maps">

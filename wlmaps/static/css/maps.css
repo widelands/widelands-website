@@ -30,3 +30,27 @@ p {
 textarea {
 	width: 97%;
 }
+
+.errorlist {
+	color: #ff0000;
+	margin: 0;
+}
+
+.maps-filter input, .maps-filter select {
+	width: 100%;
+}
+
+td.field {
+	width: 180px;
+}
+
+td.field > div {
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
+}
+
+#id_h_0, #id_w_0, #id_nr_players_0,
+#id_h_1, #id_w_1, #id_nr_players_1 {
+	width: 80px;
+}

@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     'dj_pagination',
     'tagging',
     'star_ratings',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

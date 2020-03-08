@@ -1,28 +1,66 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 #
+import os
 
 from .forms import UploadMapForm, EditCommentForm
+from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.urls import reverse
 from django.conf import settings
-from . import models
+from . import filters, models
 
 from mainpage.wl_utils import get_real_ip
-import os
 
 
 #########
 # Views #
 #########
-def index(request):
-    maps = models.Map.objects.all()
-    return render(request, 'wlmaps/index.html',
-                              {'maps': maps,
-                               'maps_per_page': settings.MAPS_PER_PAGE,
-                               })
+class MapList(ListView):
+    model = models.Map
+
+    @property
+    def filter(self):
+        if not hasattr(self, '_filter'):
+            get = self.request.GET.copy()
+            if not get.get('o'):
+                get['o'] = '-pub_date'
+
+            self._filter = filters.MapFilter(get, queryset=super().get_queryset())
+
+        return self._filter
+
+    def get_queryset(self):
+        return self.filter.qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update({
+            'maps_per_page': settings.MAPS_PER_PAGE,
+            'filter': self.filter,
+        })
+        return ctx
+
+    def options(self, request, *args, **kwargs):
+        if request.is_ajax():
+            q = request.GET.get('q', '')
+            f = request.GET.get('f', '')
+
+            if f == 'uploader':
+                values = User.objects.exclude(is_active=False).filter(username__icontains=q).values_list('username')
+            elif f == 'author':
+                # convert to set and back to list because distinct is not supported with sqlite
+                values = list(set(models.Map.objects.filter(author__icontains=q).\
+                    order_by('author').values_list('author', flat=True)))
+            else:
+                return HttpResponseBadRequest()
+
+            return JsonResponse(list(map(lambda x: {'value': x}, values)), safe=False)
+        else:
+            return HttpResponseBadRequest()
 
 
 def download(request, map_slug):
