@@ -36,11 +36,19 @@ textarea {
 	margin: 0;
 }
 
+.maps-filter input, .maps-filter select {
+	width: 100%;
+}
+
+td.field {
+	width: 180px;
+}
+
 #id_h_0, #id_w_0, #id_nr_players_0 {
-	width: 80px;
+	width: 83px;
 }
 
 #id_h_1, #id_w_1, #id_nr_players_1 {
-	width: 80px;
+	width: 83px;
 	margin-left: 5px;
 }

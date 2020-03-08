@@ -57,7 +57,7 @@
 
 	<form method="get">
         {{ form.non_field_errors }}
-		<table>
+		<table class="maps-filter">
             <tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.name__icontains %}
                 <td class="spacer"></td>
@@ -75,7 +75,8 @@
             </tr>
 			<tr>
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}
-				<td colspan="3" class="right"><input type="submit" value="Apply filters"/></td>
+                <td class="spacer" colspan="2"></td>
+				<td colspan="1" class="right"><input type="submit" value="Apply filters"/></td>
 			</tr>
 		</table>
 	</form>
