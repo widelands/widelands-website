@@ -44,11 +44,13 @@ td.field {
 	width: 180px;
 }
 
-#id_h_0, #id_w_0, #id_nr_players_0 {
-	width: 83px;
+td.field > div {
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
 }
 
+#id_h_0, #id_w_0, #id_nr_players_0,
 #id_h_1, #id_w_1, #id_nr_players_1 {
-	width: 83px;
-	margin-left: 5px;
+	width: 80px;
 }
