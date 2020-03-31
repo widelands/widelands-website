@@ -131,7 +131,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
     # Foreign middleware
     'dj_pagination.middleware.PaginationMiddleware',
     'mainpage.online_users_middleware.OnlineNowMiddleware',
@@ -196,7 +196,7 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 PYBB_ATTACHMENT_ENABLE = True
 
 # To prevent sending errors from the webserver, keep
-# this below the webserver settings 
+# this below the webserver settings
 PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*4
 PYBB_DEFAULT_MARKUP = 'markdown'
 INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from pybb.models.category
@@ -345,7 +345,8 @@ BLEACH_ALLOWED_TAGS = ['a',
                        'table', 'tbody', 'thead', 'th', 'tr', 'td',
                        'sup',
                        ]
-
+# Note: DO NOT allow style here. See
+# https://github.com/advisories/GHSA-vqhp-cxgc-6wmm
 BLEACH_ALLOWED_ATTRIBUTES = {'img': ['src', 'alt'], 'a': [
     'href'], 'td': ['align'], '*': ['class', 'id', 'title']}
 
