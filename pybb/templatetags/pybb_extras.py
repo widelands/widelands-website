@@ -117,14 +117,19 @@ def pybb_moderated_by(instance, user):
 
 @register.filter
 def pybb_editable_by(post, user):
-    """Check if the post could be edited by the user."""
+    """Check if a user is allowed to edit this post."""
 
     if user.is_superuser:
         return True
-    if post.user == user:
-        return True
     if user in post.topic.forum.moderator_group.user_set.all():
         return True
+    if post.user == user:
+        # Restrict the time a user can edit his own post
+        edit_time = timedelta(hours=pybb_settings.EDIT_HOURS)
+        if datetime.now() - edit_time > post.created:
+            return False
+        else:
+            return True
     return False
 
 
