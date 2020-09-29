@@ -120,7 +120,7 @@ def pybb_editable_by(post, user):
     """Check if a user is allowed to edit this post."""
 
     if not user.is_authenticated():
-        # Speed up if the user isn't online
+        # No need to run the other checks
         return False
     if user.is_superuser:
         return True
