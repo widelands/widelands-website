@@ -61,7 +61,7 @@
 		<span class="middle">{% trans "Quote" %}</span>
 	</a>
 
-	{% if user_is_mod or post|pybb_editable_by:user %}
+	{% if post|pybb_editable_by:user %}
 		<a class="button" href="{% url 'pybb_edit_post' post.id %}">
 			<img src="{% static 'forum/img/edit.png' %}" alt ="" class="middle" />
 			<span class="middle">{% trans "Edit" %}</span>
