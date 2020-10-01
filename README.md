@@ -1,4 +1,4 @@
-# Widelands Website
+# Widelands Website is an awesome project
 
 This the source of the [Widelands Website](https://www.widelands.org)
 
