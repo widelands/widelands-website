@@ -1,4 +1,5 @@
-# Widelands Website
+## Widelands Website ##
+# A great website
 
 This the source of the [Widelands Website](https://www.widelands.org)
 
