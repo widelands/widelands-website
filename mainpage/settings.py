@@ -200,6 +200,7 @@ PYBB_ATTACHMENT_ENABLE = True
 PYBB_ATTACHMENT_SIZE_LIMIT = 1024*1024*4
 PYBB_DEFAULT_MARKUP = 'markdown'
 INTERNAL_PERM = 'pybb.can_access_internal' # The permission string derived from pybb.models.category
+EDIT_HOURS = 24
 
 ##################################
 # Uploading files and validation #
