@@ -10,10 +10,12 @@
 
 <td class="author">
 	{{ post.user|user_link }}<br />
-	{% if post.user.wlprofile.avatar %}
-	<a href="{% url 'profile_view' post.user %}">
-		<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
-	</a>
+	{% if not post.user.wlprofile.deleted %}
+		{% if post.user.wlprofile.avatar %}
+			<a href="{% url 'profile_view' post.user %}">
+				<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
+			</a>
+		{% endif %}
 	{% endif %}
 	<div class="authorStats">
 	<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
