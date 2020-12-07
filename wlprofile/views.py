@@ -117,6 +117,9 @@ def view(request, user=None):
     else:
         profile = get_object_or_404(User, username=user).wlprofile
 
+    if profile.deleted:
+        raise Http404("User has been deleted")
+
     template_params = {
         'profile': profile,
     }
