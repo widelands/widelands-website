@@ -10,8 +10,10 @@
 
 <td class="author">
 	{{ post.user|user_link }}<br />
-	{% if not post.user.wlprofile.deleted %}
-		{% if post.user.wlprofile.avatar %}
+	{% if post.user.wlprofile.avatar %}
+		{% if post.user.wlprofile.deleted %}
+			<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
+		{% else %}
 			<a href="{% url 'profile_view' post.user %}">
 				<img src="{{ post.user.wlprofile.avatar.url }}" alt="Avatar" />
 			</a>
