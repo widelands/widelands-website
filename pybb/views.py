@@ -508,10 +508,13 @@ all_latest = render_to('pybb/all_last_posts.html')(all_latest_posts)
 def all_user_posts(request, this_user=None):
     """Get all posts of a user"""
 
-    if this_user:
-        posts = Post.objects.public().filter(user__username=this_user)
-    else:
+    if this_user is None:
         posts = Post.objects.public().filter(user__username=request.user)
+    else:
+        if get_object_or_404(User, username=this_user).wlprofile.deleted:
+            raise Http404("User has been deleted")
+
+        posts = Post.objects.public().filter(user__username=this_user)
 
     return {
         'this_user': this_user,
