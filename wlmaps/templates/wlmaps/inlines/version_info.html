@@ -1,6 +1,6 @@
 <strong>This map requires a version of Widelands
-    {% if map.min_wl_version %}
-    	{{ map.min_wl_version }}
+    {% if map.wl_version_after %}
+    	{{ map.wl_version_after }}
     {% else %}
     	{% if map.nr_players > 8 %}
     		build 20

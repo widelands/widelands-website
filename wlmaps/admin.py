@@ -26,7 +26,7 @@ class MapAdmin(admin.ModelAdmin):
     readonly_fields = ('uploader', 'nr_players', 'w', 'h', 'minimap', 'file', 'world_name')
     fieldsets = (
         (None, {
-            'fields': (('name', 'author'), 'uploader', 'uploader_comment', 'min_wl_version')
+            'fields': (('name', 'author'), 'uploader', 'uploader_comment', 'wl_version_after')
         }),
         ('Map properties', {
             'classes': ('collapse',),
