@@ -98,7 +98,7 @@ class UploadMapForm(ModelForm):
         if 'minimum_required_widelands_version' in mapinfo:
             self.instance.wl_version_after = mapinfo['minimum_required_widelands_version']
         else:
-            self.instance.wl_version_after = 'build ' + (mapinfo['needs_widelands_version_after'] + 1)
+            self.instance.wl_version_after = 'build '.format(mapinfo['needs_widelands_version_after'] + 1)
 
         # mapinfo["minimap"] is the absolute path to the image file
         # We move the file to the correct destination
