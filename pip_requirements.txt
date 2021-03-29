@@ -1,7 +1,7 @@
 # Python requirements for widelands-website at March 2020
 
 beautifulsoup4==4.7.1
-bleach==3.1.4
+bleach==3.3.0
 Django==1.11.29
 django-haystack==2.8.1
 # django-messages is very old on pypi
@@ -14,11 +14,11 @@ django-registration==3.0.1
 django-tagging==0.4.6
 django-filter==2.2.0
 gunicorn==19.9.0
-lxml==4.3.2
+lxml==4.6.3
 Markdown==3.1.1
 mysqlclient==1.4.2.post1
 numpy==1.16.4
-Pillow==6.2.0
+Pillow==8.1.1
 pydot==1.4.1
 python-magic==0.4.15
 Sphinx==2.1.2
