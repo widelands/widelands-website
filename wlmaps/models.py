@@ -41,8 +41,11 @@ class Map(models.Model):
     uploader = models.ForeignKey(User)
     nr_downloads = models.PositiveIntegerField(
         verbose_name='Download count', default=0)
-    wl_version_after = models.PositiveIntegerField(
-        verbose_name='WL version after',
+    wl_version_after = models.CharField(
+        # The field is called 'wl_version_after' even though it actually means the
+        # _minimum_ WL version required to play the map for historical reasons.
+        verbose_name='Minimum WL version',
+        max_length=10,
         null=True,
         blank=True)
     ratings = GenericRelation(Rating)
