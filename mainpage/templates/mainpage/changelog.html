@@ -1,9 +1,11 @@
 {% extends "mainpage/base.html" %}
 {% load wl_markdown %}
+{% load static %}
 
 {% block title %}Changelog - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
 {{ block.super}}
 {% endblock %}
 
