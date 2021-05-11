@@ -256,3 +256,8 @@ table.indextable tr.cap {
   background-image: url("black20.png");
 }
 
+/*--------- graphviz styles --------*/
+
+div.graphviz {
+   float: right;
+}
