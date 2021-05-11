@@ -3,7 +3,6 @@
 /*******************************/
 pre {
    margin: 4px;
-   display: block; /*show black background over the whole width*/
 }
 .highlight {
    /*	text-shadow: none;
@@ -13,6 +12,7 @@ pre {
     background-image: url("black20.png");
     margin: 4px 0px;
     margin-left: 1em;
+    overflow: auto;
 }
 .highlight .hll { background-color: #ffffcc }
 /*.highlight  { background: #f0f0f0; }*/
