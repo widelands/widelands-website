@@ -408,8 +408,12 @@ table.field-list td, table.field-list th {
     padding-left: 1em;
 }
 
-.field-list p {
+/*.field-list p {
     margin: 0;
+}*/
+
+ul p {
+   margin: 0;
 }
 
 .field-name {
