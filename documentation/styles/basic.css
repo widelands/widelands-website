@@ -341,12 +341,24 @@ table caption span.caption-number {
 table caption span.caption-text {
 }
 
+table.docutils tr {
+   vertical-align: top;
+}
+
 table.docutils td, table.docutils th {
     padding: 1px 8px 1px 5px;
     border-top: 0;
     border-left: 0;
     border-right: 0;
     border-bottom: 1px solid #aaa;
+}
+
+table.docutils tr.row-even {
+   background-color: #424242;
+}
+
+table.docutils p {
+   margin: 0 0 2px 0;
 }
 
 table.footnote td, table.footnote th {

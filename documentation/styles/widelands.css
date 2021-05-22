@@ -214,6 +214,7 @@ pre {
 div.body code .pre {
    background-image: url("black20.png");
    padding: 0 1px 0 1px;
+   font-size: 1.1em;
 }
 
 th {
