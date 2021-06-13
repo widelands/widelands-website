@@ -214,10 +214,23 @@ pre {
 div.body code .pre {
    background-image: url("black20.png");
    padding: 0 1px 0 1px;
+   font-size: 1.1em;
 }
 
-th {
+table.docutils thead tr {
    background-image: url("black20.png");
+}
+
+table.docutils caption {
+    text-align: left;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #181;
+    margin: 2px;
+}
+
+table.docutils tr.row-even {
+   background-color: #424242;
 }
 
 .warning code {
