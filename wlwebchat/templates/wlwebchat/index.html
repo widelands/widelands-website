@@ -12,12 +12,12 @@
 {% block content_main %}
 <div class="blogEntry">
 	<p>
-	This is a webchat applet provided by the <a href="https://www.freenode.net">freenode network</a>. This is a convenient
-	solution if you just want to chat in the #widelands channel on freenode.
+	This is a webchat applet provided by the <a href="https://libera.chat">libera.chat network</a>. This is a convenient
+	solution if you just want to chat in the #widelands channel on libera.chat.
 	</p>
 
 	<!-- Start of Webchat -->
-	<iframe src="https://webchat.freenode.net?nick={% if user.is_authenticated %}{{ user.username }}{% else %}widelands_.{% endif %}&amp;channels=widelands&amp;uio=d4" style="width: 100%; height: 610px;"></iframe>
+	<iframe src="https://web.libera.chat?nick={% if user.is_authenticated %}{{ user.username }}{% else %}widelands_?{% endif %}&amp;channels=#widelands" style="width: 100%; height: 610px;"></iframe>
 	<!-- End of Webchat -->
 
 	<p>
