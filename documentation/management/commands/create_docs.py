@@ -119,7 +119,7 @@ class Command(BaseCommand):
 
         try:
             check_call(['python', os.path.join(
-                self.sphinx_dir, 'extract_rst.py')])
+                self.sphinx_dir, 'extract_rst.py'), '-graphs'])
             check_call(['sphinx-build',
                         '-b', builder,
                         '-d', os.path.join(self.sphinx_dir, 'build/doctrees'),
