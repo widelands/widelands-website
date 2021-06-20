@@ -108,7 +108,8 @@ div.sphinxsidebar input {
 
 div.section {
     min-height: 100px;
-    overflow: hidden;
+    /*overflow: hidden;*/
+    clear: both;
 }
 
 /* -- hyperlink styles ------------------------------------------------------ */
@@ -140,7 +141,7 @@ div.body h6 {
    font-weight: normal;
    color: #181;
    border-bottom: 1px solid #C8BE93;
-/*    margin: 20px -20px 10px -20px; */
+   margin: 20px -20px 10px -20px;
    padding: 3px 0 3px 10px;
 }
 
