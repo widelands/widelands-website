@@ -208,6 +208,11 @@ p.admonition-title:after {
    content: ":";
 }
 
+/* make codeblocks not run over class-graphs */
+.highlight-lua.notranslate {
+    overflow: auto;
+}
+
 pre {
    padding: 5px;
    margin-left: 1em;
@@ -280,3 +285,4 @@ table.indextable tr.cap {
 div.graphviz {
    float: right;
 }
+
