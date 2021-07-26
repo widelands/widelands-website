@@ -284,5 +284,6 @@ table.indextable tr.cap {
 
 div.graphviz {
    float: right;
+   max-width: 80%;
 }
 
