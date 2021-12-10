@@ -33,9 +33,7 @@
 		<table class="notifications">
 			<tr>
 				<th class="small">{% trans "Notification Type" %}</th>
-				{% for noticetype in objects %}
-					<th class="small">{{ header }}</th>
-				{% endfor %}
+				<th class="small">Email</th>
 			</tr>
 			{% for setting in objects %}
 			<tr class="{% cycle "odd" "even" %}">
