@@ -1,21 +1,20 @@
 {% extends "notification/base.html" %}
 
 {% load humanize i18n %}
-{% load custom_date %}
 
 {% block title %}
-{% trans "Notifications "%} - {{ block.super }}
+{% trans "Add-On settings "%} - {{ block.super }}
 {% endblock %}
 
-{% block notifications %}class="active"{% endblock %}
+{% block addon_settings %}class="active"{% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Notification Settings" %} {{ profile.user }}</h1>
+	<h1>{% trans "Add-On Settings" %} {{ profile.user }}</h1>
 {% endblock %}
 
 {% block content_main %}
 <div class="blogEntry">
-	<h2>{% trans "Settings" %}</h2>
+	<h2>{% trans "Email Settings regarding Add-Ons" %}</h2>
 
 	{% url 'acct_email' as email_url %}
 	{% if user.email %}
@@ -28,34 +27,30 @@
 		You do not have a verified email address to which notifications can be sent. You can add one by <a href="{% url 'profile_edit' %}">editing your profile</a>.
 	</p>
 	{% endif %}
+
 	<form method="POST" action=".">
-	{% for app, settings in app_tables.items %}
-		<h3>{{ app|capfirst }} </h3>
+        {% csrf_token %}
 		<table class="notifications">
 			<tr>
 				<th class="small">{% trans "Notification Type" %}</th>
-				{% for header in column_headers %}
+				{% for noticetype in objects %}
 					<th class="small">{{ header }}</th>
 				{% endfor %}
 			</tr>
-			{% for setting in settings %}
+			{% for setting in objects %}
 			<tr class="{% cycle "odd" "even" %}">
 				<td>
-					{% trans setting.notice_type.display %}
-					 ({% trans setting.notice_type.description %})
+					{% trans setting.display %}<br />
+					{% trans setting.description %}
 				</td>
 				<td style="width: 5em;">
-					{% for html_value in setting.html_values %}
-						<input type="checkbox" name="{{ html_value.0 }}" {% if html_value.1 %}checked="checked" {% endif %}/>
-					{% endfor %}
+    				<input type="checkbox" name="{{ setting.label }}" {% if setting.shouldsend %}checked="checked" {% endif %}/>
 				</td>
 			</tr>
 			{% endfor %}
 		</table>
 		<br />
-	{% endfor %}
-	{% csrf_token %}
-	<input class="posRight" type="submit" value="{% trans "Change" %}" />
+	   <input class="posRight" type="submit" value="{% trans "Change" %}" />
 	</form>
 </div>
 {% endblock %}

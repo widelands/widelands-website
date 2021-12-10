@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'check_input.apps.CheckInput',
     'documentation',
     'privacy_policy.apps.PrivacyPolicyConfig',
+    'wladdons_settings.apps.WladdonsSettingsConfig',
     'haystack', # search engine; see option HAYSTACK_CONNECTIONS
 
     # Modified 3rd party apps
