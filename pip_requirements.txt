@@ -14,7 +14,7 @@ django-registration==3.0.1
 django-tagging==0.4.6
 django-filter==2.2.0
 gunicorn==19.9.0
-lxml==4.6.3
+lxml==4.6.5
 Markdown==3.1.1
 mysqlclient==1.4.2.post1
 numpy==1.16.4
