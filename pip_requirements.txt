@@ -21,7 +21,7 @@ numpy==1.16.4
 Pillow==8.3.2
 pydot==1.4.1
 python-magic==0.4.15
-Sphinx==2.1.2
+Sphinx==4.3.2
 Whoosh==2.7.4
 
 # Automatically installed dependencies
