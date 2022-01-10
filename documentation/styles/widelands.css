@@ -269,9 +269,9 @@ div.code-block-caption {
 
 
 /* Overwritten classes from basic.css */
-code.descname {
+.sig-name, code.descname {
    color: #181;
-   font-size: larger;
+   font-weight: bold;
    padding-right: 0.5em;
 }
 

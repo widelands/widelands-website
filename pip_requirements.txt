@@ -13,15 +13,15 @@ dj-pagination==2.4.0
 django-registration==3.0.1
 django-tagging==0.4.6
 django-filter==2.2.0
-gunicorn==19.9.0
-lxml==4.6.3
+gunicorn==20.1.0
+lxml==4.6.5
 Markdown==3.1.1
 mysqlclient==1.4.2.post1
 numpy==1.16.4
 Pillow==8.3.2
 pydot==1.4.1
 python-magic==0.4.15
-Sphinx==2.1.2
+Sphinx==4.3.2
 Whoosh==2.7.4
 
 # Automatically installed dependencies
