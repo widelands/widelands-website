@@ -106,6 +106,12 @@ div.sphinxsidebar input {
    font-size: 1em;
 }
 
+div.section {
+    min-height: 100px;
+    /*overflow: hidden;*/
+    clear: both;
+}
+
 /* -- hyperlink styles ------------------------------------------------------ */
 
 a {
@@ -202,6 +208,11 @@ p.admonition-title:after {
    content: ":";
 }
 
+/* make codeblocks not run over class-graphs */
+.highlight-lua.notranslate {
+    overflow: auto;
+}
+
 pre {
    padding: 5px;
    margin-left: 1em;
@@ -258,14 +269,21 @@ div.code-block-caption {
 
 
 /* Overwritten classes from basic.css */
-code.descname {
+.sig-name, code.descname {
    color: #181;
-   font-size: larger;
+   font-weight: bold;
    padding-right: 0.5em;
 }
 
 table.indextable tr.cap {
   margin-top: 10px;
   background-image: url("black20.png");
+}
+
+/*--------- graphviz styles --------*/
+
+div.graphviz {
+   float: right;
+   max-width: 80%;
 }
 
