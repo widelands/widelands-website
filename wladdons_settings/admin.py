@@ -1,12 +1,19 @@
 from django.contrib import admin
-from wladdons_settings.models import AddonNotice
+from wladdons_settings.models import AddonNoticeUser
+from wladdons_settings.models import AddonNoticeType
 
 
-class AddonNoticeAdmin(admin.ModelAdmin):
-    
+class AddonNoticeUserAdmin(admin.ModelAdmin):
+
     search_fields = ['user__username', ]
-    list_display = ('label', 'user', 'shouldsend')
-    readonly_fields = ('label', 'display', 'description', 'user')
+    list_display = ('notice_type', 'user', 'shouldsend')
 
 
-admin.site.register(AddonNotice, AddonNoticeAdmin)
+class AddonNoticeTypeAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'label': ('display',)}
+
+    list_display = ('display', 'description', 'send_default')
+
+
+admin.site.register(AddonNoticeUser, AddonNoticeUserAdmin)
+admin.site.register(AddonNoticeType, AddonNoticeTypeAdmin)

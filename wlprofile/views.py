@@ -95,6 +95,12 @@ def do_delete(request):
         message.sender_deleted_at = datetime.now()
         message.save()
 
+    # Delete addon notifications
+    from wladdons_settings.models import AddonNoticeUser
+    user_notice = AddonNoticeUser.objects.filter(user=user)
+    for notice in user_notice:
+        notice.delete()
+
     # Do some settings in django.auth.User
     user.is_active = False
     user.is_staff = False

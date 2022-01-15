@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from wladdons_settings.models import get_addon_setting
-from wladdons_settings.settings import ADDONNOTICETYPES
+from wladdons_settings.models import AddonNoticeType
+from wladdons_settings.models import get_addon_usersetting
 from django.contrib.auth.decorators import login_required
 
 
@@ -8,15 +8,17 @@ from django.contrib.auth.decorators import login_required
 def addon_settings(request):
     settings = []
 
-    for label in ADDONNOTICETYPES:
-        setting = get_addon_setting(request.user, label)
+    notices = AddonNoticeType.objects.all()
+
+    for notice in notices:
+        usersetting = get_addon_usersetting(request.user, notice)
         if request.method == 'POST':
-            if request.POST.get(label) == 'on':
-                setting.shouldsend = True
+            if request.POST.get(usersetting.notice_type.label) == 'on':
+                usersetting.shouldsend = True
             else:
-                setting.shouldsend = False
-            setting.save()
-        settings.append(setting)
+                usersetting.shouldsend = False
+            usersetting.save()
+        settings.append(usersetting)
 
     return render(request, 'wladdons_settings/settings.html', {
         'objects': settings})

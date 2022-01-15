@@ -1,38 +1,64 @@
 from django.db import models
 from django.contrib.auth.models import User
-from wladdons_settings.settings import ADDONNOTICETYPES as AT
 
 
-class AddonNotice(models.Model):
+class AddonNoticeType(models.Model):
 
-    user = models.ForeignKey(User,
-                             on_delete=models.CASCADE)
-    label = models.CharField(max_length=40,
-                             unique=True,
-                             help_text='Change this in wladdons_settings.settings')
-    display = models.CharField(max_length=50,
-                               help_text='Change this in wladdons_settings.settings')
-    description = models.CharField(max_length=100,
-                                   help_text='Change this in wladdons_settings.settings')
-    shouldsend = models.BooleanField(default=True)
+    display = models.CharField(
+        max_length=50,
+        help_text='E.g.: Translation issues'
+    )
+    description = models.CharField(
+        max_length=100,
+        help_text='E.g.: Notify me on translation issues'
+    )
+    send_default = models.BooleanField(
+        default=True,
+        help_text='Default setting for this notice type'
+    )
+    label = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.label
+        return self.display
 
     class Meta:
         verbose_name = 'Addon notice'
         verbose_name_plural = 'Addon notices'
 
 
-def get_addon_setting(user, label):
-    """Return AddonType for a specific user."""
+class AddonNoticeUser(models.Model):
 
-    defaults = {'display': AT[label]['display'],
-                'description': AT[label]['description']}
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+    notice_type = models.ForeignKey(
+        AddonNoticeType,
+        on_delete=models.CASCADE
+    )
+    shouldsend = models.BooleanField(default=True)
 
-    setting, created = AddonNotice.objects.update_or_create(user=user,
-                                                            label=label,
-                                                            defaults=defaults)
+    def __str__(self):
+        return self.notice_type.display
+
+    class Meta:
+        verbose_name = 'Addon notice for user'
+        verbose_name_plural = 'Addon notices for users'
+
+
+def get_addon_usersetting(user, noticetype):
+    """Returns the usersetting for a user.
+
+    If there is no setting yet, create it.
+    """
+
+    usersetting, created = AddonNoticeUser.objects.update_or_create(
+        user=user,
+        notice_type=noticetype
+    )
+
     if created:
-        print('AddonSetting created: {}'.format(setting))
-    return setting
+        usersetting.shouldsend = noticetype.send_default
+        usersetting.save()
+
+    return usersetting
