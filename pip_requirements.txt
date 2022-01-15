@@ -22,6 +22,7 @@ Pillow==8.3.2
 pydot==1.4.1
 python-magic==0.4.15
 Sphinx==4.3.2
+docutils==0.17
 Whoosh==2.7.4
 
 # Automatically installed dependencies
@@ -36,7 +37,6 @@ Whoosh==2.7.4
     # Pygments==2.2.0
     # requests==2.18.1, installs: idna, urllib3, chardet, certifi
     # Babel==2.4.0, installs: pytz
-    # docutils==0.13.1
     # Jinja2==2.9.6, installs: MarkupSafe
     # typing==3.6.1
     # imagesize==0.7.1

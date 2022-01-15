@@ -106,7 +106,7 @@ div.sphinxsidebar input {
    font-size: 1em;
 }
 
-div.section {
+section {
     min-height: 100px;
     /*overflow: hidden;*/
     clear: both;
