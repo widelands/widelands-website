@@ -16,14 +16,15 @@ class AddonNoticeType(models.Model):
         default=True,
         help_text='Default setting for this notice type'
     )
-    label = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True,
+                            help_text='Do not change this once it is set')
 
     def __str__(self):
         return self.display
 
     class Meta:
-        verbose_name = 'Addon notice'
-        verbose_name_plural = 'Addon notices'
+        verbose_name = 'Addon notice type'
+        verbose_name_plural = 'Addon notice types'
 
 
 class AddonNoticeUser(models.Model):
@@ -42,8 +43,8 @@ class AddonNoticeUser(models.Model):
         return self.notice_type.display
 
     class Meta:
-        verbose_name = 'Addon notice for user'
-        verbose_name_plural = 'Addon notices for users'
+        verbose_name = 'Addon noticetype/user relationship'
+        verbose_name_plural = 'Addon noticetype/user relationships'
 
 
 def get_addon_usersetting(user, noticetype):

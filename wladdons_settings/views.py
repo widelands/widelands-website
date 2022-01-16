@@ -13,7 +13,7 @@ def addon_settings(request):
     for notice in notices:
         usersetting = get_addon_usersetting(request.user, notice)
         if request.method == 'POST':
-            if request.POST.get(usersetting.notice_type.label) == 'on':
+            if request.POST.get(usersetting.notice_type.slug) == 'on':
                 usersetting.shouldsend = True
             else:
                 usersetting.shouldsend = False

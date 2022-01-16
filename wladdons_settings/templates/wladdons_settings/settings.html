@@ -43,7 +43,7 @@
 						{% trans setting.notice_type.description %}
 					</td>
 					<td style="width: 5em;">
-						<input type="checkbox" name="{{ setting.notice_type.label }}" {% if setting.shouldsend %}checked="checked" {% endif %}/>
+						<input type="checkbox" name="{{ setting.notice_type.slug }}" {% if setting.shouldsend %}checked="checked" {% endif %}/>
 					</td>
 				</tr>
 				{% endfor %}

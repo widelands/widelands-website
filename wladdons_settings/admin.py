@@ -10,7 +10,7 @@ class AddonNoticeUserAdmin(admin.ModelAdmin):
 
 
 class AddonNoticeTypeAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'label': ('display',)}
+    prepopulated_fields = {'slug': ('display',)}
 
     list_display = ('display', 'description', 'send_default')
 
