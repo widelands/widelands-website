@@ -31,10 +31,10 @@
 
 		<p>Your Add-Ons:</p>
 		<ul>
-            {% for addon in addons %}
-            <li>{{ addon|escape }}</li>
-            {% endfor %}
-        </ul>
+			{% for addon in addons %}
+			<li>{{ addon|escape }}</li>
+			{% endfor %}
+		</ul>
 
 		<form method="POST" action=".">
 			{% csrf_token %}
