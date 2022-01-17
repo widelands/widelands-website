@@ -138,7 +138,7 @@ Source code only
 
 The documentation is made out of the source code. To get a copy, see:
 
-https://wl.widelands.org/wiki/BzrPrimer/
+https://wl.widelands.org/wiki/GitPrimer/
 
 After the source code is downloaded, adjust the path of 
 
@@ -183,6 +183,25 @@ Now you can create the economy graphs:
 
 You can access the encyclopdia by clicking on 'The Game -> Encyclopedia' now.
 
+Dependencies between website and the addons server
+==================================================
+
+The addon-server is able to send emails for various actions in regard with
+add-ons uploaded by users. The settings for emailing is done via a users
+profile page on the website. In order to get this work locally you have to
+set up the add-ons-server database and upload add-ons.
+See: https://github.com/widelands/wl_addons_server for pointers
+
+For a connection between the add-ons-server and the website define a new entry
+in the DATABASES-section in local_settings.py called 'addonserver':
+
+   'addonserver': {
+        # Entries according to the add-on database
+   }
+
+Then define some notification-types in the admin page for WLADDONS_SETTINGS.
+If a user has uploaded add-on(s) the noticetypes are created for this user if
+he enters his profile page and clicks on the tab 'Add-On Settings'.
 
 Contact
 =======

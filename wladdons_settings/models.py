@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.utils import ConnectionDoesNotExist
 
 
 class AddonNoticeType(models.Model):
@@ -47,19 +48,45 @@ class AddonNoticeUser(models.Model):
         verbose_name_plural = 'Addon noticetype/user relationships'
 
 
+def get_addons_for_user(user_pk):
+    """Fetch the addon-names for this user from the add-ons database."""
+
+    from django.db import connections
+
+    try:
+        cursor = connections['addonserver'].cursor()
+        cursor.execute('SELECT addons.name\
+            FROM uploaders, addons\
+            WHERE uploaders.addon=addons.id\
+            AND uploaders.user=%s', [user_pk])
+
+        user_addons = cursor.fetchall()
+        cursor.close()
+    except ConnectionDoesNotExist:
+        user_addons = None
+
+    return user_addons
+
+
 def get_addon_usersetting(user, noticetype):
     """Returns the usersetting for a user.
 
-    If there is no setting yet, create it.
+    The settings are created only if this user has uploaded an addon.
     """
 
-    usersetting, created = AddonNoticeUser.objects.update_or_create(
-        user=user,
-        notice_type=noticetype
-    )
+    usersetting = None
 
-    if created:
-        usersetting.shouldsend = noticetype.send_default
-        usersetting.save()
+    user_addons = get_addons_for_user(user.pk)
 
-    return usersetting
+    if user_addons is not None:
+        print(user_addons, user, user.pk)
+        if user_addons:
+            usersetting, created = AddonNoticeUser.objects.update_or_create(
+                user=user,
+                notice_type=noticetype
+            )
+            if created:
+                usersetting.shouldsend = noticetype.send_default
+                usersetting.save()
+
+    return usersetting, user_addons

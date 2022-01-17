@@ -29,6 +29,13 @@
 		</p>
 		{% endif %}
 
+		<p>Your Add-Ons:</p>
+		<ul>
+            {% for addon in addons %}
+            <li>{{ addon|escape }}</li>
+            {% endfor %}
+        </ul>
+
 		<form method="POST" action=".">
 			{% csrf_token %}
 			<table class="notifications">
@@ -52,7 +59,7 @@
 		   <input class="posRight" type="submit" value="{% trans "Change" %}" />
 		</form>
 	{% else %}
-	<p>Currently there are no settings available...</p>
+	<p>Currently there are no settings available or you didn't had uploaded any Add-ons yet.</p>
 	{% endif %}
 </div>
 {% endblock %}
