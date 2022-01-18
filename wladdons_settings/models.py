@@ -53,6 +53,8 @@ def get_addons_for_user(user_pk):
 
     from django.db import connections
 
+    user_addons = []
+
     try:
         cursor = connections['addonserver'].cursor()
         cursor.execute('SELECT addons.name\
@@ -63,13 +65,13 @@ def get_addons_for_user(user_pk):
         user_addons = cursor.fetchall()
         cursor.close()
     except ConnectionDoesNotExist:
-        user_addons = None
+        pass
 
     return user_addons
 
 
 def get_addon_usersetting(user, noticetype):
-    """Returns the usersetting for a user.
+    """Returns the usersetting for a user and add-on names.
 
     The settings are created only if this user has uploaded an addon.
     """
@@ -77,16 +79,14 @@ def get_addon_usersetting(user, noticetype):
     usersetting = None
 
     user_addons = get_addons_for_user(user.pk)
-
-    if user_addons is not None:
-        print(user_addons, user, user.pk)
-        if user_addons:
-            usersetting, created = AddonNoticeUser.objects.update_or_create(
-                user=user,
-                notice_type=noticetype
-            )
-            if created:
-                usersetting.shouldsend = noticetype.send_default
-                usersetting.save()
+    print(user_addons, user)
+    if user_addons:
+        usersetting, created = AddonNoticeUser.objects.update_or_create(
+            user=user,
+            notice_type=noticetype
+        )
+        if created:
+            usersetting.shouldsend = noticetype.send_default
+            usersetting.save()
 
     return usersetting, user_addons
