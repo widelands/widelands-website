@@ -2,7 +2,6 @@ from django.shortcuts import render
 from wladdons_settings.models import AddonNoticeType
 from wladdons_settings.models import get_addon_usersetting
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.models import Site
 
 
 @login_required

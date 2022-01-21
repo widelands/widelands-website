@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.utils import ConnectionDoesNotExist
 
 
 class AddonNoticeType(models.Model):
@@ -55,23 +54,21 @@ def get_addons_for_user(user_pk):
 
     user_addons = []
 
-    try:
-        cursor = connections['addonserver'].cursor()
-        cursor.execute('SELECT addons.name\
-            FROM uploaders, addons\
-            WHERE uploaders.addon=addons.id\
-            AND uploaders.user=%s', [user_pk])
+    cursor = connections['addonserver'].cursor()
+    cursor.execute('SELECT addons.name\
+        FROM uploaders, addons\
+        WHERE uploaders.addon=addons.id\
+        AND uploaders.user=%s', [user_pk])
 
-        user_addons = cursor.fetchall()
-        cursor.close()
-    except ConnectionDoesNotExist:
-        pass
+    user_addons = cursor.fetchall()
+    cursor.close()
 
     return user_addons
 
 
 def get_addon_usersetting(user, noticetype):
-    """Returns the usersetting for a user and add-on names."""
+    """Returns the usersetting for a user and the names of Add-Ons this user
+    has created."""
 
     usersetting = None
 
@@ -79,10 +76,8 @@ def get_addon_usersetting(user, noticetype):
     #print(user_addons, user)
     usersetting, created = AddonNoticeUser.objects.update_or_create(
         user=user,
-        notice_type=noticetype
+        notice_type=noticetype,
+        shouldsend=noticetype.send_default
     )
-    if created:
-        usersetting.shouldsend = noticetype.send_default
-        usersetting.save()
 
     return usersetting, user_addons
