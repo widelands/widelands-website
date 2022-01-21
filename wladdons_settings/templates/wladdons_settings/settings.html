@@ -43,6 +43,7 @@
 
 		<form method="POST" action=".">
 			{% csrf_token %}
+			{% if addon_settings %}
 			<h3>Notice types for players</h3>
 			<table class="notifications">
 				<tr>
@@ -61,6 +62,8 @@
 				</tr>
 				{% endfor %}
 			</table>
+			{% endif %}
+			{% if author_related_settings %}
 			<h3>Notice types for Add-On authors</h3>
 			<table class="notifications">
 				<tr>
@@ -79,6 +82,7 @@
 				</tr>
 				{% endfor %}
 			</table>
+			{% endif %}
 			<br />
 			<input class="posRight" type="submit" value="{% trans "Change" %}" />
 		</form>
