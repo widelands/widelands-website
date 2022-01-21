@@ -41,8 +41,8 @@
 			{% for setting in settings %}
 			<tr class="{% cycle "odd" "even" %}">
 				<td>
-					{% trans setting.notice_type.display %}
-					 ({% trans setting.notice_type.description %})
+					{% trans setting.notice_type.display %}<br />
+					{% trans setting.notice_type.description %}
 				</td>
 				<td style="width: 5em;">
 					{% for html_value in setting.html_values %}

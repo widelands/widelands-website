@@ -22,6 +22,10 @@ def addon_settings(request):
                 usersetting.save()
             settings.append(usersetting)
 
+    add_related=[settings.pop(i) for i, x in enumerate(settings) if x.author_related]
+    
     return render(request, 'wladdons_settings/settings.html', {
-        'objects': settings,
-        'addons': addons,})
+        'addon_settings': settings,
+        'addons': addons,
+        'author_related_settings': add_related,
+        })

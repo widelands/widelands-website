@@ -16,6 +16,11 @@ class AddonNoticeType(models.Model):
         default=True,
         help_text='Default setting for this notice type'
     )
+    author_related_default = models.BooleanField(
+        default=True,
+        help_text='Turn off for notice types which are not directly related\
+                   to an add-on author, e.g. mentions in add-on comments.'
+    )
     slug = models.SlugField(unique=True,
                             help_text='Do not change this once it is set')
 
@@ -38,6 +43,7 @@ class AddonNoticeUser(models.Model):
         on_delete=models.CASCADE
     )
     shouldsend = models.BooleanField(default=True)
+    author_related = models.BooleanField(default=True)
 
     def __str__(self):
         return self.notice_type.display
@@ -54,6 +60,7 @@ def get_addons_for_user(user_pk):
 
     user_addons = []
 
+    # not try-clause to get admins informed on a failure
     cursor = connections['addonserver'].cursor()
     cursor.execute('SELECT addons.name\
         FROM uploaders, addons\
@@ -72,12 +79,15 @@ def get_addon_usersetting(user, noticetype):
 
     usersetting = None
 
-    user_addons = get_addons_for_user(user.pk)
-    #print(user_addons, user)
     usersetting, created = AddonNoticeUser.objects.update_or_create(
         user=user,
         notice_type=noticetype,
-        shouldsend=noticetype.send_default
     )
+    if created:
+        usersetting.shouldsend=noticetype.send_default
+        usersetting.author_related=noticetype.author_related_default
+        usersetting.save()
+
+    user_addons = get_addons_for_user(user.pk)
 
     return usersetting, user_addons

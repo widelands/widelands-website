@@ -12,7 +12,7 @@ class AddonNoticeUserAdmin(admin.ModelAdmin):
 class AddonNoticeTypeAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('display',)}
 
-    list_display = ('display', 'description', 'send_default')
+    list_display = ('display', 'description', 'send_default', 'author_related_default')
 
 
 admin.site.register(AddonNoticeUser, AddonNoticeUserAdmin)
