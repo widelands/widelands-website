@@ -71,22 +71,18 @@ def get_addons_for_user(user_pk):
 
 
 def get_addon_usersetting(user, noticetype):
-    """Returns the usersetting for a user and add-on names.
-
-    The settings are created only if this user has uploaded an addon.
-    """
+    """Returns the usersetting for a user and add-on names."""
 
     usersetting = None
 
     user_addons = get_addons_for_user(user.pk)
-    print(user_addons, user)
-    if user_addons:
-        usersetting, created = AddonNoticeUser.objects.update_or_create(
-            user=user,
-            notice_type=noticetype
-        )
-        if created:
-            usersetting.shouldsend = noticetype.send_default
-            usersetting.save()
+    #print(user_addons, user)
+    usersetting, created = AddonNoticeUser.objects.update_or_create(
+        user=user,
+        notice_type=noticetype
+    )
+    if created:
+        usersetting.shouldsend = noticetype.send_default
+        usersetting.save()
 
     return usersetting, user_addons

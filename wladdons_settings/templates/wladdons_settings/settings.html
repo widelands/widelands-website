@@ -29,12 +29,17 @@
 		</p>
 		{% endif %}
 
-		<p>Your Add-Ons:</p>
-		<ul>
-			{% for addon in addons %}
-			<li>{{ addon|escape }}</li>
-			{% endfor %}
-		</ul>
+		{% if addons %}
+			<p>Your Add-Ons:</p>
+			<ul>
+				{% for addon in addons %}
+				<li>{{ addon|escape }}</li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p>You haven't uploaded any Add-On yet.</p>
+			<p>Look at <a href="/documentation/add-ons/index.html" target="_blank">Add-Ons</a> for information how to write your own Add-On.</p>
+		{% endif %}
 
 		<form method="POST" action=".">
 			{% csrf_token %}
@@ -56,11 +61,10 @@
 				{% endfor %}
 			</table>
 			<br />
-		   <input class="posRight" type="submit" value="{% trans "Change" %}" />
+			<input class="posRight" type="submit" value="{% trans "Change" %}" />
 		</form>
 	{% else %}
-	<p>Currently there are no settings available or you didn't had uploaded any Add-Ons yet.</p>
-	<p>Look at <a href="/documentation/add-ons/index.html" target="_blank">Add-Ons</a> for information how to write your own Add-On.</p>
+	<p>Currently there are no settings available.</p>
 	{% endif %}
 </div>
 {% endblock %}
