@@ -110,16 +110,11 @@ class Command(BaseCommand):
             except OSError:
                 raise
 
-        # Locally 'dirhtml' do not work because the staticfiles view disallow
-        # directory indexes, but 'dirhtml' gives nicer addresses in production
-        builder = 'html'
-        if not settings.DEBUG:
-            # In production DEBUG is False
-            builder = 'dirhtml'
+        builder = 'dirhtml'
 
         try:
             check_call(['python', os.path.join(
-                self.sphinx_dir, 'extract_rst.py'), '-graphs'])
+                self.sphinx_dir, 'extract_rst.py'), '-graphs', builder])
             check_call(['sphinx-build',
                         '-b', builder,
                         '-d', os.path.join(self.sphinx_dir, 'build/doctrees'),
