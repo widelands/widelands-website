@@ -53,12 +53,6 @@
 			{% endif %}
 			<h3>Notice types for Add-On authors</h3>
 			{% if addons %}
-				<p>Your Add-Ons:</p>
-				<ul>
-					{% for addon in addons %}
-					<li>{{ addon|escape }}</li>
-					{% endfor %}
-				</ul>
 				{% if author_related_settings %}
 				<table class="notifications">
 					<tr>
@@ -78,6 +72,13 @@
 					{% endfor %}
 				</table>
 				{% endif %}
+				<p></p>
+				<p>Your Add-Ons:</p>
+				<ul>
+					{% for addon in addons %}
+					<li>{{ addon.0|escape }}</li>
+					{% endfor %}
+				</ul>
 			{% else %}
 				<p>You haven't uploaded any Add-On yet.</p>
 				<p>Look at <a href="/documentation/add-ons/index.html" target="_blank">Add-Ons</a> for information how to write your own Add-On.</p>

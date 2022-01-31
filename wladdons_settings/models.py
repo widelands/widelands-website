@@ -69,7 +69,6 @@ def get_addons_for_user(user_pk):
 
     user_addons = cursor.fetchall()
     cursor.close()
-
     return user_addons
 
 
@@ -88,6 +87,4 @@ def get_addon_usersetting(user, noticetype):
         usersetting.author_related=noticetype.author_related_default
         usersetting.save()
 
-    user_addons = get_addons_for_user(user.pk)
-
-    return usersetting, user_addons
+    return usersetting
