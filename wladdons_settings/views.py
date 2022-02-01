@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 def addon_settings(request):
     settings = []
     addons = []
+    author_related_settings = []
 
     notices = AddonNoticeType.objects.all()
 
@@ -22,14 +23,14 @@ def addon_settings(request):
                 else:
                     usersetting.shouldsend = False
                 usersetting.save()
-            settings.append(usersetting)
-
-    # Split the list
-    add_related=[settings.pop(i) for i, x in enumerate(settings) if x.author_related]
+            if usersetting.author_related:
+                author_related_settings.append(usersetting)
+            else:
+                settings.append(usersetting)
     
     addons = get_addons_for_user(request.user.pk)
     return render(request, 'wladdons_settings/settings.html', {
         'addon_settings': settings,
         'addons': addons,
-        'author_related_settings': add_related,
+        'author_related_settings': author_related_settings,
         })
