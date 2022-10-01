@@ -11,6 +11,7 @@ import os
 import os.path
 import locale
 import codecs
+import random
 
 
 def mainpage(request):
@@ -27,10 +28,14 @@ def legal_notice(request):
         if form.is_valid():
             name = form.cleaned_data["forename"] + " " + form.cleaned_data["surname"]
             subject = "An inquiry over the webpage"
+            question = form.cleaned_data["question"]
+            answer = form.cleaned_data["answer"]
             message = "\n".join(
                 [
                     "From: " + name,
                     "EMail: " + form.cleaned_data["email"],
+                    "Question: " + question,
+                    "Answer: " + answer,
                     "Inquiry:",
                     form.cleaned_data["inquiry"],
                 ]
@@ -42,12 +47,22 @@ def legal_notice(request):
             for recipient in settings.INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
 
-            send_mail(subject, message, sender, recipients, fail_silently=False)
+            # if answer is right send mail
+            if check_question(question, answer):
+                send_mail(subject, message, sender, recipients, fail_silently=False)
+            # else:
+            #    # nur zum testen, nach dem ausrollen das else entfernen ;)
+            #    send_mail('SPAM: ' + subject, message, sender,
+            #          recipients, fail_silently=False)
+
             # Redirect after POST
             return HttpResponseRedirect("/legal_notice_thanks/")
 
     else:
         form = ContactForm()  # An unbound form
+
+    # random number for random question
+    question_rnum = random.randint(0, len(settings.INQUIRY_QUESTION) - 1)
 
     return render(
         request,
@@ -55,8 +70,40 @@ def legal_notice(request):
         {
             "form": form,
             "inquiry_recipients": settings.INQUIRY_RECIPIENTS,
+            "question": settings.INQUIRY_QUESTION[question_rnum][0],
+            "chieftains": get_chieftains(),
         },
     )
+
+
+def check_question(question, answer):
+    # check if the answer is right
+    questions = settings.INQUIRY_QUESTION
+    for i in range(len(questions)):
+        if questions[i][0] == question:
+            if answer.lower() in questions[i][1 : len(questions[i])]:
+                return True
+    return False
+
+
+def get_chieftains():
+    # get chieftains from development.json
+    # chieftains backup hard coded
+    chieftains = settings.INQUIRY_CHIEFTAINS
+    try:
+        with open(settings.WIDELANDS_SVN_DIR + "data/txts/developers.json", "r") as f:
+            json_data = json.load(f)["developers"]
+
+        for head in json_data:
+            if head["heading"] == "Chieftains":
+                for entry in head["entries"]:
+                    if "members" in list(entry.keys()):
+                        return entry["members"]
+
+    except IOError:
+        chieftains.append("ERROR:")
+        chieftains.append("\tCouldn't find developer file!")
+        return chieftains
 
 
 def legal_notice_thanks(request):
