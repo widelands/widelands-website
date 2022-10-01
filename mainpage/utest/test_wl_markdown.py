@@ -71,9 +71,7 @@ class TestWlMarkdown(DBTestCase):
 
     def test_missing_editlink_wikiword(self):
         input = """<a href="/wiki/MissingPage/edit/">this page</a>"""
-        wanted = (
-            """<p><a class="missingLink" href="/wiki/MissingPage/edit/" title="This Link is misspelled or missing. Click to create it anyway.">this page</a></p>"""
-        )
+        wanted = """<p><a class="missingLink" href="/wiki/MissingPage/edit/" title="This Link is misspelled or missing. Click to create it anyway.">this page</a></p>"""
         self._check(input, wanted)
 
     # Check smileys
