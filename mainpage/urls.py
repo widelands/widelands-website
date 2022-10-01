@@ -1,16 +1,14 @@
+from django.conf import settings
 from django.conf.urls import *
-
-# Uncomment the next two lines to enable the admin:
+from django.conf.urls.static import static
 from django.contrib import admin
-
-admin.autodiscover()
-
-from django.views.generic.base import RedirectView
-from django.views.generic import TemplateView
 from django.contrib.syndication.views import Feed
+from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 from django_registration.backends.activation.views import RegistrationView
 from mainpage.forms import RegistrationWithCaptchaForm
 
+admin.autodiscover()
 
 urlpatterns = [
     # Creating a sitemap.xml
@@ -70,7 +68,7 @@ urlpatterns = [
     url(r"^scheduling/", include("wlscheduling.urls")),
     url(r"^privacy/", include("privacy_policy.urls")),
     url(r"^addons/", include("wladdons_settings.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 try:
     from .local_urls import *

@@ -122,7 +122,7 @@ def pybb_moderated_by(instance, user):
 def pybb_editable_by(post, user):
     """Check if a user is allowed to edit this post."""
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         # No need to run the other checks
         return False
     if user.is_superuser:
