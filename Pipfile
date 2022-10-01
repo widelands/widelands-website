@@ -27,6 +27,7 @@ docutils = "==0.17"
 whoosh = "==2.7.4"
 
 [dev-packages]
+ipython = "*"
 
 [requires]
 python_version = "3.10"

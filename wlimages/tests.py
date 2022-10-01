@@ -18,7 +18,7 @@ import sys
 sys.path.append("..")
 
 import PIL
-from io import StringIO
+from io import BytesIO
 
 from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
@@ -37,7 +37,7 @@ from .views import upload
 class _TestUploadingBase(TestCase):
     @staticmethod
     def _make_new_uploaded_image(name, type="bmp"):
-        sio = StringIO()
+        sio = BytesIO()
         i = PIL.Image.new("RGB", (4, 4))
 
         i.save(sio, type)

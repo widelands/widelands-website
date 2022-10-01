@@ -261,8 +261,7 @@ def do_wl_markdown(value, *args, **keyw):
         # This applies only in forum
         for tag in soup.find_all("img"):
             _make_clickable_images(tag)
-
-    return str(soup)
+    return "".join([str(x) for x in soup.body.children])
 
 
 @register.filter
