@@ -3,7 +3,7 @@ Installing the homepage
 
 Used python version
 -------------------
-The website is tested with python 3.6. This README reflects setting up the
+The website is tested with python 3.10. This README reflects setting up the
 website with this python version.
 
 Install prerequisites
@@ -11,15 +11,18 @@ Install prerequisites
 
 Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
-package manager. To get the sources you will need to install git. Finally
-you are going to need the build dependencies for numpy, which will be compiled
-as a part of getting the dependencies for the website. Go and install them all.
+package manager. To get the sources you will need to install git. 
 
 Example:
 On Ubuntu, installing all required tools and dependencies in two commands:
 
    $ sudo apt-get install python3-virtualenv python3-pip git libmysqlclient-dev
-   $ sudo apt-get build-dep python3-numpy
+   $ sudo apt-get build-dep 
+
+On Mac, you might need something like:
+
+   $ brew install mysql libmagic
+
 
 Setting up the local environment
 --------------------------------
@@ -47,10 +50,10 @@ All fine and good. Now we have to install all the third party modules the
 website needs. We use pip for that.
 
 Installation of the third party libraries should be easy, given you have
-development tools installed and in your path. The two difficult packages are
-PIL and numpy; you can also try to migrate them over from your global site dir
-or add your global site dir to your PYTHONPATH.
-Installation via pip should work like this::
+development tools installed and in your path. The most difficult package here
+is PIL; you can also try to migrate them over from your global site dir or add
+your global site dir to your PYTHONPATH. Installation via pip should work like
+this:
 
    $ pip install -r pip_requirements.txt
 

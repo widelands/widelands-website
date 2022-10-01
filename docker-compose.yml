@@ -1,5 +1,8 @@
 # This is a basic docker compose to get a mariadb running locally to develop
-# against.
+# against. This is an alternative way of developing compared to what is
+# described in the README.txt file (which is using sqlite as database). 
+# Using docker-compose can be useful, because it allows to use a backup of the
+# actual database from the server for development.
 
 version: '3.3'
 
