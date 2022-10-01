@@ -13,8 +13,9 @@
 
 	<h2>Project lead</h2>
 	<ul>
-		<li>GunChleoc (Since 2016)</li>
-		<li>Holger Rapp (SirVer) (2001 – 2016)</li>
+	        {% for chieftain in chieftains %}
+	        <li>{{ chieftain }}</li>
+	        {% endfor %}
 	</ul>
 
 	<h2>Contact</h2>
@@ -54,6 +55,13 @@
 					<span class="errormessage">{{ error }}</span>
 				{% endfor %}
 			</td>
+		</tr>
+		<tr>
+	            	<td colspan="2"><label for="id_question">{{ question }}</label></td>
+		</tr>
+		<tr>
+		        <td><input id="id_question" type="hidden" name="question" value="{{ question }}"></td>
+		        <td><input id="id_answer" type="text" name="answer" maxlength="80" required></td>
 		</tr>
 		<tr>
 			<td></td>
