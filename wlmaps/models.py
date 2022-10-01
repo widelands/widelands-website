@@ -36,7 +36,7 @@ class Map(models.Model):
 
     pub_date = models.DateTimeField(default=datetime.datetime.now)
     uploader_comment = models.TextField(verbose_name="Uploader comment", blank=True)
-    uploader = models.ForeignKey(User)
+    uploader = models.ForeignKey(User, on_delete=models.CASCADE)
     nr_downloads = models.PositiveIntegerField(verbose_name="Download count", default=0)
     wl_version_after = models.CharField(
         # The field is called 'wl_version_after' even though it actually means the

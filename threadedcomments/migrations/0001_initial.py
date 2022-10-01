@@ -86,7 +86,12 @@ class Migration(migrations.Migration):
                         null=True, verbose_name="IP address", blank=True
                     ),
                 ),
-                ("content_type", models.ForeignKey(to="contenttypes.ContentType")),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        to="contenttypes.ContentType", on_delete=models.CASCADE
+                    ),
+                ),
                 (
                     "parent",
                     models.ForeignKey(
@@ -95,6 +100,7 @@ class Migration(migrations.Migration):
                         blank=True,
                         to="threadedcomments.FreeThreadedComment",
                         null=True,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],
@@ -186,7 +192,12 @@ class Migration(migrations.Migration):
                         null=True, verbose_name="IP address", blank=True
                     ),
                 ),
-                ("content_type", models.ForeignKey(to="contenttypes.ContentType")),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        to="contenttypes.ContentType", on_delete=models.CASCADE
+                    ),
+                ),
                 (
                     "parent",
                     models.ForeignKey(
@@ -195,9 +206,15 @@ class Migration(migrations.Migration):
                         blank=True,
                         to="threadedcomments.ThreadedComment",
                         null=True,
+                        on_delete=models.CASCADE,
                     ),
                 ),
-                ("user", models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+                    ),
+                ),
             ],
             options={
                 "ordering": ("-date_submitted",),

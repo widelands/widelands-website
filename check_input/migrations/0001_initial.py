@@ -35,13 +35,17 @@ class Migration(migrations.Migration):
                 (
                     "content_type",
                     models.ForeignKey(
-                        verbose_name=b"related model", to="contenttypes.ContentType"
+                        verbose_name=b"related model",
+                        to="contenttypes.ContentType",
+                        on_delete=models.CASCADE,
                     ),
                 ),
                 (
                     "user",
                     models.ForeignKey(
-                        verbose_name=b"related user", to=settings.AUTH_USER_MODEL
+                        verbose_name=b"related user",
+                        to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],

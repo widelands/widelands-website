@@ -44,8 +44,18 @@ class Migration(migrations.Migration):
                 ),
                 ("image", models.ImageField(upload_to=b"wlimages/")),
                 ("url", models.CharField(max_length=250)),
-                ("content_type", models.ForeignKey(to="contenttypes.ContentType")),
-                ("user", models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        to="contenttypes.ContentType", on_delete=models.CASCADE
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+                    ),
+                ),
             ],
             options={
                 "ordering": ("-date_submitted",),

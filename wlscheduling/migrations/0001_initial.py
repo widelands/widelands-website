@@ -33,7 +33,9 @@ class Migration(migrations.Migration):
                 (
                     "user",
                     models.ForeignKey(
-                        related_name="availabilities", to=settings.AUTH_USER_MODEL
+                        related_name="availabilities",
+                        to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],

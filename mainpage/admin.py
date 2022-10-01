@@ -18,7 +18,7 @@ Displays groups and permissions to admin/auth/user."""
 
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 
 def roles(self):

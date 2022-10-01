@@ -21,8 +21,12 @@ class SuspiciousInput(models.Model):
     """
 
     text = models.CharField(max_length=200, verbose_name="suspicious user input")
-    user = models.ForeignKey(User, verbose_name="related user")
-    content_type = models.ForeignKey(ContentType, verbose_name="related model")
+    user = models.ForeignKey(
+        User, verbose_name="related user", on_delete=models.CASCADE
+    )
+    content_type = models.ForeignKey(
+        ContentType, verbose_name="related model", on_delete=models.CASCADE
+    )
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 

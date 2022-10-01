@@ -72,8 +72,10 @@ class NoticeSetting(models.Model):
 
     """
 
-    user = models.ForeignKey(User, verbose_name=_("user"))
-    notice_type = models.ForeignKey(NoticeType, verbose_name=_("notice type"))
+    user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
+    notice_type = models.ForeignKey(
+        NoticeType, verbose_name=_("notice type"), on_delete=models.CASCADE
+    )
     medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA)
     send = models.BooleanField(_("send"))
 
@@ -335,8 +337,8 @@ def queue(users, label, extra_context=None, on_site=True):
     notices = []
     for user in users:
         notices.append((user, label, extra_context, on_site))
-
-    NoticeQueueBatch(pickled_data=base64.b64encode(pickle.dumps(notices))).save()
+    data = base64.b64encode(pickle.dumps(notices)).decode("ascii")
+    NoticeQueueBatch(pickled_data=data).save()
 
 
 class ObservedItemManager(models.Manager):
@@ -362,13 +364,15 @@ class ObservedItemManager(models.Manager):
 
 class ObservedItem(models.Model):
 
-    user = models.ForeignKey(User, verbose_name=_("user"))
+    user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
 
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     observed_object = GenericForeignKey("content_type", "object_id")
 
-    notice_type = models.ForeignKey(NoticeType, verbose_name=_("notice type"))
+    notice_type = models.ForeignKey(
+        NoticeType, verbose_name=_("notice type"), on_delete=models.CASCADE
+    )
 
     added = models.DateTimeField(_("added"), default=datetime.datetime.now)
 

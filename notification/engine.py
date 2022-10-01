@@ -45,7 +45,15 @@ def send_all():
         # nesting the try statement to be Python 2.4
         try:
             for queued_batch in NoticeQueueBatch.objects.all():
-                notices = pickle.loads(base64.b64decode(queued_batch.pickled_data))
+                # TODO(sirver): This is an unfortunate historic development:
+                # base64.b64encode used to return a string which got saved into
+                # the database as a string. Now, it returns a bytes object, on
+                # conversion to a string, django prepends turns this into
+                # "b'<data>'". We fix it here.
+                text_in_database = queued_batch.pickled_data
+                if text_in_database.startswith("b'"):
+                    text_in_database = text_in_database[2:-1]
+                notices = pickle.loads(base64.b64decode(text_in_database))
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
                     # FrankU: commented, because not all users get e-mailed

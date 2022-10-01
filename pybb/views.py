@@ -1,39 +1,30 @@
-import math
+from check_input.models import SuspiciousInput
 from collections import OrderedDict
-from mainpage.templatetags.wl_markdown import do_wl_markdown
-from pybb.markups import mypostmarkup
-
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.contrib.auth.models import User
+from datetime import date, timedelta
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from django.shortcuts import redirect
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import Http404
-from django.conf import settings
-
-from pybb.util import render_to, build_form, quote_text, ajax, urlize
-from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES
-from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.urls import reverse
+from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb import settings as pybb_settings
+from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
+from pybb.markups import mypostmarkup
+from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES
 from pybb.orm import load_related
-from pybb.templatetags.pybb_extras import pybb_moderated_by
-
-from check_input.models import SuspiciousInput
-from datetime import date, timedelta
+from pybb.templatetags.pybb_extras import pybb_moderated_by, pybb_editable_by
+from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
+import math
 
 
 try:
     from notification import models as notification
 except ImportError:
     notification = None
-
-
-def allowed_for(user):
-    """Check if a user has the permission to enter internal Forums."""
-
-    return user.is_superuser or user.has_perm(pybb_settings.INTERNAL_PERM)
 
 
 def index_ctx(request):
@@ -284,8 +275,6 @@ def show_post(request, post_id):
 
 @login_required
 def edit_post_ctx(request, post_id):
-    from pybb.templatetags.pybb_extras import pybb_editable_by
-
     post = get_object_or_404(Post, pk=post_id)
     if not pybb_editable_by(post, request.user):
         return HttpResponseRedirect(post.get_absolute_url())

@@ -23,6 +23,12 @@ import configparser
 from PIL import Image
 
 
+def allowed_for(user):
+    """Check if a user has the permission to enter internal Forums."""
+
+    return user.is_superuser or user.has_perm(pybb_settings.INTERNAL_PERM)
+
+
 def render_to(template_path):
     """Expect the dict from view.
 

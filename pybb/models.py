@@ -82,7 +82,10 @@ class Category(models.Model):
 
 class Forum(models.Model):
     category = models.ForeignKey(
-        Category, related_name="forums", verbose_name=_("Category")
+        Category,
+        related_name="forums",
+        verbose_name=_("Category"),
+        on_delete=models.CASCADE,
     )
     name = models.CharField(_("Name"), max_length=80)
     position = models.IntegerField(_("Position"), blank=True, default=0)
@@ -142,11 +145,13 @@ class Forum(models.Model):
 
 
 class Topic(models.Model):
-    forum = models.ForeignKey(Forum, related_name="topics", verbose_name=_("Forum"))
+    forum = models.ForeignKey(
+        Forum, related_name="topics", verbose_name=_("Forum"), on_delete=models.CASCADE
+    )
     name = models.CharField(_("Subject"), max_length=255)
     created = models.DateTimeField(_("Created"), null=True)
     updated = models.DateTimeField(_("Updated"), null=True)
-    user = models.ForeignKey(User, verbose_name=_("User"))
+    user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE)
     views = models.IntegerField(_("Views count"), blank=True, default=0)
     sticky = models.BooleanField(_("Sticky"), blank=True, default=False)
     closed = models.BooleanField(_("Closed"), blank=True, default=False)
@@ -287,8 +292,12 @@ class PublicPostsManager(models.Manager):
 
 
 class Post(RenderableItem):
-    topic = models.ForeignKey(Topic, related_name="posts", verbose_name=_("Topic"))
-    user = models.ForeignKey(User, related_name="posts", verbose_name=_("User"))
+    topic = models.ForeignKey(
+        Topic, related_name="posts", verbose_name=_("Topic"), on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        User, related_name="posts", verbose_name=_("User"), on_delete=models.CASCADE
+    )
     created = models.DateTimeField(_("Created"), blank=True)
     updated = models.DateTimeField(_("Updated"), blank=True, null=True)
     markup = models.CharField(
@@ -384,8 +393,8 @@ class Read(models.Model):
     """For each topic that user has entered the time is logged to this
     model."""
 
-    user = models.ForeignKey(User, verbose_name=_("User"))
-    topic = models.ForeignKey(Topic, verbose_name=_("Topic"))
+    user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, verbose_name=_("Topic"), on_delete=models.CASCADE)
     time = models.DateTimeField(_("Time"), blank=True)
 
     class Meta:
@@ -403,7 +412,12 @@ class Read(models.Model):
 
 
 class Attachment(models.Model):
-    post = models.ForeignKey(Post, verbose_name=_("Post"), related_name="attachments")
+    post = models.ForeignKey(
+        Post,
+        verbose_name=_("Post"),
+        related_name="attachments",
+        on_delete=models.CASCADE,
+    )
     size = models.IntegerField(_("Size"))
     content_type = models.CharField(_("Content type"), max_length=255)
     path = models.CharField(_("Path"), max_length=255)

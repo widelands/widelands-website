@@ -16,16 +16,10 @@ def delete_selected(modeladmin, request, queryset):
         obj.delete()
 
 
-delete_selected.short_description = "Delete selected posts"
-
-
 def unhide_post(modeladmin, request, queryset):
     """Unhide post(s) and inform subscribers."""
     for obj in queryset:
         obj.unhide_post()
-
-
-unhide_post.short_description = "Unhide post and inform subscribers"
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -114,7 +108,6 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ["-created"]
     date_hierarchy = "created"
     search_fields = ["body", "topic__name"]
-    actions = [delete_selected, unhide_post]
     inlines = [
         AttachmentInline,
     ]
@@ -126,6 +119,21 @@ class PostAdmin(admin.ModelAdmin):
         ),
         (_("Message"), {"fields": ("body", "body_html", "body_text")}),
     )
+
+    def get_actions(self, request):
+        # Overwrite delete_selected from base class.
+        actions = admin.ModelAdmin.get_actions(self, request)
+        actions["delete_selected"] = (
+            delete_selected,
+            "delete_selected",
+            "Delete selected posts",
+        )
+        actions["unhide_post"] = (
+            delete_selected,
+            "unhide_post",
+            "Unhide post and inform subscribers",
+        )
+        return actions
 
 
 class ReadAdmin(admin.ModelAdmin):

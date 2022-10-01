@@ -52,11 +52,13 @@ class Article(models.Model):
     markup = models.CharField(
         _("Content Markup"), max_length=3, choices=markup_choices, null=True, blank=True
     )
-    creator = models.ForeignKey(User, verbose_name=_("Article Creator"), null=True)
+    creator = models.ForeignKey(
+        User, verbose_name=_("Article Creator"), null=True, on_delete=models.SET_NULL
+    )
     created_at = models.DateTimeField(default=datetime.now)
     last_update = models.DateTimeField(blank=True, null=True)
 
-    content_type = models.ForeignKey(ContentType, null=True)
+    content_type = models.ForeignKey(ContentType, null=True, on_delete=models.SET_NULL)
     object_id = models.PositiveIntegerField(null=True)
     group = GenericForeignKey("content_type", "object_id")
 
@@ -135,10 +137,14 @@ class ChangeSetManager(models.Manager):
 class ChangeSet(models.Model):
     """A report of an older version of some Article."""
 
-    article = models.ForeignKey(Article, verbose_name=_("Article"))
+    article = models.ForeignKey(
+        Article, verbose_name=_("Article"), on_delete=models.CASCADE
+    )
 
     # Editor identification -- logged
-    editor = models.ForeignKey(User, verbose_name=_("Editor"), null=True)
+    editor = models.ForeignKey(
+        User, verbose_name=_("Editor"), null=True, on_delete=models.CASCADE
+    )
 
     # Revision number, starting from 1
     revision = models.IntegerField(_("Revision Number"))

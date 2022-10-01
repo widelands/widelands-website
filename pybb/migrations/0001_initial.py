@@ -97,6 +97,7 @@ class Migration(migrations.Migration):
                         related_name="forums",
                         verbose_name="Category",
                         to="pybb.Category",
+                        on_delete=models.CASCADE,
                     ),
                 ),
                 (
@@ -187,6 +188,7 @@ class Migration(migrations.Migration):
                         related_name="dst_users",
                         verbose_name="Recipient",
                         to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
                     ),
                 ),
                 (
@@ -195,6 +197,7 @@ class Migration(migrations.Migration):
                         related_name="src_users",
                         verbose_name="Author",
                         to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],
@@ -249,7 +252,10 @@ class Migration(migrations.Migration):
                 (
                     "forum",
                     models.ForeignKey(
-                        related_name="topics", verbose_name="Forum", to="pybb.Forum"
+                        related_name="topics",
+                        verbose_name="Forum",
+                        to="pybb.Forum",
+                        on_delete=models.CASCADE,
                     ),
                 ),
                 (
@@ -263,7 +269,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "user",
-                    models.ForeignKey(verbose_name="User", to=settings.AUTH_USER_MODEL),
+                    models.ForeignKey(
+                        verbose_name="User",
+                        to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
+                    ),
                 ),
             ],
             options={
@@ -275,32 +285,47 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="read",
             name="topic",
-            field=models.ForeignKey(verbose_name="Topic", to="pybb.Topic"),
+            field=models.ForeignKey(
+                verbose_name="Topic", to="pybb.Topic", on_delete=models.CASCADE
+            ),
         ),
         migrations.AddField(
             model_name="read",
             name="user",
-            field=models.ForeignKey(verbose_name="User", to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                verbose_name="User",
+                to=settings.AUTH_USER_MODEL,
+                on_delete=models.CASCADE,
+            ),
         ),
         migrations.AddField(
             model_name="post",
             name="topic",
             field=models.ForeignKey(
-                related_name="posts", verbose_name="Topic", to="pybb.Topic"
+                related_name="posts",
+                verbose_name="Topic",
+                to="pybb.Topic",
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AddField(
             model_name="post",
             name="user",
             field=models.ForeignKey(
-                related_name="posts", verbose_name="User", to=settings.AUTH_USER_MODEL
+                related_name="posts",
+                verbose_name="User",
+                to=settings.AUTH_USER_MODEL,
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AddField(
             model_name="attachment",
             name="post",
             field=models.ForeignKey(
-                related_name="attachments", verbose_name="Post", to="pybb.Post"
+                related_name="attachments",
+                verbose_name="Post",
+                to="pybb.Post",
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AlterUniqueTogether(

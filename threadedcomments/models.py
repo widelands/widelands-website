@@ -157,17 +157,22 @@ class ThreadedComment(models.Model):
     """
 
     # Generic Foreign Key Fields
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(_("object ID"))
     content_object = GenericForeignKey()
 
     # Hierarchy Field
     parent = models.ForeignKey(
-        "self", null=True, blank=True, default=None, related_name="children"
+        "self",
+        null=True,
+        blank=True,
+        default=None,
+        related_name="children",
+        on_delete=models.CASCADE,
     )
 
     # User Field
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Date Fields
     date_submitted = models.DateTimeField(

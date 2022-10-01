@@ -64,7 +64,11 @@ class Migration(migrations.Migration):
                 ("tags", tagging.fields.TagField(max_length=255, blank=True)),
                 (
                     "content_type",
-                    models.ForeignKey(to="contenttypes.ContentType", null=True),
+                    models.ForeignKey(
+                        to="contenttypes.ContentType",
+                        null=True,
+                        on_delete=models.CASCADE,
+                    ),
                 ),
                 (
                     "creator",
@@ -72,6 +76,7 @@ class Migration(migrations.Migration):
                         verbose_name="Article Creator",
                         to=settings.AUTH_USER_MODEL,
                         null=True,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],
@@ -142,12 +147,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "article",
-                    models.ForeignKey(verbose_name="Article", to="wiki.Article"),
+                    models.ForeignKey(
+                        verbose_name="Article",
+                        to="wiki.Article",
+                        on_delete=models.CASCADE,
+                    ),
                 ),
                 (
                     "editor",
                     models.ForeignKey(
-                        verbose_name="Editor", to=settings.AUTH_USER_MODEL, null=True
+                        verbose_name="Editor",
+                        to=settings.AUTH_USER_MODEL,
+                        null=True,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],

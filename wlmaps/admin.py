@@ -17,13 +17,7 @@ def delete_selected(modeladmin, request, queryset):
         obj.delete()
 
 
-delete_selected.short_description = "Delete selected maps"
-
-
 class MapAdmin(admin.ModelAdmin):
-    actions = [
-        delete_selected,
-    ]
     list_display = ["name", "author", "pub_date"]
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name", "author"]
@@ -64,6 +58,16 @@ class MapAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_actions(self, request):
+        # Overwrite delete_selected from base class.
+        actions = admin.ModelAdmin.get_actions(self, request)
+        actions["delete_selected"] = (
+            delete_selected,
+            "delete_selected",
+            "Delete selected maps",
+        )
+        return actions
 
 
 admin.site.register(Map, MapAdmin)

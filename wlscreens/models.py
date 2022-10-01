@@ -65,7 +65,11 @@ class Screenshot(models.Model):
         storage=OverwriteStorage(),
     )
     comment = models.TextField(null=True, blank=True)
-    category = models.ForeignKey(Category, related_name="screenshots")
+    category = models.ForeignKey(
+        Category,
+        related_name="screenshots",
+        on_delete=models.CASCADE,
+    )
     position = models.IntegerField(
         null=True,
         blank=True,

@@ -41,7 +41,7 @@ class Poll(models.Model):
 
 
 class Choice(models.Model):
-    poll = models.ForeignKey(Poll, related_name="choices")
+    poll = models.ForeignKey(Poll, related_name="choices", on_delete=models.CASCADE)
     choice = models.CharField(max_length=256)
     votes = models.PositiveIntegerField(default=0)
 
@@ -50,7 +50,7 @@ class Choice(models.Model):
 
 
 class Vote(models.Model):
-    user = models.ForeignKey(User, related_name="poll_votes")
-    poll = models.ForeignKey(Poll)
-    choice = models.ForeignKey(Choice)
+    user = models.ForeignKey(User, related_name="poll_votes", on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     date_voted = models.DateTimeField("voted at", default=datetime.datetime.now)

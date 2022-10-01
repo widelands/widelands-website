@@ -54,6 +54,7 @@ class Migration(migrations.Migration):
                         related_name="wlggz",
                         verbose_name="User",
                         to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],

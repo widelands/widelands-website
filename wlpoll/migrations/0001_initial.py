@@ -78,12 +78,17 @@ class Migration(migrations.Migration):
                         default=datetime.datetime.now, verbose_name=b"voted at"
                     ),
                 ),
-                ("choice", models.ForeignKey(to="wlpoll.Choice")),
-                ("poll", models.ForeignKey(to="wlpoll.Poll")),
+                (
+                    "choice",
+                    models.ForeignKey(to="wlpoll.Choice", on_delete=models.CASCADE),
+                ),
+                ("poll", models.ForeignKey(to="wlpoll.Poll", on_delete=models.CASCADE)),
                 (
                     "user",
                     models.ForeignKey(
-                        related_name="poll_votes", to=settings.AUTH_USER_MODEL
+                        related_name="poll_votes",
+                        to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
                     ),
                 ),
             ],
@@ -91,6 +96,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="choice",
             name="poll",
-            field=models.ForeignKey(related_name="choices", to="wlpoll.Poll"),
+            field=models.ForeignKey(
+                related_name="choices", to="wlpoll.Poll", on_delete=models.CASCADE
+            ),
         ),
     ]

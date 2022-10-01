@@ -66,8 +66,18 @@ class Migration(SchemaMigration):
                         verbose_name="ID", primary_key=True, auto_created=True
                     ),
                 ),
-                ("forum", models.ForeignKey(orm["pybb.forum"], null=False)),
-                ("user", models.ForeignKey(orm["auth.user"], null=False)),
+                (
+                    "forum",
+                    models.ForeignKey(
+                        orm["pybb.forum"], null=False, on_delete=models.CASCADE
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        orm["auth.user"], null=False, on_delete=models.CASCADE
+                    ),
+                ),
             ),
         )
         db.create_unique("pybb_forum_moderators", ["forum_id", "user_id"])
@@ -132,8 +142,18 @@ class Migration(SchemaMigration):
                         verbose_name="ID", primary_key=True, auto_created=True
                     ),
                 ),
-                ("topic", models.ForeignKey(orm["pybb.topic"], null=False)),
-                ("user", models.ForeignKey(orm["auth.user"], null=False)),
+                (
+                    "topic",
+                    models.ForeignKey(
+                        orm["pybb.topic"], null=False, on_delete=models.CASCADE
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        orm["auth.user"], null=False, on_delete=models.CASCADE
+                    ),
+                ),
             ),
         )
         db.create_unique("pybb_topic_subscribers", ["topic_id", "user_id"])

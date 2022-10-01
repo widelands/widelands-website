@@ -13,7 +13,7 @@ from django.utils.html import escape
 from pybb.models import Post, Forum, Topic, Read
 from pybb.unread import cache_unreads
 from pybb import settings as pybb_settings
-import pybb.views
+from pybb.util import allowed_for
 
 register = template.Library()
 
@@ -24,7 +24,7 @@ def pybb_last_posts(context, number=8):
     BASE_COUNT = 100
 
     # Create permission dependent Querysets
-    if pybb.views.allowed_for(context.request.user):
+    if allowed_for(context.request.user):
         last_posts = Post.objects.filter(hidden=False).order_by("-created")[:BASE_COUNT]
     else:
         last_posts = Post.objects.public(limit=BASE_COUNT)
@@ -122,7 +122,7 @@ def pybb_moderated_by(instance, user):
 def pybb_editable_by(post, user):
     """Check if a user is allowed to edit this post."""
 
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         # No need to run the other checks
         return False
     if user.is_superuser:
@@ -176,7 +176,7 @@ def forum_navigation(context):
 
     forums = Forum.objects.all()
 
-    if pybb.views.allowed_for(context.request.user):
+    if allowed_for(context.request.user):
         pass
     else:
         # Don't show internal forums
