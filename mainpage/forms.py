@@ -18,3 +18,5 @@ class ContactForm(forms.Form):
     forename = forms.CharField(max_length=80, required=False)
     email = forms.EmailField()
     inquiry = forms.CharField(widget=forms.Textarea)
+    answer = forms.CharField()
+    question = forms.CharField()
