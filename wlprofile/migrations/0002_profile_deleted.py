@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wlprofile', '0001_initial'),
+        ("wlprofile", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='deleted',
+            model_name="profile",
+            name="deleted",
             field=models.BooleanField(default=False),
         ),
     ]

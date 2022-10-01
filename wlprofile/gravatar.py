@@ -16,7 +16,7 @@ from pybb import settings as pybb_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 
-warnings.filterwarnings('ignore', r'tmpnam')
+warnings.filterwarnings("ignore", r"tmpnam")
 
 
 def fetch_gravatar(email):
@@ -28,15 +28,14 @@ def fetch_gravatar(email):
 
     hash = md5(email).hexdigest()
     size = max(pybb_settings.AVATAR_WIDTH, pybb_settings.AVATAR_HEIGHT)
-    default = urllib.parse.quote('http://spam.egg/')
+    default = urllib.parse.quote("http://spam.egg/")
 
-    url = 'http://www.gravatar.com/avatar/%s?s=%d&d=%s' % (hash, size, default)
+    url = "http://www.gravatar.com/avatar/%s?s=%d&d=%s" % (hash, size, default)
     fname = os.tmpnam()
 
     class RedirectHandler(urllib.request.HTTPRedirectHandler):
-
         def http_error_302(*args):
-            raise IOError('Redirect found')
+            raise IOError("Redirect found")
 
     timeout = socket.getdefaulttimeout()
     socket.setdefaulttimeout(10)
@@ -44,7 +43,7 @@ def fetch_gravatar(email):
     socket.setdefaulttimeout(timeout)
 
     try:
-        file(fname, 'wb').write(opener.open(url, fname).read())
+        file(fname, "wb").write(opener.open(url, fname).read())
     except IOError as ex:
         # logging.error(ex)
         return None
@@ -54,19 +53,21 @@ def fetch_gravatar(email):
 
 def check_gravatar(user, ignore_date_joined=False, ignore_saved_avatar=False):
     if user.is_active:
-        if ignore_date_joined or (datetime.now() - user.date_joined) < timedelta(seconds=3):
+        if ignore_date_joined or (datetime.now() - user.date_joined) < timedelta(
+            seconds=3
+        ):
             if ignore_saved_avatar or not user.pybb_profile.avatar:
                 path = fetch_gravatar(user.email)
                 if path:
                     avatars_dir = os.path.join(
-                        settings.MEDIA_ROOT, pybb_settings.AVATARS_UPLOAD_TO)
-                    avatar_name = '_pybb_%d' % user.id
+                        settings.MEDIA_ROOT, pybb_settings.AVATARS_UPLOAD_TO
+                    )
+                    avatar_name = "_pybb_%d" % user.id
 
                     avatar_path = os.path.join(avatars_dir, avatar_name)
                     shutil.copy(path, avatar_path)
 
-                    relpath = os.path.join(
-                        pybb_settings.AVATARS_UPLOAD_TO, avatar_name)
+                    relpath = os.path.join(pybb_settings.AVATARS_UPLOAD_TO, avatar_name)
                     user.pybb_profile.avatar = relpath
                     user.pybb_profile.save()
                     return True

@@ -9,17 +9,16 @@ from check_input.models import SuspiciousInput
 
 def moderate_info(request):
     """Redirect to the moderate comments info page."""
-    
+
     # We need the try to catch logged out users
     try:
-        hidden_posts_count = SuspiciousInput.objects.filter(
-            user=request.user).count()
+        hidden_posts_count = SuspiciousInput.objects.filter(user=request.user).count()
     except TypeError:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect("/")
 
     # Don't make the page accesible through browsers addressbar
     if hidden_posts_count == 0:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect("/")
 
     if hidden_posts_count >= settings.MAX_HIDDEN_POSTS:
         user = get_object_or_404(User, username=request.user)
@@ -28,9 +27,9 @@ def moderate_info(request):
         user.save()
         # Log the user out
         logout(request)
-    
-    context={
-        'max_count': settings.MAX_HIDDEN_POSTS,
-        'act_count': hidden_posts_count,
+
+    context = {
+        "max_count": settings.MAX_HIDDEN_POSTS,
+        "act_count": hidden_posts_count,
     }
-    return render(request, 'check_input/moderate_info.html', context=context)
+    return render(request, "check_input/moderate_info.html", context=context)

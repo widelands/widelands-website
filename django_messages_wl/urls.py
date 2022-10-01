@@ -4,6 +4,5 @@ from . import views
 
 
 urlpatterns += [
-    url(r'^django_messages_wl/get_usernames/', views.get_usernames),
+    url(r"^django_messages_wl/get_usernames/", views.get_usernames),
 ]
-

@@ -8,8 +8,8 @@ class ExtendedImageField(models.ImageField):
     """Extended ImageField that can resize image before saving it."""
 
     def __init__(self, *args, **kwargs):
-        self.width = kwargs.pop('width', None)
-        self.height = kwargs.pop('height', None)
+        self.width = kwargs.pop("width", None)
+        self.height = kwargs.pop("height", None)
         super(ExtendedImageField, self).__init__(*args, **kwargs)
 
     def save_form_data(self, instance, data):
@@ -19,11 +19,13 @@ class ExtendedImageField(models.ImageField):
                 if instance.avatar != self.default:
                     instance.avatar.delete()
             else:
-                if hasattr(data, 'read') and self.width and self.height:
+                if hasattr(data, "read") and self.width and self.height:
                     content = self.resize_image(
-                        data.read(), width=self.width, height=self.height)
+                        data.read(), width=self.width, height=self.height
+                    )
                     data = SimpleUploadedFile(
-                        instance.user.username + '.png', content, 'image/png')
+                        instance.user.username + ".png", content, "image/png"
+                    )
             super(ExtendedImageField, self).save_form_data(instance, data)
 
     def resize_image(self, rawdata, width, height):
@@ -44,8 +46,8 @@ class ExtendedImageField(models.ImageField):
                 image = image.resize((width, height), resample=Image.ANTIALIAS)
         except Exception as err:
             logging.error(err)
-            return ''
+            return ""
 
         string = BytesIO()
-        image.save(string, format='PNG')
+        image.save(string, format="PNG")
         return string.getvalue()

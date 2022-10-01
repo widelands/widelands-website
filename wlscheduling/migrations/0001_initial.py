@@ -13,11 +13,31 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Availabilities',
+            name="Availabilities",
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('avail_time', models.DateTimeField(default=0, verbose_name=b'one hour of availability')),
-                ('user', models.ForeignKey(related_name='availabilities', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                (
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
+                ),
+                (
+                    "avail_time",
+                    models.DateTimeField(
+                        default=0, verbose_name=b"one hour of availability"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        related_name="availabilities",
+                        to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
+                    ),
+                ),
             ],
         ),
     ]

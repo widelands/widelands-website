@@ -13,14 +13,16 @@ register = template.Library()
 @register.filter
 def restore_commandsymbols(s):
     """We need to restore " " for textile to work properly."""
-    s = s.replace('&quot;', '"')
-    s = s.replace('&quot;', '"')
+    s = s.replace("&quot;", '"')
+    s = s.replace("&quot;", '"')
     return force_text(s)
+
+
 restore_commandsymbols.is_safe = True
 
 
-@register.inclusion_tag('wiki/article_content.html')
-def render_content(article, content_attr='content', markup_attr='markup'):
+@register.inclusion_tag("wiki/article_content.html")
+def render_content(article, content_attr="content", markup_attr="markup"):
     """Display an the body of an article, rendered with the right markup.
 
     - content_attr is the article attribute that will be rendered.
@@ -49,6 +51,6 @@ def render_content(article, content_attr='content', markup_attr='markup'):
 
     """
     return {
-        'content': getattr(article, content_attr),
-        'markup': getattr(article, markup_attr)
+        "content": getattr(article, content_attr),
+        "markup": getattr(article, markup_attr),
     }

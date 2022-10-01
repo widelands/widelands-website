@@ -7,5 +7,5 @@ from .views import webchat
 
 urlpatterns = [
     # Uncomment the next line to enable the admin:
-    url(r'^$', webchat, name='webchat_index'),
+    url(r"^$", webchat, name="webchat_index"),
 ]

@@ -14,24 +14,53 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='GGZAuth',
+            name="GGZAuth",
             fields=[
-                ('id', models.AutoField(verbose_name='ID',
-                                        serialize=False, auto_created=True, primary_key=True)),
-                ('password', models.CharField(default=b'', max_length=80,
-                                              verbose_name='ggz password', blank=True)),
-                ('lastlogin', models.DateTimeField(
-                    null=True, verbose_name='ggz lastlogin')),
-                ('permissions', models.IntegerField(
-                    default=7, verbose_name='ggz permissions')),
-                ('confirmed', models.IntegerField(default=1,
-                                                  verbose_name='confirmed', editable=False)),
-                ('user', wl_utils.AutoOneToOneField(related_name='wlggz',
-                                                    verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                (
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
+                ),
+                (
+                    "password",
+                    models.CharField(
+                        default=b"",
+                        max_length=80,
+                        verbose_name="ggz password",
+                        blank=True,
+                    ),
+                ),
+                (
+                    "lastlogin",
+                    models.DateTimeField(null=True, verbose_name="ggz lastlogin"),
+                ),
+                (
+                    "permissions",
+                    models.IntegerField(default=7, verbose_name="ggz permissions"),
+                ),
+                (
+                    "confirmed",
+                    models.IntegerField(
+                        default=1, verbose_name="confirmed", editable=False
+                    ),
+                ),
+                (
+                    "user",
+                    wl_utils.AutoOneToOneField(
+                        related_name="wlggz",
+                        verbose_name="User",
+                        to=settings.AUTH_USER_MODEL,
+                        on_delete=models.CASCADE,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'ggz',
-                'verbose_name_plural': 'ggz',
+                "verbose_name": "ggz",
+                "verbose_name_plural": "ggz",
             },
         ),
     ]

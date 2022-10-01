@@ -1,6 +1,9 @@
 from django.db.models import signals
 from threadedcomments.models import ThreadedComment, MARKUP_CHOICES
-from threadedcomments.models import DEFAULT_MAX_COMMENT_LENGTH, DEFAULT_MAX_COMMENT_DEPTH
+from threadedcomments.models import (
+    DEFAULT_MAX_COMMENT_LENGTH,
+    DEFAULT_MAX_COMMENT_DEPTH,
+)
 from comment_utils import moderation
 
 MARKUP_CHOICES_IDS = [c[0] for c in MARKUP_CHOICES]
@@ -35,7 +38,6 @@ class CommentModerator(moderation.CommentModerator):
 
 
 class Moderator(moderation.Moderator):
-
     def connect(self):
         signals.pre_save.connect(self.pre_save_moderation, sender=ThreadedComment)
         signals.post_save.connect(self.post_save_moderation, sender=ThreadedComment)

@@ -12,25 +12,26 @@
 # Since we want to include something from one path up,
 # we append the parent path to sys.path
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 import unittest
 from wiki.models import Article
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.test import TestCase as DBTestCase
+
 _domain = Site.objects.get(pk=settings.SITE_ID).domain
 
 from templatetags.wl_markdown import do_wl_markdown
 
 
 class TestWlMarkdown(DBTestCase):
-
     def setUp(self):
-        a = Article.objects.create(title='MainPage')
-        a = Article.objects.create(title='HalloWelt')
-        a = Article.objects.create(title='NoWikiWord')
-        a = Article.objects.create(title='WikiWord')
+        a = Article.objects.create(title="MainPage")
+        a = Article.objects.create(title="HalloWelt")
+        a = Article.objects.create(title="NoWikiWord")
+        a = Article.objects.create(title="WikiWord")
 
     def _check(self, input, wanted):
         res = do_wl_markdown(input)
@@ -58,16 +59,20 @@ class TestWlMarkdown(DBTestCase):
 
     def test_wikiwords_external_links__except_correct_result(self):
         input = """[NoWikiWord](http://www.sun.com)"""
-        wanted = """<p><a href="http://www.sun.com" class="external">NoWikiWord</a></p>"""
+        wanted = (
+            """<p><a href="http://www.sun.com" class="external">NoWikiWord</a></p>"""
+        )
         self._check(input, wanted)
 
     def test_wikiwords_noexternal_links__except_correct_result(self):
         input = """[NoWikiWord](http://%s/blahfasel/wiki)""" % _domain
-        wanted = """<p><a href="http://%s/blahfasel/wiki">NoWikiWord</a></p>""" % _domain
+        wanted = (
+            """<p><a href="http://%s/blahfasel/wiki">NoWikiWord</a></p>""" % _domain
+        )
         self._check(input, wanted)
 
     def test_wikiwords_noclasschangeforimage_links__except_correct_result(self):
-        input =  """<a href="http://www.ccc.de"><img src="/blub" /></a>"""
+        input = """<a href="http://www.ccc.de"><img src="/blub" /></a>"""
         wanted = """<p><a href="http://www.ccc.de"><img src="/blub" /></a></p>"""
         self._check(input, wanted)
 
@@ -111,7 +116,9 @@ class TestWlMarkdown(DBTestCase):
 
     def test_missing_editlink_wikiword(self):
         input = """<a href="/wiki/MissingPage/edit/">this page</a>"""
-        wanted = """<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>"""
+        wanted = (
+            """<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>"""
+        )
         self._check(input, wanted)
 
     # Check smileys
@@ -238,8 +245,8 @@ class TestWlMarkdown(DBTestCase):
 
     def test_emptystring_problem(self):
         # {{{ Test strings
-        input = ''
-        wanted = ''
+        input = ""
+        wanted = ""
         # }}}
         self._check(input, wanted)
 
@@ -284,7 +291,7 @@ Value 3 | Value 4
         self._check(input, wanted)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
     # k = TestWlMarkdown_WikiWordsInLink_ExceptCorrectResult()
     # unittest.TextTestRunner().run(k)

@@ -11,8 +11,8 @@ from django.conf import settings
 
 # Taken from django snippet 976
 
-class OverwriteStorage(FileSystemStorage):
 
+class OverwriteStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         """Returns a filename that's free on the target storage system, and
         available for new content to be written to."""
@@ -28,7 +28,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     class Meta:
-        ordering = ['-name']
+        ordering = ["-name"]
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -41,14 +41,15 @@ class Category(models.Model):
 
 
 def screenshot_path(instance, filename):
-    return 'wlscreens/screens/%s/%s.%s' % (
-            instance.category, instance.name, filename.rsplit('.', 1)[-1].lower()
-            )
+    return "wlscreens/screens/%s/%s.%s" % (
+        instance.category,
+        instance.name,
+        filename.rsplit(".", 1)[-1].lower(),
+    )
 
 
 def thumbnail_path(instance, filename):
-    return 'wlscreens/thumbs/%s/%s.png' % (
-            instance.category, instance.name)
+    return "wlscreens/thumbs/%s/%s.png" % (instance.category, instance.name)
 
 
 class Screenshot(models.Model):
@@ -63,56 +64,55 @@ class Screenshot(models.Model):
         editable=False,
         storage=OverwriteStorage(),
     )
-    comment = models.TextField(
-        null=True,
-        blank=True
-    )
+    comment = models.TextField(null=True, blank=True)
     category = models.ForeignKey(
         Category,
-        related_name='screenshots',
+        related_name="screenshots",
         on_delete=models.CASCADE,
     )
     position = models.IntegerField(
         null=True,
         blank=True,
         default=0,
-        help_text='The position inside the category',
+        help_text="The position inside the category",
     )
 
     class Meta:
-        unique_together = ('name', 'category')
-        ordering = ['-category__name', 'position']
+        unique_together = ("name", "category")
+        ordering = ["-category__name", "position"]
 
     def save(self, *args, **kwargs):
         # Open original screenshot which we want to thumbnail using PIL's Image
         # object
         try:
             image = Image.open(self.screenshot)
-    
+
             # Convert to RGB if necessary
-            if image.mode not in ('L', 'RGB'):
-                image = image.convert('RGB')
-    
+            if image.mode not in ("L", "RGB"):
+                image = image.convert("RGB")
+
             image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
-    
+
             # Save the thumbnail
             temp_handle = BytesIO()
-            image.save(temp_handle, 'png')
+            image.save(temp_handle, "png")
             image.close()
             temp_handle.seek(0)
-    
+
             # Save to the thumbnail field
-            suf = SimpleUploadedFile(os.path.split(self.screenshot.name)[-1],
-                                     temp_handle.read(), content_type='image/png')
-            self.thumbnail.save(suf.name + '.png', suf, save=False)
-    
+            suf = SimpleUploadedFile(
+                os.path.split(self.screenshot.name)[-1],
+                temp_handle.read(),
+                content_type="image/png",
+            )
+            self.thumbnail.save(suf.name + ".png", suf, save=False)
+
             # Save this photo instance
             super(Screenshot, self).save(*args, **kwargs)
         except IOError:
             # Likely we have a screenshot in the database which didn't exist
-            # on the filesystem at the given path. Ignore it.            
+            # on the filesystem at the given path. Ignore it.
             pass
-
 
     def __str__(self):
         return "%s:%s" % (self.category.name, self.name)

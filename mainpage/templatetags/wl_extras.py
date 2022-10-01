@@ -12,6 +12,7 @@ def current_year():
     """Just return the current year."""
 
     from datetime import date
+
     return date.today().year
 
 
@@ -20,6 +21,7 @@ def wl_logo():
     """Just return the name of the logo."""
 
     from django.conf import settings
+
     return settings.LOGO_FILE
 
 

@@ -17,8 +17,8 @@ def addon_settings(request):
     for notice in notices:
         usersetting = get_addon_usersetting(request.user, notice)
         if usersetting is not None:
-            if request.method == 'POST':
-                if request.POST.get(usersetting.notice_type.slug) == 'on':
+            if request.method == "POST":
+                if request.POST.get(usersetting.notice_type.slug) == "on":
                     usersetting.shouldsend = True
                 else:
                     usersetting.shouldsend = False
@@ -27,10 +27,14 @@ def addon_settings(request):
                 author_related_settings.append(usersetting)
             else:
                 settings.append(usersetting)
-    
+
     addons = get_addons_for_user(request.user.pk)
-    return render(request, 'wladdons_settings/settings.html', {
-        'addon_settings': settings,
-        'addons': addons,
-        'author_related_settings': author_related_settings,
-        })
+    return render(
+        request,
+        "wladdons_settings/settings.html",
+        {
+            "addon_settings": settings,
+            "addons": addons,
+            "author_related_settings": author_related_settings,
+        },
+    )

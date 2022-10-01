@@ -16,8 +16,7 @@ from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb.markups import mypostmarkup
 from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES
 from pybb.orm import load_related
-from pybb.templatetags.pybb_extras import pybb_editable_by
-from pybb.templatetags.pybb_extras import pybb_moderated_by
+from pybb.templatetags.pybb_extras import pybb_moderated_by, pybb_editable_by
 from pybb.util import render_to, build_form, quote_text, ajax, urlize
 import math
 
@@ -28,31 +27,29 @@ except ImportError:
     notification = None
 
 
-def allowed_for(user):
-    """Check if a user has the permission to enter internal Forums."""
-    
-    return user.is_superuser or user.has_perm(pybb_settings.INTERNAL_PERM)
-
-
 def index_ctx(request):
     if allowed_for(request.user):
         cats = Category.objects.all().select_related()
     else:
         cats = Category.exclude_internal.all().select_related()
 
-    return {'cats': cats }
-index = render_to('pybb/index.html')(index_ctx)
+    return {"cats": cats}
+
+
+index = render_to("pybb/index.html")(index_ctx)
 
 
 def show_category_ctx(request, category_id):
-    
+
     category = get_object_or_404(Category, pk=category_id)
-    
+
     if category.internal and not allowed_for(request.user):
         raise Http404
 
-    return {'category': category }
-show_category = render_to('pybb/category.html')(show_category_ctx)
+    return {"category": category}
+
+
+show_category = render_to("pybb/category.html")(show_category_ctx)
 
 
 def show_forum_ctx(request, forum_id):
@@ -63,15 +60,17 @@ def show_forum_ctx(request, forum_id):
 
     user_is_mod = pybb_moderated_by(forum, request.user)
 
-    topics = forum.topics.order_by(
-        '-sticky', '-updated').select_related()
+    topics = forum.topics.order_by("-sticky", "-updated").select_related()
 
-    return {'forum': forum,
-            'topics': topics,
-            'page_size': pybb_settings.FORUM_PAGE_SIZE,
-            'user_is_mod': user_is_mod,
-            }
-show_forum = render_to('pybb/forum.html')(show_forum_ctx)
+    return {
+        "forum": forum,
+        "topics": topics,
+        "page_size": pybb_settings.FORUM_PAGE_SIZE,
+        "user_is_mod": user_is_mod,
+    }
+
+
+show_forum = render_to("pybb/forum.html")(show_forum_ctx)
 
 
 def show_topic_ctx(request, topic_id):
@@ -80,7 +79,7 @@ def show_topic_ctx(request, topic_id):
     context = {}
     try:
         topic = Topic.objects.select_related().get(pk=topic_id)
-        context.update({'topic': topic})
+        context.update({"topic": topic})
     except Topic.DoesNotExist:
         raise Http404()
 
@@ -93,37 +92,39 @@ def show_topic_ctx(request, topic_id):
     if request.user.is_authenticated:
         topic.update_read(request.user)
 
-    last_post = topic.posts.order_by('-created')[0]
-    context.update({'last_post': last_post})
+    last_post = topic.posts.order_by("-created")[0]
+    context.update({"last_post": last_post})
 
     initial = {}
     user_is_mod = False
     if request.user.is_authenticated:
-        initial = {'markup': 'markdown'}
+        initial = {"markup": "markdown"}
 
-        form = AddPostForm(topic=topic,
-                           initial=initial,
-                           user=request.user,
-                           )
-        context.update({'form': form})
+        form = AddPostForm(
+            topic=topic,
+            initial=initial,
+            user=request.user,
+        )
+        context.update({"form": form})
 
         user_is_mod = pybb_moderated_by(topic, request.user)
-        context.update({'user_is_mod': user_is_mod})
-        
-        subscribed = (request.user.is_authenticated and
-                      request.user in topic.subscribers.all())
-        context.update({'subscribed': subscribed})
-    
+        context.update({"user_is_mod": user_is_mod})
+
+        subscribed = (
+            request.user.is_authenticated and request.user in topic.subscribers.all()
+        )
+        context.update({"subscribed": subscribed})
+
         is_spam = False
         if topic.is_hidden:
-                is_spam = topic.posts.first().is_spam()
-        context.update({'is_spam': is_spam})
+            is_spam = topic.posts.first().is_spam()
+        context.update({"is_spam": is_spam})
 
     if user_is_mod:
         posts = topic.posts.select_related()
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
-    context.update({'posts': posts})
+    context.update({"posts": posts})
 
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
@@ -134,22 +135,25 @@ def show_topic_ctx(request, topic_id):
     #     post.user.pybb_profile = profiles[post.user.id]
 
     if pybb_settings.PYBB_ATTACHMENT_ENABLE:
-        load_related(posts, Attachment.objects.all(), 'post')
+        load_related(posts, Attachment.objects.all(), "post")
 
-    context.update({
-        'page_size': pybb_settings.TOPIC_PAGE_SIZE,
-        'form_url': reverse('pybb_add_post', args=[topic.id]),
-        'wikipage': settings.ATTACHMENT_DESCR_PAGE,
-    })
+    context.update(
+        {
+            "page_size": pybb_settings.TOPIC_PAGE_SIZE,
+            "form_url": reverse("pybb_add_post", args=[topic.id]),
+            "wikipage": settings.ATTACHMENT_DESCR_PAGE,
+        }
+    )
 
     return context
 
-show_topic = render_to('pybb/topic.html')(show_topic_ctx)
+
+show_topic = render_to("pybb/topic.html")(show_topic_ctx)
 
 
 @login_required
 def add_post_ctx(request, forum_id, topic_id):
-    """ Standalone view for adding posts."""
+    """Standalone view for adding posts."""
 
     forum = None
     topic = None
@@ -163,16 +167,21 @@ def add_post_ctx(request, forum_id, topic_id):
         return HttpResponseRedirect(topic.get_absolute_url())
 
     try:
-        quote_id = int(request.GET.get('quote_id'))
+        quote_id = int(request.GET.get("quote_id"))
     except TypeError:
-        quote = ''
+        quote = ""
     else:
         post = get_object_or_404(Post, pk=quote_id)
-        quote = quote_text(post.body, post.user, 'markdown')
+        quote = quote_text(post.body, post.user, "markdown")
 
-    form = build_form(AddPostForm, request, topic=topic, forum=forum,
-                      user=request.user,
-                      initial={'markup': 'markdown', 'body': quote})
+    form = build_form(
+        AddPostForm,
+        request,
+        topic=topic,
+        forum=forum,
+        user=request.user,
+        initial={"markup": "markdown", "body": quote},
+    )
 
     if form.is_valid():
         post = form.save()
@@ -181,16 +190,18 @@ def add_post_ctx(request, forum_id, topic_id):
         # Check for spam in topics name for new topics
         if not topic:
             is_spam = SuspiciousInput.check_input(
-                content_object=post.topic, user=post.topic.user, text=post.topic.name)
+                content_object=post.topic, user=post.topic.user, text=post.topic.name
+            )
         # Check for spam in Post
         if not is_spam:
             is_spam = SuspiciousInput.check_input(
-                content_object=post, user=post.user, text=post.body)
+                content_object=post, user=post.user, text=post.body
+            )
 
         if is_spam:
             post.hidden = is_spam
-            post.save(update_fields=['hidden'])
-            return HttpResponseRedirect('/moderated/')
+            post.save(update_fields=["hidden"])
+            return HttpResponseRedirect("/moderated/")
 
         if notification:
             if not topic:
@@ -201,55 +212,64 @@ def add_post_ctx(request, forum_id, topic_id):
                     # - enable 'forum_new_topic' in the notification settings, or
                     # - subscribe to an existing topic
                     subscribers = User.objects.filter(
-                        Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM) |
-                        Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
-                        ).exclude(username=request.user.username)
-                    superusers = User.objects.filter(
-                        is_superuser=True).exclude(
-                        username=request.user.username)
+                        Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM)
+                        | Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
+                    ).exclude(username=request.user.username)
+                    superusers = User.objects.filter(is_superuser=True).exclude(
+                        username=request.user.username
+                    )
                     # Combine the querysets, excluding double entrys.
                     subscribers = subscribers.union(superusers)
                 else:
                     # Inform normal users
-                    subscribers = notification.get_observers_for('forum_new_topic',
-                                                             excl_user=request.user)
+                    subscribers = notification.get_observers_for(
+                        "forum_new_topic", excl_user=request.user
+                    )
 
-                notification.send(subscribers, 'forum_new_topic',
-                                  {'topic': post.topic,
-                                   'post': post,
-                                   'user': post.topic.user
-                                   },
-                                  )
+                notification.send(
+                    subscribers,
+                    "forum_new_topic",
+                    {"topic": post.topic, "post": post, "user": post.topic.user},
+                )
                 # Topics author is subscriber for all new posts in his topic
                 post.topic.subscribers.add(request.user)
 
             else:
                 # Send mails about a new post to topic subscribers
-                notification.send(post.topic.subscribers.exclude(username=post.user), 'forum_new_post',
-                                  {'post': post, 'topic': topic, 'user': post.user},)
+                notification.send(
+                    post.topic.subscribers.exclude(username=post.user),
+                    "forum_new_post",
+                    {"post": post, "topic": topic, "user": post.user},
+                )
 
         return HttpResponseRedirect(post.get_absolute_url())
 
     if topic:
-        form_url = reverse('pybb_add_post', args=[topic.id])
+        form_url = reverse("pybb_add_post", args=[topic.id])
     else:
-        form_url = reverse('pybb_add_topic', args=[forum.id])
+        form_url = reverse("pybb_add_topic", args=[forum.id])
 
-    return {'form': form,
-            'topic': topic,
-            'forum': forum,
-            'form_url': form_url,
-            'wikipage': settings.ATTACHMENT_DESCR_PAGE,
-            }
-add_post = render_to('pybb/add_post.html')(add_post_ctx)
+    return {
+        "form": form,
+        "topic": topic,
+        "forum": forum,
+        "form_url": form_url,
+        "wikipage": settings.ATTACHMENT_DESCR_PAGE,
+    }
+
+
+add_post = render_to("pybb/add_post.html")(add_post_ctx)
 
 
 def show_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
-    url = '%s?page=%d#post-%d' % (reverse('pybb_topic',
-                                          args=[post.topic.id]), page, post.id)
+    url = "%s?page=%d#post-%d" % (
+        reverse("pybb_topic", args=[post.topic.id]),
+        page,
+        post.id,
+    )
     return HttpResponseRedirect(url)
 
 
@@ -263,17 +283,22 @@ def edit_post_ctx(request, post_id):
 
     if form.is_valid():
         post = form.save()
-        is_spam = SuspiciousInput.check_input(content_object=post, user=post.user, text=post.body)
+        is_spam = SuspiciousInput.check_input(
+            content_object=post, user=post.user, text=post.body
+        )
         if is_spam:
             post.hidden = is_spam
             post.save()
-            return HttpResponseRedirect('/moderated/')
+            return HttpResponseRedirect("/moderated/")
         return HttpResponseRedirect(post.get_absolute_url())
 
-    return {'form': form,
-            'post': post,
-            }
-edit_post = render_to('pybb/edit_post.html')(edit_post_ctx)
+    return {
+        "form": form,
+        "post": post,
+    }
+
+
+edit_post = render_to("pybb/edit_post.html")(edit_post_ctx)
 
 
 @login_required
@@ -301,17 +326,18 @@ def unstick_topic(request, topic_id):
 @login_required
 def delete_post_ctx(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    last_post = post.topic.posts.order_by('-created')[0]
+    last_post = post.topic.posts.order_by("-created")[0]
 
     allowed = False
-    if pybb_moderated_by(post, request.user) or \
-            (post.user == request.user and post == last_post):
+    if pybb_moderated_by(post, request.user) or (
+        post.user == request.user and post == last_post
+    ):
         allowed = True
 
     if not allowed:
         return HttpResponseRedirect(post.get_absolute_url())
 
-    if request.method == 'POST':
+    if request.method == "POST":
         topic = post.topic
         forum = post.topic.forum
         post.delete()
@@ -323,9 +349,12 @@ def delete_post_ctx(request, post_id):
         else:
             return HttpResponseRedirect(topic.get_absolute_url())
     else:
-        return {'post': post,
-                }
-delete_post = render_to('pybb/delete_post.html')(delete_post_ctx)
+        return {
+            "post": post,
+        }
+
+
+delete_post = render_to("pybb/delete_post.html")(delete_post_ctx)
 
 
 @login_required
@@ -353,45 +382,46 @@ def open_topic(request, topic_id):
 def delete_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     topic.subscribers.remove(request.user)
-    if 'from_topic' in request.GET:
-        return HttpResponseRedirect(reverse('pybb_topic', args=[topic.id]))
+    if "from_topic" in request.GET:
+        return HttpResponseRedirect(reverse("pybb_topic", args=[topic.id]))
     else:
-        return HttpResponseRedirect(reverse('pybb_edit_profile'))
+        return HttpResponseRedirect(reverse("pybb_edit_profile"))
 
 
 @login_required
 def add_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     topic.subscribers.add(request.user)
-    return HttpResponseRedirect(reverse('pybb_topic', args=[topic.id]))
+    return HttpResponseRedirect(reverse("pybb_topic", args=[topic.id]))
 
 
 def show_attachment(request, hash):
     attachment = get_object_or_404(Attachment, hash=hash)
-    
-    with open(attachment.get_absolute_path(), 'rb') as file_obj:
+
+    with open(attachment.get_absolute_path(), "rb") as file_obj:
         return HttpResponse(file_obj, content_type=attachment.content_type)
     return HTTP404
+
 
 @login_required
 @ajax
 def post_ajax_preview(request):
-    content = request.POST.get('content')
-    markup = request.POST.get('markup')
+    content = request.POST.get("content")
+    markup = request.POST.get("markup")
 
     if not markup in list(dict(MARKUP_CHOICES).keys()):
-        return {'error': 'Invalid markup'}
+        return {"error": "Invalid markup"}
 
     if not content:
-        return {'content': ''}
+        return {"content": ""}
 
-    if markup == 'bbcode':
+    if markup == "bbcode":
         html = mypostmarkup.markup(content, auto_urls=False)
-    elif markup == 'markdown':
-        html = str(do_wl_markdown(content, 'bleachit'))
+    elif markup == "markdown":
+        html = str(do_wl_markdown(content, "bleachit"))
 
     html = urlize(html)
-    return {'content': html}
+    return {"content": html}
 
 
 def toggle_hidden_topic(request, topic_id):
@@ -402,7 +432,7 @@ def toggle_hidden_topic(request, topic_id):
     else:
         first_post.hidden = True
     first_post.save()
-    
+
     return redirect(topic)
 
 
@@ -410,36 +440,35 @@ def all_latest_posts(request):
     """Provide a view to show more latest posts."""
 
     # default values
-    sort_by_default = 'topic'
+    sort_by_default = "topic"
     days_default = pybb_settings.LAST_POSTS_DAYS
 
-    if request.method == 'POST':
+    if request.method == "POST":
         # Executed when the form is submitted
         form = LastPostsDayForm(request.POST)
         if form.is_valid():
-            days = form.cleaned_data['days']
-            sort_by = form.cleaned_data['sort_by']
-            url = '{}?days={days}&sort_by={sort_by}'.format(
-                reverse('all_latest_posts'),
-                days=days, sort_by=sort_by
-                )
+            days = form.cleaned_data["days"]
+            sort_by = form.cleaned_data["sort_by"]
+            url = "{}?days={days}&sort_by={sort_by}".format(
+                reverse("all_latest_posts"), days=days, sort_by=sort_by
+            )
 
             return HttpResponseRedirect(url)
 
-    else: # request GET
+    else:  # request GET
         # Initialize if no values are given or if the
         # values are given in the url
-        days = request.GET.get('days', days_default)
-        sort_by = request.GET.get('sort_by', sort_by_default)
+        days = request.GET.get("days", days_default)
+        sort_by = request.GET.get("sort_by", sort_by_default)
 
         # Create a bound form, so error messages are shown if
         # the given values don't validate against the form
         form = LastPostsDayForm(
             {
-                'days': days,
-                'sort_by': sort_by,
+                "days": days,
+                "sort_by": sort_by,
             }
-            )
+        )
 
         if not form.is_valid():
             # If we are here, the user has likely modified the query in the url
@@ -458,7 +487,7 @@ def all_latest_posts(request):
 
         posts_count = len(last_posts)
 
-        if sort_by == 'topic':
+        if sort_by == "topic":
             # The use of an OrderedDict makes sure the ordering of
             # last_posts get not arbitrary
             topics = OrderedDict()
@@ -472,7 +501,7 @@ def all_latest_posts(request):
 
             object_list = topics
 
-        elif sort_by == 'forum':
+        elif sort_by == "forum":
             forums = OrderedDict()
             for post in last_posts:
                 if post.topic.forum.name not in forums:
@@ -489,15 +518,17 @@ def all_latest_posts(request):
         object_list = []
         posts_count = 0
         sort_by = sort_by_default
-        
+
     return {
-        'object_list': object_list,
-        'posts_count': posts_count,
-        'form': form,
-        'sort_by': sort_by
+        "object_list": object_list,
+        "posts_count": posts_count,
+        "form": form,
+        "sort_by": sort_by,
     }
 
-all_latest = render_to('pybb/all_last_posts.html')(all_latest_posts)
+
+all_latest = render_to("pybb/all_last_posts.html")(all_latest_posts)
+
 
 @login_required
 def all_user_posts(request, this_user=None):
@@ -512,8 +543,9 @@ def all_user_posts(request, this_user=None):
         posts = Post.objects.public().filter(user__username=this_user)
 
     return {
-        'this_user': this_user,
-        'posts': posts,
-        }
+        "this_user": this_user,
+        "posts": posts,
+    }
 
-user_posts = render_to('pybb/all_user_posts.html')(all_user_posts)
+
+user_posts = render_to("pybb/all_user_posts.html")(all_user_posts)

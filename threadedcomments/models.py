@@ -8,22 +8,21 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.utils.encoding import force_text
 
-DEFAULT_MAX_COMMENT_LENGTH = getattr(
-    settings, 'DEFAULT_MAX_COMMENT_LENGTH', 1000)
-DEFAULT_MAX_COMMENT_DEPTH = getattr(settings, 'DEFAULT_MAX_COMMENT_DEPTH', 8)
+DEFAULT_MAX_COMMENT_LENGTH = getattr(settings, "DEFAULT_MAX_COMMENT_LENGTH", 1000)
+DEFAULT_MAX_COMMENT_DEPTH = getattr(settings, "DEFAULT_MAX_COMMENT_DEPTH", 8)
 
 MARKDOWN = 1
 TEXTILE = 2
 REST = 3
 PLAINTEXT = 5
 MARKUP_CHOICES = (
-    (MARKDOWN, _('markdown')),
-    (TEXTILE, _('textile')),
-    (REST, _('restructuredtext')),
-    (PLAINTEXT, _('plaintext')),
+    (MARKDOWN, _("markdown")),
+    (TEXTILE, _("textile")),
+    (REST, _("restructuredtext")),
+    (PLAINTEXT, _("plaintext")),
 )
 
-DEFAULT_MARKUP = getattr(settings, 'DEFAULT_MARKUP', PLAINTEXT)
+DEFAULT_MARKUP = getattr(settings, "DEFAULT_MARKUP", PLAINTEXT)
 
 
 def dfs(node, all_nodes, depth):
@@ -33,7 +32,9 @@ def dfs(node, all_nodes, depth):
     how deeply nested this node is away from the original object.
     """
     node.depth = depth
-    to_return = [node, ]
+    to_return = [
+        node,
+    ]
     for subnode in all_nodes:
         if subnode.parent and subnode.parent.id == node.id:
             to_return.extend(dfs(subnode, all_nodes, depth + 1))
@@ -67,11 +68,15 @@ class ThreadedCommentManager(models.Manager):
             {% endfor %}
         """
         content_type = ContentType.objects.get_for_model(content_object)
-        children = list(self.get_query_set().filter(
-            content_type=content_type,
-            object_id=getattr(content_object, 'pk',
-                              getattr(content_object, 'id')),
-        ).select_related().order_by('date_submitted'))
+        children = list(
+            self.get_query_set()
+            .filter(
+                content_type=content_type,
+                object_id=getattr(content_object, "pk", getattr(content_object, "id")),
+            )
+            .select_related()
+            .order_by("date_submitted")
+        )
         to_return = []
         if root:
             if isinstance(root, int):
@@ -93,10 +98,10 @@ class ThreadedCommentManager(models.Manager):
     def _generate_object_kwarg_dict(self, content_object, **kwargs):
         """Generates the most comment keyword arguments for a given
         ``content_object``."""
-        kwargs['content_type'] = ContentType.objects.get_for_model(
-            content_object)
-        kwargs['object_id'] = getattr(
-            content_object, 'pk', getattr(content_object, 'id'))
+        kwargs["content_type"] = ContentType.objects.get_for_model(content_object)
+        kwargs["object_id"] = getattr(
+            content_object, "pk", getattr(content_object, "id")
+        )
         return kwargs
 
     def create_for_object(self, content_object, **kwargs):
@@ -107,7 +112,9 @@ class ThreadedCommentManager(models.Manager):
     def get_or_create_for_object(self, content_object, **kwargs):
         """A simple wrapper around ``get_or_create`` for a given
         ``content_object``."""
-        return self.get_or_create(**self._generate_object_kwarg_dict(content_object, **kwargs))
+        return self.get_or_create(
+            **self._generate_object_kwarg_dict(content_object, **kwargs)
+        )
 
     def get_for_object(self, content_object, **kwargs):
         """A simple wrapper around ``get`` for a given ``content_object``."""
@@ -122,13 +129,15 @@ class ThreadedCommentManager(models.Manager):
 class PublicThreadedCommentManager(ThreadedCommentManager):
     """
     A ``Manager`` which borrows all of the same methods from ``ThreadedCommentManager``,
-    but which also restricts the queryset to only the published methods 
+    but which also restricts the queryset to only the published methods
     (in other words, ``is_public = True``).
     """
 
     def get_query_set(self):
-        return super(ThreadedCommentManager, self).get_queryset().filter(
-            Q(is_public=True) | Q(is_approved=True)
+        return (
+            super(ThreadedCommentManager, self)
+            .get_queryset()
+            .filter(Q(is_public=True) | Q(is_approved=True))
         )
 
 
@@ -146,41 +155,50 @@ class ThreadedComment(models.Model):
     only those values which are designated as public (``is_public=True``).
 
     """
+
     # Generic Foreign Key Fields
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField(_('object ID'))
+    object_id = models.PositiveIntegerField(_("object ID"))
     content_object = GenericForeignKey()
 
     # Hierarchy Field
     parent = models.ForeignKey(
-        'self', null=True, blank=True, default=None, related_name='children', on_delete=models.CASCADE)
+        "self",
+        null=True,
+        blank=True,
+        default=None,
+        related_name="children",
+        on_delete=models.CASCADE,
+    )
 
     # User Field
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Date Fields
     date_submitted = models.DateTimeField(
-        _('date/time submitted'), default=datetime.now)
-    date_modified = models.DateTimeField(
-        _('date/time modified'), default=datetime.now)
+        _("date/time submitted"), default=datetime.now
+    )
+    date_modified = models.DateTimeField(_("date/time modified"), default=datetime.now)
     date_approved = models.DateTimeField(
-        _('date/time approved'), default=None, null=True, blank=True)
+        _("date/time approved"), default=None, null=True, blank=True
+    )
 
     # Meat n' Potatoes
-    comment = models.TextField(_('comment'))
+    comment = models.TextField(_("comment"))
     markup = models.IntegerField(
-        choices=MARKUP_CHOICES, default=DEFAULT_MARKUP, null=True, blank=True)
+        choices=MARKUP_CHOICES, default=DEFAULT_MARKUP, null=True, blank=True
+    )
 
     # Status Fields
-    is_public = models.BooleanField(_('is public'), default=True)
-    is_approved = models.BooleanField(_('is approved'), default=False)
+    is_public = models.BooleanField(_("is public"), default=True)
+    is_approved = models.BooleanField(_("is approved"), default=False)
 
     objects = ThreadedCommentManager()
     public = PublicThreadedCommentManager()
 
     def __str__(self):
         if len(self.comment) > 50:
-            return self.comment[:50] + '...'
+            return self.comment[:50] + "..."
         return self.comment[:50]
 
     def save(self, **kwargs):
@@ -197,7 +215,7 @@ class ThreadedComment(models.Model):
         return self.content_object
 
     class Meta:
-        ordering = ('-date_submitted',)
-        verbose_name = _('Threaded Comment')
-        verbose_name_plural = _('Threaded Comments')
-        get_latest_by = 'date_submitted'
+        ordering = ("-date_submitted",)
+        verbose_name = _("Threaded Comment")
+        verbose_name_plural = _("Threaded Comments")
+        get_latest_by = "date_submitted"

@@ -16,15 +16,20 @@ def restructuredparts(value, **overrides):
         from docutils.core import publish_parts
     except ImportError:
         if settings.DEBUG:
-            raise template.TemplateSyntaxError("Error in {% restructuredtext %} filter: The Python docutils library isn't installed.")
+            raise template.TemplateSyntaxError(
+                "Error in {% restructuredtext %} filter: The Python docutils library isn't installed."
+            )
         return value
     else:
         docutils_settings = dict(
-            getattr(settings, 'RESTRUCTUREDTEXT_FILTER_SETTINGS', {}))
+            getattr(settings, "RESTRUCTUREDTEXT_FILTER_SETTINGS", {})
+        )
         docutils_settings.update(overrides)
-        if 'halt_level' not in docutils_settings:
-            docutils_settings['halt_level'] = 6
-        return publish_parts(source=value, writer_name='html4css1', settings_overrides=docutils_settings)
+        if "halt_level" not in docutils_settings:
+            docutils_settings["halt_level"] = 6
+        return publish_parts(
+            source=value, writer_name="html4css1", settings_overrides=docutils_settings
+        )
 
 
 @register.filter
@@ -41,7 +46,7 @@ def restructuredtext(value, **overrides):
     parts = restructuredparts(value, **overrides)
     if not isinstance(parts, dict):
         return value
-    return parts['html_body']
+    return parts["html_body"]
 
 
 @register.filter
@@ -57,7 +62,6 @@ def restructuredtext_has_errors(value, do_raise=False):
 
 
 class ReStructuredTextNode(template.Node):
-
     def __init__(self, nodelist):
         self.nodelist = nodelist
 
@@ -65,7 +69,7 @@ class ReStructuredTextNode(template.Node):
         return restructuredtext(self.nodelist.render(context))
 
 
-@register.tag('restructuredtext')
+@register.tag("restructuredtext")
 def rest_tag(parser, token):
     """
     Render the ReStructuredText into html. Will pre-render template code first.
@@ -81,12 +85,12 @@ def rest_tag(parser, token):
         {% endrestructuredtext %}
 
     """
-    nodelist = parser.parse(('endrestructuredtext',))
+    nodelist = parser.parse(("endrestructuredtext",))
     parser.delete_first_token()
     return ReStructuredTextNode(nodelist)
 
 
-@register.inclusion_tag('restructuredtext/dynamic.html', takes_context=True)
+@register.inclusion_tag("restructuredtext/dynamic.html", takes_context=True)
 def rstflatpage(context):
     """The core content of the restructuredtext flatpage with history, editing,
     etc. for use in your 'flatpages/default.html' or custom template.
@@ -113,7 +117,7 @@ def rstflatpage(context):
     return context
 
 
-@register.inclusion_tag('restructuredtext/feeds.html', takes_context=True)
+@register.inclusion_tag("restructuredtext/feeds.html", takes_context=True)
 def rstflatpage_feeds(context):
     """Optionally inserts the history feeds."""
     return context

@@ -20,23 +20,29 @@ class SuspiciousInput(models.Model):
 
     """
 
-    text = models.CharField(
-        max_length=200, verbose_name='suspicious user input')
-    user = models.ForeignKey(User, verbose_name='related user', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, verbose_name='related model', on_delete=models.CASCADE)
+    text = models.CharField(max_length=200, verbose_name="suspicious user input")
+    user = models.ForeignKey(
+        User, verbose_name="related user", on_delete=models.CASCADE
+    )
+    content_type = models.ForeignKey(
+        ContentType, verbose_name="related model", on_delete=models.CASCADE
+    )
     object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")
 
     class Meta:
-        ordering = ['content_type_id']
-        default_permissions = ('change', 'delete',)
+        ordering = ["content_type_id"]
+        default_permissions = (
+            "change",
+            "delete",
+        )
 
     def __str__(self):
         return self.text
 
     def clean(self):
         # Cleaning fields
-        max_chars = self._meta.get_field('text').max_length
+        max_chars = self._meta.get_field("text").max_length
         if len(self.text) >= max_chars:
             # Truncate the text to fit with max_length of field
             # otherwise a Database error is thrown

@@ -5,7 +5,7 @@ from mainpage.sitemaps import SitemapHTTPS
 
 
 class NewsSitemap(SitemapHTTPS):
-    changefreq = 'yearly'
+    changefreq = "yearly"
     priority = 0.5
 
     def items(self):

@@ -13,11 +13,9 @@ class ThreadedCommentForm(forms.ModelForm):
     """
 
     comment = forms.CharField(
-        label=_('comment'),
-        max_length=DEFAULT_MAX_COMMENT_LENGTH,
-        widget=forms.Textarea
+        label=_("comment"), max_length=DEFAULT_MAX_COMMENT_LENGTH, widget=forms.Textarea
     )
 
     class Meta:
         model = ThreadedComment
-        fields = ('comment', 'markup')
+        fields = ("comment", "markup")

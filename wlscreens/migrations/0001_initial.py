@@ -11,31 +11,66 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('slug', models.SlugField(blank=True, max_length=255, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("slug", models.SlugField(blank=True, max_length=255, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Screenshot',
+            name="Screenshot",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('screenshot', models.ImageField(storage=wlscreens.models.OverwriteStorage(), upload_to=wlscreens.models.screenshot_path)),
-                ('thumbnail', models.ImageField(editable=False, storage=wlscreens.models.OverwriteStorage(), upload_to=wlscreens.models.thumbnail_path)),
-                ('comment', models.TextField(blank=True, null=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='screenshots', to='wlscreens.Category')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "screenshot",
+                    models.ImageField(
+                        storage=wlscreens.models.OverwriteStorage(),
+                        upload_to=wlscreens.models.screenshot_path,
+                    ),
+                ),
+                (
+                    "thumbnail",
+                    models.ImageField(
+                        editable=False,
+                        storage=wlscreens.models.OverwriteStorage(),
+                        upload_to=wlscreens.models.thumbnail_path,
+                    ),
+                ),
+                ("comment", models.TextField(blank=True, null=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="screenshots",
+                        to="wlscreens.Category",
+                    ),
+                ),
             ],
         ),
         migrations.AlterUniqueTogether(
-            name='screenshot',
-            unique_together=set([('name', 'category')]),
+            name="screenshot",
+            unique_together=set([("name", "category")]),
         ),
     ]

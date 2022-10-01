@@ -8,13 +8,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wlmaps', '0003_auto_20190712_0928'),
+        ("wlmaps", "0003_auto_20190712_0928"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='map',
-            name='wl_version_after',
-            field=models.CharField(blank=True, max_length=10, null=True, verbose_name='Minimum WL version'),
+            model_name="map",
+            name="wl_version_after",
+            field=models.CharField(
+                blank=True, max_length=10, null=True, verbose_name="Minimum WL version"
+            ),
         ),
     ]

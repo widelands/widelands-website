@@ -8,6 +8,7 @@ So Djangos orm is used when changing things, e.g. delete a permission.
 
 from django.contrib import admin
 from django.contrib.auth.models import Permission
+
 admin.site.register(Permission)
 
 
@@ -25,25 +26,37 @@ def roles(self):
     text = [x.name for x in self.groups.all()]
     # Permissions
     if self.user_permissions.count():
-        text += ['has perm.']
-    value = ', '.join(text)
+        text += ["has perm."]
+    value = ", ".join(text)
     return value
-roles.short_description = 'Groups/Permissions'
+
+
+roles.short_description = "Groups/Permissions"
 
 
 def persons(self):
-    return ', '.join(['<a href="%s">%s</a>' % (reverse('admin:auth_user_change', args=(x.id,)), x.username) for x in self.user_set.all().order_by('username')])
+    return ", ".join(
+        [
+            '<a href="%s">%s</a>'
+            % (reverse("admin:auth_user_change", args=(x.id,)), x.username)
+            for x in self.user_set.all().order_by("username")
+        ]
+    )
+
+
 persons.allow_tags = True
 
 
 def deleted(self):
-    return '' if self.wlprofile.deleted==False else 'Yes'
-deleted.short_description = 'Deleted himself'
+    return "" if self.wlprofile.deleted == False else "Yes"
+
+
+deleted.short_description = "Deleted himself"
 
 
 class GroupAdmin(GroupAdmin):
-    list_display = ['name', persons]
-    list_display_links = ['name']
+    list_display = ["name", persons]
+    list_display_links = ["name"]
 
 
 admin.site.unregister(Group)
@@ -51,9 +64,17 @@ admin.site.register(Group, GroupAdmin)
 
 
 class UserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'date_joined', 'last_login',
-                    'is_active', deleted, 'is_staff', roles)
-    ordering = ('-date_joined',)
+    list_display = (
+        "username",
+        "email",
+        "date_joined",
+        "last_login",
+        "is_active",
+        deleted,
+        "is_staff",
+        roles,
+    )
+    ordering = ("-date_joined",)
 
 
 admin.site.unregister(User)

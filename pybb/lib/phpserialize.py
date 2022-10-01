@@ -98,34 +98,35 @@ r"""
 """
 from io import StringIO
 
-__author__ = 'Armin Ronacher <armin.ronacher@active-4.com>'
-__version__ = '1.1'
+__author__ = "Armin Ronacher <armin.ronacher@active-4.com>"
+__version__ = "1.1"
 
 
-def dumps(data, charset='utf-8', errors='strict'):
+def dumps(data, charset="utf-8", errors="strict"):
     """Return the PHP-serialized representation of the object as a string,
     instead of writing it to a file like `dump` does.
     """
+
     def _serialize(obj, keypos):
         if keypos:
             if isinstance(obj, (int, float, bool)):
-                return 'i:%i;' % obj
+                return "i:%i;" % obj
             if isinstance(obj, str):
                 if isinstance(obj, str):
                     obj = obj.encode(charset, errors)
                 return 's:%i:"%s";' % (len(obj), obj)
             if obj is None:
                 return 's:0:"";'
-            raise TypeError('can\'t serialize %r as key' % type(obj))
+            raise TypeError("can't serialize %r as key" % type(obj))
         else:
             if obj is None:
-                return 'N;'
+                return "N;"
             if isinstance(obj, bool):
-                return 'b:%i;' % obj
+                return "b:%i;" % obj
             if isinstance(obj, int):
-                return 'i:%s;' % obj
+                return "i:%s;" % obj
             if isinstance(obj, float):
-                return 'd:%s;' % obj
+                return "d:%s;" % obj
             if isinstance(obj, str):
                 if isinstance(obj, str):
                     obj = obj.encode(charset, errors)
@@ -139,12 +140,13 @@ def dumps(data, charset='utf-8', errors='strict'):
                 for key, value in iterable:
                     out.append(_serialize(key, True))
                     out.append(_serialize(value, False))
-                return 'a:%i:{%s}' % (len(obj), ''.join(out))
-            raise TypeError('can\'t serialize %r' % type(obj))
+                return "a:%i:{%s}" % (len(obj), "".join(out))
+            raise TypeError("can't serialize %r" % type(obj))
+
     return _serialize(data, False)
 
 
-def load(fp, charset='utf-8', errors='strict', decode_strings=False):
+def load(fp, charset="utf-8", errors="strict", decode_strings=False):
     """Read a string from the open file object `fp` and interpret it as a
     data stream of PHP-serialized objects, reconstructing and returning
     the original object hierarchy.
@@ -157,10 +159,11 @@ def load(fp, charset='utf-8', errors='strict', decode_strings=False):
     `load` will read exactly one object from the stream.  See the docstring of
     the module for this chained behavior.
     """
+
     def _expect(e):
         v = fp.read(len(e))
         if v != e:
-            raise ValueError('failed expectation, expected %r got %r' % (e, v))
+            raise ValueError("failed expectation, expected %r got %r" % (e, v))
 
     def _read_until(delim):
         buf = []
@@ -169,37 +172,37 @@ def load(fp, charset='utf-8', errors='strict', decode_strings=False):
             if char == delim:
                 break
             elif not char:
-                raise ValueError('unexpected end of stream')
+                raise ValueError("unexpected end of stream")
             buf.append(char)
-        return ''.join(buf)
+        return "".join(buf)
 
     def _unserialize():
         type_ = fp.read(1).lower()
-        if type_ == 'n':
-            _expect(';')
+        if type_ == "n":
+            _expect(";")
             return None
-        if type_ in 'idb':
-            _expect(':')
-            data = _read_until(';')
-            if type_ == 'i':
+        if type_ in "idb":
+            _expect(":")
+            data = _read_until(";")
+            if type_ == "i":
                 return int(data)
-            if type_ == 'd':
+            if type_ == "d":
                 return float(data)
             return int(data) != 0
-        if type_ == 's':
-            _expect(':')
-            length = int(_read_until(':'))
+        if type_ == "s":
+            _expect(":")
+            length = int(_read_until(":"))
             _expect('"')
             data = fp.read(length)
             _expect('"')
             if decode_strings:
                 data = data.decode(charset, errors)
-            _expect(';')
+            _expect(";")
             return data
-        if type_ == 'a':
-            _expect(':')
-            items = int(_read_until(':')) * 2
-            _expect('{')
+        if type_ == "a":
+            _expect(":")
+            items = int(_read_until(":")) * 2
+            _expect("{")
             result = {}
             last_item = Ellipsis
             for idx in range(items):
@@ -209,21 +212,21 @@ def load(fp, charset='utf-8', errors='strict', decode_strings=False):
                 else:
                     result[last_item] = item
                     last_item = Ellipsis
-            _expect('}')
+            _expect("}")
             return result
-        raise ValueError('unexpected opcode')
+        raise ValueError("unexpected opcode")
 
     return _unserialize()
 
 
-def loads(data, charset='utf-8', errors='strict', decode_strings=False):
+def loads(data, charset="utf-8", errors="strict", decode_strings=False):
     """Read a PHP-serialized object hierarchy from a string.  Characters in the
     string past the object's representation are ignored.
     """
     return load(StringIO(data), charset, errors, decode_strings)
 
 
-def dump(data, fp, charset='utf-8', errors='strict'):
+def dump(data, fp, charset="utf-8", errors="strict"):
     """Write a PHP-serialized representation of obj to the open file object
     `fp`.  Unicode strings are encoded to `charset` with the error handling
     of `errors`.
@@ -240,7 +243,7 @@ def dict_to_list(d):
     try:
         return [d[x] for x in range(len(d))]
     except KeyError:
-        raise ValueError('dict is not a sequence')
+        raise ValueError("dict is not a sequence")
 
 
 def dict_to_tuple(d):
@@ -252,6 +255,7 @@ serialize = dumps
 unserialize = loads
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

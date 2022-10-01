@@ -5,8 +5,8 @@ from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import user_logged_out
 from django.dispatch import receiver
 
-ONLINE_THRESHOLD = getattr(settings, 'ONLINE_THRESHOLD', 60 * 15)
-ONLINE_MAX = getattr(settings, 'ONLINE_MAX', 50)
+ONLINE_THRESHOLD = getattr(settings, "ONLINE_THRESHOLD", 60 * 15)
+ONLINE_MAX = getattr(settings, "ONLINE_MAX", 50)
 
 
 def get_online_now(self):
@@ -16,7 +16,7 @@ def get_online_now(self):
 @receiver(user_logged_out)
 def logout(sender, **kwargs):
     try:
-        cache.delete('online-%s' % kwargs['user'].id)
+        cache.delete("online-%s" % kwargs["user"].id)
     except AttributeError:
         pass
 
@@ -32,12 +32,12 @@ class OnlineNowMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         # First get the index
-        uids = cache.get('online-now', [])
+        uids = cache.get("online-now", [])
 
         # Perform the multiget on the individual online uid keys
-        online_keys = ['online-%s' % (u,) for u in uids]
+        online_keys = ["online-%s" % (u,) for u in uids]
         fresh = list(cache.get_many(online_keys).keys())
-        online_now_ids = [int(k.replace('online-', '')) for k in fresh]
+        online_now_ids = [int(k.replace("online-", "")) for k in fresh]
 
         # If the user is authenticated, add their id to the list
         if request.user.is_authenticated:
@@ -55,5 +55,5 @@ class OnlineNowMiddleware(MiddlewareMixin):
         request.__class__.online_now = property(get_online_now)
 
         # Set the new cache
-        cache.set('online-%s' % (request.user.pk,), True, ONLINE_THRESHOLD)
-        cache.set('online-now', online_now_ids, ONLINE_THRESHOLD)
+        cache.set("online-%s" % (request.user.pk,), True, ONLINE_THRESHOLD)
+        cache.set("online-now", online_now_ids, ONLINE_THRESHOLD)
