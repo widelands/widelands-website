@@ -8,7 +8,12 @@ from django.views.generic import ListView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponse,
+    JsonResponse,
+    HttpResponseBadRequest,
+)
 from django.urls import reverse
 from django.conf import settings
 from . import filters, models
@@ -24,10 +29,10 @@ class MapList(ListView):
 
     @property
     def filter(self):
-        if not hasattr(self, '_filter'):
+        if not hasattr(self, "_filter"):
             get = self.request.GET.copy()
-            if not get.get('o'):
-                get['o'] = '-pub_date'
+            if not get.get("o"):
+                get["o"] = "-pub_date"
 
             self._filter = filters.MapFilter(get, queryset=super().get_queryset())
 
@@ -38,27 +43,38 @@ class MapList(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx.update({
-            'maps_per_page': settings.MAPS_PER_PAGE,
-            'filter': self.filter,
-        })
+        ctx.update(
+            {
+                "maps_per_page": settings.MAPS_PER_PAGE,
+                "filter": self.filter,
+            }
+        )
         return ctx
 
     def options(self, request, *args, **kwargs):
         if request.is_ajax():
-            q = request.GET.get('q', '')
-            f = request.GET.get('f', '')
+            q = request.GET.get("q", "")
+            f = request.GET.get("f", "")
 
-            if f == 'uploader':
-                values = User.objects.exclude(is_active=False).filter(username__icontains=q).values_list('username')
-            elif f == 'author':
+            if f == "uploader":
+                values = (
+                    User.objects.exclude(is_active=False)
+                    .filter(username__icontains=q)
+                    .values_list("username")
+                )
+            elif f == "author":
                 # convert to set and back to list because distinct is not supported with sqlite
-                values = list(set(models.Map.objects.filter(author__icontains=q).\
-                    order_by('author').values_list('author', flat=True)))
+                values = list(
+                    set(
+                        models.Map.objects.filter(author__icontains=q)
+                        .order_by("author")
+                        .values_list("author", flat=True)
+                    )
+                )
             else:
                 return HttpResponseBadRequest()
 
-            return JsonResponse(list(map(lambda x: {'value': x}, values)), safe=False)
+            return JsonResponse(list(map(lambda x: {"value": x}, values)), safe=False)
         else:
             return HttpResponseBadRequest()
 
@@ -68,16 +84,16 @@ def download(request, map_slug):
     increases the download count."""
     m = get_object_or_404(models.Map, slug=map_slug)
 
-    file = open(m.file.path, 'rb')
+    file = open(m.file.path, "rb")
     data = file.read()
-    filename = os.path.basename('%s.wmf' % m.name)
+    filename = os.path.basename("%s.wmf" % m.name)
 
     # Remember that this has been downloaded
     m.nr_downloads += 1
-    m.save(update_fields=['nr_downloads'])
+    m.save(update_fields=["nr_downloads"])
 
-    response = HttpResponse(data, content_type='application/octet-stream')
-    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    response = HttpResponse(data, content_type="application/octet-stream")
+    response["Content-Disposition"] = 'attachment; filename="%s"' % filename
 
     return response
 
@@ -85,33 +101,31 @@ def download(request, map_slug):
 def view(request, map_slug):
     map = get_object_or_404(models.Map, slug=map_slug)
     context = {
-        'map': map,
+        "map": map,
     }
-    return render(request, 'wlmaps/map_detail.html',
-                              context)
+    return render(request, "wlmaps/map_detail.html", context)
 
 
 @login_required
 def edit_comment(request, map_slug):
     map = get_object_or_404(models.Map, slug=map_slug)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = EditCommentForm(request.POST)
         if form.is_valid():
-            map.uploader_comment = form.cleaned_data['uploader_comment']
-            map.save(update_fields=['uploader_comment'])
+            map.uploader_comment = form.cleaned_data["uploader_comment"]
+            map.save(update_fields=["uploader_comment"])
             return HttpResponseRedirect(map.get_absolute_url())
     else:
         form = EditCommentForm(instance=map)
 
-    context = {'form': form, 'map': map}
+    context = {"form": form, "map": map}
 
-    return render(request, 'wlmaps/edit_comment.html',
-                              context)
+    return render(request, "wlmaps/edit_comment.html", context)
 
 
 @login_required
 def upload(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UploadMapForm(request.POST, request.FILES)
         if form.is_valid():
             map = form.save(commit=False)
@@ -121,6 +135,7 @@ def upload(request):
     else:
         form = UploadMapForm()
 
-    context = {'form': form, }
-    return render(request, 'wlmaps/upload.html',
-                              context)
+    context = {
+        "form": form,
+    }
+    return render(request, "wlmaps/upload.html", context)

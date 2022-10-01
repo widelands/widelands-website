@@ -9,18 +9,22 @@ from wlhelp.sitemap import *
 
 
 sitemaps = {
-    'static': StaticViewSitemap,
-    'news': NewsSitemap,
-    'wiki': WikiSitemap,
-    'forum': ForumSitemap,
-    'wlhelptribe': WlHelpTribeSitemap,
-    'wlhelpware': WlHelpWareSitemap,
-    'wlhelpworker': WlHelpWorkerSitemap,
-    'wlhelpbuildings': WlHelpBuildingSitemap,
+    "static": StaticViewSitemap,
+    "news": NewsSitemap,
+    "wiki": WikiSitemap,
+    "forum": ForumSitemap,
+    "wlhelptribe": WlHelpTribeSitemap,
+    "wlhelpware": WlHelpWareSitemap,
+    "wlhelpworker": WlHelpWorkerSitemap,
+    "wlhelpbuildings": WlHelpBuildingSitemap,
 }
 
 urlpatterns = [
     # Creating a sitemap.xml
-    url(r'^$', sitemap, {'sitemaps': sitemaps},
-        name='django.contrib.sitemaps.views.sitemap')
+    url(
+        r"^$",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    )
 ]

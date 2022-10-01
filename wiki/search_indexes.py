@@ -20,9 +20,9 @@ class ArticleIndex(indexes.SearchIndex, indexes.Indexable):
     """
 
     text = indexes.CharField(document=True, use_template=True)
-    title = indexes.CharField(model_attr='title')
-    summary = indexes.CharField(model_attr='summary', null=True)
-    content = indexes.CharField(model_attr='content')
+    title = indexes.CharField(model_attr="title")
+    summary = indexes.CharField(model_attr="summary", null=True)
+    content = indexes.CharField(model_attr="content")
     # To get date related search working
     # we assume the index is always up to date
     date = DateField(default=date.today())
@@ -31,4 +31,4 @@ class ArticleIndex(indexes.SearchIndex, indexes.Indexable):
         return Article
 
     def get_updated_field(self):
-        return 'last_update'
+        return "last_update"

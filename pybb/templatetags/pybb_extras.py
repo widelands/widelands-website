@@ -18,15 +18,14 @@ import pybb.views
 register = template.Library()
 
 
-@register.inclusion_tag('pybb/last_posts.html', takes_context=True)
+@register.inclusion_tag("pybb/last_posts.html", takes_context=True)
 def pybb_last_posts(context, number=8):
 
     BASE_COUNT = 100
 
     # Create permission dependent Querysets
     if pybb.views.allowed_for(context.request.user):
-        last_posts = Post.objects.filter(
-            hidden=False).order_by('-created')[:BASE_COUNT]
+        last_posts = Post.objects.filter(hidden=False).order_by("-created")[:BASE_COUNT]
     else:
         last_posts = Post.objects.public(limit=BASE_COUNT)
 
@@ -37,16 +36,15 @@ def pybb_last_posts(context, number=8):
             check = check + [post.topic_id]
             answer = answer + [post]
     return {
-        'posts': answer,
-        }
+        "posts": answer,
+    }
 
 
 @register.simple_tag
-def pybb_link(object, anchor=''):
+def pybb_link(object, anchor=""):
     """Return A tag with link to object."""
 
-    url = hasattr(
-        object, 'get_absolute_url') and object.get_absolute_url() or None
+    url = hasattr(object, "get_absolute_url") and object.get_absolute_url() or None
     anchor = anchor or smart_text(object)
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
 
@@ -59,10 +57,10 @@ def pybb_has_unreads(topic, user):
     delta = timedelta(seconds=pybb_settings.READ_TIMEOUT)
 
     def _is_topic_read(topic, user):
-        if (now - delta > topic.updated):
+        if now - delta > topic.updated:
             return True
         else:
-            if hasattr(topic, '_read'):
+            if hasattr(topic, "_read"):
                 read = topic._read
             else:
                 try:
@@ -90,12 +88,12 @@ def pybb_has_unreads(topic, user):
                     return True
             return False
         else:
-            raise Exception('Object should be a topic')
+            raise Exception("Object should be a topic")
 
 
 @register.filter
 def pybb_setting(name):
-    return mark_safe(getattr(pybb_settings, name, 'NOT DEFINED'))
+    return mark_safe(getattr(pybb_settings, name, "NOT DEFINED"))
 
 
 @register.filter
@@ -105,14 +103,19 @@ def pybb_moderated_by(instance, user):
         if isinstance(instance, Forum):
             return user.is_superuser or user in instance.moderator_group.user_set.all()
         if isinstance(instance, Topic):
-            return user.is_superuser or user in instance.forum.moderator_group.user_set.all()
+            return (
+                user.is_superuser
+                or user in instance.forum.moderator_group.user_set.all()
+            )
         if isinstance(instance, Post):
-            return user.is_superuser or user in instance.topic.forum.moderator_group.user_set.all()
+            return (
+                user.is_superuser
+                or user in instance.topic.forum.moderator_group.user_set.all()
+            )
     except:
         pass
-    
+
     return False
-    
 
 
 @register.filter
@@ -161,7 +164,7 @@ def pybb_output_bbcode(post):
     return pprint(post)
 
 
-@register.inclusion_tag('mainpage/forum_navigation.html', takes_context=True)
+@register.inclusion_tag("mainpage/forum_navigation.html", takes_context=True)
 def forum_navigation(context):
     """Makes the forum list available to the navigation.
 
@@ -179,4 +182,4 @@ def forum_navigation(context):
         # Don't show internal forums
         forums = forums.filter(category__internal=False)
 
-    return {'forums': forums.order_by('category', 'position')}
+    return {"forums": forums.order_by("category", "position")}

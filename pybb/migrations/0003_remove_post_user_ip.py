@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pybb', '0002_auto_20161001_2046'),
+        ("pybb", "0002_auto_20161001_2046"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='post',
-            name='user_ip',
+            model_name="post",
+            name="user_ip",
         ),
     ]

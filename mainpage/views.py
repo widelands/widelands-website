@@ -14,44 +14,53 @@ import codecs
 
 
 def mainpage(request):
-    return render(request, 'mainpage/mainpage.html',)
+    return render(
+        request,
+        "mainpage/mainpage.html",
+    )
 
 
 def legal_notice(request):
     """The legal notice page to fullfill law."""
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['forename'] + \
-                ' ' + form.cleaned_data['surname']
-            subject = 'An inquiry over the webpage'
-            message = '\n'.join(['From: ' + name,
-                                 'EMail: ' + form.cleaned_data['email'],
-                                 'Inquiry:',
-                                 form.cleaned_data['inquiry']])
-            sender = 'legal_note@widelands.org'
+            name = form.cleaned_data["forename"] + " " + form.cleaned_data["surname"]
+            subject = "An inquiry over the webpage"
+            message = "\n".join(
+                [
+                    "From: " + name,
+                    "EMail: " + form.cleaned_data["email"],
+                    "Inquiry:",
+                    form.cleaned_data["inquiry"],
+                ]
+            )
+            sender = "legal_note@widelands.org"
 
             # get email addresses which are in form of ('name','email'),
             recipients = []
             for recipient in settings.INQUIRY_RECIPIENTS:
                 recipients.append(recipient[1])
 
-            send_mail(subject, message, sender,
-                      recipients, fail_silently=False)
+            send_mail(subject, message, sender, recipients, fail_silently=False)
             # Redirect after POST
-            return HttpResponseRedirect('/legal_notice_thanks/')
+            return HttpResponseRedirect("/legal_notice_thanks/")
 
     else:
         form = ContactForm()  # An unbound form
 
-    return render(request, 'mainpage/legal_notice.html', {
-        'form': form,
-        'inquiry_recipients': settings.INQUIRY_RECIPIENTS,
-    })
+    return render(
+        request,
+        "mainpage/legal_notice.html",
+        {
+            "form": form,
+            "inquiry_recipients": settings.INQUIRY_RECIPIENTS,
+        },
+    )
 
 
 def legal_notice_thanks(request):
-    return render(request, 'mainpage/legal_notice_thanks.html')
+    return render(request, "mainpage/legal_notice_thanks.html")
 
 
 def developers(request):
@@ -64,78 +73,83 @@ def developers(request):
 
     # Get locale and translator names from each .json file and
     # store them in one list.
-    txt = '[TOC]\n\n'
+    txt = "[TOC]\n\n"
     transl_files = []
     transl_list = []
-    path = os.path.normpath(settings.WIDELANDS_SVN_DIR + 'data/i18n/locales/')
+    path = os.path.normpath(settings.WIDELANDS_SVN_DIR + "data/i18n/locales/")
     try:
         transl_files = os.listdir(path)
         if transl_files:
             for fname in transl_files:
-                if fname.endswith('.json'):
-                    with open(path + '/' + fname, 'r') as f:
+                if fname.endswith(".json"):
+                    with open(path + "/" + fname, "r") as f:
                         json_data = json.load(f)
                     try:
-                        if json_data['translator-list'] != 'translator-credits':
-                            if not 'your-language-name-in-english' in json_data:
-                                transl_list = ['KeyError']
+                        if json_data["translator-list"] != "translator-credits":
+                            if not "your-language-name-in-english" in json_data:
+                                transl_list = ["KeyError"]
                                 break
                             transl_list.append(json_data)
                     except KeyError:
-                        transl_list = ['KeyError']
+                        transl_list = ["KeyError"]
                         break
 
             # No KeyError -> Sort the list
-            if 'KeyError' in transl_list:
-                txt = 'Some Translator key is wrong, please contact the Developers.\n'
+            if "KeyError" in transl_list:
+                txt = "Some Translator key is wrong, please contact the Developers.\n"
             else:
-                transl_list.sort(key=itemgetter(
-                    'your-language-name-in-english'))
+                transl_list.sort(key=itemgetter("your-language-name-in-english"))
 
         else:
-            txt = 'No files for translators found!\n'
+            txt = "No files for translators found!\n"
     except OSError:
         txt = txt + "Couldn't find translators directory!\n"
 
     # Get other developers, put in the translators list
     # at given position and prepare all for wl_markdown
     try:
-        with open(settings.WIDELANDS_SVN_DIR + 'data/txts/developers.json', 'r') as f:
-            json_data = json.load(f)['developers']
+        with open(settings.WIDELANDS_SVN_DIR + "data/txts/developers.json", "r") as f:
+            json_data = json.load(f)["developers"]
 
         for head in json_data:
-            if 'heading' in head:
+            if "heading" in head:
                 # Add first header
-                txt = txt + '##' + head['heading'] + '\n'
+                txt = txt + "##" + head["heading"] + "\n"
                 # Inserting Translators if there was no error
-                if head['heading'] == 'Translators' and 'KeyError' not in transl_list:
-                    for values in (transl_list):
+                if head["heading"] == "Translators" and "KeyError" not in transl_list:
+                    for values in transl_list:
                         # Add subheader for locale
-                        txt = txt + '### ' + \
-                            values['your-language-name-in-english'] + '\n'
+                        txt = (
+                            txt
+                            + "### "
+                            + values["your-language-name-in-english"]
+                            + "\n"
+                        )
                         # Prepaire the names for wl_markdown
-                        txt = txt + '* ' + \
-                            values['translator-list'].replace('\n', '\n* ') + '\n'
+                        txt = (
+                            txt
+                            + "* "
+                            + values["translator-list"].replace("\n", "\n* ")
+                            + "\n"
+                        )
 
                 # Add a subheader or/and the member(s)
-                for entry in head['entries']:
-                    if 'subheading' in list(entry.keys()):
-                        txt = txt + '###' + entry['subheading'] + '\n'
-                    if 'members' in list(entry.keys()):
-                        for name in entry['members']:
-                            txt = txt + '* ' + name + '\n'
-                    if 'translate' in list(entry.keys()):
-                        for transl in entry['translate']:
-                            txt = txt + '* ' + transl + '\n'
+                for entry in head["entries"]:
+                    if "subheading" in list(entry.keys()):
+                        txt = txt + "###" + entry["subheading"] + "\n"
+                    if "members" in list(entry.keys()):
+                        for name in entry["members"]:
+                            txt = txt + "* " + name + "\n"
+                    if "translate" in list(entry.keys()):
+                        for transl in entry["translate"]:
+                            txt = txt + "* " + transl + "\n"
 
     except IOError:
         txt = txt + "Couldn't find developer file!"
 
     txt = do_wl_markdown(txt, beautify=False)
 
-    return render(request, 'mainpage/developers.html',
-                  {'developers': txt}
-                  )
+    return render(request, "mainpage/developers.html", {"developers": txt})
 
 
 def changelog(request):
@@ -145,22 +159,33 @@ def changelog(request):
     This replaces the wiki changelog
 
     """
-    data = codecs.open(settings.WIDELANDS_SVN_DIR + 'ChangeLog', encoding='utf-8', mode='r').read()
-    return render(request, 'mainpage/changelog.html',
-                  {'changelog': data},
-                  )
+    data = codecs.open(
+        settings.WIDELANDS_SVN_DIR + "ChangeLog", encoding="utf-8", mode="r"
+    ).read()
+    return render(
+        request,
+        "mainpage/changelog.html",
+        {"changelog": data},
+    )
 
 
 def custom_http_500(request):
     """A custom http 500 error page to not lose css styling."""
-    return render(request, '500.html', status=500)
+    return render(request, "500.html", status=500)
 
 
 def view_locale(request):
-    loc_info = 'getlocale: ' + str(locale.getlocale()) + \
-        '<br/>getdefaultlocale(): ' + str(locale.getdefaultlocale()) + \
-        '<br/>fs_encoding: ' + str(sys.getfilesystemencoding()) + \
-        '<br/>sys default encoding: ' + str(sys.getdefaultencoding()) + \
-        '<br><br> Environment variables:' + \
-        '<br>DISPLAY: ' + os.environ.get('DISPLAY', 'Not set')
+    loc_info = (
+        "getlocale: "
+        + str(locale.getlocale())
+        + "<br/>getdefaultlocale(): "
+        + str(locale.getdefaultlocale())
+        + "<br/>fs_encoding: "
+        + str(sys.getfilesystemencoding())
+        + "<br/>sys default encoding: "
+        + str(sys.getdefaultencoding())
+        + "<br><br> Environment variables:"
+        + "<br>DISPLAY: "
+        + os.environ.get("DISPLAY", "Not set")
+    )
     return HttpResponse(loc_info)

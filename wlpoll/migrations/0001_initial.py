@@ -15,42 +15,82 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Choice',
+            name="Choice",
             fields=[
-                ('id', models.AutoField(verbose_name='ID',
-                                        serialize=False, auto_created=True, primary_key=True)),
-                ('choice', models.CharField(max_length=256)),
-                ('votes', models.PositiveIntegerField(default=0)),
+                (
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
+                ),
+                ("choice", models.CharField(max_length=256)),
+                ("votes", models.PositiveIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
-            name='Poll',
+            name="Poll",
             fields=[
-                ('id', models.AutoField(verbose_name='ID',
-                                        serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=256)),
-                ('pub_date', models.DateTimeField(
-                    default=datetime.datetime.now, verbose_name=b'date published')),
-                ('closed_date', models.DateTimeField(default=wlpoll.models.closed_date_default,
-                                                     null=True, verbose_name=b'date closed', blank=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
+                ),
+                ("name", models.CharField(max_length=256)),
+                (
+                    "pub_date",
+                    models.DateTimeField(
+                        default=datetime.datetime.now, verbose_name=b"date published"
+                    ),
+                ),
+                (
+                    "closed_date",
+                    models.DateTimeField(
+                        default=wlpoll.models.closed_date_default,
+                        null=True,
+                        verbose_name=b"date closed",
+                        blank=True,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Vote',
+            name="Vote",
             fields=[
-                ('id', models.AutoField(verbose_name='ID',
-                                        serialize=False, auto_created=True, primary_key=True)),
-                ('date_voted', models.DateTimeField(
-                    default=datetime.datetime.now, verbose_name=b'voted at')),
-                ('choice', models.ForeignKey(to='wlpoll.Choice')),
-                ('poll', models.ForeignKey(to='wlpoll.Poll')),
-                ('user', models.ForeignKey(
-                    related_name='poll_votes', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
+                ),
+                (
+                    "date_voted",
+                    models.DateTimeField(
+                        default=datetime.datetime.now, verbose_name=b"voted at"
+                    ),
+                ),
+                ("choice", models.ForeignKey(to="wlpoll.Choice")),
+                ("poll", models.ForeignKey(to="wlpoll.Poll")),
+                (
+                    "user",
+                    models.ForeignKey(
+                        related_name="poll_votes", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='choice',
-            name='poll',
-            field=models.ForeignKey(related_name='choices', to='wlpoll.Poll'),
+            model_name="choice",
+            name="poll",
+            field=models.ForeignKey(related_name="choices", to="wlpoll.Poll"),
         ),
     ]

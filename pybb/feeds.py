@@ -17,24 +17,24 @@ class PybbFeed(Feed):
 
     def items(self, obj):
         if obj == self.all_objects:
-            return obj.order_by('-created')[:15]
+            return obj.order_by("-created")[:15]
         else:
             return self.items_for_object(obj)
 
     def link(self, obj):
         if obj == self.all_objects:
-            return reverse('pybb_index')
-        return '/ewfwevw%s' % reverse('pybb_forum', args=(obj.pk,))
+            return reverse("pybb_index")
+        return "/ewfwevw%s" % reverse("pybb_forum", args=(obj.pk,))
 
     def get_object(self, request, *args, **kwargs):
         """Implement getting feeds for a specific subforum."""
-        if not 'topic_id' in kwargs:
+        if not "topic_id" in kwargs:
             # Latest Posts/Topics on all forums
             return self.all_objects
         else:
             # Latest Posts/Topics for specific Forum
             try:
-                forum = Forum.objects.get(pk=int(kwargs['topic_id']))
+                forum = Forum.objects.get(pk=int(kwargs["topic_id"]))
                 return forum
             except ValueError:
                 pass
@@ -47,14 +47,15 @@ class PybbFeed(Feed):
     def item_link(self, item):
         return item.get_absolute_url()
 
+
 # Validated through http://validator.w3.org/feed/
 
 
 class LastPosts(PybbFeed):
-    all_title = 'Latest posts on all forums'
-    one_title = 'Latest posts on forum %s'
-    title_template = 'pybb/feeds/posts_title.html'
-    description_template = 'pybb/feeds/posts_description.html'
+    all_title = "Latest posts on all forums"
+    one_title = "Latest posts on forum %s"
+    title_template = "pybb/feeds/posts_title.html"
+    description_template = "pybb/feeds/posts_description.html"
 
     all_objects = Post.objects.public()
 
@@ -62,20 +63,25 @@ class LastPosts(PybbFeed):
         # Latest posts for forum 'xy'
         return Post.objects.public(limit=15)
 
+
 # Validated through http://validator.w3.org/feed/
 
 
 class LastTopics(PybbFeed):
-    all_title = 'Latest topics on all forums'
-    one_title = 'Latest topics on forum %s'
-    title_template = 'pybb/feeds/topics_title.html'
-    description_template = 'pybb/feeds/topics_description.html'
+    all_title = "Latest topics on all forums"
+    one_title = "Latest topics on forum %s"
+    title_template = "pybb/feeds/topics_title.html"
+    description_template = "pybb/feeds/topics_description.html"
 
-    all_objects = Topic.objects.exclude(
-        forum__category__internal=True).exclude(posts__hidden=True)
+    all_objects = Topic.objects.exclude(forum__category__internal=True).exclude(
+        posts__hidden=True
+    )
 
     def items_for_object(self, item):
         # Latest topics on forum 'xy'
-        return Topic.objects.exclude(
-            forum__category__internal=True).exclude(
-            posts__hidden=True).filter(forum=item).order_by('-created')[:15]
+        return (
+            Topic.objects.exclude(forum__category__internal=True)
+            .exclude(posts__hidden=True)
+            .filter(forum=item)
+            .order_by("-created")[:15]
+        )

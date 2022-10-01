@@ -8,26 +8,26 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('threadedcomments', '0001_initial'),
+        ("threadedcomments", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='freethreadedcomment',
-            name='content_type',
+            model_name="freethreadedcomment",
+            name="content_type",
         ),
         migrations.RemoveField(
-            model_name='freethreadedcomment',
-            name='parent',
+            model_name="freethreadedcomment",
+            name="parent",
         ),
         migrations.DeleteModel(
-            name='TestModel',
+            name="TestModel",
         ),
         migrations.RemoveField(
-            model_name='threadedcomment',
-            name='ip_address',
+            model_name="threadedcomment",
+            name="ip_address",
         ),
         migrations.DeleteModel(
-            name='FreeThreadedComment',
+            name="FreeThreadedComment",
         ),
     ]

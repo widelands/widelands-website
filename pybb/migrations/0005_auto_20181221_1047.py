@@ -8,23 +8,23 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pybb', '0004_auto_20181209_1334'),
+        ("pybb", "0004_auto_20181209_1334"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='privatemessage',
-            name='dst_user',
+            model_name="privatemessage",
+            name="dst_user",
         ),
         migrations.RemoveField(
-            model_name='privatemessage',
-            name='src_user',
+            model_name="privatemessage",
+            name="src_user",
         ),
         migrations.RemoveField(
-            model_name='forum',
-            name='moderators',
+            model_name="forum",
+            name="moderators",
         ),
         migrations.DeleteModel(
-            name='PrivateMessage',
+            name="PrivateMessage",
         ),
     ]

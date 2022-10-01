@@ -17,25 +17,27 @@ from django.contrib.auth.admin import UserAdmin
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'time_zone', 'location', 'deleted']
+    list_display = ["user", "time_zone", "location", "deleted"]
     list_per_page = 20
-    ordering = ['-user']
-    search_fields = ['user__username', 'user__first_name', 'user__last_name']
+    ordering = ["-user"]
+    search_fields = ["user__username", "user__first_name", "user__last_name"]
     fieldsets = (
-        (None, {
-            'fields': ('user', 'time_zone', 'location')
-        }
+        (None, {"fields": ("user", "time_zone", "location")}),
+        (
+            _("IM"),
+            {
+                "classes": ("collapse",),
+                "fields": ("jabber", "icq", "msn", "aim", "yahoo"),
+            },
         ),
-        (_('IM'), {
-            'classes': ('collapse',),
-            'fields': ('jabber', 'icq', 'msn', 'aim', 'yahoo')
-        }
-        ),
-        (_('Additional options'), {
-            'classes': ('collapse',),
-            'fields': ('site', 'avatar', 'signature', 'show_signatures')
-        }
+        (
+            _("Additional options"),
+            {
+                "classes": ("collapse",),
+                "fields": ("site", "avatar", "signature", "show_signatures"),
+            },
         ),
     )
+
 
 admin.site.register(Profile, ProfileAdmin)

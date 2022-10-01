@@ -3,15 +3,15 @@ from django.urls import reverse
 
 
 class SitemapHTTPS(Sitemap):
-    protocol = 'https'
+    protocol = "https"
 
 
 class StaticViewSitemap(SitemapHTTPS):
     priority = 0.5
-    changefreq = 'yearly'
+    changefreq = "yearly"
 
     def items(self):
-        return ['mainpage', 'changelog']
+        return ["mainpage", "changelog"]
 
     def location(self, item):
         return reverse(item)

@@ -1,11 +1,10 @@
-
 def get_real_ip(request):
     """Returns the real user IP, even if behind a proxy."""
-    for key in ('HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'):
+    for key in ("HTTP_X_FORWARDED_FOR", "REMOTE_ADDR"):
         if key in request.META:
             return request.META[key]
     # No match -> Return a fictional IP to have the model fields not empty
-    return '192.168.255.255'
+    return "192.168.255.255"
 
 
 # AutoOneToOneField
@@ -26,11 +25,12 @@ class AutoReverseOneToOneDescriptor(ReverseOneToOneDescriptor):
     AutoOneToOneField."""
 
     def __get__(self, instance, instance_type=None):
-        model = getattr(self.related, 'related_model', self.related.model)
+        model = getattr(self.related, "related_model", self.related.model)
 
         try:
-            return (super(AutoReverseOneToOneDescriptor, self)
-                    .__get__(instance, instance_type))
+            return super(AutoReverseOneToOneDescriptor, self).__get__(
+                instance, instance_type
+            )
         except model.DoesNotExist:
             obj = model(**{self.related.field.name: instance})
 
@@ -39,8 +39,9 @@ class AutoReverseOneToOneDescriptor(ReverseOneToOneDescriptor):
             # Don't return obj directly, otherwise it won't be added
             # to Django's cache, and the first 2 calls to obj.relobj
             # will return 2 different in-memory objects
-            return (super(AutoReverseOneToOneDescriptor, self)
-                    .__get__(instance, instance_type))
+            return super(AutoReverseOneToOneDescriptor, self).__get__(
+                instance, instance_type
+            )
 
 
 class AutoOneToOneField(OneToOneField):
@@ -48,12 +49,13 @@ class AutoOneToOneField(OneToOneField):
     object if dependent oject has not created yet."""
 
     def contribute_to_related_class(self, cls, related):
-        setattr(cls, related.get_accessor_name(),
-                AutoReverseOneToOneDescriptor(related))
+        setattr(
+            cls, related.get_accessor_name(), AutoReverseOneToOneDescriptor(related)
+        )
 
 
 # Memory based cache does not allow whitespace or control characters in keys
 # We are using a database cache atm, so this is just a forethought to
 # prevent failures when switching to a memory based cache
 def get_valid_cache_key(key):
-    return key.replace(' ', '_')
+    return key.replace(" ", "_")

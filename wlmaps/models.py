@@ -12,6 +12,7 @@ from star_ratings.models import Rating
 
 import datetime
 import os
+
 try:
     from notification import models as notification
 except ImportError:
@@ -22,43 +23,40 @@ class Map(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True)
     author = models.CharField(max_length=255)
-    w = models.PositiveIntegerField(verbose_name='Width')
-    h = models.PositiveIntegerField(verbose_name='Height')
-    nr_players = models.PositiveIntegerField(verbose_name='Max Players')
+    w = models.PositiveIntegerField(verbose_name="Width")
+    h = models.PositiveIntegerField(verbose_name="Height")
+    nr_players = models.PositiveIntegerField(verbose_name="Max Players")
 
-    descr = models.TextField(verbose_name='Description')
-    hint = models.TextField(verbose_name='Hint', blank=True)
-    minimap = models.ImageField(
-        verbose_name='Minimap', upload_to='wlmaps/minimaps')
-    file = models.FileField(verbose_name='Mapfile',
-                            upload_to='wlmaps/maps')
+    descr = models.TextField(verbose_name="Description")
+    hint = models.TextField(verbose_name="Hint", blank=True)
+    minimap = models.ImageField(verbose_name="Minimap", upload_to="wlmaps/minimaps")
+    file = models.FileField(verbose_name="Mapfile", upload_to="wlmaps/maps")
 
     world_name = models.CharField(max_length=50, blank=True)
 
     pub_date = models.DateTimeField(default=datetime.datetime.now)
-    uploader_comment = models.TextField(
-        verbose_name='Uploader comment', blank=True)
+    uploader_comment = models.TextField(verbose_name="Uploader comment", blank=True)
     uploader = models.ForeignKey(User)
-    nr_downloads = models.PositiveIntegerField(
-        verbose_name='Download count', default=0)
+    nr_downloads = models.PositiveIntegerField(verbose_name="Download count", default=0)
     wl_version_after = models.CharField(
         # The field is called 'wl_version_after' even though it actually means the
         # _minimum_ WL version required to play the map for historical reasons.
-        verbose_name='Minimum WL version',
+        verbose_name="Minimum WL version",
         max_length=10,
         null=True,
-        blank=True)
+        blank=True,
+    )
     ratings = GenericRelation(Rating)
 
     class Meta:
-        ordering = ('-pub_date',)
-        get_latest_by = 'pub_date'
+        ordering = ("-pub_date",)
+        get_latest_by = "pub_date"
 
     def get_absolute_url(self):
-        return reverse('wlmaps_view', kwargs={'map_slug': self.slug})
+        return reverse("wlmaps_view", kwargs={"map_slug": self.slug})
 
     def __str__(self):
-        return '%s by %s' % (self.name, self.author)
+        return "%s by %s" % (self.name, self.author)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -76,13 +74,16 @@ class Map(models.Model):
         # Send notifications only on new maps, not when updating fields, e.g.
         # nr_downloads
         if notification and is_new:
-            notification.send(notification.get_observers_for('maps_new_map', excl_user=self.uploader), 'maps_new_map',
-                              {'mapname': self.name,
-                               'url': self.get_absolute_url(),
-                               'user': self.uploader,
-                               'uploader_comment': self.uploader_comment
-                               },
-                              )
+            notification.send(
+                notification.get_observers_for("maps_new_map", excl_user=self.uploader),
+                "maps_new_map",
+                {
+                    "mapname": self.name,
+                    "url": self.get_absolute_url(),
+                    "user": self.uploader,
+                    "uploader_comment": self.uploader_comment,
+                },
+            )
 
         return map
 

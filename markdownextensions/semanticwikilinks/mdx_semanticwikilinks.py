@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 
-'''
+"""
 SemanticWikiLinks Extension for Python-Markdown
 ===============================================
 
@@ -75,10 +75,11 @@ All rights reserved.
 
 This software is released under the modified BSD License. 
 See LICENSE.md for details.
-'''
+"""
 
 
 import markdown
+
 try:
     from markdown import etree
 except ImportError:
@@ -86,7 +87,7 @@ except ImportError:
 import re
 
 
-__version__ = '1.1.1'
+__version__ = "1.1.1"
 
 
 WIKILINK_RE = r"""
@@ -99,19 +100,19 @@ WIKILINK_RE = r"""
 
 
 def make_link(md, rel, target, label):
-    a = etree.Element('a')
-    a.set('href', target)
+    a = etree.Element("a")
+    a.set("href", target)
     if rel:
-        a.set('rel', rel)
+        a.set("rel", rel)
     a.text = label or target
     return a
 
 
 def make_wikilink(md, rel, target, label):
     # Turns a link from Syntax [[ Page Name | linktext ]]
-    a = etree.Element('a')
-    a.set('href', '/wiki/' + target)
-    a.set('class', 'wikilink')
+    a = etree.Element("a")
+    a.set("href", "/wiki/" + target)
+    a.set("class", "wikilink")
     if rel:
         pass
     a.text = label or target
@@ -119,11 +120,13 @@ def make_wikilink(md, rel, target, label):
 
 
 class SemanticWikiLinkExtension(markdown.Extension):
-
     def __init__(self, *args, **kwargs):
         self.config = {
-            'make_link': [make_wikilink, 'Callback to convert link parts into an HTML/etree element'],
-            'namespace': ['aa', 'Default namespace'],
+            "make_link": [
+                make_wikilink,
+                "Callback to convert link parts into an HTML/etree element",
+            ],
+            "namespace": ["aa", "Default namespace"],
         }
         super(SemanticWikiLinkExtension, self).__init__(*args, **kwargs)
 
@@ -132,15 +135,13 @@ class SemanticWikiLinkExtension(markdown.Extension):
 
         # append to end of inline patterns
         ext = SemanticWikiLinkPattern(self.config, md)
-        md.inlinePatterns.add('semanticwikilink', ext, '<not_strong')
+        md.inlinePatterns.add("semanticwikilink", ext, "<not_strong")
 
 
 class SemanticWikiLinkPattern(markdown.inlinepatterns.Pattern):
-
     def __init__(self, config, md=None):
-        markdown.inlinepatterns.Pattern.__init__(self, '', md)
-        self.compiled_re = re.compile(
-            '^(.*?)%s(.*?)$' % WIKILINK_RE, re.DOTALL | re.X)
+        markdown.inlinepatterns.Pattern.__init__(self, "", md)
+        self.compiled_re = re.compile("^(.*?)%s(.*?)$" % WIKILINK_RE, re.DOTALL | re.X)
         self.config = config
 
     def getCompiledRegExp(self):
@@ -149,20 +150,21 @@ class SemanticWikiLinkPattern(markdown.inlinepatterns.Pattern):
     def handleMatch(self, m):
         """Returns etree."""
         d = m.groupdict()
-        fn = self.config['make_link'][0]
-        namespace = d.get('namespace') or self.config['namespace'][0]
-        rel = d.get('rel')
+        fn = self.config["make_link"][0]
+        namespace = d.get("namespace") or self.config["namespace"][0]
+        rel = d.get("rel")
 
         if rel:
-            rel = '%s:%s' % (namespace, d.get('rel'))
+            rel = "%s:%s" % (namespace, d.get("rel"))
 
-        return fn(self.markdown, rel, d.get('target'), d.get('label'))
+        return fn(self.markdown, rel, d.get("target"), d.get("label"))
 
 
 def makeExtension(*args, **kwargs):
     return SemanticWikiLinkExtension(*args, **kwargs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

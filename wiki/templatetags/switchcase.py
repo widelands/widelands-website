@@ -31,11 +31,10 @@ def switch(parser, token):
     # Parse out the arguments.
     args = token.split_contents()
     if len(args) != 2:
-        raise template.TemplateSyntaxError(
-            '%s tag tags exactly 2 arguments.' % args[0])
+        raise template.TemplateSyntaxError("%s tag tags exactly 2 arguments." % args[0])
 
     # Pull out all the children of the switch tag (until {% endswitch %}).
-    childnodes = parser.parse(('endswitch',))
+    childnodes = parser.parse(("endswitch",))
 
     # Remove the {% endswitch %} node so it doesn't get parsed twice.
     parser.delete_first_token()
@@ -57,13 +56,12 @@ def case(parser, token):
     assert len(args) == 2
 
     # Same dance as above, except this time we care about all the child nodes
-    children = parser.parse(('endcase',))
+    children = parser.parse(("endcase",))
     parser.delete_first_token()
     return CaseNode(args[1], children)
 
 
 class SwitchNode(template.Node):
-
     def __init__(self, value, cases):
         self.value = value
         self.cases = cases
@@ -74,7 +72,7 @@ class SwitchNode(template.Node):
         try:
             value = template.Variable(self.value).resolve(context)
         except template.VariableDoesNotExist:
-            return ''
+            return ""
 
         # Check each case, and if it matches return the rendered content
         # of that case (short-circuit).
@@ -83,11 +81,10 @@ class SwitchNode(template.Node):
                 return case.render(context)
 
         # No matches; render nothing.
-        return ''
+        return ""
 
 
 class CaseNode(template.Node):
-
     def __init__(self, value, childnodes):
         self.value = value
         self.childnodes = childnodes

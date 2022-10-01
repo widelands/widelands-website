@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class PrivacyPolicyConfig(AppConfig):
-    name = 'privacy_policy'
+    name = "privacy_policy"

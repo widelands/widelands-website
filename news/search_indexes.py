@@ -19,13 +19,13 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     """
 
     text = indexes.CharField(document=True, use_template=True)
-    title = indexes.CharField(model_attr='title')
-    body = indexes.CharField(model_attr='body')
-    date = indexes.DateTimeField(model_attr='publish')
+    title = indexes.CharField(model_attr="title")
+    body = indexes.CharField(model_attr="body")
+    date = indexes.DateTimeField(model_attr="publish")
 
     def get_model(self):
         return Post
-    
+
     def index_queryset(self, using=None):
         "Don't index news of the future"
         return self.get_model().objects.filter(publish__lte=datetime.datetime.now())

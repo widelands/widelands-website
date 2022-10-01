@@ -15,23 +15,20 @@ def change_password(request):
     """empty text."""
     instance = request.user.wlggz
 
-    if request.method == 'POST':
-        form = EditGGZForm(request.POST,
-                           instance=instance, files=request.FILES)
+    if request.method == "POST":
+        form = EditGGZForm(request.POST, instance=instance, files=request.FILES)
 
         if form.is_valid():
             form.save()
-            messages.info(request,
-                          'Your password was saved successfully.')
+            messages.info(request, "Your password was saved successfully.")
 
-            return HttpResponseRedirect(reverse('profile_view'))
+            return HttpResponseRedirect(reverse("profile_view"))
     else:
         form = EditGGZForm(instance=instance)
 
     template_params = {
-        'wlggz': instance,
-        'ggz_form': form,
+        "wlggz": instance,
+        "ggz_form": form,
     }
 
-    return render(request, 'wlggz/edit_ggz.html',
-                              template_params)
+    return render(request, "wlggz/edit_ggz.html", template_params)

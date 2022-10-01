@@ -3,7 +3,7 @@ from mainpage.sitemaps import SitemapHTTPS
 
 
 class ForumSitemap(SitemapHTTPS):
-    changefreq = 'monthly'
+    changefreq = "monthly"
     priority = 0.5
 
     def items(self):

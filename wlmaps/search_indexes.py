@@ -20,12 +20,12 @@ class MapIndex(indexes.SearchIndex, indexes.Indexable):
     """
 
     text = indexes.CharField(document=True, use_template=True)
-    author = indexes.CharField(model_attr='author')
+    author = indexes.CharField(model_attr="author")
     date = DateField(default=date.today())
-    pub_date = indexes.DateTimeField(model_attr='pub_date')
+    pub_date = indexes.DateTimeField(model_attr="pub_date")
 
     def get_model(self):
         return Map
-    
+
     def get_updated_field(self):
         return "pub_date"

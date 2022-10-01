@@ -14,12 +14,15 @@ from django.conf import settings
 from django.utils.encoding import smart_bytes, force_text
 from django.utils.safestring import mark_safe
 from django.conf import settings
-from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import SemanticWikiLinkExtension
+from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import (
+    SemanticWikiLinkExtension,
+)
 
 # Try to get a not so fully broken markdown module
 import markdown
+
 if markdown.version_info[0] < 2:
-    raise ImportError('Markdown library to old!')
+    raise ImportError("Markdown library to old!")
 from markdown import markdown
 import re
 import urllib.request, urllib.parse, urllib.error
@@ -32,6 +35,7 @@ from bs4 import BeautifulSoup, NavigableString
 # links starting with /wiki/
 try:
     from wiki.models import Article, ChangeSet
+
     check_for_missing_wikipages = True
 except ImportError:
     check_for_missing_wikipages = False
@@ -43,11 +47,12 @@ from django.conf import settings
 try:
     _domain = Site.objects.get(pk=settings.SITE_ID).domain
 except:
-    _domain = ''
+    _domain = ""
 
 # Getting local domain lists
 try:
     from django.conf import settings
+
     LOCAL_DOMAINS = [_domain] + settings.LOCAL_DOMAINS
 except ImportError:
     LOCAL_DOMAINS = [_domain]
@@ -68,28 +73,28 @@ def _insert_smileys(text):
     for content in text.parent.contents:
         try:
             # If this fails, content is probably '\n' or not a string, e.g.  <br />
-            words = content.split(' ')
+            words = content.split(" ")
         except:
             # apply the unsplittable content and continue
             tmp_content.append(content)
             continue
 
         for i, word in enumerate(words):
-            smiley = ''
+            smiley = ""
             for sc, img in settings.SMILEYS:
                 if word == sc:
                     smiley = img
             if smiley:
-                img_tag = BeautifulSoup(features='lxml').new_tag('img')
-                img_tag['src'] = '{}{}'.format(settings.SMILEY_DIR, smiley)
-                img_tag['alt'] = smiley
+                img_tag = BeautifulSoup(features="lxml").new_tag("img")
+                img_tag["src"] = "{}{}".format(settings.SMILEY_DIR, smiley)
+                img_tag["alt"] = smiley
                 tmp_content.append(img_tag)
                 # apply a space after the smiley
-                tmp_content.append(NavigableString(' '))
+                tmp_content.append(NavigableString(" "))
             else:
                 if i < (len(words) - 1):
                     # Apply a space after each word, except the last word
-                    word = word + ' '
+                    word = word + " "
                 tmp_content.append(NavigableString(word))
 
     text.parent.contents = tmp_content
@@ -104,12 +109,11 @@ def _classify_link(tag):
     """
 
     # No class change for image links
-    if tag.next_element and tag.next_element.name == 'img':
+    if tag.next_element and tag.next_element.name == "img":
         return
 
-
     try:
-        href = tag['href'].lower()
+        href = tag["href"].lower()
         if not tag.string:
             # Apply href to empty linkname, e.g.: [](/some/link)
             # Just to be sure tag.next_element is never None
@@ -118,48 +122,49 @@ def _classify_link(tag):
         return
 
     # Check for external link
-    if href.startswith('http'):
+    if href.startswith("http"):
         for domain in LOCAL_DOMAINS:
             external = True
             if href.find(domain) != -1:
                 external = False
                 break
         if external:
-            tag['class'] = 'externalLink'
-            tag['title'] = 'This link refers to outer space'
+            tag["class"] = "externalLink"
+            tag["title"] = "This link refers to outer space"
             return
 
-    if '/profile/' in (tag['href']):
-        tag['class'] = 'userLink'
-        tag['title'] = 'This link refers to a userpage'
+    if "/profile/" in (tag["href"]):
+        tag["class"] = "userLink"
+        tag["title"] = "This link refers to a userpage"
         return
 
-    if check_for_missing_wikipages and href.startswith('/wiki/'):
+    if check_for_missing_wikipages and href.startswith("/wiki/"):
 
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
-        article_name = urllib.parse.unquote(tag['href'][6:].split('/', 1)[0])
+        article_name = urllib.parse.unquote(tag["href"][6:].split("/", 1)[0])
 
         if not len(article_name):  # Wiki root link is not a page
-            tag['class'] = 'wrongLink'
-            tag['title'] = 'This Link misses an articlename'
+            tag["class"] = "wrongLink"
+            tag["title"] = "This Link misses an articlename"
             return
 
         # Wiki special pages are also not counted
-        if article_name in ['list', 'search', 'history', 'feeds', 'observe', 'edit']:
-            tag['class'] = 'specialLink'
+        if article_name in ["list", "search", "history", "feeds", "observe", "edit"]:
+            tag["class"] = "specialLink"
             return
 
         # Check for a redirect
         try:
             # try to get the article id; if this fails an IndexError is raised
-            a_id = ChangeSet.objects.filter(
-                old_title=article_name).values_list('article_id')[0]
+            a_id = ChangeSet.objects.filter(old_title=article_name).values_list(
+                "article_id"
+            )[0]
 
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
             if article_name != act_t:
-                tag['title'] = 'This is a redirect and points to \"' + act_t + '\"'
+                tag["title"] = 'This is a redirect and points to "' + act_t + '"'
                 return
             else:
                 return
@@ -168,24 +173,26 @@ def _classify_link(tag):
 
         # article missing (or misspelled)
         if Article.objects.filter(title=article_name).count() == 0:
-            tag['class'] = 'missingLink'
-            tag['title'] = 'This Link is misspelled or missing. Click to create it anyway.'
+            tag["class"] = "missingLink"
+            tag[
+                "title"
+            ] = "This Link is misspelled or missing. Click to create it anyway."
             return
     return
 
 
 def _make_clickable_images(tag):
     # is external link?
-    if tag['src'].startswith('http'):
+    if tag["src"].startswith("http"):
         # Do not change if it is already a link
-        if tag.parent.name != 'a':
+        if tag.parent.name != "a":
             # add link to image
-            new_link = BeautifulSoup(features='lxml').new_tag('a')
-            new_link['href'] = tag['src']
-            new_img = BeautifulSoup(features='lxml').new_tag('img')
-            new_img['src'] = tag['src']
+            new_link = BeautifulSoup(features="lxml").new_tag("a")
+            new_link["href"] = tag["src"]
+            new_img = BeautifulSoup(features="lxml").new_tag("img")
+            new_img["src"] = tag["src"]
             try:
-                new_img['alt'] = tag['alt']
+                new_img["alt"] = tag["alt"]
             except KeyError:
                 pass
             new_link.append(new_img)
@@ -201,7 +208,7 @@ def find_smiley_Strings(bs4_string):
     fixed in _insert_smileys().
     """
 
-    if bs4_string.parent.name.lower() == 'code':
+    if bs4_string.parent.name.lower() == "code":
         return False
 
     for sc in settings.SMILEYS:
@@ -212,24 +219,30 @@ def find_smiley_Strings(bs4_string):
 
 # Predefine the markdown extensions here to have a clean code in
 # do_wl_markdown()
-md_extensions = ['extra', 'toc', SemanticWikiLinkExtension()]
+md_extensions = ["extra", "toc", SemanticWikiLinkExtension()]
+
 
 def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""
 
-    beautify = keyw.pop('beautify', True)
+    beautify = keyw.pop("beautify", True)
     html = markdown(value, extensions=md_extensions)
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
-    if 'bleachit' in args:
-        html = mark_safe(bleach.clean(
-            html, tags=settings.BLEACH_ALLOWED_TAGS, attributes=settings.BLEACH_ALLOWED_ATTRIBUTES))
+    if "bleachit" in args:
+        html = mark_safe(
+            bleach.clean(
+                html,
+                tags=settings.BLEACH_ALLOWED_TAGS,
+                attributes=settings.BLEACH_ALLOWED_ATTRIBUTES,
+            )
+        )
 
     # Prepare the html and apply smileys and classes.
     # BeautifulSoup objects are all references, so changing a variable
     # derived from the soup will take effect on the soup itself.
     # Because of that the called functions will modify the soup directly.
-    soup = BeautifulSoup(html, features='lxml')
+    soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return str(soup)
@@ -241,21 +254,21 @@ def do_wl_markdown(value, *args, **keyw):
             _insert_smileys(text)
 
         # Classify links
-        for tag in soup.find_all('a'):
+        for tag in soup.find_all("a"):
             _classify_link(tag)
 
         # All external images gets clickable
         # This applies only in forum
-        for tag in soup.find_all('img'):
+        for tag in soup.find_all("img"):
             _make_clickable_images(tag)
 
     return str(soup)
 
 
 @register.filter
-def wl_markdown(content, arg=''):
+def wl_markdown(content, arg=""):
     """A Filter which decides when to 'bleach' the content."""
-    if arg == 'bleachit':
-        return mark_safe(do_wl_markdown(content, 'bleachit'))
+    if arg == "bleachit":
+        return mark_safe(do_wl_markdown(content, "bleachit"))
     else:
         return mark_safe(do_wl_markdown(content))
