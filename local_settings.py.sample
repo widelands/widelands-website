@@ -41,6 +41,19 @@ DATABASES = {
 NORECAPTCHA_SITE_KEY = 'dummy'
 NORECAPTCHA_SECRET_KEY = 'dummy'
 
+# These are used in the contact form to ensure people are human.
+INQUIRY_QUESTION = [
+    ('What color is better than green?', 'blue'),
+    ('Type one of these two words: widelands, butter', 'widelands', 'butter'),
+]
+
+# if you change this, pls edit the question -> answer
+INQUIRY_CHIEFTAINS = [
+    'Benedikt Straub (Nordfriese) (Since 2022).',
+    'GunChleoc (2016 – 2022)',
+    'Holger Rapp (SirVer) (2001 – 2016)',
+]
+
 # The logo used for mainpage
 LOGO_FILE = 'logo_alpha.png'
 
