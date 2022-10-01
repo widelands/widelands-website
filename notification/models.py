@@ -337,8 +337,8 @@ def queue(users, label, extra_context=None, on_site=True):
     notices = []
     for user in users:
         notices.append((user, label, extra_context, on_site))
-
-    NoticeQueueBatch(pickled_data=base64.b64encode(pickle.dumps(notices))).save()
+    data = base64.b64encode(pickle.dumps(notices)).decode("ascii")
+    NoticeQueueBatch(pickled_data=data).save()
 
 
 class ObservedItemManager(models.Manager):

@@ -21,7 +21,6 @@ from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_f
 import math
 
 
-# NOCOM(#sirver): This should be updated too.
 try:
     from notification import models as notification
 except ImportError:
