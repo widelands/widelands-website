@@ -87,9 +87,13 @@ class Screenshot(models.Model):
         try:
             image = Image.open(self.screenshot)
 
-            # Convert to RGB if necessary
-            if image.mode not in ("L", "RGB"):
-                image = image.convert("RGB")
+            # As of now, the uploaded image is of PngImageFile. PIL relies that
+            # this file is around in the future when we want to do anything
+            # with its data. That is not guaranteed here though, because this
+            # is a temporary file that django will delete at some point in
+            # time. We convert it into an in-memory file here to avoid this
+            # problem, in the same step we fix its mode to be RGB.
+            image = image.convert("RGB")
 
             image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
 
