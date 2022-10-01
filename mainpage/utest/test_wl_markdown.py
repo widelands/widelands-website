@@ -23,7 +23,7 @@ from django.test import TestCase as DBTestCase
 
 _domain = Site.objects.get(pk=settings.SITE_ID).domain
 
-from templatetags.wl_markdown import do_wl_markdown
+from ..templatetags.wl_markdown import do_wl_markdown
 
 
 class TestWlMarkdown(DBTestCase):
@@ -42,40 +42,6 @@ class TestWlMarkdown(DBTestCase):
         wanted = "<p>Hallo Welt</p>"
         self._check(input, wanted)
 
-    def test_wikiwords_simple__except_correct_result(self):
-        input = "Na Du HalloWelt, Du?"
-        wanted = """<p>Na Du <a href="/wiki/HalloWelt">HalloWelt</a>, Du?</p>"""
-        self._check(input, wanted)
-
-    def test_wikiwords_avoid__except_correct_result(self):
-        input = "Hi !NotAWikiWord Moretext"
-        wanted = """<p>Hi NotAWikiWord Moretext</p>"""
-        self._check(input, wanted)
-
-    def test_wikiwords_in_link__except_correct_result(self):
-        input = """WikiWord [NoWikiWord](/forum/)"""
-        wanted = """<p><a href="/wiki/WikiWord">WikiWord</a> <a href="/forum/">NoWikiWord</a></p>"""
-        self._check(input, wanted)
-
-    def test_wikiwords_external_links__except_correct_result(self):
-        input = """[NoWikiWord](http://www.sun.com)"""
-        wanted = (
-            """<p><a href="http://www.sun.com" class="external">NoWikiWord</a></p>"""
-        )
-        self._check(input, wanted)
-
-    def test_wikiwords_noexternal_links__except_correct_result(self):
-        input = """[NoWikiWord](http://%s/blahfasel/wiki)""" % _domain
-        wanted = (
-            """<p><a href="http://%s/blahfasel/wiki">NoWikiWord</a></p>""" % _domain
-        )
-        self._check(input, wanted)
-
-    def test_wikiwords_noclasschangeforimage_links__except_correct_result(self):
-        input = """<a href="http://www.ccc.de"><img src="/blub" /></a>"""
-        wanted = """<p><a href="http://www.ccc.de"><img src="/blub" /></a></p>"""
-        self._check(input, wanted)
-
     # Existing links
     def test_existing_link_html(self):
         input = """<a href="/wiki/MainPage">this page</a>"""
@@ -87,11 +53,6 @@ class TestWlMarkdown(DBTestCase):
         wanted = """<p><a href="/wiki/MainPage">this page</a></p>"""
         self._check(input, wanted)
 
-    def test_existing_link_wikiword(self):
-        input = """MainPage"""
-        wanted = """<p><a href="/wiki/MainPage">MainPage</a></p>"""
-        self._check(input, wanted)
-
     def test_existing_editlink_wikiword(self):
         input = """<a href="/wiki/MainPage/edit/">this page</a>"""
         wanted = """<p><a href="/wiki/MainPage/edit/">this page</a></p>"""
@@ -100,111 +61,100 @@ class TestWlMarkdown(DBTestCase):
     # Missing links
     def test_missing_link_html(self):
         input = """<a href="/wiki/MissingPage">this page</a>"""
-        wanted = """<p><a href="/wiki/MissingPage" class="missing">this page</a></p>"""
+        wanted = """<p><a class="missingLink" href="/wiki/MissingPage" title="This Link is misspelled or missing. Click to create it anyway.">this page</a></p>"""
         self._check(input, wanted)
 
     def test_missing_link_markdown(self):
         input = """[this page](/wiki/MissingPage)"""
-        wanted = """<p><a href="/wiki/MissingPage" class="missing">this page</a></p>"""
+        wanted = """<p><a class="missingLink" href="/wiki/MissingPage" title="This Link is misspelled or missing. Click to create it anyway.">this page</a></p>"""
         self._check(input, wanted)
-
-    def test_missing_link_wikiword(self):
-        input = """BlubMissingPage"""
-        wanted = """<p><a href="/wiki/BlubMissingPage" class="missing">BlubMissingPage</a></p>"""
-        res = do_wl_markdown(input)
-        # self._check(input,wanted)
 
     def test_missing_editlink_wikiword(self):
         input = """<a href="/wiki/MissingPage/edit/">this page</a>"""
         wanted = (
-            """<p><a href="/wiki/MissingPage/edit/" class="missing">this page</a></p>"""
+            """<p><a class="missingLink" href="/wiki/MissingPage/edit/" title="This Link is misspelled or missing. Click to create it anyway.">this page</a></p>"""
         )
         self._check(input, wanted)
 
     # Check smileys
     def test_smiley_angel(self):
         input = """O:-)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-angel.png" alt="face-angel.png" /></p>"""
+        wanted = """<p><img alt="face-angel.png" src="/static/img/smileys/face-angel.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_crying(self):
         input = """:'-("""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-crying.png" alt="face-crying.png" /></p>"""
-        self._check(input, wanted)
-
-    def test_smiley_devilish(self):
-        input = """>:-)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-devilish.png" alt="face-devilish.png" /></p>"""
+        wanted = """<p><img alt="face-crying.png" src="/static/img/smileys/face-crying.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_glasses(self):
         input = """8-)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-glasses.png" alt="face-glasses.png" /></p>"""
+        wanted = """<p><img alt="face-glasses.png" src="/static/img/smileys/face-glasses.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_kiss(self):
         input = """:-x"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-kiss.png" alt="face-kiss.png" /></p>"""
+        wanted = """<p><img alt="face-kiss.png" src="/static/img/smileys/face-kiss.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_plain(self):
         input = """:-|"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-plain.png" alt="face-plain.png" /></p>"""
+        wanted = """<p><img alt="face-plain.png" src="/static/img/smileys/face-plain.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_sad(self):
         input = """:-("""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-sad.png" alt="face-sad.png" /></p>"""
+        wanted = """<p><img alt="face-sad.png" src="/static/img/smileys/face-sad.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_smilebig(self):
         input = """:))"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-smile-big.png" alt="face-smile-big.png" /></p>"""
+        wanted = """<p><img alt="face-smile-big.png" src="/static/img/smileys/face-smile-big.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_smile(self):
         input = """:-)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png" /></p>"""
+        wanted = """<p><img alt="face-smile.png" src="/static/img/smileys/face-smile.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_surprise(self):
         input = """:-O"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-surprise.png" alt="face-surprise.png" /></p>"""
+        wanted = """<p><img alt="face-surprise.png" src="/static/img/smileys/face-surprise.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_wink(self):
         input = """;-)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-wink.png" alt="face-wink.png" /></p>"""
+        wanted = """<p><img alt="face-wink.png" src="/static/img/smileys/face-wink.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_grin(self):
         input = """:D"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-grin.png" alt="face-grin.png" /></p>"""
+        wanted = """<p><img alt="face-grin.png" src="/static/img/smileys/face-grin.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_sad(self):
         input = """:("""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-sad.png" alt="face-sad.png" /></p>"""
+        wanted = """<p><img alt="face-sad.png" src="/static/img/smileys/face-sad.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_smile(self):
         input = """:)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-smile.png" alt="face-smile.png" /></p>"""
+        wanted = """<p><img alt="face-smile.png" src="/static/img/smileys/face-smile.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_surprise(self):
         input = """:O"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-surprise.png" alt="face-surprise.png" /></p>"""
+        wanted = """<p><img alt="face-shock.png" src="/static/img/smileys/face-shock.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_wink(self):
         input = """;)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-wink.png" alt="face-wink.png" /></p>"""
+        wanted = """<p><img alt="face-wink.png" src="/static/img/smileys/face-wink.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_monkey(self):
         input = """:(|)"""
-        wanted = """<p><img src="/wlmedia/img/smileys/face-monkey.png" alt="face-monkey.png" /></p>"""
+        wanted = """<p><img alt="face-monkey.png" src="/static/img/smileys/face-monkey.png"/> </p>"""
         self._check(input, wanted)
 
     # Occured errors
@@ -215,18 +165,18 @@ class TestWlMarkdown(DBTestCase):
 
     def test_wiki_rootlink_with_slash(self):
         input = """<a href="/wiki/">this page</a>"""
-        wanted = """<p><a href="/wiki/">this page</a></p>"""
+        wanted = """<p><a class="wrongLink" href="/wiki/" title="This Link misses an articlename">this page</a></p>"""
         self._check(input, wanted)
 
     # Special pages
     def test_wiki_specialpage(self):
         input = """<a href="/wiki/list">this page</a>"""
-        wanted = """<p><a href="/wiki/list">this page</a></p>"""
+        wanted = """<p><a class="specialLink" href="/wiki/list">this page</a></p>"""
         self._check(input, wanted)
 
     def test_wiki_specialpage_markdown(self):
         input = """[list](/wiki/list)"""
-        wanted = """<p><a href="/wiki/list">list</a></p>"""
+        wanted = """<p><a class="specialLink" href="/wiki/list">list</a></p>"""
         self._check(input, wanted)
 
     # Special problem with emphasis
@@ -239,7 +189,7 @@ class TestWlMarkdown(DBTestCase):
     def test_markdown_alt_problem(self):
         # {{{ Test strings
         input = """![img_thisisNOTitalicplease_name.png](/wlmedia/blah.png)\n\n"""
-        wanted = '<p><img alt="img_thisisNOTitalicplease_name.png" src="/wlmedia/blah.png" /></p>'
+        wanted = '<p><img alt="img_thisisNOTitalicplease_name.png" src="/wlmedia/blah.png"/></p>'
         # }}}
         self._check(input, wanted)
 
@@ -278,16 +228,6 @@ Value 3 | Value 4
 </tbody>
 </table>"""
         # }}}
-        self._check(input, wanted)
-
-    def test_svnrevision_replacement(self):
-        input = "- Fixed this bug (bzr:r3222)"
-        wanted = """<ul>\n<li>Fixed this bug (<a href="http://bazaar.launchpad.net/%7Ewidelands-dev/widelands/trunk/revision/3222" class="external">r3222</a>)</li>\n</ul>"""
-        self._check(input, wanted)
-
-    def test_svnrevision_multiple_replacement(self):
-        input = "- Fixed this bug (bzr:r3222, bzr:r3424)"
-        wanted = """<ul>\n<li>Fixed this bug (<a href="http://bazaar.launchpad.net/%7Ewidelands-dev/widelands/trunk/revision/3222" class="external">r3222</a>, <a href="http://bazaar.launchpad.net/%7Ewidelands-dev/widelands/trunk/revision/3424" class="external">r3424</a>)</li>\n</ul>"""
         self._check(input, wanted)
 
 
