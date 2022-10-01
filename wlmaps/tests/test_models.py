@@ -5,6 +5,7 @@
 from django.test import TestCase as DjangoTest, Client
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from star_ratings.models import Rating
 
 from wlmaps.models import *
 
@@ -55,19 +56,14 @@ class TestWLMapsModels_Map(DjangoTest):
     def test_validMapInsertion_expectCorrectResult(self):
         # This really tests the setUp functionality. let's
         # hope that this worked out
-        self.assertEqual(Map.objects.get(pk=1), self.map)
+        self.assertEqual(Map.objects.get(author="Author"), self.map)
 
     def test_MapNameGeneration_expectCorrectResult(self):
         self.assertEqual(repr(self.map), "<Map: Map by Author>")
 
     def test_Permalink_expectCorrectResult(self):
-        self.assertEqual(self.map.get_absolute_url(), "/wlmaps/map/")
-        self.assertEqual(self.map1.get_absolute_url(), "/wlmaps/map-with-a-long-slug/")
-
-    def test_Rating_ExceptCorrectResult(self):
-        self.map.rating.add(score=10, user=self.user, ip_address="127.0.0.1")
-        self.assertEqual(self.map.rating.votes, 1)
-        self.assertEqual(self.map.rating.score, 10)
+        self.assertEqual(self.map.get_absolute_url(), "/maps/map/")
+        self.assertEqual(self.map1.get_absolute_url(), "/maps/map-with-a-long-slug/")
 
     def test_DoubleAddingMapWithSameSlug_ExceptRaise(self):
         self.assertRaises(

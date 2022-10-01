@@ -43,7 +43,7 @@ class TestWLMaps_ValidUpload_ExceptCorrectResult(_LoginToSite):
         url = reverse("wlmaps_upload")
         c = self.client.post(url, {"file": open(elven_forests, "rb"), "test": True})
 
-        o = Map.objects.get(pk=1)
+        o = Map.objects.get(name="Elven Forests")
         self.assertEqual(o.name, "Elven Forests")
         self.assertEqual(o.author, "Winterwind")
 
@@ -52,9 +52,7 @@ class TestWLMaps_AnonUpload_ExceptRedirect(DjangoTest):
     def runTest(self):
         url = reverse("wlmaps_upload")
         k = self.client.post(url, {"file": open(elven_forests, "rb")})
-        self.assertRedirects(
-            k, reverse("django.contrib.auth.views.login") + "?next=%s" % url
-        )
+        self.assertRedirects(k, "/accounts/login/?next=/maps/upload/")
 
 
 # Invalid Uploading

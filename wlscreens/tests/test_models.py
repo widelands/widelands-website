@@ -13,7 +13,7 @@ from django.conf import settings
 from django.test import TestCase as DjangoTest
 from django.db import IntegrityError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from io import StringIO
+from io import BytesIO
 
 from unittest import TestCase
 
@@ -23,7 +23,6 @@ from wlscreens.models import *
 class TestCategoryAdding(DjangoTest):
     def test_addCategory_exceptCorrectResult(self):
         c = Category.objects.create(name="A new Revision")
-        self.assertEqual(c.pk, 1)
         self.assertEqual(c.slug, "a-new-revision")
 
 
@@ -40,10 +39,6 @@ class TestCategory(DjangoTest):
         c = Category.objects.create(name="A new Revision")
         self.assertEqual(repr(c), "<Category: A new Revision>")
 
-    def test_UrlGeneration_exceptCorrectResult(self):
-        c = Category.objects.create(name="build 13")
-        self.assertEqual(c.get_absolute_url(), "/wlscreens/build-13/")
-
 
 class _ScreenshotBase(DjangoTest):
     urls = "wlscreens.test_urls"
@@ -51,7 +46,7 @@ class _ScreenshotBase(DjangoTest):
     @staticmethod
     def _make_random_image(size):
         img = Image.new("RGB", size)
-        png = StringIO()
+        png = BytesIO()
         img.save(png, "png")
         png.seek(0)
         return SimpleUploadedFile("test.png", png.read())
@@ -71,7 +66,6 @@ class TestScreenshotAdding(_ScreenshotBase):
             screenshot=self.img,
             comment="This rockz!",
         )
-        self.assertEqual(i.pk, 1)
         self.assertEqual(i.thumbnail.width, settings.THUMBNAIL_SIZE[0])
 
 

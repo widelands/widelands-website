@@ -50,7 +50,7 @@ class TestCustomDate_NaturalDayReplacementToday_ExceptCorrectResult(_CustomDate_
     def runTest(self):
         now = datetime.datetime(2008, 4, 12, 0, 0, 21)
         rv = do_custom_date("j.m.y: %ND(j.m.y)", self.date, 0, now)
-        self.assertEqual("12.04.08: today", rv)
+        self.assertEqual("12.04.08: Today", rv)
 
 
 class TestCustomDate_NaturalDayReplacementTomorrow_ExceptCorrectResult(
@@ -59,7 +59,7 @@ class TestCustomDate_NaturalDayReplacementTomorrow_ExceptCorrectResult(
     def runTest(self):
         now = datetime.datetime(2008, 4, 11, 23, 59, 59)
         rv = do_custom_date("j.m.y: %ND(j.m.y)", self.date, 0, now)
-        self.assertEqual("12.04.08: tomorrow", rv)
+        self.assertEqual("12.04.08: Tomorrow", rv)
 
 
 class TestCustomDate_NaturalDayReplacementYesterday_ExceptCorrectResult(
@@ -68,7 +68,7 @@ class TestCustomDate_NaturalDayReplacementYesterday_ExceptCorrectResult(
     def runTest(self):
         now = datetime.datetime(2008, 4, 13, 00, 00, 0o1)
         rv = do_custom_date("j.m.y: %ND(j.m.y)", self.date, 0, now)
-        self.assertEqual("12.04.08: yesterday", rv)
+        self.assertEqual("12.04.08: Yesterday", rv)
 
 
 class TestCustomDate_NaturalDayReplacementNoSpecialDay_ExceptCorrectResult(
@@ -102,7 +102,7 @@ class TestCustomDate_RecursiveReplacementHitDayTodayHitYear_ExceptCorrectResult(
     def runTest(self):
         now = datetime.datetime(2008, 4, 12, 00, 00, 0o1)
         rv = do_custom_date("j.m.y: %ND(j.m.%NY(Y))", self.date, 0, now)
-        self.assertEqual("12.04.08: today", rv)
+        self.assertEqual("12.04.08: Today", rv)
 
 
 #########
