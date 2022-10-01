@@ -21,23 +21,25 @@ class WorkerIndex(indexes.SearchIndex, indexes.Indexable):
     # To get date related search working
     # we assume the index is always up to date
     date = DateField(default=date.today())
-    displayname = indexes.CharField(model_attr='displayname')
-    help = indexes.CharField(model_attr='help')
+    displayname = indexes.CharField(model_attr="displayname")
+    help = indexes.CharField(model_attr="help")
 
     def get_model(self):
         return Worker
+
 
 class WareIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.CharField(document=True, use_template=True)
     # To get date related search working
-    # we assume the index is always up to date 
+    # we assume the index is always up to date
     date = DateField(default=date.today())
-    displayname = indexes.CharField(model_attr='displayname')
-    help = indexes.CharField(model_attr='help')
+    displayname = indexes.CharField(model_attr="displayname")
+    help = indexes.CharField(model_attr="help")
 
     def get_model(self):
         return Ware
+
 
 class BuildingIndex(indexes.SearchIndex, indexes.Indexable):
 
@@ -45,8 +47,8 @@ class BuildingIndex(indexes.SearchIndex, indexes.Indexable):
     # To get date related search working
     # we assume the index is always up to date
     date = DateField(default=date.today())
-    displayname = indexes.CharField(model_attr='displayname')
-    help = indexes.CharField(model_attr='help')
+    displayname = indexes.CharField(model_attr="displayname")
+    help = indexes.CharField(model_attr="help")
 
     def get_model(self):
         return Building

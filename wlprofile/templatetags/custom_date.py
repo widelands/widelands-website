@@ -23,8 +23,8 @@ from django.conf import settings
 register = template.Library()
 
 
-natural_day_expr =  re.compile(r'''\%ND\((.*?)\)''')
-natural_year_expr =  re.compile(r'''\%NY\((.*?)\)''')
+natural_day_expr = re.compile(r"""\%ND\((.*?)\)""")
+natural_year_expr = re.compile(r"""\%NY\((.*?)\)""")
 
 ZERO = timedelta(0)
 HOUR = timedelta(hours=1)
@@ -73,14 +73,14 @@ def do_custom_date(format, date, timezone, now=None):
     # FIXME:
     #       it is not tested if it works withe the summer and winter time (+1h)
     if timezone > 0:
-        tz_info = 'UTC+' + str(timezone)
+        tz_info = "UTC+" + str(timezone)
     elif timezone < 0:
-        tz_info = 'UTC' + str(timezone)
+        tz_info = "UTC" + str(timezone)
     else:
-        tz_info = 'UTC'
+        tz_info = "UTC"
 
     # set the server timezone for tzinfo
-    ForumStdTimeZone = FixedOffset(60, 'UTC+1')
+    ForumStdTimeZone = FixedOffset(60, "UTC+1")
 
     # set the user's timezone information
     ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
@@ -98,20 +98,22 @@ def do_custom_date(format, date, timezone, now=None):
 
     def _replace_ny(g):
         if now.year == date.year:
-            return ''
+            return ""
         return g.group(1)
 
     def _replace_nd(g):
-        delta = ddate(date.year, date.month, date.day) - \
-            ddate(now.year, now.month, now.day)
+        delta = ddate(date.year, date.month, date.day) - ddate(
+            now.year, now.month, now.day
+        )
         if delta.days == 0:
-            return _(r'\T\o\d\a\y')
+            return _(r"\T\o\d\a\y")
         elif delta.days == 1:
-            return _(r'\T\o\m\o\r\r\o\w')
+            return _(r"\T\o\m\o\r\r\o\w")
         elif delta.days == -1:
-            return _(r'\Y\e\s\t\e\r\d\a\y')
+            return _(r"\Y\e\s\t\e\r\d\a\y")
         else:
             return g.group(1)
+
     try:
         while 1:
             oformat = format
@@ -132,17 +134,22 @@ def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
     a sane default."""
     if not user.is_authenticated:
-        return do_custom_date(settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE))
+        return do_custom_date(
+            settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE)
+        )
     try:
         userprofile = User.objects.get(username=user).wlprofile
         return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
     except ObjectDoesNotExist:
-        return do_custom_date(settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE))
+        return do_custom_date(
+            settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE)
+        )
+
 
 custom_date.is_safe = False
 
 
-def pluralize (value, name):
+def pluralize(value, name):
     """Pluralize a name.
 
     Depending on 'value', the 'name' will be pluralized or not. Negative
@@ -150,9 +157,9 @@ def pluralize (value, name):
     """
 
     if value > 1:
-        return '{:-.0f} {}'.format(value, name + 's')
+        return "{:-.0f} {}".format(value, name + "s")
 
-    return '{:-.0f} {}'.format(value, name)
+    return "{:-.0f} {}".format(value, name)
 
 
 @register.filter
@@ -171,15 +178,15 @@ def elapsed_time(date):
     days = hours // 24
 
     if hours == 0 and minutes <= 1:
-        return pluralize(1, 'minute')
+        return pluralize(1, "minute")
     elif hours == 0:
-        return pluralize(minutes, 'minute')
+        return pluralize(minutes, "minute")
     elif hours == 1 or days == 0:
-        return pluralize(hours, 'hour')
+        return pluralize(hours, "hour")
     else:
-        return pluralize(days, 'day')
+        return pluralize(days, "day")
 
-    return 'Failure'
+    return "Failure"
 
 
 @register.simple_tag

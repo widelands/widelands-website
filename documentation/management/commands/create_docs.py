@@ -22,16 +22,14 @@ import glob
 
 
 class Command(BaseCommand):
-    help = 'Create the source code documenation.'
+    help = "Create the source code documenation."
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
 
         # Define the main directories used in this class
-        self.sphinx_dir = os.path.join(
-            settings.WIDELANDS_SVN_DIR, 'doc/sphinx')
-        self.build_dir = os.path.join(
-            settings.MEDIA_ROOT, 'documentation/html_temp')
+        self.sphinx_dir = os.path.join(settings.WIDELANDS_SVN_DIR, "doc/sphinx")
+        self.build_dir = os.path.join(settings.MEDIA_ROOT, "documentation/html_temp")
         self.sphinx_conf_dir = os.path.dirname(conf.__file__)
 
     def move_docs(self):
@@ -43,13 +41,11 @@ class Command(BaseCommand):
 
         """
 
-        if os.name == 'posix':
+        if os.name == "posix":
             # Creating symlinks is only available on unix systems
             try:
-                link_name = os.path.join(
-                    settings.MEDIA_ROOT, 'documentation/html')
-                target_dir = os.path.join(
-                    settings.MEDIA_ROOT, 'documentation/current')
+                link_name = os.path.join(settings.MEDIA_ROOT, "documentation/html")
+                target_dir = os.path.join(settings.MEDIA_ROOT, "documentation/current")
 
                 if not os.path.exists(target_dir):
                     # only needed on first run
@@ -73,8 +69,7 @@ class Command(BaseCommand):
         else:
             # Non unix OS: Copy docs
             try:
-                target_dir = os.path.join(
-                    settings.MEDIA_ROOT, 'documentation/html')
+                target_dir = os.path.join(settings.MEDIA_ROOT, "documentation/html")
                 if os.path.exists(target_dir):
                     shutil.rmtree(target_dir)
                 shutil.copytree(self.build_dir, target_dir)
@@ -97,33 +92,47 @@ class Command(BaseCommand):
 
         if not os.path.exists(self.sphinx_dir):
             print(
-                "Can't find the directory given by WIDELANDS_SVN_DIR in local_settings.py:\n", self.sphinx_dir)
+                "Can't find the directory given by WIDELANDS_SVN_DIR in local_settings.py:\n",
+                self.sphinx_dir,
+            )
             sys.exit(1)
 
-        if os.path.exists(os.path.join(self.sphinx_dir, 'build')):
+        if os.path.exists(os.path.join(self.sphinx_dir, "build")):
             # Clean the autogen* files created by extract_rst.py
             # This has to be done because sometimes such a file remains after
             # removing it from extract_rst.
             try:
-                for f in glob.glob(os.path.join(self.sphinx_dir, 'source/autogen*')):
+                for f in glob.glob(os.path.join(self.sphinx_dir, "source/autogen*")):
                     os.remove(f)
             except OSError:
                 raise
 
-        builder = 'dirhtml'
+        builder = "dirhtml"
 
         try:
-            check_call(['python', os.path.join(
-                self.sphinx_dir, 'extract_rst.py'), '-graphs', builder])
-            check_call(['sphinx-build',
-                        '-b', builder,
-                        '-d', os.path.join(self.sphinx_dir, 'build/doctrees'),
-                        '-c', self.sphinx_conf_dir,
-                        os.path.join(self.sphinx_dir, 'source'),
-                        self.build_dir,
-                        ])
+            check_call(
+                [
+                    "python",
+                    os.path.join(self.sphinx_dir, "extract_rst.py"),
+                    "-graphs",
+                    builder,
+                ]
+            )
+            check_call(
+                [
+                    "sphinx-build",
+                    "-b",
+                    builder,
+                    "-d",
+                    os.path.join(self.sphinx_dir, "build/doctrees"),
+                    "-c",
+                    self.sphinx_conf_dir,
+                    os.path.join(self.sphinx_dir, "source"),
+                    self.build_dir,
+                ]
+            )
         except CalledProcessError as why:
-            print('An error occured: {0}'.format(why))
+            print("An error occured: {0}".format(why))
             sys.exit(1)
 
         self.move_docs()

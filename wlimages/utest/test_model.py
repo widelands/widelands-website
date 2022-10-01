@@ -12,7 +12,8 @@
 # Since we want to include something from one path up,
 # we append the parent path to sys.path
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 import unittest
 
@@ -20,12 +21,11 @@ from models import Image
 
 
 class TestImages_TestUploading_ExceptCorrectResult(unittest.TestCase):
-
     def runTest(self):
         self.assertEqual(1, 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
     # k = TestWlMarkdown_WikiWordsInLink_ExceptCorrectResult()
     # unittest.TextTestRunner().run(k)

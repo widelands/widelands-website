@@ -31,50 +31,53 @@ def diff(txt1, txt2):
     patch = dmp.patch_make(txt1, txt2)
     return dmp.patch_toText(patch)
 
+
 try:
     markup_choices = settings.WIKI_MARKUP_CHOICES
 except AttributeError:
     markup_choices = (
-        ('crl', _('Creole')),
-        ('rst', _('reStructuredText')),
-        ('txl', _('Textile')),
-        ('mrk', _('Markdown')),
+        ("crl", _("Creole")),
+        ("rst", _("reStructuredText")),
+        ("txl", _("Textile")),
+        ("mrk", _("Markdown")),
     )
 
 
 class Article(models.Model):
     """A wiki page reflecting the actual revision."""
+
     title = models.CharField(_("Title"), max_length=50, unique=True)
     content = models.TextField(_("Content"))
-    summary = models.CharField(_("Summary"), max_length=150,
-                               null=True, blank=True)
-    markup = models.CharField(_("Content Markup"), max_length=3,
-                              choices=markup_choices,
-                              null=True, blank=True)
-    creator = models.ForeignKey(User, verbose_name=_('Article Creator'),
-                                null=True)
+    summary = models.CharField(_("Summary"), max_length=150, null=True, blank=True)
+    markup = models.CharField(
+        _("Content Markup"), max_length=3, choices=markup_choices, null=True, blank=True
+    )
+    creator = models.ForeignKey(User, verbose_name=_("Article Creator"), null=True)
     created_at = models.DateTimeField(default=datetime.now)
     last_update = models.DateTimeField(blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
-    group = GenericForeignKey('content_type', 'object_id')
+    group = GenericForeignKey("content_type", "object_id")
 
     images = GenericRelation(Image)
 
     tags = TagField()
 
     class Meta:
-        verbose_name = _('Article')
-        verbose_name_plural = _('Articles')
-        app_label = 'wiki'
-        default_permissions = ('change', 'add',)
-        ordering = ['title']
+        verbose_name = _("Article")
+        verbose_name_plural = _("Articles")
+        app_label = "wiki"
+        default_permissions = (
+            "change",
+            "add",
+        )
+        ordering = ["title"]
 
     def get_absolute_url(self):
         if self.group is None:
-            return reverse('wiki_article', args=(self.title,))
-        return self.group.get_absolute_url() + 'wiki/' + self.title
+            return reverse("wiki_article", args=(self.title,))
+        return self.group.get_absolute_url() + "wiki/" + self.title
 
     def save(self, *args, **kwargs):
         self.last_update = datetime.now()
@@ -82,16 +85,14 @@ class Article(models.Model):
 
     def latest_changeset(self):
         try:
-            return self.changeset_set.filter(
-                reverted=False).order_by('-revision')[0]
+            return self.changeset_set.filter(reverted=False).order_by("-revision")[0]
         except IndexError:
             return ChangeSet.objects.none()
 
     def all_images(self):
         return self.images.all()
 
-    def new_revision(self, old_content, old_title, old_markup,
-                     comment, editor):
+    def new_revision(self, old_content, old_title, old_markup, comment, editor):
         """Create a new ChangeSet with the old content."""
 
         content_diff = diff(self.content, old_content)
@@ -102,7 +103,8 @@ class Article(models.Model):
             editor=editor,
             old_title=old_title,
             old_markup=old_markup,
-            content_diff=content_diff)
+            content_diff=content_diff,
+        )
 
         return cs
 
@@ -121,7 +123,6 @@ class Article(models.Model):
 
 
 class ChangeSetManager(models.Manager):
-
     def all_later(self, revision):
         """Return all changes later to the given revision.
 
@@ -137,17 +138,20 @@ class ChangeSet(models.Model):
     article = models.ForeignKey(Article, verbose_name=_("Article"))
 
     # Editor identification -- logged
-    editor = models.ForeignKey(User, verbose_name=_('Editor'),
-                               null=True)
+    editor = models.ForeignKey(User, verbose_name=_("Editor"), null=True)
 
     # Revision number, starting from 1
     revision = models.IntegerField(_("Revision Number"))
 
     # How to recreate this version
     old_title = models.CharField(_("Old Title"), max_length=50, blank=True)
-    old_markup = models.CharField(_("Article Content Markup"), max_length=3,
-                                  choices=markup_choices,
-                                  null=True, blank=True)
+    old_markup = models.CharField(
+        _("Article Content Markup"),
+        max_length=3,
+        choices=markup_choices,
+        null=True,
+        blank=True,
+    )
     content_diff = models.TextField(_("Content Patch"), blank=True)
 
     comment = models.TextField(_("Editor comment"), blank=True)
@@ -157,26 +161,29 @@ class ChangeSet(models.Model):
     objects = ChangeSetManager()
 
     class Meta:
-        verbose_name = _('Change set')
-        verbose_name_plural = _('Change sets')
-        get_latest_by = 'modified'
-        ordering = ('-revision',)
-        app_label = 'wiki'
+        verbose_name = _("Change set")
+        verbose_name_plural = _("Change sets")
+        get_latest_by = "modified"
+        ordering = ("-revision",)
+        app_label = "wiki"
 
     def __str__(self):
-        return '#%s' % self.revision
+        return "#%s" % self.revision
 
     def get_absolute_url(self):
         if self.article.group is None:
-            return reverse('wiki_changeset', kwargs={
-                'title': self.article.title,
-                'revision': self.revision
-            })
-        return reverse('wiki_changeset', kwargs={
-            'group_slug': self.article.group.slug,
-            'title': self.article.title,
-            'revision': self.revision,
-        })
+            return reverse(
+                "wiki_changeset",
+                kwargs={"title": self.article.title, "revision": self.revision},
+            )
+        return reverse(
+            "wiki_changeset",
+            kwargs={
+                "group_slug": self.article.group.slug,
+                "title": self.article.title,
+                "revision": self.revision,
+            },
+        )
 
     def is_anonymous_change(self):
         return self.editor is None
@@ -187,7 +194,8 @@ class ChangeSet(models.Model):
         # XXX Would be better to exclude reverted revisions
         #     and revisions previous/next to reverted ones
         next_changes = self.article.changeset_set.filter(
-            revision__gt=self.revision).order_by('-revision')
+            revision__gt=self.revision
+        ).order_by("-revision")
 
         article = self.article
 
@@ -211,24 +219,29 @@ class ChangeSet(models.Model):
         article.save()
 
         article.new_revision(
-            old_content=old_content, old_title=old_title,
+            old_content=old_content,
+            old_title=old_title,
             old_markup=old_markup,
-            comment='Reverted to revision #%s' % self.revision,
-            editor=editor
-            )
+            comment="Reverted to revision #%s" % self.revision,
+            editor=editor,
+        )
 
         self.save()
 
         if None not in (notification, self.editor):
-            notification.send([self.editor], 'wiki_revision_reverted',
-                              {'revision': self, 'article': self.article})
+            notification.send(
+                [self.editor],
+                "wiki_revision_reverted",
+                {"revision": self, "article": self.article},
+            )
 
     def save(self, *args, **kwargs):
         """Saves the article with a new revision."""
         if self.id is None:
             try:
-                self.revision = ChangeSet.objects.filter(
-                    article=self.article).latest().revision + 1
+                self.revision = (
+                    ChangeSet.objects.filter(article=self.article).latest().revision + 1
+                )
             except self.DoesNotExist:
                 self.revision = 1
 
@@ -238,7 +251,8 @@ class ChangeSet(models.Model):
         """Returns the content of this revision."""
         content = self.article.content
         newer_changesets = ChangeSet.objects.filter(
-            article=self.article, revision__gt=self.revision).order_by('-revision')
+            article=self.article, revision__gt=self.revision
+        ).order_by("-revision")
         for changeset in newer_changesets:
             patches = dmp.patch_fromText(changeset.content_diff)
             content = dmp.patch_apply(patches, content)[0]
@@ -247,8 +261,13 @@ class ChangeSet(models.Model):
     def compare_to(self, revision_from):
         other_content = ""
         if int(revision_from) > 0:
-            other_content = ChangeSet.objects.filter(
-                article=self.article, revision__lte=revision_from).order_by('-revision')[0].get_content()
+            other_content = (
+                ChangeSet.objects.filter(
+                    article=self.article, revision__lte=revision_from
+                )
+                .order_by("-revision")[0]
+                .get_content()
+            )
         diffs = dmp.diff_main(other_content, self.get_content())
-        #dmp.diff_cleanupSemantic(diffs)
+        # dmp.diff_cleanupSemantic(diffs)
         return dmp.diff_prettyHtml(diffs)

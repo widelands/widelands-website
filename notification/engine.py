@@ -1,4 +1,3 @@
-
 import sys
 import time
 import logging
@@ -22,22 +21,22 @@ from notification import models as notification
 
 # lock timeout value. how long to wait for the lock to become available.
 # default behavior is to never wait for the lock to be available.
-LOCK_WAIT_TIMEOUT = getattr(settings, 'NOTIFICATION_LOCK_WAIT_TIMEOUT', -1)
+LOCK_WAIT_TIMEOUT = getattr(settings, "NOTIFICATION_LOCK_WAIT_TIMEOUT", -1)
 
 
 def send_all():
-    lock = FileLock('send_notices')
+    lock = FileLock("send_notices")
 
-    logging.debug('acquiring lock...')
+    logging.debug("acquiring lock...")
     try:
         lock.acquire(LOCK_WAIT_TIMEOUT)
     except AlreadyLocked:
-        logging.debug('lock already in place. quitting.')
+        logging.debug("lock already in place. quitting.")
         return
     except LockTimeout:
-        logging.debug('waiting for the lock timed out. quitting.')
+        logging.debug("waiting for the lock timed out. quitting.")
         return
-    logging.debug('acquired.')
+    logging.debug("acquired.")
 
     batches, sent = 0, 0
     start_time = time.time()
@@ -46,9 +45,7 @@ def send_all():
         # nesting the try statement to be Python 2.4
         try:
             for queued_batch in NoticeQueueBatch.objects.all():
-                notices = pickle.loads(
-                    base64.b64decode(queued_batch.pickled_data)
-                    )
+                notices = pickle.loads(base64.b64decode(queued_batch.pickled_data))
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
                     # FrankU: commented, because not all users get e-mailed
@@ -57,8 +54,7 @@ def send_all():
 
                     # call this once per user to be atomic and allow for logging to
                     # accurately show how long each takes.
-                    notification.send_now(
-                        [user], label, extra_context, on_site)
+                    notification.send_now([user], label, extra_context, on_site)
                     sent += 1
                 queued_batch.delete()
                 batches += 1
@@ -67,17 +63,22 @@ def send_all():
             exc_class, e, t = sys.exc_info()
             # email people
             current_site = Site.objects.get_current()
-            subject = '[%s emit_notices] %r' % (current_site.name, e)
-            message = '%s' % (
-                '\n'.join(traceback.format_exception(*sys.exc_info())),)
+            subject = "[%s emit_notices] %r" % (current_site.name, e)
+            message = "%s" % ("\n".join(traceback.format_exception(*sys.exc_info())),)
             mail_admins(subject, message, fail_silently=True)
             # log it as critical
-            logging.critical('an exception occurred: %r' % e)
+            logging.critical("an exception occurred: %r" % e)
     finally:
-        logging.debug('releasing lock...')
+        logging.debug("releasing lock...")
         lock.release()
-        logging.debug('released.')
+        logging.debug("released.")
 
-    logging.info('')
-    logging.info('%s batches, %s sent' % (batches, sent,))
-    logging.info('done in %.2f seconds' % (time.time() - start_time))
+    logging.info("")
+    logging.info(
+        "%s batches, %s sent"
+        % (
+            batches,
+            sent,
+        )
+    )
+    logging.info("done in %.2f seconds" % (time.time() - start_time))

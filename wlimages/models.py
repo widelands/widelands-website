@@ -25,10 +25,10 @@ class ImageManager(models.Manager):
         """Makes sure that no image/revision pair is already in the
         database."""
 
-        if 'name' not in keyw or 'revision' not in keyw:
-            raise IntegrityError('needs name and revision as keywords')
+        if "name" not in keyw or "revision" not in keyw:
+            raise IntegrityError("needs name and revision as keywords")
 
-        if self.filter(name=keyw['name'], revision=keyw['revision']).count():
+        if self.filter(name=keyw["name"], revision=keyw["revision"]).count():
             raise Image.AlreadyExisting()
 
         return super(ImageManager, self).create(**keyw)
@@ -37,25 +37,28 @@ class ImageManager(models.Manager):
         # Use Django's get_valid_name() to get a safe filename
         storage = FileSystemStorage()
         safe_filename = storage.get_valid_name(image.name)
-        im = self.create(content_type=content_type, object_id=object_id,
-                         user=user, revision=1, name=image.name)
-        path = '%swlimages/%s' % (settings.MEDIA_ROOT, safe_filename)
+        im = self.create(
+            content_type=content_type,
+            object_id=object_id,
+            user=user,
+            revision=1,
+            name=image.name,
+        )
+        path = "%swlimages/%s" % (settings.MEDIA_ROOT, safe_filename)
 
-        destination = open(path, 'wb')
+        destination = open(path, "wb")
         for chunk in image.chunks():
             destination.write(chunk)
 
-        im.image = 'wlimages/%s' % (safe_filename)
+        im.image = "wlimages/%s" % (safe_filename)
 
         im.save()
 
 
 class Image(models.Model):
-
     class AlreadyExisting(IntegrityError):
-
         def __str__(self):
-            return 'The combination of image/revision is already in the database'
+            return "The combination of image/revision is already in the database"
 
     """
     TODO
@@ -73,8 +76,9 @@ class Image(models.Model):
 
     # Date Fields
     date_submitted = models.DateTimeField(
-        _('date/time submitted'), default=datetime.now)
-    image = models.ImageField(upload_to='wlimages/')
+        _("date/time submitted"), default=datetime.now
+    )
+    image = models.ImageField(upload_to="wlimages/")
 
     objects = ImageManager()
 
@@ -91,7 +95,7 @@ class Image(models.Model):
         return self.content_object
 
     class Meta:
-        ordering = ('-date_submitted',)
-        verbose_name = _('Image')
-        verbose_name_plural = _('Images')
-        get_latest_by = 'date_submitted'
+        ordering = ("-date_submitted",)
+        verbose_name = _("Image")
+        verbose_name_plural = _("Images")
+        get_latest_by = "date_submitted"

@@ -8,12 +8,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wlimages', '0002_remove_image_url'),
+        ("wlimages", "0002_remove_image_url"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='image',
-            name='editor_ip',
+            model_name="image",
+            name="editor_ip",
         ),
     ]

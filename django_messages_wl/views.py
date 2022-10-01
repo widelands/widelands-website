@@ -13,15 +13,15 @@ def get_usernames(request):
 
     """
     if request.is_ajax():
-        q = request.GET.get('term', '')
+        q = request.GET.get("term", "")
 
         usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)
         results = []
         for user in usernames:
-            name_json = {'value': user.username}
+            name_json = {"value": user.username}
             results.append(name_json)
         data = json.dumps(results)
     else:
-        data = 'fail'
-    mimetype = 'application/json'
+        data = "fail"
+    mimetype = "application/json"
     return HttpResponse(data, mimetype)

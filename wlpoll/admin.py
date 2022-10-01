@@ -14,8 +14,9 @@ class ChoiceInline(admin.TabularInline):
 class PollAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
 
-    search_fields = ['name']
-    list_display = ['name', 'pub_date']
-    list_filter = ['pub_date']
+    search_fields = ["name"]
+    list_display = ["name", "pub_date"]
+    list_filter = ["pub_date"]
+
 
 admin.site.register(Poll, PollAdmin)

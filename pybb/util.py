@@ -23,8 +23,6 @@ import configparser
 from PIL import Image
 
 
-
-
 def render_to(template_path):
     """Expect the dict from view.
 
@@ -35,21 +33,23 @@ def render_to(template_path):
     def decorator(func):
         def wrapper(request, *args, **kwargs):
             import pdb
-            #output = pdb.runcall(func, request, *args, **kwargs)
+
+            # output = pdb.runcall(func, request, *args, **kwargs)
             output = func(request, *args, **kwargs)
             if not isinstance(output, dict):
                 return output
 
             # TODO(Franku): 'MIME_TYPE' is never in output as i can see for now.
             # But if, this should maybe 'content_type' instead
-            if 'MIME_TYPE' in output:
-                kwargs['mimetype'] = output.pop('MIME_TYPE')
-            if 'TEMPLATE' in output:
-                template = output.pop('TEMPLATE')
+            if "MIME_TYPE" in output:
+                kwargs["mimetype"] = output.pop("MIME_TYPE")
+            if "TEMPLATE" in output:
+                template = output.pop("TEMPLATE")
             else:
                 template = template_path
 
             return render(request, template, output)
+
         return wrapper
 
     return decorator
@@ -62,19 +62,20 @@ def ajax(func):
     content.
 
     """
+
     def wrapper(request, *args, **kwargs):
-        if request.method == 'POST':
+        if request.method == "POST":
             try:
                 response = func(request, *args, **kwargs)
             except Exception as ex:
-                response = {'error': traceback.format_exc()}
+                response = {"error": traceback.format_exc()}
         else:
-            response = {'error': {'type': 403,
-                                  'message': 'Accepts only POST request'}}
+            response = {"error": {"type": 403, "message": "Accepts only POST request"}}
         if isinstance(response, dict):
             return JsonResponse(response)
         else:
             return response
+
     return wrapper
 
 
@@ -90,29 +91,31 @@ class LazyJSONEncoder(json.JSONEncoder):
 
 class JsonResponse(HttpResponse):
     """HttpResponse subclass that serialize data into JSON format."""
+
     # TODO(Franku): The mimetype argument maybe must be replaced with content_type
 
-    def __init__(self, data, mimetype='application/json'):
+    def __init__(self, data, mimetype="application/json"):
         json_data = LazyJSONEncoder().encode(data)
-        super(JsonResponse, self).__init__(
-            content=json_data, content_type=mimetype)
+        super(JsonResponse, self).__init__(content=json_data, content_type=mimetype)
 
 
 def build_form(Form, _request, GET=False, *args, **kwargs):
     """Shorcut for building the form instance of given form class."""
 
-    if not GET and 'POST' == _request.method:
+    if not GET and "POST" == _request.method:
         form = Form(_request.POST, _request.FILES, *args, **kwargs)
-    elif GET and 'GET' == _request.method:
+    elif GET and "GET" == _request.method:
         form = Form(_request.GET, _request.FILES, *args, **kwargs)
     else:
         form = Form(*args, **kwargs)
     return form
 
 
-PLAIN_LINK_RE = re.compile(r'(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?]+)')
+PLAIN_LINK_RE = re.compile(r"(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?]+)")
+
+
 def exclude_code_tag(bs4_string):
-    if bs4_string.parent.name == 'code':
+    if bs4_string.parent.name == "code":
         return False
     m = PLAIN_LINK_RE.search(bs4_string)
     if m:
@@ -127,19 +130,19 @@ def urlize(data):
 
     """
 
-    soup = BeautifulSoup(data, 'lxml')
+    soup = BeautifulSoup(data, "lxml")
     for found_string in soup.find_all(string=exclude_code_tag):
         new_content = []
         strings_or_tags = found_string.parent.contents
         for string_or_tag in strings_or_tags:
             try:
                 for string in PLAIN_LINK_RE.split(string_or_tag):
-                    if string.startswith('http'):
+                    if string.startswith("http"):
                         # Apply an a-Tag
-                        tag = soup.new_tag('a')
-                        tag['href'] = string
+                        tag = soup.new_tag("a")
+                        tag["href"] = string
                         tag.string = string
-                        tag['nofollow'] = 'true'
+                        tag["nofollow"] = "true"
                         new_content.append(tag)
                     else:
                         # This is just a string, apply a bs4-string
@@ -157,16 +160,18 @@ def urlize(data):
 def quote_text(text, user, markup):
     """Quote message using selected markup."""
 
-    quoted_username = settings.DELETED_USERNAME if user.wlprofile.deleted else user.username
+    quoted_username = (
+        settings.DELETED_USERNAME if user.wlprofile.deleted else user.username
+    )
 
-    text = '*' + quoted_username + ' wrote:*\n\n' + text
+    text = "*" + quoted_username + " wrote:*\n\n" + text
 
-    if markup == 'markdown':
+    if markup == "markdown":
         # Inserting a space after ">" will not change the generated HTML,
         # but it will unbreak certain constructs like '>:-))'.
-        return '> ' + text.replace('\r', '').replace('\n', '\n> ') + '\n'
-    elif markup == 'bbcode':
-        return '[quote]\n%s\n[/quote]\n' % text
+        return "> " + text.replace("\r", "").replace("\n", "\n> ") + "\n"
+    elif markup == "bbcode":
+        return "[quote]\n%s\n[/quote]\n" % text
     else:
         return text
 
@@ -174,11 +179,11 @@ def quote_text(text, user, markup):
 def unescape(text):
     """Do reverse escaping."""
 
-    text = text.replace('&amp;', '&')
-    text = text.replace('&lt;', '<')
-    text = text.replace('&gt;', '>')
-    text = text.replace('&quot;', '"')
-    text = text.replace('&#39;', '\'')
+    text = text.replace("&amp;", "&")
+    text = text.replace("&lt;", "<")
+    text = text.replace("&gt;", ">")
+    text = text.replace("&quot;", '"')
+    text = text.replace("&#39;", "'")
     return text
 
 
@@ -188,8 +193,8 @@ def validate_file(attachment):
 
     # Helper functions
     def _split_mime(mime_type):
-        main, sub = mime_type.split('/', maxsplit=1)
-        return {'maintype': main, 'subtype': sub}
+        main, sub = mime_type.split("/", maxsplit=1)
+        return {"maintype": main, "subtype": sub}
 
     def _is_image():
         # Use PIL to determine if it is a valid image file
@@ -219,60 +224,51 @@ def validate_file(attachment):
                 return False
         return True
 
-
     # Main part of file checks
     # File size
     if attachment.size > pybb_settings.ATTACHMENT_SIZE_LIMIT:
         raise ValidationError(
-            'Attachment is too big. We allow max %(size)s MiB',
-            params = {
-                'size': pybb_settings.ATTACHMENT_SIZE_LIMIT/1024/1024,
-            }
-            )
+            "Attachment is too big. We allow max %(size)s MiB",
+            params={
+                "size": pybb_settings.ATTACHMENT_SIZE_LIMIT / 1024 / 1024,
+            },
+        )
 
     # Checks by file extension
-    splitted_fn = attachment.name.rsplit('.', maxsplit=2)
+    splitted_fn = attachment.name.rsplit(".", maxsplit=2)
     if len(splitted_fn) == 1:
-        raise ValidationError(
-            'We do not allow uploading files without an extension.'
-            )
+        raise ValidationError("We do not allow uploading files without an extension.")
 
     ext = splitted_fn[-1]
     if not ext in settings.ALLOWED_EXTENSIONS:
-        raise ValidationError(
-            'This type of file is not allowed.'
-            )
+        raise ValidationError("This type of file is not allowed.")
 
     # Widelands map file
-    if ext == 'wmf':
+    if ext == "wmf":
         raise ValidationError(
-            'This seems to be a widelands map file. Please upload \
-            it at our maps section.'
+            "This seems to be a widelands map file. Please upload \
+            it at our maps section."
         )
 
     # Widelands savegame (*.wgf) and widelands replay (*.wrpl.wgf)
     # are not the same.
-    if ext == 'wgf' and not splitted_fn[-2] == 'wrpl':
+    if ext == "wgf" and not splitted_fn[-2] == "wrpl":
         if not _zip_contains(settings.WGF_CONTENT_CHECK):
-            raise ValidationError(
-                'This is not a valid widelands savegame.'
-            )
+            raise ValidationError("This is not a valid widelands savegame.")
 
     # Widelands replay
-    if ext == 'wrpl':
+    if ext == "wrpl":
         raise ValidationError(
-            'This file is part of a replay. Please zip it together with \
-            the corresponding .wrpl.wgf file and upload again.'
+            "This file is part of a replay. Please zip it together with \
+            the corresponding .wrpl.wgf file and upload again."
         )
 
-    if ext == 'zip':
+    if ext == "zip":
         if _is_zip() == None:
-            raise ValidationError(
-                'This is not a valid zip file.'
-            )
+            raise ValidationError("This is not a valid zip file.")
 
     # Widelands AI configuration
-    if ext == 'wai':
+    if ext == "wai":
         wai = configparser.ConfigParser()
         try:
             wai.read(tmp_file_path)
@@ -284,9 +280,7 @@ def validate_file(attachment):
             else:
                 raise
         except:
-            raise ValidationError(
-                'This not a valid wai file.'
-                )
+            raise ValidationError("This not a valid wai file.")
 
     # Checks by MimeType
     # Get MIME-Type from python-magic
@@ -296,11 +290,10 @@ def validate_file(attachment):
 
     # Check for valid image file. Use te mime-type provided by python-magic,
     # because for a renamed image the wrong mime-type is send by the browser.
-    if magic_mime['maintype'] == 'image':
+    if magic_mime["maintype"] == "image":
         if not _is_image():
             raise ValidationError(
-                'This is not a valid image: %(file)s',
-                params={'file': attachment.name}
+                "This is not a valid image: %(file)s", params={"file": attachment.name}
             )
 
     # Compare Mime type send by browser and Mime type from python-magic.
@@ -309,15 +302,15 @@ def validate_file(attachment):
     # type is 'text/x-lua' but 'x-lua' is not official at all. See:
     # https://www.iana.org/assignments/media-types/media-types.xhtml
     # Unrecoginzed extension are always send with mime type
-    # 'application/octet-stream'. Skip if we know them. 
+    # 'application/octet-stream'. Skip if we know them.
     if not ext in settings.SKIP_MIME_EXTENSIONS:
-        if not magic_mime['maintype'] == send_mime['maintype']:
+        if not magic_mime["maintype"] == send_mime["maintype"]:
             raise ValidationError(
-                'The file %(file)s looks like %(send_mime)s, \
-                but we think it is %(magic_mime)s',
+                "The file %(file)s looks like %(send_mime)s, \
+                but we think it is %(magic_mime)s",
                 params={
-                    'file': attachment.name,
-                    'send_mime': send_mime['maintype'],
-                    'magic_mime': magic_mime['maintype'],
-                    },
+                    "file": attachment.name,
+                    "send_mime": send_mime["maintype"],
+                    "magic_mime": magic_mime["maintype"],
+                },
             )

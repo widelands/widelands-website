@@ -8,16 +8,16 @@ from news.models import Post, Category
 
 class NewsPostsFeed(Feed):
     # RSS Feed
-    title = 'Widelands news feed'
-    description = 'The news section from the widelands.org homepage'
-    title_template = 'news/feeds/posts_title.html'
-    description_template = 'news/feeds/posts_description.html'
+    title = "Widelands news feed"
+    description = "The news section from the widelands.org homepage"
+    title_template = "news/feeds/posts_title.html"
+    description_template = "news/feeds/posts_description.html"
 
     def items(self):
         return Post.objects.published()[:10]
 
     def link(self):
-        return reverse('news_index')
+        return reverse("news_index")
 
     def item_pubdate(self, item):
         return item.publish

@@ -7,17 +7,19 @@ from django.db import models
 
 
 class EventsManager(models.Manager):
-
     def open(self):
-        return self.all().exclude(end_date__lt=datetime.datetime.now()).\
-            order_by('end_date')
+        return (
+            self.all()
+            .exclude(end_date__lt=datetime.datetime.now())
+            .order_by("end_date")
+        )
 
 
 class Event(models.Model):
     name = models.CharField(max_length=256)
     link = models.CharField(max_length=1024)
-    start_date = models.DateField('start date')
-    end_date = models.DateField('end date', blank=True, null=True)
+    start_date = models.DateField("start date")
+    end_date = models.DateField("end date", blank=True, null=True)
 
     objects = EventsManager()
 

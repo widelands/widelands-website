@@ -5,6 +5,7 @@
 from .models import Map
 from django.contrib import admin
 
+
 def delete_selected(modeladmin, request, queryset):
     """Overwritten Django's default action to delete a map.
 
@@ -14,29 +15,55 @@ def delete_selected(modeladmin, request, queryset):
     """
     for obj in queryset:
         obj.delete()
-delete_selected.short_description = 'Delete selected maps'
+
+
+delete_selected.short_description = "Delete selected maps"
 
 
 class MapAdmin(admin.ModelAdmin):
-    actions = [delete_selected,]
-    list_display = ['name', 'author', 'pub_date']
-    prepopulated_fields = {'slug': ('name',)}
-    search_fields = ['name', 'author']
-    list_filter = ['pub_date']
-    readonly_fields = ('uploader', 'nr_players', 'w', 'h', 'minimap', 'file', 'world_name')
-    fieldsets = (
-        (None, {
-            'fields': (('name', 'author'), 'uploader', 'uploader_comment', 'wl_version_after')
-        }),
-        ('Map properties', {
-            'classes': ('collapse',),
-            'fields': ('descr', 'hint', 'world_name',
-                       ('nr_players', 'w', 'h')
-                       )
-        }),
-        ('Upload information', {
-            'classes': ('collapse',),
-            'fields': ('minimap', 'file', 'pub_date', 'nr_downloads', 'slug')
-        }),
+    actions = [
+        delete_selected,
+    ]
+    list_display = ["name", "author", "pub_date"]
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ["name", "author"]
+    list_filter = ["pub_date"]
+    readonly_fields = (
+        "uploader",
+        "nr_players",
+        "w",
+        "h",
+        "minimap",
+        "file",
+        "world_name",
     )
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    ("name", "author"),
+                    "uploader",
+                    "uploader_comment",
+                    "wl_version_after",
+                )
+            },
+        ),
+        (
+            "Map properties",
+            {
+                "classes": ("collapse",),
+                "fields": ("descr", "hint", "world_name", ("nr_players", "w", "h")),
+            },
+        ),
+        (
+            "Upload information",
+            {
+                "classes": ("collapse",),
+                "fields": ("minimap", "file", "pub_date", "nr_downloads", "slug"),
+            },
+        ),
+    )
+
+
 admin.site.register(Map, MapAdmin)

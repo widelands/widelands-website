@@ -8,7 +8,7 @@ from privacy_policy.models import PrivacyPolicy
 
 
 def _format_text(language, text):
-    return '[TOC]\n\n#{}\n{}'.format(language, text)
+    return "[TOC]\n\n#{}\n{}".format(language, text)
 
 
 def privacy_policy(request, *args, **kwargs):
@@ -19,7 +19,7 @@ def privacy_policy(request, *args, **kwargs):
     """
 
     # Default is 'english'
-    slug = kwargs.pop('slug', 'english')
+    slug = kwargs.pop("slug", "english")
     policies = PrivacyPolicy.objects.all()
 
     if policies.count():
@@ -33,14 +33,14 @@ def privacy_policy(request, *args, **kwargs):
         languages = [(x.language, x.slug) for x in policies.exclude(slug=slug)]
         current_lang = policy.language
     else:
-        text = 'No Policy created yet!'
-        languages = ''
-        current_lang = ''
+        text = "No Policy created yet!"
+        languages = ""
+        current_lang = ""
 
     context = {
-        'text': text,
-        'languages': languages,
-        'cur_lang': current_lang,
+        "text": text,
+        "languages": languages,
+        "cur_lang": current_lang,
     }
 
-    return render(request, 'privacy_policy/privacy_policy.html', context)
+    return render(request, "privacy_policy/privacy_policy.html", context)

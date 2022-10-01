@@ -6,7 +6,6 @@ import json as simplejson
 
 
 class LazyEncoder(simplejson.JSONEncoder):
-
     def default(self, obj):
         if isinstance(obj, Promise):
             return force_text(obj)
@@ -19,11 +18,10 @@ class JSONResponse(HttpResponse):
 
     def __init__(self, object, is_iterable=True):
         if is_iterable:
-            content = serialize('json', object)
+            content = serialize("json", object)
         else:
             content = simplejson.dumps(object, cls=LazyEncoder)
-        super(JSONResponse, self).__init__(
-            content, mimetype='application/json')
+        super(JSONResponse, self).__init__(content, mimetype="application/json")
 
 
 class XMLResponse(HttpResponse):
@@ -32,7 +30,7 @@ class XMLResponse(HttpResponse):
 
     def __init__(self, object, is_iterable=True):
         if is_iterable:
-            content = serialize('xml', object)
+            content = serialize("xml", object)
         else:
             content = object
-        super(XMLResponse, self).__init__(content, mimetype='application/xml')
+        super(XMLResponse, self).__init__(content, mimetype="application/xml")

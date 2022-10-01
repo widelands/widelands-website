@@ -6,8 +6,13 @@ from django.conf import settings
 from django.core.cache import cache
 from django.template import RequestContext
 from django.urls import reverse
-from django.http import (Http404, HttpResponseRedirect,
-                         HttpResponseNotAllowed, HttpResponse, HttpResponseForbidden)
+from django.http import (
+    Http404,
+    HttpResponseRedirect,
+    HttpResponseNotAllowed,
+    HttpResponse,
+    HttpResponseForbidden,
+)
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
@@ -43,22 +48,20 @@ ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
 
 
-def get_articles_by_group(article_qs, group_slug=None,
-                          group_slug_field=None, group_qs=None):
+def get_articles_by_group(
+    article_qs, group_slug=None, group_slug_field=None, group_qs=None
+):
     group = None
     if group_slug is not None:
-        group = get_object_or_404(group_qs,
-                                  **{group_slug_field: group_slug})
-        article_qs = article_qs.filter(content_type=get_ct(group),
-                                       object_id=group.id)
+        group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+        article_qs = article_qs.filter(content_type=get_ct(group), object_id=group.id)
     return article_qs, group
 
 
 def get_articles_for_object(object, article_qs=None):
     if article_qs is None:
         article_qs = ALL_ARTICLES
-    return article_qs.filter(content_type=get_ct(object),
-                             object_id=object.id)
+    return article_qs.filter(content_type=get_ct(object), object_id=object.id)
 
 
 def get_url(urlname, group=None, args=None, kw=None):
@@ -66,21 +69,24 @@ def get_url(urlname, group=None, args=None, kw=None):
         return reverse(urlname, args=args)
     else:
         app = group._meta.app_label
-        urlconf = '.'.join([app, 'urls'])
+        urlconf = ".".join([app, "urls"])
         url = reverse(urlname, urlconf, kwargs=kw)
-        return ''.join(['/', app, url])  # @@@ harcoded: /app/.../
+        return "".join(["/", app, url])  # @@@ harcoded: /app/.../
 
 
 class ArticleEditLock(object):
     """A soft lock to edting an article."""
+
     def __init__(self, title, request, message_template=None):
         self.title = title
         self.user = request.user
         self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         if message_template is None:
-            message_template = ('Possible edit conflict:'
-                                ' Another user started editing this article at %s')
+            message_template = (
+                "Possible edit conflict:"
+                " Another user started editing this article at %s"
+            )
 
         self.message_template = message_template
         cache.set(title, self, WIKI_LOCK_DURATION * 60)
@@ -90,16 +96,16 @@ class ArticleEditLock(object):
         article."""
         if not self.is_mine(request):
             user = request.user
-            messages.add_message(request,
-                                 messages.INFO,
-                                 self.message_template % self.created_at)
+            messages.add_message(
+                request, messages.INFO, self.message_template % self.created_at
+            )
 
     def is_mine(self, request):
         return self.user == request.user
 
 
 def has_read_perm(user, group, is_member, is_private):
-    """ Return True if the user has permission to *read*
+    """Return True if the user has permission to *read*
     Articles, False otherwise.
     """
     if (group is None) or (is_member is None) or is_member(user, group):
@@ -117,20 +123,25 @@ def has_write_perm(user, group, is_member):
     return False
 
 
-def article_list(request,
-                 group_slug=None, group_slug_field=None, group_qs=None,
-                 article_qs=ALL_ARTICLES,
-                 ArticleClass=Article,
-                 template_name='index.html',
-                 template_dir='wiki',
-                 extra_context=None,
-                 is_member=None,
-                 is_private=None,
-                 *args, **kw):
-    if request.method == 'GET':
+def article_list(
+    request,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    ArticleClass=Article,
+    template_name="index.html",
+    template_dir="wiki",
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
+    if request.method == "GET":
         articles, group = get_articles_by_group(
-            article_qs, group_slug,
-            group_slug_field, group_qs)
+            article_qs, group_slug, group_slug_field, group_qs
+        )
 
         allow_read = has_read_perm(request.user, group, is_member, is_private)
         allow_write = has_write_perm(request.user, group, is_member)
@@ -138,47 +149,53 @@ def article_list(request,
         if not allow_read:
             return HttpResponseForbidden()
 
-        articles = articles.order_by('title')
+        articles = articles.order_by("title")
 
-        template_params = {'articles': articles,
-                           'allow_write': allow_write}
+        template_params = {"articles": articles, "allow_write": allow_write}
 
         if group_slug is not None:
-            template_params['group'] = group
-            new_article = ArticleClass(title='NewArticle',
-                                       content_type=get_ct(group),
-                                       object_id=group.id)
+            template_params["group"] = group
+            new_article = ArticleClass(
+                title="NewArticle", content_type=get_ct(group), object_id=group.id
+            )
         else:
-            new_article = ArticleClass(title='NewArticle')
-        template_params['new_article'] = new_article
+            new_article = ArticleClass(title="NewArticle")
+        template_params["new_article"] = new_article
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render(request, '/'.join([template_dir, template_name]),
-                                  template_params,)
-    return HttpResponseNotAllowed(['GET'])
+        return render(
+            request,
+            "/".join([template_dir, template_name]),
+            template_params,
+        )
+    return HttpResponseNotAllowed(["GET"])
 
 
-def view_article(request, title, revision=None,
-                 ArticleClass=Article,  # to create an unsaved instance
-                 group_slug=None, group_slug_field=None, group_qs=None,
-                 article_qs=ALL_ARTICLES,
-                 template_name='view.html',
-                 template_dir='wiki',
-                 extra_context=None,
-                 is_member=None,
-                 is_private=None,
-                 *args, **kw):
+def view_article(
+    request,
+    title,
+    revision=None,
+    ArticleClass=Article,  # to create an unsaved instance
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    template_name="view.html",
+    template_dir="wiki",
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
 
-    if request.method == 'GET':
-        article_args = {'title': title}
+    if request.method == "GET":
+        article_args = {"title": title}
         if group_slug is not None:
-            group = get_object_or_404(
-                group_qs, **{group_slug_field: group_slug})
-            article_args.update({'content_type': get_ct(group),
-                                 'object_id': group.id})
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
+            group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+            article_args.update({"content_type": get_ct(group), "object_id": group.id})
+            allow_read = has_read_perm(request.user, group, is_member, is_private)
             allow_write = has_write_perm(request.user, group, is_member)
         else:
             allow_read = allow_write = True
@@ -195,8 +212,11 @@ def view_article(request, title, revision=None,
         except ArticleClass.DoesNotExist:
             try:
                 # try to find an article that once had this title
-                article = ChangeSet.objects.filter(
-                    old_title=title).order_by('-revision')[0].article
+                article = (
+                    ChangeSet.objects.filter(old_title=title)
+                    .order_by("-revision")[0]
+                    .article
+                )
                 redirected_from = title
                 # if article is not None:
                 #    return redirect(article, permanent=True)
@@ -204,52 +224,59 @@ def view_article(request, title, revision=None,
                 article = ArticleClass(**article_args)
 
         if revision is not None:
-            changeset = get_object_or_404(
-                article.changeset_set, revision=revision)
+            changeset = get_object_or_404(article.changeset_set, revision=revision)
             article.content = changeset.get_content()
 
-        template_params = {'article': article,
-                           'revision': revision,
-                           'redirected_from': redirected_from,
-                           'allow_write': allow_write}
+        template_params = {
+            "article": article,
+            "revision": revision,
+            "redirected_from": redirected_from,
+            "allow_write": allow_write,
+        }
 
         if notification is not None:
-            template_params.update({'is_observing': is_observing,
-                                    'can_observe': True})
+            template_params.update({"is_observing": is_observing, "can_observe": True})
 
         if group_slug is not None:
-            template_params['group'] = group
+            template_params["group"] = group
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render(request, '/'.join([template_dir, template_name]),
-                                  template_params,)
-    return HttpResponseNotAllowed(['GET'])
+        return render(
+            request,
+            "/".join([template_dir, template_name]),
+            template_params,
+        )
+    return HttpResponseNotAllowed(["GET"])
 
 
 @login_required
-def edit_article(request, title,
-                 group_slug=None, group_slug_field=None, group_qs=None,
-                 article_qs=ALL_ARTICLES,
-                 ArticleClass=Article,  # to get the DoesNotExist exception
-                 ArticleFormClass=ArticleForm,
-                 template_name='edit.html',
-                 template_dir='wiki',
-                 extra_context=None,
-                 check_membership=False,
-                 is_member=None,
-                 is_private=None,
-                 *args, **kw):
+def edit_article(
+    request,
+    title,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    ArticleClass=Article,  # to get the DoesNotExist exception
+    ArticleFormClass=ArticleForm,
+    template_name="edit.html",
+    template_dir="wiki",
+    extra_context=None,
+    check_membership=False,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
 
     group = None
-    article_args = {'title': title}
+    article_args = {"title": title}
     if group_slug is not None:
         group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
         group_ct = get_ct(group)
-        article_args.update({'content_type': group_ct,
-                             'object_id': group.id})
-        allow_read = has_read_perm(request.user, group, is_member,
-                                   is_private)
+        article_args.update({"content_type": group_ct, "object_id": group.id})
+        allow_read = has_read_perm(request.user, group, is_member, is_private)
         allow_write = has_write_perm(request.user, group, is_member)
     else:
         allow_read = allow_write = True
@@ -269,17 +296,17 @@ def edit_article(request, title,
             # No Article found and no redirect found
             article = None
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
         form = ArticleFormClass(request.POST, instance=article)
-        
+
         form.cache_old_content()
         if form.is_valid():
 
             if request.user.is_authenticated:
                 form.editor = request.user
 
-            if ((article is None) and (group_slug is not None)):
+            if (article is None) and (group_slug is not None):
                 form.group = group
 
             new_article, changeset = form.save()
@@ -288,89 +315,102 @@ def edit_article(request, title,
             if lock is not None:
                 # Clean the lock
                 cache.delete(get_valid_cache_key(title))
-            
+
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
-                items = notification.ObservedItem.objects.all_for(
-                    new_article, 'post_save').exclude(user=request.user).iterator()
+                items = (
+                    notification.ObservedItem.objects.all_for(new_article, "post_save")
+                    .exclude(user=request.user)
+                    .iterator()
+                )
                 users = [o.user for o in items]
-                notification.send(users, 'wiki_observed_article_changed',
-                                  {'editor': request.user,
-                                   'rev': changeset.revision,
-                                   'rev_comment': changeset.comment,
-                                   'article': new_article})
-
+                notification.send(
+                    users,
+                    "wiki_observed_article_changed",
+                    {
+                        "editor": request.user,
+                        "rev": changeset.revision,
+                        "rev_comment": changeset.comment,
+                        "article": new_article,
+                    },
+                )
 
             return redirect(new_article)
 
-    elif request.method == 'GET':
+    elif request.method == "GET":
         lock = cache.get(get_valid_cache_key(title))
         if lock is None:
             lock = ArticleEditLock(get_valid_cache_key(title), request)
         lock.create_message(request)
         initial = {}
         if group_slug is not None:
-            initial.update({'content_type': group_ct.id,
-                            'object_id': group.id})
+            initial.update({"content_type": group_ct.id, "object_id": group.id})
 
         if article is None:
-            initial.update({'title': title,
-                            'action': 'create'})
+            initial.update({"title": title, "action": "create"})
             form = ArticleFormClass(initial=initial)
         else:
-            initial['action'] = 'edit'
-            form = ArticleFormClass(instance=article,
-                                    initial=initial)
+            initial["action"] = "edit"
+            form = ArticleFormClass(instance=article, initial=initial)
     if not article:
-        template_params = {'form': form, 'new_article': True}
+        template_params = {"form": form, "new_article": True}
     else:
-        template_params = {'form': form, 'new_article': False,
-                           'content_type': ContentType.objects.get_for_model(Article).pk, 'object_id': article.pk,
-                           'images': article.all_images(),
-                           'article': article,
-                           }
+        template_params = {
+            "form": form,
+            "new_article": False,
+            "content_type": ContentType.objects.get_for_model(Article).pk,
+            "object_id": article.pk,
+            "images": article.all_images(),
+            "article": article,
+        }
 
     if group_slug is not None:
-        template_params['group'] = group
+        template_params["group"] = group
     if extra_context is not None:
         template_params.update(extra_context)
 
-    return render(request, '/'.join([template_dir, template_name]),
-                              template_params,)
+    return render(
+        request,
+        "/".join([template_dir, template_name]),
+        template_params,
+    )
 
 
-def view_changeset(request, title, revision,
-                   revision_from=None,
-                   group_slug=None, group_slug_field=None, group_qs=None,
-                   article_qs=ALL_ARTICLES,
-                   changes_qs=ALL_CHANGES,
-                   template_name='changeset.html',
-                   template_dir='wiki',
-                   extra_context=None,
-                   is_member=None,
-                   is_private=None,
-                   *args, **kw):
+def view_changeset(
+    request,
+    title,
+    revision,
+    revision_from=None,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    changes_qs=ALL_CHANGES,
+    template_name="changeset.html",
+    template_dir="wiki",
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
 
-    if request.method == 'GET':
-        article_args = {'article__title': title}
+    if request.method == "GET":
+        article_args = {"article__title": title}
         if group_slug is not None:
-            group = get_object_or_404(
-                group_qs, **{group_slug_field: group_slug})
-            article_args.update({'article__content_type': get_ct(group),
-                                 'article__object_id': group.id})
+            group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+            article_args.update(
+                {"article__content_type": get_ct(group), "article__object_id": group.id}
+            )
         changeset = get_object_or_404(
-            changes_qs,
-            revision=int(revision),
-            **article_args)
+            changes_qs, revision=int(revision), **article_args
+        )
 
-        article_args = {'title': title}
+        article_args = {"title": title}
         if group_slug is not None:
-            group = get_object_or_404(
-                group_qs, **{group_slug_field: group_slug})
-            article_args.update({'content_type': get_ct(group),
-                                 'object_id': group.id})
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
+            group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+            article_args.update({"content_type": get_ct(group), "object_id": group.id})
+            allow_read = has_read_perm(request.user, group, is_member, is_private)
             allow_write = has_write_perm(request.user, group, is_member)
         else:
             allow_read = allow_write = True
@@ -387,44 +427,52 @@ def view_changeset(request, title, revision,
         if int(revision) is not int(revision_from) + 1:
             from_value = revision_from
 
-        template_params = {'article': article,
-                           'article_title': article.title,
-                           'changeset': changeset,
-                           'differences': changeset.compare_to(revision_from),
-                           'from': from_value,
-                           'to': revision,
-                           'allow_write': allow_write}
+        template_params = {
+            "article": article,
+            "article_title": article.title,
+            "changeset": changeset,
+            "differences": changeset.compare_to(revision_from),
+            "from": from_value,
+            "to": revision,
+            "allow_write": allow_write,
+        }
 
         if group_slug is not None:
-            template_params['group'] = group
+            template_params["group"] = group
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render(request, '/'.join([template_dir, template_name]),
-                                  template_params,)
-    return HttpResponseNotAllowed(['GET'])
+        return render(
+            request,
+            "/".join([template_dir, template_name]),
+            template_params,
+        )
+    return HttpResponseNotAllowed(["GET"])
 
 
-def article_history(request, title,
-                    group_slug=None, group_slug_field=None, group_qs=None,
-                    article_qs=ALL_ARTICLES,
-                    template_name='history.html',
-                    template_dir='wiki',
-                    extra_context=None,
-                    is_member=None,
-                    is_private=None,
-                    *args, **kw):
+def article_history(
+    request,
+    title,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    template_name="history.html",
+    template_dir="wiki",
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
 
-    if request.method == 'GET':
+    if request.method == "GET":
 
-        article_args = {'title': title}
+        article_args = {"title": title}
         if group_slug is not None:
-            group = get_object_or_404(
-                group_qs, **{group_slug_field: group_slug})
-            article_args.update({'content_type': get_ct(group),
-                                 'object_id': group.id})
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
+            group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+            article_args.update({"content_type": get_ct(group), "object_id": group.id})
+            allow_read = has_read_perm(request.user, group, is_member, is_private)
             allow_write = has_write_perm(request.user, group, is_member)
         else:
             allow_read = allow_write = True
@@ -435,45 +483,53 @@ def article_history(request, title,
         article = get_object_or_404(article_qs, **article_args)
         # changes = article.changeset_set.filter(
         #    reverted=False).order_by('-revision')
-        changes = article.changeset_set.all().order_by('-revision')
+        changes = article.changeset_set.all().order_by("-revision")
 
-        template_params = {'article': article,
-                           'changes': changes,
-                           'allow_write': allow_write}
+        template_params = {
+            "article": article,
+            "changes": changes,
+            "allow_write": allow_write,
+        }
         if group_slug is not None:
-            template_params['group'] = group
+            template_params["group"] = group
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render(request, '/'.join([template_dir, template_name]),
-                                  template_params,)
+        return render(
+            request,
+            "/".join([template_dir, template_name]),
+            template_params,
+        )
 
-    return HttpResponseNotAllowed(['GET'])
+    return HttpResponseNotAllowed(["GET"])
 
 
 @login_required
-def revert_to_revision(request, title,
-                       group_slug=None, group_slug_field=None, group_qs=None,
-                       article_qs=ALL_ARTICLES,
-                       extra_context=None,
-                       is_member=None,
-                       is_private=None,
-                       *args, **kw):
+def revert_to_revision(
+    request,
+    title,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        revision = int(request.POST['revision'])
+        revision = int(request.POST["revision"])
 
-        article_args = {'title': title}
+        article_args = {"title": title}
 
         group = None
         if group_slug is not None:
-            group = get_object_or_404(
-                group_qs, **{group_slug_field: group_slug})
-            article_args.update({'content_type': get_ct(group),
-                                 'object_id': group.id})
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
+            group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+            article_args.update({"content_type": get_ct(group), "object_id": group.id})
+            allow_read = has_read_perm(request.user, group, is_member, is_private)
             allow_write = has_write_perm(request.user, group, is_member)
         else:
             allow_read = allow_write = True
@@ -483,11 +539,9 @@ def revert_to_revision(request, title,
 
         article = get_object_or_404(article_qs, **article_args)
 
-        
         # Check whether there is another Article with the same name to which this article
         # wants to be reverted to. If so: prevent it and show a message.
-        old_title = article.changeset_set.filter(
-            revision=revision+1).get().old_title
+        old_title = article.changeset_set.filter(revision=revision + 1).get().old_title
         try:
             art = Article.objects.exclude(pk=article.pk).get(title=old_title)
         except Article.DoesNotExist:
@@ -499,28 +553,36 @@ def revert_to_revision(request, title,
             return redirect(article)
         # An article with this name exists
         messages.error(
-            request, 'Reverting not possible because an article with name \'%s\' already exists' % old_title)
+            request,
+            "Reverting not possible because an article with name '%s' already exists"
+            % old_title,
+        )
         return redirect(article)
 
-    return HttpResponseNotAllowed(['POST'])
+    return HttpResponseNotAllowed(["POST"])
 
 
-def history(request,
-            group_slug=None, group_slug_field=None, group_qs=None,
-            article_qs=ALL_ARTICLES, changes_qs=ALL_CHANGES,
-            template_name='recentchanges.html',
-            template_dir='wiki',
-            extra_context=None,
-            *args, **kw):
+def history(
+    request,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    changes_qs=ALL_CHANGES,
+    template_name="recentchanges.html",
+    template_dir="wiki",
+    extra_context=None,
+    *args,
+    **kw
+):
 
-    if request.method == 'GET':
+    if request.method == "GET":
         if group_slug is not None:
-            group = get_object_or_404(group_qs,
-                                      **{group_slug_field: group_slug})
-            changes_qs = changes_qs.filter(article__content_type=get_ct(group),
-                                           article__object_id=group.id)
-            allow_read = has_read_perm(request.user, group, is_member,
-                                       is_private)
+            group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
+            changes_qs = changes_qs.filter(
+                article__content_type=get_ct(group), article__object_id=group.id
+            )
+            allow_read = has_read_perm(request.user, group, is_member, is_private)
             allow_write = has_write_perm(request.user, group, is_member)
         else:
             allow_read = allow_write = True
@@ -528,37 +590,46 @@ def history(request,
         if not allow_read:
             return HttpResponseForbidden()
 
-        template_params = {'changes': changes_qs.order_by('-modified'),
-                           'allow_write': allow_write}
+        template_params = {
+            "changes": changes_qs.order_by("-modified"),
+            "allow_write": allow_write,
+        }
         if group_slug is not None:
-            template_params['group'] = group_slug
+            template_params["group"] = group_slug
 
         if extra_context is not None:
             template_params.update(extra_context)
 
-        return render(request, '/'.join([template_dir, template_name]),
-                                  template_params,)
-    return HttpResponseNotAllowed(['GET'])
+        return render(
+            request,
+            "/".join([template_dir, template_name]),
+            template_params,
+        )
+    return HttpResponseNotAllowed(["GET"])
 
 
 @login_required
-def observe_article(request, title,
-                    group_slug=None, group_slug_field=None, group_qs=None,
-                    article_qs=ALL_ARTICLES,
-                    template_name='recentchanges.html',
-                    template_dir='wiki',
-                    extra_context=None,
-                    is_member=None,
-                    is_private=None,
-                    *args, **kw):
-    article_args = {'title': title}
+def observe_article(
+    request,
+    title,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    template_name="recentchanges.html",
+    template_dir="wiki",
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
+    article_args = {"title": title}
     group = None
     if group_slug is not None:
         group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
-        article_args.update({'content_type': get_ct(group),
-                             'object_id': group.id})
-        allow_read = has_read_perm(request.user, group, is_member,
-                                   is_private)
+        article_args.update({"content_type": get_ct(group), "object_id": group.id})
+        allow_read = has_read_perm(request.user, group, is_member, is_private)
     else:
         allow_read = True
 
@@ -568,32 +639,35 @@ def observe_article(request, title,
     article = get_object_or_404(article_qs, **article_args)
 
     if not notification.is_observing(article, request.user):
-        notification.observe(article, request.user,
-                             'wiki_observed_article_changed')
+        notification.observe(article, request.user, "wiki_observed_article_changed")
 
     return redirect(article)
 
-    return HttpResponseNotAllowed(['POST'])
+    return HttpResponseNotAllowed(["POST"])
 
 
 @login_required
-def stop_observing_article(request, title,
-                           group_slug=None, group_slug_field=None, group_qs=None,
-                           article_qs=ALL_ARTICLES,
-                           template_name='recentchanges.html',
-                           template_dir='wiki',
-                           extra_context=None,
-                           is_member=None,
-                           is_private=None,
-                           *args, **kw):
-    article_args = {'title': title}
+def stop_observing_article(
+    request,
+    title,
+    group_slug=None,
+    group_slug_field=None,
+    group_qs=None,
+    article_qs=ALL_ARTICLES,
+    template_name="recentchanges.html",
+    template_dir="wiki",
+    extra_context=None,
+    is_member=None,
+    is_private=None,
+    *args,
+    **kw
+):
+    article_args = {"title": title}
     group = None
     if group_slug is not None:
         group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
-        article_args.update({'content_type': get_ct(group),
-                             'object_id': group.id})
-        allow_read = has_read_perm(request.user, group, is_member,
-                                   is_private)
+        article_args.update({"content_type": get_ct(group), "object_id": group.id})
+        allow_read = has_read_perm(request.user, group, is_member, is_private)
     else:
         allow_read = True
 
@@ -616,21 +690,20 @@ def article_preview(request):
     through the view template and returns it to the caller
 
     """
-    rv = do_wl_markdown(request.POST['body'], 'bleachit')
-    return HttpResponse(rv, content_type='text/html')
+    rv = do_wl_markdown(request.POST["body"], "bleachit")
+    return HttpResponse(rv, content_type="text/html")
 
 
 def article_diff(request):
     """This is a AJAX function that diffs the body of the article as it is
     currently displayed with the current version of the article."""
-    current_article = get_object_or_404(
-        Article, pk=int(request.POST['article']))
-    content = request.POST['body']
+    current_article = get_object_or_404(Article, pk=int(request.POST["article"]))
+    content = request.POST["body"]
 
     diffs = dmp.diff_main(current_article.content, content)
     dmp.diff_cleanupSemantic(diffs)
 
-    return HttpResponse(dmp.diff_prettyHtml(diffs), content_type='text/html')
+    return HttpResponse(dmp.diff_prettyHtml(diffs), content_type="text/html")
 
 
 def backlinks(request, title):
@@ -664,17 +737,20 @@ def backlinks(request, title):
             # e.g. [[ Back | Title%20of%20Page ]]
             match = regexp.search(urllib.parse.unquote(article.content))
             if match:
-                found_links.append({'title': article.title})
+                found_links.append({"title": article.title})
 
         for old_title in old_titles:
             if old_title in article.content:
-                found_old_links.append(
-                    {'old_title': old_title, 'title': article.title })
+                found_old_links.append({"old_title": old_title, "title": article.title})
 
-    context = {'found_links': found_links,
-               'found_old_links': found_old_links,
-               'name': title,
-               'article': this_article,
-               }
-    return render(request, 'wiki/backlinks.html',
-                              context,)
+    context = {
+        "found_links": found_links,
+        "found_old_links": found_old_links,
+        "name": title,
+        "article": this_article,
+    }
+    return render(
+        request,
+        "wiki/backlinks.html",
+        context,
+    )

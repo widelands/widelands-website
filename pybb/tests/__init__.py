@@ -5,9 +5,8 @@ from pybb.tests.postmarkup import PostmarkupTestCase
 
 
 def suite():
-    cases = (PostmarkupTestCase,
-             )
+    cases = (PostmarkupTestCase,)
     tests = unittest.TestSuite(
-        unittest.TestLoader().loadTestsFromTestCase(x)
-        for x in cases)
+        unittest.TestLoader().loadTestsFromTestCase(x) for x in cases
+    )
     return tests

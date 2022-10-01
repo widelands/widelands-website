@@ -9,23 +9,39 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0008_alter_user_username_max_length'),
-        ('pybb', '0003_remove_post_user_ip'),
+        ("auth", "0008_alter_user_username_max_length"),
+        ("pybb", "0003_remove_post_user_ip"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='category',
-            options={'ordering': ['position'], 'permissions': (('can_access_internal', 'Can access Internal Forums'),), 'verbose_name': 'Category', 'verbose_name_plural': 'Categories'},
+            name="category",
+            options={
+                "ordering": ["position"],
+                "permissions": (("can_access_internal", "Can access Internal Forums"),),
+                "verbose_name": "Category",
+                "verbose_name_plural": "Categories",
+            },
         ),
         migrations.AddField(
-            model_name='category',
-            name='internal',
-            field=models.BooleanField(default=False, help_text='If set, this category is only visible for special users.', verbose_name='Internal Category'),
+            model_name="category",
+            name="internal",
+            field=models.BooleanField(
+                default=False,
+                help_text="If set, this category is only visible for special users.",
+                verbose_name="Internal Category",
+            ),
         ),
         migrations.AddField(
-            model_name='forum',
-            name='moderator_group',
-            field=models.ForeignKey(blank=True, default=None, help_text=b'Users in this Group will have administrative permissions in this Forum.', null=True, on_delete=django.db.models.deletion.CASCADE, to='auth.Group'),
+            model_name="forum",
+            name="moderator_group",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                help_text=b"Users in this Group will have administrative permissions in this Forum.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="auth.Group",
+            ),
         ),
     ]

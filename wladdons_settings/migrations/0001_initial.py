@@ -17,32 +17,87 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AddonNoticeType',
+            name="AddonNoticeType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('display', models.CharField(help_text='E.g.: Translation issues', max_length=50)),
-                ('description', models.CharField(help_text='E.g.: Notify me on translation issues', max_length=100)),
-                ('send_default', models.BooleanField(default=True, help_text='Default setting for this notice type')),
-                ('author_related_default', models.BooleanField(default=True, help_text='Turn off for notice types which are not directly related                   to an add-on author, e.g. mentions in add-on comments.')),
-                ('slug', models.SlugField(help_text='Do not change this once it is set', unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "display",
+                    models.CharField(
+                        help_text="E.g.: Translation issues", max_length=50
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        help_text="E.g.: Notify me on translation issues",
+                        max_length=100,
+                    ),
+                ),
+                (
+                    "send_default",
+                    models.BooleanField(
+                        default=True, help_text="Default setting for this notice type"
+                    ),
+                ),
+                (
+                    "author_related_default",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Turn off for notice types which are not directly related                   to an add-on author, e.g. mentions in add-on comments.",
+                    ),
+                ),
+                (
+                    "slug",
+                    models.SlugField(
+                        help_text="Do not change this once it is set", unique=True
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Addon notice type',
-                'verbose_name_plural': 'Addon notice types',
+                "verbose_name": "Addon notice type",
+                "verbose_name_plural": "Addon notice types",
             },
         ),
         migrations.CreateModel(
-            name='AddonNoticeUser',
+            name="AddonNoticeUser",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('shouldsend', models.BooleanField(default=True)),
-                ('author_related', models.BooleanField(default=True)),
-                ('notice_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='wladdons_settings.AddonNoticeType')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("shouldsend", models.BooleanField(default=True)),
+                ("author_related", models.BooleanField(default=True)),
+                (
+                    "notice_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="wladdons_settings.AddonNoticeType",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Addon noticetype/user relationship',
-                'verbose_name_plural': 'Addon noticetype/user relationships',
+                "verbose_name": "Addon noticetype/user relationship",
+                "verbose_name_plural": "Addon noticetype/user relationships",
             },
         ),
     ]

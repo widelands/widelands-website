@@ -19,11 +19,10 @@ def delete_me(request):
     """Show a page to inform the user what deleting means."""
 
     context = {
-        'user': request.user,
-        'deleted_name': settings.DELETED_USERNAME,
+        "user": request.user,
+        "deleted_name": settings.DELETED_USERNAME,
     }
-    return render(request, 'wlprofile/delete_me.html',
-                  context)
+    return render(request, "wlprofile/delete_me.html", context)
 
 
 @login_required
@@ -47,15 +46,17 @@ def do_delete(request):
 
     # Clean possible Playtime availabilities
     from wlscheduling.models import Availabilities
+
     try:
         events = Availabilities.objects.filter(user=user)
         for event in events:
             event.delete()
     except:
         pass
-            
+
     # Clean the Online gaming password
     from wlggz.models import GGZAuth
+
     try:
         ggz_user = GGZAuth.objects.get(user=user)
         ggz_user.delete()
@@ -64,12 +65,12 @@ def do_delete(request):
 
     # Clean the profile
     profile = user.wlprofile
-    upload_to = Profile._meta.get_field('avatar').upload_to
-    
+    upload_to = Profile._meta.get_field("avatar").upload_to
+
     if upload_to in profile.avatar.name:
         # Delete the avatar file
         profile.avatar.delete()
-    
+
     # Delete the profile and recreate it to get a clean profile page
     # We create a new one to have the anymous.png as avatar
     profile.delete()
@@ -86,6 +87,7 @@ def do_delete(request):
     # has also put the message in the trash.
     from django_messages.models import Message
     from datetime import datetime
+
     messages = Message.objects.inbox_for(user)
     for message in messages:
         message.recipient_deleted_at = datetime.now()
@@ -97,6 +99,7 @@ def do_delete(request):
 
     # Delete addon notifications
     from wladdons_settings.models import AddonNoticeUser
+
     user_notice = AddonNoticeUser.objects.filter(user=user)
     for notice in user_notice:
         notice.delete()
@@ -108,7 +111,7 @@ def do_delete(request):
     user.email = settings.DELETED_MAIL_ADDRESS
     user.save()
 
-    return redirect('mainpage')
+    return redirect("mainpage")
 
 
 @login_required
@@ -128,32 +131,28 @@ def view(request, user=None):
         raise Http404("User has been deleted")
 
     template_params = {
-        'profile': profile,
+        "profile": profile,
     }
 
-    return render(request, 'wlprofile/view_profile.html',
-                              template_params)
+    return render(request, "wlprofile/view_profile.html", template_params)
 
 
 @login_required
 def edit(request):
     instance = request.user.wlprofile
 
-    if request.method == 'POST':
-        form = EditProfileForm(request.POST,
-                               instance=instance, files=request.FILES)
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, instance=instance, files=request.FILES)
         if form.is_valid():
             form.save()
-            messages.info(request,
-                          'Your profile was changed successfully.')
+            messages.info(request, "Your profile was changed successfully.")
 
-            return HttpResponseRedirect(reverse('profile_view'))
+            return HttpResponseRedirect(reverse("profile_view"))
     else:
         form = EditProfileForm(instance=instance)
 
     template_params = {
-        'profile': instance,
-        'profile_form': form,
+        "profile": instance,
+        "profile_form": form,
     }
-    return render(request, 'wlprofile/edit_profile.html',
-                              template_params)
+    return render(request, "wlprofile/edit_profile.html", template_params)

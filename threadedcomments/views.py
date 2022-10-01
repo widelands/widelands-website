@@ -11,10 +11,10 @@ from threadedcomments.utils import JSONResponse, XMLResponse
 from mainpage.wl_utils import get_real_ip
 
 
-def _adjust_max_comment_length(form, field_name='comment'):
+def _adjust_max_comment_length(form, field_name="comment"):
     """Sets the maximum comment length to that default specified in the
     settings."""
-    form.base_fields['comment'].max_length = DEFAULT_MAX_COMMENT_LENGTH
+    form.base_fields["comment"].max_length = DEFAULT_MAX_COMMENT_LENGTH
 
 
 def _get_next(request):
@@ -32,35 +32,49 @@ def _get_next(request):
     4. Otherwise, the view raise a 404 Not Found.
 
     """
-    next = request.POST.get('next', request.GET.get(
-        'next', request.META.get('HTTP_REFERER', None)))
+    next = request.POST.get(
+        "next", request.GET.get("next", request.META.get("HTTP_REFERER", None))
+    )
     if not next or next == request.path:
         raise Http404  # No next url was supplied in GET or POST.
     return next
 
 
-def _preview(request, context_processors, extra_context, form_class=ThreadedCommentForm):
+def _preview(
+    request, context_processors, extra_context, form_class=ThreadedCommentForm
+):
     """Returns a preview of the comment so that the user may decide if he or
     she wants to edit it before submitting it permanently."""
     _adjust_max_comment_length(form_class)
     form = form_class(request.POST or None)
     context = {
-        'next': _get_next(request),
-        'form': form,
+        "next": _get_next(request),
+        "form": form,
     }
     if form.is_valid():
         new_comment = form.save(commit=False)
-        context['comment'] = new_comment
+        context["comment"] = new_comment
     else:
-        context['comment'] = None
-    return render(request,
-                  'threadedcomments/preview_comment.html',
-                  extra_context,
-                  )
+        context["comment"] = None
+    return render(
+        request,
+        "threadedcomments/preview_comment.html",
+        extra_context,
+    )
 
 
 @login_required
-def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=None, add_messages=False, ajax=False, context_processors=[], extra_context={}):
+def comment(
+    request,
+    content_type=None,
+    object_id=None,
+    edit_id=None,
+    parent_id=None,
+    add_messages=False,
+    ajax=False,
+    context_processors=[],
+    extra_context={},
+):
     """Receives POST data and creates a new ``ThreadedComment``, or
     edits an old one based upon the specified parameters.
 
@@ -78,8 +92,10 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
     model = ThreadedComment
     if not edit_id and not (content_type and object_id):
         raise Http404  # Must specify either content_type and object_id or edit_id
-    if 'preview' in request.POST:
-        return _preview(request, context_processors, extra_context, form_class=form_class)
+    if "preview" in request.POST:
+        return _preview(
+            request, context_processors, extra_context, form_class=form_class
+        )
     if edit_id:
         instance = get_object_or_404(model, id=edit_id)
     else:
@@ -90,7 +106,8 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
         new_comment = form.save(commit=False)
         if not edit_id:
             new_comment.content_type = get_object_or_404(
-                ContentType, id=int(content_type))
+                ContentType, id=int(content_type)
+            )
             new_comment.object_id = int(object_id)
 
         new_comment.user = request.user
@@ -100,17 +117,26 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
         new_comment.save()
         if add_messages:
             request.user.message_set.create(
-                message='Your message has been posted successfully.')
+                message="Your message has been posted successfully."
+            )
 
-        if ajax == 'json':
-            return JSONResponse([new_comment, ])
-        elif ajax == 'xml':
-            return XMLResponse([new_comment, ])
+        if ajax == "json":
+            return JSONResponse(
+                [
+                    new_comment,
+                ]
+            )
+        elif ajax == "xml":
+            return XMLResponse(
+                [
+                    new_comment,
+                ]
+            )
         else:
             return HttpResponseRedirect(_get_next(request))
-    elif ajax == 'json':
-        return JSONResponse({'errors': form.errors}, is_iterable=False)
-    elif ajax == 'xml':
+    elif ajax == "json":
+        return JSONResponse({"errors": form.errors}, is_iterable=False)
+    elif ajax == "xml":
         template_str = """
 <errorlist>
     {% for error,name in errors %}
@@ -121,7 +147,16 @@ def comment(request, content_type=None, object_id=None, edit_id=None, parent_id=
 </errorlist>
         """
         response_str = Template(template_str).render(
-            Context({'errors': list(zip(list(form.errors.values()), list(form.errors.keys())))}))
+            Context(
+                {
+                    "errors": list(
+                        zip(list(form.errors.values()), list(form.errors.keys()))
+                    )
+                }
+            )
+        )
         return XMLResponse(response_str, is_iterable=False)
     else:
-        return _preview(request, context_processors, extra_context, form_class=form_class)
+        return _preview(
+            request, context_processors, extra_context, form_class=form_class
+        )

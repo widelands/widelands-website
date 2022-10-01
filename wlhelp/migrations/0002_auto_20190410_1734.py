@@ -8,29 +8,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wlhelp', '0001_initial'),
+        ("wlhelp", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='building',
-            options={'ordering': ['name']},
+            name="building",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='tribe',
-            options={'ordering': ['name']},
+            name="tribe",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='ware',
-            options={'ordering': ['name']},
+            name="ware",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='worker',
-            options={'ordering': ['name']},
+            name="worker",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterField(
-            model_name='building',
-            name='type',
-            field=models.CharField(choices=[(b'P', b'productionsite'), (b'W', b'warehouse'), (b'M', b'militarysite'), (b'T', b'trainingsite'), (b'm', b'market')], max_length=1),
+            model_name="building",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    (b"P", b"productionsite"),
+                    (b"W", b"warehouse"),
+                    (b"M", b"militarysite"),
+                    (b"T", b"trainingsite"),
+                    (b"m", b"market"),
+                ],
+                max_length=1,
+            ),
         ),
     ]

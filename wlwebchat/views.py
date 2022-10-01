@@ -3,4 +3,4 @@ from django.shortcuts import render
 
 
 def webchat(request):
-    return render(request, 'wlwebchat/index.html')
+    return render(request, "wlwebchat/index.html")

@@ -15,68 +15,86 @@ from mainpage.validators import virus_scan
 
 
 class AddPostForm(forms.ModelForm):
-    name = forms.CharField(label=_('Subject'))
+    name = forms.CharField(label=_("Subject"))
     attachment = forms.FileField(
-        label=_('Attachment'),
+        label=_("Attachment"),
         required=False,
-        validators=[virus_scan, validate_file, ])
+        validators=[
+            virus_scan,
+            validate_file,
+        ],
+    )
 
     class Meta:
         model = Post
         # Listing fields again to get the the right order
-        fields = ['name', 'body', 'markup', 'attachment', ]
+        fields = [
+            "name",
+            "body",
+            "markup",
+            "attachment",
+        ]
         widgets = {
-            'body': forms.Textarea(attrs={'cols': 80, 'rows': 15}),
+            "body": forms.Textarea(attrs={"cols": 80, "rows": 15}),
         }
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        self.topic = kwargs.pop('topic', None)
-        self.forum = kwargs.pop('forum', None)
+        self.user = kwargs.pop("user", None)
+        self.topic = kwargs.pop("topic", None)
+        self.forum = kwargs.pop("forum", None)
         super(AddPostForm, self).__init__(*args, **kwargs)
 
         if self.topic:
-            self.fields['name'].widget = forms.HiddenInput()
-            self.fields['name'].required = False
+            self.fields["name"].widget = forms.HiddenInput()
+            self.fields["name"].required = False
 
-        if not pybb_settings.ATTACHMENT_ENABLE or self.user.wlprofile.post_count() < settings.ALLOW_ATTACHMENTS_AFTER:
-            self.fields['attachment'].widget = forms.HiddenInput()
-            self.fields['attachment'].required = False
+        if (
+            not pybb_settings.ATTACHMENT_ENABLE
+            or self.user.wlprofile.post_count() < settings.ALLOW_ATTACHMENTS_AFTER
+        ):
+            self.fields["attachment"].widget = forms.HiddenInput()
+            self.fields["attachment"].required = False
 
     def save(self, *args, **kwargs):
         if self.forum:
             topic_is_new = True
-            topic = Topic(forum=self.forum,
-                          user=self.user,
-                          name=self.cleaned_data['name'])
+            topic = Topic(
+                forum=self.forum, user=self.user, name=self.cleaned_data["name"]
+            )
             topic.save(*args, **kwargs)
         else:
             topic_is_new = False
             topic = self.topic
 
-        post = Post(topic=topic, user=self.user,
-                    markup=self.cleaned_data['markup'],
-                    body=self.cleaned_data['body'])
+        post = Post(
+            topic=topic,
+            user=self.user,
+            markup=self.cleaned_data["markup"],
+            body=self.cleaned_data["body"],
+        )
         post.save(*args, **kwargs)
 
         if pybb_settings.ATTACHMENT_ENABLE:
-            self.save_attachment(post, self.cleaned_data['attachment'])
+            self.save_attachment(post, self.cleaned_data["attachment"])
 
         return post
 
     def save_attachment(self, post, memfile):
         if memfile:
-            obj = Attachment(size=memfile.size, content_type=memfile.content_type,
-                             name=memfile.name, post=post)
-            dir = os.path.join(settings.MEDIA_ROOT,
-                               pybb_settings.ATTACHMENT_UPLOAD_TO)
+            obj = Attachment(
+                size=memfile.size,
+                content_type=memfile.content_type,
+                name=memfile.name,
+                post=post,
+            )
+            dir = os.path.join(settings.MEDIA_ROOT, pybb_settings.ATTACHMENT_UPLOAD_TO)
             if not os.path.exists(dir):
                 os.makedirs(dir)
 
-            fname = '{}.0'.format(post.id)
+            fname = "{}.0".format(post.id)
             path = os.path.join(dir, fname)
 
-            with open(path, 'wb') as f:
+            with open(path, "wb") as f:
                 f.write(memfile.read())
 
             obj.path = fname
@@ -84,10 +102,9 @@ class AddPostForm(forms.ModelForm):
 
 
 class EditPostForm(forms.ModelForm):
-
     class Meta:
         model = Post
-        fields = ['body', 'markup']
+        fields = ["body", "markup"]
 
     def save(self, *args, **kwargs):
         post = super(EditPostForm, self).save(commit=False)
@@ -98,11 +115,14 @@ class EditPostForm(forms.ModelForm):
 
 class LastPostsDayForm(forms.Form):
     days = forms.IntegerField(
-        max_value = 1000,
-        min_value = 5,
-        )
-    
+        max_value=1000,
+        min_value=5,
+    )
+
     sort_by = forms.ChoiceField(
-        choices = [('forum','Forum'),('topic', 'Topic'),],
-        label = 'Group by:',
-        )
+        choices=[
+            ("forum", "Forum"),
+            ("topic", "Topic"),
+        ],
+        label="Group by:",
+    )
