@@ -21,7 +21,8 @@ TZ_CHOICES = [(float(x[0]), x[1]) for x in (
 
 class Profile(models.Model):
     user = AutoOneToOneField(
-        User, related_name='wlprofile', verbose_name=_('User'))
+        User, related_name='wlprofile', verbose_name=_('User'),
+        on_delete=models.CASCADE)
 
     # Web related fields.
     site = models.URLField(_('Website'), blank=True, default='')

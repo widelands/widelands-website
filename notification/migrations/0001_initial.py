@@ -80,11 +80,11 @@ class Migration(migrations.Migration):
                 ('added', models.DateTimeField(
                     default=datetime.datetime.now, verbose_name='added')),
                 ('signal', models.TextField(verbose_name='signal')),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
                 ('notice_type', models.ForeignKey(
-                    verbose_name='notice type', to='notification.NoticeType')),
+                    verbose_name='notice type', to='notification.NoticeType', on_delete=models.CASCADE)),
                 ('user', models.ForeignKey(
-                    verbose_name='user', to=settings.AUTH_USER_MODEL)),
+                    verbose_name='user', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-added'],
@@ -96,25 +96,25 @@ class Migration(migrations.Migration):
             model_name='noticesetting',
             name='notice_type',
             field=models.ForeignKey(
-                verbose_name='notice type', to='notification.NoticeType'),
+                verbose_name='notice type', to='notification.NoticeType', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='noticesetting',
             name='user',
             field=models.ForeignKey(
-                verbose_name='user', to=settings.AUTH_USER_MODEL),
+                verbose_name='user', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='notice',
             name='notice_type',
             field=models.ForeignKey(
-                verbose_name='notice type', to='notification.NoticeType'),
+                verbose_name='notice type', to='notification.NoticeType', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='notice',
             name='user',
             field=models.ForeignKey(
-                verbose_name='user', to=settings.AUTH_USER_MODEL),
+                verbose_name='user', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='noticesetting',

@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('graph_url', models.CharField(max_length=256)),
                 ('imagemap', models.TextField()),
                 ('help', models.TextField(max_length=256)),
-                ('tribe', models.ForeignKey(to='wlhelp.Tribe')),
+                ('tribe', models.ForeignKey(to='wlhelp.Tribe', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -70,8 +70,8 @@ class Migration(migrations.Migration):
                 ('help', models.TextField(max_length=256)),
                 ('exp', models.TextField(max_length=8)),
                 ('becomes', models.OneToOneField(
-                    related_name='trained_by_experience', null=True, blank=True, to='wlhelp.Worker')),
-                ('tribe', models.ForeignKey(to='wlhelp.Tribe')),
+                    related_name='trained_by_experience', null=True, blank=True, to='wlhelp.Worker', on_delete=models.CASCADE)),
+                ('tribe', models.ForeignKey(to='wlhelp.Tribe', on_delete=models.CASCADE)),
             ],
         ),
         migrations.AddField(
@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
             model_name='building',
             name='enhancement',
             field=models.OneToOneField(
-                related_name='enhanced_from', null=True, blank=True, to='wlhelp.Building'),
+                related_name='enhanced_from', null=True, blank=True, to='wlhelp.Building', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='building',
@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='building',
             name='tribe',
-            field=models.ForeignKey(to='wlhelp.Tribe'),
+            field=models.ForeignKey(to='wlhelp.Tribe', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='building',

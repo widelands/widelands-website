@@ -87,7 +87,6 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ['-created']
     date_hierarchy = 'created'
     search_fields = ['body', 'topic__name']
-    actions = [delete_selected, unhide_post]
     inlines = [AttachmentInline,]
     fieldsets = (
         (None, {
@@ -104,6 +103,12 @@ class PostAdmin(admin.ModelAdmin):
         }
         ),
     )
+
+    def get_actions(self, request):
+        # Overwrite delete_selected from base class.
+        actions = admin.ModelAdmin.actions[:]
+        del actions['delete_selected']
+        return actions + [delete_selected, unhide_post]
 
 
 class ReadAdmin(admin.ModelAdmin):

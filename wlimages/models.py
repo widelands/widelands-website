@@ -61,7 +61,7 @@ class Image(models.Model):
     TODO
     """
     # Generic Foreign Key Fields
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
 
@@ -69,7 +69,7 @@ class Image(models.Model):
     revision = models.PositiveIntegerField()
 
     # User Field
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Date Fields
     date_submitted = models.DateTimeField(

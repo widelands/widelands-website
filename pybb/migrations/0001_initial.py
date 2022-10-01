@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(
                     null=True, verbose_name='Updated')),
                 ('category', models.ForeignKey(related_name='forums',
-                                               verbose_name='Category', to='pybb.Category')),
+                                               verbose_name='Category', to='pybb.Category', on_delete=models.CASCADE)),
                 ('moderators', models.ManyToManyField(
                     to=settings.AUTH_USER_MODEL, verbose_name='Moderators', blank=True)),
             ],
@@ -102,9 +102,9 @@ class Migration(migrations.Migration):
                 ('body_html', models.TextField(verbose_name='HTML version')),
                 ('body_text', models.TextField(verbose_name='Text version')),
                 ('dst_user', models.ForeignKey(related_name='dst_users',
-                                               verbose_name='Recipient', to=settings.AUTH_USER_MODEL)),
+                                               verbose_name='Recipient', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                 ('src_user', models.ForeignKey(related_name='src_users',
-                                               verbose_name='Author', to=settings.AUTH_USER_MODEL)),
+                                               verbose_name='Author', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-created'],
@@ -139,11 +139,11 @@ class Migration(migrations.Migration):
                 ('sticky', models.BooleanField(default=False, verbose_name='Sticky')),
                 ('closed', models.BooleanField(default=False, verbose_name='Closed')),
                 ('forum', models.ForeignKey(related_name='topics',
-                                            verbose_name='Forum', to='pybb.Forum')),
+                                            verbose_name='Forum', to='pybb.Forum', on_delete=models.CASCADE)),
                 ('subscribers', models.ManyToManyField(related_name='subscriptions',
                                                        verbose_name='Subscribers', to=settings.AUTH_USER_MODEL, blank=True)),
                 ('user', models.ForeignKey(
-                    verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                    verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-updated'],
@@ -154,31 +154,31 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='read',
             name='topic',
-            field=models.ForeignKey(verbose_name='Topic', to='pybb.Topic'),
+            field=models.ForeignKey(verbose_name='Topic', to='pybb.Topic', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='read',
             name='user',
             field=models.ForeignKey(
-                verbose_name='User', to=settings.AUTH_USER_MODEL),
+                verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='post',
             name='topic',
             field=models.ForeignKey(
-                related_name='posts', verbose_name='Topic', to='pybb.Topic'),
+                related_name='posts', verbose_name='Topic', to='pybb.Topic', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='post',
             name='user',
             field=models.ForeignKey(
-                related_name='posts', verbose_name='User', to=settings.AUTH_USER_MODEL),
+                related_name='posts', verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='attachment',
             name='post',
             field=models.ForeignKey(
-                related_name='attachments', verbose_name='Post', to='pybb.Post'),
+                related_name='attachments', verbose_name='Post', to='pybb.Post', on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='read',

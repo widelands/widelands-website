@@ -6,7 +6,7 @@ Django==1.11.29
 django-haystack==2.8.1
 # django-messages is very old on pypi
 # Do not install newer versions because our notifications app is affected
--e git://github.com/arneb/django-messages.git@2d8dabb755e0b5ace876bde25f45d07c2051ac37#egg=django_messages
+-e git+https://github.com/arneb/django-messages.git@2d8dabb755e0b5ace876bde25f45d07c2051ac37#egg=django_messages
 django-nocaptcha-recaptcha==0.0.20
 django-star-ratings==0.8.0
 dj-pagination==2.4.0
@@ -24,27 +24,3 @@ python-magic==0.4.15
 Sphinx==4.3.2
 docutils==0.17
 Whoosh==2.7.4
-
-# Automatically installed dependencies
-
-# Dependencies for django-registration:
-    # confusable-homoglyphs=3.0
-
-# Dependencies for Sphinx:
-    # snowballstemmer==1.2.1
-    # alabaster==0.7.10
-    # sphinxcontrib-websupport==1.0.1
-    # Pygments==2.2.0
-    # requests==2.18.1, installs: idna, urllib3, chardet, certifi
-    # Babel==2.4.0, installs: pytz
-    # Jinja2==2.9.6, installs: MarkupSafe
-    # typing==3.6.1
-    # imagesize==0.7.1
-    # six==1.10.0
-    # packaging==19.0
-
-# Depencies for beautifulsoup:
-    # soupsieve==1.8, installs backports.functools-lru-cache
-
-# Dependencies for bleach:
-    # six

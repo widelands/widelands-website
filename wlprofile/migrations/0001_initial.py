@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('show_signatures', models.BooleanField(
                     default=True, verbose_name='Show signatures')),
                 ('user', wl_utils.AutoOneToOneField(related_name='wlprofile',
-                                                    verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                                                    verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Profile',

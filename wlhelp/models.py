@@ -8,7 +8,7 @@ class Tribe(models.Model):
     icon_url = models.CharField(max_length=256)
     network_pdf_url = models.CharField(max_length=256)
     network_gif_url = models.CharField(max_length=256)
-    
+
     class Meta:
         ordering = ['name']
 
@@ -21,7 +21,7 @@ class Worker(models.Model):
 
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
-    tribe = models.ForeignKey(Tribe)
+    tribe = models.ForeignKey(Tribe, on_delete=models.CASCADE)
     # URL to include this, i wasn't able to feed django local images
     image_url = models.CharField(max_length=256)
     graph_url = models.CharField(max_length=256)  # URL to the help graph
@@ -32,7 +32,9 @@ class Worker(models.Model):
     help = models.TextField(max_length=256)
     exp = models.TextField(max_length=8)  # Just in case
     becomes = models.OneToOneField(
-        'self', related_name='trained_by_experience', blank=True, null=True)
+        'self', related_name='trained_by_experience',
+        on_delete=models.SET_NULL,
+        blank=True, null=True)
 
     class Meta:
         ordering = ['name']
@@ -45,7 +47,7 @@ class Worker(models.Model):
 class Ware(models.Model):
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
-    tribe = models.ForeignKey(Tribe)
+    tribe = models.ForeignKey(Tribe, on_delete=models.CASCADE)
     # URL to include this, i wasn't able to feed django local images
     image_url = models.CharField(max_length=256)
     graph_url = models.CharField(max_length=256)  # URL to the help graph
@@ -109,7 +111,7 @@ class Building(models.Model):
 
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
-    tribe = models.ForeignKey(Tribe)
+    tribe = models.ForeignKey(Tribe, on_delete=models.CASCADE)
     # URL to include this, i wasn't able to feed django local images
     image_url = models.CharField(max_length=256)
     graph_url = models.CharField(max_length=256)  # URL to the help graph
@@ -122,7 +124,9 @@ class Building(models.Model):
 
     # Enhances to
     enhancement = models.OneToOneField(
-        'self', related_name='enhanced_from', blank=True, null=True)
+        'self', related_name='enhanced_from', blank=True, null=True,
+        on_delete=models.SET_NULL,
+        )
 
     # Build cost
     build_wares = models.ManyToManyField(
@@ -147,7 +151,7 @@ class Building(models.Model):
         Ware, related_name='produced_by_buildings', blank=True)
     output_workers = models.ManyToManyField(
         Worker, related_name='trained_by_buildings', blank=True)
-    
+
     class Meta:
         ordering = ['name']
 

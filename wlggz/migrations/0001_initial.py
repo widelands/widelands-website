@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('confirmed', models.IntegerField(default=1,
                                                   verbose_name='confirmed', editable=False)),
                 ('user', wl_utils.AutoOneToOneField(related_name='wlggz',
-                                                    verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                                                    verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'ggz',

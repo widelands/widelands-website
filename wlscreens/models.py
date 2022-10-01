@@ -69,7 +69,8 @@ class Screenshot(models.Model):
     )
     category = models.ForeignKey(
         Category,
-        related_name='screenshots'
+        related_name='screenshots',
+        on_delete=models.CASCADE,
     )
     position = models.IntegerField(
         null=True,

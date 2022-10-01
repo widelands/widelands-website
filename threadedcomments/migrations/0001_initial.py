@@ -39,9 +39,9 @@ class Migration(migrations.Migration):
                     default=False, verbose_name='is approved')),
                 ('ip_address', models.GenericIPAddressField(
                     null=True, verbose_name='IP address', blank=True)),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
                 ('parent', models.ForeignKey(related_name='children', default=None,
-                                             blank=True, to='threadedcomments.FreeThreadedComment', null=True)),
+                                             blank=True, to='threadedcomments.FreeThreadedComment', null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-date_submitted',),
@@ -81,10 +81,10 @@ class Migration(migrations.Migration):
                     default=False, verbose_name='is approved')),
                 ('ip_address', models.GenericIPAddressField(
                     null=True, verbose_name='IP address', blank=True)),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
                 ('parent', models.ForeignKey(related_name='children', default=None,
-                                             blank=True, to='threadedcomments.ThreadedComment', null=True)),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                                             blank=True, to='threadedcomments.ThreadedComment', null=True, on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-date_submitted',),

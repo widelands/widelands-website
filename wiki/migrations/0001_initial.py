@@ -34,9 +34,9 @@ class Migration(migrations.Migration):
                 ('object_id', models.PositiveIntegerField(null=True)),
                 ('tags', tagging.fields.TagField(max_length=255, blank=True)),
                 ('content_type', models.ForeignKey(
-                    to='contenttypes.ContentType', null=True)),
+                    to='contenttypes.ContentType', null=True, on_delete=models.CASCADE)),
                 ('creator', models.ForeignKey(verbose_name='Article Creator',
-                                              to=settings.AUTH_USER_MODEL, null=True)),
+                                              to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Article',
@@ -64,9 +64,9 @@ class Migration(migrations.Migration):
                 ('reverted', models.BooleanField(
                     default=False, verbose_name='Reverted Revision')),
                 ('article', models.ForeignKey(
-                    verbose_name='Article', to='wiki.Article')),
+                    verbose_name='Article', to='wiki.Article', on_delete=models.CASCADE)),
                 ('editor', models.ForeignKey(verbose_name='Editor',
-                                             to=settings.AUTH_USER_MODEL, null=True)),
+                                             to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-revision',),

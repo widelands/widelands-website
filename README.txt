@@ -101,8 +101,8 @@ following table:
 
 Now everything should work.
 
-Runnning with DBUG=False
-------------------------
+Runnning with DEBUG=False
+-------------------------
 In case you want to test the site with the setting DEBUG=False, you might
 notice that at least the admin site is missing all css. To fix this run:
 

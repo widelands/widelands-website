@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                     default=0, editable=False, blank=True)),
                 ('rating_score', models.IntegerField(
                     default=0, editable=False, blank=True)),
-                ('uploader', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('uploader', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-pub_date',),

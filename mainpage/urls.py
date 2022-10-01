@@ -27,10 +27,10 @@ urlpatterns = [
     url(r'^accounts/', include('django_registration.backends.activation.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
 
-    url(r'^ratings/', include('star_ratings.urls', namespace='ratings', app_name='ratings')),
+    url(r'^ratings/', include('star_ratings.urls', namespace='ratings')),
     # Formerly 3rd party
     url(r'^notification/', include('notification.urls')),
-    
+
     url(r'^messages/', include('django_messages_wl.urls')),
 
     url(r'^threadedcomments/', include('threadedcomments.urls')),

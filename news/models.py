@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import permalink
 from django.contrib.auth.models import User
 from tagging.fields import TagField
 from news.managers import PublicManager
@@ -44,7 +43,7 @@ class Post(models.Model):
     )
     title = models.CharField(_('title'), max_length=200)
     slug = models.SlugField(_('slug'), unique_for_date='publish')
-    author = models.ForeignKey(User, null=True)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     body = models.TextField(
         _('body'), help_text='Text entered here will be rendered using Markdown')
     tease = models.TextField(_('tease'), blank=True)
