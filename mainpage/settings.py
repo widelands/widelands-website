@@ -117,8 +117,7 @@ INSTALLED_APPS = [
     # Thirdparty apps
     'threadedcomments',  # included as wlapp
     'notification',     # included as wlapp
-    # NOCOM(#sirver): bring back
-    #  'django_messages_wl.apps.WLDjangoMessagesConfig',
+    'django_messages_wl.apps.WLDjangoMessagesConfig',
     'dj_pagination',
     'tagging',
     'star_ratings',

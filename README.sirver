@@ -1,0 +1,14 @@
+- Porting to 3.10
+- Upgrading django & dependencies
+
+Document:
+   - Using mariadb for development
+
+
+Required:
+   brew install mysql libmagic
+
+Remove GGZ?
+
+TODO:
+- wl_addons_server is not backed up on the server. I hence do not have it on my computer either.

@@ -1,0 +1,21 @@
+# This is a basic docker compose to get a mariadb running locally to develop
+# against.
+
+version: '3.3'
+
+services:
+  db:
+    image: mariadb:10.9
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: "foobar"
+    ports:
+      - 3306:3306
+    volumes:
+      - db_volume:/var/lib/mysql
+      - type: bind
+        source: ./dbdump
+        target: /var/database_backups/
+# Names our volume
+volumes:
+  db_volume:
