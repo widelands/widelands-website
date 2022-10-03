@@ -276,15 +276,19 @@ class TribeParser(object):
 
             # Buildcost if we have any
             if "buildcost" in building:
-                b.build_costs, b.build_wares = objects_with_counts(
+                build_costs, build_wares = objects_with_counts(
                     WareModel, building["buildcost"]
                 )
+                b.build_costs = build_costs
+                b.build_wares.set(build_wares)
 
             # Try to figure out who works there
             if "workers" in building:
-                b.workers_count, b.workers_types = objects_with_counts(
+                workers_count, workers_types = objects_with_counts(
                     WorkerModel, building["workers"]
                 )
+                b.workers_count = workers_count
+                b.workers_types.set(workers_types)
 
             # Try to figure out if this building can be enhanced
             if "enhancement" in building:
@@ -294,23 +298,25 @@ class TribeParser(object):
 
             # Input wares
             if "stored_wares" in building:
-                b.store_count, b.store_wares = objects_with_counts(
+                store_count, store_wares = objects_with_counts(
                     WareModel, building["stored_wares"]
                 )
+                b.store_count = store_count
+                b.store_wares.set(store_wares)
 
             # Output wares
             if "produced_wares" in building:
-                b.output_wares = [
+                b.output_wares.set([
                     WareModel.objects.get_or_create(name=w, tribe=self._to)[0]
                     for w in building["produced_wares"]
-                ]
+                ])
 
             # Output workers
             if "produced_workers" in building:
-                b.output_workers = [
+                b.output_workers.set([
                     WorkerModel.objects.get_or_create(name=w, tribe=self._to)[0]
                     for w in building["produced_workers"]
-                ]
+                ])
 
             b.save()
 
