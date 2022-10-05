@@ -32,7 +32,7 @@ class GGZAuth(models.Model):
     def save(self, *args, **kwargs):
         # hash the password
         pw_hash = hashlib.sha1(self.password.encode("utf-8")).digest()
-        pw_base64 = base64.standard_b64encode(pw_hash)
+        pw_base64 = base64.standard_b64encode(pw_hash).decode("ascii")
         self.password = pw_base64
         # Save into the database
         super(GGZAuth, self).save(*args, **kwargs)
