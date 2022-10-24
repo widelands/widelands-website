@@ -28,7 +28,7 @@ function show_reply_form(comment_id, url, depth) {
 							+ '<input type="hidden" name="markup" value="1" />'
 							+ '<input type="submit" value="Submit Comment" />'
 							+ '<button type="button" onclick="javascript:hide_reply_form(\''+comment_id+'\', \''+url+'\', '+depth+')">Cancel</button>'
-							+ "{% csrf_token %}"
+							+ '{% csrf_token %}'
 							+ '</form>'
 					+ '</td>'
 				+ '</tr>'
