@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function(){
 {% include "wlscheduling/other-users.html" %}
 
 <!-- Div to send django data to js file -->
-<div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}" day-to-fill = "{{ current_user_availabilities }}" users-to-fill="{{other_users_availabilities}}" csrf-token = "{% csrf_token %}"></div>
+<!-- csrf-token needs to be in single quotes, otherwise the result get messed up -->
+<div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}" day-to-fill = "{{ current_user_availabilities }}" users-to-fill="{{other_users_availabilities}}" csrf-token = '{% csrf_token %}'></div>
 
 
 {% endblock %}
