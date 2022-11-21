@@ -67,7 +67,8 @@ class UploadMapForm(ModelForm):
             os.remove(copied_file)
             return cleaned_data
 
-        mapinfo = json.load(open(copied_file + ".json"))
+        with open (copied_file + ".json") as f:
+            mapinfo = json.load(f)
 
         if Map.objects.filter(name=mapinfo["name"]):
             self._errors["file"] = self.error_class(

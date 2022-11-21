@@ -6,8 +6,6 @@ from django.test import TestCase as DjangoTest, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-# TODO(Franku): Not used, but should be replaced with python json because it gets removed in django 1.7
-# from django.utils import simplejson as json
 from wlmaps.models import *
 
 import os
@@ -41,7 +39,8 @@ class _LoginToSite(DjangoTest):
 class TestWLMaps_ValidUpload_ExceptCorrectResult(_LoginToSite):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        c = self.client.post(url, {"file": open(elven_forests, "rb"), "test": True})
+        with open (elven_forests, "rb") as f:
+            c = self.client.post(url, {"file": f, "test": True})
 
         o = Map.objects.get(name="Elven Forests")
         self.assertEqual(o.name, "Elven Forests")
@@ -51,7 +50,8 @@ class TestWLMaps_ValidUpload_ExceptCorrectResult(_LoginToSite):
 class TestWLMaps_AnonUpload_ExceptRedirect(DjangoTest):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        k = self.client.post(url, {"file": open(elven_forests, "rb")})
+        with open (elven_forests, "rb") as f:
+            k = self.client.post(url, {"file": f})
         self.assertRedirects(k, "/accounts/login/?next=/maps/upload/")
 
 
@@ -66,17 +66,20 @@ class TestWLMaps_UploadWithoutMap_ExceptError(_LoginToSite):
 class TestWLMaps_UploadTwice_ExceptCorrectResult(_LoginToSite):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        self.client.post(url, {"file": open(elven_forests, "rb"), "test": True})
+        with open (elven_forests, "rb") as f:
+            self.client.post(url, {"file": f, "test": True})
         self.assertEqual(len(Map.objects.all()), 1)
 
-        self.client.post(url, {"file": open(elven_forests, "rb"), "test": True})
+        with open (elven_forests, "rb") as f:
+            self.client.post(url, {"file": f, "test": True})
         self.assertEqual(len(Map.objects.all()), 1)
 
 
 class TestWLMaps_UploadWithInvalidMap_ExceptError(_LoginToSite):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        self.client.post(url, {"file": open(__file__, "rb"), "test": True})
+        with open (__file__, "rb") as f:
+            self.client.post(url, {"file": f, "test": True})
         self.assertEqual(len(Map.objects.all()), 0)
 
 
