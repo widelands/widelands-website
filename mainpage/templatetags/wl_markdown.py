@@ -212,9 +212,10 @@ def find_smiley_Strings(bs4_string):
 # Predefine the markdown extensions here to have a clean code in
 # do_wl_markdown()
 md_extensions = ["extra", "toc", "mdx_wikilink_plus"]
-md_configs = {'mdx_wikilink_plus': {'base_url': '/wiki/',
-                                    'url_whitespace': '%20'},
-             }
+md_configs = {
+    "mdx_wikilink_plus": {"base_url": "/wiki/", "url_whitespace": "%20"},
+}
+
 
 def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""

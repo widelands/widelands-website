@@ -17,6 +17,5 @@ try:
             _("a new comment has been posted to a topic you observe"),
         )
 
-
 except ImportError:
     print("Skipping creation of NoticeTypes as notification app not found")

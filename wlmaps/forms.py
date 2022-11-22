@@ -67,7 +67,7 @@ class UploadMapForm(ModelForm):
             os.remove(copied_file)
             return cleaned_data
 
-        with open (copied_file + ".json") as f:
+        with open(copied_file + ".json") as f:
             mapinfo = json.load(f)
 
         if Map.objects.filter(name=mapinfo["name"]):

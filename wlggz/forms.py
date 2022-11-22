@@ -18,7 +18,7 @@ class EditGGZForm(forms.ModelForm):
         required=True,
     )
     password2 = forms.CharField(
-        label=_(u"Enter the password again"),
+        label=_("Enter the password again"),
         widget=forms.PasswordInput(render_value=False),
         required=True,
     )

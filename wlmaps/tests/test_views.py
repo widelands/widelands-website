@@ -39,7 +39,7 @@ class _LoginToSite(DjangoTest):
 class TestWLMaps_ValidUpload_ExceptCorrectResult(_LoginToSite):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        with open (elven_forests, "rb") as f:
+        with open(elven_forests, "rb") as f:
             c = self.client.post(url, {"file": f, "test": True})
 
         o = Map.objects.get(name="Elven Forests")
@@ -50,7 +50,7 @@ class TestWLMaps_ValidUpload_ExceptCorrectResult(_LoginToSite):
 class TestWLMaps_AnonUpload_ExceptRedirect(DjangoTest):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        with open (elven_forests, "rb") as f:
+        with open(elven_forests, "rb") as f:
             k = self.client.post(url, {"file": f})
         self.assertRedirects(k, "/accounts/login/?next=/maps/upload/")
 
@@ -66,11 +66,11 @@ class TestWLMaps_UploadWithoutMap_ExceptError(_LoginToSite):
 class TestWLMaps_UploadTwice_ExceptCorrectResult(_LoginToSite):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        with open (elven_forests, "rb") as f:
+        with open(elven_forests, "rb") as f:
             self.client.post(url, {"file": f, "test": True})
         self.assertEqual(len(Map.objects.all()), 1)
 
-        with open (elven_forests, "rb") as f:
+        with open(elven_forests, "rb") as f:
             self.client.post(url, {"file": f, "test": True})
         self.assertEqual(len(Map.objects.all()), 1)
 
@@ -78,7 +78,7 @@ class TestWLMaps_UploadTwice_ExceptCorrectResult(_LoginToSite):
 class TestWLMaps_UploadWithInvalidMap_ExceptError(_LoginToSite):
     def runTest(self):
         url = reverse("wlmaps_upload")
-        with open (__file__, "rb") as f:
+        with open(__file__, "rb") as f:
             self.client.post(url, {"file": f, "test": True})
         self.assertEqual(len(Map.objects.all()), 0)
 
