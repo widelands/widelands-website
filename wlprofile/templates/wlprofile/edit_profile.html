@@ -1,7 +1,7 @@
 {% extends "wlprofile/base.html" %}
 
 {% load i18n %}
-
+{% load static %}
 {% block title %}
 {% trans "Profile Editing" %} - {{ block.super }}
 {% endblock %}
@@ -28,8 +28,13 @@
 					{% endif %}
 					{% endifequal %}
 
-					{{ field }}
-
+					{{ field }} 
+					{% ifequal field.name "operating_system" %}
+						<img  src="{% static "img/menu_help.png" %}" alt="Info" title="Specify your operating system to help developers in case of questions.">
+					{% endifequal %}
+					{% ifequal field.name "webservice_nick" %}
+						<img  src="{% static "img/menu_help.png" %}" alt="Info" title="Examples: IRC/NickName, Facebook/NickName, Youtube/NickName, ...">
+					{% endifequal %}
 					{% ifequal field.name "time_display" %}
 						<a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
 					{% endifequal %}

@@ -53,32 +53,28 @@
 				<td><a href="{% url 'all_user_posts' profile.user %}" title="Show all posts">{{ profile.post_count }}</a></td>
 			</tr>
 			<tr>
-				<td class="grey">Website:</td>
-				<td><a href="{{profile.site}}">{{ profile.site }}</a></td>
-			</tr>
-			<tr>
 				<td class="grey">Location:</td>
 				<td>{{ profile.location }}</td>
 			</tr>
 			<tr>
-				<td class="grey">Jabber:</td>
-				<td>{{ profile.jabber }}</td>
+				<td class="grey">Operating System:</td>
+				<td>{{ profile.operating_system }}</td>
 			</tr>
 			<tr>
-				<td class="grey">ICQ:</td>
-				<td>{{ profile.icq }}</td>
+				<td class="grey">Webservice(s)/Nick:</td>
+				<td>{{ profile.webservice_nick }}</td>
 			</tr>
 			<tr>
-				<td class="grey">MSN:</td>
-				<td>{{ profile.msn }}</td>
+				<td class="grey">Favourite Map:</td>
+				<td>{{ profile.favourite_map }}</td>
 			</tr>
 			<tr>
-				<td class="grey">AIM:</td>
-				<td>{{ profile.aim }}</td>
+				<td class="grey">Favourite Tribe:</td>
+				<td>{{ profile.favourite_tribe|default_if_none:"" }}</td>
 			</tr>
 			<tr>
-				<td class="grey">Yahoo:</td>
-				<td>{{ profile.yahoo }}</td>
+				<td class="grey">Favourite Add-On:</td>
+				<td>{{ profile.favourite_addon }}</td>
 			</tr>
 			<tr>
 				<td class="grey">Signature:</td>

@@ -22,10 +22,13 @@
 	<div class="authorStats">
 	<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
 	<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+	{% if post.user.wlprofile.operating_system %}
+	<strong>OS:</strong> {{ post.user.wlprofile.operating_system }}<br />
+	{% endif %}
 	<img src="{% static 'img/'%}{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
 	<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
 	{% if post.user.wlprofile.location %}
-	<strong>Location:</strong> {{ post.user.wlprofile.location }}<br />
+	<strong>Location:</strong> {{ post.user.wlprofile.location }}
 	{% endif %}
 	</div>
 </td>

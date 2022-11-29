@@ -20,13 +20,12 @@ class EditProfileForm(forms.ModelForm):
         model = Profile
         fields = [
             "avatar",
-            "site",
             "location",
-            "jabber",
-            "icq",
-            "msn",
-            "aim",
-            "yahoo",
+            "operating_system",
+            "webservice_nick",
+            "favourite_map",
+            "favourite_tribe",
+            "favourite_addon",
             "signature",
             "email",
             "show_signatures",
