@@ -29,11 +29,14 @@
 					{% endifequal %}
 
 					{{ field }} 
+					{% ifequal field.name "widelands_version" %}
+						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify the widelands version to help developers in case of questions.">
+					{% endifequal %}
 					{% ifequal field.name "operating_system" %}
-						<img  src="{% static "img/menu_help.png" %}" alt="Info" title="Specify your operating system to help developers in case of questions.">
+						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify your operating system to help developers in case of questions.">
 					{% endifequal %}
 					{% ifequal field.name "webservice_nick" %}
-						<img  src="{% static "img/menu_help.png" %}" alt="Info" title="Examples: IRC/NickName, Facebook/NickName, Youtube/NickName, ...">
+						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Examples: IRC/NickName, Facebook/NickName, Youtube/NickName, ...">
 					{% endifequal %}
 					{% ifequal field.name "time_display" %}
 						<a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
