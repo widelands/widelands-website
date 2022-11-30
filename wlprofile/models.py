@@ -64,6 +64,13 @@ class Profile(models.Model):
         default="",
         )
 
+    widelands_version = models.CharField(
+        _("Widelands Version"),
+        max_length=255,
+        blank=True,
+        default="",
+        )
+
     webservice_nick = models.CharField(
         _("Webservice/Nick"),
         max_length=255,

@@ -25,6 +25,9 @@
 	{% if post.user.wlprofile.operating_system %}
 	<strong>OS:</strong> {{ post.user.wlprofile.operating_system }}<br />
 	{% endif %}
+	{% if post.user.wlprofile.widelands_version %}
+	<strong>Version:</strong> {{ post.user.wlprofile.widelands_version }}<br />
+	{% endif %}
 	<img src="{% static 'img/'%}{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
 	<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
 	{% if post.user.wlprofile.location %}

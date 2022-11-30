@@ -22,6 +22,7 @@ class EditProfileForm(forms.ModelForm):
             "avatar",
             "location",
             "operating_system",
+            "widelands_version",
             "webservice_nick",
             "favourite_map",
             "favourite_tribe",

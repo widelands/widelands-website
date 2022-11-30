@@ -14,7 +14,10 @@ Activation - {{ block.super }}
 {% block content_main %}
 <div class="blogEntry">
 	<p>
-		You are now activated and can <a href="{% url 'login' %}">log in</a>.
+		You are now activated. After logging in it is recommended to edit your profile page and set your operating system and the widelands version you use.
+	</p>
+	<p>
+		<a href="{% url 'login' %}">Log in here</a>.
 	</p>
 </div>
 {% endblock %}
