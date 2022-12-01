@@ -68,6 +68,9 @@ urlpatterns = [
     url(r"^scheduling/", include("wlscheduling.urls")),
     url(r"^privacy/", include("privacy_policy.urls")),
     url(r"^addons/", include("wladdons_settings.urls")),
+    url(r"^feeds/news/",
+    RedirectView.as_view(url="/news/feed", permanent=True),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 try:
