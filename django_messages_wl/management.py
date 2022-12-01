@@ -25,6 +25,5 @@ if "notification" in settings.INSTALLED_APPS and getattr(
             default=2,
         )
 
-
 else:
     print("Skipping creation of NoticeTypes as notification app not found")

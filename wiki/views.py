@@ -23,7 +23,6 @@ from wiki.models import Article, ChangeSet, dmp
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
-from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import WIKILINK_RE
 
 from mainpage.wl_utils import get_real_ip
 from mainpage.wl_utils import get_valid_cache_key
