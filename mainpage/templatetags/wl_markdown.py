@@ -14,15 +14,7 @@ from django.conf import settings
 from django.utils.encoding import smart_bytes, force_text
 from django.utils.safestring import mark_safe
 from django.conf import settings
-from markdownextensions.semanticwikilinks.mdx_semanticwikilinks import (
-    SemanticWikiLinkExtension,
-)
 
-# Try to get a not so fully broken markdown module
-import markdown
-
-if markdown.version_info[0] < 2:
-    raise ImportError("Markdown library to old!")
 from markdown import markdown
 import re
 import urllib.request, urllib.parse, urllib.error
@@ -219,14 +211,17 @@ def find_smiley_Strings(bs4_string):
 
 # Predefine the markdown extensions here to have a clean code in
 # do_wl_markdown()
-md_extensions = ["extra", "toc", SemanticWikiLinkExtension()]
+md_extensions = ["extra", "toc", "mdx_wikilink_plus"]
+md_configs = {
+    "mdx_wikilink_plus": {"base_url": "/wiki/", "url_whitespace": "%20"},
+}
 
 
 def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""
 
     beautify = keyw.pop("beautify", True)
-    html = markdown(value, extensions=md_extensions)
+    html = markdown(value, extensions=md_extensions, extension_configs=md_configs)
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if "bleachit" in args:

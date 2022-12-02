@@ -306,17 +306,21 @@ class TribeParser(object):
 
             # Output wares
             if "produced_wares" in building:
-                b.output_wares.set([
-                    WareModel.objects.get_or_create(name=w, tribe=self._to)[0]
-                    for w in building["produced_wares"]
-                ])
+                b.output_wares.set(
+                    [
+                        WareModel.objects.get_or_create(name=w, tribe=self._to)[0]
+                        for w in building["produced_wares"]
+                    ]
+                )
 
             # Output workers
             if "produced_workers" in building:
-                b.output_workers.set([
-                    WorkerModel.objects.get_or_create(name=w, tribe=self._to)[0]
-                    for w in building["produced_workers"]
-                ])
+                b.output_workers.set(
+                    [
+                        WorkerModel.objects.get_or_create(name=w, tribe=self._to)[0]
+                        for w in building["produced_workers"]
+                    ]
+                )
 
             b.save()
 
