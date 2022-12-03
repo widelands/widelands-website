@@ -4,6 +4,7 @@ from .fields import ExtendedImageField
 from mainpage.wl_utils import AutoOneToOneField
 from django.utils.translation import ugettext_lazy as _
 from pybb.models import Post
+from wlhelp.models import Tribe
 
 from django.conf import settings
 
@@ -56,13 +57,47 @@ class Profile(models.Model):
         User, related_name="wlprofile", verbose_name=_("User"), on_delete=models.CASCADE
     )
 
-    # Web related fields.
-    site = models.URLField(_("Website"), blank=True, default="")
-    jabber = models.CharField(_("Jabber"), max_length=80, blank=True, default="")
-    icq = models.CharField(_("ICQ"), max_length=12, blank=True, default="")
-    msn = models.CharField(_("MSN"), max_length=80, blank=True, default="")
-    aim = models.CharField(_("AIM"), max_length=80, blank=True, default="")
-    yahoo = models.CharField(_("Yahoo"), max_length=80, blank=True, default="")
+    operating_system = models.CharField(
+        _("Operating System"),
+        max_length=100,
+        blank=True,
+        default="",
+        )
+
+    widelands_version = models.CharField(
+        _("Widelands Version"),
+        max_length=255,
+        blank=True,
+        default="",
+        )
+
+    webservice_nick = models.CharField(
+        _("Webservice/Nick"),
+        max_length=255,
+        blank=True,
+        default="",
+        )
+
+    favourite_map = models.CharField(
+        _("Your favourite Map(s)"),
+        max_length=100,
+        blank=True,
+        default="",
+        )
+
+    favourite_tribe=models.ForeignKey(
+        Tribe,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        )
+
+    favourite_addon= models.CharField(
+        _("Your favourite Add-On"),
+        max_length=255,
+        blank=True,
+        default="",
+        )
 
     # Personal Informations
     location = models.CharField(_("Location"), max_length=30, blank=True, default="")

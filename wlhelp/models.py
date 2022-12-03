@@ -13,7 +13,7 @@ class Tribe(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return "%s" % self.name
+        return "%s" % self.displayname
 
 
 class Worker(models.Model):
