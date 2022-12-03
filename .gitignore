@@ -1,6 +1,7 @@
 __pycache__/
 /dev.db
 *.pyc
+mainpage/local*.py
 
 # Uploaded images.
 media/*

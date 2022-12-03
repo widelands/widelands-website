@@ -12,6 +12,5 @@ try:
             1,
         )
 
-
 except ImportError:
     print("Skipping creation of NoticeTypes as notification app not found")
