@@ -187,7 +187,8 @@ def add_post_ctx(request, forum_id, topic_id):
         post = form.save()
 
         is_spam = False
-        # Check for spam in topics name for new topics
+
+        # Check for spam for newly created topics
         if not topic:
             is_spam = SuspiciousInput.check_input(
                 content_object=post.topic, user=post.topic.user, text=post.topic.name
@@ -235,6 +236,12 @@ def add_post_ctx(request, forum_id, topic_id):
                 post.topic.subscribers.add(request.user)
 
             else:
+                # Handle auto subscriptions to topics
+                notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")
+                notice_setting = notification.get_notification_setting(post.user, notice_type, "1")
+                if notice_setting.send:
+                    post.topic.subscribers.add(request.user)
+
                 # Send mails about a new post to topic subscribers
                 notification.send(
                     post.topic.subscribers.exclude(username=post.user),
