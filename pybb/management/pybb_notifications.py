@@ -16,6 +16,12 @@ try:
             _("Forum New Post"),
             _("a new comment has been posted to a topic you observe"),
         )
+        notification.create_notice_type(
+            "forum_auto_subscribe",
+            _("Subscribe automatically"),
+            _("once you add a post to an existing topic you will be informed on new posts"),
+            default=0,
+            )
 
 except ImportError:
     print("Skipping creation of NoticeTypes as notification app not found")
