@@ -237,8 +237,12 @@ def add_post_ctx(request, forum_id, topic_id):
 
             else:
                 # Handle auto subscriptions to topics
-                notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")
-                notice_setting = notification.get_notification_setting(post.user, notice_type, "1")
+                notice_type = notification.NoticeType.objects.get(
+                    label="forum_auto_subscribe"
+                )
+                notice_setting = notification.get_notification_setting(
+                    post.user, notice_type, "1"
+                )
                 if notice_setting.send:
                     post.topic.subscribers.add(request.user)
 
