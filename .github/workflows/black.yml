@@ -9,4 +9,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: psf/black@stable
         with:
-          options: "--check --diff --target-version py310"
+          options: "--check --diff --skip-string-normalization --target-version py310"
