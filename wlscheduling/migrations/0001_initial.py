@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 (
                     "avail_time",
                     models.DateTimeField(
-                        default=0, verbose_name=b"one hour of availability"
+                        verbose_name=b"one hour of availability"
                     ),
                 ),
                 (
