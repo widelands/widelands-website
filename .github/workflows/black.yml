@@ -1,15 +1,15 @@
-name: Lint
+name: black-autoformat
 
 on: [push, pull_request]
 
 jobs:
-  lint:
+  black-autoformat:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: psf/black@stable
         with:
-          options: "--target-version py310"
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: black autoformat
+          options: "--check --diff --safe --target-version py310"
+#      - uses: stefanzweifel/git-auto-commit-action@v4
+#        with:
+#          commit_message: autoformatted by black
