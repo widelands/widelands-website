@@ -19,6 +19,10 @@
 			</a>
 		{% endif %}
 	{% endif %}
+	<br />
+	{% if topic.user == post.user %}
+	<a href="{{ topic.get_absolute_url }}" title="Switch to first post">Topic Opener</a>
+	{% endif %}
 	<div class="authorStats">
 	<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
 	<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
