@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: psf/black@stable
         with:
-          options: "--check --diff --safe --target-version py310"
-#      - uses: stefanzweifel/git-auto-commit-action@v4
-#        with:
-#          commit_message: autoformatted by black
+          options: "--safe --target-version py310"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: autoformatted by black
