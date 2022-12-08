@@ -23,10 +23,10 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=256)),
                 ("link", models.CharField(max_length=1024)),
-                ("start_date", models.DateField(verbose_name=b"start date")),
+                ("start_date", models.DateField(verbose_name="start date")),
                 (
                     "end_date",
-                    models.DateField(null=True, verbose_name=b"end date", blank=True),
+                    models.DateField(null=True, verbose_name="end date", blank=True),
                 ),
             ],
         ),
