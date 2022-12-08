@@ -189,7 +189,7 @@ AVATAR_HEIGHT = AVATAR_WIDTH = 80
 ######################
 # Pybb Configuration #
 ######################
-
+PYBB_DEFAULT_MARKUP = "markdown"
 PYBB_ATTACHMENT_ENABLE = True
 
 # To prevent sending errors from the webserver, keep
@@ -198,6 +198,12 @@ PYBB_ATTACHMENT_SIZE_LIMIT = 1024 * 1024 * 4
 PYBB_DEFAULT_MARKUP = "markdown"
 INTERNAL_PERM = "pybb.can_access_internal"  # The permission string derived from pybb.models.category
 EDIT_HOURS = 24
+
+####################
+# threadedcomments #
+####################
+
+DEFAULT_MARKUP = 1 #"markdown"
 
 ##################################
 # Uploading files and validation #
