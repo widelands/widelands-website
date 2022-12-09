@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wlscheduling', '0001_initial'),
+        ("wlscheduling", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='availabilities',
-            name='avail_time',
-            field=models.DateTimeField(help_text='this user is available for this whole hour'),
+            model_name="availabilities",
+            name="avail_time",
+            field=models.DateTimeField(
+                help_text="this user is available for this whole hour"
+            ),
         ),
     ]

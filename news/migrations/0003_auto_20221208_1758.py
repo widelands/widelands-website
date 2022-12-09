@@ -8,23 +8,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('news', '0002_auto_20170417_1857'),
+        ("news", "0002_auto_20170417_1857"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='author',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="post",
+            name="author",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='body',
-            field=models.TextField(help_text='Text entered here will be rendered using Markdown', verbose_name='body'),
+            model_name="post",
+            name="body",
+            field=models.TextField(
+                help_text="Text entered here will be rendered using Markdown",
+                verbose_name="body",
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='slug',
-            field=models.SlugField(unique_for_date='publish', verbose_name='slug'),
+            model_name="post",
+            name="slug",
+            field=models.SlugField(unique_for_date="publish", verbose_name="slug"),
         ),
     ]

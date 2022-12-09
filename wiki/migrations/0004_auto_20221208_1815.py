@@ -8,28 +8,59 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wiki', '0003_auto_20180918_0836'),
+        ("wiki", "0003_auto_20180918_0836"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='article',
-            name='content_type',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='contenttypes.ContentType'),
+            model_name="article",
+            name="content_type",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="contenttypes.ContentType",
+            ),
         ),
         migrations.AlterField(
-            model_name='article',
-            name='creator',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Article Creator'),
+            model_name="article",
+            name="creator",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Article Creator",
+            ),
         ),
         migrations.AlterField(
-            model_name='article',
-            name='markup',
-            field=models.CharField(blank=True, choices=[('crl', 'Creole'), ('rst', 'reStructuredText'), ('txl', 'Textile'), ('mrk', 'Markdown')], max_length=3, null=True, verbose_name='Content Markup'),
+            model_name="article",
+            name="markup",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("crl", "Creole"),
+                    ("rst", "reStructuredText"),
+                    ("txl", "Textile"),
+                    ("mrk", "Markdown"),
+                ],
+                max_length=3,
+                null=True,
+                verbose_name="Content Markup",
+            ),
         ),
         migrations.AlterField(
-            model_name='changeset',
-            name='old_markup',
-            field=models.CharField(blank=True, choices=[('crl', 'Creole'), ('rst', 'reStructuredText'), ('txl', 'Textile'), ('mrk', 'Markdown')], max_length=3, null=True, verbose_name='Article Content Markup'),
+            model_name="changeset",
+            name="old_markup",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("crl", "Creole"),
+                    ("rst", "reStructuredText"),
+                    ("txl", "Textile"),
+                    ("mrk", "Markdown"),
+                ],
+                max_length=3,
+                null=True,
+                verbose_name="Article Content Markup",
+            ),
         ),
     ]

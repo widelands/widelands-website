@@ -203,7 +203,7 @@ EDIT_HOURS = 24
 # threadedcomments #
 ####################
 
-DEFAULT_MARKUP = 1 #"markdown"
+DEFAULT_MARKUP = 1  # "markdown"
 
 ##################################
 # Uploading files and validation #
