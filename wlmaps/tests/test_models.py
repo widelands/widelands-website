@@ -80,7 +80,7 @@ class TestWLMapsModels_Map(DjangoTest):
                 "world_name": "blackland",
                 "uploader": self.user,
                 "uploader_comment": "Rockdamap",
-            }
+            },
         )
 
     def test_DoubleAddingMapWithSameName_ExceptRaise(self):
@@ -99,5 +99,5 @@ class TestWLMapsModels_Map(DjangoTest):
                 "world_name": "blackland",
                 "uploader": self.user,
                 "uploader_comment": "Rockdamap",
-            }
+            },
         )

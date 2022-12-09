@@ -62,42 +62,42 @@ class Profile(models.Model):
         max_length=100,
         blank=True,
         default="",
-        )
+    )
 
     widelands_version = models.CharField(
         _("Widelands Version"),
         max_length=255,
         blank=True,
         default="",
-        )
+    )
 
     webservice_nick = models.CharField(
         _("Webservice/Nick"),
         max_length=255,
         blank=True,
         default="",
-        )
+    )
 
     favourite_map = models.CharField(
         _("Your favourite Map(s)"),
         max_length=100,
         blank=True,
         default="",
-        )
+    )
 
-    favourite_tribe=models.ForeignKey(
+    favourite_tribe = models.ForeignKey(
         Tribe,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        )
+    )
 
-    favourite_addon= models.CharField(
+    favourite_addon = models.CharField(
         _("Your favourite Add-On"),
         max_length=255,
         blank=True,
         default="",
-        )
+    )
 
     # Personal Informations
     location = models.CharField(_("Location"), max_length=30, blank=True, default="")

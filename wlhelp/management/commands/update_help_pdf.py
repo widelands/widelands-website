@@ -19,7 +19,7 @@ class Command(BaseCommand):
     def handle(
         self,
         json_directory=os.path.normpath(settings.MEDIA_ROOT + "/map_object_info"),
-        **kwargs
+        **kwargs,
     ):
         with open(
             os.path.normpath(json_directory + "/tribes.json"), "r"

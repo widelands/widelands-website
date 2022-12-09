@@ -87,7 +87,7 @@ class TestImages_TestModelAddingTwiceTheSameNameAndRevision_ExceptRaises(
                 "object_id": 1,
                 "name": "test",
                 "revision": 1,
-            }
+            },
         )
 
 
