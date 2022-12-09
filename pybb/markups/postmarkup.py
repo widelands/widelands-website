@@ -116,28 +116,28 @@ def create(include=None, exclude=None, use_pygments=True, **kwargs):
         "wiki",
         "http://en.wikipedia.org/wiki/Special:Search?search=%s",
         "wikipedia.com",
-        **kwargs
+        **kwargs,
     )
     add_tag(
         SearchTag,
         "google",
         "http://www.google.com/search?hl=en&q=%s&btnG=Google+Search",
         "google.com",
-        **kwargs
+        **kwargs,
     )
     add_tag(
         SearchTag,
         "dictionary",
         "http://dictionary.reference.com/browse/%s",
         "dictionary.com",
-        **kwargs
+        **kwargs,
     )
     add_tag(
         SearchTag,
         "dict",
         "http://dictionary.reference.com/browse/%s",
         "dictionary.com",
-        **kwargs
+        **kwargs,
     )
 
     add_tag(ImgTag, "img")
@@ -188,7 +188,7 @@ class TagBase(object):
         auto_close=False,
         inline=False,
         strip_first_newline=False,
-        **kwargs
+        **kwargs,
     ):
         """Base class for all tags.
 

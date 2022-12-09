@@ -7,28 +7,59 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wlhelp', '0002_auto_20190410_1734'),
+        ("wlhelp", "0002_auto_20190410_1734"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='building',
-            name='enhancement',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='enhanced_from', to='wlhelp.Building'),
+            model_name="building",
+            name="enhancement",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="enhanced_from",
+                to="wlhelp.Building",
+            ),
         ),
         migrations.AlterField(
-            model_name='building',
-            name='size',
-            field=models.CharField(choices=[('S', 'small'), ('M', 'medium'), ('B', 'big'), ('I', 'mine'), ('P', 'port'), ('H', 'headquarters')], max_length=1),
+            model_name="building",
+            name="size",
+            field=models.CharField(
+                choices=[
+                    ("S", "small"),
+                    ("M", "medium"),
+                    ("B", "big"),
+                    ("I", "mine"),
+                    ("P", "port"),
+                    ("H", "headquarters"),
+                ],
+                max_length=1,
+            ),
         ),
         migrations.AlterField(
-            model_name='building',
-            name='type',
-            field=models.CharField(choices=[('P', 'productionsite'), ('W', 'warehouse'), ('M', 'militarysite'), ('T', 'trainingsite'), ('m', 'market')], max_length=1),
+            model_name="building",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    ("P", "productionsite"),
+                    ("W", "warehouse"),
+                    ("M", "militarysite"),
+                    ("T", "trainingsite"),
+                    ("m", "market"),
+                ],
+                max_length=1,
+            ),
         ),
         migrations.AlterField(
-            model_name='worker',
-            name='becomes',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='trained_by_experience', to='wlhelp.Worker'),
+            model_name="worker",
+            name="becomes",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="trained_by_experience",
+                to="wlhelp.Worker",
+            ),
         ),
     ]

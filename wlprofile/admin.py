@@ -34,10 +34,15 @@ class ProfileAdmin(admin.ModelAdmin):
             _("Other fields"),
             {
                 "classes": ("collapse",),
-                "fields": ("webservice_nick", "favourite_map", "favourite_tribe", "favourite_addon", "avatar"),
+                "fields": (
+                    "webservice_nick",
+                    "favourite_map",
+                    "favourite_tribe",
+                    "favourite_addon",
+                    "avatar",
+                ),
             },
         ),
-        
     )
 
 

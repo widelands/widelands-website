@@ -135,7 +135,7 @@ def article_list(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
     if request.method == "GET":
         articles, group = get_articles_by_group(
@@ -186,7 +186,7 @@ def view_article(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
 
     if request.method == "GET":
@@ -266,7 +266,7 @@ def edit_article(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
 
     group = None
@@ -391,7 +391,7 @@ def view_changeset(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
 
     if request.method == "GET":
@@ -462,7 +462,7 @@ def article_history(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
 
     if request.method == "GET":
@@ -515,7 +515,7 @@ def revert_to_revision(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
 
     if request.method == "POST":
@@ -572,7 +572,7 @@ def history(
     template_dir="wiki",
     extra_context=None,
     *args,
-    **kw
+    **kw,
 ):
 
     if request.method == "GET":
@@ -621,7 +621,7 @@ def observe_article(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
     article_args = {"title": title}
     group = None
@@ -659,7 +659,7 @@ def stop_observing_article(
     is_member=None,
     is_private=None,
     *args,
-    **kw
+    **kw,
 ):
     article_args = {"title": title}
     group = None

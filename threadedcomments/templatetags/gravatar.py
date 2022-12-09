@@ -70,7 +70,7 @@ class GravatarUrlNode(template.Node):
         rating=GRAVATAR_MAX_RATING,
         size=GRAVATAR_SIZE,
         default=GRAVATAR_DEFAULT_IMG,
-        **other_kwargs
+        **other_kwargs,
     ):
         self.email = template.Variable(email)
         self.rating = template.Variable(rating)
