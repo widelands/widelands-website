@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 (
                     "password",
                     models.CharField(
-                        default=b"",
+                        default="",
                         max_length=80,
                         verbose_name="ggz password",
                         blank=True,

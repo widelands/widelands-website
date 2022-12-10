@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                 (
                     "pub_date",
                     models.DateTimeField(
-                        default=datetime.datetime.now, verbose_name=b"date published"
+                        default=datetime.datetime.now, verbose_name="date published"
                     ),
                 ),
                 (
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                     models.DateTimeField(
                         default=wlpoll.models.closed_date_default,
                         null=True,
-                        verbose_name=b"date closed",
+                        verbose_name="date closed",
                         blank=True,
                     ),
                 ),
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 (
                     "date_voted",
                     models.DateTimeField(
-                        default=datetime.datetime.now, verbose_name=b"voted at"
+                        default=datetime.datetime.now, verbose_name="voted at"
                     ),
                 ),
                 (

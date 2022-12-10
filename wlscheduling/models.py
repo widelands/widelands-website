@@ -10,5 +10,5 @@ class Availabilities(models.Model):
         User, related_name="availabilities", on_delete=models.CASCADE
     )
     avail_time = models.DateTimeField(
-        help_text="this user is available for this whole hour", default=0
+        help_text="this user is available for this whole hour"
     )

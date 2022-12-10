@@ -28,14 +28,14 @@ class Migration(migrations.Migration):
                 (
                     "text",
                     models.CharField(
-                        max_length=200, verbose_name=b"suspicious user input"
+                        max_length=200, verbose_name="suspicious user input"
                     ),
                 ),
                 ("object_id", models.PositiveIntegerField()),
                 (
                     "content_type",
                     models.ForeignKey(
-                        verbose_name=b"related model",
+                        verbose_name="related model",
                         to="contenttypes.ContentType",
                         on_delete=models.CASCADE,
                     ),
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 (
                     "user",
                     models.ForeignKey(
-                        verbose_name=b"related user",
+                        verbose_name="related user",
                         to=settings.AUTH_USER_MODEL,
                         on_delete=models.CASCADE,
                     ),
