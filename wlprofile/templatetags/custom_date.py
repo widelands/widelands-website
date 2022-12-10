@@ -135,14 +135,18 @@ def custom_date(date, user):
     a sane default."""
     if not user.is_authenticated:
         return do_custom_date(
-            settings.DEFAULT_TIME_DISPLAY, date, 1.0 #float(settings.DEFAULT_TIME_ZONE)
+            settings.DEFAULT_TIME_DISPLAY,
+            date,
+            1.0,  # float(settings.DEFAULT_TIME_ZONE)
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
         return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
     except ObjectDoesNotExist:
         return do_custom_date(
-            settings.DEFAULT_TIME_DISPLAY, date, 1.0 #float(settings.DEFAULT_TIME_ZONE)
+            settings.DEFAULT_TIME_DISPLAY,
+            date,
+            1.0,  # float(settings.DEFAULT_TIME_ZONE)
         )
 
 

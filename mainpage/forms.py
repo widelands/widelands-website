@@ -24,15 +24,21 @@ class ContactForm(forms.Form):
     answer = forms.CharField()
     question = forms.CharField()
 
+
 class LoginTimezoneForm(AuthenticationForm):
     """Login form with time zone fields."""
 
-    browser_timezone = forms.FloatField(label="Time difference to UTC",
-                                        disabled=False,
-                                        widget=forms.HiddenInput,
-                                        )
-    set_timezone = forms.BooleanField(label="Apply the corresponding time zone in your profile", label_suffix="", required=False, initial=True)
-
+    browser_timezone = forms.FloatField(
+        label="Time difference to UTC",
+        disabled=False,
+        widget=forms.HiddenInput,
+    )
+    set_timezone = forms.BooleanField(
+        label="Apply the corresponding time zone in your profile",
+        label_suffix="",
+        required=False,
+        initial=True,
+    )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -43,7 +49,10 @@ class LoginTimezoneForm(AuthenticationForm):
         user = get_object_or_404(User, username=cleaned_data.get("username"))
         user_tz = user.wlprofile.time_zone
         if set_timezone:
-            if  user_tz != time_zone and user.wlprofile.get_time_zone_display() != 'Auto':
+            if (
+                user_tz != time_zone
+                and user.wlprofile.get_time_zone_display() != "Auto"
+            ):
                 for tz in TZ_CHOICES:
                     if tz[0] == time_zone:
                         user.wlprofile.time_zone = time_zone
