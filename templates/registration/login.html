@@ -1,5 +1,17 @@
 {% extends "mainpage/base.html" %}
 
+{% block extra_head %}
+	<script>
+		window.addEventListener('load', set_time);
+		function set_time() {
+	      var browserTimeZone = - new Date().getTimezoneOffset()/60
+			browserTimeZone = browserTimeZone.toPrecision(2)
+			document.getElementById("time_zone").innerHTML = browserTimeZone
+			document.getElementById("id_browser_timezone").value = browserTimeZone
+		}
+	</script>
+{% endblock %}
+
 {% block title %}
 Login - {{ block.super }}
 {% endblock %}
@@ -21,7 +33,7 @@ Login - {{ block.super }}
 		<table>
 			<tr>
 				<td class="grey">
-					{{ form.username.label_tag }} 
+					{{ form.username.label_tag }}
 				</td>
 				<td>
 					{{ form.username }}
@@ -29,10 +41,19 @@ Login - {{ block.super }}
 			</tr>
 			<tr>
 				<td class="grey">
-					{{ form.password.label_tag }} 
+					{{ form.password.label_tag }}
 				</td>
 				<td>
 					{{ form.password }}
+				</td>
+			</tr>
+			<tr>
+				<td class="grey">
+					Time difference to UTC: <span id="time_zone"><span>
+				</td>
+				<td>
+					{{ form.browser_timezone }}
+					{{ form.set_timezone }} <span class="grey">{{ form.set_timezone.label_tag }}</span>
 				</td>
 			</tr>
 		</table>

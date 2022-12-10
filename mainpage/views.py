@@ -1,6 +1,7 @@
 from django.conf import settings
 from .templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
+from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render

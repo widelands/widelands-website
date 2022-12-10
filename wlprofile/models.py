@@ -11,6 +11,7 @@ from django.conf import settings
 TZ_CHOICES = [
     (float(x[0]), x[1])
     for x in (
+        (0.2, "Auto"),
         (-12, "-12"),
         (-11, "-11"),
         (-10, "-10"),
@@ -104,7 +105,7 @@ class Profile(models.Model):
 
     # Configuration for Forum/Site
     time_zone = models.FloatField(
-        _("Time zone"), choices=TZ_CHOICES, default=float(settings.DEFAULT_TIME_ZONE)
+        _("Time zone"), choices=TZ_CHOICES, default=TZ_CHOICES[0]
     )
     time_display = models.CharField(
         _("Time display"), max_length=80, default=settings.DEFAULT_TIME_DISPLAY
