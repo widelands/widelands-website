@@ -42,10 +42,12 @@ class LoginTimezoneForm(AuthenticationForm):
         set_timezone = cleaned_data.get("set_timezone")
         user = get_object_or_404(User, username=cleaned_data.get("username"))
         user_tz = user.wlprofile.time_zone
-        if user_tz != time_zone and user.wlprofile.get_time_zone_display() != 'Auto':
-            for tz in TZ_CHOICES:
-                if tz[0] == time_zone:
-                    user.wlprofile.time_zone = time_zone
-                    user.wlprofile.save()
+        if set_timezone:
+            if  user_tz != time_zone and user.wlprofile.get_time_zone_display() != 'Auto':
+                for tz in TZ_CHOICES:
+                    if tz[0] == time_zone:
+                        user.wlprofile.time_zone = time_zone
+                        user.wlprofile.save()
+                        print("Profile changed")
 
         print(user.wlprofile.get_time_zone_display(), user.is_authenticated)
