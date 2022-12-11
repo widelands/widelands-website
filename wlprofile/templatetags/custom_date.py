@@ -47,7 +47,7 @@ class FixedOffset(tzinfo):
         return ZERO
 
 
-def do_custom_date(format, date, timezone, now=None):
+def do_custom_date(format, date, timezone=1.0, now=None):
     """Returns a string formatted representation of date according to format.
     This accepts all formats that strftime also accepts, but it also accepts
     some new options which are dependant on the current date.
@@ -137,7 +137,6 @@ def custom_date(date, user):
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
-            1.0,  # float(settings.DEFAULT_TIME_ZONE)
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
@@ -146,7 +145,6 @@ def custom_date(date, user):
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
-            1.0,  # float(settings.DEFAULT_TIME_ZONE)
         )
 
 
