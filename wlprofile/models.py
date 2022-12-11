@@ -11,7 +11,6 @@ from django.conf import settings
 TZ_CHOICES = [
     (float(x[0]), x[1])
     for x in (
-        (0.2, "Auto"),
         (-12, "-12"),
         (-11, "-11"),
         (-10, "-10"),

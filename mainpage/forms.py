@@ -34,7 +34,7 @@ class LoginTimezoneForm(AuthenticationForm):
         widget=forms.HiddenInput,
     )
     set_timezone = forms.BooleanField(
-        label="Apply the corresponding time zone in your profile",
+        label="Save this time zone in your profile",
         label_suffix="",
         required=False,
         initial=True,
@@ -44,19 +44,16 @@ class LoginTimezoneForm(AuthenticationForm):
         cleaned_data = super().clean()
         # now the user is logged in
         print(cleaned_data)
-        time_zone = cleaned_data.get("browser_timezone")
+        br_time_zone = cleaned_data.get("browser_timezone")
         set_timezone = cleaned_data.get("set_timezone")
         user = get_object_or_404(User, username=cleaned_data.get("username"))
-        user_tz = user.wlprofile.time_zone
         if set_timezone:
-            if (
-                user_tz != time_zone
-                and user.wlprofile.get_time_zone_display() != "Auto"
-            ):
-                for tz in TZ_CHOICES:
-                    if tz[0] == time_zone:
-                        user.wlprofile.time_zone = time_zone
+            user_tz = user.wlprofile.time_zone
+            if user_tz != br_time_zone:
+                for value, display in TZ_CHOICES:
+                    if value == br_time_zone:
+                        user.wlprofile.time_zone = br_time_zone
                         user.wlprofile.save()
-                        print("Profile changed")
+                        break;
 
         print(user.wlprofile.get_time_zone_display(), user.is_authenticated)
