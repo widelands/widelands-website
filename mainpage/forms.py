@@ -54,6 +54,6 @@ class LoginTimezoneForm(AuthenticationForm):
                     if value == br_time_zone:
                         user.wlprofile.time_zone = br_time_zone
                         user.wlprofile.save()
-                        break;
+                        break
 
         print(user.wlprofile.get_time_zone_display(), user.is_authenticated)
