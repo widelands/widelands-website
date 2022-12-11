@@ -7,9 +7,8 @@
 	      var browserTimeZone = - new Date().getTimezoneOffset()/60
 			browserTimeZone = browserTimeZone.toPrecision(2)
 			document.getElementById("id_browser_timezone").value = browserTimeZone
-			if (browserTimeZone > 0) {
-				browserTimeZone = '+' + browserTimeZone
-			}
+			// add a + sign for the display
+			browserTimeZone = browserTimeZone > 0 ? '+' + browserTimeZone : browserTimeZone
 			document.getElementById("time_zone").innerHTML = browserTimeZone
 		}
 	</script>
@@ -57,6 +56,8 @@ Login - {{ block.super }}
 				<td>
 					{{ form.browser_timezone }}
 					{{ form.set_timezone }} <span class="grey">{{ form.set_timezone.label_tag }}</span>
+					<noscript class="errormessage"></br>Automatic setting of your time zone isn't possible because javascript is disabled</br>
+						Please check your time zone in you profile page after log in</noscript>
 				</td>
 			</tr>
 		</table>

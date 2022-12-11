@@ -29,10 +29,11 @@ class LoginTimezoneForm(AuthenticationForm):
     """Login form with time zone fields."""
 
     browser_timezone = forms.FloatField(
+        required=False,
         widget=forms.HiddenInput,
     )
     set_timezone = forms.BooleanField(
-        label="Save this time zone in your profile",
+        label="Save this time zone in your profile.",
         label_suffix="",
         required=False,
         initial=True,
@@ -41,10 +42,10 @@ class LoginTimezoneForm(AuthenticationForm):
     def clean(self):
         cleaned_data = super().clean()
         # now the user is logged in
-        br_time_zone = cleaned_data.get("browser_timezone")
+        br_time_zone = cleaned_data.get("browser_timezone", None)
         set_timezone = cleaned_data.get("set_timezone")
         user = get_object_or_404(User, username=cleaned_data.get("username"))
-        if set_timezone:
+        if set_timezone and br_time_zone != None:
             user_tz = user.wlprofile.time_zone
             if user_tz != br_time_zone:
                 for value, display in TZ_CHOICES:
