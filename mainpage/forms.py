@@ -29,8 +29,6 @@ class LoginTimezoneForm(AuthenticationForm):
     """Login form with time zone fields."""
 
     browser_timezone = forms.FloatField(
-        label="Time difference to UTC",
-        disabled=False,
         widget=forms.HiddenInput,
     )
     set_timezone = forms.BooleanField(
@@ -43,7 +41,6 @@ class LoginTimezoneForm(AuthenticationForm):
     def clean(self):
         cleaned_data = super().clean()
         # now the user is logged in
-        print(cleaned_data)
         br_time_zone = cleaned_data.get("browser_timezone")
         set_timezone = cleaned_data.get("set_timezone")
         user = get_object_or_404(User, username=cleaned_data.get("username"))
@@ -55,5 +52,3 @@ class LoginTimezoneForm(AuthenticationForm):
                         user.wlprofile.time_zone = br_time_zone
                         user.wlprofile.save()
                         break
-
-        print(user.wlprofile.get_time_zone_display(), user.is_authenticated)

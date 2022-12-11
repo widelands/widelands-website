@@ -6,8 +6,14 @@
 		function set_time() {
 	      var browserTimeZone = - new Date().getTimezoneOffset()/60
 			browserTimeZone = browserTimeZone.toPrecision(2)
-			document.getElementById("time_zone").innerHTML = browserTimeZone
 			document.getElementById("id_browser_timezone").value = browserTimeZone
+			if (browserTimeZone > 0) {
+				browserTimeZone = '+' + browserTimeZone
+			}
+			else if (browserTimeZone < 0) {
+				browserTimeZone = '-' + browserTimeZone
+			}
+			document.getElementById("time_zone").innerHTML = browserTimeZone
 		}
 	</script>
 {% endblock %}
@@ -49,7 +55,7 @@ Login - {{ block.super }}
 			</tr>
 			<tr>
 				<td class="grey">
-					Time difference to UTC: <span id="time_zone"><span>
+					Looks your time zone is <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a> <span id="time_zone"><span>
 				</td>
 				<td>
 					{{ form.browser_timezone }}
