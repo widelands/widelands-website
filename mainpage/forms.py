@@ -49,9 +49,9 @@ class LoginTimezoneForm(AuthenticationForm):
         profile = get_object_or_404(
             User, username=cleaned_data.get("username")
         ).wlprofile
-        if set_timezone
+        if (set_timezone
                 and br_time_zone is not None
-                and profile.time_zone != br_time_zone:
+                and profile.time_zone != br_time_zone):
             found = False
             for value, display in TZ_CHOICES:
                 if value == br_time_zone:
