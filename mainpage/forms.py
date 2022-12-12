@@ -2,12 +2,14 @@
 # encoding: utf-8
 
 from django import forms
+from django.conf import settings
 from django_registration.forms import RegistrationForm
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from wlprofile.models import TZ_CHOICES
 from django.shortcuts import get_object_or_404
+from django.core.mail import mail_admins
 
 
 class RegistrationWithCaptchaForm(RegistrationForm):
@@ -44,12 +46,23 @@ class LoginTimezoneForm(AuthenticationForm):
         # now the user is logged in
         br_time_zone = cleaned_data.get("browser_timezone", None)
         set_timezone = cleaned_data.get("set_timezone")
-        user = get_object_or_404(User, username=cleaned_data.get("username"))
-        if set_timezone and br_time_zone != None:
-            user_tz = user.wlprofile.time_zone
-            if user_tz != br_time_zone:
+        profile = get_object_or_404(
+            User, username=cleaned_data.get("username")).wlprofile
+        if set_timezone and br_time_zone is not None:
+            if profile.time_zone != br_time_zone:
+                found = False
                 for value, display in TZ_CHOICES:
                     if value == br_time_zone:
-                        user.wlprofile.time_zone = br_time_zone
-                        user.wlprofile.save()
-                        break
+                        profile.time_zone = br_time_zone
+                        profile.save()
+                        found = True
+                if found == False:
+                    recipients = []
+                    for recipient in settings.ADMINS:
+                        recipients.append(recipient[1])
+                    mail_admins("Missing Time Zone?",
+                                "Automatic applying a time zone for user '{user}' has failed. Please check if '{tz}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models".format(user=profile.user.username, tz=br_time_zone),
+                                )
+                    self.add_error("set_timezone",
+                                   "The time zone can't be found in our list of time zones. Please disable the checkbox and try again. After successful login please check your time zone in the 'Edit Profile' page. Admins got already informed about this.",
+                                   )

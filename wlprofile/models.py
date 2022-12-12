@@ -104,7 +104,7 @@ class Profile(models.Model):
 
     # Configuration for Forum/Site
     time_zone = models.FloatField(
-        _("Time zone"), choices=TZ_CHOICES, default=TZ_CHOICES[0]
+        _("Time zone"), choices=TZ_CHOICES, default=TZ_CHOICES[0][0]
     )
     time_display = models.CharField(
         _("Time display"), max_length=80, default=settings.DEFAULT_TIME_DISPLAY

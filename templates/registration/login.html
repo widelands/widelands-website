@@ -24,7 +24,7 @@ Login - {{ block.super }}
 
 {% block content_main %}
 <div class="blogEntry">
-{% if form.errors %}
+{% if form.non_field_errors %}
 	<p class="errormessage">
 		Your username and password didn't match.
 		<br />
@@ -55,7 +55,7 @@ Login - {{ block.super }}
 				</td>
 				<td>
 					{{ form.browser_timezone }}
-					{{ form.set_timezone }} <span class="grey">{{ form.set_timezone.label_tag }}</span>
+					{{ form.set_timezone }} <span class="grey">{{ form.set_timezone.label_tag }}</span><div class="errormessage">{{ form.set_timezone.errors }}</div>
 					<noscript class="errormessage"></br>Automatic setting of your time zone isn't possible because javascript is disabled</br>
 						Please check your time zone in you profile page after log in</noscript>
 				</td>
