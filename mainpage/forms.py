@@ -47,7 +47,8 @@ class LoginTimezoneForm(AuthenticationForm):
         br_time_zone = cleaned_data.get("browser_timezone", None)
         set_timezone = cleaned_data.get("set_timezone")
         profile = get_object_or_404(
-            User, username=cleaned_data.get("username")).wlprofile
+            User, username=cleaned_data.get("username")
+        ).wlprofile
         if set_timezone and br_time_zone is not None:
             if profile.time_zone != br_time_zone:
                 found = False
@@ -60,9 +61,13 @@ class LoginTimezoneForm(AuthenticationForm):
                     recipients = []
                     for recipient in settings.ADMINS:
                         recipients.append(recipient[1])
-                    mail_admins("Missing Time Zone?",
-                                "Automatic applying a time zone for user '{user}' has failed. Please check if '{tz}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models".format(user=profile.user.username, tz=br_time_zone),
-                                )
-                    self.add_error("set_timezone",
-                                   "The time zone can't be found in our list of time zones. Please disable the checkbox and try again. After successful login please check your time zone in the 'Edit Profile' page. Admins got already informed about this.",
-                                   )
+                    mail_admins(
+                        "Missing Time Zone?",
+                        "Automatic applying a time zone for user '{user}' has failed. Please check if '{tz}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models".format(
+                            user=profile.user.username, tz=br_time_zone
+                        ),
+                    )
+                    self.add_error(
+                        "set_timezone",
+                        "The time zone can't be found in our list of time zones. Please disable the checkbox and try again. After successful login please check your time zone in the 'Edit Profile' page. Admins got already informed about this.",
+                    )
