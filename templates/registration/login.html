@@ -5,7 +5,7 @@
 		window.addEventListener('load', set_time);
 		function set_time() {
 	      var browserTimeZone = - new Date().getTimezoneOffset()/60
-			browserTimeZone = browserTimeZone.toPrecision(2)
+			browserTimeZone = browserTimeZone.toPrecision(3)
 			document.getElementById("id_browser_timezone").value = browserTimeZone
 			// add a + sign for the display
 			browserTimeZone = browserTimeZone > 0 ? '+' + browserTimeZone : browserTimeZone
