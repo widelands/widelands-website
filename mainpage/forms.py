@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 from django import forms
-from django.conf import settings
 from django_registration.forms import RegistrationForm
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
@@ -61,9 +60,6 @@ class LoginTimezoneForm(AuthenticationForm):
                     profile.save()
                     found = True
             if found == False:
-                recipients = []
-                for recipient in settings.ADMINS:
-                    recipients.append(recipient[1])
                 mail_admins(
                     "Missing Time Zone?",
                     "Automatic applying a time zone for user '{user}' has failed. Please check if '{tz}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models".format(
