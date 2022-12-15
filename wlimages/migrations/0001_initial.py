@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                         verbose_name="date/time submitted",
                     ),
                 ),
-                ("image", models.ImageField(upload_to=b"wlimages/")),
+                ("image", models.ImageField(upload_to="wlimages/")),
                 ("url", models.CharField(max_length=250)),
                 (
                     "content_type",

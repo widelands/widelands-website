@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
             field=models.IntegerField(
                 blank=True,
                 default=0,
-                help_text=b"The position inside the category",
+                help_text="The position inside the category",
                 null=True,
             ),
         ),

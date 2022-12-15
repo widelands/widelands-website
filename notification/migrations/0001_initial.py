@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
                 (
                     "medium",
                     models.CharField(
-                        max_length=1, verbose_name="medium", choices=[(b"1", "Email")]
+                        max_length=1, verbose_name="medium", choices=[("1", "Email")]
                     ),
                 ),
                 ("send", models.BooleanField(verbose_name="send")),

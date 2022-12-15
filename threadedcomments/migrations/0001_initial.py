@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 (
                     "markup",
                     models.IntegerField(
-                        default=b"markdown",
+                        default=1,
                         null=True,
                         blank=True,
                         choices=[
@@ -167,7 +167,7 @@ class Migration(migrations.Migration):
                 (
                     "markup",
                     models.IntegerField(
-                        default=b"markdown",
+                        default=1,
                         null=True,
                         blank=True,
                         choices=[
