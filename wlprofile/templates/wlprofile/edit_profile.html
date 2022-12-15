@@ -28,7 +28,7 @@
 					{% endif %}
 					{% endifequal %}
 
-					{{ field }} 
+					{{ field }}
 					{% ifequal field.name "widelands_version" %}
 						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify the widelands version to help developers in case of questions.">
 					{% endifequal %}
@@ -37,6 +37,9 @@
 					{% endifequal %}
 					{% ifequal field.name "webservice_nick" %}
 						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Examples: IRC/NickName, Facebook/NickName, Youtube/NickName, ...">
+					{% endifequal %}
+					{% ifequal field.name "time_zone" %}
+						Your local time zone offset from <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>
 					{% endifequal %}
 					{% ifequal field.name "time_display" %}
 						<a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
