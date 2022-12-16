@@ -16,7 +16,7 @@ from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb.markups import mypostmarkup
 from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES
 from pybb.orm import load_related
-from pybb.templatetags.pybb_extras import pybb_moderated_by, pybb_editable_by
+from pybb.templatetags.pybb_extras import pybb_moderated_by, pybb_editable_by, pybb_has_unreads
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
 import math
 
@@ -71,6 +71,17 @@ def show_forum_ctx(request, forum_id):
 
 
 show_forum = render_to("pybb/forum.html")(show_forum_ctx)
+
+
+@login_required
+def mark_forum_read(request, forum_id):
+    user = request.user
+    forum = get_object_or_404(Forum, pk=forum_id)
+    for topic in forum.topics.all():
+        if pybb_has_unreads(topic, user):
+            topic.update_read(user)
+
+    return HttpResponseRedirect(forum.get_absolute_url())
 
 
 def show_topic_ctx(request, topic_id):
