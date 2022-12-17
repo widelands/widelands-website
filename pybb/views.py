@@ -16,7 +16,11 @@ from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb.markups import mypostmarkup
 from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES
 from pybb.orm import load_related
-from pybb.templatetags.pybb_extras import pybb_moderated_by, pybb_editable_by, pybb_has_unreads
+from pybb.templatetags.pybb_extras import (
+    pybb_moderated_by,
+    pybb_editable_by,
+    pybb_has_unreads,
+)
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
 import math
 
