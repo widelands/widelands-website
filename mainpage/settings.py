@@ -178,7 +178,6 @@ WIKI_WORD_RE = r"[:\-\w ]+"
 ######################
 # User configuration #
 ######################
-DEFAULT_TIME_ZONE = 3  # See wlprofile.templatetags.custom_date
 DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601
 DEFAULT_MARKUP = "markdown"
 SIGNATURE_MAX_LENGTH = 255

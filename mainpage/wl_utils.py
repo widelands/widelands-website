@@ -9,6 +9,10 @@ def get_real_ip(request):
 
 # AutoOneToOneField
 # =================
+# This is used to create a wlprofile object for a user automatically:
+# user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+# profile = user.wlprofile  -> Now the wlprofile is created
+#
 # Initial implemenation details about AutoOneToOneField:
 #   http://softwaremaniacs.org/blog/2007/03/07/auto-one-to-one-field/
 #
@@ -46,7 +50,7 @@ class AutoReverseOneToOneDescriptor(ReverseOneToOneDescriptor):
 
 class AutoOneToOneField(OneToOneField):
     """OneToOneField creates dependent object on first request from parent
-    object if dependent oject has not created yet."""
+    object if dependent object has not created yet."""
 
     def contribute_to_related_class(self, cls, related):
         setattr(

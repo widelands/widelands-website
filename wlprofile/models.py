@@ -11,43 +11,45 @@ from django.conf import settings
 TZ_CHOICES = [
     (float(x[0]), x[1])
     for x in (
-        (-12, "-12"),
-        (-11, "-11"),
-        (-10, "-10"),
-        (-9.5, "-09.5"),
-        (-9, "-09"),
-        (-8.5, "-08.5"),
-        (-8, "-08 PST"),
-        (-7, "-07 MST"),
-        (-6, "-06 CST"),
-        (-5, "-05 EST"),
-        (-4, "-04 AST"),
-        (-3.5, "-03.5"),
-        (-3, "-03 ADT"),
-        (-2, "-02"),
-        (-1, "-01"),
-        (0, "00 GMT"),
-        (1, "+01 CET"),
-        (2, "+02"),
-        (3, "+03"),
-        (3.5, "+03.5"),
-        (4, "+04"),
-        (4.5, "+04.5"),
-        (5, "+05"),
-        (5.5, "+05.5"),
-        (6, "+06"),
-        (6.5, "+06.5"),
-        (7, "+07"),
-        (8, "+08"),
-        (9, "+09"),
-        (9.5, "+09.5"),
-        (10, "+10"),
-        (10.5, "+10.5"),
-        (11, "+11"),
-        (11.5, "+11.5"),
-        (12, "+12"),
-        (13, "+13"),
-        (14, "+14"),
+        (-12, "UTC -12"),
+        (-11, "UTC -11"),
+        (-10, "UTC -10"),
+        (-9.5, "UTC -09.5"),
+        (-9, "UTC -09"),
+        (-8.5, "UTC -08.5"),
+        (-8, "UTC -08"),
+        (-7, "UTC -07"),
+        (-6, "UTC -06"),
+        (-5, "UTC -05"),
+        (-4, "UTC -04"),
+        (-3.5, "UTC -03.5"),
+        (-3, "UTC -03"),
+        (-2, "UTC -02"),
+        (-1, "UTC -01"),
+        (0, "UTC"),
+        (1, "UTC +01"),
+        (2, "UTC +02"),
+        (3, "UTC +03"),
+        (3.5, "UTC +03.5"),
+        (4, "UTC +04"),
+        (4.5, "UTC +04.5"),
+        (5, "UTC +05"),
+        (5.5, "UTC +05.5"),
+        (5.75, "UTC +05.45"),
+        (6, "UTC +06"),
+        (6.5, "UTC +06.5"),
+        (7, "UTC +07"),
+        (8, "UTC +08"),
+        (9, "UTC +09"),
+        (9.5, "UTC +09.5"),
+        (10, "UTC +10"),
+        (10.5, "UTC +10.5"),
+        (11, "UTC +11"),
+        (11.5, "UTC +11.5"),
+        (12, "UTC +12"),
+        (12.75, "UTC +12.75"),
+        (13, "UTC +13"),
+        (14, "UTC +14"),
     )
 ]
 
@@ -103,9 +105,7 @@ class Profile(models.Model):
     location = models.CharField(_("Location"), max_length=30, blank=True, default="")
 
     # Configuration for Forum/Site
-    time_zone = models.FloatField(
-        _("Time zone"), choices=TZ_CHOICES, default=float(settings.DEFAULT_TIME_ZONE)
-    )
+    time_zone = models.FloatField(_("Time zone"), choices=TZ_CHOICES, default=0.0)
     time_display = models.CharField(
         _("Time display"), max_length=80, default=settings.DEFAULT_TIME_DISPLAY
     )

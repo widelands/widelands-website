@@ -47,7 +47,7 @@ class FixedOffset(tzinfo):
         return ZERO
 
 
-def do_custom_date(format, date, timezone, now=None):
+def do_custom_date(format, date, timezone=1.0, now=None):
     """Returns a string formatted representation of date according to format.
     This accepts all formats that strftime also accepts, but it also accepts
     some new options which are dependant on the current date.
@@ -135,14 +135,16 @@ def custom_date(date, user):
     a sane default."""
     if not user.is_authenticated:
         return do_custom_date(
-            settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE)
+            settings.DEFAULT_TIME_DISPLAY,
+            date,
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
         return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
     except ObjectDoesNotExist:
         return do_custom_date(
-            settings.DEFAULT_TIME_DISPLAY, date, float(settings.DEFAULT_TIME_ZONE)
+            settings.DEFAULT_TIME_DISPLAY,
+            date,
         )
 
 
