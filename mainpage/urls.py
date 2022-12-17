@@ -6,7 +6,9 @@ from django.contrib.syndication.views import Feed
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from django_registration.backends.activation.views import RegistrationView
+from django.contrib.auth.views import LoginView
 from mainpage.forms import RegistrationWithCaptchaForm
+from mainpage.forms import LoginTimezoneForm
 
 admin.autodiscover()
 
@@ -28,6 +30,7 @@ urlpatterns = [
         name="django_registration_register",
     ),
     url(r"^accounts/", include("django_registration.backends.activation.urls")),
+    url(r"^accounts/login/$", LoginView.as_view(authentication_form=LoginTimezoneForm)),
     url(r"^accounts/", include("django.contrib.auth.urls")),
     url(r"^ratings/", include("star_ratings.urls", namespace="ratings")),
     # Formerly 3rd party
