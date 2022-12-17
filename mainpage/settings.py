@@ -228,6 +228,7 @@ ALLOWED_EXTENSIONS = [
     "txt",
     "csv",
     "wai",
+    "wry",
 ]
 
 # Widelands Savegame should contain at least these entries
