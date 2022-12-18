@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import Http404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -78,14 +77,29 @@ show_forum = render_to("pybb/forum.html")(show_forum_ctx)
 
 
 @login_required
-def mark_forum_read(request, forum_id):
-    user = request.user
-    forum = get_object_or_404(Forum, pk=forum_id)
-    for topic in forum.topics.all():
-        if pybb_has_unreads(topic, user):
-            topic.update_read(user)
+def mark_as_read(request, **kwargs):
 
-    return HttpResponseRedirect(forum.get_absolute_url())
+    forum_id = kwargs.get("forum_id", None)
+    category_id = kwargs.get("category_id", None)
+
+    def _mark_read(forum, user):
+        if not isinstance(forum, Forum):
+            raise Http404()
+        for topic in forum.topics.all():
+            if pybb_has_unreads(topic, user):
+                topic.update_read(user)
+
+    user = request.user
+    if forum_id:
+        forum = get_object_or_404(Forum, pk=forum_id)
+        _mark_read(forum, user)
+        return HttpResponseRedirect(forum.get_absolute_url())
+    if category_id:
+        category = get_object_or_404(Category, pk=category_id)
+        for forum in category.forums.all():
+            _mark_read(forum, user)
+        return HttpResponseRedirect(category.get_absolute_url())
+
 
 
 def show_topic_ctx(request, topic_id):
@@ -99,7 +113,7 @@ def show_topic_ctx(request, topic_id):
         raise Http404()
 
     if topic.forum.category.internal and not allowed_for(request.user):
-        raise Http404
+        raise Http404()
 
     topic.views += 1
     topic.save()

@@ -7,11 +7,16 @@ urlpatterns = [
     # Misc
     url("^$", views.index, name="pybb_index"),
     url("^category/(?P<category_id>\d+)/$", views.show_category, name="pybb_category"),
+    url(
+        "^category/(?P<category_id>\d+)/mark_as_read/$",
+        views.mark_as_read,
+        name="mark_as_read",
+        ),
     url("^forum/(?P<forum_id>\d+)/$", views.show_forum, name="pybb_forum"),
     url(
-        "^forum/(?P<forum_id>\d+)/mark_forum_read/$",
-        views.mark_forum_read,
-        name="mark_forum_read",
+        "^forum/(?P<forum_id>\d+)/mark_as_read/$",
+        views.mark_as_read,
+        name="mark_as_read",
     ),
     # Feeds
     url("^feeds/topics/(?P<topic_id>\d+)/$", LastTopics(), name="pybb_feed_topics"),
