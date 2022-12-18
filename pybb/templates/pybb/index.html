@@ -1,9 +1,15 @@
 {% extends 'pybb/base.html' %}
 {% load pybb_extras %}
 {% load static %}
+{% load i18n %}
 
 {% block content_header %}
-    <h1>Forums</h1>
+  <h1>Forums</h1>
+  {% if user.is_authenticated %}
+  <a class="button posRight" href="{% url 'mark_as_read' %}" title="Takes effect on all(!) topics">
+	 <span class="middle">{% trans "Mark all as Read" %}</span>
+  </a>
+	{% endif %}
 {% endblock %}
 
 {% block content_main %}
@@ -17,7 +23,7 @@
 <div class="center green">
 	<img src="{% static 'forum/img/folder_big_work_star.png' %}" alt="Has unread posts" class="middle" />
 	= Unread posts
-	<img src="{% static 'forum/img/folder_big_work.png' %}" alt="Hasn't unread posts" class="middle" /> 
+	<img src="{% static 'forum/img/folder_big_work.png' %}" alt="Hasn't unread posts" class="middle" />
 	= No unread posts
 </div>
 
@@ -29,7 +35,7 @@
      </td>
      <td>= Unread posts</td>
      <td>
-         <img src="{% static 'forum/img/folder_big.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" /> 
+         <img src="{% static 'forum/img/folder_big.png' %}" style="width: 48px; height:48px; margin: 0px;" alt="" align="middle" />
      </td><td>= No unread posts</td>
   </tr>
 

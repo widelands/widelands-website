@@ -32,10 +32,16 @@
 
 <div class="blogEntry">
 	<div class="breadCrumb">
-	<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
-	{% pybb_link forum.category %} &#187; 
+	<a href="{% url 'pybb_index' %}">Forums</a> &#187;
+	{% pybb_link forum.category %} &#187;
 	{{ forum }}
 	</div>
+
+	{% if forum.topics.all and user.is_authenticated %}
+	<a class="button posRight" href="{% url 'mark_as_read' forum_id=forum.id %}" title="Takes effect on all topics in this Forum">
+		<span class="middle">{% trans "Mark all as Read" %}</span>
+	</a>
+	{% endif %}
 
 	{% autopaginate topics page_size as object_list %}
 	{% paginate using "pagination/pagination_mod.html" %}
@@ -93,7 +99,7 @@
 <div class="center green">
 	<img src="{% static 'forum/img/doc_big_work_star.png' %}" alt="" class="middle" />
 	= Unread posts
-	<img src="{% static 'forum/img/doc_big_work.png' %}" alt="" class="middle" /> 
+	<img src="{% static 'forum/img/doc_big_work.png' %}" alt="" class="middle" />
 	= No unread posts
 </div>
 {% endblock %}
