@@ -101,7 +101,6 @@ def mark_as_read(request, **kwargs):
         return HttpResponseRedirect(category.get_absolute_url())
 
 
-
 def show_topic_ctx(request, topic_id):
     """View of topic posts including a form to add a Post."""
 
