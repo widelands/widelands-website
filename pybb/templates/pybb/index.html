@@ -6,7 +6,7 @@
 {% block content_header %}
   <h1>Forums</h1>
   {% if user.is_authenticated %}
-  <a class="button posRight" href="{% url 'mark_as_read' %}">
+  <a class="button posRight" href="{% url 'mark_as_read' %}" title="Takes effect on all(!) topics">
 	 <span class="middle">{% trans "Mark all as Read" %}</span>
   </a>
 	{% endif %}
