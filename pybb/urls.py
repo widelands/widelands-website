@@ -6,12 +6,13 @@ from pybb.feeds import LastPosts, LastTopics
 urlpatterns = [
     # Misc
     url("^$", views.index, name="pybb_index"),
+    url("^mark_as_read/", views.mark_as_read, name="mark_as_read"),
     url("^category/(?P<category_id>\d+)/$", views.show_category, name="pybb_category"),
     url(
         "^category/(?P<category_id>\d+)/mark_as_read/$",
         views.mark_as_read,
         name="mark_as_read",
-    ),
+        ),
     url("^forum/(?P<forum_id>\d+)/$", views.show_forum, name="pybb_forum"),
     url(
         "^forum/(?P<forum_id>\d+)/mark_as_read/$",

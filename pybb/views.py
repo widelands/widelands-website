@@ -100,6 +100,17 @@ def mark_as_read(request, **kwargs):
             _mark_read(forum, user)
         return HttpResponseRedirect(category.get_absolute_url())
 
+    # All topics should be marked as read
+    if user.has_perm("can_access_internal"):
+        categories = Category.objects.all()
+    else:
+        categories = Category.exclude_internal.all()
+
+    for category in categories:
+        for forum in category.forums.all():
+            _mark_read(forum, user)
+    return HttpResponseRedirect("/forum")
+
 
 def show_topic_ctx(request, topic_id):
     """View of topic posts including a form to add a Post."""
