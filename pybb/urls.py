@@ -12,7 +12,7 @@ urlpatterns = [
         "^category/(?P<category_id>\d+)/mark_as_read/$",
         views.mark_as_read,
         name="mark_as_read",
-        ),
+    ),
     url("^forum/(?P<forum_id>\d+)/$", views.show_forum, name="pybb_forum"),
     url(
         "^forum/(?P<forum_id>\d+)/mark_as_read/$",
