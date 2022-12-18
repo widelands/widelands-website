@@ -78,9 +78,10 @@ show_forum = render_to("pybb/forum.html")(show_forum_ctx)
 
 @login_required
 def mark_as_read(request, **kwargs):
+    """Mark topics as read.
 
-    forum_id = kwargs.get("forum_id", None)
-    category_id = kwargs.get("category_id", None)
+    Called from button 'Mark all as read' from different locations.
+    """
 
     def _mark_read(forum, user):
         if not isinstance(forum, Forum):
@@ -89,6 +90,8 @@ def mark_as_read(request, **kwargs):
             if pybb_has_unreads(topic, user):
                 topic.update_read(user)
 
+    forum_id = kwargs.get("forum_id", None)
+    category_id = kwargs.get("category_id", None)
     user = request.user
     if forum_id:
         forum = get_object_or_404(Forum, pk=forum_id)
@@ -101,12 +104,7 @@ def mark_as_read(request, **kwargs):
         return HttpResponseRedirect(category.get_absolute_url())
 
     # All topics should be marked as read
-    if user.has_perm("can_access_internal"):
-        categories = Category.objects.all()
-    else:
-        categories = Category.exclude_internal.all()
-
-    for category in categories:
+    for category in Category.objects.all():
         for forum in category.forums.all():
             _mark_read(forum, user)
     return HttpResponseRedirect("/forum")
