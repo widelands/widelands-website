@@ -203,7 +203,10 @@ EDIT_HOURS = 24
 ####################
 
 DEFAULT_MARKUP = 1  # "markdown"
-
+##################
+# django-tagging #
+##################
+FORCE_LOWERCASE_TAGS = True
 ##################################
 # Uploading files and validation #
 ##################################

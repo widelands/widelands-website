@@ -28,7 +28,6 @@ from mainpage.wl_utils import get_real_ip
 from mainpage.wl_utils import get_valid_cache_key
 
 from tagging.models import Tag
-from tagging.views import TaggedObjectList
 
 import re
 import urllib.request, urllib.parse, urllib.error
