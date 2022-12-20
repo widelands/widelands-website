@@ -27,6 +27,9 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from mainpage.wl_utils import get_real_ip
 from mainpage.wl_utils import get_valid_cache_key
 
+from tagging.models import Tag
+from tagging.views import TaggedObjectList
+
 import re
 import urllib.request, urllib.parse, urllib.error
 
@@ -226,11 +229,16 @@ def view_article(
             changeset = get_object_or_404(article.changeset_set, revision=revision)
             article.content = changeset.get_content()
 
+        outdated = False
+        tags = [x.name for x in Tag.objects.get_for_object(article)]
+        if "outdated" in tags:
+            outdated = True
         template_params = {
             "article": article,
             "revision": revision,
             "redirected_from": redirected_from,
             "allow_write": allow_write,
+            "outdated": outdated,
         }
 
         if notification is not None:

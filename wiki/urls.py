@@ -11,6 +11,9 @@ from wiki.feeds import (
     RssArticleHistoryFeed,
     AtomArticleHistoryFeed,
 )
+from wiki.models import Article
+from tagging.views import TaggedObjectList
+
 
 urlpatterns = [
     # Redirects
@@ -96,4 +99,7 @@ urlpatterns = [
         views.backlinks,
         name="backlinks",
     ),
+    url(r'^tag_list/(?P<tag>[^/]+(?u))/$',
+        TaggedObjectList.as_view(model=Article, paginate_by=10, allow_empty=True, template_name="wiki/tag_view.html"),
+        name='article_tag_detail'),
 ]

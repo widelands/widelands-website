@@ -1,0 +1,8 @@
+{% load tagging_tags %}
+
+{% tags_for_object article as tag_list %}
+   {% for t in tag_list %}
+	  {% if t != tag %}
+	     <a href="{% url 'article_tag_detail' t.name %}">{{t.name}}</a>
+	  {% endif %}
+   {% endfor %}

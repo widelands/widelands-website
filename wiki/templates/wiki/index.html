@@ -1,6 +1,7 @@
 {% extends "wiki/base.html" %}
 {% load i18n %}
 {% load custom_date wlprofile_extras %}
+{% load tagging_tags %}
 
 {% block title %}Wiki Index - {{ block.super }}{% endblock %}
 
@@ -10,6 +11,10 @@
 
 {% block content_main %}
 <div class="blogEntry">
+	{% tag_cloud_for_model wiki.Article as cloud_tags %}
+	{% for tag in cloud_tags %}
+		<a href="{% url 'article_tag_detail' tag.name %}">{{tag.name}}</a></br>
+	{% endfor %}
 	{% if articles %}
 		<p> There are {{ articles|length }} articles in this wiki:</p>
 		<table>
@@ -18,6 +23,7 @@
 				<th>{% trans "Page" %}</th>
 				<th>{% trans "Summary" %}</th>
 				<th>{% trans "Last update" %}</th>
+				<th>{% trans "Tags" %}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -26,6 +32,7 @@
 				<td><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></td>
 				<td>{{ article.summary }}</td>
 				<td>{{ article.last_update|custom_date:user }}</td>
+				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
