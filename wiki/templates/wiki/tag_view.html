@@ -24,8 +24,7 @@
 			{% for article in object_list %}
 			<tr>
 				<td><a href="{% url 'wiki_article' article %}">{{ article }}</a></td>
-				<td>{% include "wiki/inlines/tag_urls.html" %}
-				</td>
+				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
 			</tr>
 		</tbody>
         {% endfor %}

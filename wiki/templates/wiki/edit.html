@@ -54,6 +54,7 @@
 	{% endif %}
 	<p>
 	You can edit the wiki pages contents using the syntax described on the <a href="/wiki/WikiSyntax">WikiSyntax</a>.
+	For a description of the input fields see: <a href="/wiki/WikiHelp">WikiHelp</a>
 	</p>
 
 	<div id="preview"></div>
@@ -70,6 +71,7 @@
 			<!-- Content -->
 			<tr><th colspan="2"><label for="id_content">{% trans "Content" %}:</label></th></tr>
 			<tr><td colspan="2"  class="errormessage">{{ form.content.errors }}{{ form.content }}</td></tr>
+			<!-- Tags -->
 			<tr><th colspan="2"><label for={{ form.tags.id_for_label }}>Tags:</label></th></tr>
 			<tr><td colspan="2"  class="errormessage">{{ form.tags.errors }}{{ form.tags }}</td></tr>
 			<!-- Summary -->
