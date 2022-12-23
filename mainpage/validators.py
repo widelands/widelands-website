@@ -32,6 +32,7 @@ def check_utf8mb3_preview(text):
             return True
     return False
 
+
 def check_utf8mb3(text):
     """Our database doesn't support the whole variety of utf8.
 
@@ -43,4 +44,4 @@ def check_utf8mb3(text):
             raise ValidationError(
                 "Your text contain characters which can't be handled (yet).\
                 Usually this is some unicode character."
-                )
+            )

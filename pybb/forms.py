@@ -14,16 +14,19 @@ from .util import validate_file
 from mainpage.validators import virus_scan
 from mainpage.validators import check_utf8mb3
 
+
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(
         label=_("Subject"),
         validators=[
             check_utf8mb3,
-            ],
-        )
+        ],
+    )
     body = forms.CharField(
         widget=forms.Textarea(attrs={"cols": 80, "rows": 15}),
-        validators=[check_utf8mb3,],
+        validators=[
+            check_utf8mb3,
+        ],
     )
     attachment = forms.FileField(
         label=_("Attachment"),
