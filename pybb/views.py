@@ -22,7 +22,7 @@ from pybb.templatetags.pybb_extras import (
 )
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
 import math
-
+from mainpage.validators import check_utf8mb3_preview
 
 try:
     from notification import models as notification
@@ -462,6 +462,9 @@ def post_ajax_preview(request):
 
     if not content:
         return {"content": ""}
+
+    if check_utf8mb3_preview(content):
+        return {"content": "Error: At least one character in your post can't be handled" }
 
     if markup == "bbcode":
         html = mypostmarkup.markup(content, auto_urls=False)

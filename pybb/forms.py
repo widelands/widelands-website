@@ -12,10 +12,19 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from .util import validate_file
 from mainpage.validators import virus_scan
-
+from mainpage.validators import check_utf8mb3
 
 class AddPostForm(forms.ModelForm):
-    name = forms.CharField(label=_("Subject"))
+    name = forms.CharField(
+        label=_("Subject"),
+        validators=[
+            check_utf8mb3,
+            ],
+        )
+    body = forms.CharField(
+        widget=forms.Textarea(attrs={"cols": 80, "rows": 15}),
+        validators=[check_utf8mb3,],
+    )
     attachment = forms.FileField(
         label=_("Attachment"),
         required=False,
@@ -29,14 +38,8 @@ class AddPostForm(forms.ModelForm):
         model = Post
         # Listing fields again to get the the right order
         fields = [
-            "name",
-            "body",
             "markup",
-            "attachment",
         ]
-        widgets = {
-            "body": forms.Textarea(attrs={"cols": 80, "rows": 15}),
-        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
