@@ -4,6 +4,7 @@ from threadedcomments.models import ThreadedComment
 from django.utils.translation import ugettext_lazy as _
 from mainpage.validators import check_utf8mb3
 
+
 class ThreadedCommentForm(forms.ModelForm):
     """
     Form which can be used to validate data for a new ThreadedComment.
@@ -18,7 +19,7 @@ class ThreadedCommentForm(forms.ModelForm):
         widget=forms.Textarea,
         validators=[
             check_utf8mb3,
-            ]
+        ],
     )
 
     class Meta:

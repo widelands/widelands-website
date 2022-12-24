@@ -20,13 +20,13 @@ class EditProfileForm(forms.ModelForm):
         widget=forms.Textarea,
         validators=[
             check_utf8mb3,
-            ],
+        ],
     )
 
     webservice_nick = forms.CharField(
         validators=[
             check_utf8mb3,
-            ],
+        ],
     )
 
     class Meta:
