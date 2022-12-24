@@ -46,6 +46,7 @@ def _preview(
     """Returns a preview of the comment so that the user may decide if he or
     she wants to edit it before submitting it permanently."""
     _adjust_max_comment_length(form_class)
+
     form = form_class(request.POST or None)
     context = {
         "next": _get_next(request),
@@ -56,6 +57,8 @@ def _preview(
         context["comment"] = new_comment
     else:
         context["comment"] = None
+
+    extra_context.update(context)
     return render(
         request,
         "threadedcomments/preview_comment.html",

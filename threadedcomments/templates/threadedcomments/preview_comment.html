@@ -14,11 +14,12 @@
 
 {% block content_main %}
 <div class="blogEntry">
+	{{next}}
 	{% if comment %}
 		<h3>Preview:</h3>
 		<div id="comment_preview">{% auto_transform_markup comment %}</div>
 	{% endif %}
-	<form method="POST" action=".">
+	<form method="POST" action="{{ next }}">
 		<span class="errormessage">{{ form.comment.errors }}</span>
 		{{ form.comment }}
 		<br />
