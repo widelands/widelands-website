@@ -46,10 +46,8 @@ def _preview(
     """Returns a preview of the comment so that the user may decide if he or
     she wants to edit it before submitting it permanently."""
     _adjust_max_comment_length(form_class)
-
     form = form_class(request.POST or None)
     context = {
-        "next": _get_next(request),
         "form": form,
     }
     if form.is_valid():
@@ -136,7 +134,8 @@ def comment(
                 ]
             )
         else:
-            return HttpResponseRedirect(_get_next(request))
+            next = extra_context.get("next", _get_next(request))
+            return HttpResponseRedirect(next)
     elif ajax == "json":
         return JSONResponse({"errors": form.errors}, is_iterable=False)
     elif ajax == "xml":
@@ -160,6 +159,12 @@ def comment(
         )
         return XMLResponse(response_str, is_iterable=False)
     else:
+        # The form isn't valid
+        # Because this function and _preview do play ping pong the function
+        # _get_next() returns different values, so
+        # we save the ?next= value from the GET dictionary
+        if "next" not in extra_context.keys():
+            extra_context.update({"next": request.GET.get("next")})
         return _preview(
             request, context_processors, extra_context, form_class=form_class
         )
