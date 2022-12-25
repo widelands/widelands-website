@@ -47,6 +47,10 @@ def _preview(
     she wants to edit it before submitting it permanently."""
     _adjust_max_comment_length(form_class)
     form = form_class(request.POST or None)
+
+    if "next" not in extra_context.keys():
+        extra_context.update({"next": _get_next(request)})
+
     context = {
         "form": form,
     }
@@ -160,11 +164,6 @@ def comment(
         return XMLResponse(response_str, is_iterable=False)
     else:
         # The form isn't valid
-        # Because this function and _preview do play ping pong the function
-        # _get_next() returns different values, so
-        # we save the ?next= value from the GET dictionary
-        if "next" not in extra_context.keys():
-            extra_context.update({"next": request.GET.get("next")})
         return _preview(
             request, context_processors, extra_context, form_class=form_class
         )
