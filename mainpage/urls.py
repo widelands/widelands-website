@@ -9,6 +9,8 @@ from django_registration.backends.activation.views import RegistrationView
 from django.contrib.auth.views import LoginView
 from mainpage.forms import RegistrationWithCaptchaForm
 from mainpage.forms import LoginTimezoneForm
+from django_messages.views import compose
+from django_messages_wl.forms import ExtendedComposeForm
 
 admin.autodiscover()
 
@@ -35,6 +37,7 @@ urlpatterns = [
     url(r"^ratings/", include("star_ratings.urls", namespace="ratings")),
     # Formerly 3rd party
     url(r"^notification/", include("notification.urls")),
+    url(r'^messages/compose/', compose, {"form_class":ExtendedComposeForm}, name='messages_compose'),
     url(r"^messages/", include("django_messages_wl.urls")),
     url(r"^threadedcomments/", include("threadedcomments.urls")),
     # Redirect old urls to new documentation
