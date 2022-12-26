@@ -47,11 +47,8 @@ def _preview(
     she wants to edit it before submitting it permanently."""
     _adjust_max_comment_length(form_class)
     form = form_class(request.POST or None)
-
-    if "next" not in extra_context.keys():
-        extra_context.update({"next": _get_next(request)})
-
     context = {
+        "next": _get_next(request),
         "form": form,
     }
     if form.is_valid():
@@ -59,8 +56,6 @@ def _preview(
         context["comment"] = new_comment
     else:
         context["comment"] = None
-
-    extra_context.update(context)
     return render(
         request,
         "threadedcomments/preview_comment.html",
@@ -138,8 +133,7 @@ def comment(
                 ]
             )
         else:
-            next = extra_context.get("next", _get_next(request))
-            return HttpResponseRedirect(next)
+            return HttpResponseRedirect(_get_next(request))
     elif ajax == "json":
         return JSONResponse({"errors": form.errors}, is_iterable=False)
     elif ajax == "xml":
@@ -163,7 +157,6 @@ def comment(
         )
         return XMLResponse(response_str, is_iterable=False)
     else:
-        # The form isn't valid
         return _preview(
             request, context_processors, extra_context, form_class=form_class
         )
