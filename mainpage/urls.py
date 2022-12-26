@@ -38,7 +38,7 @@ urlpatterns = [
     # Formerly 3rd party
     url(r"^notification/", include("notification.urls")),
     url(
-        r"^messages/compose/",
+        r"^messages/compose/$",
         compose,
         {"form_class": ExtendedComposeForm},
         name="messages_compose",
