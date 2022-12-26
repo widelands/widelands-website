@@ -11,17 +11,19 @@ urlpatterns = [
         compose,
         {"form_class": ExtendedComposeForm},
         name="messages_compose",
-        ),
+    ),
     url(
         r"^compose/(?P<recipient>[\w.@+-]+)/$",
         compose,
         {"form_class": ExtendedComposeForm},
-        name="messages_compose_to"),
+        name="messages_compose_to",
+    ),
     url(
         r"^reply/(?P<message_id>[\d]+)/$",
         reply,
         {"form_class": ExtendedComposeForm},
-        name='messages_reply'),
+        name="messages_reply",
+    ),
     # Needs to be after the custom views
     url(r"^", include("django_messages.urls")),
 ]
