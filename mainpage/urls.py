@@ -10,7 +10,6 @@ from django.contrib.auth.views import LoginView
 from mainpage.forms import RegistrationWithCaptchaForm
 from mainpage.forms import LoginTimezoneForm
 
-
 admin.autodiscover()
 
 urlpatterns = [

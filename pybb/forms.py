@@ -11,8 +11,7 @@ from pybb.models import Topic, Post, Attachment
 from pybb import settings as pybb_settings
 from django.conf import settings
 from .util import validate_file
-from mainpage.validators import virus_scan
-from mainpage.validators import check_utf8mb3
+from mainpage.validators import virus_scan, check_utf8mb3
 
 
 class AddPostForm(forms.ModelForm):
