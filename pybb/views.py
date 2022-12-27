@@ -465,7 +465,7 @@ def post_ajax_preview(request):
 
     if check_utf8mb3_preview(content):
         return {
-            "content": "Error: At least one character in your post can't be handled"
+            "content": "<span class='errormessage'>Error: At least one character in your post can't be handled</span>"
         }
 
     if markup == "bbcode":
