@@ -5,7 +5,8 @@
 <div id="logo">
 	<a href="{% url 'mainpage' %}"><img src=
 	"{% static 'img/'%}{% wl_logo %}" alt=
-	"Widelands Logo"></a>
+	"Widelands Logo"></a></br>
+	<div class="errormessage">{{ git_data }}</div>
 </div>
 <ul class="header_boxes">
     <li class="small">
@@ -35,7 +36,7 @@
 			<a href="{% url 'profile_view' %}" title="Your Profile">Profile</a> |
 			{% if messages_inbox_count %}
 				<a href="{% url 'messages_inbox' %}" title="New Messages">Messages ({{ messages_inbox_count }})</a>
-			{% else %}			
+			{% else %}
 				<a href="{% url 'messages_inbox' %}" title="Show Inbox">Messages</a>
 			{% endif %}
 			<br />

@@ -5,6 +5,8 @@ from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.sites.models import Site
+from subprocess import run
 import sys
 import json
 import os
@@ -15,9 +17,17 @@ import random
 
 
 def mainpage(request):
+    current_site = Site.objects.get_current()#
+    context = None
+    if current_site.domain == 'alpha.widelands.org' or current_site.name == 'localhost':
+        cp1 = run(["git", "rev-parse", "--short", " HEAD"])
+        cp2 = run(["git", "symbolic-ref", "--short", " HEAD"])
+        if cp1.returncode == 0 and cp2.returncode == 0:
+            context = {"git_data": "On branch {} with commit {}".format(cp1.stdout, cp2.stdout)}
     return render(
         request,
         "mainpage/mainpage.html",
+        context,
     )
 
 
