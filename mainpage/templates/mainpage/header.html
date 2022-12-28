@@ -6,7 +6,9 @@
 	<a href="{% url 'mainpage' %}"><img src=
 	"{% static 'img/'%}{% wl_logo %}" alt=
 	"Widelands Logo"></a></br>
-	<div class="green">{{ git_data }}</div>
+	{% if user.is_authenticated %}
+	<div class="green">{% git_data %}</div>
+	{% endif %}
 </div>
 <ul class="header_boxes">
     <li class="small">

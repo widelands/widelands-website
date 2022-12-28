@@ -65,7 +65,7 @@ def get_valid_cache_key(key):
 
 
 def return_git_path(pgm="git"):
-    """Find and return the path to git executable and check if it is valid"""
+    """Find and return the path to git executable and check if it is valid."""
     git_path = shutil.which(pgm)
     if not git_path:
         git_path = "/usr/bin/git"
