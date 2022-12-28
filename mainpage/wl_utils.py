@@ -63,3 +63,14 @@ class AutoOneToOneField(OneToOneField):
 # prevent failures when switching to a memory based cache
 def get_valid_cache_key(key):
     return key.replace(" ", "_")
+
+import os
+import shutil
+
+def check_git_path(pgm):
+    git_path = shutil.which(pgm)
+    if not git_path:
+        git_path = "/usr/bin/git"
+        if not os.path.exists(git_path) or not os.access(git_path,os.X_OK):
+            return False
+    return git_path

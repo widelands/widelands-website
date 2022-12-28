@@ -5,8 +5,8 @@ from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from wl_utils import check_git_path
 import subprocess
-import shutil
 import sys
 import json
 import os
@@ -18,13 +18,14 @@ import random
 
 def mainpage(request):
     context = None
-    if settings.SHOW_GIT_DATA:
+    git_path = check_git_path("git")
+    if settings.SHOW_GIT_DATA and git_path:
         try:
             branch = subprocess.check_output(
-                [shutil.which("git"), "symbolic-ref", "--short", "HEAD"]
+                [git_path, "symbolic-ref", "--short", "HEAD"]
             )
             commit = subprocess.check_output(
-                [shutil.which("git"), "rev-parse", "--short", "HEAD"]
+                [git_path, "rev-parse", "--short", "HEAD"]
             )
             context = {
                 "git_data": "On branch '{}' with commit '{}'".format(
