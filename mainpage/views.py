@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from subprocess import check_output
+import subprocess
 import sys
 import json
 import os
@@ -19,14 +19,14 @@ def mainpage(request):
     context = None
     if settings.SHOW_GIT_DATA:
         try:
-            branch = check_output(["git", "symbolic-ref", "--short", "HEAD"])
-            commit = check_output(["git", "rev-parse", "--short", "HEAD"])
+            branch = subprocess.check_output(["git", "symbolic-ref", "--short", "HEAD"])
+            commit = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
             context = {
                 "git_data": "On branch '{}' with commit '{}'".format(
                     branch.decode(), commit.decode()
                 )
             }
-        except CalledProcessError as e:
+        except subprocess.CalledProcessError as e:
             context = {"git_data": e}
 
     return render(
