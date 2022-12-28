@@ -5,7 +5,6 @@ from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.sites.models import Site
 from subprocess import check_output
 import sys
 import json
@@ -17,9 +16,8 @@ import random
 
 
 def mainpage(request):
-    current_site = Site.objects.get_current()
     context = None
-    if current_site.domain == "alpha.widelands.org" or current_site.name == "localhost":
+    if settings.SHOW_GIT_DATA:
         try:
             branch = check_output(["git", "symbolic-ref", "--short", "HEAD"])
             commit = check_output(["git", "rev-parse", "--short", "HEAD"])
@@ -30,7 +28,6 @@ def mainpage(request):
             }
         except CalledProcessError as e:
             context = {"git_data": e}
-            pass
 
     return render(
         request,
