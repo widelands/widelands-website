@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from mainpage.forms import ContactForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from wl_utils import check_git_path
+from .wl_utils import return_git_path
 import subprocess
 import sys
 import json
@@ -18,7 +18,7 @@ import random
 
 def mainpage(request):
     context = None
-    git_path = check_git_path("git")
+    git_path = return_git_path()
     if settings.SHOW_GIT_DATA and git_path:
         try:
             branch = subprocess.check_output(

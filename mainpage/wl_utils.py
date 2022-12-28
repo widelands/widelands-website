@@ -1,3 +1,10 @@
+from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
+from django.db.models import OneToOneField
+from django.db import models
+import os
+import shutil
+
+
 def get_real_ip(request):
     """Returns the real user IP, even if behind a proxy."""
     for key in ("HTTP_X_FORWARDED_FOR", "REMOTE_ADDR"):
@@ -16,14 +23,6 @@ def get_real_ip(request):
 # Initial implemenation details about AutoOneToOneField:
 #   http://softwaremaniacs.org/blog/2007/03/07/auto-one-to-one-field/
 #
-
-
-from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
-
-from django.db.models import OneToOneField
-from django.db import models
-
-
 class AutoReverseOneToOneDescriptor(ReverseOneToOneDescriptor):
     """The descriptor that handles the object creation for an
     AutoOneToOneField."""
@@ -65,14 +64,11 @@ def get_valid_cache_key(key):
     return key.replace(" ", "_")
 
 
-import os
-import shutil
-
-
-def check_git_path(pgm):
+def return_git_path(pgm="git"):
+    """Find and return the path to git executable and check if it is valid"""
     git_path = shutil.which(pgm)
     if not git_path:
         git_path = "/usr/bin/git"
         if not os.path.exists(git_path) or not os.access(git_path, os.X_OK):
-            return False
+            return None
     return git_path
