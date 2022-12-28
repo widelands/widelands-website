@@ -20,8 +20,12 @@ def mainpage(request):
     context = None
     if settings.SHOW_GIT_DATA:
         try:
-            branch = subprocess.check_output([shutil.which("git"), "symbolic-ref", "--short", "HEAD"])
-            commit = subprocess.check_output([shutil.which("git"), "rev-parse", "--short", "HEAD"])
+            branch = subprocess.check_output(
+                [shutil.which("git"), "symbolic-ref", "--short", "HEAD"]
+            )
+            commit = subprocess.check_output(
+                [shutil.which("git"), "rev-parse", "--short", "HEAD"]
+            )
             context = {
                 "git_data": "On branch '{}' with commit '{}'".format(
                     branch.decode(), commit.decode()
