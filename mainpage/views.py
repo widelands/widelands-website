@@ -24,9 +24,7 @@ def mainpage(request):
             branch = subprocess.check_output(
                 [git_path, "symbolic-ref", "--short", "HEAD"]
             )
-            commit = subprocess.check_output(
-                [git_path, "rev-parse", "--short", "HEAD"]
-            )
+            commit = subprocess.check_output([git_path, "rev-parse", "--short", "HEAD"])
             context = {
                 "git_data": "On branch '{}' with commit '{}'".format(
                     branch.decode(), commit.decode()
