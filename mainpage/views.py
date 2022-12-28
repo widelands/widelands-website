@@ -19,13 +19,17 @@ import random
 def mainpage(request):
     current_site = Site.objects.get_current()
     context = None
-    if current_site.domain == 'alpha.widelands.org' or current_site.name == 'localhost':
+    if current_site.domain == "alpha.widelands.org" or current_site.name == "localhost":
         try:
             branch = check_output(["git", "symbolic-ref", "--short", "HEAD"])
             commit = check_output(["git", "rev-parse", "--short", "HEAD"])
-            context = {"git_data": "On branch '{}' with commit '{}'".format(branch.decode(), commit.decode())}
+            context = {
+                "git_data": "On branch '{}' with commit '{}'".format(
+                    branch.decode(), commit.decode()
+                )
+            }
         except CalledProcessError as e:
-            context={"git_data": e}
+            context = {"git_data": e}
             pass
 
     return render(
