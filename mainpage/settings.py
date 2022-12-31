@@ -175,7 +175,15 @@ WIKI_LOCK_DURATION = 30
 WIKI_URL_RE = r"[:\-\w ]+"
 WIKI_WORD_RE = r"[:\-\w ]+"
 # List pages below the URL '/wiki/...' here if they are dynamically created
-WIKI_SPECIAL_PAGES = ["list", "search", "history", "feeds", "observe", "edit", "tag_list"]
+WIKI_SPECIAL_PAGES = [
+    "list",
+    "search",
+    "history",
+    "feeds",
+    "observe",
+    "edit",
+    "tag_list",
+]
 
 ######################
 # User configuration #
