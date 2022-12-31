@@ -203,12 +203,14 @@ EDIT_HOURS = 24
 ####################
 # threadedcomments #
 ####################
-
 DEFAULT_MARKUP = 1  # "markdown"
+
 ##################
 # django-tagging #
 ##################
 FORCE_LOWERCASE_TAGS = True
+MAX_TAG_LENGTH = 20
+
 ##################################
 # Uploading files and validation #
 ##################################
