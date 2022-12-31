@@ -23,3 +23,25 @@ def virus_scan(uploaded_file):
                 "Please check the installation of clamav and make \
                 sure clamdscan is working."
             )
+
+
+def check_utf8mb3_preview(text):
+
+    for c in text:
+        if len(c.encode()) > 3:
+            return True
+    return False
+
+
+def check_utf8mb3(text):
+    """Our database doesn't support the whole variety of utf8.
+
+    See: https://github.com/widelands/widelands-website/issues/286
+    """
+
+    for c in text:
+        if len(c.encode()) > 3:
+            raise ValidationError(
+                "Your text contain characters which can't be handled (yet).\
+                Usually this is some unicode character."
+            )

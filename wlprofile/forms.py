@@ -8,7 +8,7 @@
 
 from django import forms
 from .models import Profile
-
+from mainpage.validators import check_utf8mb3
 from django.conf import settings
 import re
 
@@ -16,11 +16,25 @@ import re
 class EditProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True)
 
+    signature = forms.CharField(
+        widget=forms.Textarea,
+        validators=[
+            check_utf8mb3,
+        ],
+    )
+
+    webservice_nick = forms.CharField(
+        validators=[
+            check_utf8mb3,
+        ],
+    )
+
     class Meta:
         model = Profile
         fields = [
             "avatar",
             "location",
+            "email",
             "operating_system",
             "widelands_version",
             "webservice_nick",
@@ -28,7 +42,6 @@ class EditProfileForm(forms.ModelForm):
             "favourite_tribe",
             "favourite_addon",
             "signature",
-            "email",
             "show_signatures",
             "time_zone",
             "time_display",
