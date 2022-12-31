@@ -72,7 +72,15 @@
 			<tr><th colspan="2"><label for="id_content">{% trans "Content" %}:</label></th></tr>
 			<tr><td colspan="2"  class="errormessage">{{ form.content.errors }}{{ form.content }}</td></tr>
 			<!-- Tags -->
-			<tr><th colspan="2"><label for={{ form.tags.id_for_label }}>Tags:</label></th></tr>
+			<tr>
+				<th colspan="2">
+					<label for={{ form.tags.id_for_label }}>Tags:</label>
+					<a href="/wiki/WikiHelp/#tagging" title="Help (new window)" style="float: right;" target="_blank">
+						<img src="{% static "img/menu_help_borderless.png" %}" alt="Help for tags" class="middle">
+						Help for Tags
+					</a>
+				</th>
+			</tr>
 			<tr><td colspan="2"  class="errormessage">{{ form.tags.errors }}{{ form.tags }}</td></tr>
 			<!-- Summary -->
 			<tr><th colspan="2"><label for="id_summary">{% trans "Page Summary" %}:</label></th></tr>

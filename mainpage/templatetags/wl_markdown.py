@@ -142,7 +142,7 @@ def _classify_link(tag):
             return
 
         # Wiki special pages are also not counted
-        if article_name in ["list", "search", "history", "feeds", "observe", "edit"]:
+        if article_name in settings.WIKI_SPECIAL_PAGES:
             tag["class"] = "specialLink"
             return
 
