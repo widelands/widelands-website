@@ -174,6 +174,16 @@ PASSWORD_HASHERS = [
 WIKI_LOCK_DURATION = 30
 WIKI_URL_RE = r"[:\-\w ]+"
 WIKI_WORD_RE = r"[:\-\w ]+"
+# List pages below the URL '/wiki/...' here if they are dynamically created
+WIKI_SPECIAL_PAGES = [
+    "list",
+    "search",
+    "history",
+    "feeds",
+    "observe",
+    "edit",
+    "tag_list",
+]
 
 ######################
 # User configuration #
@@ -203,8 +213,13 @@ EDIT_HOURS = 24
 ####################
 # threadedcomments #
 ####################
-
 DEFAULT_MARKUP = 1  # "markdown"
+
+##################
+# django-tagging #
+##################
+FORCE_LOWERCASE_TAGS = True
+MAX_TAG_LENGTH = 20
 
 ##################################
 # Uploading files and validation #

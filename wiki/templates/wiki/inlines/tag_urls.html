@@ -1,0 +1,11 @@
+{% load tagging_tags %}
+
+{% tags_for_object article as tag_list %}
+	{% for t in tag_list %}
+		{% if t != tag %}
+		{% comment %}the forloop.last needs to be in every line to prevent a space after the tag {% endcomment %}
+			<a href="{% url 'article_tag_detail' t.name %}">{{t.name}}</a>{% if not forloop.last %},{% endif %}
+		{% else %}
+			<span class="grey">{{ t.name }}</span>{% if not forloop.last %},{% endif %}
+		{% endif %}
+   {% endfor %}

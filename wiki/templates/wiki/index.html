@@ -18,6 +18,7 @@
 				<th>{% trans "Page" %}</th>
 				<th>{% trans "Summary" %}</th>
 				<th>{% trans "Last update" %}</th>
+				<th>{% trans "Tagged with" %}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -26,6 +27,7 @@
 				<td><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></td>
 				<td>{{ article.summary }}</td>
 				<td>{{ article.last_update|custom_date:user }}</td>
+				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
 			</tr>
 			{% endfor %}
 		</tbody>

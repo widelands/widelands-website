@@ -1,6 +1,7 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
 {% load wiki_extras %}
+{% load tagging_tags %}
 
 {% block title %}
 {{ article.title }} - {{block.super}}
@@ -43,7 +44,18 @@
 			({% trans "Viewing revision " %} {{ revision }})
 		</p>
 	{% endif %}
+	{% if outdated %}
+		<h2 class="errormessage">Outdated</h2>
+		<p class="errormessage">This article is marked as outdated.
+			If you are familiar with this topic, please consider updating and improving this page.
+			In case of any questions, please ask in the forum! For pointers see <a href="/wiki/WikiHelp">WikiHelp</a> in our wiki.
+			After finishing your work remove the 'outdated' tag.</p>
+	{% endif %}
 	{% render_content article %}
+	{% tags_for_object article as tag_list %}
+		{% if tag_list %}
+			<div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" %}</div>
+		{% endif %}
 </div>
 {% endblock %}
 

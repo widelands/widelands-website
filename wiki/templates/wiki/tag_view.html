@@ -1,0 +1,33 @@
+{% extends 'wiki/base.html' %}
+{% load i18n %}
+{% load wiki_extras %}
+
+{% block title %}
+{{ article.title }} - {{block.super}}
+{% endblock %}
+
+
+{% block content_header %}
+	<h1>Articles with tag '{{ tag.name }}'</h1>
+{% endblock %}
+
+{% block content_main %}
+	<div class="blogEntry">
+	<table>
+		<thead>
+			<tr>
+				<th>Article name</th>
+				<th>Tagged with</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article in object_list %}
+			<tr>
+				<td><a href="{% url 'wiki_article' article %}">{{ article }}</a></td>
+				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
+			</tr>
+		</tbody>
+			{% endfor %}
+	</table>
+{% endblock %}
+

@@ -13,7 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 
 from tagging.fields import TagField
-from tagging.models import Tag
+
 from wlimages.models import Image
 
 try:
