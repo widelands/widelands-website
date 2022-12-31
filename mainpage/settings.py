@@ -194,6 +194,8 @@ PYBB_ATTACHMENT_ENABLE = True
 # To prevent sending errors from the webserver, keep
 # this below the webserver settings
 PYBB_ATTACHMENT_SIZE_LIMIT = 1024 * 1024 * 4
+ALLOW_ATTACHMENTS_AFTER = 5  # Allow attachments only after this amount of posts
+ATTACHMENT_DESCR_PAGE = "Attachments"  # Wikipage describing uploads
 PYBB_DEFAULT_MARKUP = "markdown"
 INTERNAL_PERM = "pybb.can_access_internal"  # The permission string derived from pybb.models.category
 EDIT_HOURS = 24
@@ -250,12 +252,6 @@ ALLOWED_WAI_SECTIONS = [
     "neuron_functions",
     "fneurons",
 ]
-
-# Allow attachments only after this amount of posts
-ALLOW_ATTACHMENTS_AFTER = 5
-
-# Page describing uploads
-ATTACHMENT_DESCR_PAGE = "Attachments"
 
 # If clamav including clamdscan is installed and running
 # set this to True
@@ -453,6 +449,7 @@ CACHES = {
 
 NOTIFICATION_QUEUE_ALL = False
 
+SHOW_GIT_DATA = False  # Show git branch and commit in the header
 
 try:
     from .local_settings import *
