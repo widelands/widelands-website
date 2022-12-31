@@ -54,7 +54,7 @@
 	{% render_content article %}
 	{% tags_for_object article as tag_list %}
 		{% if tag_list %}
-			<div class="right"> Tagged with: {% include "wiki/inlines/tag_urls.html" %}</div>
+			<div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" %}</div>
 		{% endif %}
 </div>
 {% endblock %}
