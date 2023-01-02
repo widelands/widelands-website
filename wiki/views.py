@@ -4,11 +4,9 @@ from datetime import datetime
 
 from django.conf import settings
 from django.core.cache import cache
-from django.template import RequestContext
 from django.urls import reverse
 from django.http import (
     Http404,
-    HttpResponseRedirect,
     HttpResponseNotAllowed,
     HttpResponse,
     HttpResponseForbidden,
@@ -26,7 +24,6 @@ from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
-from mainpage.wl_utils import get_real_ip
 from mainpage.wl_utils import get_valid_cache_key
 
 from tagging.models import Tag
@@ -98,7 +95,6 @@ class ArticleEditLock(object):
         """Show a message to the user if there is another user editing this
         article."""
         if not self.is_mine(request):
-            user = request.user
             messages.add_message(
                 request, messages.INFO, self.message_template % self.created_at
             )

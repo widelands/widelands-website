@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import *
-from django.http import HttpResponseRedirect
-from wiki import views, models
+from wiki import views
 from django.conf import settings
 from django.views.generic import RedirectView
 from wiki.feeds import (
