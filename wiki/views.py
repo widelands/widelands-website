@@ -319,6 +319,14 @@ def edit_article(
         form.cache_old_content()
         if form.is_valid():
 
+            if request.user.is_authenticated:
+                form.editor = request.user
+
+            if (article is None) and (group_slug is not None):
+                form.group = group
+
+            new_article, changeset = form.save()
+
             redirect_to = form.cleaned_data["redirect_to"]
             if redirect_to != "":
                 # Create or update the redirect
@@ -327,22 +335,14 @@ def edit_article(
                     old_path=article.get_absolute_url(),
                     # new_path=redirect_to,
                     defaults={"new_path": redirect_to},
-                )
+                    )
             else:
                 # Remove redirect
                 try:
-                    r = Redirect.objects.get(old_path=article.get_absolute_url())
+                    r = Redirect.objects.get(old_path=new_article.get_absolute_url())
                     r.delete()
                 except Redirect.DoesNotExist:
                     pass
-
-            if request.user.is_authenticated:
-                form.editor = request.user
-
-            if (article is None) and (group_slug is not None):
-                form.group = group
-
-            new_article, changeset = form.save()
 
             lock = cache.get(get_valid_cache_key(title))
             if lock is not None:
