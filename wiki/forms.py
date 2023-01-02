@@ -31,9 +31,7 @@ class ArticleForm(forms.ModelForm):
 
     action = forms.CharField(widget=forms.HiddenInput)
 
-    redirect_to = forms.CharField(
-        required = False
-        )
+    redirect_to = forms.CharField(required=False)
 
     class Meta:
         model = Article
@@ -79,12 +77,12 @@ class ArticleForm(forms.ModelForm):
         if "/wiki/" in redirect_to:
             raise forms.ValidationError(
                 _("Only for redirecting outside our wiki."),
-                )
+            )
         if redirect_to != "":
             if not redirect_to.startswith("/") and not redirect_to.startswith("http"):
                 raise forms.ValidationError(
                     _("The redirect should start with a '/' or 'http'"),
-                    )
+                )
         return redirect_to
 
     def clean(self):
@@ -94,9 +92,9 @@ class ArticleForm(forms.ModelForm):
         # removed from self.cleaned_data
         redirect_to = self.cleaned_data.get("redirect_to", None)
         if redirect_to and not self.cleaned_data["deleted"]:
-            self.add_error('deleted',
-                "Applying a redirect needs deleted to be checked."
-                )
+            self.add_error(
+                "deleted", "Applying a redirect needs deleted to be checked."
+            )
 
         if self.cleaned_data["action"] == "create":
             try:

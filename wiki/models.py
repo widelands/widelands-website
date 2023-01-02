@@ -59,8 +59,8 @@ class Article(models.Model):
     last_update = models.DateTimeField(blank=True, null=True)
     deleted = models.BooleanField(
         default=False,
-        help_text = "Check to mark as deleted",
-        )
+        help_text="Check to mark as deleted",
+    )
 
     content_type = models.ForeignKey(ContentType, null=True, on_delete=models.SET_NULL)
     object_id = models.PositiveIntegerField(null=True)

@@ -29,7 +29,12 @@ urlpatterns = [
     ),
     url(r"^preview/$", views.article_preview, name="wiki_preview"),
     url(r"^diff/$", views.article_diff, name="wiki_preview_diff"),
-    url(r"^list/$", views.article_list, {'article_qs': Article.objects.exclude(deleted=True)}, name="wiki_list"),
+    url(
+        r"^list/$",
+        views.article_list,
+        {"article_qs": Article.objects.exclude(deleted=True)},
+        name="wiki_list",
+    ),
     url(r"^trash/list/$", views.trash_list, name="wiki_list_deleted"),
     url(r"^history/$", views.history, name="wiki_history"),
     # Feeds
@@ -54,7 +59,7 @@ urlpatterns = [
         r"^trash/edit/(?P<title>" + settings.WIKI_URL_RE + r")/$",
         views.edit_article,
         name="wiki_article_deleted",
-        ),
+    ),
     url(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/(?P<revision>\d+)/$",
         views.view_article,

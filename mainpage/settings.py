@@ -87,7 +87,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.humanize",
     "django.contrib.sitemaps",
-    'django.contrib.redirects',
+    "django.contrib.redirects",
     "nocaptcha_recaptcha",
     # Our own apps
     "wiki.templatetags.restructuredtext",

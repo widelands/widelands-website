@@ -254,13 +254,14 @@ def view_article(
             template_params.update(extra_context)
 
         # TODO janus, bitte den http status prüfen
-        status=200
+        status = 200
         if redirected_from:
-            status=301
+            status = 301
         return render(
             request,
             "/".join([template_dir, template_name]),
-            template_params,status,
+            template_params,
+            status,
         )
     return HttpResponseNotAllowed(["GET"])
 
@@ -324,9 +325,9 @@ def edit_article(
                 obj, created = Redirect.objects.update_or_create(
                     site=get_current_site(request),
                     old_path=article.get_absolute_url(),
-                    #new_path=redirect_to,
-                    defaults={'new_path': redirect_to},
-                    )
+                    # new_path=redirect_to,
+                    defaults={"new_path": redirect_to},
+                )
             else:
                 # Remove redirect
                 try:
@@ -796,10 +797,11 @@ def backlinks(request, title):
         context,
     )
 
+
 def trash_list(request):
     """Renders a list of articles which are deleted.
-       Some articles might be redirected to a URL or path outside our wiki. For
-       those articles the destination is shown.
+    Some articles might be redirected to a URL or path outside our wiki. For
+    those articles the destination is shown.
     """
 
     del_articles = Article.objects.filter(deleted=True)
@@ -812,10 +814,10 @@ def trash_list(request):
                 article[1] = r
         articles.append(article)
 
-    context = {"articles" : articles}
+    context = {"articles": articles}
 
     return render(
         request,
         "wiki/trash_list.html",
         context,
-        )
+    )
