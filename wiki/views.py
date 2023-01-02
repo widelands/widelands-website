@@ -16,6 +16,8 @@ from django.http import (
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+from django.contrib.redirects.models import Redirect
+from django.contrib.sites.shortcuts import get_current_site
 
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
@@ -228,10 +230,17 @@ def view_article(
             changeset = get_object_or_404(article.changeset_set, revision=revision)
             article.content = changeset.get_content()
 
+        if article.deleted:
+            if Redirect.objects.filter(old_path=article.get_absolute_url()):
+                # This article is marked as deleted and a redirect is applied
+                # The django Redirects app takes care for redirecting
+                raise Http404()
+
         outdated = False
         tags = [x.name for x in Tag.objects.get_for_object(article)]
         if "outdated" in tags:
             outdated = True
+
         template_params = {
             "article": article,
             "revision": revision,
@@ -248,10 +257,14 @@ def view_article(
         if extra_context is not None:
             template_params.update(extra_context)
 
+        # TODO janus, bitte den http status prüfen
+        status=200
+        if redirected_from:
+            status=301
         return render(
             request,
             "/".join([template_dir, template_name]),
-            template_params,
+            template_params,status,
         )
     return HttpResponseNotAllowed(["GET"])
 
@@ -309,6 +322,23 @@ def edit_article(
         form.cache_old_content()
         if form.is_valid():
 
+            redirect_to = form.cleaned_data["redirect_to"]
+            if redirect_to != "":
+                # Create or update the redirect
+                obj, created = Redirect.objects.update_or_create(
+                    site=get_current_site(request),
+                    old_path=article.get_absolute_url(),
+                    #new_path=redirect_to,
+                    defaults={'new_path': redirect_to},
+                    )
+            else:
+                # Remove redirect
+                try:
+                    r = Redirect.objects.get(old_path=article.get_absolute_url())
+                    r.delete()
+                except Redirect.DoesNotExist:
+                    pass
+
             if request.user.is_authenticated:
                 form.editor = request.user
 
@@ -340,6 +370,9 @@ def edit_article(
                         "article": new_article,
                     },
                 )
+            if new_article.deleted:
+                # TODO janus, bitte den http status prüfen
+                return redirect("wiki_list_deleted", permanent=True)
 
             return redirect(new_article)
 
@@ -357,6 +390,12 @@ def edit_article(
             form = ArticleFormClass(initial=initial)
         else:
             initial["action"] = "edit"
+            try:
+                r = Redirect.objects.get(old_path=article.get_absolute_url())
+                initial.update({"redirect_to": r.new_path})
+            except:
+                pass
+
             form = ArticleFormClass(instance=article, initial=initial)
     if not article:
         template_params = {"form": form, "new_article": True}
@@ -760,3 +799,27 @@ def backlinks(request, title):
         "wiki/backlinks.html",
         context,
     )
+
+def trash_list(request):
+    """Renders a list of articles which are deleted.
+       Some articles might be redirected to a URL or path outside our wiki. For
+       those articles the destination is shown.
+    """
+
+    del_articles = Article.objects.filter(deleted=True)
+    redirects = Redirect.objects.all()
+    articles = []
+    for a in del_articles:
+        article = [a, None]
+        for r in redirects:
+            if a.get_absolute_url() == r.old_path:
+                article[1] = r
+        articles.append(article)
+
+    context = {"articles" : articles}
+
+    return render(
+        request,
+        "wiki/trash_list.html",
+        context,
+        )

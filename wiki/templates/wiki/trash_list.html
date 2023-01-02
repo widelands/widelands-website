@@ -1,0 +1,46 @@
+{% extends "wiki/base.html" %}
+{% load i18n %}
+{% load custom_date wlprofile_extras %}
+
+{% block title %}Wiki Index - {{ block.super }}{% endblock %}
+
+{% block content_header %}
+	<h1>Wiki: Trash</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+	{% if articles %}
+		<p> There are {{ articles|length }} articles in this trash.</p>
+		<p> The column 'Redirected to' shows if this article was redirected to a destination outside of our wiki.</p>
+		<p> You can restore an article or change the redirects destination or remove the redirect, by clicking on the button 'Show in Trash'
+			which opens the article in edit mode.</p>
+		<table>
+		<thead>
+			<tr>
+				<th>{% trans "Page" %}</th>
+				<th>{% trans "Summary" %}</th>
+				<th>{% trans "Last update" %}</th>
+				<th>{% trans "Deleted" %}</th>
+				<th>{% trans "Redirected to" %}</th>
+				<th>{% trans "Restore" %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article, redirect in articles %}
+			<tr>
+				<td>{{ article.title }}</a></td>
+				<td>{{ article.summary }}</td>
+				<td>{{ article.last_update|custom_date:user }}</td>
+				<td>{{ article.deleted }}</td>
+				<td>{{ redirect.new_path }}</td>
+				<td>
+					<a href="{% url 'wiki_article_deleted' article.title %}" class="button">Show in Trash</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+		</table>
+	{% endif %}
+</div>
+{% endblock %}

@@ -130,7 +130,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
     # Foreign middleware
     "dj_pagination.middleware.PaginationMiddleware",
     "mainpage.online_users_middleware.OnlineNowMiddleware",
