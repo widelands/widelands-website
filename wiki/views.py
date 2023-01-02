@@ -335,7 +335,7 @@ def edit_article(
                     old_path=article.get_absolute_url(),
                     # new_path=redirect_to,
                     defaults={"new_path": redirect_to},
-                    )
+                )
             else:
                 # Remove redirect
                 try:
