@@ -47,12 +47,14 @@ except ImportError:
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
 
+
 def get_redirect(article):
     try:
         r = Redirect.objects.get(old_path=article.get_absolute_url())
         return r
     except Redirect.DoesNotExist:
         return None
+
 
 def get_articles_by_group(
     article_qs, group_slug=None, group_slug_field=None, group_qs=None
@@ -239,17 +241,15 @@ def view_article(
                 raise Http404()
             else:
                 # This article was deleted and has no redirect
-                return render(request, "wiki/gone.html", context={"article":article}, status=410)
+                return render(
+                    request, "wiki/gone.html", context={"article": article}, status=410
+                )
 
         template_params = {}
         outdated = False
         tags = [x.name for x in Tag.objects.get_for_object(article)]
         if "outdated" in tags:
-            template_params.update(
-                {
-                    "outdated": True
-                }
-            )
+            template_params.update({"outdated": True})
 
         template_params.update(
             {
@@ -277,7 +277,7 @@ def view_article(
             request,
             "/".join([template_dir, template_name]),
             template_params,
-            status = http_status,
+            status=http_status,
         )
     return HttpResponseNotAllowed(["GET"])
 
@@ -366,7 +366,7 @@ def edit_article(
                 # Remove all tags
                 if new_article.tags:
                     del new_article.tags
-                    new_article.save(update_fields=['tags'])
+                    new_article.save(update_fields=["tags"])
 
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
@@ -379,13 +379,19 @@ def edit_article(
 
                 if new_article.deleted:
                     # This will be the last notification
-                    comment = "This Article was deleted and your observation is removed."
+                    comment = (
+                        "This Article was deleted and your observation is removed."
+                    )
                     r = get_redirect(new_article)
                     if r:
                         path = r.new_path
                         if not path.startswith("http"):
-                            path = "{}://{}{}".format(request.scheme, get_current_site(request),path)
-                        comment = "{}\nWe made a redirect and the new content can be found at {}".format(comment, path)
+                            path = "{}://{}{}".format(
+                                request.scheme, get_current_site(request), path
+                            )
+                        comment = "{}\nWe made a redirect and the new content can be found at {}".format(
+                            comment, path
+                        )
                 else:
                     comment = changeset.comment
 
@@ -401,18 +407,23 @@ def edit_article(
                 )
                 if new_article.deleted:
                     # Remove observers
-                    observers = notification.ObservedItem.objects.all_for(new_article, "post_save")
+                    observers = notification.ObservedItem.objects.all_for(
+                        new_article, "post_save"
+                    )
                     for o in observers:
                         notification.stop_observing(new_article, o.user)
 
             return redirect(new_article)
 
     elif request.method == "GET":
-        if (article
+        if (
+            article
             and article.deleted
             and "/trash/" not in request.path_info  # for new articles
-            ):
-            return render(request, "wiki/gone.html", context={"article":article}, status=410)
+        ):
+            return render(
+                request, "wiki/gone.html", context={"article": article}, status=410
+            )
 
         lock = cache.get(get_valid_cache_key(title))
         if lock is None:
@@ -565,7 +576,9 @@ def article_history(
         article = get_object_or_404(article_qs, **article_args)
 
         if article.deleted:
-            return render(request, "wiki/gone.html", context={"article":article}, status=410)
+            return render(
+                request, "wiki/gone.html", context={"article": article}, status=410
+            )
 
         # changes = article.changeset_set.filter(
         #    reverted=False).order_by('-revision')
@@ -662,7 +675,6 @@ def history(
     **kw,
 ):
 
-    
     if request.method == "GET":
         if group_slug is not None:
             group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
@@ -803,7 +815,9 @@ def backlinks(request, title):
     this_article = get_object_or_404(Article, title=title)
 
     if this_article.deleted:
-        return render(request, "wiki/gone.html", context={"article":this_article}, status=410)
+        return render(
+            request, "wiki/gone.html", context={"article": this_article}, status=410
+        )
 
     changesets = this_article.changeset_set.all()
     old_titles = []

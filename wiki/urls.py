@@ -111,8 +111,8 @@ urlpatterns = [
     url(
         r"^tag_list/(?P<tag>[^/]+(?u))/$",
         TaggedObjectList.as_view(
-            queryset = Article.objects.exclude(deleted=True),
-            #model=Article,
+            queryset=Article.objects.exclude(deleted=True),
+            # model=Article,
             allow_empty=True,
             template_name="wiki/tag_view.html",
         ),
