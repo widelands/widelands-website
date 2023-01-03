@@ -35,12 +35,14 @@
 				<td>{{ article.deleted }}</td>
 				<td>{{ redirect.new_path }}</td>
 				<td>
-					<a href="{% url 'wiki_article_deleted' article.title %}" class="button">Show in Trash</a>
+					<a href="{% url 'wiki_article_deleted' article.title %}" class="button">Edit in Trash</a>
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 		</table>
+	{% else %}
+		<p>No deleted articles yet.</p>
 	{% endif %}
 </div>
 {% endblock %}

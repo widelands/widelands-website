@@ -32,7 +32,6 @@ urlpatterns = [
     url(
         r"^list/$",
         views.article_list,
-        {"article_qs": Article.objects.exclude(deleted=True)},
         name="wiki_list",
     ),
     url(r"^trash/list/$", views.trash_list, name="wiki_list_deleted"),
@@ -112,7 +111,8 @@ urlpatterns = [
     url(
         r"^tag_list/(?P<tag>[^/]+(?u))/$",
         TaggedObjectList.as_view(
-            model=Article,
+            queryset = Article.objects.exclude(deleted=True),
+            #model=Article,
             allow_empty=True,
             template_name="wiki/tag_view.html",
         ),
