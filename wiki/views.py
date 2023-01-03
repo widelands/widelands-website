@@ -513,6 +513,11 @@ def view_changeset(
 
         article = article_qs.get(**article_args)
 
+        if article.deleted:
+            return render(
+                request, "wiki/gone.html", context={"article": article}, status=410
+                )
+
         if revision_from is None:
             revision_from = int(revision) - 1
 
@@ -690,6 +695,7 @@ def history(
             return HttpResponseForbidden()
 
         changes_qs = changes_qs.exclude(article__deleted=True)
+
         template_params = {
             "changes": changes_qs.order_by("-modified"),
             "allow_write": allow_write,
