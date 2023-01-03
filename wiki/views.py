@@ -867,6 +867,7 @@ def backlinks(request, title):
         context,
     )
 
+
 @login_required
 def trash_list(request):
     """Renders a list of articles which are deleted.
