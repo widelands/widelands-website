@@ -516,7 +516,7 @@ def view_changeset(
         if article.deleted:
             return render(
                 request, "wiki/gone.html", context={"article": article}, status=410
-                )
+            )
 
         if revision_from is None:
             revision_from = int(revision) - 1
