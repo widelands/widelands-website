@@ -5,9 +5,9 @@ from os import path
 from documentation.views import dirhtml_view
 
 # Don't use this file on the server!
-    
+
 local_urlpatterns = [
-    # Files uploaded by users   
+    # Files uploaded by users
     url(r'^wlmedia/(?P<path>.*)$',
         serve,
         {'document_root': settings.MEDIA_ROOT},
@@ -18,7 +18,7 @@ local_urlpatterns = [
         {'document_root': settings.STATIC_ROOT},
         name='static_media_collected'),
     # HTML documentation created by ./manage.py create_docs
-    url(r'^documentation/(?P<folder_name>\w*)/$', dirhtml_view),
+    url(r'^documentation/(?P<folder_name>[\w*-?\w*]*)/$', dirhtml_view),
     url(r'^documentation/$', dirhtml_view),
     url(r'^documentation/(?P<path>.*)$',
         serve,
