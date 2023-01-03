@@ -867,12 +867,15 @@ def backlinks(request, title):
         context,
     )
 
-
+@login_required
 def trash_list(request):
     """Renders a list of articles which are deleted.
     Some articles might be redirected to a URL or path outside our wiki. For
     those articles the destination is shown.
     """
+
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
 
     del_articles = Article.objects.filter(deleted=True)
     redirects = Redirect.objects.all()
