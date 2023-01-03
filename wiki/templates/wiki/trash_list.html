@@ -35,7 +35,7 @@
 				<td>{{ article.deleted }}</td>
 				<td>{{ redirect.new_path }}</td>
 				<td>
-					<a href="{% url 'wiki_article_deleted' article.title %}" class="button">Edit in Trash</a>
+					<a href="{% url 'wiki_edit_deleted' article.title %}" class="button">Edit in Trash</a>
 				</td>
 			</tr>
 			{% endfor %}

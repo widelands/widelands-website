@@ -47,6 +47,12 @@ except ImportError:
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
 
+def get_redirect(article):
+    try:
+        r = Redirect.objects.get(old_path=article.get_absolute_url())
+        return r
+    except Redirect.DoesNotExist:
+        return None
 
 def get_articles_by_group(
     article_qs, group_slug=None, group_slug_field=None, group_qs=None
@@ -227,7 +233,7 @@ def view_article(
             article.content = changeset.get_content()
 
         if article.deleted:
-            if Redirect.objects.filter(old_path=article.get_absolute_url()):
+            if get_redirect(article):
                 # A redirect is applied
                 # The django Redirects app takes care for redirecting
                 raise Http404()
@@ -352,18 +358,15 @@ def edit_article(
                 )
             else:
                 # Remove redirect
-                try:
-                    Redirect.objects.get(old_path=new_article.get_absolute_url()).delete()
-                except Redirect.DoesNotExist:
-                    pass
+                r = get_redirect(new_article)
+                if r:
+                    r.delete()
 
             if new_article.deleted:
                 # Remove all tags
                 if new_article.tags:
                     del new_article.tags
-                    new_article.save()
-                # view_article will return Http 410
-                return redirect(new_article)
+                    new_article.save(update_fields=['tags'])
 
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
@@ -373,21 +376,42 @@ def edit_article(
                     .iterator()
                 )
                 users = [o.user for o in items]
+
+                if new_article.deleted:
+                    # This will be the last notification
+                    comment = "This Article was deleted and your observation is removed."
+                    r = get_redirect(new_article)
+                    if r:
+                        path = r.new_path
+                        if not path.startswith("http"):
+                            path = "{}://{}{}".format(request.scheme, get_current_site(request),path)
+                        comment = "{}\nWe made a redirect and the new content can be found at {}".format(comment, path)
+                else:
+                    comment = changeset.comment
+
                 notification.send(
                     users,
                     "wiki_observed_article_changed",
                     {
                         "editor": request.user,
                         "rev": changeset.revision,
-                        "rev_comment": changeset.comment,
+                        "rev_comment": comment,
                         "article": new_article,
                     },
                 )
+                if new_article.deleted:
+                    # Remove observers
+                    observers = notification.ObservedItem.objects.all_for(new_article, "post_save")
+                    for o in observers:
+                        notification.stop_observing(new_article, o.user)
 
             return redirect(new_article)
 
     elif request.method == "GET":
-        if article and article.deleted:
+        if (article
+            and article.deleted
+            and "/trash/" not in request.path_info  # for new articles
+            ):
             return render(request, "wiki/gone.html", context={"article":article}, status=410)
 
         lock = cache.get(get_valid_cache_key(title))

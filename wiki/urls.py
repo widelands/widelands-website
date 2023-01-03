@@ -57,7 +57,7 @@ urlpatterns = [
     url(
         r"^trash/edit/(?P<title>" + settings.WIKI_URL_RE + r")/$",
         views.edit_article,
-        name="wiki_article_deleted",
+        name="wiki_edit_deleted",
     ),
     url(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/(?P<revision>\d+)/$",
