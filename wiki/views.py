@@ -380,7 +380,7 @@ def edit_article(
                 if new_article.deleted:
                     # This will be the last notification
                     comment = (
-                        "This Article was deleted and your observation is removed."
+                        "This Article was deleted and your observation was removed."
                     )
                     r = get_redirect(new_article)
                     if r:
@@ -438,11 +438,9 @@ def edit_article(
             form = ArticleFormClass(initial=initial)
         else:
             initial["action"] = "edit"
-            try:
-                r = Redirect.objects.get(old_path=article.get_absolute_url())
+            r = get_redirect(article)
+            if r:
                 initial.update({"redirect_to": r.new_path})
-            except:
-                pass
 
             form = ArticleFormClass(instance=article, initial=initial)
     if not article:

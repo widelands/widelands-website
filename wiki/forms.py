@@ -88,7 +88,7 @@ class ArticleForm(forms.ModelForm):
     def clean(self):
         super(ArticleForm, self).clean()
         kw = {}
-        # After clean_fieldname() raises a ValidationError the field will be
+        # After clean_redirect_to() raises a ValidationError the field will be
         # removed from self.cleaned_data
         redirect_to = self.cleaned_data.get("redirect_to", None)
         if redirect_to and not self.cleaned_data["deleted"]:
