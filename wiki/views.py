@@ -199,6 +199,10 @@ def view_article(
 
     if request.method == "GET":
         article_args = {"title": title}
+
+        if article_args["title"] in settings.FORBIDDEN_WIKI_TITLES:
+            raise Http404()
+
         if group_slug is not None:
             group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
             article_args.update({"content_type": get_ct(group), "object_id": group.id})

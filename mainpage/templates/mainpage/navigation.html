@@ -53,7 +53,7 @@
 			<li><a href="/wiki/list/">List Of All Pages</a></li>
 			<li><a href="/wiki/history/">Recent changes</a></li>
 			{% if request.user.is_staff %}
-			<li><a href="{% url 'wiki_list_deleted' %}">Deleted articles</a></li>
+			<li><a href="{% url 'wiki_list_deleted' %}" class="permissionLink">Deleted articles</a></li>
 			{% endif %}
 		</ul>
 	</li>
