@@ -8,6 +8,8 @@ So Djangos orm is used when changing things, e.g. delete a permission.
 
 from django.contrib import admin
 from django.contrib.auth.models import Permission
+from django.utils.safestring import mark_safe
+
 
 admin.site.register(Permission)
 
@@ -44,7 +46,7 @@ def persons(self):
     )
 
 
-persons.allow_tags = True
+persons = mark_safe(persons)
 
 
 def deleted(self):
