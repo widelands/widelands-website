@@ -186,7 +186,9 @@ WIKI_SPECIAL_PAGES = [
     "edit",
     "tag_list",
 ]
-FORBIDDEN_WIKI_TITLES = [ "trash",]
+FORBIDDEN_WIKI_TITLES = [
+    "trash",
+]
 ######################
 # User configuration #
 ######################
