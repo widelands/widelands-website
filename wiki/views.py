@@ -365,12 +365,10 @@ def edit_article(
                 if r:
                     r.delete()
 
-            if (new_article.deleted
-                and new_article.tags
-                ):
-                    # Remove all tags
-                    del new_article.tags
-                    new_article.save(update_fields=["tags"])
+            if new_article.deleted and new_article.tags:
+                # Remove all tags
+                del new_article.tags
+                new_article.save(update_fields=["tags"])
 
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
