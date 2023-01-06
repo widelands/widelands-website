@@ -50,8 +50,7 @@ ALL_CHANGES = ChangeSet.objects.all()
 
 def get_redirect(article):
     try:
-        r = Redirect.objects.get(old_path=article.get_absolute_url())
-        return r
+        return Redirect.objects.get(old_path=article.get_absolute_url())
     except Redirect.DoesNotExist:
         return None
 
@@ -366,9 +365,10 @@ def edit_article(
                 if r:
                     r.delete()
 
-            if new_article.deleted:
-                # Remove all tags
-                if new_article.tags:
+            if (new_article.deleted
+                and new_article.tags
+                ):
+                    # Remove all tags
                     del new_article.tags
                     new_article.save(update_fields=["tags"])
 

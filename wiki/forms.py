@@ -78,8 +78,10 @@ class ArticleForm(forms.ModelForm):
             raise forms.ValidationError(
                 _("Only for redirecting outside our wiki."),
             )
-        if redirect_to != "":
-            if not redirect_to.startswith("/") and not redirect_to.startswith("http"):
+        if (redirect_to != ""
+            and not redirect_to.startswith("/")
+            and not redirect_to.startswith("http")
+            ):
                 raise forms.ValidationError(
                     _("The redirect should start with a '/' or 'http'"),
                 )
