@@ -88,6 +88,17 @@
 			<!-- Comment -->
 			<tr><th colspan=2><label for="id_comment">{% trans "Comment for this revision" %}:</label></th></tr>
 			<tr><td colspan=2  class="errormessage">{{ form.comment.errors }}{{ form.comment }}</td></tr>
+			{% if request.user.is_staff %}
+			<!-- Redirect -->
+			<tr>
+				<th><label for="id_do_redirect">{{ form.deleted.help_text}}:</label></th>
+				<th><label for="id_redirect_to">Redirect to (e.g. /documentation/foo/bar.html). Only for redirecting outside of our wiki:</label></th>
+			</tr>
+			<tr>
+				<td class="errormessage">{{ form.deleted.errors }} {{ form.deleted }}</td>
+				<td class="errormessage">{{ form.redirect_to.errors }}{{ form.redirect_to }}</td>
+			</tr>
+			{% endif %}
 		</table>
 		<!-- Markup as hidden element -->
 		<input type="hidden" name="markup" value="mrk" />

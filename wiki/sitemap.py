@@ -7,7 +7,7 @@ class WikiSitemap(SitemapHTTPS):
     priority = 0.5
 
     def items(self):
-        return Article.objects.all()
+        return Article.objects.exclude(deleted=True)
 
     def lastmod(self, obj):
         return obj.last_update

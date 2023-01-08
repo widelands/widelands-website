@@ -1,0 +1,28 @@
+{% extends 'wiki/base.html' %}
+{% load i18n %}
+{% load wlimages_extras %}
+{% load static %}
+
+{% block title %}
+{% trans "Does not exist" %}{{ block.super }}
+{% endblock %}
+
+{% block content_header %}
+	<h1>{% trans "Article does not exist" %}</h1>
+{% endblock %}
+
+{# add the wanted classes to the tabs #}
+{% block class_wiki_edit %}class="hidden"{% endblock %}
+{% block class_wiki_back %}class="hidden"{% endblock %}
+{% block class_wiki_hist %}class="hidden"{% endblock %}
+{% block class_wiki_backl %}class="hidden"{% endblock %}
+{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+	<p>The article you requested was probably removed from this wiki.</p>
+	{% if request.user.is_staff %}
+		<p>You can remove the 'deleted' flag by editing it in the <a href="{% url 'wiki_edit_deleted' article.title %}">Trash</a></p>
+	{% endif %}
+</div>
+{% endblock %}
