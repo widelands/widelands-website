@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import *
-from django.http import HttpResponseRedirect
-from wiki import views, models
+from wiki import views
 from django.conf import settings
 from django.views.generic import RedirectView
 from wiki.feeds import (
@@ -30,7 +29,12 @@ urlpatterns = [
     ),
     url(r"^preview/$", views.article_preview, name="wiki_preview"),
     url(r"^diff/$", views.article_diff, name="wiki_preview_diff"),
-    url(r"^list/$", views.article_list, name="wiki_list"),
+    url(
+        r"^list/$",
+        views.article_list,
+        name="wiki_list",
+    ),
+    url(r"^trash/list/$", views.trash_list, name="wiki_list_deleted"),
     url(r"^history/$", views.history, name="wiki_history"),
     # Feeds
     url(r"^feeds/rss/$", RssHistoryFeed(), name="wiki_history_feed_rss"),
@@ -49,6 +53,11 @@ urlpatterns = [
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/$",
         views.view_article,
         name="wiki_article",
+    ),
+    url(
+        r"^trash/edit/(?P<title>" + settings.WIKI_URL_RE + r")/$",
+        views.edit_article,
+        name="wiki_edit_deleted",
     ),
     url(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/(?P<revision>\d+)/$",
@@ -102,7 +111,8 @@ urlpatterns = [
     url(
         r"^tag_list/(?P<tag>[^/]+(?u))/$",
         TaggedObjectList.as_view(
-            model=Article,
+            queryset=Article.objects.exclude(deleted=True),
+            # model=Article,
             allow_empty=True,
             template_name="wiki/tag_view.html",
         ),

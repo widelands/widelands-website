@@ -5,7 +5,7 @@ Showing the forum navigation ordered by category position and forum position
 {% for forum in forums %}
 	{% if forum.category.internal %}
 		<li>
-			<a href="{% url 'pybb_forum' forum.id %}" style="color: rgba(254, 234, 138, 1);">{{ forum.name }}</a>
+			<a href="{% url 'pybb_forum' forum.id %}" class="permissionLink">{{ forum.name }}</a>
 		</li>
 	{% else %}
 		<li>

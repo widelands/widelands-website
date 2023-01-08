@@ -59,7 +59,7 @@
 	text-align: left;
 }
 
-#edit_wiki_page_form #id_title, #id_comment, #id_tags {
+#edit_wiki_page_form #id_title, #id_comment, #id_tags, #id_redirect_to {
 	width: 100%;
 }
 

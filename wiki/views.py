@@ -4,11 +4,9 @@ from datetime import datetime
 
 from django.conf import settings
 from django.core.cache import cache
-from django.template import RequestContext
 from django.urls import reverse
 from django.http import (
     Http404,
-    HttpResponseRedirect,
     HttpResponseNotAllowed,
     HttpResponse,
     HttpResponseForbidden,
@@ -16,6 +14,8 @@ from django.http import (
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+from django.contrib.redirects.models import Redirect
+from django.contrib.sites.shortcuts import get_current_site
 
 from wiki.forms import ArticleForm
 from wiki.models import Article, ChangeSet, dmp
@@ -24,7 +24,6 @@ from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
-from mainpage.wl_utils import get_real_ip
 from mainpage.wl_utils import get_valid_cache_key
 
 from tagging.models import Tag
@@ -47,6 +46,13 @@ except ImportError:
 # default querysets
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
+
+
+def get_redirect(article):
+    try:
+        return Redirect.objects.get(old_path=article.get_absolute_url())
+    except Redirect.DoesNotExist:
+        return None
 
 
 def get_articles_by_group(
@@ -96,7 +102,6 @@ class ArticleEditLock(object):
         """Show a message to the user if there is another user editing this
         article."""
         if not self.is_mine(request):
-            user = request.user
             messages.add_message(
                 request, messages.INFO, self.message_template % self.created_at
             )
@@ -150,7 +155,7 @@ def article_list(
         if not allow_read:
             return HttpResponseForbidden()
 
-        articles = articles.order_by("title")
+        articles = articles.exclude(deleted=True).order_by("title")
 
         template_params = {"articles": articles, "allow_write": allow_write}
 
@@ -193,6 +198,10 @@ def view_article(
 
     if request.method == "GET":
         article_args = {"title": title}
+
+        if article_args["title"] in settings.FORBIDDEN_WIKI_TITLES:
+            raise Http404()
+
         if group_slug is not None:
             group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
             article_args.update({"content_type": get_ct(group), "object_id": group.id})
@@ -228,17 +237,31 @@ def view_article(
             changeset = get_object_or_404(article.changeset_set, revision=revision)
             article.content = changeset.get_content()
 
+        if article.deleted:
+            if get_redirect(article):
+                # A redirect is applied
+                # The django Redirects app takes care for redirecting
+                raise Http404()
+            else:
+                # This article was deleted and has no redirect
+                return render(
+                    request, "wiki/gone.html", context={"article": article}, status=410
+                )
+
+        template_params = {}
         outdated = False
         tags = [x.name for x in Tag.objects.get_for_object(article)]
         if "outdated" in tags:
-            outdated = True
-        template_params = {
-            "article": article,
-            "revision": revision,
-            "redirected_from": redirected_from,
-            "allow_write": allow_write,
-            "outdated": outdated,
-        }
+            template_params.update({"outdated": True})
+
+        template_params.update(
+            {
+                "article": article,
+                "revision": revision,
+                "redirected_from": redirected_from,
+                "allow_write": allow_write,
+            }
+        )
 
         if notification is not None:
             template_params.update({"is_observing": is_observing, "can_observe": True})
@@ -248,10 +271,16 @@ def view_article(
         if extra_context is not None:
             template_params.update(extra_context)
 
+        # If this articles name is an old name of the article,
+        # apply the correct Http status
+        http_status = 200
+        if redirected_from:
+            http_status = 301
         return render(
             request,
             "/".join([template_dir, template_name]),
             template_params,
+            status=http_status,
         )
     return HttpResponseNotAllowed(["GET"])
 
@@ -322,6 +351,25 @@ def edit_article(
                 # Clean the lock
                 cache.delete(get_valid_cache_key(title))
 
+            redirect_to = form.cleaned_data["redirect_to"]
+            if redirect_to != "":
+                # Create or update the redirect
+                obj, created = Redirect.objects.update_or_create(
+                    site=get_current_site(request),
+                    old_path=new_article.get_absolute_url(),
+                    defaults={"new_path": redirect_to},
+                )
+            else:
+                # Remove redirect
+                r = get_redirect(new_article)
+                if r:
+                    r.delete()
+
+            if new_article.deleted and new_article.tags:
+                # Remove all tags
+                del new_article.tags
+                new_article.save(update_fields=["tags"])
+
             if notification and not changeset.reverted:
                 # Get observers for this article and exclude current editor
                 items = (
@@ -330,20 +378,55 @@ def edit_article(
                     .iterator()
                 )
                 users = [o.user for o in items]
+
+                if new_article.deleted:
+                    # This will be the last notification
+                    comment = (
+                        "This Article was deleted and your observation was removed."
+                    )
+                    r = get_redirect(new_article)
+                    if r:
+                        path = r.new_path
+                        if not path.startswith("http"):
+                            path = "{}://{}{}".format(
+                                request.scheme, get_current_site(request), path
+                            )
+                        comment = "{}\nWe made a redirect and the new content can be found at {}".format(
+                            comment, path
+                        )
+                else:
+                    comment = changeset.comment
+
                 notification.send(
                     users,
                     "wiki_observed_article_changed",
                     {
                         "editor": request.user,
                         "rev": changeset.revision,
-                        "rev_comment": changeset.comment,
+                        "rev_comment": comment,
                         "article": new_article,
                     },
                 )
+                if new_article.deleted:
+                    # Remove observers
+                    observers = notification.ObservedItem.objects.all_for(
+                        new_article, "post_save"
+                    )
+                    for o in observers:
+                        notification.stop_observing(new_article, o.user)
 
             return redirect(new_article)
 
     elif request.method == "GET":
+        if (
+            article
+            and article.deleted
+            and "/trash/" not in request.path_info  # for new articles
+        ):
+            return render(
+                request, "wiki/gone.html", context={"article": article}, status=410
+            )
+
         lock = cache.get(get_valid_cache_key(title))
         if lock is None:
             lock = ArticleEditLock(get_valid_cache_key(title), request)
@@ -357,6 +440,10 @@ def edit_article(
             form = ArticleFormClass(initial=initial)
         else:
             initial["action"] = "edit"
+            r = get_redirect(article)
+            if r:
+                initial.update({"redirect_to": r.new_path})
+
             form = ArticleFormClass(instance=article, initial=initial)
     if not article:
         template_params = {"form": form, "new_article": True}
@@ -426,6 +513,11 @@ def view_changeset(
 
         article = article_qs.get(**article_args)
 
+        if article.deleted:
+            return render(
+                request, "wiki/gone.html", context={"article": article}, status=410
+            )
+
         if revision_from is None:
             revision_from = int(revision) - 1
 
@@ -487,6 +579,12 @@ def article_history(
             return HttpResponseForbidden()
 
         article = get_object_or_404(article_qs, **article_args)
+
+        if article.deleted:
+            return render(
+                request, "wiki/gone.html", context={"article": article}, status=410
+            )
+
         # changes = article.changeset_set.filter(
         #    reverted=False).order_by('-revision')
         changes = article.changeset_set.all().order_by("-revision")
@@ -595,6 +693,8 @@ def history(
 
         if not allow_read:
             return HttpResponseForbidden()
+
+        changes_qs = changes_qs.exclude(article__deleted=True)
 
         template_params = {
             "changes": changes_qs.order_by("-modified"),
@@ -719,6 +819,12 @@ def backlinks(request, title):
 
     # Find old title(s) of this article
     this_article = get_object_or_404(Article, title=title)
+
+    if this_article.deleted:
+        return render(
+            request, "wiki/gone.html", context={"article": this_article}, status=410
+        )
+
     changesets = this_article.changeset_set.all()
     old_titles = []
     for cs in changesets:
@@ -736,10 +842,10 @@ def backlinks(request, title):
     # Search for current and previous titles
     found_old_links = []
     found_links = []
-    articles_all = Article.objects.all().exclude(title=title)
+    articles_all = Article.objects.all().exclude(title=title, deleted=True)
     for article in articles_all:
         for regexp in search_title:
-            # Need to unqoute the content to match
+            # Need to unquote the content to match
             # e.g. [[ Back | Title%20of%20Page ]]
             match = regexp.search(urllib.parse.unquote(article.content))
             if match:
@@ -758,5 +864,34 @@ def backlinks(request, title):
     return render(
         request,
         "wiki/backlinks.html",
+        context,
+    )
+
+
+@login_required
+def trash_list(request):
+    """Renders a list of articles which are deleted.
+    Some articles might be redirected to a URL or path outside our wiki. For
+    those articles the destination is shown.
+    """
+
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    del_articles = Article.objects.filter(deleted=True)
+    redirects = Redirect.objects.all()
+    articles = []
+    for a in del_articles:
+        article = [a, None]
+        for r in redirects:
+            if a.get_absolute_url() == r.old_path:
+                article[1] = r
+        articles.append(article)
+
+    context = {"articles": articles}
+
+    return render(
+        request,
+        "wiki/trash_list.html",
         context,
     )
