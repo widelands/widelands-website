@@ -1,14 +1,12 @@
-from django.conf import settings
 from django.conf.urls import *
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.syndication.views import Feed
+from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from django_registration.backends.activation.views import RegistrationView
-from django.contrib.auth.views import LoginView
-from mainpage.forms import RegistrationWithCaptchaForm
+
 from mainpage.forms import LoginTimezoneForm
+from mainpage.forms import RegistrationWithCaptchaForm
 
 admin.autodiscover()
 
@@ -76,7 +74,7 @@ urlpatterns = [
         r"^feeds/news/",
         RedirectView.as_view(url="/news/feed", permanent=True),
     ),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
 try:
     from .local_urls import *

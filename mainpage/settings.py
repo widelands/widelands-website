@@ -279,7 +279,7 @@ VIRUS_CHECK = False
 ##############################################
 # Link classification and other Markup stuff #
 ##############################################
-LOCAL_DOMAINS = ["xoops.widelands.org"]
+LOCAL_DOMAINS = ["xoops.widelands.org", "wl.widelands.org"]
 
 SMILEY_DIR = STATIC_URL + "img/smileys/"
 # Keep this list ordered by length of smileys
