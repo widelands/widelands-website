@@ -1,7 +1,8 @@
 {% extends "wiki/base.html" %}
 {% load i18n %}
 {% load custom_date wlprofile_extras %}
-
+{% load wiki_extras %}
+{% load tagging_tags %}
 {% block title %}Wiki Index - {{ block.super }}{% endblock %}
 
 {% block content_header %}
@@ -11,7 +12,10 @@
 {% block content_main %}
 <div class="blogEntry">
 	{% if articles %}
-		<p> There are {{ articles|length }} articles in this wiki:</p>
+		<p> There are {{ articles|length }} articles in this wiki.</p>
+		{% tags_for_model wiki.Article as all_tags %}
+		<p> Filter by Tag: {% for t in all_tags %}<a href="{% url 'article_tag_detail' t.name %}">{{t.name}}</a>{% if not forloop.last %} | {% endif %}{% endfor %} </p>
+		<p> Jump to articles starting with: {% alphabet_list articles %}</p>
 		<table>
 		<thead>
 			<tr>
@@ -24,7 +28,7 @@
 		<tbody>
 			{% for article in articles %}
 			<tr>
-				<td><a href="{% url 'wiki_article' article.title %}">{{ article.title }}</a></td>
+				<td><a href="{% url 'wiki_article' article.title %}" id="{{ article.title|slugify }}">{{ article.title }}</a></td>
 				<td>{{ article.summary }}</td>
 				<td>{{ article.last_update|custom_date:user }}</td>
 				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
