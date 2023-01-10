@@ -17,6 +17,7 @@ class EditProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True)
 
     signature = forms.CharField(
+        required=False,
         widget=forms.Textarea,
         validators=[
             check_utf8mb3,
@@ -24,6 +25,7 @@ class EditProfileForm(forms.ModelForm):
     )
 
     webservice_nick = forms.CharField(
+        required=False,
         validators=[
             check_utf8mb3,
         ],
