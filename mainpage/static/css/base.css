@@ -256,6 +256,10 @@ a.small {
 	font-style: italic;
 }
 
+.nolinebreak {
+    white-space: nowrap;
+}
+
 /* Base */
 
 div#wrapper {

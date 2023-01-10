@@ -12,7 +12,7 @@
 <div class="blogEntry">
 	{% if articles %}
 		<p> There are {{ articles|length }} articles in this trash.</p>
-		<p> The column 'Redirected to' shows if this article was redirected to a destination outside of our wiki.</p>
+		<p> The column 'Redirected to' shows if this article was redirected to a destination outside our wiki.</p>
 		<p> You can restore an article or change the redirects destination or remove the redirect by clicking on the button 'Edit in Trash'
 			which opens the article in edit mode.</p>
 		<table>
@@ -23,7 +23,7 @@
 					<span class="small">Links are just here to verify deletions or redirects</span>
 				</th>
 				<th>{% trans "Summary" %}</th>
-				<th style="width: 9em">{% trans "Last update" %}</th>
+				<th>{% trans "Last update" %}</th>
 				<th>{% trans "Redirected to" %}</th>
 				<th>{% trans "Change" %}</th>
 			</tr>
@@ -33,9 +33,9 @@
 			<tr>
 				<td><a href="{% url 'wiki_article' article.title %}"> {{ article.title }}</a></td>
 				<td>{{ article.summary }}</td>
-				<td>{{ article.last_update|custom_date:user }}</td>
+				<td class="nolinebreak">{{ article.last_update|custom_date:user	}}</td>
 				<td>{{ redirect.new_path }}</td>
-				<td style="vertical-align: middle;">
+				<td class="middle">
 					<a href="{% url 'wiki_edit_deleted' article.title %}" class="button">Edit in Trash</a>
 				</td>
 			</tr>

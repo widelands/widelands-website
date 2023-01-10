@@ -21,7 +21,7 @@
 			<tr>
 				<th>{% trans "Page" %}</th>
 				<th>{% trans "Summary" %}</th>
-				<th style="width: 9em;">{% trans "Last update" %}</th>
+				<th>{% trans "Last update" %}</th>
 				<th>{% trans "Tagged with" %}</th>
 			</tr>
 		</thead>
@@ -30,7 +30,7 @@
 			<tr>
 				<td><a href="{% url 'wiki_article' article.title %}" id="{{ article.title|slugify }}">{{ article.title }}</a></td>
 				<td>{{ article.summary }}</td>
-				<td>{{ article.last_update|custom_date:user }}</td>
+				<td class="nolinebreak">{{ article.last_update|custom_date:user }}</td>
 				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
 			</tr>
 			{% endfor %}
