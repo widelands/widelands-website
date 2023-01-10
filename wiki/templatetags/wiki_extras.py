@@ -56,6 +56,7 @@ def render_content(article, content_attr="content", markup_attr="markup"):
         "markup": getattr(article, markup_attr),
     }
 
+
 @register.inclusion_tag("wiki/inlines/alphabet_list.html")
 def alphabet_list(articles):
     """Renders a template showing an alphabet list."""
@@ -63,4 +64,6 @@ def alphabet_list(articles):
     for article in articles:
         if article.title[0].upper() not in alphabet:
             alphabet.update({article.title[0].upper(): slugify(article.title)})
-    return {"alphabet": alphabet, }
+    return {
+        "alphabet": alphabet,
+    }
