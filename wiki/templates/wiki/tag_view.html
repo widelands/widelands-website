@@ -1,6 +1,7 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
 {% load wiki_extras %}
+{% load tagging_tags %}
 
 {% block title %}
 Tag-list: {{ tag.name }} - {{block.super}}
@@ -13,7 +14,7 @@ Tag-list: {{ tag.name }} - {{block.super}}
 
 {% block content_main %}
 	<div class="blogEntry">
-	<table>
+		<table>
 		<thead>
 			<tr>
 				<th>Article name</th>
@@ -24,10 +25,13 @@ Tag-list: {{ tag.name }} - {{block.super}}
 			{% for article in object_list %}
 			<tr>
 				<td><a href="{% url 'wiki_article' article %}">{{ article }}</a></td>
-				<td>{% include "wiki/inlines/tag_urls.html" %}</td>
+				{% tags_for_object article as article_tags %}
+				<td>{% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}</td>
 			</tr>
 		</tbody>
 			{% endfor %}
 	</table>
+		{% tags_for_model wiki.Article as all_tags %}
+		<p><span style="font-weight: bold;"> Show articles tagged with:</span> {% include "wiki/inlines/tag_urls.html" with sep=" |" tag_list=all_tags %} </p>
 {% endblock %}
 

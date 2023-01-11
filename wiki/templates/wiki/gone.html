@@ -4,11 +4,11 @@
 {% load static %}
 
 {% block title %}
-{% trans "Does not exist" %}{{ block.super }}
+{% trans "Does not exist" %} -{{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Article does not exist" %}</h1>
+	<h1>{% trans "Article was deleted" %}</h1>
 {% endblock %}
 
 {# add the wanted classes to the tabs #}

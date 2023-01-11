@@ -1,3 +1,3 @@
-{% for a, slug in alphabet.items %}
-   <a href="#{{ slug }}"> {{ a }}</a>{% if not forloop.last %} | {% endif %}
+{% for char, slug in alphabet.items %}
+   <a href="#{{ slug }}"> {{ char }}</a>{% if not forloop.last %} {{ sep }} {% endif %}
 {% endfor %}

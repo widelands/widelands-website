@@ -58,12 +58,14 @@ def render_content(article, content_attr="content", markup_attr="markup"):
 
 
 @register.inclusion_tag("wiki/inlines/alphabet_list.html")
-def alphabet_list(articles):
-    """Renders a template showing an alphabet list."""
+def alphabet_links(objects, sep=" |"):
+    """Renders a template showing an alphabet list as links."""
+
     alphabet = {}
-    for article in articles:
-        if article.title[0].upper() not in alphabet:
-            alphabet.update({article.title[0].upper(): slugify(article.title)})
+    for object in objects:
+        if object.title[0].upper() not in alphabet:
+            alphabet.update({object.title[0].upper(): slugify(object.title)})
     return {
         "alphabet": alphabet,
+        "sep": sep,
     }
