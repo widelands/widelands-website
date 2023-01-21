@@ -35,7 +35,7 @@
 				<td>{{ article.summary }}</td>
 				<td class="nolinebreak">{{ article.last_update|custom_date:user	}}</td>
 				<td>{{ redirect.new_path }}</td>
-				<td class="middle">
+				<td class="middle nolinebreak">
 					<a href="{% url 'wiki_edit_deleted' article.title %}" class="button">Edit in Trash</a>
 				</td>
 			</tr>
