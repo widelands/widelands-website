@@ -52,9 +52,9 @@
 			After finishing your work remove the 'outdated' tag.</p>
 	{% endif %}
 	{% render_content article %}
-	{% tags_for_object article as tag_list %}
-		{% if tag_list %}
-			<div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" %}</div>
+	{% tags_for_object article as article_tags %}
+		{% if article_tags %}
+			<div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}</div>
 		{% endif %}
 </div>
 {% endblock %}

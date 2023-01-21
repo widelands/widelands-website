@@ -118,6 +118,10 @@ th {
     padding: 0px 5px;
 }
 
+tr:hover {
+	background-color: rgba(83,83,83,0.5);
+}
+
 /*********************/
 /* Image positioning */
 /*********************/

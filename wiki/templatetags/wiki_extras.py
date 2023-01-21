@@ -5,6 +5,7 @@ from django import template
 from django.conf import settings
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
+from django.utils.text import slugify
 
 
 register = template.Library()
@@ -53,4 +54,18 @@ def render_content(article, content_attr="content", markup_attr="markup"):
     return {
         "content": getattr(article, content_attr),
         "markup": getattr(article, markup_attr),
+    }
+
+
+@register.inclusion_tag("wiki/inlines/alphabet_list.html")
+def alphabet_links(objects, sep=" |"):
+    """Renders a template showing an alphabet list as links."""
+
+    alphabet = {}
+    for object in objects:
+        if object.title[0].upper() not in alphabet:
+            alphabet.update({object.title[0].upper(): slugify(object.title)})
+    return {
+        "alphabet": alphabet,
+        "sep": sep,
     }
