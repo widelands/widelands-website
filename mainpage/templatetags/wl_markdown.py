@@ -123,6 +123,7 @@ def _classify_link(tag):
         if external:
             tag["class"] = "externalLink"
             tag["title"] = "This link refers to outer space"
+            tag["target"] = "_blank"
             return
 
     if "/profile/" in (tag["href"]):
