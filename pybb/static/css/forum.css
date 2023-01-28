@@ -10,7 +10,7 @@
 /********************/
 
 .forum {
-	border: none; 
+	border: none;
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
@@ -130,10 +130,6 @@ div.blogEntry .post p {
 .post td {
 	padding: 0 1em 0 1em;
 	border: 1px solid #474444;
-}
-
-.attachment {
-	display: inline-block
 }
 
 /*****************/
