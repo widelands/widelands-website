@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 from django import forms
-from django_registration.forms import RegistrationForm
-from nocaptcha_recaptcha.fields import NoReCaptchaField
+# from django_registration.forms import RegistrationForm
+from captcha.fields import ReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from wlprofile.models import TZ_CHOICES
@@ -11,10 +11,10 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import mail_admins
 
 
-class RegistrationWithCaptchaForm(RegistrationForm):
+class FormWithCaptcha(forms.Form):
     """Overwritten form containing a recaptcha"""
 
-    captcha = NoReCaptchaField()
+    captcha = ReCaptchaField()
 
 
 class ContactForm(forms.Form):

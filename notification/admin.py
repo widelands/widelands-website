@@ -1,6 +1,6 @@
 from django.contrib import admin
 from notification.models import NoticeType, NoticeSetting, ObservedItem
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class NoticeTypeAdmin(admin.ModelAdmin):

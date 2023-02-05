@@ -8,11 +8,11 @@ from .diff_match_patch import diff_match_patch
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 
-from tagging.fields import TagField
+#from tagging.fields import TagField
 
 from wlimages.models import Image
 
@@ -68,7 +68,7 @@ class Article(models.Model):
 
     images = GenericRelation(Image)
 
-    tags = TagField()
+#    tags = TagField()
 
     class Meta:
         verbose_name = _("Article")

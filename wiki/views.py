@@ -26,7 +26,7 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 from mainpage.wl_utils import get_valid_cache_key
 
-from tagging.models import Tag
+# from tagging.models import Tag
 
 import re
 import urllib.request, urllib.parse, urllib.error

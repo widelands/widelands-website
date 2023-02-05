@@ -3,7 +3,7 @@
 import re
 from django import template
 from django.conf import settings
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 
@@ -16,7 +16,7 @@ def restore_commandsymbols(s):
     """We need to restore " " for textile to work properly."""
     s = s.replace("&quot;", '"')
     s = s.replace("&quot;", '"')
-    return force_text(s)
+    return force_str(s)
 
 
 restore_commandsymbols.is_safe = True

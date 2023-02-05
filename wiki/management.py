@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_noop as _
+from django.utils.translation import gettext_noop as _
 
 try:
     from notification import models as notification

@@ -5,7 +5,7 @@
  on the site
 {% endcomment %}
 
-{% load inbox %}
+
 {% load i18n %}
 {% load wlprofile_extras wlpoll_extras wlevents_extras %}
 {% load pybb_extras %}
@@ -55,7 +55,7 @@
 
 <!-- Future Events if any -->
 {% get_future_events as events %}
-{% if events.count %}         
+{% if events.count %}
 <div class="columnModule">
 	<h3>Important Dates</h3>
 	<div class="columnModuleBox">
@@ -63,9 +63,9 @@
 			{% for e in events %}
 				<li>
 				{{e.start_date|date:"d M"}}
-				{% ifnotequal e.start_date e.end_date %}
+				{% if e.start_date != e.end_date %}
 					 - {{e.end_date|date:"d M"}}
-				{% endifnotequal %}
+				{% endif %}
 				- <a href="{{e.link}}">{{e.name}}</a></li>
 			{% endfor %}
 		</ul>

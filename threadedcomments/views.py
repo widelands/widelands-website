@@ -3,12 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, Context, Template
-from django.utils.http import urlquote
-from django.conf import settings
 from threadedcomments.forms import ThreadedCommentForm
 from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.utils import JSONResponse, XMLResponse
-from mainpage.wl_utils import get_real_ip
 
 
 def _adjust_max_comment_length(form, field_name="comment"):
