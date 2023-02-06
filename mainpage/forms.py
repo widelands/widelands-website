@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from django import forms
-# from django_registration.forms import RegistrationForm
+from django_registration.forms import RegistrationForm
 from captcha.fields import ReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import mail_admins
 
 
-class FormWithCaptcha(forms.Form):
+class FormWithCaptcha(RegistrationForm):
     """Overwritten form containing a recaptcha"""
 
     captcha = ReCaptchaField()
