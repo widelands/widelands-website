@@ -26,6 +26,7 @@ from mainpage.wl_utils import get_real_ip
 #########
 class MapList(ListView):
     model = models.Map
+    paginate_by = settings.MAPS_PER_PAGE
 
     @property
     def filter(self):
@@ -43,9 +44,11 @@ class MapList(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        page = ctx['page_obj']
         ctx.update(
             {
-                "maps_per_page": settings.MAPS_PER_PAGE,
+                "paginator_range":page.paginator.get_elided_page_range(
+                    page.number, on_each_side=2),
                 "filter": self.filter,
             }
         )

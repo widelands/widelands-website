@@ -21,6 +21,7 @@ from pybb.templatetags.pybb_extras import (
     pybb_has_unreads,
 )
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
+from mainpage.wl_utils import get_pagination
 import math
 from mainpage.validators import check_utf8mb3_preview
 
@@ -62,15 +63,14 @@ def show_forum_ctx(request, forum_id):
         raise Http404
 
     user_is_mod = pybb_moderated_by(forum, request.user)
-
     topics = forum.topics.order_by("-sticky", "-updated").select_related()
 
-    return {
+    context = {
         "forum": forum,
-        "topics": topics,
-        "page_size": pybb_settings.FORUM_PAGE_SIZE,
         "user_is_mod": user_is_mod,
     }
+    context.update(get_pagination(request, topics, pybb_settings.FORUM_PAGE_SIZE))
+    return context
 
 
 show_forum = render_to("pybb/forum.html")(show_forum_ctx)
@@ -162,7 +162,7 @@ def show_topic_ctx(request, topic_id):
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
     context.update({"posts": posts})
-
+    context.update(get_pagination(request, posts, pybb_settings.TOPIC_PAGE_SIZE))
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
@@ -176,7 +176,6 @@ def show_topic_ctx(request, topic_id):
 
     context.update(
         {
-            "page_size": pybb_settings.TOPIC_PAGE_SIZE,
             "form_url": reverse("pybb_add_post", args=[topic.id]),
             "wikipage": settings.ATTACHMENT_DESCR_PAGE,
         }

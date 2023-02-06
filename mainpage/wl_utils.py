@@ -3,7 +3,7 @@ from django.db.models import OneToOneField
 from django.db import models
 import os
 import shutil
-
+from django.core.paginator import Paginator
 
 def get_real_ip(request):
     """Returns the real user IP, even if behind a proxy."""
@@ -72,3 +72,19 @@ def return_git_path(pgm="git"):
         if not os.path.exists(git_path) or not os.access(git_path, os.X_OK):
             return None
     return git_path
+
+
+def get_pagination(request, objects, per_page=20):
+    """Paginate objects.
+    Returns:
+         page_obj: containing the limited lists of objects per page
+         paginator_range: a generator object with all page numbers and ellipsis
+
+    """
+    paginator = Paginator(objects, per_page)
+    page_obj = paginator.get_page(request.GET.get("page"))
+    return {
+        "page_obj": page_obj,
+        "paginator_range": paginator.get_elided_page_range(
+                    page_obj.number, on_each_side=2),
+    }

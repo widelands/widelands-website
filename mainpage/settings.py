@@ -117,7 +117,6 @@ INSTALLED_APPS = [
     "threadedcomments",  # included as wlapp
     "notification",  # included as wlapp
     #"django_messages_wl.apps.WLDjangoMessagesConfig",
-    "dj_pagination",
     #"tagging",
     "star_ratings",
     "django_filters",
@@ -133,7 +132,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
     # Foreign middleware
-    "dj_pagination.middleware.PaginationMiddleware",
     "mainpage.online_users_middleware.OnlineNowMiddleware",
 ]
 
