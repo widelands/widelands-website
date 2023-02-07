@@ -194,7 +194,6 @@ def unescape(text):
 
 
 def validate_file(attachment):
-
     tmp_file_path = attachment.temporary_file_path()
 
     # Helper functions

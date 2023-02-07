@@ -132,7 +132,6 @@ def _classify_link(tag):
         return
 
     if check_for_missing_wikipages and href.startswith("/wiki/"):
-
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
         # Using href because we need cAsEs here
         article_name = urllib.parse.unquote(tag["href"][6:].split("/", 1)[0])

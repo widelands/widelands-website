@@ -3,7 +3,6 @@ from django.db.models import signals
 
 
 class WikiConfig(AppConfig):
-
     name = "wiki"
     verbose_name = "Wiki"
 

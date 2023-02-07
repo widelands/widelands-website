@@ -44,11 +44,12 @@ class MapList(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        page = ctx['page_obj']
+        page = ctx["page_obj"]
         ctx.update(
             {
-                "paginator_range":page.paginator.get_elided_page_range(
-                    page.number, on_each_side=2),
+                "paginator_range": page.paginator.get_elided_page_range(
+                    page.number, on_each_side=2
+                ),
                 "filter": self.filter,
             }
         )

@@ -16,7 +16,9 @@ urlpatterns = [
         name="news_archive_month",
     ),
     re_path(r"^(?P<year>\d{4})/$", YearNews.as_view(), name="news_archive_year"),
-    re_path(r"^category/(?P<slug>[-\w]+)/", CategoryView.as_view(), name="category_posts"),
+    re_path(
+        r"^category/(?P<slug>[-\w]+)/", CategoryView.as_view(), name="category_posts"
+    ),
     re_path(
         r"^$", NewsList.as_view(template_name="news/post_list.html"), name="news_index"
     ),

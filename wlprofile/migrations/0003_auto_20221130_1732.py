@@ -6,7 +6,6 @@ import wlprofile.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("wlhelp", "0003_auto_20221129_2035"),
         ("wlprofile", "0002_profile_deleted"),

@@ -3,7 +3,6 @@ from django.db.models import signals
 
 
 class WlMapsConfig(AppConfig):
-
     name = "wlmaps"
     verbose_name = "Widelands Maps"
 

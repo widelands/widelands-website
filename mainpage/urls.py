@@ -28,7 +28,9 @@ urlpatterns = [
         name="django_registration_register",
     ),
     re_path(r"^accounts/", include("django_registration.backends.activation.urls")),
-    re_path(r"^accounts/login/$", LoginView.as_view(authentication_form=LoginTimezoneForm)),
+    re_path(
+        r"^accounts/login/$", LoginView.as_view(authentication_form=LoginTimezoneForm)
+    ),
     re_path(r"^accounts/", include("django.contrib.auth.urls")),
     re_path(r"^ratings/", include("star_ratings.urls", namespace="ratings")),
     # Formerly 3rd party

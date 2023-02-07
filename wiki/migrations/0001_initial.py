@@ -4,11 +4,11 @@
 from django.db import models, migrations
 import datetime
 from django.conf import settings
-#import tagging.fields
+
+# import tagging.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("contenttypes", "0002_remove_content_type_name"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(default=datetime.datetime.now)),
                 ("last_update", models.DateTimeField(null=True, blank=True)),
                 ("object_id", models.PositiveIntegerField(null=True)),
-#                ("tags", tagging.fields.TagField(max_length=255, blank=True)),
+                #                ("tags", tagging.fields.TagField(max_length=255, blank=True)),
                 (
                     "content_type",
                     models.ForeignKey(

@@ -7,7 +7,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("auth", "0008_alter_user_username_max_length"),
         ("pybb", "0003_remove_post_user_ip"),

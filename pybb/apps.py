@@ -3,7 +3,6 @@ from django.db.models import signals
 
 
 class PybbConfig(AppConfig):
-
     name = "pybb"
     verbose_name = "Pybb"
 

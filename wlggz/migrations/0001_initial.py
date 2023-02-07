@@ -7,7 +7,6 @@ import mainpage.wl_utils as wl_utils
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]

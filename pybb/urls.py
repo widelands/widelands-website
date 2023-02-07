@@ -7,7 +7,9 @@ urlpatterns = [
     # Misc
     re_path("^$", views.index, name="pybb_index"),
     re_path("^mark_as_read/", views.mark_as_read, name="mark_as_read"),
-    re_path("^category/(?P<category_id>\d+)/$", views.show_category, name="pybb_category"),
+    re_path(
+        "^category/(?P<category_id>\d+)/$", views.show_category, name="pybb_category"
+    ),
     re_path(
         "^category/(?P<category_id>\d+)/mark_as_read/$",
         views.mark_as_read,
@@ -32,14 +34,20 @@ urlpatterns = [
         {"topic_id": None},
         name="pybb_add_topic",
     ),
-    re_path("^topic/(?P<topic_id>\d+)/stick/$", views.stick_topic, name="pybb_stick_topic"),
+    re_path(
+        "^topic/(?P<topic_id>\d+)/stick/$", views.stick_topic, name="pybb_stick_topic"
+    ),
     re_path(
         "^topic/(?P<topic_id>\d+)/unstick/$",
         views.unstick_topic,
         name="pybb_unstick_topic",
     ),
-    re_path("^topic/(?P<topic_id>\d+)/close/$", views.close_topic, name="pybb_close_topic"),
-    re_path("^topic/(?P<topic_id>\d+)/open/$", views.open_topic, name="pybb_open_topic"),
+    re_path(
+        "^topic/(?P<topic_id>\d+)/close/$", views.close_topic, name="pybb_close_topic"
+    ),
+    re_path(
+        "^topic/(?P<topic_id>\d+)/open/$", views.open_topic, name="pybb_open_topic"
+    ),
     re_path(
         "^topic/(?P<topic_id>\d+)/unhide/$",
         views.toggle_hidden_topic,
@@ -54,7 +62,9 @@ urlpatterns = [
     ),
     re_path("^post/(?P<post_id>\d+)/$", views.show_post, name="pybb_post"),
     re_path("^post/(?P<post_id>\d+)/edit/$", views.edit_post, name="pybb_edit_post"),
-    re_path("^post/(?P<post_id>\d+)/delete/$", views.delete_post, name="pybb_delete_post"),
+    re_path(
+        "^post/(?P<post_id>\d+)/delete/$", views.delete_post, name="pybb_delete_post"
+    ),
     re_path(r"^latest_posts/$", views.all_latest, name="all_latest_posts"),
     re_path(
         r"^user_posts/(?P<this_user>[\w.@+-]+)/$",
@@ -62,7 +72,9 @@ urlpatterns = [
         name="all_user_posts",
     ),
     # Attachment
-    re_path("^attachment/(?P<hash>\w+)/$", views.show_attachment, name="pybb_attachment"),
+    re_path(
+        "^attachment/(?P<hash>\w+)/$", views.show_attachment, name="pybb_attachment"
+    ),
     # API
     re_path(
         "^api/post_ajax_preview/$",

@@ -195,7 +195,6 @@ def view_article(
     *args,
     **kw,
 ):
-
     if request.method == "GET":
         article_args = {"title": title}
 
@@ -304,7 +303,6 @@ def edit_article(
     *args,
     **kw,
 ):
-
     group = None
     article_args = {"title": title}
     if group_slug is not None:
@@ -332,12 +330,10 @@ def edit_article(
             article = None
 
     if request.method == "POST":
-
         form = ArticleFormClass(request.POST, instance=article)
 
         form.cache_old_content()
         if form.is_valid():
-
             if request.user.is_authenticated:
                 form.editor = request.user
 
@@ -487,7 +483,6 @@ def view_changeset(
     *args,
     **kw,
 ):
-
     if request.method == "GET":
         article_args = {"article__title": title}
         if group_slug is not None:
@@ -563,9 +558,7 @@ def article_history(
     *args,
     **kw,
 ):
-
     if request.method == "GET":
-
         article_args = {"title": title}
         if group_slug is not None:
             group = get_object_or_404(group_qs, **{group_slug_field: group_slug})
@@ -622,9 +615,7 @@ def revert_to_revision(
     *args,
     **kw,
 ):
-
     if request.method == "POST":
-
         revision = int(request.POST["revision"])
 
         article_args = {"title": title}
@@ -679,7 +670,6 @@ def history(
     *args,
     **kw,
 ):
-
     if request.method == "GET":
         if group_slug is not None:
             group = get_object_or_404(group_qs, **{group_slug_field: group_slug})

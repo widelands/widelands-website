@@ -6,7 +6,6 @@ from django.urls import reverse
 
 
 class PrivacyPolicy(models.Model):
-
     language = models.CharField(
         default="English",
         max_length=30,

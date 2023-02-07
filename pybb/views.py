@@ -44,7 +44,6 @@ index = render_to("pybb/index.html")(index_ctx)
 
 
 def show_category_ctx(request, category_id):
-
     category = get_object_or_404(Category, pk=category_id)
 
     if category.internal and not allowed_for(request.user):
@@ -352,7 +351,6 @@ edit_post = render_to("pybb/edit_post.html")(edit_post_ctx)
 
 @login_required
 def stick_topic(request, topic_id):
-
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
         if not topic.sticky:
@@ -363,7 +361,6 @@ def stick_topic(request, topic_id):
 
 @login_required
 def unstick_topic(request, topic_id):
-
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
         if topic.sticky:
@@ -418,7 +415,6 @@ def close_topic(request, topic_id):
 
 @login_required
 def open_topic(request, topic_id):
-
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
         if topic.closed:
@@ -603,5 +599,6 @@ def all_user_posts(request, this_user=None):
     context.update(get_pagination(request, posts, pybb_settings.FORUM_PAGE_SIZE))
 
     return context
+
 
 user_posts = render_to("pybb/all_user_posts.html")(all_user_posts)

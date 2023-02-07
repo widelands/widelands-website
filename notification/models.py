@@ -38,7 +38,6 @@ class LanguageStoreNotAvailable(Exception):
 
 
 class NoticeType(models.Model):
-
     label = models.CharField(_("label"), max_length=40)
     display = models.CharField(
         _("display"), max_length=50, help_text=_("Used as subject when sending emails.")
@@ -363,7 +362,6 @@ class ObservedItemManager(models.Manager):
 
 
 class ObservedItem(models.Model):
-
     user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)

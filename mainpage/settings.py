@@ -25,7 +25,7 @@ DATABASES = {
         "PORT": "",
     }
 }
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -117,7 +117,7 @@ INSTALLED_APPS = [
     "threadedcomments",  # included as wlapp
     "notification",  # included as wlapp
     # "django_messages_wl.apps.WlDjangoMessagesConfig",
-    #"tagging",
+    # "tagging",
     "star_ratings",
     "django_filters",
 ]
@@ -150,7 +150,7 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
-                #"django_messages.context_processors.inbox",
+                # "django_messages.context_processors.inbox",
             ],
         },
     },

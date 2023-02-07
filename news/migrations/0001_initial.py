@@ -4,11 +4,11 @@
 from django.db import models, migrations
 from django.conf import settings
 import news.models
-#import tagging.fields
+
+# import tagging.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
                     "modified",
                     models.DateTimeField(auto_now=True, verbose_name="modified"),
                 ),
-#                ("tags", tagging.fields.TagField(max_length=255, blank=True)),
+                #                ("tags", tagging.fields.TagField(max_length=255, blank=True)),
                 (
                     "author",
                     models.ForeignKey(

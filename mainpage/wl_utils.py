@@ -5,6 +5,7 @@ import os
 import shutil
 from django.core.paginator import Paginator
 
+
 def get_real_ip(request):
     """Returns the real user IP, even if behind a proxy."""
     for key in ("HTTP_X_FORWARDED_FOR", "REMOTE_ADDR"):
@@ -88,5 +89,6 @@ def get_pagination(request, objects, per_page=20):
     return {
         "page_obj": page_obj,
         "paginator_range": paginator.get_elided_page_range(
-                    page_obj.number, on_each_side=2),
+            page_obj.number, on_each_side=2
+        ),
     }

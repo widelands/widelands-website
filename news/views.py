@@ -10,7 +10,6 @@ from django.views.generic import (
 
 
 class NewsList(ArchiveIndexView):
-
     template_name = "news/category_posts.html"
     model = Post
     date_field = "publish"
@@ -19,11 +18,12 @@ class NewsList(ArchiveIndexView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(NewsList, self).get_context_data(**kwargs)
-        page_obj = context['page_obj']
+        page_obj = context["page_obj"]
         context.update(
             {
                 "paginator_range": page_obj.paginator.get_elided_page_range(
-                    page_obj.number, on_each_side=2),
+                    page_obj.number, on_each_side=2
+                ),
             }
         )
 
@@ -32,7 +32,6 @@ class NewsList(ArchiveIndexView):
 
 
 class YearNews(YearArchiveView):
-
     model = Post
     template_name = "news/post_archive_year.html"
     date_field = "publish"
@@ -42,11 +41,12 @@ class YearNews(YearArchiveView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(YearNews, self).get_context_data(**kwargs)
-        page_obj = context['page_obj']
+        page_obj = context["page_obj"]
         context.update(
             {
                 "paginator_range": page_obj.paginator.get_elided_page_range(
-                    page_obj.number, on_each_side=2),
+                    page_obj.number, on_each_side=2
+                ),
             }
         )
 
@@ -55,7 +55,6 @@ class YearNews(YearArchiveView):
 
 
 class MonthNews(MonthArchiveView):
-
     model = Post
     template_name = "news/post_archive_month.html"
     date_field = "publish"
@@ -64,11 +63,12 @@ class MonthNews(MonthArchiveView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(MonthArchiveView, self).get_context_data(**kwargs)
-        page_obj = context['page_obj']
+        page_obj = context["page_obj"]
         context.update(
             {
                 "paginator_range": page_obj.paginator.get_elided_page_range(
-                    page_obj.number, on_each_side=2),
+                    page_obj.number, on_each_side=2
+                ),
             }
         )
 
@@ -77,14 +77,12 @@ class MonthNews(MonthArchiveView):
 
 
 class NewsDetail(DateDetailView):
-
     model = Post
     template_name = "news/post_detail.html"
     date_field = "publish"
 
 
 class CategoryView(ListView):
-
     template_name = "news/category_posts.html"
     paginate_by = 20
 
@@ -98,11 +96,12 @@ class CategoryView(ListView):
             context["cur_category"] = get_object_or_404(
                 Category, slug=self.kwargs["slug"]
             )
-        page_obj = context['page_obj']
+        page_obj = context["page_obj"]
         context.update(
             {
                 "paginator_range": page_obj.paginator.get_elided_page_range(
-                    page_obj.number, on_each_side=2),
+                    page_obj.number, on_each_side=2
+                ),
             }
         )
 

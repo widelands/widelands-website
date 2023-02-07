@@ -11,7 +11,8 @@ from wiki.feeds import (
     AtomArticleHistoryFeed,
 )
 from wiki.models import Article
-#from tagging.views import TaggedObjectList
+
+# from tagging.views import TaggedObjectList
 
 
 urlpatterns = [
