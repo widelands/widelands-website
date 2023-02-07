@@ -594,10 +594,12 @@ def all_user_posts(request, this_user=None):
 
         posts = Post.objects.public().filter(user__username=this_user)
 
-    return {
+    context = {
         "this_user": this_user,
         "posts": posts,
     }
+    context.update(get_pagination(request, posts, pybb_settings.FORUM_PAGE_SIZE))
 
+    return context
 
 user_posts = render_to("pybb/all_user_posts.html")(all_user_posts)
