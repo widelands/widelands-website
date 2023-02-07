@@ -161,8 +161,8 @@ def show_topic_ctx(request, topic_id):
         posts = topic.posts.select_related()
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
+
     context.update({"posts": posts})
-    context.update(get_pagination(request, posts, pybb_settings.TOPIC_PAGE_SIZE))
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
@@ -173,6 +173,8 @@ def show_topic_ctx(request, topic_id):
 
     if pybb_settings.PYBB_ATTACHMENT_ENABLE:
         load_related(posts, Attachment.objects.all(), "post")
+
+    context.update(get_pagination(request, posts, pybb_settings.TOPIC_PAGE_SIZE))
 
     context.update(
         {

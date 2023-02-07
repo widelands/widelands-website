@@ -116,7 +116,7 @@ INSTALLED_APPS = [
     # Thirdparty apps
     "threadedcomments",  # included as wlapp
     "notification",  # included as wlapp
-    #"django_messages_wl.apps.WLDjangoMessagesConfig",
+    # "django_messages_wl.apps.WlDjangoMessagesConfig",
     #"tagging",
     "star_ratings",
     "django_filters",
@@ -150,7 +150,7 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
-                # "django_messages.context_processors.inbox",
+                #"django_messages.context_processors.inbox",
             ],
         },
     },
