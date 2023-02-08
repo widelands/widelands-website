@@ -408,12 +408,6 @@ BLEACH_ALLOWED_ATTRIBUTES = {
     "*": ["class", "id", "title"],
 }
 
-##########################
-# Pagination settings    #
-# for dj-pagination      #
-##########################
-PAGINATION_DEFAULT_WINDOW = 2
-
 ###########################
 # Settings for displaying #
 # online users            #

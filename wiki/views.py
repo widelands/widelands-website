@@ -249,9 +249,9 @@ def view_article(
 
         template_params = {}
         outdated = False
-        tags = [x.name for x in Tag.objects.get_for_object(article)]
-        if "outdated" in tags:
-            template_params.update({"outdated": True})
+        # tags = [x.name for x in Tag.objects.get_for_object(article)]
+        # if "outdated" in tags:
+        #   template_params.update({"outdated": True})
 
         template_params.update(
             {

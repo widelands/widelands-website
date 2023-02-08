@@ -1,7 +1,7 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
 {% load wiki_extras %}
-{% load tagging_tags %}
+{#{% load tagging_tags %}#}
 
 {% block title %}
 {{ article.title }} - {{block.super}}
@@ -52,10 +52,12 @@
 			After finishing your work remove the 'outdated' tag.</p>
 	{% endif %}
 	{% render_content article %}
+	{% comment %}
 	{% tags_for_object article as article_tags %}
 		{% if article_tags %}
 			<div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}</div>
 		{% endif %}
+	{% endcomment %}
 </div>
 {% endblock %}
 
