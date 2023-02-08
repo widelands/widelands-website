@@ -17,8 +17,7 @@ from django.http import (
 from django.urls import reverse
 from django.conf import settings
 from . import filters, models
-
-from mainpage.wl_utils import get_real_ip
+from mainpage.wl_utils import get_pagination
 
 
 #########
@@ -26,7 +25,6 @@ from mainpage.wl_utils import get_real_ip
 #########
 class MapList(ListView):
     model = models.Map
-    paginate_by = settings.MAPS_PER_PAGE
 
     @property
     def filter(self):
@@ -44,14 +42,13 @@ class MapList(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        page = ctx["page_obj"]
         ctx.update(
             {
-                "paginator_range": page.paginator.get_elided_page_range(
-                    page.number, on_each_side=2
-                ),
                 "filter": self.filter,
             }
+        )
+        ctx.update(
+            get_pagination(self.request, ctx["object_list"], settings.MAPS_PER_PAGE)
         )
         return ctx
 

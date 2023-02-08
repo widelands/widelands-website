@@ -81,14 +81,13 @@ def get_pagination(request, objects, per_page=20):
     "pagination/pagination.html" in the template.
     Returns a dict with context variables:
          page_obj: containing the limited lists of objects per page
-         paginator_range: a generator object with all page numbers and ellipsis
+         paginator_range: a list of all page numbers and ellipsis
     """
 
     paginator = Paginator(objects, per_page)
     page_obj = paginator.get_page(request.GET.get("page"))
     return {
         "page_obj": page_obj,
-        "paginator_range": paginator.get_elided_page_range(
-            page_obj.number, on_each_side=2
-        ),
+        "paginator_range": list(paginator.get_elided_page_range(
+            page_obj.number, on_each_side=2)),
     }
