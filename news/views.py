@@ -18,9 +18,7 @@ class NewsList(ArchiveIndexView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(NewsList, self).get_context_data(**kwargs)
-        context.update(
-            get_pagination(self.request, Post.objects.all(), 20)
-        )
+        context.update(get_pagination(self.request, Post.objects.all(), 20))
 
         return context
 
@@ -34,9 +32,7 @@ class YearNews(YearArchiveView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(YearNews, self).get_context_data(**kwargs)
-        context.update(
-            get_pagination(self.request, context["object_list"], 20)
-        )
+        context.update(get_pagination(self.request, context["object_list"], 20))
 
         return context
 
@@ -49,9 +45,7 @@ class MonthNews(MonthArchiveView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(MonthArchiveView, self).get_context_data(**kwargs)
-        context.update(
-            get_pagination(self.request, context["object_list"], 20)
-        )
+        context.update(get_pagination(self.request, context["object_list"], 20))
 
         return context
 
@@ -76,9 +70,7 @@ class CategoryView(ListView):
                 Category, slug=self.kwargs["slug"]
             )
 
-        context.update(
-            get_pagination(self.request, context["object_list"], 20)
-        )
+        context.update(get_pagination(self.request, context["object_list"], 20))
         context["categories"] = Category.objects.all()
         return context
 

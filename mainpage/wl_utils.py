@@ -88,6 +88,7 @@ def get_pagination(request, objects, per_page=20):
     page_obj = paginator.get_page(request.GET.get("page"))
     return {
         "page_obj": page_obj,
-        "paginator_range": list(paginator.get_elided_page_range(
-            page_obj.number, on_each_side=2)),
+        "paginator_range": list(
+            paginator.get_elided_page_range(page_obj.number, on_each_side=2)
+        ),
     }
