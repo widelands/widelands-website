@@ -25,6 +25,8 @@ DATABASES = {
         "PORT": "",
     }
 }
+
+# See: https://docs.djangoproject.com/en/4.1/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Local time zone for this installation. Choices can be found here:

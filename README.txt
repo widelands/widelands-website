@@ -11,13 +11,13 @@ Install prerequisites
 
 Getting the homepage to run locally is best supported using virtualenv and
 pip. Install those two tools first, either via easy_install or via your local
-package manager. To get the sources you will need to install git. 
+package manager. To get the sources you will need to install git.
 
 Example:
 On Ubuntu, installing all required tools and dependencies in two commands:
 
    $ sudo apt-get install python3-virtualenv python3-pip git libmysqlclient-dev
-   $ sudo apt-get build-dep 
+   $ sudo apt-get build-dep
 
 On Mac, you might need something like:
 
@@ -66,10 +66,10 @@ Setting up the website
 Setting your local paths
 ------------------------
 
-Copy the two files settings_local.py.sample and local_urls.py.sample to 
-settings_local.py and local_urls.py inside the mainpage folder. 
-Take a look at those files and modify them to your needs - most likely 
-everything works directly, but you might want to edit the bd variable 
+Copy the two files settings_local.py.sample and local_urls.py.sample to
+settings_local.py and local_urls.py inside the mainpage folder.
+Take a look at those files and modify them to your needs - most likely
+everything works directly, but you might want to edit the bd variable
 in mainpage/local_settings.py::
 
    $ cp local_urls.py.sample mainpage/local_urls.py
@@ -129,11 +129,20 @@ production environments, only for development/testing.
 See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
 for further details.
 
+Starting the website locally with gunicorn
+------------------------------------------
+
+This might be useful for testing thread-safety:
+
+ $ cd mainpage
+ $ gunicorn --workers 4 wlwebsite_wsgi:application
+
+This will run the website with 4 workers (threads).
 
 Dependencies between website and widelands source code
 ======================================================
 
-Some parts of the website need access to the source code of widelands, other 
+Some parts of the website need access to the source code of widelands, other
 parts need some widelands executables.
 
 Source code only
@@ -143,7 +152,7 @@ The documentation is made out of the source code. To get a copy, see:
 
 https://wl.widelands.org/wiki/GitPrimer/
 
-After the source code is downloaded, adjust the path of 
+After the source code is downloaded, adjust the path of
 
 WIDELANDS_SVN_DIR = '/path/to/widelands/trunk'
 
@@ -163,7 +172,7 @@ Widelands executables are needed to:
 * Upload maps to the website
 * Create the Encylopdia
 
-Either install widelands as a program to your operating system, or create the 
+Either install widelands as a program to your operating system, or create the
 binaries by compiling the source code. If you want to compile, run:
 
    $ ./compile.sh -r
