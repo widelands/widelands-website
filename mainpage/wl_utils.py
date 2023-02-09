@@ -92,3 +92,10 @@ def get_pagination(request, objects, per_page=20):
             paginator.get_elided_page_range(page_obj.number, on_each_side=2)
         ),
     }
+
+
+def is_ajax(request):
+    """Django removed this method.
+    See: https://docs.djangoproject.com/en/4.1/releases/3.1/#id2
+    """
+    return request.headers.get("x-requested-with") == "XMLHttpRequest"

@@ -14,10 +14,10 @@ from django.http import (
     JsonResponse,
     HttpResponseBadRequest,
 )
-from django.urls import reverse
+
 from django.conf import settings
 from . import filters, models
-from mainpage.wl_utils import get_pagination
+from mainpage.wl_utils import get_pagination, is_ajax
 
 
 #########
@@ -53,7 +53,7 @@ class MapList(ListView):
         return ctx
 
     def options(self, request, *args, **kwargs):
-        if request.is_ajax():
+        if is_ajax(request):
             q = request.GET.get("q", "")
             f = request.GET.get("f", "")
 
