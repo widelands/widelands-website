@@ -5,7 +5,6 @@ from haystack.query import SearchQuerySet
 
 
 class WlSearchForm(SearchForm):
-
     start_date = forms.DateField(
         required=False,
         initial=date.today() - timedelta(365),

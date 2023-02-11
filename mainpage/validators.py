@@ -26,7 +26,6 @@ def virus_scan(uploaded_file):
 
 
 def check_utf8mb3_preview(text):
-
     for c in text:
         if len(c.encode()) > 3:
             return True

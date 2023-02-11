@@ -4,7 +4,6 @@ from wladdons_settings.models import AddonNoticeType
 
 
 class AddonNoticeUserAdmin(admin.ModelAdmin):
-
     search_fields = [
         "user__username",
     ]

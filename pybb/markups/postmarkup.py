@@ -287,7 +287,6 @@ class LinkTag(TagBase):
         self.annotate_links = annotate_links
 
     def render_open(self, parser, node_index):
-
         self.domain = ""
         tag_data = parser.tag_data
         nest_level = tag_data["link_nest_level"] = (
@@ -347,7 +346,6 @@ class LinkTag(TagBase):
             return ""
 
     def render_close(self, parser, node_index):
-
         tag_data = parser.tag_data
         tag_data["link_nest_level"] -= 1
 
@@ -360,7 +358,6 @@ class LinkTag(TagBase):
             return ""
 
     def annotate_link(self, domain=None):
-
         if domain and self.annotate_links:
             return annotate_link(domain)
         else:
@@ -397,7 +394,6 @@ class SearchTag(TagBase):
         self.annotate_links = annotate_links
 
     def render_open(self, parser, node_idex):
-
         if self.params:
             search = self.params
         else:
@@ -409,7 +405,6 @@ class SearchTag(TagBase):
             return link
 
     def render_close(self, parser, node_index):
-
         if self.label:
             ret = "</a>"
             if self.annotate_links:
@@ -425,7 +420,6 @@ class PygmentsCodeTag(TagBase):
         self.line_numbers = pygments_line_numbers
 
     def render_open(self, parser, node_index):
-
         contents = self.get_contents(parser)
         self.skip_contents(parser)
 
@@ -444,7 +438,6 @@ class CodeTag(TagBase):
         TagBase.__init__(self, name, enclosed=True, strip_first_newline=True)
 
     def render_open(self, parser, node_index):
-
         contents = _escape_no_breaks(self.get_contents(parser))
         self.skip_contents(parser)
         return '<div class="code"><pre>%s</pre></div>' % contents
@@ -455,7 +448,6 @@ class ImgTag(TagBase):
         TagBase.__init__(self, name, inline=True)
 
     def render_open(self, parser, node_index):
-
         contents = self.get_contents(parser)
         self.skip_contents(parser)
 
@@ -475,7 +467,6 @@ class ListTag(TagBase):
         TagBase.close(self, parser, close_pos, node_index)
 
     def render_open(self, parser, node_index):
-
         self.close_tag = ""
 
         tag_data = parser.tag_data
@@ -502,7 +493,6 @@ class ListTag(TagBase):
             return "<ul><li>"
 
     def render_close(self, parser, node_index):
-
         tag_data = parser.tag_data
         tag_data["ListTag.count"] -= 1
 
@@ -515,7 +505,6 @@ class ListItemTag(TagBase):
         self.closed = False
 
     def render_open(self, parser, node_index):
-
         tag_data = parser.tag_data
         if not tag_data.setdefault("ListTag.count", 0):
             return ""
@@ -528,14 +517,12 @@ class ListItemTag(TagBase):
 
 
 class SizeTag(TagBase):
-
     valid_chars = frozenset("0123456789")
 
     def __init__(self, name, **kwargs):
         TagBase.__init__(self, name, inline=True)
 
     def render_open(self, parser, node_index):
-
         try:
             self.size = int("".join([c for c in self.params if c in self.valid_chars]))
         except ValueError:
@@ -549,28 +536,24 @@ class SizeTag(TagBase):
         return '<span style="font-size:%spx">' % self.size
 
     def render_close(self, parser, node_index):
-
         if self.size is None:
             return ""
 
         return "</span>"
 
     def validate_size(self, size):
-
         size = min(64, size)
         size = max(4, size)
         return size
 
 
 class ColorTag(TagBase):
-
     valid_chars = frozenset("#0123456789abcdefghijklmnopqrstuvwxyz")
 
     def __init__(self, name, **kwargs):
         TagBase.__init__(self, name, inline=True)
 
     def render_open(self, parser, node_index):
-
         valid_chars = self.valid_chars
         color = self.params.split()[0:1][0].lower()
         self.color = "".join([c for c in color if c in valid_chars])
@@ -581,7 +564,6 @@ class ColorTag(TagBase):
         return '<span style="color:%s">' % self.color
 
     def render_close(self, parser, node_index):
-
         if not self.color:
             return ""
         return "</span>"
@@ -589,11 +571,9 @@ class ColorTag(TagBase):
 
 class CenterTag(TagBase):
     def render_open(self, parser, node_index, **kwargs):
-
         return '<div style="text-align:center">'
 
     def render_close(self, parser, node_index):
-
         return "</div>"
 
 
@@ -602,7 +582,6 @@ class CenterTag(TagBase):
 
 class MultiReplace:
     def __init__(self, repl_dict):
-
         # string to string mapping; use a regular expression
         keys = list(repl_dict.keys())
         keys.sort()  # lexical order
@@ -633,7 +612,6 @@ def _escape_no_breaks(s):
 
 class TagFactory(object):
     def __init__(self):
-
         self.tags = {}
 
     @classmethod
@@ -646,19 +624,15 @@ class TagFactory(object):
         return make
 
     def add_tag(self, cls, name, *args, **kwargs):
-
         self.tags[name] = self.tag_factory_callable(cls, name, *args, **kwargs)
 
     def __getitem__(self, name):
-
         return self.tags[name]()
 
     def __contains__(self, name):
-
         return name in self.tags
 
     def get(self, name, default=None):
-
         if name in self.tags:
             return self.tags[name]()
 
@@ -670,7 +644,6 @@ class _Parser(object):
     """This is an interface to the parser, used by Tag classes."""
 
     def __init__(self, post_markup):
-
         self.pm = post_markup
         self.tag_data = {}
         self.render_node_index = 0
@@ -707,7 +680,6 @@ class _Parser(object):
 
 
 class PostMarkup(object):
-
     standard_replace = MultiReplace(
         {"<": "&lt;", ">": "&gt;", "&": "&amp;", "\n": "<br/>"}
     )
@@ -725,7 +697,6 @@ class PostMarkup(object):
     # I tried to use RE's. Really I did.
     @classmethod
     def tokenize(cls, post):
-
         text = True
         pos = 0
 
@@ -739,7 +710,6 @@ class PostMarkup(object):
             return min(f1, f2)
 
         while True:
-
             brace_pos = post.find("[", pos)
             if brace_pos == -1:
                 if pos < len(post):
@@ -811,7 +781,6 @@ class PostMarkup(object):
 
         text_tokens = []
         for tag_type, tag_token, start_pos, end_pos in self.tokenize(postmarkup):
-
             if tag_type == PostMarkup.TOKEN_TEXT:
                 text_tokens.append(re_url.sub(repl, tag_token))
             else:
@@ -820,7 +789,6 @@ class PostMarkup(object):
         return "".join(text_tokens)
 
     def __init__(self, tag_factory=None):
-
         self.tag_factory = tag_factory or TagFactory()
 
     def default_tags(self):
@@ -876,21 +844,18 @@ class PostMarkup(object):
         remove_next_newline = False
 
         def check_tag_stack(tag_name):
-
             for tag in reversed(tag_stack):
                 if tag_name == tag.name:
                     return True
             return False
 
         def redo_break_stack():
-
             while break_stack:
                 tag = break_stack.pop()
                 open_tag(tag)
                 tag_stack.append(tag)
 
         def break_inline_tags():
-
             while tag_stack:
                 if tag_stack[-1].inline:
                     tag = tag_stack.pop()
@@ -913,7 +878,6 @@ class PostMarkup(object):
 
         # Pass 1
         for tag_type, tag_token, start_pos, end_pos in self.tokenize(post_markup):
-
             raw_tag_token = tag_token
 
             if tag_type == PostMarkup.TOKEN_TEXT:
@@ -973,7 +937,6 @@ class PostMarkup(object):
                 continue
 
             if not end_tag:
-
                 tag = tag_factory.get(tag_name, None)
                 if tag is None:
                     continue
@@ -996,7 +959,6 @@ class PostMarkup(object):
                     close_tag(tag)
 
             else:
-
                 if break_stack and break_stack[-1].name == tag_name:
                     break_stack.pop()
                     tag.close(parser, start_pos, len(nodes))
@@ -1046,7 +1008,6 @@ class PostMarkup(object):
 
 
 def _tests():
-
     import sys
 
     # sys.stdout=open('test.htm', 'w')
@@ -1213,14 +1174,12 @@ asdasdasdasdqweqwe
 
 
 def _run_unittests():
-
     # TODO: Expand tests for better coverage!
 
     import unittest
 
     class TestPostmarkup(unittest.TestCase):
         def testsimpletag(self):
-
             postmarkup = create()
 
             tests = [
@@ -1234,7 +1193,6 @@ def _run_unittests():
                 self.assertEqual(postmarkup(test), result)
 
         def testoverlap(self):
-
             postmarkup = create()
 
             tests = [
@@ -1249,7 +1207,6 @@ def _run_unittests():
                 self.assertEqual(postmarkup(test), result)
 
         def testlinks(self):
-
             postmarkup = create(annotate_links=False)
 
             tests = [
@@ -1279,6 +1236,5 @@ def _run_unittests():
 
 
 if __name__ == "__main__":
-
     _tests()
     _run_unittests()

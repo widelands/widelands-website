@@ -41,7 +41,6 @@ class TopicIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 class PostIndex(indexes.SearchIndex, indexes.Indexable):
-
     text = indexes.CharField(document=True, use_template=True)
     date = indexes.DateTimeField(model_attr="created")
     body_text = indexes.CharField(model_attr="body_text")

@@ -7,7 +7,6 @@ from django.db import models
 
 class Migration(SchemaMigration):
     def forwards(self, orm):
-
         # Adding model 'Category'
         db.create_table(
             "pybb_category",
@@ -300,7 +299,6 @@ class Migration(SchemaMigration):
         db.send_create_signal("pybb", ["Attachment"])
 
     def backwards(self, orm):
-
         # Removing unique constraint on 'Read', fields ['user', 'topic']
         db.delete_unique("pybb_read", ["user_id", "topic_id"])
 
