@@ -20,7 +20,7 @@ def parse_args():
 
 
 def find_files(startpath, extensions):
-    for (dirpath, _, filenames) in os.walk(startpath):
+    for dirpath, _, filenames in os.walk(startpath):
         for filename in filenames:
             if os.path.splitext(filename)[-1].lower() in extensions:
                 yield os.path.join(dirpath, filename)

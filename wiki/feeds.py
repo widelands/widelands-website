@@ -6,7 +6,6 @@ from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
 
 
 class RssHistoryFeed(Feed):
-
     feed_type = Rss201rev2Feed
     title = "History for all articles"
     description = "Recent changes in wiki"
@@ -32,7 +31,6 @@ class RssHistoryFeed(Feed):
 
 
 class AtomHistoryFeed(RssHistoryFeed):
-
     feed_type = Atom1Feed
     subtitle = "Recent changes in wiki"
     link = "/wiki/feeds/atom/"

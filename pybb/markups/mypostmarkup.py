@@ -12,7 +12,6 @@ class LinkTagNoAnnotate(postmarkup.LinkTag):
 
 class CodeTagNoBreak(postmarkup.CodeTag):
     def render_open(self, parser, node_index):
-
         contents = self._escape(self.get_contents(parser))
         contents = RE_FIRST_LF.sub("", contents)
         self.skip_contents(parser)

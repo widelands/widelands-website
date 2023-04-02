@@ -10,7 +10,6 @@ from django.views.generic import (
 
 
 class NewsList(ArchiveIndexView):
-
     template_name = "news/category_posts.html"
     model = Post
     date_field = "publish"
@@ -24,7 +23,6 @@ class NewsList(ArchiveIndexView):
 
 
 class YearNews(YearArchiveView):
-
     model = Post
     template_name = "news/post_archive_year.html"
     date_field = "publish"
@@ -32,21 +30,18 @@ class YearNews(YearArchiveView):
 
 
 class MonthNews(MonthArchiveView):
-
     model = Post
     template_name = "news/post_archive_month.html"
     date_field = "publish"
 
 
 class NewsDetail(DateDetailView):
-
     model = Post
     template_name = "news/post_detail.html"
     date_field = "publish"
 
 
 class CategoryView(ListView):
-
     template_name = "news/category_posts.html"
 
     def get_context_data(self, **kwargs):

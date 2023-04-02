@@ -14,6 +14,7 @@ import codecs
 import random
 from datetime import datetime
 
+
 def mainpage(request):
     return render(
         request,
@@ -223,12 +224,18 @@ def custom_http_500(request):
 
 def view_locale(request):
     loc_info = (
-        "Server time: " + datetime.now().isoformat(" ", "seconds")
-        + "<br><br>getlocale: " + str(locale.getlocale())
-        + "<br/>getdefaultlocale(): " + str(locale.getdefaultlocale())
-        + "<br/>fs_encoding: " + str(sys.getfilesystemencoding())
-        + "<br/>sys default encoding: " + str(sys.getdefaultencoding())
+        "Server time: "
+        + datetime.now().isoformat(" ", "seconds")
+        + "<br><br>getlocale: "
+        + str(locale.getlocale())
+        + "<br/>getdefaultlocale(): "
+        + str(locale.getdefaultlocale())
+        + "<br/>fs_encoding: "
+        + str(sys.getfilesystemencoding())
+        + "<br/>sys default encoding: "
+        + str(sys.getdefaultencoding())
         + "<br><br> Environment variables:"
-        + "<br>DISPLAY: " + os.environ.get("DISPLAY", "Not set")
+        + "<br>DISPLAY: "
+        + os.environ.get("DISPLAY", "Not set")
     )
     return HttpResponse(loc_info)

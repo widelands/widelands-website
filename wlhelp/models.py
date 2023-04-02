@@ -17,7 +17,6 @@ class Tribe(models.Model):
 
 
 class Worker(models.Model):
-
     name = models.CharField(max_length=100)
     displayname = models.CharField(max_length=100)
     tribe = models.ForeignKey(Tribe, on_delete=models.CASCADE)
@@ -163,7 +162,6 @@ class Building(models.Model):
         ordering = ["name"]
 
     def save(self, *args, **kwargs):
-
         tdict = dict((b, a) for a, b in self.TYPES)
         sdict = dict((b, a) for a, b in self.SIZES)
 

@@ -29,7 +29,6 @@ class WorkerIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 class WareIndex(indexes.SearchIndex, indexes.Indexable):
-
     text = indexes.CharField(document=True, use_template=True)
     # To get date related search working
     # we assume the index is always up to date
@@ -42,7 +41,6 @@ class WareIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 class BuildingIndex(indexes.SearchIndex, indexes.Indexable):
-
     text = indexes.CharField(document=True, use_template=True)
     # To get date related search working
     # we assume the index is always up to date
