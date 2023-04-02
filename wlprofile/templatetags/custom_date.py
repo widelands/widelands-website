@@ -77,7 +77,7 @@ def do_custom_date(format, date, timezone=1.0, now=None):
         tz_info = "UTC"
     # set the server timezone for tzinfo
     dst = time.localtime().tm_gmtoff / 60 / 60
-    ForumStdTimeZone = FixedOffset(dst * 60, "UTC+" + str(dst))
+    ForumStdTimeZone = FixedOffset(dst * 60, "UTC+%s".format(dst))
 
     # set the user's timezone information
     ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
