@@ -338,7 +338,6 @@ class Command(BaseCommand):
     def handle(
         self, directory=os.path.normpath(settings.WIDELANDS_SVN_DIR + "/data"), **kwargs
     ):
-
         json_directory = os.path.normpath(settings.MEDIA_ROOT + "/map_object_info")
 
         if not os.path.exists(json_directory):

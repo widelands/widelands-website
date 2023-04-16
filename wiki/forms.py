@@ -19,7 +19,6 @@ wikiword_pattern = re.compile("^" + settings.WIKI_WORD_RE + "$")
 
 
 class ArticleForm(forms.ModelForm):
-
     summary = forms.CharField(widget=forms.Textarea)
 
     comment = forms.CharField(required=False)

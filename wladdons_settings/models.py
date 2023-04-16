@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 class AddonNoticeType(models.Model):
-
     display = models.CharField(max_length=50, help_text="E.g.: Translation issues")
     description = models.CharField(
         max_length=100, help_text="E.g.: Notify me on translation issues"
@@ -27,7 +26,6 @@ class AddonNoticeType(models.Model):
 
 
 class AddonNoticeUser(models.Model):
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     notice_type = models.ForeignKey(AddonNoticeType, on_delete=models.CASCADE)
     shouldsend = models.BooleanField(default=True)

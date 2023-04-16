@@ -22,7 +22,6 @@ register = template.Library()
 
 @register.filter
 def user_link(user):
-
     if user.is_authenticated and user.wlprofile.deleted:
         # Check for is_authenticated is needed for threadedcomments reply_to.js
         return mark_safe(

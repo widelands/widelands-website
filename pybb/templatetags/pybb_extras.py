@@ -20,7 +20,6 @@ register = template.Library()
 
 @register.inclusion_tag("pybb/last_posts.html", takes_context=True)
 def pybb_last_posts(context, number=8):
-
     BASE_COUNT = 100
 
     # Create permission dependent Querysets
