@@ -28,7 +28,7 @@ class PostAdmin(admin.ModelAdmin):
             "More options",
             {
                 "classes": ("collapse",),
-                "fields": ("author", ("status", "allow_comments"), "tease", "tags"),
+                "fields": ("author", ("status", "allow_comments"), "tease"),
             },
         ),
     )
