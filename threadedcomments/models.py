@@ -4,9 +4,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 DEFAULT_MAX_COMMENT_LENGTH = getattr(settings, "DEFAULT_MAX_COMMENT_LENGTH", 1000)
 DEFAULT_MAX_COMMENT_DEPTH = getattr(settings, "DEFAULT_MAX_COMMENT_DEPTH", 8)

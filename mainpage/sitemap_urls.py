@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import StaticViewSitemap
@@ -21,7 +21,7 @@ sitemaps = {
 
 urlpatterns = [
     # Creating a sitemap.xml
-    url(
+    re_path(
         r"^$",
         sitemap,
         {"sitemaps": sitemaps},

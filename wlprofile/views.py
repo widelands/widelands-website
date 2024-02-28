@@ -132,6 +132,7 @@ def view(request, user=None):
 
     template_params = {
         "profile": profile,
+        "addondb": settings.DATABASES.get("addonserver"),
     }
 
     return render(request, "wlprofile/view_profile.html", template_params)

@@ -9,9 +9,9 @@
 # Last Modified: $Date$
 #
 
-from django.conf.urls import *
+from django.urls import *
 from . import views
 
 urlpatterns = [
-    url(r"^changepw$", views.change_password, name="wlggz_changepw"),
+    re_path(r"^changepw$", views.change_password, name="wlggz_changepw"),
 ]
