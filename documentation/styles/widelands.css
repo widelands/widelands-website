@@ -145,8 +145,8 @@ div.body h6 {
    padding: 3px 0 3px 10px;
 }
 
-div.body h1 { 
-   margin-top: 0; 
+div.body h1 {
+   margin-top: 0;
 }
 
 a.headerlink {
@@ -196,8 +196,7 @@ div.topic {
 }
 
 div.warning {
-   background-color: #ffe4e4;
-   border: 1px solid #f66;
+   border: 2px solid red;
 }
 
 p.admonition-title {

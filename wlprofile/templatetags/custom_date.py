@@ -11,14 +11,13 @@
 
 from django.utils.translation import gettext as _
 from django import template
-from django.urls import reverse
-from django.utils.safestring import mark_safe
 from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
 from django.conf import settings
+import time
 
 register = template.Library()
 
@@ -59,7 +58,7 @@ def do_custom_date(format, date, timezone=1.0, now=None):
 
     format      - format string as described above
     date        - datetime object to display
-    timezone    - vaild timzone as int
+    timezone    - valid timezone as int
     now         - overwrite the value for now; only for debug reasons
 
     """
@@ -70,21 +69,18 @@ def do_custom_date(format, date, timezone=1.0, now=None):
     # Set Timezone Information's
     #
     # set the timezone named info
-    # FIXME:
-    #       it is not tested if it works withe the summer and winter time (+1h)
     if timezone > 0:
         tz_info = "UTC+" + str(timezone)
     elif timezone < 0:
         tz_info = "UTC" + str(timezone)
     else:
         tz_info = "UTC"
-
     # set the server timezone for tzinfo
-    ForumStdTimeZone = FixedOffset(60, "UTC+1")
+    dst = time.localtime().tm_gmtoff / 60 / 60
+    ForumStdTimeZone = FixedOffset(dst * 60, "UTC+%s".format(dst))
 
     # set the user's timezone information
     ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
-
     # if there is tzinfo not set
     try:
         if not date.tzinfo:
@@ -121,7 +117,6 @@ def do_custom_date(format, date, timezone=1.0, now=None):
             format = natural_day_expr.sub(_replace_nd, format)
             if oformat == format:
                 break
-
         data = django_date(date, format)
     except NotImplementedError:
         return format
