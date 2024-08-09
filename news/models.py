@@ -1,11 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from tagging.fields import TagField
 from news.managers import PublicManager
 from django.urls import reverse
 import datetime
-import tagging
 
 
 def get_upload_name(inst, fn):
@@ -56,7 +54,7 @@ class Post(models.Model):
     created = models.DateTimeField(_("created"), auto_now_add=True)
     modified = models.DateTimeField(_("modified"), auto_now=True)
     categories = models.ManyToManyField(Category, blank=True)
-    tags = TagField()
+
     objects = PublicManager()
 
     class Meta:
