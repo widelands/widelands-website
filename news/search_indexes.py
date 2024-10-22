@@ -4,7 +4,6 @@ import datetime
 
 
 class PostIndex(indexes.SearchIndex, indexes.Indexable):
-
     """Create a search index. Changes made here need to be reindexed.
     Defined fields are stored in the index, so when displaying the result the
     data is read from the index and do not hit the database.

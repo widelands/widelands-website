@@ -249,7 +249,6 @@ class TagBase(object):
 
 
 class SimpleTag(TagBase):
-
     """A tag that can be rendered with a simple substitution."""
 
     def __init__(self, name, html_name, **kwargs):
@@ -265,7 +264,6 @@ class SimpleTag(TagBase):
 
 
 class DivStyleTag(TagBase):
-
     """A simple tag that is replaces with a div and a style."""
 
     def __init__(self, name, style, value, **kwargs):
@@ -640,7 +638,6 @@ class TagFactory(object):
 
 
 class _Parser(object):
-
     """This is an interface to the parser, used by Tag classes."""
 
     def __init__(self, post_markup):

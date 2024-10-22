@@ -1,4 +1,5 @@
 """The root of pybb tests."""
+
 import unittest
 
 from pybb.tests.postmarkup import PostmarkupTestCase
