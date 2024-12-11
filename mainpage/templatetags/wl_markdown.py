@@ -166,9 +166,9 @@ def _classify_link(tag):
         # article missing (or misspelled)
         if Article.objects.filter(title=article_name).count() == 0:
             tag["class"] = "missingLink"
-            tag[
-                "title"
-            ] = "This Link is misspelled or missing. Click to create it anyway."
+            tag["title"] = (
+                "This Link is misspelled or missing. Click to create it anyway."
+            )
             return
     return
 
