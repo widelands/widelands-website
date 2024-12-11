@@ -47,7 +47,6 @@ Exceptions:
             NotMyLock - File was locked but not by the current thread/process
 """
 
-
 import sys
 import socket
 import os
