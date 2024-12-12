@@ -5,6 +5,7 @@ from news.managers import PublicManager
 from django.urls import reverse
 import datetime
 
+
 def get_upload_name(inst, fn):
     try:
         extension = fn.split(".")[-1].lower()
