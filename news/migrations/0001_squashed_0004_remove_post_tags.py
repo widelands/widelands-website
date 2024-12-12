@@ -7,12 +7,6 @@ import news.models
 
 
 class Migration(migrations.Migration):
-    replaces = [
-        ("news", "0001_initial"),
-        ("news", "0002_auto_20170417_1857"),
-        ("news", "0003_auto_20221208_1758"),
-        ("news", "0004_remove_post_tags"),
-    ]
 
     initial = True
 
