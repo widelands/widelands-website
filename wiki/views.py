@@ -24,7 +24,7 @@ from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
-from mainpage.wl_utils import get_valid_cache_key
+from mainpage.wl_utils import get_valid_cache_key, get_pagination
 
 # from tagging.models import Tag
 
@@ -695,6 +695,8 @@ def history(
 
         if extra_context is not None:
             template_params.update(extra_context)
+
+        template_params.update(get_pagination(request, template_params["changes"]))
 
         return render(
             request,
