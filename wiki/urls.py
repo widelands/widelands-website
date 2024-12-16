@@ -12,7 +12,7 @@ from wiki.feeds import (
 )
 from wiki.models import Article
 
-# from tagging.views import TaggedObjectList
+from tagging.views import TaggedObjectList
 
 
 urlpatterns = [
@@ -109,14 +109,14 @@ urlpatterns = [
         views.backlinks,
         name="backlinks",
     ),
-    # re_path(
-    #     r"^tag_list/(?P<tag>[^/]+(?u))/$",
-    #     TaggedObjectList.as_view(
-    #         queryset=Article.objects.exclude(deleted=True),
-    #         # model=Article,
-    #         allow_empty=True,
-    #         template_name="wiki/tag_view.html",
-    #     ),
-    #     name="article_tag_detail",
-    # ),
+    re_path(
+        r"^tag_list/(?P<tag>[^/]+(?u))/$",
+        TaggedObjectList.as_view(
+            queryset=Article.objects.exclude(deleted=True),
+            # model=Article,
+            allow_empty=True,
+            template_name="wiki/tag_view.html",
+        ),
+        name="article_tag_detail",
+    ),
 ]

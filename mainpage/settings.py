@@ -119,7 +119,7 @@ INSTALLED_APPS = [
     "threadedcomments",  # included as wlapp
     "notification",  # included as wlapp
     # "django_messages_wl.apps.WlDjangoMessagesConfig",
-    # "tagging",
+    "tagging",
     "star_ratings",
     "django_filters",
 ]

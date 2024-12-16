@@ -6,7 +6,8 @@ from django.conf import settings
 from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
-
+from tagging.models import TaggedItem
+from django.contrib.contenttypes.models import ContentType
 
 register = template.Library()
 
@@ -67,5 +68,26 @@ def alphabet_links(objects, sep=" |"):
             alphabet.update({object.title[0].upper(): slugify(object.title)})
     return {
         "alphabet": alphabet,
+        "sep": sep,
+    }
+
+
+@register.inclusion_tag("wiki/inlines/tag_urls.html")
+def tag_links(cur_tag=None, sep=" |"):
+    """Renders a template showing all used tags in wiki.
+
+       Workaround for bug: https://github.com/jazzband/django-tagging/pull/2
+    """
+
+    all_tags = []
+    articles_ct = ContentType.objects.get(app_label="wiki", model="article")
+    qs = TaggedItem.objects.filter(content_type=articles_ct).select_related('tag')
+
+    for ti in qs:
+        if ti.tag not in all_tags and ti.tag.name != cur_tag:
+            all_tags.append(ti.tag)
+
+    return {
+        "tag_list": all_tags,
         "sep": sep,
     }

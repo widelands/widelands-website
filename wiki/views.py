@@ -26,7 +26,7 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 from mainpage.wl_utils import get_valid_cache_key, get_pagination
 
-# from tagging.models import Tag
+from tagging.models import Tag
 
 import re
 import urllib.request, urllib.parse, urllib.error
@@ -249,9 +249,9 @@ def view_article(
 
         template_params = {}
         outdated = False
-        # tags = [x.name for x in Tag.objects.get_for_object(article)]
-        # if "outdated" in tags:
-        #   template_params.update({"outdated": True})
+        tags = [x.name for x in Tag.objects.get_for_object(article)]
+        if "outdated" in tags:
+          template_params.update({"outdated": True})
 
         template_params.update(
             {

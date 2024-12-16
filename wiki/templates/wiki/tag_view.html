@@ -31,7 +31,6 @@ Tag-list: {{ tag.name }} - {{block.super}}
 		</tbody>
 			{% endfor %}
 	</table>
-		{% tags_for_model wiki.Article as all_tags %}
-		<p><span style="font-weight: bold;"> Show articles tagged with:</span> {% include "wiki/inlines/tag_urls.html" with sep=" |" tag_list=all_tags %} </p>
+		<p><span style="font-weight: bold;"> Show articles tagged with:</span> {% tag_links tag.name sep=" |" %} </p>
 {% endblock %}
 
