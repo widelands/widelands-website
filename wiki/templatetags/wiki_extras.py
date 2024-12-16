@@ -76,12 +76,12 @@ def alphabet_links(objects, sep=" |"):
 def tag_links(cur_tag=None, sep=" |"):
     """Renders a template showing all used tags in wiki.
 
-       Workaround for bug: https://github.com/jazzband/django-tagging/pull/2
+    Workaround for bug: https://github.com/jazzband/django-tagging/pull/2
     """
 
     all_tags = []
     articles_ct = ContentType.objects.get(app_label="wiki", model="article")
-    qs = TaggedItem.objects.filter(content_type=articles_ct).select_related('tag')
+    qs = TaggedItem.objects.filter(content_type=articles_ct).select_related("tag")
 
     for ti in qs:
         if ti.tag not in all_tags and ti.tag.name != cur_tag:
