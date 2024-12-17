@@ -14,6 +14,7 @@
 	{% if articles %}
 		<p> There are {{ articles|length }} articles in this wiki.</p>
 		<p><span style="font-weight: bold;"> Jump to articles starting with:</span> {% alphabet_links articles %}</p>
+		{% include "wiki/inlines/tag_urls.html" with sep=" |" tag_list=all_tags %}
 		<p><span style="font-weight: bold;"> Filter articles by tag:</span> {% tag_links sep=" |" %}</p>
 		<table>
 		<thead>

@@ -39,13 +39,11 @@
 		{% if user.is_authenticated %}
 			<!-- Logged in -->
 			<a href="{% url 'profile_view' %}" title="Your Profile">Profile</a> |
-		{% comment %}
 			{% if messages_inbox_count %}
 				<a href="{% url 'messages_inbox' %}" title="New Messages">Messages ({{ messages_inbox_count }})</a>
 			{% else %}
 				<a href="{% url 'messages_inbox' %}" title="Show Inbox">Messages</a>
 			{% endif %}
-		{% endcomment %}
 			<br />
 			<a href="{% url 'scheduling_main' %}" title="Playtime Scheduler">Playtime Scheduler</a>
 			<br />

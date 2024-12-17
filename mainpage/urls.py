@@ -35,7 +35,7 @@ urlpatterns = [
     re_path(r"^ratings/", include("star_ratings.urls", namespace="ratings")),
     # Formerly 3rd party
     re_path(r"^notification/", include("notification.urls")),
-    # re_path(r"^messages/", include("django_messages_wl.urls")),
+    re_path(r"^messages/", include("django_messages_wl.urls")),
     re_path(r"^threadedcomments/", include("threadedcomments.urls")),
     # Redirect old urls to new documentation
     re_path(

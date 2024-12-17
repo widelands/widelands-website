@@ -83,9 +83,9 @@ def tag_links(cur_tag=None, sep=" |"):
     articles_ct = ContentType.objects.get(app_label="wiki", model="article")
     qs = TaggedItem.objects.filter(content_type=articles_ct).select_related("tag")
 
-    for ti in qs:
-        if ti.tag not in all_tags and ti.tag.name != cur_tag:
-            all_tags.append(ti.tag)
+    for item in qs:
+        if item.tag not in all_tags and item.tag.name != cur_tag:
+            all_tags.append(item.tag)
 
     return {
         "tag_list": all_tags,
