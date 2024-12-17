@@ -2,7 +2,7 @@
 # encoding: utf-8
 #
 
-from django.urls import *
+from django.urls import re_path
 from .views import webchat
 
 urlpatterns = [

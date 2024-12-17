@@ -1,4 +1,4 @@
-from django.urls import *
+from django.urls import re_path
 from privacy_policy import views
 
 urlpatterns = [

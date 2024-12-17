@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.urls import *
+from django.urls import re_path
 from wiki import views
 from django.conf import settings
 from django.views.generic import RedirectView

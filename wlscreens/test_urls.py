@@ -1,6 +1,6 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
-from django.urls import *
+from django.urls import re_path, include
 
 urlpatterns = [
     "",

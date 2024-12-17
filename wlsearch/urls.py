@@ -9,7 +9,7 @@
 # Last Modified: $Date$
 #
 
-from django.urls import *
+from django.urls import re_path
 from .views import search
 
 urlpatterns = [

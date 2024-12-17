@@ -1,11 +1,10 @@
 from django.urls import re_path
-
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import StaticViewSitemap
-from wiki.sitemap import *
-from news.sitemap import *
-from pybb.sitemap import *
-from wlhelp.sitemap import *
+from wiki.sitemap import WikiSitemap
+from news.sitemap import NewsSitemap
+from pybb.sitemap import ForumSitemap
+from wlhelp.sitemap import WlHelpTribeSitemap, WlHelpWareSitemap, WlHelpWorkerSitemap, WlHelpBuildingSitemap
 
 
 sitemaps = {

@@ -9,8 +9,8 @@
 # Last Modified: $Date$
 #
 
-from django.urls import *
-from .views import *
+from django.urls import re_path
+from .views import index, ware_details, building_details, worker_details, workers, wares, buildings
 
 urlpatterns = [
     re_path(r"^$", index, name="wlhelp_index"),

@@ -1,5 +1,5 @@
-from django.urls import *
-from .views import *
+from django.urls import re_path
+from .views import upload, display
 
 urlpatterns = [
     re_path(

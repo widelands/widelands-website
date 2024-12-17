@@ -1,8 +1,7 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
-from django.urls import *
-from .models import Map
-from .views import *
+from django.urls import re_path
+from .views import MapList, upload, view, edit_comment, download
 
 
 urlpatterns = [

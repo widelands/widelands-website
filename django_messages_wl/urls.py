@@ -1,4 +1,4 @@
-from django.urls import *
+from django.urls import re_path, include
 from . import views
 from django_messages.views import compose, reply
 from django_messages_wl.forms import ExtendedComposeForm

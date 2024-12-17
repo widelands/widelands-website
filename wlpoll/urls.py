@@ -3,7 +3,7 @@
 #
 
 from .models import Poll
-from django.urls import *
+from django.urls import re_path
 from . import views
 from django.views.generic.dates import ArchiveIndexView
 
