@@ -4,7 +4,12 @@ from .sitemaps import StaticViewSitemap
 from wiki.sitemap import WikiSitemap
 from news.sitemap import NewsSitemap
 from pybb.sitemap import ForumSitemap
-from wlhelp.sitemap import WlHelpTribeSitemap, WlHelpWareSitemap, WlHelpWorkerSitemap, WlHelpBuildingSitemap
+from wlhelp.sitemap import (
+    WlHelpTribeSitemap,
+    WlHelpWareSitemap,
+    WlHelpWorkerSitemap,
+    WlHelpBuildingSitemap,
+)
 
 
 sitemaps = {
