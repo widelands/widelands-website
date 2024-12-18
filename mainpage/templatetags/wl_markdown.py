@@ -11,7 +11,6 @@
 
 from django import template
 from django.conf import settings
-from django.utils.encoding import smart_bytes, force_text
 from django.utils.safestring import mark_safe
 from django.conf import settings
 
