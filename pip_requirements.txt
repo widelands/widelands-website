@@ -13,7 +13,7 @@ Django==4.2.17
 django-braces==1.15.0
 django-filter==22.1
 django-haystack==3.2.1
--e git+https://github.com/frankystone/django-messages.git@8f6605be2e4f4c05817ed9922c0011aaedf18f57#egg=django_messages
+git+https://github.com/frankystone/django-messages.git@8f6605be2e4f4c05817ed9922c0011aaedf18f57#egg=django_messages
 django-model-utils==4.3.1
 django-recaptcha==3.0.0
 django-registration==3.3
