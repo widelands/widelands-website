@@ -1,5 +1,5 @@
 # -*- coding: utf-8
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read, Attachment
 

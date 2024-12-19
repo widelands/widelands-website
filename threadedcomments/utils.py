@@ -1,14 +1,14 @@
 from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.utils.functional import Promise
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 import json as simplejson
 
 
 class LazyEncoder(simplejson.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Promise):
-            return force_text(obj)
+            return force_str(obj)
         return obj
 
 
