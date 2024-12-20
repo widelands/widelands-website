@@ -124,15 +124,22 @@ def pybb_editable_by(post, user):
     if not user.is_authenticated:
         # No need to run the other checks
         return False
+
     if user.is_superuser:
         return True
-    if user in post.topic.forum.moderator_group.user_set.all():
-        # Forum moderators are always allowed
-        return True
+    try:
+        if user in post.topic.forum.moderator_group.user_set.all():
+            # Forum moderators are always allowed
+            return True
+    except AttributeError:
+        # Probably there is no moderator_group yet
+        pass
+
     if post.user == user:
         # Restrict the time a user can edit his own post
         edit_time = timedelta(hours=pybb_settings.EDIT_HOURS)
         return datetime.now() <= post.created + edit_time
+
     return False
 
 
