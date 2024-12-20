@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.functional import Promise
 from django.utils.translation import check_for_language
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django import forms
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.conf import settings
@@ -90,7 +90,7 @@ class LazyJSONEncoder(json.JSONEncoder):
 
     def default(self, o):
         if isinstance(o, Promise):
-            return force_text(o)
+            return force_str(o)
         else:
             return super(LazyJSONEncoder, self).default(o)
 

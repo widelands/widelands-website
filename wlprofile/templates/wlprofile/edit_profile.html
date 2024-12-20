@@ -22,28 +22,28 @@
 					{{ field.label_tag }}
 				</td>
 				<td>
-					{% ifequal field.name "avatar"%}
+					{% if field.name == "avatar"%}
 					{% if profile.avatar %}
 						<img class="posLeft" src="{{ profile.avatar.url }}" alt="Avatar" />
 					{% endif %}
-					{% endifequal %}
+					{% endif %}
 
 					{{ field }}
-					{% ifequal field.name "widelands_version" %}
+					{% if field.name == "widelands_version" %}
 						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify the widelands version to help developers in case of questions.">
-					{% endifequal %}
-					{% ifequal field.name "operating_system" %}
+					{% endif %}
+					{% if field.name == "operating_system" %}
 						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify your operating system to help developers in case of questions.">
-					{% endifequal %}
-					{% ifequal field.name "webservice_nick" %}
+					{% endif %}
+					{% if field.name == "webservice_nick" %}
 						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Examples: IRC/NickName, Facebook/NickName, Youtube/NickName, ...">
-					{% endifequal %}
-					{% ifequal field.name "time_zone" %}
+					{% endif %}
+					{% if field.name == "time_zone" %}
 						Your local time zone offset from <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>
-					{% endifequal %}
-					{% ifequal field.name "time_display" %}
+					{% endif %}
+					{% if field.name == "time_display" %}
 						<a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
-					{% endifequal %}
+					{% endif %}
 				</td>
 				<td class="errormessage">
 				{% if field.errors %}

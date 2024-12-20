@@ -43,7 +43,7 @@ class ExtendedImageField(models.ImageField):
                 else:
                     y = int(round((oldh - oldw) / 2.0))
                     image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
-                image = image.resize((width, height), resample=Image.ANTIALIAS)
+                image = image.resize((width, height), resample=Image.Resampling.LANCZOS)
         except Exception as err:
             logging.error(err)
             return ""

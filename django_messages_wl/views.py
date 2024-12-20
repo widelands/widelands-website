@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from mainpage.wl_utils import is_ajax
 import json
 
 
@@ -12,7 +13,7 @@ def get_usernames(request):
     2. urls.py
 
     """
-    if request.is_ajax():
+    if is_ajax(request):
         q = request.GET.get("term", "")
 
         usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)

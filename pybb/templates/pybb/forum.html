@@ -4,7 +4,6 @@
 {% load humanize %}
 {% load wlprofile_extras %}
 {% load custom_date %}
-{% load pagination_tags %}
 {% load static %}
 
 {% block extra_head %}
@@ -43,8 +42,7 @@
 	</a>
 	{% endif %}
 
-	{% autopaginate topics page_size as object_list %}
-	{% paginate using "pagination/pagination_mod.html" %}
+	{% include "pagination/pagination.html" %}
 
 	<table class="forum">
 		<thead>
@@ -56,7 +54,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for topic in object_list %}
+		{% for topic in page_obj %}
 		<tr class="{% cycle 'odd' 'even' %}">
 			{% if not topic.is_hidden %}
 			<td class="center">
@@ -93,7 +91,7 @@
 		<img src="{% static 'forum/img/new_topic.png' %}" alt ="{% trans "New Topic" %}" class="middle" />
 		<span class="middle">{% trans "New Topic" %}</span>
 	</a>
-	{% paginate %}
+	{% include "pagination/pagination.html" %}
 </div>
 
 <div class="center green">

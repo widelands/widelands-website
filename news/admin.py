@@ -1,5 +1,5 @@
 from django.contrib import admin
-from news.models import *
+from news.models import Post, Category
 from datetime import datetime
 
 
