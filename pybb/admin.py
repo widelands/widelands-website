@@ -129,7 +129,7 @@ class PostAdmin(admin.ModelAdmin):
             "Delete selected posts",
         )
         actions["unhide_post"] = (
-            delete_selected,
+            unhide_post,
             "unhide_post",
             "Unhide post and inform subscribers",
         )
