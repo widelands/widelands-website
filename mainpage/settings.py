@@ -72,6 +72,9 @@ STATIC_URL = "/static/"
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu"
 
+# See https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-cookie-secure
+CSRF_COOKIE_SECURE = True
+
 ROOT_URLCONF = "mainpage.urls"
 
 # List of finder classes that know how to find static files in
