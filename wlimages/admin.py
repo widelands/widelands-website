@@ -17,7 +17,7 @@ from .models import Image
 def delete_with_file(modeladmin, request, queryset):
     for obj in queryset:
         storage = obj.image.storage
-        storage.delete(obj.image)
+        storage.delete(obj.image.name)
         obj.delete()
 
 
