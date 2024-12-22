@@ -16,7 +16,7 @@ django-haystack==3.3.0
 django-messages @ git+https://github.com/frankystone/django-messages.git@8f6605be2e4f4c05817ed9922c0011aaedf18f57
 django-model-utils==5.0.0
 django-recaptcha==3.0.0
-django-registration==3.1.2
+django-registration==5.1.0
 django-star-ratings==0.9.2
 django-tagging @ https://github.com/jazzband/django-tagging/releases/download/0.5.1/django_tagging-0.5.1-py3-none-any.whl#sha256=30b255099485e093dd40d726833a1e77d44d22ece7e1a9e648a911ef732354d6
 docutils==0.21.2
