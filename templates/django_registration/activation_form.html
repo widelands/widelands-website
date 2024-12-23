@@ -8,33 +8,39 @@ Activation - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Activation</h1>
+<h1>Activation</h1>
 {% endblock %}
 
 {% block content_main %}
 <div class="blogEntry">
-	<p>Please click on the Button below to activate this account:</p>
-	<form action="." method="POST">
+    <p>Please click on the button below to activate this account:</p>
+    <form action="." method="POST">
         {% csrf_token %}
-		<p>
-		<label for="id_activation_key">Activation key:</label>
-		<input type="text" name="activation_key" value="{{ form.activation_key.value }}" required id="id_activation_key" size=60>
-		</p>
-		{% for error in form.activation_key.errors %}
-			<!-- Key is invalid -->
-			<p>
-				<span class="errormessage">{{ error }}</span> Please try to copy the value of the activation key send by e-mail into the field above and try again. If this won't work contact an administrator via our <a href="/legal_notice/">contact form</a>.
-			</p>
-		{% endfor %}
-		{% if activation_error %}
-			<!-- User already registered -->
-			<p>
-				<span class="errormessage">{{ activation_error.message }}</span> Please try to <a href="{% url 'login' %}">log in</a>.
-			</p>
-		{% endif %}
-		<p>
-		<input type="submit" value="Activate your account" />
-		</p>
-	</form>
+        <p>
+            <label for="id_activation_key">Activation key:</label>
+            <input type="text" name="activation_key"
+                   value="{{ form.activation_key.value }}" required
+                   id="id_activation_key" size=60>
+        </p>
+        {% for error in form.activation_key.errors %}
+        <!-- Key is invalid -->
+        <p>
+            <span class="errormessage">{{ error }}</span> Please try to copy the value
+            of the activation key sent by e-mail into the field above and try again. If
+            this doesn't work, contact an administrator via our
+            <a href="/legal_notice/">contact form</a>.
+        </p>
+        {% endfor %}
+        {% if activation_error %}
+        <!-- User already registered -->
+        <p>
+            <span class="errormessage">{{ activation_error.message }}</span> Please try
+            to <a href="{% url 'login' %}">log in</a>.
+        </p>
+        {% endif %}
+        <p>
+            <input type="submit" value="Activate your account"/>
+        </p>
+    </form>
 </div>
 {% endblock %}

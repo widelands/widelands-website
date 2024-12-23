@@ -1,6 +1,6 @@
 {% extends "mainpage/base.html" %}
 {% comment %}
-vim:ft=htmldjango: 
+vim:ft=htmldjango:
 {% endcomment %}
 
 {% block title %}
@@ -8,13 +8,20 @@ Registration - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Registration</h1>
+<h1>Registration</h1>
 {% endblock %}
 
 {% block content_main %}
 <div class="blogEntry">
-	<p>
-		Thank you for signing up. An email with the activation code has been sent to your inbox. 
-	</p>
-	<p><span class="errormessage">Please note:</span> Unfortunately some big Emailproviders (namely google - gmail and Microsoft - outlook.com, hotmail) are known for overblocking Emails or marking them as spam. Please check your spam folder. In case you don't get our mail at all, please consider registering with an email from a different provider or contact our admins with your username via our <a href="/legal_notice/">contact form</a>.</p>
+    <p>
+        Thank you for signing up. An email with the activation code has been sent to
+        your inbox.
+    </p>
+    <p><span class="errormessage">Please note:</span> Unfortunately some big
+        Emailproviders (namely google - gmail and Microsoft - outlook.com, hotmail) are
+        known for overblocking Emails or marking them as spam. Please check your spam
+        folder. In case you don't get our mail at all, please consider registering with
+        an email from a different provider or contact our admins with your username via
+        our <a href="/legal_notice/">contact form</a>.</p>
+</div>
 {% endblock %}
