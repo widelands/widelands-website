@@ -55,11 +55,11 @@
 
 	<hr />
 	{% if user.is_authenticated %}
-		{% ifequal user.wlprofile.show_signatures 1 %}
+		{% if user.wlprofile.show_signatures %}
 			{% if post.user.wlprofile.signature %}
 				{{ post.user.wlprofile.signature|urlize|linebreaks }}
 			{% endif %}
-		{% endifequal %}
+		{% endif %}
 	{% else %}
 		{% if post.user.wlprofile.signature %}
 			{{ post.user.wlprofile.signature|urlize|linebreaks }}
@@ -80,7 +80,7 @@
 			<img src="{% static 'forum/img/edit.png' %}" alt ="" class="middle" />
 			<span class="middle">{% trans "Edit" %}</span>
 		</a>
-		
+
 		{% if user_is_mod or post|pybb_equal_to:last_post %}
 		<a class="button" href="{% url 'pybb_delete_post' post.id %}">
 			<img src="{% static 'forum/img/delete.png' %}" alt ="" class="middle" />

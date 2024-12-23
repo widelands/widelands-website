@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from notification.views import notice_settings
 
 urlpatterns = [
-    url(r"^$", notice_settings, name="notification_notices"),
+    re_path(r"^$", notice_settings, name="notification_notices"),
 ]

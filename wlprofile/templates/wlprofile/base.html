@@ -32,9 +32,11 @@
 		<li>
 			<a {% block notifications %}{% endblock %} href="{% url 'notification_notices' %}">Notification Settings</a>
 		</li>
+		{% if addondb %}
 		<li>
 			<a {% block addon_settings %}{% endblock %} href="{% url 'addon_settings' %}">Add-On Settings</a>
 		</li>
+		{% endif %}
 		<li>
 			<a {% block game_passwrd %}{% endblock %} href="{% url 'wlggz_changepw' %}" title="Online Gaming Password">Gaming Password</a>
 		</li>

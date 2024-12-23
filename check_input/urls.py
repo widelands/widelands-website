@@ -1,6 +1,6 @@
-from django.conf.urls import *
+from django.urls import re_path
 from check_input import views
 
 urlpatterns = [
-    url(r"^$", views.moderate_info, name="found_spam"),
+    re_path(r"^$", views.moderate_info, name="found_spam"),
 ]

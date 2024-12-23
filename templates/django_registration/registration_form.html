@@ -9,58 +9,63 @@ Registration - {{ block.super }}
 {{ form.non_field_errors }}
 
 {% block content_header %}
-	<h1>Registration</h1>
+<h1>Registration</h1>
 {% endblock %}
 
 {% block content_main %}
 <div class="blogEntry">
-	<p><span class="errormessage">Please note:</span> Unfortunately some big Emailproviders (namely google - gmail and Microsoft - outlook.com, hotmail) are known for overblocking Emails or marking them as spam. Please check your spam folder. In case you don't get our mail at all, please consider registering with an email from a different provider or contact our admins with your username via our <a href="/legal_notice/">contact form</a>.</p>
-	<form action="." method="POST">
-		<table>
-			<tr>
-				<td class="grey">Username:</td>
-				<td>
-					{{ form.username }} {{form.username.help_text}}
+    <p><span class="errormessage">Please note:</span> Unfortunately some big
+        Emailproviders (namely google - gmail and Microsoft - outlook.com, hotmail) are
+        known for overblocking Emails or marking them as spam. Please check your spam
+        folder. In case you don't get our mail at all, please consider registering with
+        an email from a different provider or contact our admins with your username via
+        our <a href="/legal_notice/">contact form</a>.</p>
+    <form action="." method="POST">
+        <table>
+            <tr>
+                <td class="grey">Username:</td>
+                <td>
+                    {{ form.username }} {{form.username.help_text}}
 
 
-{% for error in form.username.errors %}
-					<span class="errormessage">{{ error }}</span>
-{% endfor %}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Email:</td>
-				<td>
-					{{ form.email }}
-{% for error in form.email.errors %}
-					<span class="errormessage">{{ error }}</span>
-{% endfor %}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Password:</td>
-				<td>
-					{{ form.password1 }}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Password (again):</td>
-				<td>
-					{{ form.password2 }}
- {% for error in form.password2.errors %}
-					<span class="errormessage">{{ error }}</span>
- {% endfor %}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Prove that <br />you're no spambot:</td>
-				<td>
-					<div class="noshadow">{{ form.captcha|safe }}</div>
- 				</td>
-			</tr>
-		</table>
-		<input type="submit" value="Register" />
+                    {% for error in form.username.errors %}
+                    <span class="errormessage">{{ error }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">Email:</td>
+                <td>
+                    {{ form.email }}
+                    {% for error in form.email.errors %}
+                    <span class="errormessage">{{ error }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">Password:</td>
+                <td>
+                    {{ form.password1 }}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">Password (again):</td>
+                <td>
+                    {{ form.password2 }}
+                    {% for error in form.password2.errors %}
+                    <span class="errormessage">{{ error }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">Prove that <br/>you're no spambot:</td>
+                <td>
+                    <div class="noshadow">{{ form.captcha|safe }}</div>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Register"/>
         {% csrf_token %}
-	</form>
+    </form>
 </div>
 {% endblock %}
