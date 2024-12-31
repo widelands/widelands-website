@@ -9,15 +9,9 @@
 # Last Modified: $Date$
 #
 
-from django.conf import settings
 from django.test import TestCase as DjangoTest
 from django.db import IntegrityError
-from django.core.files.uploadedfile import SimpleUploadedFile
-from io import BytesIO
-
-from unittest import TestCase
-
-from wlscreens.models import *
+from wlscreens.models import Category, Image, Screenshot
 
 
 class TestCategoryAdding(DjangoTest):

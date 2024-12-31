@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
-import shutil
 import subprocess
 
 

@@ -1,7 +1,6 @@
 # coding=UTF-8
 
 from datetime import datetime, timedelta
-import re
 from pprint import pprint
 
 from django import template

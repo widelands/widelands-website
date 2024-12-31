@@ -3,12 +3,13 @@
 
 import pydot as d
 
-from django.conf import settings
-from widelandslib.tribe import *
+from widelandslib.tribe import ProductionSite, Tribe, MilitarySite
 
 from os import makedirs, path
 import subprocess
 from tempfile import mkdtemp
+import json
+
 
 tdir = ""
 

@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import re
 from django import template
-from django.conf import settings
 from django.utils.encoding import force_str
-from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from tagging.models import TaggedItem
 from django.contrib.contenttypes.models import ContentType

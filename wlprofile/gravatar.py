@@ -5,7 +5,6 @@ except ImportError:
 import os
 import os.path
 import warnings
-import logging
 import urllib.request, urllib.parse, urllib.error
 import urllib.request, urllib.error, urllib.parse
 from datetime import datetime, timedelta
@@ -13,7 +12,6 @@ import shutil
 import socket
 
 from pybb import settings as pybb_settings
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 
 warnings.filterwarnings("ignore", r"tmpnam")

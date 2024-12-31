@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, render
-from django.template import RequestContext, Context, Template
+from django.template import Context, Template
 from threadedcomments.forms import ThreadedCommentForm
 from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.utils import JSONResponse, XMLResponse

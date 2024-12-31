@@ -2,12 +2,10 @@
 # encoding: utf-8
 #
 
-from django.test import TestCase as DjangoTest, Client
-from django.urls import reverse
+from django.test import TestCase as DjangoTest
 from django.contrib.auth.models import User
-
-from wlmaps.models import *
-
+from wlmaps.models import Map
+from django.urls import reverse
 import os
 
 elven_forests = os.path.dirname(__file__) + "/data/Elven Forests.wmf"

@@ -9,7 +9,6 @@ from django.contrib.auth.models import Group
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
 from pybb.markups import mypostmarkup
 from pybb.util import urlize, unescape
@@ -18,7 +17,6 @@ from pybb import settings as pybb_settings
 from django.conf import settings
 from notification.models import send
 from check_input.models import SuspiciousInput
-import magic
 
 try:
     from notification import models as notification

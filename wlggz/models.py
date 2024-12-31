@@ -10,7 +10,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from mainpage.wl_utils import AutoOneToOneField
 from django.utils.translation import gettext_lazy as _
-from pybb.models import Post
 
 import hashlib
 import base64

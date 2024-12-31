@@ -3,9 +3,7 @@
 
 from wlevents.models import Event
 from django import template
-from urllib.parse import urlencode, quote
 
-import datetime
 
 register = template.Library()
 

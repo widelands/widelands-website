@@ -2,9 +2,8 @@
 # encoding: utf-8
 #
 
-from wlpoll.models import Choice, Poll
+from wlpoll.models import Poll
 from django import template
-from urllib.parse import urlencode, quote
 
 register = template.Library()
 

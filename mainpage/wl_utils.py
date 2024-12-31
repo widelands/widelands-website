@@ -1,6 +1,5 @@
 from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
 from django.db.models import OneToOneField
-from django.db import models
 import os
 import shutil
 from django.core.paginator import Paginator

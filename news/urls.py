@@ -1,5 +1,4 @@
 from django.urls import re_path
-from django.views.generic import ListView
 from news.views import NewsList, YearNews, MonthNews, NewsDetail, CategoryView
 from news.feeds import NewsPostsFeed
 

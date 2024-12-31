@@ -12,7 +12,6 @@
 from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404

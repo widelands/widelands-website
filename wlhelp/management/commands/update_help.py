@@ -14,21 +14,18 @@ from ...models import Tribe as TribeModel
 from ...models import Ware as WareModel
 from ...models import Building as BuildingModel
 
-from django.core.files import File
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 import os
 import sys
-from os import makedirs, path
+from os import path
 import shutil
 import re
-import json
 import subprocess
 import collections
 
-from django.conf import settings
 
-from widelandslib.tribe import *
+from widelandslib.tribe import Tribe
 from widelandslib.make_flow_diagram import make_all_subgraphs
 
 

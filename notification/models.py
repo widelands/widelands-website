@@ -22,7 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext, get_language, activate
+from django.utils.translation import get_language, activate
 
 # favour django-mailer but fall back to django.core.mail
 if "mailer" in settings.INSTALLED_APPS:

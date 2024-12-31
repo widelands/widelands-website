@@ -1,6 +1,5 @@
 import django_filters
 
-from django.forms import widgets
 from . import models
 
 
