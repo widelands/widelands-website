@@ -8,6 +8,7 @@
 #
 # Last Modified: $Date$
 #
+from django.conf import settings
 
 from ...models import Worker as WorkerModel
 from ...models import Tribe as TribeModel
@@ -23,7 +24,7 @@ import shutil
 import re
 import subprocess
 import collections
-
+import json
 
 from widelandslib.tribe import Tribe
 from widelandslib.make_flow_diagram import make_all_subgraphs

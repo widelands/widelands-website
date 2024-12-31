@@ -9,7 +9,7 @@ from os import makedirs, path
 import subprocess
 from tempfile import mkdtemp
 import json
-
+from django.conf import settings
 
 tdir = ""
 
