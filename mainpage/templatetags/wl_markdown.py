@@ -40,7 +40,7 @@ except:
 # Getting local domain lists
 try:
     LOCAL_DOMAINS = [_domain] + settings.LOCAL_DOMAINS
-except ImportError:
+except:
     LOCAL_DOMAINS = [_domain]
 
 
