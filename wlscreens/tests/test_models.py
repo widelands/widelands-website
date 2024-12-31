@@ -8,7 +8,10 @@
 #
 # Last Modified: $Date$
 #
+from io import BytesIO
 
+from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase as DjangoTest
 from django.db import IntegrityError
 from wlscreens.models import Category, Image, Screenshot
