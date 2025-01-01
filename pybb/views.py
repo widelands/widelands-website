@@ -161,7 +161,7 @@ def show_topic_ctx(request, topic_id):
     else:
         posts = topic.posts.exclude(hidden=True).select_related()
 
-    context.update({"posts": posts})
+    context.update({"posts": posts, "user_is_mod": user_is_mod})
     # TODO: fetch profiles
     # profiles = Profile.objects.filter(user__pk__in=
     #     set(x.user.id for x in page.object_list))
