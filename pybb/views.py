@@ -144,7 +144,6 @@ def show_topic_ctx(request, topic_id):
         context.update({"form": form})
 
         user_is_mod = pybb_moderated_by(topic, request.user)
-        context.update({"user_is_mod": user_is_mod})
 
         subscribed = (
             request.user.is_authenticated and request.user in topic.subscribers.all()
