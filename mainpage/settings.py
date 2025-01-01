@@ -136,6 +136,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
+    "django.contrib.sites.middleware.CurrentSiteMiddleware",
     # Foreign middleware
     "mainpage.online_users_middleware.OnlineNowMiddleware",
 ]
