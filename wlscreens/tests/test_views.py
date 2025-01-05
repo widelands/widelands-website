@@ -2,12 +2,10 @@
 # encoding: utf-8
 #
 
-from django.test import TestCase as DjangoTest, Client
+from django.test import TestCase as DjangoTest
 from django.urls import reverse
-from django.contrib.auth.models import User
 from wlscreens.models import *
 
-import os
 
 #############
 # TestCases #

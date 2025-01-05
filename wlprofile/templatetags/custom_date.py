@@ -9,7 +9,7 @@
 # Last Modified: $Date$
 #
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django import template
 from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist

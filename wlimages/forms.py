@@ -1,8 +1,6 @@
 from django import forms
 from .models import Image
 
-import os
-
 
 class UploadImageForm(forms.Form):
     # max_length = 90 because the length of 'upload_to =' has to be considered

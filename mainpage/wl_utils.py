@@ -1,8 +1,8 @@
 from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
 from django.db.models import OneToOneField
-from django.db import models
 import os
 import shutil
+from django.core.paginator import Paginator
 
 
 def get_real_ip(request):
@@ -72,3 +72,29 @@ def return_git_path(pgm="git"):
         if not os.path.exists(git_path) or not os.access(git_path, os.X_OK):
             return None
     return git_path
+
+
+def get_pagination(request, objects, per_page=20):
+    """Paginate objects.
+    Use this for view functions where pagination is needed and include
+    "pagination/pagination.html" in the template.
+    Returns a dict with context variables:
+         page_obj: containing the limited lists of objects per page
+         paginator_range: a list of all page numbers and ellipsis
+    """
+
+    paginator = Paginator(objects, per_page)
+    page_obj = paginator.get_page(request.GET.get("page"))
+    return {
+        "page_obj": page_obj,
+        "paginator_range": list(
+            paginator.get_elided_page_range(page_obj.number, on_each_side=2)
+        ),
+    }
+
+
+def is_ajax(request):
+    """Django removed this method.
+    See: https://docs.djangoproject.com/en/4.1/releases/3.1/#id2
+    """
+    return request.headers.get("x-requested-with") == "XMLHttpRequest"

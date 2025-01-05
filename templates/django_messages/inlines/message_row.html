@@ -1,15 +1,15 @@
 {% comment %}
    vim:ft=htmldjango
 {% endcomment %}
-{% load i18n %}  
+{% load i18n %}
 {% load custom_date %}
 
    <tr class="message {% cycle "odd" "even" %}">
-       {% ifequal message.sender user %}
+       {% if message.sender == user %}
       <td>{{ message.recipient }}</td>
        {%else %}
       <td>{{ message.sender }}</td>
-       {%endifequal %}
+       {%endif %}
       <td>
           {% if message.new %}<u>{% endif %}
           {% if message.replied %}<em>{% endif %}

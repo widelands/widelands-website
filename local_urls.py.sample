@@ -1,4 +1,4 @@
-from django.conf.urls import *
+from django.urls import re_path
 from django.conf import settings
 from django.views.static import serve
 from os import path
@@ -8,19 +8,19 @@ from documentation.views import dirhtml_view
 
 local_urlpatterns = [
     # Files uploaded by users
-    url(r'^wlmedia/(?P<path>.*)$',
+    re_path(r'^wlmedia/(?P<path>.*)$',
         serve,
         {'document_root': settings.MEDIA_ROOT},
         name='static_media'),
     # Static files if DEBUG=False. Use the 'collectstatic' command to fetch them
-    url(r'^static/(?P<path>.*)$',
+    re_path(r'^static/(?P<path>.*)$',
         serve,
         {'document_root': settings.STATIC_ROOT},
         name='static_media_collected'),
     # HTML documentation created by ./manage.py create_docs
-    url(r'^documentation/(?P<folder_name>[\w*-?\w*]*)/$', dirhtml_view),
-    url(r'^documentation/$', dirhtml_view),
-    url(r'^documentation/(?P<path>.*)$',
+    re_path(r'^documentation/(?P<folder_name>[\w*-?\w*]*)/$', dirhtml_view),
+    re_path(r'^documentation/$', dirhtml_view),
+    re_path(r'^documentation/(?P<path>.*)$',
         serve,
         {'document_root': path.join(
           settings.MEDIA_ROOT, 'documentation/html/')}

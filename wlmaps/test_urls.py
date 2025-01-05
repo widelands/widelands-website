@@ -1,7 +1,7 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
-from django.conf.urls import *
+from django.urls import re_path, include
 
 urlpatterns = [
-    url(r"^wlmaps/", include("wlmaps.urls")),
+    re_path(r"^wlmaps/", include("wlmaps.urls")),
 ]

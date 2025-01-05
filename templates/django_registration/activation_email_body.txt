@@ -1,9 +1,9 @@
 Hi,
 
-You (or someone else) requested an account on {{ site }}. If this wasn't you, 
-please ignore this email. If this was you, please click on the link provided below
+a user with username "{{ user }}" requested an account on {{ site }}. If this wasn't you,
+please ignore this email. If this was you, please click on this link:
 
-http://{{ site }}{% url 'django_registration_activate' activation_key %}
+http://{{ site }}/accounts/activate/?activation_key={{ activation_key }}
 
 
 This link will be valid for {{ expiration_days }} days...

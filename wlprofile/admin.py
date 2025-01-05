@@ -9,11 +9,9 @@
 # Last Modified: $Date$
 #
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from .models import Profile
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin
 
 
 class ProfileAdmin(admin.ModelAdmin):

@@ -26,6 +26,9 @@ DATABASES = {
     }
 }
 
+# See: https://docs.djangoproject.com/en/4.1/releases/3.2/#customizing-type-of-auto-created-primary-keys
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -69,6 +72,9 @@ STATIC_URL = "/static/"
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu"
 
+# See https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-cookie-secure
+CSRF_COOKIE_SECURE = True
+
 ROOT_URLCONF = "mainpage.urls"
 
 # List of finder classes that know how to find static files in
@@ -88,7 +94,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.sitemaps",
     "django.contrib.redirects",
-    "nocaptcha_recaptcha",
+    "captcha",
     # Our own apps
     "wiki.templatetags.restructuredtext",
     "mainpage",
@@ -115,8 +121,7 @@ INSTALLED_APPS = [
     # Thirdparty apps
     "threadedcomments",  # included as wlapp
     "notification",  # included as wlapp
-    "django_messages_wl.apps.WLDjangoMessagesConfig",
-    "dj_pagination",
+    "django_messages_wl.apps.WlDjangoMessagesConfig",
     "tagging",
     "star_ratings",
     "django_filters",
@@ -131,8 +136,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
+    "django.contrib.sites.middleware.CurrentSiteMiddleware",
     # Foreign middleware
-    "dj_pagination.middleware.PaginationMiddleware",
     "mainpage.online_users_middleware.OnlineNowMiddleware",
 ]
 
@@ -408,12 +413,6 @@ BLEACH_ALLOWED_ATTRIBUTES = {
     "td": ["align"],
     "*": ["class", "id", "title"],
 }
-
-##########################
-# Pagination settings    #
-# for dj-pagination      #
-##########################
-PAGINATION_DEFAULT_WINDOW = 2
 
 ###########################
 # Settings for displaying #

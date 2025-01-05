@@ -1,6 +1,6 @@
 {% extends 'pybb/base.html' %}
 {% load custom_date %}
-{% load pagination_tags %}
+
 {% block title %}
     Posts by {{ this_user }} - {{ block.super }}
 {% endblock title %}
@@ -12,8 +12,7 @@
 {% block content_main %}
 <div class="blogEntry">
 <p>{{ this_user }} has written {{ posts|length }} post{{ posts|length|pluralize }}.</p>
-{% autopaginate posts 30 %}
-{% paginate %}
+{% include "pagination/pagination.html" %}
 <table class='forum'>
   <thead>
     <tr>
@@ -24,7 +23,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for post in posts %}
+    {% for post in page_obj %}
     <tr class="{% cycle 'odd' 'even' %}">
       <td class='post'>{{ post.created|custom_date:user }}</td>
       <td class='post'><a href="{% url 'pybb_forum' post.topic.forum.id %}">{{ post.topic.forum }}</a></td>

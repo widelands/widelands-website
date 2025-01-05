@@ -4,7 +4,6 @@
 import json
 from subprocess import check_call, CalledProcessError
 
-from django import forms
 from django.forms import ModelForm
 from django.conf import settings
 from django.core.files.storage import default_storage

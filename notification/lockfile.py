@@ -53,6 +53,7 @@ import os
 import threading
 import time
 import errno
+from concurrent.futures import thread
 
 # Work with PEP8 and non-PEP8 versions of threading module.
 try:

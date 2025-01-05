@@ -95,7 +95,7 @@ class Screenshot(models.Model):
             # problem, in the same step we fix its mode to be RGB.
             image = image.convert("RGB")
 
-            image.thumbnail(settings.THUMBNAIL_SIZE, Image.ANTIALIAS)
+            image.thumbnail(settings.THUMBNAIL_SIZE, Image.Resampling.LANCZOS)
 
             # Save the thumbnail
             temp_handle = BytesIO()

@@ -1,13 +1,12 @@
 # coding=UTF-8
 
 from datetime import datetime, timedelta
-import re
 from pprint import pprint
 
 from django import template
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import stringfilter
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.utils.html import escape
 
 from pybb.models import Post, Forum, Topic, Read
@@ -44,7 +43,7 @@ def pybb_link(object, anchor=""):
     """Return A tag with link to object."""
 
     url = hasattr(object, "get_absolute_url") and object.get_absolute_url() or None
-    anchor = anchor or smart_text(object)
+    anchor = anchor or smart_str(object)
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
 
 
@@ -124,15 +123,22 @@ def pybb_editable_by(post, user):
     if not user.is_authenticated:
         # No need to run the other checks
         return False
+
     if user.is_superuser:
         return True
-    if user in post.topic.forum.moderator_group.user_set.all():
-        # Forum moderators are always allowed
-        return True
+    try:
+        if user in post.topic.forum.moderator_group.user_set.all():
+            # Forum moderators are always allowed
+            return True
+    except AttributeError:
+        # Probably there is no moderator_group yet
+        pass
+
     if post.user == user:
         # Restrict the time a user can edit his own post
         edit_time = timedelta(hours=pybb_settings.EDIT_HOURS)
         return datetime.now() <= post.created + edit_time
+
     return False
 
 

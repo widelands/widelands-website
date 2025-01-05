@@ -25,13 +25,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test.client import Client
-from django.urls import reverse
-from django.db import IntegrityError
 
 from .models import Image
 from .forms import UploadImageForm
-
-from .views import upload
 
 
 class _TestUploadingBase(TestCase):

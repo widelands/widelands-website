@@ -1,6 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext
-from django.http import HttpResponse
 from .models import Worker, Ware, Building, Tribe
 
 

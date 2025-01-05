@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Some util functions."""
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 
 

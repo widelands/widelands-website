@@ -6,8 +6,7 @@ import sys
 
 sys.path.append("..")
 
-from nose.tools import *
-
+from nose.tools import assert_equal
 from tribe import Tribe
 
 

@@ -11,12 +11,9 @@
 
 from django import template
 from django.conf import settings
-from django.utils.encoding import smart_bytes, force_text
 from django.utils.safestring import mark_safe
-from django.conf import settings
 
 from markdown import markdown
-import re
 import urllib.request, urllib.parse, urllib.error
 import bleach
 
@@ -34,7 +31,6 @@ except ImportError:
 
 # We will also need the site domain
 from django.contrib.sites.models import Site
-from django.conf import settings
 
 try:
     _domain = Site.objects.get(pk=settings.SITE_ID).domain
@@ -43,10 +39,8 @@ except:
 
 # Getting local domain lists
 try:
-    from django.conf import settings
-
     LOCAL_DOMAINS = [_domain] + settings.LOCAL_DOMAINS
-except ImportError:
+except:
     LOCAL_DOMAINS = [_domain]
 
 

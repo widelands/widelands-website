@@ -10,14 +10,14 @@
 #
 
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from .models import Image
 
 
 def delete_with_file(modeladmin, request, queryset):
     for obj in queryset:
         storage = obj.image.storage
-        storage.delete(obj.image)
+        storage.delete(obj.image.name)
         obj.delete()
 
 

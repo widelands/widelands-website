@@ -2,14 +2,11 @@
 # encoding: utf-8
 #
 
-from django.test import TestCase as DjangoTest, Client
-from django.contrib.auth.models import User
+from django.test import TestCase as DjangoTest
 from django.db import IntegrityError
-from star_ratings.models import Rating
+from django.contrib.auth.models import User
+from wlmaps.models import Map
 
-from wlmaps.models import *
-
-import os
 
 #############
 # TestCases #

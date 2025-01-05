@@ -2,9 +2,8 @@
 # encoding: utf-8
 #
 
-from wlpoll.models import Choice, Poll
+from wlpoll.models import Poll
 from django import template
-from urllib.parse import urlencode, quote
 
 register = template.Library()
 
@@ -88,7 +87,7 @@ class GetOpenPolls(template.Node):
             rv = []
             for p in Poll.objects.open():
                 p.user_has_voted = (
-                    False if user.is_anonymous() else p.has_user_voted(user)
+                    False if user.is_anonymous else p.has_user_voted(user)
                 )
                 rv.append(p)
             context[self._vn] = rv

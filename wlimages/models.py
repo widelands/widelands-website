@@ -1,9 +1,11 @@
+import os
+
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
 from django.conf import settings
@@ -46,9 +48,16 @@ class ImageManager(models.Manager):
         )
         path = "%swlimages/%s" % (settings.MEDIA_ROOT, safe_filename)
 
-        destination = open(path, "wb")
-        for chunk in image.chunks():
-            destination.write(chunk)
+        base_path = "%swlimages" % (settings.MEDIA_ROOT)
+        # Make sure directory exists
+        if not os.path.isdir(base_path):
+            os.mkdir(base_path)
+
+        full_path = "%s/%s" % (base_path, safe_filename)
+
+        with open(full_path, "wb+") as destination:
+            for chunk in image.chunks():
+                destination.write(chunk)
 
         im.image = "wlimages/%s" % (safe_filename)
 

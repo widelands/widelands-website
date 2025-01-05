@@ -1,7 +1,7 @@
 from django import forms
 from threadedcomments.models import DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.models import ThreadedComment
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class ThreadedCommentForm(forms.ModelForm):

@@ -23,7 +23,7 @@
 				{"body": $("#id_content").val()});
 		});
 
-	{% ifequal new_article 0 %}
+	{% if not new_article %}
 		// Insert diff
 		$("#id_diff").click(function(){
 			// Activate preview
@@ -31,7 +31,7 @@
 			$("#content_diff").load( "{% url 'wiki_preview_diff' %}",
 				{"body": $("#id_content").val(), "article": {{ object_id }} });
 		});
-	{%endifequal%}
+	{%endif%}
 	});
 </script>
 {{ block.super }}
@@ -108,9 +108,9 @@
 
 		<div>
 			<input id="id_preview" type="button" value="{% trans "Preview" %}" />
-		{% ifequal new_article 0 %}
+		{% if not new_article %}
 			<input id="id_diff" type="button" value="{% trans "Diff" %}" />
-		{% endifequal %}
+		{% endif %}
 			<input type="submit" value="{% trans "Save" %}" />
 		</div>
 		{% csrf_token %}

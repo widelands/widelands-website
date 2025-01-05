@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.feedgenerator import Atom1Feed
 from pybb.models import Post, Topic, Forum
-from django.conf import settings
 
 
 class PybbFeed(Feed):

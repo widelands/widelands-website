@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 from django import template
-from django.utils.safestring import mark_safe
 from django.conf import settings
 from mainpage.wl_utils import return_git_path
 import subprocess

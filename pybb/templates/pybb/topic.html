@@ -3,7 +3,6 @@
 {% load i18n %}
 {% load wlprofile_extras %}
 {% load custom_date %}
-{% load pagination_tags %}
 {% load static %}
 
 {% block title %}
@@ -23,8 +22,8 @@
 {% block content_main %}
 <div class="blogEntry">
 	<div class="breadCrumb">
-		<a href="{% url 'pybb_index' %}">Forums</a> &#187; 
-		{% pybb_link topic.forum.category %} &#187; 
+		<a href="{% url 'pybb_index' %}">Forums</a> &#187;
+		{% pybb_link topic.forum.category %} &#187;
 		<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
 		{{ topic }}
 		</div>
@@ -89,12 +88,12 @@
 			</a>
 		{% endif %}
 			</div>
-			{% autopaginate posts page_size as object_list %}
-			{% paginate using "pagination/pagination_mod.html" %}
+
+			{% include "pagination/pagination.html" %}
 
 			<table class="forum">
 				<tbody>
-				{% for post in object_list %}
+				{% for post in page_obj %}
 					<tr class="{% cycle 'odd' 'even' %}" {% if post.is_spam %} style="background-color: gray" {% endif %}>
 						{% include 'pybb/inlines/post.html' %}
 					</tr>
@@ -156,7 +155,8 @@
 				</a>
 			{% endif %}
 			</div>
-			{% paginate %}
+			{% include "pagination/pagination.html" %}
+
 		</div>
 
 		{% if user.is_authenticated %}

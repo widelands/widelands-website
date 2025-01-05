@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from collections import OrderedDict
-from notification.models import *
+from notification.models import NoticeType, NOTICE_MEDIA, get_notification_setting
 
 
 @login_required

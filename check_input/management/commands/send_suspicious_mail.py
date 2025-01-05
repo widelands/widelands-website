@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from check_input.models import SuspiciousInput
-from django.core.mail import send_mail
-from django.conf import settings
+from django.core.mail import mail_admins
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 
@@ -23,11 +22,8 @@ class Command(BaseCommand):
                 "\n\nAdmin page: https://%s/admin/pybb/post/"
                 % Site.objects.get_current().domain
             )
-            recipients = [addr[1] for addr in settings.ADMINS]
-            send_mail(
+            mail_admins(
                 "Hidden posts were found",
                 message,
-                "admins@widelands.org",
-                recipients,
                 fail_silently=False,
             )

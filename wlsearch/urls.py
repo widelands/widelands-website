@@ -9,9 +9,9 @@
 # Last Modified: $Date$
 #
 
-from django.conf.urls import *
+from django.urls import re_path
 from .views import search
 
 urlpatterns = [
-    url(r"^$", search, name="search"),
+    re_path(r"^$", search, name="search"),
 ]

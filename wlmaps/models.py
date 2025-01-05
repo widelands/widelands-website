@@ -5,13 +5,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from django.db.models.signals import pre_delete
-from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from star_ratings.models import Rating
 
 import datetime
-import os
+
 
 try:
     from notification import models as notification
