@@ -49,6 +49,7 @@
 		<div class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</div>
 	{% endif %}
 
+    {% include 'pybb/inlines/attachment.html' %}
 
 	<hr />
 	{% if user.is_authenticated %}
