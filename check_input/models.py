@@ -53,6 +53,12 @@ class SuspiciousInput(models.Model):
             return True
         if re.search(settings.ANTI_SPAM_PHONE_NR, self.text):
             return True
+        # If this is the first post of this user check if it contains a link
+        # Only for forum posts
+        if self.content_type.model == "post":
+            if self.user.posts.count() == 1:
+                if "http" in self.text:
+                    return True
         return False
 
     @classmethod
