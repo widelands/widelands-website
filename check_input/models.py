@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
+from pybb.util import PLAIN_LINK_RE
 import re
 
 
@@ -20,7 +21,8 @@ class SuspiciousInput(models.Model):
 
     """
 
-    text = models.CharField(max_length=200, verbose_name="suspicious user input")
+    text = models.CharField(max_length=200,
+                            verbose_name="suspicious user input")
     user = models.ForeignKey(
         User, verbose_name="related user", on_delete=models.CASCADE
     )
@@ -55,10 +57,11 @@ class SuspiciousInput(models.Model):
             return True
         # If this is the first post of this user check if it contains a link
         # Only for forum posts
-        if self.content_type.model == "post":
-            if self.user.posts.count() == 1:
-                if "http" in self.text:
-                    return True
+        if self.content_type.model == "post" and \
+                self.user.posts.count() == 1 and \
+                re.search(PLAIN_LINK_RE, self.text):
+            return True
+
         return False
 
     @classmethod
