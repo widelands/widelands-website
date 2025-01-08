@@ -42,7 +42,7 @@ class SuspiciousInput(models.Model):
     def __str__(self):
         return self.text
 
-    def clean(self):
+    def strip_text(self):
         # Cleaning fields
         max_chars = self._meta.get_field("text").max_length
         if len(self.text) >= max_chars:
@@ -70,7 +70,7 @@ class SuspiciousInput(models.Model):
         is_spam = user_input.is_suspicious()
         if is_spam:
             try:
-                user_input.clean()
+                user_input.strip_text()
                 user_input.save()
             except:
                 pass
