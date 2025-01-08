@@ -85,11 +85,23 @@ def get_pagination(request, objects, per_page=20):
 
     paginator = Paginator(objects, per_page)
     page_obj = paginator.get_page(request.GET.get("page"))
+
+    query_dict = request.GET.copy()
+    if "page" in query_dict:
+        query_dict.pop("page")
+
+    query = ""
+    if query_dict:
+        # if this is not empty after popping we have an additional
+        # search querystring
+        query = "&{}".format(query_dict.urlencode())
+
     return {
         "page_obj": page_obj,
         "paginator_range": list(
             paginator.get_elided_page_range(page_obj.number, on_each_side=2)
-        ),
+            ),
+        "query": query,
     }
 
 
