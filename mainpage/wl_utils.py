@@ -85,12 +85,33 @@ def get_pagination(request, objects, per_page=20):
 
     paginator = Paginator(objects, per_page)
     page_obj = paginator.get_page(request.GET.get("page"))
-    return {
+
+    context = {
         "page_obj": page_obj,
         "paginator_range": list(
             paginator.get_elided_page_range(page_obj.number, on_each_side=2)
         ),
     }
+
+    # Maps can be queried with the search and the query string may
+    # contain beside "page=x" the search query string.
+    # To get the search query string on additional pages we have to
+    # provide it in the context.
+    query_dict = request.GET.copy()
+
+    # this query_dict may contain "page=x", pop it away
+    if "page" in query_dict:
+        query_dict.pop("page")
+
+    search_query = ""
+    if query_dict:
+        # If this is not empty after popping we have an additional
+        # search querystring.
+        search_query = "&{}".format(query_dict.urlencode())
+
+    context.update({"search_query": search_query})
+
+    return context
 
 
 def is_ajax(request):
