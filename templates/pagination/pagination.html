@@ -10,7 +10,7 @@
     {% if page_obj.has_other_pages %}
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">&laquo; previous</a>
+            <a href="?page={{ page_obj.previous_page_number }}{{ search_query }}">&laquo; previous</a>
         {% endif %}
         {% for p in paginator_range %}
             {% if p == page_obj.number %}
@@ -18,11 +18,11 @@
             {% elif p == page_obj.paginator.ELLIPSIS %}
                 <span> {{ page_obj.paginator.ELLIPSIS }}</span>
             {% else %}
-                <a href="?page={{ p }}">{{ p }} </a>
+                <a href="?page={{ p }}{{ search_query }}">{{ p }} </a>
             {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}{{ search_query }}">next &raquo;</a>
         {% endif %}
     </span>
     {% endif %}
