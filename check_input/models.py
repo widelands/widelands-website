@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
-from django.http import Http404
 
 from pybb.util import PLAIN_LINK_RE
 import re
@@ -51,7 +50,7 @@ class SuspiciousInput(models.Model):
             Add a small hint which check has found spam.
 
         """
-
+        which = "{}: ".format(which.upper())
         max_chars = self._meta.get_field("text").max_length - len(which) - 1
 
         start = 0
@@ -60,22 +59,20 @@ class SuspiciousInput(models.Model):
         else:
             start = max_chars * -1
 
-        found_in = "{} {}".format(which.upper(), self.text[start:end])
-        print("len text: ", len(found_in))
-        self.text = found_in
+        self.text = "{} {}".format(which, self.text[start:end])
 
     def is_suspicious(self):
         # check for keywords
         for x in settings.ANTI_SPAM_KWRDS:
             if x in self.text.lower():
                 pos = self.text.lower().find(x)
-                self.strip_text(which="Keyword spam: ", end=pos + len(x))
+                self.strip_text(which="Keyword spam", end=pos + len(x))
                 return True
 
         # check for telephone nr
         match = re.search(settings.ANTI_SPAM_PHONE_NR, self.text)
         if match:
-            self.strip_text(which="Telephonenr.: ", end=match.end())
+            self.strip_text(which="Telephonenr.", end=match.end())
             return True
 
         # If this is the first post of this user check if it contains a link
@@ -83,7 +80,7 @@ class SuspiciousInput(models.Model):
         if self.content_type.model == "post" and \
                 self.user.posts.count() == 1:
             match = re.search(PLAIN_LINK_RE, self.text)
-            self.strip_text(which="Link in first post: ", end=match.end())
+            self.strip_text(which="Link in first post", end=match.end())
             return True
 
         return False
@@ -95,7 +92,7 @@ class SuspiciousInput(models.Model):
         if is_spam:
             try:
                 user_input.save()
-            except ValidationError as e:
-                raise Http404(e)
+            except ValidationError:
+                pass
 
         return is_spam
