@@ -16,12 +16,6 @@ def delete_selected(modeladmin, request, queryset):
         obj.delete()
 
 
-def unhide_post(modeladmin, request, queryset):
-    """Unhide post(s) and inform subscribers."""
-    for obj in queryset:
-        obj.unhide_post()
-
-
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "position", "forum_count"]
     list_per_page = 20
@@ -127,11 +121,6 @@ class PostAdmin(admin.ModelAdmin):
             delete_selected,
             "delete_selected",
             "Delete selected posts",
-        )
-        actions["unhide_post"] = (
-            unhide_post,
-            "unhide_post",
-            "Unhide post and inform subscribers",
         )
         return actions
 
