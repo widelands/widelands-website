@@ -23,8 +23,7 @@ class SuspiciousInput(models.Model):
 
     """
 
-    text = models.CharField(max_length=200,
-                            verbose_name="suspicious user input")
+    text = models.CharField(max_length=200, verbose_name="suspicious user input")
     user = models.ForeignKey(
         User, verbose_name="related user", on_delete=models.CASCADE
     )
@@ -45,9 +44,9 @@ class SuspiciousInput(models.Model):
         return self.text
 
     def strip_text(self, which="SPAM FOUND", end=0):
-        """ Strip the text to fit with the text field.
+        """Strip the text to fit with the text field.
 
-            Add a small hint which check has found spam.
+        Add a small hint which check has found spam.
 
         """
         which = "{}: ".format(which.upper())
@@ -77,8 +76,7 @@ class SuspiciousInput(models.Model):
 
         # If this is the first post of this user check if it contains a link
         # Only for forum posts
-        if self.content_type.model == "post" and \
-                self.user.posts.count() == 1:
+        if self.content_type.model == "post" and self.user.posts.count() == 1:
             match = re.search(PLAIN_LINK_RE, self.text)
             self.strip_text(which="Link in first post", end=match.end())
             return True
