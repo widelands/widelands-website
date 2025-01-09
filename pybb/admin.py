@@ -2,6 +2,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read, Attachment
+from check_input.models import SuspiciousInput
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -113,6 +114,13 @@ class PostAdmin(admin.ModelAdmin):
 
         """
         for obj in queryset:
+            if obj.hidden:
+                # Deleting a hidden post should also delete the SuspiciousInput
+                susp_obj = SuspiciousInput.objects.all()
+                for so in susp_obj:
+                    if obj.id == so.object_id:
+                        so.delete()
+
             obj.delete()
 
 

@@ -2,7 +2,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from check_input.models import SuspiciousInput
 from django.contrib import admin
-from django.contrib.contenttypes.models import ContentType
 
 
 @admin.action(description="Delete selected posts")
