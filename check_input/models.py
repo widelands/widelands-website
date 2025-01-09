@@ -1,22 +1,25 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
+from django.http import Http404
+
 from pybb.util import PLAIN_LINK_RE
 import re
 
 
 class SuspiciousInput(models.Model):
-    """Model for collecting suspicios user input.
+    """Model for collecting suspicious user input.
 
-        Call the check_input method with this attributes:
+        Call the check_input method with these attributes:
         content_object = Model instance of a saved(!) object
         user = user
         text = text to check for suspicious content
 
         Example:
-        is_suspicous = SuspiciousInput.check_input(content_object=post,
+        is_suspicious = SuspiciousInput.check_input(content_object=post,
     user=post.user, text=post.body)
 
     """
@@ -42,24 +45,45 @@ class SuspiciousInput(models.Model):
     def __str__(self):
         return self.text
 
-    def strip_text(self):
-        # Cleaning fields
-        max_chars = self._meta.get_field("text").max_length
-        if len(self.text) >= max_chars:
-            # Truncate the text to fit with max_length of field
-            # otherwise a Database error is thrown
-            self.text = self.text[:max_chars]
+    def strip_text(self, which="SPAM FOUND", end=0):
+        """ Strip the text to fit with the text field.
+
+            Add a small hint which check has found spam.
+
+        """
+
+        max_chars = self._meta.get_field("text").max_length - len(which) - 1
+
+        start = 0
+        if end - max_chars < 0:
+            end = max_chars
+        else:
+            start = max_chars * -1
+
+        found_in = "{} {}".format(which.upper(), self.text[start:end])
+        print("len text: ", len(found_in))
+        self.text = found_in
 
     def is_suspicious(self):
-        if any(x in self.text.lower() for x in settings.ANTI_SPAM_KWRDS):
+        # check for keywords
+        for x in settings.ANTI_SPAM_KWRDS:
+            if x in self.text.lower():
+                pos = self.text.lower().find(x)
+                self.strip_text(which="Keyword spam: ", end=pos + len(x))
+                return True
+
+        # check for telephone nr
+        match = re.search(settings.ANTI_SPAM_PHONE_NR, self.text)
+        if match:
+            self.strip_text(which="Telephonenr.: ", end=match.end())
             return True
-        if re.search(settings.ANTI_SPAM_PHONE_NR, self.text):
-            return True
+
         # If this is the first post of this user check if it contains a link
         # Only for forum posts
         if self.content_type.model == "post" and \
-                self.user.posts.count() == 1 and \
-                re.search(PLAIN_LINK_RE, self.text):
+                self.user.posts.count() == 1:
+            match = re.search(PLAIN_LINK_RE, self.text)
+            self.strip_text(which="Link in first post: ", end=match.end())
             return True
 
         return False
@@ -70,9 +94,8 @@ class SuspiciousInput(models.Model):
         is_spam = user_input.is_suspicious()
         if is_spam:
             try:
-                user_input.strip_text()
                 user_input.save()
-            except:
-                pass
+            except ValidationError as e:
+                raise Http404(e)
 
         return is_spam
