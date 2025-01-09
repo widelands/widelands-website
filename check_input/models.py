@@ -74,8 +74,9 @@ class SuspiciousInput(models.Model):
         # Only for forum posts
         if self.content_type.model == "post" and self.user.posts.count() == 1:
             match = re.search(PLAIN_LINK_RE, self.text)
-            self.strip_text(which="Link in first post", end=match.end())
-            return True
+            if match:
+                self.strip_text(which="Link in first post", end=match.end())
+                return True
 
         return False
 
