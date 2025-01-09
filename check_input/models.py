@@ -54,9 +54,7 @@ class SuspiciousInput(models.Model):
 
         start = end - max_chars // 2
         end = end + max_chars // 2
-        print("start", start, "end: ", end, "max_Chars: ", max_chars)
         self.text = "{} {}".format(which, self.text[start:end])
-        print(len(self.text))
 
     def is_suspicious(self):
         # check for keywords
