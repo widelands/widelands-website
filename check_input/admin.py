@@ -24,7 +24,8 @@ def unhide_post(modeladmin, request, queryset):
             # but the first Post object has it
             # Remember: A topic is hidden if the first post is hidden
             post_obj = obj.content_type.get_object_for_this_type(
-                pk=obj.object_id).posts.all()[0]
+                pk=obj.object_id
+            ).posts.all()[0]
 
         post_obj.unhide_post()
         obj.delete()
