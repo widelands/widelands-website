@@ -43,31 +43,43 @@ class SuspiciousInput(models.Model):
     def __str__(self):
         return self.text
 
-    def strip_text(self, which="SPAM FOUND", end=0):
+    def strip_text(self, which="SPAM FOUND", start=0, end=0):
         """Strip the text to fit with the text field.
 
         Add a small hint which check has found spam.
 
         """
-        which = "{}: ".format(which.upper())
-        max_chars = self._meta.get_field("text").max_length - len(which) - 1
 
-        start = end - max_chars // 2
-        end = end + max_chars // 2
-        self.text = "{} {}".format(which, self.text[start:end])
+        which = "{}: …".format(which.upper())
+        max_chars = self._meta.get_field("text").max_length - len(which) - 1
+        kwrd_len = end - start
+        kwrd_middle_pos = (kwrd_len // 2) + start
+
+        start_pos = kwrd_middle_pos
+        end_pos = kwrd_middle_pos
+        tmp_text = ""
+
+        while len(tmp_text) < max_chars and len(tmp_text) < len(self.text):
+            if start_pos > 0:
+                start_pos = start_pos - 1
+            if end_pos < len(self.text):
+                end_pos = end_pos + 1
+            tmp_text = self.text[start_pos:end_pos]
+
+        self.text = "{} {}".format(which, tmp_text) #self.text[start_pos:end_pos])
 
     def is_suspicious(self):
         # check for keywords
         for x in settings.ANTI_SPAM_KWRDS:
             if x in self.text.lower():
                 pos = self.text.lower().find(x)
-                self.strip_text(which="Keyword spam", end=pos + len(x))
+                self.strip_text(which="Keyword spam", start=pos, end=pos + len(x))
                 return True
 
         # check for telephone nr
         match = re.search(settings.ANTI_SPAM_PHONE_NR, self.text)
         if match:
-            self.strip_text(which="Telephonenr.", end=match.end())
+            self.strip_text(which="Telephonenr.", start=match.start(), end=match.end())
             return True
 
         # If this is the first post of this user check if it contains a link
@@ -75,7 +87,7 @@ class SuspiciousInput(models.Model):
         if self.content_type.model == "post" and self.user.posts.count() == 1:
             match = re.search(PLAIN_LINK_RE, self.text)
             if match:
-                self.strip_text(which="Link in first post", end=match.end())
+                self.strip_text(which="Link in first post", start=match.start(), end=match.end())
                 return True
 
         return False
