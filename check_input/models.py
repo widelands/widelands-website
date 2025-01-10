@@ -66,7 +66,7 @@ class SuspiciousInput(models.Model):
                 end_pos = end_pos + 1
             tmp_text = self.text[start_pos:end_pos]
 
-        self.text = "{} {}".format(which, tmp_text) #self.text[start_pos:end_pos])
+        self.text = "{} {}".format(which, tmp_text)  # self.text[start_pos:end_pos])
 
     def is_suspicious(self):
         # check for keywords
@@ -87,7 +87,9 @@ class SuspiciousInput(models.Model):
         if self.content_type.model == "post" and self.user.posts.count() == 1:
             match = re.search(PLAIN_LINK_RE, self.text)
             if match:
-                self.strip_text(which="Link in first post", start=match.start(), end=match.end())
+                self.strip_text(
+                    which="Link in first post", start=match.start(), end=match.end()
+                )
                 return True
 
         return False
