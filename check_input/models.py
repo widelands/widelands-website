@@ -66,7 +66,7 @@ class SuspiciousInput(models.Model):
                 end_pos = end_pos + 1
             tmp_text = self.text[start_pos:end_pos]
 
-        self.text = "{} {}".format(which, tmp_text)  # self.text[start_pos:end_pos])
+        self.text = "{} {}".format(which, tmp_text)
 
     def is_suspicious(self):
         # check for keywords
