@@ -370,6 +370,13 @@ class Post(RenderableItem):
             for attach in self.attachments.all():
                 attach.delete()
 
+        if self.hidden:
+            # Deleting a hidden post should also delete the SuspiciousInput
+            susp_objects = SuspiciousInput.objects.all()
+            for s_object in susp_objects:
+                if self.id == s_object.object_id:
+                    s_object.delete()
+
         super(Post, self).delete(*args, **kwargs)
 
         self.topic.save()

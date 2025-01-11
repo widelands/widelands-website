@@ -114,13 +114,6 @@ class PostAdmin(admin.ModelAdmin):
 
         """
         for obj in queryset:
-            if obj.hidden:
-                # Deleting a hidden post should also delete the SuspiciousInput
-                susp_obj = SuspiciousInput.objects.all()
-                for so in susp_obj:
-                    if obj.id == so.object_id:
-                        so.delete()
-
             obj.delete()
 
 
