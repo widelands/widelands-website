@@ -94,7 +94,7 @@
 			<table class="forum">
 				<tbody>
 				{% for post in page_obj %}
-					<tr class="{% cycle 'odd' 'even' %}" {% if post.is_spam %} style="background-color: gray" {% endif %}>
+					<tr class="{% cycle 'odd' 'even' %}" {% if post.hidden %} style="background-color: gray" {% endif %}>
 						{% include 'pybb/inlines/post.html' %}
 					</tr>
 					{% if not forloop.last %}
@@ -166,3 +166,4 @@
 		{% endif %}
 	{% endif %}
 {% endblock %}
+</div>
