@@ -75,13 +75,17 @@ class SuspiciousInput(models.Model):
         for x in settings.ANTI_SPAM_KWRDS:
             if x in self.text.lower():
                 pos = self.text.lower().find(x)
-                self.strip_text(name="Keyword spam", spam_start=pos, spam_end=pos + len(x))
+                self.strip_text(
+                    name="Keyword spam", spam_start=pos, spam_end=pos + len(x)
+                )
                 return True
 
         # check for telephone nr
         match = re.search(settings.ANTI_SPAM_PHONE_NR, self.text)
         if match:
-            self.strip_text(name="Telephonenr.", spam_start=match.start(), spam_end=match.end())
+            self.strip_text(
+                name="Telephonenr.", spam_start=match.start(), spam_end=match.end()
+            )
             return True
 
         # If this is the first post of this user check if it contains a link
@@ -90,7 +94,9 @@ class SuspiciousInput(models.Model):
             match = re.search(PLAIN_LINK_RE, self.text)
             if match:
                 self.strip_text(
-                    name="Link in first post", spam_start=match.start(), spam_end=match.end()
+                    name="Link in first post",
+                    spam_start=match.start(),
+                    spam_end=match.end(),
                 )
                 return True
 
