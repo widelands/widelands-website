@@ -13,7 +13,6 @@ div.searchBoxInner {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	-khtml-border-radius: 10px;
-	background-color: #332f29;
 	background-image: url("../img/but1.png");
 }
 
@@ -62,7 +61,6 @@ div#topmenu {
 	clear: both;
 	height: 50px;
 	margin-bottom: 22px;
-	background-color: #695536;
 	background-image: url("../img/wood.png");
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
@@ -110,7 +108,6 @@ ul.menu li ul {
 	position: absolute;
 	top: 50px;
 	left: -1px;
-	background-color: #695536;
 	background-image: url("../img/wood.png");
 	padding: 0px;
 	border: 1px solid black;
@@ -118,7 +115,7 @@ ul.menu li ul {
 	border-radius: 0px 0px 4px 4px;
 	-moz-border-radius: 0px 0px 4px 4px;
 	-webkit-border-radius: 0px 0px 4px 4px;
-	-khtml-border-radius: 0px 0px 4px 4px;	
+	-khtml-border-radius: 0px 0px 4px 4px;
 }
 
 ul.menu li:hover ul {
