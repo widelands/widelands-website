@@ -56,8 +56,7 @@ class SuspiciousInput(models.Model):
         max_chars = self._meta.get_field("text").max_length - len(which) - 1
         spam_middle = ((spam_end - spam_start) // 2) + spam_start
 
-        start_pos = spam_middle
-        end_pos = spam_middle
+        start_pos = end_pos = spam_middle
         tmp_text = ""
 
         # Calculate the string so that the found spam is in the middle
