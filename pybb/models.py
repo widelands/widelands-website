@@ -1,4 +1,7 @@
 from datetime import datetime
+
+from django.core.exceptions import ObjectDoesNotExist
+
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 import os.path
 import hashlib
@@ -370,12 +373,16 @@ class Post(RenderableItem):
             for attach in self.attachments.all():
                 attach.delete()
 
-        if self.hidden:
-            # Deleting a hidden post should also delete the SuspiciousInput
-            susp_objects = SuspiciousInput.objects.all()
-            for s_object in susp_objects:
-                if self.id == s_object.object_id:
-                    s_object.delete()
+        # Deleting a hidden post should also delete the SuspiciousInput
+        # Toggling a topics visibility sets post.hidden to false,
+        # make sure to have a SuspiciousInput object in this case
+        try:
+            susp_obj = SuspiciousInput.objects.get(object_id=self.id)
+        except ObjectDoesNotExist:
+            susp_obj = None
+
+        if self.hidden or susp_obj:
+            susp_obj.delete()
 
         super(Post, self).delete(*args, **kwargs)
 

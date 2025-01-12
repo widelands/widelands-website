@@ -43,22 +43,24 @@ class SuspiciousInput(models.Model):
     def __str__(self):
         return self.text
 
-    def strip_text(self, which="SPAM FOUND", start=0, end=0):
-        """Strip the text to fit with the text field.
+    def strip_text(self, name="SPAM FOUND", spam_start=0, spam_end=0):
+        """Strip the text to fit with the text field of the model.
 
-        Add a small hint which check has found spam.
+        name        = name of check
+        spam_start  = position inside the string where spam starts
+        end_spam    = position inside the string where spam ends
 
         """
 
-        which = "{}: …".format(which.upper())
+        which = "{}: …".format(name.upper())
         max_chars = self._meta.get_field("text").max_length - len(which) - 1
-        kwrd_len = end - start
-        kwrd_middle_pos = (kwrd_len // 2) + start
+        spam_middle = ((spam_end - spam_start) // 2) + spam_start
 
-        start_pos = kwrd_middle_pos
-        end_pos = kwrd_middle_pos
+        start_pos = spam_middle
+        end_pos = spam_middle
         tmp_text = ""
 
+        # Calculate the string so that the found spam is in the middle
         while len(tmp_text) < max_chars and len(tmp_text) < len(self.text):
             if start_pos > 0:
                 start_pos = start_pos - 1
@@ -73,13 +75,13 @@ class SuspiciousInput(models.Model):
         for x in settings.ANTI_SPAM_KWRDS:
             if x in self.text.lower():
                 pos = self.text.lower().find(x)
-                self.strip_text(which="Keyword spam", start=pos, end=pos + len(x))
+                self.strip_text(name="Keyword spam", spam_start=pos, spam_end=pos + len(x))
                 return True
 
         # check for telephone nr
         match = re.search(settings.ANTI_SPAM_PHONE_NR, self.text)
         if match:
-            self.strip_text(which="Telephonenr.", start=match.start(), end=match.end())
+            self.strip_text(name="Telephonenr.", spam_start=match.start(), spam_end=match.end())
             return True
 
         # If this is the first post of this user check if it contains a link
@@ -88,7 +90,7 @@ class SuspiciousInput(models.Model):
             match = re.search(PLAIN_LINK_RE, self.text)
             if match:
                 self.strip_text(
-                    which="Link in first post", start=match.start(), end=match.end()
+                    name="Link in first post", spam_start=match.start(), spam_end=match.end()
                 )
                 return True
 
