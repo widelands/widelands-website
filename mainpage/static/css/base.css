@@ -24,7 +24,7 @@ a img {
 
 a {
 	text-decoration: none;
-	color: rgba(254, 234, 138, 1);
+	color: #fff66d; /*rgba(254, 234, 138, 1);*/
 	font-weight: bold;
 }
 
@@ -33,7 +33,7 @@ a {
 }
 
 a:visited {
-	color: #e0d7b0;
+	color: #fff1b7; /*#e0d7b0;*/
 }
 
 a.missingLink {
@@ -161,6 +161,7 @@ h1, h2, h3, h4, h5, h6 {
 /* different margin for headers where text could be written */
 div.blogEntry h1, h2, h3, h4, h5, h6 {
 	margin: 0.8em 0em 0.5em 0em;
+	color: #4bba4b;
 }
 
 #content_header h1 {
