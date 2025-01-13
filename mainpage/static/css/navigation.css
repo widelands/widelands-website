@@ -3,6 +3,7 @@
 div.searchBox {
 	height: 20px;
 	padding: 15px;
+    margin-left: auto;
 }
 
 div.searchBoxInner {
@@ -55,11 +56,12 @@ select.selection option {
 	color: #ffffee;
 }
 
-div#topmenu {
-	position: relative;
+nav {
+	/*position: relative;
 	z-index: 5;
 	clear: both;
-	height: 50px;
+	height: 50px;*/
+	display: flex;
 	margin-bottom: 22px;
 	background-image: url("../img/wood.png");
 	border: 1px solid black;

@@ -12,6 +12,7 @@ body {
 	line-height: 1.4em;
 	color: #ffffee;
 	text-shadow: 1px 1px 0px #000000;
+	padding: 0px 20px;
 }
 
 /*+++++++++++++++++++++++++*/
@@ -267,8 +268,9 @@ div#wrapper {
 	margin: 0px 20px;
 }
 
-div #main {
+main {
 	min-height: 500px;
+	display: flex;
 }
 
 div#content {
@@ -277,7 +279,7 @@ div#content {
 	flex-direction: column;
 }
 
-div#footer {
+footer {
 	background-image: url("../img/wood.png");
 	padding: 10px;
 	margin-top: 20px;
@@ -297,19 +299,18 @@ div#footer {
 	width: 100%;
 }
 
-#header {
+header {
 	display: flex;
-	display: -webkit-flex;
 	flex-flow: row wrap;
 	justify-content: space-between;
 	align-items: center;
 }
 
-#header .header_boxes li a, .header_boxes p {
+header .header_boxes li a, .header_boxes p {
 	font-weight: bold;
 }
 
-#header .header_boxes {
+header .header_boxes {
 	display: flex;
 	flex-flow: row wrap;
 	margin: 0px;
@@ -323,22 +324,22 @@ div#footer {
 	background-image: url("../img/wood.png");
 }
 
-#header .header_boxes li {
+header .header_boxes li {
 	border: 1px solid rgba(90, 74, 49, 0.84);
 	padding: 2px 5px 2px 5px;
 	text-align: center;
 }
 
-#header .header_boxes img {
+header .header_boxes img {
 	margin: 0 2px 0 2px;
 }
 
-#header .header_boxes .social img {
+header .header_boxes .social img {
 	margin: 0 4px 0 4px;
 	width: 34px;
 }
 
-#header li.loginBox {
+header li.loginBox {
 	background-image: url("../img/black20.png");
 	border: 1px solid #474444;
 	-webkit-border-radius: 4px 4px 0px 0px;
@@ -346,12 +347,12 @@ div#footer {
 	border-radius: 4px 4px 4px 4px;
 }
 
-#header p {
+header p {
 	padding: 0px;
 	margin: 0px;
 }
 
-#header img {
+header img {
 	vertical-align: middle; /* to prevent a space below */
 }
 
@@ -359,22 +360,20 @@ div#footer {
 /* Right Column */
 /****************/
 
-div#rightColumn {
-	width: 220px;
+aside {
+	display: flex;
+    flex-direction: column;
+	margin-top: -38px;
+	flex: 0 0 220px;
 }
 
-div.columnModule {
-	width: 220px;
-}
-
-div.columnModule h3 {
+section.columnModule h3 {
 	margin-bottom: 10px;
 	margin-top: 8px;	/* Correction for first box */
 }
 
-div.columnModuleBox {
-	width: 220px;
-	margin-bottom: 20px;
+section div.columnModuleBox {
+	margin-bottom: 1em;
 	background-image: url("../img/wood.png");
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
@@ -384,56 +383,55 @@ div.columnModuleBox {
 	border-radius: 4px;
 }
 
-
-div.columnModuleBox h4 {
+section div.columnModuleBox h4 {
 	color: #ffffee;
 	padding: 8px;
 	padding-bottom: 0px;
 	margin: 0px;
 }
 
-div.columnModuleBox ul.poll {
+section div.columnModuleBox ul.poll {
 	padding: 8px;
 	list-style-type: disc;
 	border: none;
 }
 
-div.columnModuleBox ul.poll li {
+section div.columnModuleBox ul.poll li {
 	padding: 0px;
 	border: none;
 	height: 20px;
 }
 
-div.columnModuleBox p {
+section div.columnModuleBox p {
 	margin: 0px;
 	padding: 8px;
 }
 
-div.columnModuleBox ul {
-	width: 220px;
+section div.columnModuleBox ul {
+	/*width: 220px;*/
 	padding: 0px;
 	margin: 0px;
 	list-style-type: none;
 }
 
-div.columnModuleBox ul.player {
+section div.columnModuleBox ul.player {
 	padding: 4px;
 	list-style-type: disc;
 }
 
-div.columnModuleBox ul.player li{
+section div.columnModuleBox ul.player li{
 	padding: 4px;
 	border: none;
 }
 
-div.columnModuleBox ul li {
+section div.columnModuleBox ul li {
 	display: block;
 	padding: 8px;
 	border-top: 1px solid black;
 	font-size: 0.8em;
 }
 
-div.columnModuleBox ul li:first-child {
+section div.columnModuleBox ul li:first-child {
 	border-top: none;
 }
 
@@ -448,7 +446,14 @@ img.landing {
 	-o-border-image: url(../img/image_border.png) 20 round; /* Opera 11-12.1 */
 }
 
-div.blogEntry {
+article {
+    display:flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: 1em;
+}
+
+article section {
 	background-image: url("../img/but1.png");
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -458,36 +463,37 @@ div.blogEntry {
 	padding: 1em 1em 2em 1em;
 	margin-bottom: 20px;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	/*margin-right: 1em;*/
 }
 
-div.blogEntry img {
+section.blogEntry img {
 	max-width: 100%;
 }
 
-div.blogEntry img.title {
+section.blogEntry img.title {
 	width: 150px;
 	margin-right: 20px;
 	margin-bottom: 10px;
 }
 
-div.blogEntry p {
+section.blogEntry p {
 	text-align: justify;
 	margin: 0px;
 	margin-bottom: 10px;
 }
 
-div.blogEntry hr {
+section.blogEntry hr {
 	height: 1px;
 	background: #998;
 	border: none;
 	clear: left;
 }
 
-div.blogEntry .breadCrumb{
+section.blogEntry .breadCrumb{
 	margin-bottom: 1em;
 }
 
-div.blogEntry .posRight{
+section.blogEntry .posRight{
 	margin-bottom: 1em;
 }
 
@@ -572,8 +578,8 @@ div.blogEntry .posRight{
 /* The max-width has to be adjusted
    depending on the width of the logo*/
 @media (max-width: 1000px) {
-	#header {
-		justify-content: center;
+	header {
+			justify-content: center;
 	}
 	.header_boxes {
 		justify-content: center;

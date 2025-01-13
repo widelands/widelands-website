@@ -20,10 +20,11 @@
 	<h1>Welcome to Widelands.org</h1>
 {% endblock %}
 {% block content_main %}
-<div class="blogEntry" style="min-height: 380px;">
+<!--<div class="blogEntry" style="min-height: 380px;">-->
+	<section>
 	<img class="landing posRight" src="{% static 'img/welcome.jpg' %}" alt="Welcome!" />
 	<p>
-	<a href="{% url 'wiki_article' "Description" %}">Widelands</a> is a 
+	<a href="{% url 'wiki_article' "Description" %}">Widelands</a> is a
 	<a href="{% url 'wiki_article' "The Widelands Project" %}">free, open source</a>
 	real-time strategy game with singleplayer campaigns and a multiplayer mode.
 	The game was inspired by Settlers&nbsp;II&#8482; (&copy;&nbsp;Bluebyte) but
@@ -52,8 +53,8 @@
 	for pointers.
 	</p>
 	<div style="clear: left"></div>
-</div>
-
+<!--</div>-->
+</section>
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
     <div id="content_header">
