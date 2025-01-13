@@ -40,6 +40,13 @@
 	</div>
 </td>
 <td class="post">
+	{% if post.hidden %}
+		<p class="errormessage">Moderator info: This post is hidden.
+			You can delete it right here. More options are available at
+			<a href="{{ site }}/admin/check_input/suspiciousinput/">the admin page for suspicious inputs.</a>
+		</p>
+	{% endif %}
+
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
 	<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
 	<hr />

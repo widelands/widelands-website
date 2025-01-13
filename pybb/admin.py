@@ -2,24 +2,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read, Attachment
-
-
-def delete_selected(modeladmin, request, queryset):
-    """Overwritten Django's default action to delete a post.
-
-    This action uses the delete() method of the post model.
-    This ensures also deleting a topic if neccesary, preventing
-    index-errors if a topic has only one post.
-
-    """
-    for obj in queryset:
-        obj.delete()
-
-
-def unhide_post(modeladmin, request, queryset):
-    """Unhide post(s) and inform subscribers."""
-    for obj in queryset:
-        obj.unhide_post()
+from check_input.models import SuspiciousInput
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -119,21 +102,19 @@ class PostAdmin(admin.ModelAdmin):
         ),
         (_("Message"), {"fields": ("body", "body_html", "body_text")}),
     )
+    actions = ["delete_selected"]
 
-    def get_actions(self, request):
-        # Overwrite delete_selected from base class.
-        actions = admin.ModelAdmin.get_actions(self, request)
-        actions["delete_selected"] = (
-            delete_selected,
-            "delete_selected",
-            "Delete selected posts",
-        )
-        actions["unhide_post"] = (
-            unhide_post,
-            "unhide_post",
-            "Unhide post and inform subscribers",
-        )
-        return actions
+    @admin.action(description="Delete selected posts")
+    def delete_selected(modeladmin, request, queryset):
+        """Overwritten Django's default action to delete a post.
+
+        This action uses the delete() method of the post model.
+        This ensures also deleting a topic if neccesary, preventing
+        index-errors if a topic has only one post.
+
+        """
+        for obj in queryset:
+            obj.delete()
 
 
 class ReadAdmin(admin.ModelAdmin):
