@@ -3,166 +3,178 @@
 {% load static %}
 
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/search.css' %}" />
+<link rel="stylesheet" type="text/css" media="all"
+      href="{% static 'css/search.css' %}"/>
 <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
 {{block.super}}
 {% endblock %}
 
 {% block content_header %}
-    <h2>Search</h2>
+<h2>Search</h2>
 {% endblock %}
 
 {% block content_main %}
-    <div class="blogEntry">
-        <div class="closeable" title="Click to expand">Help</div>
-        <ul class="search-help-hints">
-            <li>The search is case insensitive.</li>
-            <li>Search terms get stemmed: E.g. 'Mining' will also find 'mine', 'mines' and 'miner'.</li>
-            <li>If you search for more than one word, only entries that contain all of the given words will be returned.</li>
-            <li>Words surrounded by parentheses will find exact matches:
-            E.g. "main page" will find all wiki articles with this name or the content contains 'main page'</li>
-            <li>Words preceding with a minus will be excluded: E.g. searching for 'tribe -barbarian'
-            will find all forum posts containing 'tribe' but exclude all forum posts containing 'barbarian'.</li>
-            <li>The start date won't be considered when searching the encyclopedia, maps or the wiki.
-            The default is set to return results for the span of one year.</li>
-        </ul>
+<section>
+    <div class="closeable" title="Click to expand">Help</div>
+    <ul class="search-help-hints">
+        <li>The search is case insensitive.</li>
+        <li>Search terms get stemmed: E.g. 'Mining' will also find 'mine', 'mines' and
+            'miner'.
+        </li>
+        <li>If you search for more than one word, only entries that contain all of the
+            given words will be returned.
+        </li>
+        <li>Words surrounded by parentheses will find exact matches:
+            E.g. "main page" will find all wiki articles with this name or the content
+            contains 'main page'
+        </li>
+        <li>Words preceding with a minus will be excluded: E.g. searching for 'tribe
+            -barbarian'
+            will find all forum posts containing 'tribe' but exclude all forum posts
+            containing 'barbarian'.
+        </li>
+        <li>The start date won't be considered when searching the encyclopedia, maps or
+            the wiki.
+            The default is set to return results for the span of one year.
+        </li>
+    </ul>
     <form method="get" action=".">
-      {{ form.non_field_errors }}
-      <hr>
-      <div class="search-options">
-        <div>
-          <strong>Search for: </strong>{{ form.q }}
-        </div>
-        <div>
-          <strong>Startdate: </strong>{{ form.start_date }}
-            {% if form.start_date.errors %}
+        {{ form.non_field_errors }}
+        <hr>
+        <div class="search-options">
+            <div>
+                <strong>Search for: </strong>{{ form.q }}
+            </div>
+            <div>
+                <strong>Startdate: </strong>{{ form.start_date }}
+                {% if form.start_date.errors %}
                 <span class="errormessage"> Enter a date in the form of YYYY-MM-DD </span>
-            {% else %}
+                {% else %}
                 (Leave empty for full search)
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
-      </div>
-      <div  class="search-options">
-        <div>
-          <strong>Search in: </strong>
-          <span class="button">
+        <div class="search-options">
+            <div>
+                <strong>Search in: </strong>
+                <span class="button">
             {{ form.incl_forum.label_tag }} {{ form.incl_forum }}
           </span>
-          <span class="button">
+                <span class="button">
             {{ form.incl_maps.label_tag }} {{ form.incl_maps }}
           </span>
-          <span class="button">
+                <span class="button">
             {{ form.incl_wiki.label_tag }} {{ form.incl_wiki }}
           </span>
-          <span class="button">
+                <span class="button">
             {{ form.incl_help.label_tag }} {{ form.incl_help }}
           </span>
-          <span class="button">
+                <span class="button">
             {{ form.incl_news.label_tag }} {{ form.incl_news }}
           </span>
+            </div>
+            <div class="flex-right">
+                <input type="submit" value="Search">
+            </div>
         </div>
-        <div class="flex-right">
-          <input type="submit" value="Search">
-        </div>
-      </div>
-      <hr>
-      {% if query %}
+        <hr>
+        {% if query %}
         {% if result %}
-            {% if result.topics or result.posts %}
-              <h2>Forum:</h2>
-              {% if result.topics %}
-                <h3>Topics:</h3>
-                <ul class="search">
-                  {% for topic in result.topics %}
-                    <li>
-                      {% include "search/includes/topics.html" %}
-                    </li>
-                  {% endfor %}
-              </ul>
-              {% endif %}
-              {% if result.posts %}
-                <h3>Posts:</h3>
-                <ul class="search">
-                  {% for post in result.posts %}
-                      <li class="highlight">
-                        {% include "search/includes/posts.html" %}
-                      </li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            {% endif%}
-            {% if result.wiki %}
-              <h2>Wiki:</h2>
-                  <ul class="search">
-                      {% for article in result.wiki %}
-                        <li class="highlight"> 
-                          {% include "search/includes/wiki_articles.html" %}
-                        </li>
-                      {% endfor %}
-                  </ul>
-            {% endif %}
-            {% if result.news %}
-              <h2>News:</h2>
-                  <ul class="search">
-                      {% for news in result.news %}
-                        <li class="highlight"> 
-                          {% include "search/includes/news.html" %}
-                        </li>
-                      {% endfor %}
-                  </ul>
-            {% endif %}
-            {% if result.maps %}
-              <h2>Maps:</h2>
-                  <ul class="search">
-                      {% for map in result.maps %}
-                        <li> 
-                          {% include "search/includes/maps.html" %}
-                        </li>
-                      {% endfor %}
-                  </ul>
-            {% endif %}
-            {% if result.workers or result.buildings or result.wares %}
-                <h2>Encylopedia:</h2>
-                {% if result.workers %}
-                    <h3>Workers: </h3>
-                    <ul class="search">
-                        {% for worker in result.workers %}
-                          <li class="highlight">
-                            {% include "search/includes/workers.html" %}
-                          </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                {% if result.wares %}
-                    <h3>Wares:</h3>
-                    <ul class="search">
-                        {% for ware in result.wares %}
-                          <li class="highlight">
-                            {% include "search/includes/wares.html" %}
-                          </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                {% if result.buildings %}
-                    <h3>Buildings:</h3>
-                    <ul class="search">
-                        {% for building in result.buildings %}
-                          <li class="highlight">
-                            {% include "search/includes/buildings.html" %}
-                          </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-              {% endif %} {# Encyclopedia #}
+        {% if result.topics or result.posts %}
+        <h2>Forum:</h2>
+        {% if result.topics %}
+        <h3>Topics:</h3>
+        <ul class="search">
+            {% for topic in result.topics %}
+            <li>
+                {% include "search/includes/topics.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if result.posts %}
+        <h3>Posts:</h3>
+        <ul class="search">
+            {% for post in result.posts %}
+            <li class="highlight">
+                {% include "search/includes/posts.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endif%}
+        {% if result.wiki %}
+        <h2>Wiki:</h2>
+        <ul class="search">
+            {% for article in result.wiki %}
+            <li class="highlight">
+                {% include "search/includes/wiki_articles.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if result.news %}
+        <h2>News:</h2>
+        <ul class="search">
+            {% for news in result.news %}
+            <li class="highlight">
+                {% include "search/includes/news.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if result.maps %}
+        <h2>Maps:</h2>
+        <ul class="search">
+            {% for map in result.maps %}
+            <li>
+                {% include "search/includes/maps.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if result.workers or result.buildings or result.wares %}
+        <h2>Encylopedia:</h2>
+        {% if result.workers %}
+        <h3>Workers: </h3>
+        <ul class="search">
+            {% for worker in result.workers %}
+            <li class="highlight">
+                {% include "search/includes/workers.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if result.wares %}
+        <h3>Wares:</h3>
+        <ul class="search">
+            {% for ware in result.wares %}
+            <li class="highlight">
+                {% include "search/includes/wares.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if result.buildings %}
+        <h3>Buildings:</h3>
+        <ul class="search">
+            {% for building in result.buildings %}
+            <li class="highlight">
+                {% include "search/includes/buildings.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endif %} {# Encyclopedia #}
         {% else %}
-          <p><span class="errormessage">Nothing found... </span>
-          consider adjusting the start date when searching the Forum or News.
-          </p>
+        <p><span class="errormessage">Nothing found... </span>
+            consider adjusting the start date when searching the Forum or News.
+        </p>
         {% endif %} {# result #}
-      {% else %}
+        {% else %}
         <p class="errormessage">Please enter a term to search for.</p>
-      {% endif %} {# query #}
+        {% endif %} {# query #}
     </form>
-    </div>
+</section>
 {% endblock %}

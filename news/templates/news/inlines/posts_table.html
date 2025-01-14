@@ -5,43 +5,43 @@ List all news in a table
 {% load threadedcommentstags %}
 {% load custom_date %}
 
-<div class="blogEntry">
-	<div class="center">
-		{% include "pagination/pagination.html" %}
-	</div>
-	<table width="100%">
-		<caption></caption>
-		<thead>
-			<tr>
-				<th align="left">Title</th>
-				<th>Published</th>
-				<th>Comments</th>
-				<th align="right">Category</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for object in page_obj %}
-			{% get_comment_count for object as ccount %}
-			<tr>
-				<td><a href="{{object.get_absolute_url}}">{{ object.title }}</a></td>
-				<td align="center">{{ object.publish|custom_date:user }}</td>
-				<td align="center">{{ ccount }}</td>
-				<td align="right">
-				<a href=" {% url 'category_posts' slug=object.get_category_slug %}">
-				{% if object.categories.all %}
-				    {{ object.categories.all.0|title }}
-				{% else %}
-				    None
-				{% endif %}
-				</a>
-				</td>
-			</tr>
-	    	{% endfor %}
-		</tbody>
-	</table>
-	{% if page_obj.has_other_pages %}
-	<div class="center">
-		{% include "pagination/pagination.html" %}
-	</div>
-	{% endif %}
-</div>
+<section>
+    <div class="center">
+        {% include "pagination/pagination.html" %}
+    </div>
+    <table width="100%">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th align="left">Title</th>
+            <th>Published</th>
+            <th>Comments</th>
+            <th align="right">Category</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in page_obj %}
+        {% get_comment_count for object as ccount %}
+        <tr>
+            <td><a href="{{object.get_absolute_url}}">{{ object.title }}</a></td>
+            <td align="center">{{ object.publish|custom_date:user }}</td>
+            <td align="center">{{ ccount }}</td>
+            <td align="right">
+                <a href=" {% url 'category_posts' slug=object.get_category_slug %}">
+                    {% if object.categories.all %}
+                    {{ object.categories.all.0|title }}
+                    {% else %}
+                    None
+                    {% endif %}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if page_obj.has_other_pages %}
+    <div class="center">
+        {% include "pagination/pagination.html" %}
+    </div>
+    {% endif %}
+</section>

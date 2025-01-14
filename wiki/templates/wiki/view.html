@@ -8,13 +8,17 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/rss+xml" title="Wiki History for article {{ article.title }} (RSS)" href="{% url 'wiki_article_history_feed_rss' article.title %}" />
-<link rel="alternate" type="application/atom+xml" title="Wiki History for article {{ article.title }} (Atom)" href="{% url 'wiki_article_history_feed_atom' article.title %}" />
+<link rel="alternate" type="application/rss+xml"
+      title="Wiki History for article {{ article.title }} (RSS)"
+      href="{% url 'wiki_article_history_feed_rss' article.title %}"/>
+<link rel="alternate" type="application/atom+xml"
+      title="Wiki History for article {{ article.title }} (Atom)"
+      href="{% url 'wiki_article_history_feed_atom' article.title %}"/>
 {{ block.super}}
 {% endblock %}
 
 {% block content_header %}
-	<h1>{{ article.title }}</h1>
+<h1>{{ article.title }}</h1>
 {% endblock %}
 
 {# add the wanted classes to the tabs #}
@@ -22,42 +26,46 @@
 {% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
 {% block content_main %}
-	{% if messages %}
-	    {% for message in messages %}
-	    <p class="errormessage">{{ message }}</p>
-	    {% endfor %}
-	{% endif %}
-<div class="blogEntry">
-	{% if not article.id %}
-		<p>
-			{% trans "This article does not exist." %}
-			<a href="{% url 'wiki_edit' article.title %}">{% trans "Create it now?" %}</a>
-		</p>
-	{% endif %}
-	{% if redirected_from %}
-		<p class="small">
-			({% trans "Redirected from" %} {{ redirected_from }})
-		</p>
-	{% endif %}
-	{% if revision %}
-		<p class="small">
-			({% trans "Viewing revision " %} {{ revision }})
-		</p>
-	{% endif %}
-	{% if outdated %}
-		<h2 class="errormessage">Outdated</h2>
-		<p class="errormessage">This article is marked as outdated.
-			If you are familiar with this topic, please consider updating and improving this page.
-			In case of any questions, please ask in the forum! For pointers see <a href="/wiki/WikiHelp">WikiHelp</a> in our wiki.
-			After finishing your work remove the 'outdated' tag.</p>
-	{% endif %}
-	{% render_content article %}
-	{% comment %}
-	{% tags_for_object article as article_tags %}
-		{% if article_tags %}
-			<div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}</div>
-		{% endif %}
-	{% endcomment %}
-</div>
+{% if messages %}
+{% for message in messages %}
+<p class="errormessage">{{ message }}</p>
+{% endfor %}
+{% endif %}
+<section>
+    {% if not article.id %}
+    <p>
+        {% trans "This article does not exist." %}
+        <a href="{% url 'wiki_edit' article.title %}">{% trans "Create it now?" %}</a>
+    </p>
+    {% endif %}
+    {% if redirected_from %}
+    <p class="small">
+        ({% trans "Redirected from" %} {{ redirected_from }})
+    </p>
+    {% endif %}
+    {% if revision %}
+    <p class="small">
+        ({% trans "Viewing revision " %} {{ revision }})
+    </p>
+    {% endif %}
+    {% if outdated %}
+    <h2 class="errormessage">Outdated</h2>
+    <p class="errormessage">This article is marked as outdated.
+        If you are familiar with this topic, please consider updating and improving this
+        page.
+        In case of any questions, please ask in the forum! For pointers see <a
+                href="/wiki/WikiHelp">WikiHelp</a> in our wiki.
+        After finishing your work remove the 'outdated' tag.</p>
+    {% endif %}
+    {% render_content article %}
+    {% comment %}
+    {% tags_for_object article as article_tags %}
+    {% if article_tags %}
+    <div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" with sep=","
+        tag_list=article_tags %}
+    </div>
+    {% endif %}
+    {% endcomment %}
+</section>
 {% endblock %}
 

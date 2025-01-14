@@ -10,160 +10,177 @@
 {% endblock title %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ topic.forum.name }}'" href="{% url 'pybb_feed_posts' %}{{topic.forum.id}}/"  />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ topic.forum.name }}'" href="{% url 'pybb_feed_topics' %}{{topic.forum.id}}/" />
+<link rel="alternate" type="application/atom+xml"
+      title="Latest Posts on forum '{{ topic.forum.name }}'"
+      href="{% url 'pybb_feed_posts' %}{{topic.forum.id}}/"/>
+<link rel="alternate" type="application/atom+xml"
+      title="Latest Topics on forum '{{ topic.forum.name }}'"
+      href="{% url 'pybb_feed_topics' %}{{topic.forum.id}}/"/>
 {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Topic: {{ topic }}</h1>
+<h1>Topic: {{ topic }}</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-	<div class="breadCrumb">
-		<a href="{% url 'pybb_index' %}">Forums</a> &#187;
-		{% pybb_link topic.forum.category %} &#187;
-		<a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
-		{{ topic }}
-		</div>
-	{% if topic.is_hidden %}
-		<p>This topic is hidden. It is either waiting for a review or was hidden by a moderator.</p>
-		{% if posts.0.is_spam and user_is_mod %}
-			<p>This topic's first post is possible spam. Toggle the visibility to show the post. If it is indeed spam, consider deleting the user:</p>
-			<p>To delete the user, go to the <a href="/admin/auth/user/{{posts.0.user.pk}}/change/">admin user-page for the post's author</a></p>
-		{% endif %}
-		<div class="posRight">
-		{% if user_is_mod %}
-			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-				<img src="{% static 'forum/img/topic_show.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Toggle Visibility" %}</span>
-			</a>
-		{% endif %}
-	{% else %}
-		<div class="posRight">
-		{% if user_is_mod %}
-			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-				<img src="{% static 'forum/img/topic_hide.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Toggle Visibility" %}</span>
-			</a>
-			{% if topic.sticky %}
-			<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
-				<img src="{% static 'forum/img/unstick.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Unstick Topic" %}</span>
-			</a>
-			{% else %}
-			<a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
-				<img src="{% static 'forum/img/sticky.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Stick Topic" %}</span>
-			</a>
-			{% endif %}
-			{% if topic.closed %}
-			<a class="button" href="{% url 'pybb_open_topic' topic.id %}">
-				<img src="{% static 'forum/img/open.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Open Topic" %}</span>
-			</a>
-			{% else %}
-			<a class="button" href="{% url 'pybb_close_topic' topic.id %}">
-				<img src="{% static 'forum/img/closed.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Close Topic" %}</span>
-			</a>
-			{% endif %}
-		{% endif %}
-		{% if user.is_authenticated %}
-			{% if subscribed %}
-			<a class="button" href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
-				<img src="{% static 'forum/img/unsubscribe.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Unsubscribe" %}</span>
-			</a>
-			{% else %}
-			<a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
-				<img src="{% static 'forum/img/subscribe.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "Subscribe" %}</span>
-			</a>
-			{% endif %}
-			<a class="button" href="{% url 'pybb_add_post' topic.id %}">
-				<img src="{% static 'forum/img/send.png' %}" alt ="" class="middle" />
-				<span class="middle">{% trans "New Reply" %}</span>
-			</a>
-		{% endif %}
-			</div>
+<section>
+    <div class="breadCrumb">
+        <a href="{% url 'pybb_index' %}">Forums</a> &#187;
+        {% pybb_link topic.forum.category %} &#187;
+        <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
+        {{ topic }}
+    </div>
+    {% if topic.is_hidden %}
+    <p>This topic is hidden. It is either waiting for a review or was hidden by a
+        moderator.</p>
+    {% if posts.0.is_spam and user_is_mod %}
+    <p>This topic's first post is possible spam. Toggle the visibility to show the post.
+        If it is indeed spam, consider deleting the user:</p>
+    <p>To delete the user, go to the <a
+            href="/admin/auth/user/{{posts.0.user.pk}}/change/">admin user-page for the
+        post's author</a></p>
+    {% endif %}
+    <div class="posRight">
+        {% if user_is_mod %}
+        <a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+            <img src="{% static 'forum/img/topic_show.png' %}" alt="" class="middle"/>
+            <span class="middle">{% trans "Toggle Visibility" %}</span>
+        </a>
+        {% endif %}
+        {% else %}
+        <div class="posRight">
+            {% if user_is_mod %}
+            <a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+                <img src="{% static 'forum/img/topic_hide.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Toggle Visibility" %}</span>
+            </a>
+            {% if topic.sticky %}
+            <a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
+                <img src="{% static 'forum/img/unstick.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Unstick Topic" %}</span>
+            </a>
+            {% else %}
+            <a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
+                <img src="{% static 'forum/img/sticky.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Stick Topic" %}</span>
+            </a>
+            {% endif %}
+            {% if topic.closed %}
+            <a class="button" href="{% url 'pybb_open_topic' topic.id %}">
+                <img src="{% static 'forum/img/open.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Open Topic" %}</span>
+            </a>
+            {% else %}
+            <a class="button" href="{% url 'pybb_close_topic' topic.id %}">
+                <img src="{% static 'forum/img/closed.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Close Topic" %}</span>
+            </a>
+            {% endif %}
+            {% endif %}
+            {% if user.is_authenticated %}
+            {% if subscribed %}
+            <a class="button"
+               href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
+                <img src="{% static 'forum/img/unsubscribe.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Unsubscribe" %}</span>
+            </a>
+            {% else %}
+            <a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
+                <img src="{% static 'forum/img/subscribe.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Subscribe" %}</span>
+            </a>
+            {% endif %}
+            <a class="button" href="{% url 'pybb_add_post' topic.id %}">
+                <img src="{% static 'forum/img/send.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "New Reply" %}</span>
+            </a>
+            {% endif %}
+        </div>
 
-			{% include "pagination/pagination.html" %}
+        {% include "pagination/pagination.html" %}
 
-			<table class="forum">
-				<tbody>
-				{% for post in page_obj %}
-					<tr class="{% cycle 'odd' 'even' %}" {% if post.hidden %} style="background-color: gray" {% endif %}>
-						{% include 'pybb/inlines/post.html' %}
-					</tr>
-					{% if not forloop.last %}
-					{# no spacer at end of table #}
-					<tr class="spacer">
-						<td></td>
-						<td></td>
-					</tr>
-					{% endif %}
-				{% endfor %}
-				</tbody>
-			</table>
+        <table class="forum">
+            <tbody>
+            {% for post in page_obj %}
+            <tr class="{% cycle 'odd' 'even' %}" {% if post.hidden %}
+                style="background-color: gray" {% endif %}>
+                {% include 'pybb/inlines/post.html' %}
+            </tr>
+            {% if not forloop.last %}
+            {# no spacer at end of table #}
+            <tr class="spacer">
+                <td></td>
+                <td></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
 
-			<div class="posRight">
-			{% if user_is_mod %}
-			<a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-					<img src="{% static 'forum/img/topic_hide.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Toggle Visibility" %}</span>
-				</a>
-				{% if topic.sticky %}
-				<a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
-					<img src="{% static 'forum/img/unstick.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Unstick Topic" %}</span>
-				</a>
-				{% else %}
-				<a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
-					<img src="{% static 'forum/img/sticky.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Stick Topic" %}</span>
-				</a>
-				{% endif %}
-				{% if topic.closed %}
-				<a class="button" href="{% url 'pybb_open_topic' topic.id %}">
-					<img src="{% static 'forum/img/open.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Open Topic" %}</span>
-				</a>
-				{% else %}
-				<a class="button" href="{% url 'pybb_close_topic' topic.id %}">
-					<img src="{% static 'forum/img/closed.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Close Topic" %}</span>
-				</a>
-				{% endif %}
-			{% endif %}
-			{% if user.is_authenticated %}
-				{% if subscribed %}
-				<a class="button" href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
-					<img src="{% static 'forum/img/unsubscribe.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Unsubscribe" %}</span>
-				</a>
-				{% else %}
-				<a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
-					<img src="{% static 'forum/img/subscribe.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "Subscribe" %}</span>
-				</a>
-				{% endif %}
-				<a class="button" href="{% url 'pybb_add_post' topic.id %}">
-					<img src="{% static 'forum/img/send.png' %}" alt ="" class="middle" />
-					<span class="middle">{% trans "New Reply" %}</span>
-				</a>
-			{% endif %}
-			</div>
-			{% include "pagination/pagination.html" %}
+        <div class="posRight">
+            {% if user_is_mod %}
+            <a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
+                <img src="{% static 'forum/img/topic_hide.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Toggle Visibility" %}</span>
+            </a>
+            {% if topic.sticky %}
+            <a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
+                <img src="{% static 'forum/img/unstick.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Unstick Topic" %}</span>
+            </a>
+            {% else %}
+            <a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
+                <img src="{% static 'forum/img/sticky.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Stick Topic" %}</span>
+            </a>
+            {% endif %}
+            {% if topic.closed %}
+            <a class="button" href="{% url 'pybb_open_topic' topic.id %}">
+                <img src="{% static 'forum/img/open.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Open Topic" %}</span>
+            </a>
+            {% else %}
+            <a class="button" href="{% url 'pybb_close_topic' topic.id %}">
+                <img src="{% static 'forum/img/closed.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "Close Topic" %}</span>
+            </a>
+            {% endif %}
+            {% endif %}
+            {% if user.is_authenticated %}
+            {% if subscribed %}
+            <a class="button"
+               href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
+                <img src="{% static 'forum/img/unsubscribe.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Unsubscribe" %}</span>
+            </a>
+            {% else %}
+            <a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
+                <img src="{% static 'forum/img/subscribe.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Subscribe" %}</span>
+            </a>
+            {% endif %}
+            <a class="button" href="{% url 'pybb_add_post' topic.id %}">
+                <img src="{% static 'forum/img/send.png' %}" alt="" class="middle"/>
+                <span class="middle">{% trans "New Reply" %}</span>
+            </a>
+            {% endif %}
+        </div>
+        {% include "pagination/pagination.html" %}
 
-		</div>
+    </div>
 
-		{% if user.is_authenticated %}
-			{% if not topic.closed %}
-				{% include "pybb/inlines/add_post_form.html" %}
-			{% endif %}
-		{% endif %}
-	{% endif %}
-{% endblock %}
-</div>
+    {% if user.is_authenticated %}
+    {% if not topic.closed %}
+    {% include "pybb/inlines/add_post_form.html" %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
+    {% endblock %}
+</section>

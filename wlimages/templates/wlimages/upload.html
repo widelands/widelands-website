@@ -1,15 +1,15 @@
 {% extends "mainpage/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% block content_main %}
-	<div class="blogEntry"
-		<form  enctype="multipart/form-data" action="/images/upload/" method="POST">
-		{{ upload_form.imagename.errors }}
-		{% csrf_token %}
-		</form>
-		<div class="button"><a href="{% url 'wiki_edit' referer %}">Back</a></div>
-	</div>
+<section>
+    <form enctype="multipart/form-data" action="/images/upload/" method="POST">
+        {{ upload_form.imagename.errors }}
+        {% csrf_token %}
+    </form>
+    <div class="button"><a href="{% url 'wiki_edit' referer %}">Back</a></div>
+</section>
 
 {% endblock %}

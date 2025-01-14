@@ -19,7 +19,6 @@
 		</ul>
     {% endif %}
 {% endblock %}
-<!--<div class="blogEntry">-->
 <section class="blogEntry">
 	{% if object.has_image %}
 		<a href="{% url 'category_posts' slug=object.get_category_slug %}">

@@ -1,29 +1,32 @@
 {% extends "wlscheduling/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% block content_header %}
-    <h1>Scheduling: Other users' playtimes</h1>
+<h1>Scheduling: Other users' playtimes</h1>
 {% endblock %}
 
 {% block content_main %}
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function(){ 
-    addTimeZoneInfo();
-    addOtherUsersAvailabilities();
-}, false);
+    document.addEventListener('DOMContentLoaded', function(){
+        addTimeZoneInfo();
+        addOtherUsersAvailabilities();
+    }, false);
 </script>
-<div class="blogEntry">
+<section>
     {% include "wlscheduling/timezone-msg.html" %}
     <div id="other-users-wrapper"></div>
-    <div id="no-user-to-display" hidden="hidden">Sorry currently there isn't anybody who has scheduled a gaming session. Don't hesitate to signal to other when you'll be available <a href="{% url 'scheduling_scheduling' %}">here</a></div>
+    <div id="no-user-to-display" hidden="hidden">Sorry currently there isn't anybody who
+        has scheduled a gaming session. Don't hesitate to signal to other when you'll be
+        available <a href="{% url 'scheduling_scheduling' %}">here</a></div>
 
-</div>
+</section>
 
 <!-- Templates for the js script -->
 {% include "wlscheduling/other-users.html" %}
 
 <!-- Div to send django data to js file -->
-<div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}" users-to-fill="{{other_users_availabilities}}"></div>
+<div id="django-data" user-time-zone="{{user.wlprofile.time_zone}}"
+     users-to-fill="{{other_users_availabilities}}"></div>
 {% endblock %}

@@ -12,28 +12,31 @@ Base view to show a news post in the archive
 
 {% block extra_head %}
 {{ block.super }}
-	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}" />
-	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/comments.css' %}" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}"/>
+<link rel="stylesheet" type="text/css" media="all"
+      href="{% static 'css/comments.css' %}"/>
 {% endblock %}
 
 {% block content_header %}
-	<h1>News: {{ object.title }}</h1><br />
-	<div class="linksBox">
-		<a href="{% url 'news_index' %}">News Archive: </a>
-		{% if object.get_previous_by_publish %}
-			<a href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{ object.get_previous_post }}</a>
-		{% endif %}
-		{% if object.get_next_post %}
-			| <a href="{{ object.get_next_post.get_absolute_url }}">{{ object.get_next_post }} &raquo;</a> 
-		{% endif %}
-	</div>{% endblock %}
+<h1>News: {{ object.title }}</h1><br/>
+<div class="linksBox">
+    <a href="{% url 'news_index' %}">News Archive: </a>
+    {% if object.get_previous_by_publish %}
+    <a href="{{ object.get_previous_post.get_absolute_url }}">&laquo; {{
+        object.get_previous_post }}</a>
+    {% endif %}
+    {% if object.get_next_post %}
+    | <a href="{{ object.get_next_post.get_absolute_url }}">{{ object.get_next_post }}
+    &raquo;</a>
+    {% endif %}
+</div>{% endblock %}
 
 {% block content_main %}
 
-	{% include "news/inlines/post_detail.html" %}
+{% include "news/inlines/post_detail.html" %}
 
-	<div class="blogEntry">
-		<h3 id="comment_anchor">Comments on this Post:</h3>
-		{% include "threadedcomments/inlines/comments.html" %}
-	</div>
+<section>
+    <h3 id="comment_anchor">Comments on this Post:</h3>
+    {% include "threadedcomments/inlines/comments.html" %}
+</section>
 {% endblock %}

@@ -5,39 +5,39 @@
 {% block title %} Category: {{ cur_category }} - {{ block.super }}{% endblock %}
 
 {% block content_header %}
-    <h1>Posts for Category: {{ cur_category }}</h1>
+<h1>Posts for Category: {{ cur_category }}</h1>
 {% endblock %}
 
 {% block content_main %}
 <div>
-	<div class="linksBox">
-		<a href="{% url 'news_index' %}">News Archive</a>
-	</div>
-	<br />
-	<div class="linksBox">All Categories:
-		{% for category in categories %}
-			<a href="{% url 'category_posts' slug=category.slug %}">{{ category }} </a> |
-		{% endfor %}
-		{# Speciallink to provide posts which have no category #}
-		<a href="{% url 'category_posts' slug='none' %}"> None </a>
-	</div>
+    <div class="linksBox">
+        <a href="{% url 'news_index' %}">News Archive</a>
+    </div>
+    <br/>
+    <div class="linksBox">All Categories:
+        {% for category in categories %}
+        <a href="{% url 'category_posts' slug=category.slug %}">{{ category }} </a> |
+        {% endfor %}
+        {# Speciallink to provide posts which have no category #}
+        <a href="{% url 'category_posts' slug='none' %}"> None </a>
+    </div>
 </div>
-<div class="blogEntry">
-	<div class="center">
-	{% include "pagination/pagination.html" %}
-	</div>
+<section>
+    <div class="center">
+        {% include "pagination/pagination.html" %}
+    </div>
     <table width="100%">
-      <th align="left">Title</th>
-      <th>Posted at</th>
-	  <th>Comments</th>
-    {% for post in post_list %}
-		{% get_comment_count for post as ccount %}
+        <th align="left">Title</th>
+        <th>Posted at</th>
+        <th>Comments</th>
+        {% for post in post_list %}
+        {% get_comment_count for post as ccount %}
         <tr>
-          <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
-          <td align="center">{{ post.publish|custom_date:user }}</td>
-		  <td align="center"> {{ ccount }}</td>
+            <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
+            <td align="center">{{ post.publish|custom_date:user }}</td>
+            <td align="center"> {{ ccount }}</td>
         </tr>
-    {% endfor %}
+        {% endfor %}
     </table>
-</div>
+</section>
 {% endblock %}

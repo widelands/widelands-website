@@ -1,17 +1,17 @@
 {% extends "mainpage/base.html" %}
 
 {% block extra_head %}
-	<script>
-		window.addEventListener('load', set_time);
-		function set_time() {
-	      var browserTimeZone = - new Date().getTimezoneOffset()/60
-			browserTimeZone = browserTimeZone.toPrecision(3)
-			document.getElementById("id_browser_timezone").value = browserTimeZone
-			// add a + sign for the display
-			browserTimeZone = browserTimeZone > 0 ? '+' + browserTimeZone : browserTimeZone
-			document.getElementById("time_zone").innerHTML = browserTimeZone
-		}
-	</script>
+<script>
+    window.addEventListener('load', set_time);
+    function set_time() {
+      var browserTimeZone = - new Date().getTimezoneOffset()/60
+        browserTimeZone = browserTimeZone.toPrecision(3)
+        document.getElementById("id_browser_timezone").value = browserTimeZone
+        // add a + sign for the display
+        browserTimeZone = browserTimeZone > 0 ? '+' + browserTimeZone : browserTimeZone
+        document.getElementById("time_zone").innerHTML = browserTimeZone
+    }
+</script>
 {% endblock %}
 
 {% block title %}
@@ -19,52 +19,58 @@ Login - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Login</h1>
+<h1>Login</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-{% if form.non_field_errors %}
-	<p class="errormessage">
-		Your username and password didn't match.
-		<br />
-		Please try again.
-	</p>
-{% endif %}
-	<form method="post" action="." id="login_form">
-		<table>
-			<tr>
-				<td class="grey">
-					{{ form.username.label_tag }}
-				</td>
-				<td>
-					{{ form.username }}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">
-					{{ form.password.label_tag }}
-				</td>
-				<td>
-					{{ form.password }}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">
-					Looks your time zone is <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a> <span id="time_zone"><span>
-				</td>
-				<td>
-					{{ form.browser_timezone }}
-					{{ form.set_timezone }} <span class="grey">{{ form.set_timezone.label_tag }}</span><div class="errormessage">{{ form.set_timezone.errors }}</div>
-					<noscript class="errormessage"></br>Automatic setting of your time zone isn't possible because javascript is disabled</br>
-						Please check your time zone in you profile page after log in</noscript>
-				</td>
-			</tr>
-		</table>
-		{% csrf_token %}
-		<input type="submit" value="login" />
-		<input type="hidden" name="next" value="{{ next }}" />
-	</form>
-	<p><a href="{% url 'password_reset' %}">Lost password?</a> | <a href="{% url 'django_registration_register' %}">Register now!</a></p>
-</div>
+<section>
+    {% if form.non_field_errors %}
+    <p class="errormessage">
+        Your username and password didn't match.
+        <br/>
+        Please try again.
+    </p>
+    {% endif %}
+    <form method="post" action="." id="login_form">
+        <table>
+            <tr>
+                <td class="grey">
+                    {{ form.username.label_tag }}
+                </td>
+                <td>
+                    {{ form.username }}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">
+                    {{ form.password.label_tag }}
+                </td>
+                <td>
+                    {{ form.password }}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">
+                    Looks your time zone is <a
+                        href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>
+                    <span id="time_zone"></span>
+                </td>
+                <td>
+                    {{ form.browser_timezone }}
+                    {{ form.set_timezone }} <span class="grey">{{ form.set_timezone.label_tag }}</span>
+                    <div class="errormessage">{{ form.set_timezone.errors }}</div>
+                    <noscript class="errormessage"></br>Automatic setting of your time
+                        zone isn't possible because javascript is disabled</br>
+                        Please check your time zone in you profile page after log in
+                    </noscript>
+                </td>
+            </tr>
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="login"/>
+        <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
+    <p><a href="{% url 'password_reset' %}">Lost password?</a> | <a
+            href="{% url 'django_registration_register' %}">Register now!</a></p>
+</section>
 {% endblock %}

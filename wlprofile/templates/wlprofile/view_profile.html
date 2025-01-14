@@ -4,87 +4,88 @@
 {% load custom_date %}
 
 {% block title %}
-	{% if not profile.deleted %}
-		{{ profile.user.username }}'s
-	{% else %}
-		Deleted Users Profile
-	{% endif %}
-	- Profile
-	{{ block.super }}
+{% if not profile.deleted %}
+{{ profile.user.username }}'s
+{% else %}
+Deleted Users Profile
+{% endif %}
+- Profile
+{{ block.super }}
 {% endblock %}
 
 {% block profile %}class="active"{% endblock %}
 
 {% block content_header %}
-	<h1>{% if not profile.deleted %}
-		{{ profile.user.username }}'s
-	{% else %}
-		Deleted User
-	{% endif %}
-	Profile
-	</h1>
+<h1>{% if not profile.deleted %}
+    {{ profile.user.username }}'s
+    {% else %}
+    Deleted User
+    {% endif %}
+    Profile
+</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-	{% if messages %}
-		{% for message in messages %}
-		<p style="text-align: center;">{{ message }}</p>
-		{% endfor %}
-	{% endif %}
-	{% if not profile.deleted %}
-		<table>
-			<tr>
-				<td>
-				{% if profile.avatar %}
-					<img src="{{ profile.avatar.url }}" alt="Avatar" />
-				{% endif %}
-				</td>
-				<td>
+<section>
+    {% if messages %}
+    {% for message in messages %}
+    <p style="text-align: center;">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% if not profile.deleted %}
+    <table>
+        <tr>
+            <td>
+                {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Avatar"/>
+                {% endif %}
+            </td>
+            <td>
 
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Joined:</td>
-				<td>{{ profile.user.date_joined|custom_date:user|title }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Forum Posts:</td>
-				<td><a href="{% url 'all_user_posts' profile.user %}" title="Show all posts">{{ profile.post_count }}</a></td>
-			</tr>
-			<tr>
-				<td class="grey">Location:</td>
-				<td>{{ profile.location }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Operating System:</td>
-				<td>{{ profile.operating_system }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Webservice(s)/Nick:</td>
-				<td>{{ profile.webservice_nick }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Favourite Map:</td>
-				<td>{{ profile.favourite_map }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Favourite Tribe:</td>
-				<td>{{ profile.favourite_tribe|default_if_none:"" }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Favourite Add-On:</td>
-				<td>{{ profile.favourite_addon }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Signature:</td>
-				<td>{{ profile.signature|urlize|linebreaks }}</td>
-			</tr>
-		</table>
-	{% else %}
-		<p>This user has deleted their data...</p>
-	{% endif %}
-</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="grey">Joined:</td>
+            <td>{{ profile.user.date_joined|custom_date:user|title }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Forum Posts:</td>
+            <td><a href="{% url 'all_user_posts' profile.user %}"
+                   title="Show all posts">{{ profile.post_count }}</a></td>
+        </tr>
+        <tr>
+            <td class="grey">Location:</td>
+            <td>{{ profile.location }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Operating System:</td>
+            <td>{{ profile.operating_system }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Webservice(s)/Nick:</td>
+            <td>{{ profile.webservice_nick }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Favourite Map:</td>
+            <td>{{ profile.favourite_map }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Favourite Tribe:</td>
+            <td>{{ profile.favourite_tribe|default_if_none:"" }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Favourite Add-On:</td>
+            <td>{{ profile.favourite_addon }}</td>
+        </tr>
+        <tr>
+            <td class="grey">Signature:</td>
+            <td>{{ profile.signature|urlize|linebreaks }}</td>
+        </tr>
+    </table>
+    {% else %}
+    <p>This user has deleted their data...</p>
+    {% endif %}
+</section>
 
 {% endblock %}
 

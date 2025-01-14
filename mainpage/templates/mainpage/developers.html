@@ -3,16 +3,16 @@
 {% block title %}Widelands Development Team - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}"/>
 {{ block.super}}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Widelands Development Team</h1>
+<h1>Widelands Development Team</h1>
 {% endblock %}
 {% block content_main %}
-<div class="blogEntry">
-	{{ developers|safe }}
-</div>
+<section>
+    {{ developers|safe }}
+</section>
 {% endblock %}
 

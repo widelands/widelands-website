@@ -1,6 +1,6 @@
 {% extends "wlpoll/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% load wlprofile_extras wlpoll_extras %}
@@ -10,43 +10,43 @@
 {% block title %}{{ object.name }} - {{ block.super }}{% endblock %}
 
 {% block content_header %}
-	<h1>Poll: {{ object.name }}</h1>
+<h1>Poll: {{ object.name }}</h1>
 {% endblock %}
 
 {% block content_tabbing %}
-	{% if perms.wlpoll %}
-	<ul class="small tab-list">
-		{% if perms.wlpoll.add_poll %}
-			<li>
-				<a href="/admin/wlpoll/poll/add/">Add New Poll</a>
-			</li>
-		{% endif %}
-		{% if perms.wlpoll.change_poll %}
-			<li>
-				<a href="/admin/wlpoll/poll/{{object.id}}/">Edit</a>
-			</li>
-		{% endif %}
-		{% if perms.wlpoll.delete_poll %}
-			<li>
-				<a href="/admin/wlpoll/poll/{{object.id}}/delete/">Delete</a>
-			</li>
-		{% endif %}
-	</ul>
-	{% endif %}
+{% if perms.wlpoll %}
+<ul class="small tab-list">
+    {% if perms.wlpoll.add_poll %}
+    <li>
+        <a href="/admin/wlpoll/poll/add/">Add New Poll</a>
+    </li>
+    {% endif %}
+    {% if perms.wlpoll.change_poll %}
+    <li>
+        <a href="/admin/wlpoll/poll/{{object.id}}/">Edit</a>
+    </li>
+    {% endif %}
+    {% if perms.wlpoll.delete_poll %}
+    <li>
+        <a href="/admin/wlpoll/poll/{{object.id}}/delete/">Delete</a>
+    </li>
+    {% endif %}
+</ul>
+{% endif %}
 
 {% endblock %}
 {% block content_main %}
-	<div class="blogEntry">
-		<div id="chartContainer" style="width: 100%; height: 400px"></div>
-		{% display_poll object %}		
-		<hr />
-		{% get_comment_count for object as ccount %}
-		<span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments, {{object.total_votes}} votes</a></span>
-		<span class="small posRight">Posted on {{ object.pub_date|custom_date:user }}</span>
-	</div>
+<section>
+    <div id="chartContainer" style="width: 100%; height: 400px"></div>
+    {% display_poll object %}
+    <hr/>
+    {% get_comment_count for object as ccount %}
+    <span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments, {{object.total_votes}} votes</a></span>
+    <span class="small posRight">Posted on {{ object.pub_date|custom_date:user }}</span>
+</section>
 
-	<div class="blogEntry">
-		<h3>Comments on this Poll:</h3>
-		{% include "threadedcomments/inlines/comments.html" %}
-	</div>
+<section>
+    <h3>Comments on this Poll:</h3>
+    {% include "threadedcomments/inlines/comments.html" %}
+</section>
 {% endblock %}

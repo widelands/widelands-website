@@ -6,28 +6,29 @@
 {% endblock %}
 
 {% block content_header %}
-    <h1>{% trans "Delete Post" %}</h1>
+<h1>{% trans "Delete Post" %}</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-	<h3>{% trans "Are you sure you want to delete this message?" %}</h3>
-	<div class="preview-box">
-		<div class="content post">
-		{{ post.body_html|safe }}
+<section>
+    <h3>{% trans "Are you sure you want to delete this message?" %}</h3>
+    <div class="preview-box">
+        <div class="content post">
+            {{ post.body_html|safe }}
 
-		{% if post.attachments.all %}
-			{% include 'pybb/inlines/attachment.html' %}
-		{% endif %}
-		</div>
-		<br />
-	</div>
-	<form method="post">
-		<p class="info_line">
-			<input type="submit" value="{% trans "Yes, I am sure." %}" />
-			<input type="button" value="{% trans "Cancel" %}" onclick="history.back();" />
-		</p>
-		{% csrf_token %}
-	</form>
-</div>
+            {% if post.attachments.all %}
+            {% include 'pybb/inlines/attachment.html' %}
+            {% endif %}
+        </div>
+        <br/>
+    </div>
+    <form method="post">
+        <p class="info_line">
+            <input type="submit" value="{% trans " Yes, I am sure." %}" />
+            <input type="button" value="{% trans " Cancel" %}" onclick="history.back();"
+            />
+        </p>
+        {% csrf_token %}
+    </form>
+</section>
 {% endblock %}

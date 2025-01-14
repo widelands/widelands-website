@@ -1,6 +1,6 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
@@ -8,21 +8,22 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>{{ tribe.displayname }}: {{ ware.displayname }}</h1>
+<h1>{{ tribe.displayname }}: {{ ware.displayname }}</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-	<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
-	<a href="{% url 'wlhelp_wares' tribe.name %}">{{ tribe.displayname }} Wares</a> &#187;
-	{{ ware.displayname }}
-	<br /><br />
+<section>
+    <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
+    <a href="{% url 'wlhelp_wares' tribe.name %}">{{ tribe.displayname }} Wares</a>
+    &#187;
+    {{ ware.displayname }}
+    <br/><br/>
 
-	<h2>Description</h2>
-	<p>{{ ware.help }}</p>
+    <h2>Description</h2>
+    <p>{{ ware.help }}</p>
 
-	<h2>Economy Graph</h2>
-	{{ ware.imagemap|safe }}
-	<img src="{{ ware.graph_url }}" usemap="#G" alt="Graph for {{ ware.displayname }}" />
-</div>
+    <h2>Economy Graph</h2>
+    {{ ware.imagemap|safe }}
+    <img src="{{ ware.graph_url }}" usemap="#G" alt="Graph for {{ ware.displayname }}"/>
+</section>
 {% endblock %}

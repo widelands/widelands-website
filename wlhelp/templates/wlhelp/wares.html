@@ -1,6 +1,6 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
@@ -8,62 +8,69 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>{{ tribe.displayname }}: Wares</h1>
+<h1>{{ tribe.displayname }}: Wares</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-	<div class="posRight">
-		{% include 'wlhelp/inlines/js_form_scripting.html' %}
-	</div>
-	<div class="breadCrumb">
-		<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Wares
-	</div>
+<section>
+    <div class="posRight">
+        {% include 'wlhelp/inlines/js_form_scripting.html' %}
+    </div>
+    <div class="breadCrumb">
+        <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{
+        tribe.displayname }} Wares
+    </div>
 
-	<table class="help">
-		<tr>
-			<th style="width: 8em;">Ware</th>
-			<th>Description</th>
-			<th style="width: 16em;">Produced at/by</th>
-		</tr>
-	{% for w in wares %}
-		<tr class="{% cycle "odd" "even" %}" id="{{ w.name }}">
-			<td>
-				<a id="{{ w.name }}" href="{% url 'wlhelp_ware_details' tribe.name w.name %}" title="Show economy graph">
-					{{ w.displayname }}
-					<br />
-					<img src="{{ w.image_url }}"  alt="{{ w.name }}" />
-				</a>
-			</td>
-			<td>
-				{{ w.help }}
-				<div class="small scripting">Internal name: "{{ w.name }}"</div>
-			</td>
-			<td>
-				<table class="help small">
-					<tr>
-						<th>At:</th>
-						<th>By:</th>
-					</tr>
-					{% for building in w.produced_by_buildings.all %}
-					<tr>
-						<td>
-							<a href="../buildings/#{{ building.name }}">{{ building.displayname }}<br />
-								<img src="{{ building.image_url }}"  alt="{{ building.displayname }}" />
-							</a>
-						</td>
-						<td>
-							{% for worker in building.workers_types.all %}
-								<a href="../workers/#{{ worker.name }}">{{ worker.displayname }}<br />
-									<img src="{{ worker.image_url }}"  alt="{{ worker.displayname }}" />
-								</a><br />
-							{% endfor %}
-						</td>
-					</tr>
-					{% endfor %}
-				</table>
-		</tr>
-	{% endfor %}
-	</table>
-</div>
+    <table class="help">
+        <tr>
+            <th style="width: 8em;">Ware</th>
+            <th>Description</th>
+            <th style="width: 16em;">Produced at/by</th>
+        </tr>
+        {% for w in wares %}
+        <tr class="{% cycle " odd
+        " "even" %}" id="{{ w.name }}">
+        <td>
+            <a id="{{ w.name }}"
+               href="{% url 'wlhelp_ware_details' tribe.name w.name %}"
+               title="Show economy graph">
+                {{ w.displayname }}
+                <br/>
+                <img src="{{ w.image_url }}" alt="{{ w.name }}"/>
+            </a>
+        </td>
+        <td>
+            {{ w.help }}
+            <div class="small scripting">Internal name: "{{ w.name }}"</div>
+        </td>
+        <td>
+            <table class="help small">
+                <tr>
+                    <th>At:</th>
+                    <th>By:</th>
+                </tr>
+                {% for building in w.produced_by_buildings.all %}
+                <tr>
+                    <td>
+                        <a href="../buildings/#{{ building.name }}">{{
+                            building.displayname }}<br/>
+                            <img src="{{ building.image_url }}"
+                                 alt="{{ building.displayname }}"/>
+                        </a>
+                    </td>
+                    <td>
+                        {% for worker in building.workers_types.all %}
+                        <a href="../workers/#{{ worker.name }}">{{ worker.displayname }}<br/>
+                            <img src="{{ worker.image_url }}"
+                                 alt="{{ worker.displayname }}"/>
+                        </a><br/>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            </tr>
+            {% endfor %}
+    </table>
+</section>
 {% endblock %}

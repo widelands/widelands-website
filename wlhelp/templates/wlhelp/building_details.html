@@ -1,6 +1,6 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
@@ -8,58 +8,63 @@
 {% endblock %}
 
 {% block content_header %}
-    <h1>{{ tribe.displayname }}: {{ building.displayname }}</h1>
+<h1>{{ tribe.displayname }}: {{ building.displayname }}</h1>
 {% endblock %}
 {% block content_main %}
-<div class="blogEntry">
+<section>
     <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
-    <a href="{% url 'wlhelp_buildings' tribe.name %}">{{ tribe.displayname }} Buildings</a> &#187;
+    <a href="{% url 'wlhelp_buildings' tribe.name %}">{{ tribe.displayname }}
+        Buildings</a> &#187;
     {{ building.displayname }}
-    <br /><br />
+    <br/><br/>
 
     <h2>Description</h2>
     <p>{{ building.help }}</p>
 
     <h2>Economy Graph</h2>
     {{ building.imagemap|safe }}
-    <img src="{{ building.graph_url }}" usemap="#G" alt="Graph for {{ building.displayname }}" />
+    <img src="{{ building.graph_url }}" usemap="#G"
+         alt="Graph for {{ building.displayname }}"/>
 
-{% comment %}
+    {% comment %}
 
-{% if building.get_build_cost %}
-    <h2>Build Cost<h2>
+    {% if building.get_build_cost %}
+    <h2>Build Cost</h2>
     {% for costs in building.get_build_cost %}
-        {% for w in costs %}
-        <a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
-        {% endfor %}
-    <br />
+    {% for w in costs %}
+    <a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}"
+       title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}"/></a>
     {% endfor %}
-{% endif %}
+    <br/>
+    {% endfor %}
+    {% endif %}
 
-{% if building.produces or building.trains %}
+    {% if building.produces or building.trains %}
     <h2>Produces</h2>
     {% if building.produces and not building.trains %}
-        {% for w in building.get_ware_outputs %}
-        <a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
-        {% endfor %}
+    {% for w in building.get_ware_outputs %}
+    <a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}"
+       title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}"/></a>
+    {% endfor %}
     {% else %}
-        {% for wor in building.get_worker_outputs %}
-        <img src="{{ wor.image_url }}" alt="{{ wor.name }}" />
-        {% endfor %}
+    {% for wor in building.get_worker_outputs %}
+    <img src="{{ wor.image_url }}" alt="{{ wor.name }}"/>
+    {% endfor %}
     {% endif %}
-{% endif %}
+    {% endif %}
 
-{% if building.get_stored_wares %}
+    {% if building.get_stored_wares %}
     <h2>Stores</h2>
     {% for costs in building.get_stored_wares %}
-        {% for w in costs %}
-        <a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}" title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}" /></a>
-        {% endfor %}
-    <br />
+    {% for w in costs %}
+    <a href="{% url 'wlhelp_ware_details' w.tribe.name w.name %}"
+       title="{{w.displayname}}"><img src="{{ w.image_url }}" alt="{{ w.name }}"/></a>
     {% endfor %}
-{% endif %}
+    <br/>
+    {% endfor %}
+    {% endif %}
 
-{% endcomment %}
+    {% endcomment %}
 
-</div>
+</section>
 {% endblock %}

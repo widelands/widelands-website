@@ -10,35 +10,35 @@
 {% block extra_head %}
 <script type="text/javascript" src="{% static 'js/disableOnSubmit.js' %}"></script>
 <script type="text/javascript">
-	$(function() {
-		$('form').disableOnSubmit();
-	});
+    $(function() {
+        $('form').disableOnSubmit();
+    });
 
-	$(document).ready(function() {
-		// Insert rendered markup for preview
-		$("#id_preview").click(function(){
-			// Activate preview
-			$("#preview").html("<h3>Preview</h3>\n<hr>\n<div class=\"wiki_article\" id=\"content_preview\">Loading...</div>\n<hr>");
-			$("#content_preview").load( "{% url 'wiki_preview' %}",
-				{"body": $("#id_content").val()});
-		});
+    $(document).ready(function() {
+        // Insert rendered markup for preview
+        $("#id_preview").click(function(){
+            // Activate preview
+            $("#preview").html("<h3>Preview</h3>\n<hr>\n<div class=\"wiki_article\" id=\"content_preview\">Loading...</div>\n<hr>");
+            $("#content_preview").load( "{% url 'wiki_preview' %}",
+                {"body": $("#id_content").val()});
+        });
 
-	{% if not new_article %}
-		// Insert diff
-		$("#id_diff").click(function(){
-			// Activate preview
-			$("#diff").html("<h3>Diff</h3>\n<hr>\n<div id=\"content_diff\">Loading...</div>\n<hr>");
-			$("#content_diff").load( "{% url 'wiki_preview_diff' %}",
-				{"body": $("#id_content").val(), "article": {{ object_id }} });
-		});
-	{%endif%}
-	});
+    {% if not new_article %}
+        // Insert diff
+        $("#id_diff").click(function(){
+            // Activate preview
+            $("#diff").html("<h3>Diff</h3>\n<hr>\n<div id=\"content_diff\">Loading...</div>\n<hr>");
+            $("#content_diff").load( "{% url 'wiki_preview_diff' %}",
+                {"body": $("#id_content").val(), "article": {{ object_id }} });
+        });
+    {%endif%}
+    });
 </script>
 {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Editing" %} {{ article.title }}</h1>
+<h1>{% trans "Editing" %} {{ article.title }}</h1>
 {% endblock %}
 
 {# add the wanted classes to the tabs #}
@@ -46,92 +46,128 @@
 {% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
-	{% if messages %}
-	    {% for message in messages %}
-		    <p class="errormessage">{{ message }}</p>
-	    {% endfor %}
-	{% endif %}
-	<p>
-	You can edit the wiki pages contents using the syntax described on the <a href="/wiki/WikiSyntax">WikiSyntax</a>.
-	For a description of the input fields see: <a href="/wiki/WikiHelp">WikiHelp</a>
-	</p>
+<section>
+    {% if messages %}
+    {% for message in messages %}
+    <p class="errormessage">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    <p>
+        You can edit the wiki pages contents using the syntax described on the <a
+            href="/wiki/WikiSyntax">WikiSyntax</a>.
+        For a description of the input fields see: <a href="/wiki/WikiHelp">WikiHelp</a>
+    </p>
 
-	<div id="preview"></div>
+    <div id="preview"></div>
 
-	<div id="diff"></div>
+    <div id="diff"></div>
 
-	<form action="." method="post">
-		<table id="edit_wiki_page_form">
-			<!-- Title -->
-			<tr>
-				<th><label for="id_title">{% trans "Title" %}:</label></th>
-				<td class="errormessage">{{ form.title.errors }}{{ form.title }}</td>
-			</tr>
-			<!-- Content -->
-			<tr><th colspan="2"><label for="id_content">{% trans "Content" %}:</label></th></tr>
-			<tr><td colspan="2"  class="errormessage">{{ form.content.errors }}{{ form.content }}</td></tr>
-			<!-- Tags -->
-			<tr>
-				<th colspan="2">
-					<label for={{ form.tags.id_for_label }}>Tags:</label>
-					<a href="/wiki/WikiHelp/#tagging" title="Help (new window)" style="float: right;" target="_blank">
-						<img src="{% static "img/menu_help_borderless.png" %}" alt="Help for tags" class="middle">
-						Help for Tags
-					</a>
-				</th>
-			</tr>
-			<tr><td colspan="2"  class="errormessage">{{ form.tags.errors }}{{ form.tags }}</td></tr>
-			<!-- Summary -->
-			<tr><th colspan="2"><label for="id_summary">{% trans "Page Summary" %}:</label></th></tr>
-			<tr><td colspan="2"  class="errormessage">{{ form.summary.errors }}{{ form.summary }}</td></tr>
-			<!-- Comment -->
-			<tr><th colspan=2><label for="id_comment">{% trans "Comment for this revision" %}:</label></th></tr>
-			<tr><td colspan=2  class="errormessage">{{ form.comment.errors }}{{ form.comment }}</td></tr>
-			{% if request.user.is_staff %}
-			<!-- Redirect -->
-			<tr>
-				<th><label for="id_do_redirect">{{ form.deleted.help_text}}:</label></th>
-				<th><label for="id_redirect_to">Redirect to (e.g. /documentation/foo/bar.html). Only for redirecting outside of our wiki:</label></th>
-			</tr>
-			<tr>
-				<td class="errormessage">{{ form.deleted.errors }} {{ form.deleted }}</td>
-				<td class="errormessage">{{ form.redirect_to.errors }}{{ form.redirect_to }}</td>
-			</tr>
-			{% endif %}
-		</table>
-		<!-- Markup as hidden element -->
-		<input type="hidden" name="markup" value="mrk" />
-		{{ form.content_type }}
-		{{ form.object_id }}
-		{{ form.action }}
+    <form action="." method="post">
+        <table id="edit_wiki_page_form">
+            <!-- Title -->
+            <tr>
+                <th><label for="id_title">{% trans "Title" %}:</label></th>
+                <td class="errormessage">{{ form.title.errors }}{{ form.title }}</td>
+            </tr>
+            <!-- Content -->
+            <tr>
+                <th colspan="2"><label for="id_content">{% trans "Content" %}:</label>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2" class="errormessage">{{ form.content.errors }}{{
+                    form.content }}
+                </td>
+            </tr>
+            <!-- Tags -->
+            <tr>
+                <th colspan="2">
+                    <label for={{ form.tags.id_for_label }}>Tags:</label>
+                    <a href="/wiki/WikiHelp/#tagging" title="Help (new window)"
+                       style="float: right;" target="_blank">
+                        <img src="{% static " img/menu_help_borderless.png" %}"
+                        alt="Help for tags" class="middle">
+                        Help for Tags
+                    </a>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2" class="errormessage">{{ form.tags.errors }}{{ form.tags
+                    }}
+                </td>
+            </tr>
+            <!-- Summary -->
+            <tr>
+                <th colspan="2"><label for="id_summary">{% trans "Page Summary"
+                    %}:</label></th>
+            </tr>
+            <tr>
+                <td colspan="2" class="errormessage">{{ form.summary.errors }}{{
+                    form.summary }}
+                </td>
+            </tr>
+            <!-- Comment -->
+            <tr>
+                <th colspan=2><label for="id_comment">{% trans "Comment for this
+                    revision" %}:</label></th>
+            </tr>
+            <tr>
+                <td colspan=2 class="errormessage">{{ form.comment.errors }}{{
+                    form.comment }}
+                </td>
+            </tr>
+            {% if request.user.is_staff %}
+            <!-- Redirect -->
+            <tr>
+                <th><label for="id_do_redirect">{{ form.deleted.help_text}}:</label>
+                </th>
+                <th><label for="id_redirect_to">Redirect to (e.g.
+                    /documentation/foo/bar.html). Only for redirecting outside of our
+                    wiki:</label></th>
+            </tr>
+            <tr>
+                <td class="errormessage">{{ form.deleted.errors }} {{ form.deleted }}
+                </td>
+                <td class="errormessage">{{ form.redirect_to.errors }}{{
+                    form.redirect_to }}
+                </td>
+            </tr>
+            {% endif %}
+        </table>
+        <!-- Markup as hidden element -->
+        <input type="hidden" name="markup" value="mrk"/>
+        {{ form.content_type }}
+        {{ form.object_id }}
+        {{ form.action }}
 
-		<div>
-			<input id="id_preview" type="button" value="{% trans "Preview" %}" />
-		{% if not new_article %}
-			<input id="id_diff" type="button" value="{% trans "Diff" %}" />
-		{% endif %}
-			<input type="submit" value="{% trans "Save" %}" />
-		</div>
-		{% csrf_token %}
-	</form>
-	<br />
-	<h3>Images</h3>
-	{% if new_article %}
-		You must save the article once before you can attach images to it.
-	{% else %}
-		{% if images.count %}
-		Images attached to this article:
-		{% endif %}
-		{% include 'wlimages/inlines/image_list.html' %}
-		{% get_upload_form as iform %}
-		<form enctype="multipart/form-data" action="/images/upload/{{content_type}}/{{object_id}}/{{ request.path|iriencode }}" method="POST">
-			{{ iform.as_p }}
-			<div>
-				<input type="submit" value="{% trans "Upload Image" %}" />
-			</div>
-			{% csrf_token %}
-		</form>
-	{% endif%}
-</div>
+        <div>
+            <input id="id_preview" type="button" value="{% trans " Preview" %}" />
+            {% if not new_article %}
+            <input id="id_diff" type="button" value="{% trans " Diff" %}" />
+            {% endif %}
+            <input type="submit" value="{% trans " Save" %}" />
+        </div>
+        {% csrf_token %}
+    </form>
+    <br/>
+    <h3>Images</h3>
+    {% if new_article %}
+    You must save the article once before you can attach images to it.
+    {% else %}
+    {% if images.count %}
+    Images attached to this article:
+    {% endif %}
+    {% include 'wlimages/inlines/image_list.html' %}
+    {% get_upload_form as iform %}
+    <form enctype="multipart/form-data"
+          action="/images/upload/{{content_type}}/{{object_id}}/{{ request.path|iriencode }}"
+          method="POST">
+        {{ iform.as_p }}
+        <div>
+            <input type="submit" value="{% trans " Upload Image" %}" />
+        </div>
+        {% csrf_token %}
+    </form>
+    {% endif%}
+</section>
 {% endblock %}

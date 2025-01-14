@@ -1,69 +1,74 @@
 {% extends "mainpage/base.html" %}
 
 {% comment %}
- vim:ft=htmldjango:
+vim:ft=htmldjango:
 
- This site is the main page, the first users will see when
- they reach our homepage
+This site is the main page, the first users will see when
+they reach our homepage
 
 {% endcomment %}
 {% load static %}
 {% load news_extras %}
 
 {% block extra_head %}
-<meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y" />
-<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}" />
-<link rel="alternate" type="application/rss+xml" title="Widelands News" href="news/feed/" />
+<meta name="google-site-verification"
+      content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y"/>
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}"/>
+<link rel="alternate" type="application/rss+xml" title="Widelands News"
+      href="news/feed/"/>
 
 {{ block.super}}{% endblock %}
 {% block content_header %}
-	<h1>Welcome to Widelands.org</h1>
+<h1>Welcome to Widelands.org</h1>
 {% endblock %}
 {% block content_main %}
-<!--<div class="blogEntry" style="min-height: 380px;">-->
-	<section>
-	<img class="landing posRight" src="{% static 'img/welcome.jpg' %}" alt="Welcome!" />
-	<p>
-	<a href="{% url 'wiki_article' "Description" %}">Widelands</a> is a
-	<a href="{% url 'wiki_article' "The Widelands Project" %}">free, open source</a>
-	real-time strategy game with singleplayer campaigns and a multiplayer mode.
-	The game was inspired by Settlers&nbsp;II&#8482; (&copy;&nbsp;Bluebyte) but
-	has significantly more variety and depth to it. Still, it is easy to get
-	started through playable tutorials.
-	</p>
-	<p>
-	For more information read <a href="{% url 'wiki_article' "Description" %}">the
-	full description</a> and look at some <a href="{% url 'wlscreens_index' %}">screenshots</a>.
-	Or you can <a href="{% url 'wiki_article' "Download" %}">download</a>
-	the latest release and just try it out for yourself.
-	</p>
-	<p>
-	This website is the home of the Widelands community.
-	You are invited to visit the <a href="{% url 'pybb_index' %}">forums</a>:
-	discuss strategies, find partners for multiplayer games, help with translations,
-	voice your opinion on graphics, music and much more.
-	</p>
-	<p>
-	Widelands is currently (and will always be) under development - you can
-	get a feel for what is worked on by looking at the <a href="/changelog">changelog</a>.
-	Everybody is invited to help out too - we need 2D and 3D artists, sound
-	effect creators, composers, map makers, translators, test players,
-	web programmers and C++ coders. All skill levels are welcome - just
-	start working on something or ask in the <a href="{% url 'pybb_index' %}">forums</a>
-	for pointers.
-	</p>
-	<div style="clear: left"></div>
-<!--</div>-->
+
+<section>
+    <img class="landing posRight" src="{% static 'img/welcome.jpg' %}" alt="Welcome!"/>
+    <p>
+        <a href="{% url 'wiki_article' " Description" %}">Widelands</a> is a
+        <a href="{% url 'wiki_article' " The Widelands Project" %}">free, open
+        source</a>
+        real-time strategy game with singleplayer campaigns and a multiplayer mode.
+        The game was inspired by Settlers&nbsp;II&#8482; (&copy;&nbsp;Bluebyte) but
+        has significantly more variety and depth to it. Still, it is easy to get
+        started through playable tutorials.
+    </p>
+    <p>
+        For more information read <a href="{% url 'wiki_article' " Description" %}">the
+        full description</a> and look at some <a href="{% url 'wlscreens_index' %}">screenshots</a>.
+        Or you can <a href="{% url 'wiki_article' " Download" %}">download</a>
+        the latest release and just try it out for yourself.
+    </p>
+    <p>
+        This website is the home of the Widelands community.
+        You are invited to visit the <a href="{% url 'pybb_index' %}">forums</a>:
+        discuss strategies, find partners for multiplayer games, help with translations,
+        voice your opinion on graphics, music and much more.
+    </p>
+    <p>
+        Widelands is currently (and will always be) under development - you can
+        get a feel for what is worked on by looking at the <a href="/changelog">changelog</a>.
+        Everybody is invited to help out too - we need 2D and 3D artists, sound
+        effect creators, composers, map makers, translators, test players,
+        web programmers and C++ coders. All skill levels are welcome - just
+        start working on something or ask in the <a
+            href="{% url 'pybb_index' %}">forums</a>
+        for pointers.
+    </p>
+   <!-- <div style="clear: left"></div>-->
+    <!--</div>-->
 </section>
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
-    <div id="content_header">
-        <h1>News</h1>
-    </div>
-	{% for object in latest_posts_list %}
-		{% include "news/inlines/post_detail.html" %}
-	{% endfor %}
-	<div class="center"><p><a class="invertedColor" href="{% url 'news_index' %}">News archive</a></p></div>
+<div id="content_header">
+    <h1>News</h1>
+</div>
+{% for object in latest_posts_list %}
+{% include "news/inlines/post_detail.html" %}
+{% endfor %}
+<div class="center"><p><a class="invertedColor" href="{% url 'news_index' %}">News
+    archive</a></p></div>
 {% endif %}
 
 {% endblock %}

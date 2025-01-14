@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Article History of" %} {{ article.title }}</h1>
+<h1>{% trans "Article History of" %} {{ article.title }}</h1>
 {% endblock %}
 
 {# add the wanted classes to the tabs #}
@@ -18,104 +18,113 @@
 {% block content_main %}
 {% if changes|length > 1 %}
 <script type="text/javascript">
-	function check() {
-		$revisions = $('input:radio[name=revision]');
-		if ($revisions.is(':checked') === false) {
-			alert('{% trans "No revision selected." %}');
-			return false;
-		}
-		return true;
-	}
+    function check() {
+        $revisions = $('input:radio[name=revision]');
+        if ($revisions.is(':checked') === false) {
+            alert('{% trans "No revision selected." %}');
+            return false;
+        }
+        return true;
+    }
 
-	{% with first=changes|first %}
-	function selectedFrom(from) {
-		for (i = 1; i <= {{ first.revision }}; i++) {
-			$("#id_to_" + i).css("display", i <= from ? "none" : "inline");
-		}
-	}
+    {% with first=changes|first %}
+    function selectedFrom(from) {
+        for (i = 1; i <= {{ first.revision }}; i++) {
+            $("#id_to_" + i).css("display", i <= from ? "none" : "inline");
+        }
+    }
 
-	function selectedTo(to) {
-		for (i = 1; i <= {{ first.revision }}; i++) {
-			$("#id_from_" + i).css("display", i < to ? "inline" : "none");
-		}
-	}
+    function selectedTo(to) {
+        for (i = 1; i <= {{ first.revision }}; i++) {
+            $("#id_from_" + i).css("display", i < to ? "inline" : "none");
+        }
+    }
 
-	$(function() {
-		var $to = $('input:radio[name=to]');
-		var to_revision = {{ first.revision }};
-		if ($to.is(':checked') === false) {
-			$to.filter('[value='+to_revision+']').attr('checked', true);
-			selectedTo(to_revision);
-		} else {
-			selectedTo($('input:radio[name=to]:checked').val());
-		}
+    $(function() {
+        var $to = $('input:radio[name=to]');
+        var to_revision = {{ first.revision }};
+        if ($to.is(':checked') === false) {
+            $to.filter('[value='+to_revision+']').attr('checked', true);
+            selectedTo(to_revision);
+        } else {
+            selectedTo($('input:radio[name=to]:checked').val());
+        }
 
-		var $from = $('input:radio[name=from]');
-		var from_revision = {{ first.revision }} - 1;
-		if ($from.is(':checked') === false) {
-			$from.filter('[value='+from_revision+']').attr('checked', true);
-			selectedFrom(from_revision);
-		} else {
-			selectedFrom($('input:radio[name=from]:checked').val());
-		}
-	});
-	{% endwith %}
+        var $from = $('input:radio[name=from]');
+        var from_revision = {{ first.revision }} - 1;
+        if ($from.is(':checked') === false) {
+            $from.filter('[value='+from_revision+']').attr('checked', true);
+            selectedFrom(from_revision);
+        } else {
+            selectedFrom($('input:radio[name=from]:checked').val());
+        }
+    });
+    {% endwith %}
 </script>
 {% endif %}
 
-<div class="blogEntry">
-	<form action="{% url 'wiki_revert_to_revision' article.title %}" method="post" onsubmit="return check(this);">
-		<table class="history_list">
-		<thead>
-			<tr>
-				<th>#</th>
-				{% if changes|length > 1 %}
-				<th colspan="2">{% trans "Compare" %}</th>
-				{% endif %}
-				<th>{% trans "Revert" %}</th>
-				<th class="at">{% trans "At" %}</th>
-				<th class="user">{% trans "User" %}</th>
-				<th>{% trans "Comment" %}</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for change in changes %}
-			<tr class="{% cycle 'odd' 'even' %}">
-				<td class="small_column">
-					<a href="{{ change.get_absolute_url }}">{{ change.revision }}</a>
-				</td>
-				{% if changes|length > 1 %}
-				<td class="small_column">
-					<input class="radio" id="id_from_{{ change.revision }}" name="from" type="radio" value="{{ change.revision }}" onclick="selectedFrom({{ change.revision }});" />
-				</td>
-				<td class="small_column">
-					<input class="radio" id="id_to_{{ change.revision }}" name="to" type="radio" value="{{ change.revision }}" onclick="selectedTo({{ change.revision }});" />
-				</td>
-				{% endif %}
-				<td class="small_column">
-					{% if not forloop.first %}
-						 <input class="radio" id="id_revision" name="revision" type="radio" value="{{ change.revision }}" />
-					{% endif %}
-				</td>
-				<td>
-					{{ change.modified|custom_date:user }}
-				</td>
-				<td>
-					{{ change.editor|user_link }}
-				</td>
-				<td class="italic">
-					{% if change.comment %}'{{ change.comment }}'{% endif %}
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-		</table>
-		<br />
-		<input type="submit" value="{% trans "Revert to selected revision" %}" />
-		{% if changes|length > 1 %}
-		<input type="button" value="{% trans "Compare selected revisions" %}" onclick="location.pathname='/wiki/history/{{ article.title|urlencode }}/changeset/'+$('input:radio[name=from]:checked').val()+'/'+$('input:radio[name=to]:checked').val()+'/';" />
-		{% endif %}
-		{% csrf_token %}
-	</form>
-</div>
+<section>
+    <form action="{% url 'wiki_revert_to_revision' article.title %}" method="post"
+          onsubmit="return check(this);">
+        <table class="history_list">
+            <thead>
+            <tr>
+                <th>#</th>
+                {% if changes|length > 1 %}
+                <th colspan="2">{% trans "Compare" %}</th>
+                {% endif %}
+                <th>{% trans "Revert" %}</th>
+                <th class="at">{% trans "At" %}</th>
+                <th class="user">{% trans "User" %}</th>
+                <th>{% trans "Comment" %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for change in changes %}
+            <tr class="{% cycle 'odd' 'even' %}">
+                <td class="small_column">
+                    <a href="{{ change.get_absolute_url }}">{{ change.revision }}</a>
+                </td>
+                {% if changes|length > 1 %}
+                <td class="small_column">
+                    <input class="radio" id="id_from_{{ change.revision }}" name="from"
+                           type="radio" value="{{ change.revision }}"
+                           onclick="selectedFrom({{ change.revision }});"/>
+                </td>
+                <td class="small_column">
+                    <input class="radio" id="id_to_{{ change.revision }}" name="to"
+                           type="radio" value="{{ change.revision }}"
+                           onclick="selectedTo({{ change.revision }});"/>
+                </td>
+                {% endif %}
+                <td class="small_column">
+                    {% if not forloop.first %}
+                    <input class="radio" id="id_revision" name="revision" type="radio"
+                           value="{{ change.revision }}"/>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ change.modified|custom_date:user }}
+                </td>
+                <td>
+                    {{ change.editor|user_link }}
+                </td>
+                <td class="italic">
+                    {% if change.comment %}'{{ change.comment }}'{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br/>
+        <input type="submit" value="{% trans " Revert to selected revision" %}" />
+        {% if changes|length > 1 %}
+        <input type="button" value="{% trans " Compare selected revisions" %}"
+        onclick="location.pathname='/wiki/history/{{ article.title|urlencode
+        }}/changeset/'+$('input:radio[name=from]:checked').val()+'/'+$('input:radio[name=to]:checked').val()+'/';"
+        />
+        {% endif %}
+        {% csrf_token %}
+    </form>
+</section>
 {% endblock %}

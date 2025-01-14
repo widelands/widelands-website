@@ -71,7 +71,7 @@ a.invertedColor:hover {
 }
 
 form {
-	display: inline;
+	/*display: inline;*/
 }
 
 /**************/
@@ -261,40 +261,9 @@ a.small {
     white-space: nowrap;
 }
 
-/* Base */
-
-div#wrapper {
-	min-width: 980px;
-	margin: 0px 20px;
-}
-
-main {
-	min-height: 500px;
-	display: flex;
-}
-
-div#content {
-	margin-right: 240px;
-	display: flex;
-	flex-direction: column;
-}
-
-footer {
-	background-image: url("../img/wood.png");
-	padding: 10px;
-	margin-top: 20px;
-	text-align: center;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	border: 1px solid black;
-	-moz-border-radius: 4px;
-	-khtml-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-}
-
-/**********/
-/* Header */
-/**********/
+/**************/
+/* Header top */
+/**************/
 #logo img {
 	width: 100%;
 }
@@ -356,96 +325,18 @@ header img {
 	vertical-align: middle; /* to prevent a space below */
 }
 
-/****************/
-/* Right Column */
-/****************/
+/* navigation.css */
 
-aside {
+/******************************/
+/*  all below navigation bar  */
+/******************************/
+
+main {
+	/*min-height: 500px;*/
 	display: flex;
-    flex-direction: column;
-	margin-top: -38px;
-	flex: 0 0 220px;
 }
 
-section.columnModule h3 {
-	margin-bottom: 10px;
-	margin-top: 8px;	/* Correction for first box */
-}
-
-section div.columnModuleBox {
-	margin-bottom: 1em;
-	background-image: url("../img/wood.png");
-	border: 1px solid black;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-khtml-border-radius: 4px;
-	border-radius: 4px;
-}
-
-section div.columnModuleBox h4 {
-	color: #ffffee;
-	padding: 8px;
-	padding-bottom: 0px;
-	margin: 0px;
-}
-
-section div.columnModuleBox ul.poll {
-	padding: 8px;
-	list-style-type: disc;
-	border: none;
-}
-
-section div.columnModuleBox ul.poll li {
-	padding: 0px;
-	border: none;
-	height: 20px;
-}
-
-section div.columnModuleBox p {
-	margin: 0px;
-	padding: 8px;
-}
-
-section div.columnModuleBox ul {
-	/*width: 220px;*/
-	padding: 0px;
-	margin: 0px;
-	list-style-type: none;
-}
-
-section div.columnModuleBox ul.player {
-	padding: 4px;
-	list-style-type: disc;
-}
-
-section div.columnModuleBox ul.player li{
-	padding: 4px;
-	border: none;
-}
-
-section div.columnModuleBox ul li {
-	display: block;
-	padding: 8px;
-	border-top: 1px solid black;
-	font-size: 0.8em;
-}
-
-section div.columnModuleBox ul li:first-child {
-	border-top: none;
-}
-
-/* News Posts */
-
-img.landing {
-	margin-left: 20px;
-	margin-bottom: 15px;
-	border: 10px solid transparent;
-	border-image: url(../img/image_border.png) 20 round;
-	-webkit-border-image: url(../img/image_border.png) 20 round; /* Safari 3.1-5 */
-	-o-border-image: url(../img/image_border.png) 20 round; /* Opera 11-12.1 */
-}
-
+/* left side */
 article {
     display:flex;
     flex-direction: column;
@@ -495,6 +386,126 @@ section.blogEntry .breadCrumb{
 
 section.blogEntry .posRight{
 	margin-bottom: 1em;
+}
+
+/* right side */
+aside {
+	display: flex;
+    flex-direction: column;
+	margin-top: -38px;
+	flex: 0 0 220px;
+}
+
+section.columnModule h3 {
+	margin-bottom: 10px;
+	margin-top: 8px;	/* Correction for first box */
+}
+
+section div.columnModuleBox {
+	margin-bottom: 1em;
+	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	border-radius: 4px;
+}
+
+section div.columnModuleBox h4 {
+	color: #ffffee;
+	padding: 8px;
+	padding-bottom: 0px;
+	margin: 0px;
+}
+
+section div.columnModuleBox ul.poll {
+	padding: 8px;
+	list-style-type: disc;
+	border: none;
+}
+
+section div.columnModuleBox ul.poll li {
+	padding: 0px;
+	border: none;
+	height: 20px;
+}
+
+section div.columnModuleBox p {
+	margin: 0px;
+	padding: 8px;
+}
+
+section div.columnModuleBox ul {
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+section div.columnModuleBox ul.player {
+	padding: 4px;
+	list-style-type: disc;
+}
+
+section div.columnModuleBox ul.player li{
+	padding: 4px;
+	border: none;
+}
+
+section div.columnModuleBox ul li {
+	display: block;
+	padding: 8px;
+	border-top: 1px solid black;
+	font-size: 0.8em;
+}
+
+section div.columnModuleBox ul li:first-child {
+	border-top: none;
+}
+
+
+/* Base */
+/* main page */
+img.landing {
+	margin-left: 20px;
+	margin-bottom: 15px;
+	border: 10px solid transparent;
+	border-image: url(../img/image_border.png) 20 round;
+	-webkit-border-image: url(../img/image_border.png) 20 round; /* Safari 3.1-5 */
+	-o-border-image: url(../img/image_border.png) 20 round; /* Opera 11-12.1 */
+	max-height: 100%;
+    max-width: 100%;
+}
+
+/*div#wrapper {
+	min-width: 980px;
+	margin: 0px 20px;
+}*/
+
+/*
+div#content {
+	margin-right: 240px;
+	display: flex;
+	flex-direction: column;
+}
+*/
+/* footer */
+
+footer {
+	background-image: url("../img/wood.png");
+	padding: 10px;
+	margin-top: 20px;
+	text-align: center;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border: 1px solid black;
+	-moz-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+footer p {
+    margin: 0;
 }
 
 /* Pagination */

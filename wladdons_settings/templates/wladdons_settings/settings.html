@@ -9,85 +9,93 @@
 {% block addon_settings %}class="active"{% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Add-On Settings" %} {{ profile.user }}</h1>
+<h1>{% trans "Add-On Settings" %} {{ profile.user }}</h1>
 {% endblock %}
 
 {% block content_main %}
-<div class="blogEntry">
+<section>
 
-	<h2>{% trans "Email Settings regarding Add-Ons" %}</h2>
-	{% if addon_settings or author_related_settings %}
-		{% url 'acct_email' as email_url %}
-		{% if user.email %}
-		<p>
-			{% trans "Primary email" %}: {{ user.email }}<br />
-			(You can change this in your <a href="{% url 'profile_edit' %}">profile settings</a>.)
-		</p>
-		{% else %}
-		<p class="errormessage">
-			You do not have a verified email address to which notifications can be sent. You can add one by <a href="{% url 'profile_edit' %}">editing your profile</a>.
-		</p>
-		{% endif %}
+    <h2>{% trans "Email Settings regarding Add-Ons" %}</h2>
+    {% if addon_settings or author_related_settings %}
+    {% url 'acct_email' as email_url %}
+    {% if user.email %}
+    <p>
+        {% trans "Primary email" %}: {{ user.email }}<br/>
+        (You can change this in your <a href="{% url 'profile_edit' %}">profile
+        settings</a>.)
+    </p>
+    {% else %}
+    <p class="errormessage">
+        You do not have a verified email address to which notifications can be sent. You
+        can add one by <a href="{% url 'profile_edit' %}">editing your profile</a>.
+    </p>
+    {% endif %}
 
-		<form method="POST" action=".">
-			{% csrf_token %}
-			{% if addon_settings %}
-			<h3>Notice types for players</h3>
-			<table class="notifications">
-				<tr>
-					<th class="small">{% trans "Notification Type" %}</th>
-					<th class="small">Email</th>
-				</tr>
-				{% for setting in addon_settings %}
-				<tr class="{% cycle "odd" "even" %}">
-					<td>
-						{% trans setting.notice_type.display %}<br />
-						{% trans setting.notice_type.description %}
-					</td>
-					<td style="width: 5em;">
-						<input type="checkbox" name="{{ setting.notice_type.slug }}" {% if setting.shouldsend %}checked="checked" {% endif %}/>
-					</td>
-				</tr>
-				{% endfor %}
-			</table>
-			{% endif %}
-			<h3>Notice types for Add-On authors</h3>
-			{% if addons %}
-				{% if author_related_settings %}
-				<table class="notifications">
-					<tr>
-						<th class="small">{% trans "Notification Type" %}</th>
-						<th class="small">Email</th>
-					</tr>
-					{% for setting in author_related_settings %}
-					<tr class="{% cycle "odd" "even" %}">
-						<td>
-							{% trans setting.notice_type.display %}<br />
-							{% trans setting.notice_type.description %}
-						</td>
-						<td style="width: 5em;">
-							<input type="checkbox" name="{{ setting.notice_type.slug }}" {% if setting.shouldsend %}checked="checked" {% endif %}/>
-						</td>
-					</tr>
-					{% endfor %}
-				</table>
-				{% endif %}
-				<p></p>
-				<p>Your Add-Ons:</p>
-				<ul>
-					{% for addon in addons %}
-					<li>{{ addon.0|escape }}</li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<p>You haven't uploaded any Add-On yet.</p>
-				<p>Look at <a href="/documentation/add-ons/index.html" target="_blank">Add-Ons</a> for information how to write your own Add-On.</p>
-			{% endif %}
-			<br />
-			<input class="posRight" type="submit" value="{% trans "Change" %}" />
-		</form>
-	{% else %}
-	<p>Currently there are no settings available.</p>
-	{% endif %}
-</div>
+    <form method="POST" action=".">
+        {% csrf_token %}
+        {% if addon_settings %}
+        <h3>Notice types for players</h3>
+        <table class="notifications">
+            <tr>
+                <th class="small">{% trans "Notification Type" %}</th>
+                <th class="small">Email</th>
+            </tr>
+            {% for setting in addon_settings %}
+            <tr class="{% cycle " odd
+            " "even" %}">
+            <td>
+                {% trans setting.notice_type.display %}<br/>
+                {% trans setting.notice_type.description %}
+            </td>
+            <td style="width: 5em;">
+                <input type="checkbox" name="{{ setting.notice_type.slug }}" {% if
+                       setting.shouldsend %}checked="checked" {% endif %}/>
+            </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <h3>Notice types for Add-On authors</h3>
+        {% if addons %}
+        {% if author_related_settings %}
+        <table class="notifications">
+            <tr>
+                <th class="small">{% trans "Notification Type" %}</th>
+                <th class="small">Email</th>
+            </tr>
+            {% for setting in author_related_settings %}
+            <tr class="{% cycle " odd
+            " "even" %}">
+            <td>
+                {% trans setting.notice_type.display %}<br/>
+                {% trans setting.notice_type.description %}
+            </td>
+            <td style="width: 5em;">
+                <input type="checkbox" name="{{ setting.notice_type.slug }}" {% if
+                       setting.shouldsend %}checked="checked" {% endif %}/>
+            </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <p></p>
+        <p>Your Add-Ons:</p>
+        <ul>
+            {% for addon in addons %}
+            <li>{{ addon.0|escape }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You haven't uploaded any Add-On yet.</p>
+        <p>Look at <a href="/documentation/add-ons/index.html"
+                      target="_blank">Add-Ons</a> for information how to write your own
+            Add-On.</p>
+        {% endif %}
+        <br/>
+        <input class="posRight" type="submit" value="{% trans " Change" %}" />
+    </form>
+    {% else %}
+    <p>Currently there are no settings available.</p>
+    {% endif %}
+</section>
 {% endblock %}
