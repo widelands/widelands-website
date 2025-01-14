@@ -1,6 +1,6 @@
 {% extends "wlmaps/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% load custom_date %}
@@ -19,14 +19,15 @@ vim:ft=htmldjango
 {% endblock %}
 
 {% block content_header %}
-<h1>Map: {{ map.name }}</h1>
+    <h1>Map: {{ map.name }}</h1>
 {% endblock %}
-{% block content_main %}
+
+{% block content_section %}
 <section>
     <div>
         <a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}
     </div>
-    <img class="posLeft map" style="float: left" src="{{ MEDIA_URL }}{{ map.minimap }}"
+    <img class="posLeft map" src="{{ MEDIA_URL }}{{ map.minimap }}"
          alt="{{ map.name }}"/>
     <div>
         <h3>Description:</h3>
@@ -52,7 +53,7 @@ vim:ft=htmldjango
     </div>
     <br/>
 
-    <div style="display: block">
+    <div>
         <h3>Basic Information:</h3>
         <table>
             <tr>
@@ -63,9 +64,9 @@ vim:ft=htmldjango
                 <td class="grey">World:</td>
                 <td>
                     {% if map.world_name %}
-                    {{ map.world_name|title }}
+                        {{ map.world_name|title }}
                     {% else %}
-                    One World
+                        One World
                     {% endif %}
                 </td>
             </tr>
@@ -94,8 +95,7 @@ vim:ft=htmldjango
             </tr>
             <tr>
                 <td class="grey">Upload:</td>
-                <td>by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user
-                    }}
+                <td>by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}
                 </td>
             </tr>
         </table>

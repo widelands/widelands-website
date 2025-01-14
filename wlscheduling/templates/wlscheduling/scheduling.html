@@ -8,14 +8,14 @@
     <h1>Multiplayer</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function(){ 
+document.addEventListener('DOMContentLoaded', function(){
     var calendar = createCalendar();
     addTimeZoneInfo();
     addPreviousDateFromUser(calendar);
     addOtherUsersAvailabilities();
-    
+
     //Validate btn
     document.getElementById('validate-btn').onclick = function () {
         sendDataAsForm(calendar);
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <h2>Select the dates you'll be available on</h2>
     {% include "wlscheduling/timezone-msg.html" %}
     <div id="scheduling-datepicker"></div>
-    
+
     <div id="second-step" hidden="hidden">
         <h2>Select the hours you'll be available on these dates</h2>
         <div id="days-wrapper"></div>
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <div class="hidden-hour"></div>
     </div>
 </div>
-    
+
 
 <!-- Template for the days of avaibility of the other users  -->
 {% include "wlscheduling/other-users.html" %}

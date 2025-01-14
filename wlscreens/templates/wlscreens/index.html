@@ -1,6 +1,6 @@
 {% extends "wlscreens/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% load wl_markdown %}
@@ -8,27 +8,27 @@ vim:ft=htmldjango
 
 {% block extra_head %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'lightbox_v2/css/lightbox.css' %}"
-      type="text/css" media="screen"/>
-<link rel="stylesheet" href="{% static 'lightbox_v2/css/custom.css' %}" type="text/css"
-      media="screen"/>
-<!-- lightbox-plus-jquery.min.js supports also IE9+ -->
-<script type="text/javascript"
-        src="{% static 'lightbox_v2/lightbox-plus-jquery.min.js' %}"></script>
-<script type="text/javascript">
-    lightbox.option({
-          'resizeDuration': 400,
-          'wrapAround': true,
-          'showImageNumberLabel': false,
+    <link rel="stylesheet" href="{% static 'lightbox_v2/css/lightbox.css' %}"
+          type="text/css" media="screen"/>
+    <link rel="stylesheet" href="{% static 'lightbox_v2/css/custom.css' %}" type="text/css"
+          media="screen"/>
+    <!-- lightbox-plus-jquery.min.js supports also IE9+ -->
+    <script type="text/javascript"
+            src="{% static 'lightbox_v2/lightbox-plus-jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        lightbox.option({
+            'resizeDuration': 400,
+            'wrapAround': true,
+            'showImageNumberLabel': false,
         });
-</script>
+    </script>
 {% endblock %}
 
 {% block content_header %}
-<h1>Screenshots</h1>
+    <h1>Screenshots</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 {% for c in categories %}
 <section>
     <h2>{{ c.name }}</h2>

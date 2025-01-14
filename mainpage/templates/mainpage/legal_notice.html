@@ -7,31 +7,35 @@
 <h1>Legal notice</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
-    <p>The website <a href="https://wl.widelands.org">widelands.org</a> is a privately
+    <p>
+        The website <a href="https://wl.widelands.org">widelands.org</a> is a privately
         owned page to exchange knowledge and experience about the free, open source game
-        Widelands. There are no financial goal or interest.</p>
+        Widelands. There are no financial goal or interest.
+    </p>
 
     <h2>Project lead</h2>
     <ul>
         {% for chieftain in chieftains %}
-        <li>{{ chieftain }}</li>
+            <li>{{ chieftain }}</li>
         {% endfor %}
     </ul>
 
     <h2>Contact</h2>
-    <p>There are several possibilities to get in contact. For questions about the game
-        or the contents of the website please take a look at our <a
-                href=/wiki/ContactPage>Contact page</a> or post in the <a href=/forum>forums</a>.
-        Use the one of the following methods if you do not want to make an account:</p>
+    <p>
+        There are several possibilities to get in contact. For questions about the game
+        or the contents of the website please take a look at our
+        <a href=/wiki/ContactPage>Contact page</a> or post in the <a href=/forum>forums</a>.
+        Use the one of the following methods if you do not want to make an account:
+    </p>
 
     <ul>
         <li>E-Mail Holger Rapp: sirver(at)gmx.de</li>
         <li>Contact form. Using this form sends E-Mails to following person(s):
             <ul>
                 {% for name, recipient in inquiry_recipients %}
-                <li>{{ name }}: {{ recipient }}</li>
+                    <li>{{ name }}: {{ recipient }}</li>
                 {% endfor %}
             </ul>
 
@@ -44,38 +48,48 @@
                                    maxlength="80"></td>
                     </tr>
                     <tr>
-                        <td><label for="id_surname">Last name (optional): </label></td>
-                        <td><input id="id_surname" type="text" name="surname"
-                                   maxlength="80"></td>
+                        <td>
+                            <label for="id_surname">Last name (optional): </label>
+                        </td>
+                        <td>
+                            <input id="id_surname" type="text" name="surname" maxlength="80">
+                        </td>
                     </tr>
                     <tr>
-                        <td><label for="id_email">Email:</label></td>
-                        <td><input type="email" name="email" id="id_email" required>
+                        <td>
+                            <label for="id_email">Email:</label>
+                        </td>
+                        <td>
+                            <input type="email" name="email" id="id_email" required>
                             {% for error in form.email.errors %}
-                            <span class="errormessage">{{ error }}</span>
+                                <span class="errormessage">{{ error }}</span>
                             {% endfor %}
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="id_inquiry">Inquiry: </label>{{
-                            form.inquiry.errors }}
+                        <td>
+                            <label for="id_inquiry">Inquiry: </label>
+                            {{ form.inquiry.errors }}
                         </td>
-                        <td><textarea id="id_inquiry" rows="10" cols="40" name="inquiry"
-                                      required></textarea>
+                        <td>
+                            <textarea id="id_inquiry" rows="10" cols="40" name="inquiry" required></textarea>
                             {% for error in form.inquiry.errors %}
-                            <span class="errormessage">{{ error }}</span>
+                                <span class="errormessage">{{ error }}</span>
                             {% endfor %}
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><label for="id_question">{{ question }}</label>
+                        <td colspan="2">
+                            <label for="id_question">{{ question }}</label>
                         </td>
                     </tr>
                     <tr>
-                        <td><input id="id_question" type="hidden" name="question"
-                                   value="{{ question }}"></td>
-                        <td><input id="id_answer" type="text" name="answer"
-                                   maxlength="80" required></td>
+                        <td>
+                            <input id="id_question" type="hidden" name="question" value="{{ question }}">
+                        </td>
+                        <td>
+                            <input id="id_answer" type="text" name="answer" maxlength="80" required>
+                        </td>
                     </tr>
                     <tr>
                         <td></td>

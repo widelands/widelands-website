@@ -8,7 +8,7 @@
 <h1>Wiki: Trash</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     {% if articles %}
     <p> There are {{ articles|length }} articles in this trash.</p>
@@ -33,14 +33,14 @@
         <tbody>
         {% for article, redirect in articles %}
         <tr>
-            <td><a href="{% url 'wiki_article' article.title %}"> {{ article.title
-                }}</a></td>
+            <td><a href="{% url 'wiki_article' article.title %}"> {{ article.title }}</a></td>
             <td>{{ article.summary }}</td>
             <td class="nolinebreak">{{ article.last_update|custom_date:user }}</td>
             <td>{{ redirect.new_path }}</td>
             <td class="middle nolinebreak">
-                <a href="{% url 'wiki_edit_deleted' article.title %}" class="button">Edit
-                    in Trash</a>
+                <a href="{% url 'wiki_edit_deleted' article.title %}" class="button">
+                    Edit in Trash
+                </a>
             </td>
         </tr>
         {% endfor %}

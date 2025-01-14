@@ -18,22 +18,27 @@
 {% block class_wiki_backl %}class="hidden"{% endblock %}
 {% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <p>The article you requested was probably removed from this wiki.</p>
     {% if request.user.is_staff %}
-    <p>You can remove the 'deleted' flag by editing it in the <a
-            href="{% url 'wiki_edit_deleted' article.title %}">Trash</a></p>
+        <p>You can remove the 'deleted' flag by editing it in the
+            <a href="{% url 'wiki_edit_deleted' article.title %}">Trash</a>
+        </p>
     {% else %}
-    <p>If you are interested to work on this article please ask in the forum "Homepage"
-        or contact the last editor. For your interest here is some more information:</p>
+        <p>
+            If you are interested to work on this article please ask in the forum "Homepage"
+            or contact the last editor. For your interest here is some more information:
+        </p>
     <ul>
-        <li><span style="font-weight: bold;">Summary:</span> {{ article.summary }}</li>
-        <li><span style="font-weight: bold;">Last Comment:</span> {{
-            article.changeset_set.first.comment }}
+        <li>
+            <span style="font-weight: bold;">Summary:</span> {{ article.summary }}
         </li>
-        <li><span style="font-weight: bold;">Last edited by:</span> {{
-            article.changeset_set.first.editor|user_link }}
+        <li>
+            <span style="font-weight: bold;">Last Comment:</span> {{ article.changeset_set.first.comment }}
+        </li>
+        <li>
+            <span style="font-weight: bold;">Last edited by:</span> {{ article.changeset_set.first.editor|user_link }}
         </li>
     </ul>
     {% endif %}

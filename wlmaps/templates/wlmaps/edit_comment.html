@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block content_header %}
-<h1>Edit comment: {{ map.name }}</h1>
+    <h1>Edit comment: {{ map.name }}</h1>
 {% endblock %}
-{% block content_main %}
+{% block content_section %}
 <section>
     <form enctype="multipart/form-data"
           action="{% url 'wlmaps_edit_comment' map.slug %}" method="post">
@@ -20,7 +20,7 @@
             {{ form.uploader_comment }}
         </div>
         {% if form.uploader_comment.errors %}
-        <span class="errormessage">{{ form.uploader_comment.errors }}</span><br/>
+            <span class="errormessage">{{ form.uploader_comment.errors }}</span><br/>
         {% endif %}
         {% csrf_token %}
         <button type="submit">

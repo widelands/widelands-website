@@ -5,11 +5,11 @@
 
 {% block title %}
 {% if not profile.deleted %}
-{{ profile.user.username }}'s
+    {{ profile.user.username }}'s - Profile
 {% else %}
-Deleted Users Profile
+    Deleted Users Profile
 {% endif %}
-- Profile
+
 {{ block.super }}
 {% endblock %}
 
@@ -25,12 +25,12 @@ Deleted Users Profile
 </h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     {% if messages %}
-    {% for message in messages %}
-    <p style="text-align: center;">{{ message }}</p>
-    {% endfor %}
+        {% for message in messages %}
+            <p style="text-align: center;">{{ message }}</p>
+        {% endfor %}
     {% endif %}
     {% if not profile.deleted %}
     <table>
@@ -88,4 +88,3 @@ Deleted Users Profile
 </section>
 
 {% endblock %}
-

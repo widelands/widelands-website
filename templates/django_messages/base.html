@@ -18,7 +18,7 @@ Messages - {{block.super}}
 <h1>Messages: {% block msg_title %}{% endblock %}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     {% if messages %}
     {% for message in messages %}
@@ -29,8 +29,7 @@ Messages - {{block.super}}
         <tr>
             <th class="msg_menu">
                 <ul>
-                    <li><a href="{% url 'messages_compose' %}">{% trans "New Message"
-                        %}</a>
+                    <li><a href="{% url 'messages_compose' %}">{% trans "New Message" %}</a>
                     <li><a href="{% url 'messages_inbox' %}">{% trans "Inbox" %}</a>
                     <li><a href="{% url 'messages_outbox' %}">{% trans "Outbox" %}</a>
                     <li><a href="{% url 'messages_trash' %}">{% trans "Trash" %}</a>

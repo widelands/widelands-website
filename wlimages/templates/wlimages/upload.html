@@ -1,9 +1,9 @@
 {% extends "mainpage/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <form enctype="multipart/form-data" action="/images/upload/" method="POST">
         {{ upload_form.imagename.errors }}

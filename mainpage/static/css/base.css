@@ -344,6 +344,12 @@ article {
     margin-right: 1em;
 }
 
+article header {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
 article section {
 	background-image: url("../img/but1.png");
 	-moz-border-radius: 4px;
@@ -392,7 +398,6 @@ section.blogEntry .posRight{
 aside {
 	display: flex;
     flex-direction: column;
-	margin-top: -38px;
 	flex: 0 0 220px;
 }
 

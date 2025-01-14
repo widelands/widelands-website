@@ -9,10 +9,10 @@ Tag-list: {{ tag.name }} - {{block.super}}
 
 
 {% block content_header %}
-<h1>Articles with tag '{{ tag.name }}'</h1>
+    <h1>Articles with tag '{{ tag.name }}'</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <table>
         <thead>
@@ -26,14 +26,14 @@ Tag-list: {{ tag.name }} - {{block.super}}
         <tr>
             <td><a href="{% url 'wiki_article' article %}">{{ article }}</a></td>
             {% tags_for_object article as article_tags %}
-            <td>{% include "wiki/inlines/tag_urls.html" with sep=","
-                tag_list=article_tags %}
+            <td>{% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}
             </td>
         </tr>
         </tbody>
         {% endfor %}
     </table>
-    <p><span style="font-weight: bold;"> Show articles tagged with:</span> {% tag_links
-        tag.name sep=" |" %} </p>
+    <p>
+        <span style="font-weight: bold;"> Show articles tagged with:</span> {% tag_links tag.name sep=" |" %}
+    </p>
     {% endblock %}
 </section>

@@ -5,13 +5,13 @@
 {% load static %}
 
 {% block title %}
-{% trans "Delete me" %} - {{ block.super }}
+    {% trans "Delete me" %} - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-<h1>{% trans "Delete your account" %}</h1>
+    <h1>{% trans "Delete your account" %}</h1>
 {% endblock %}
-{% block content_main %}
+{% block content_section %}
 <section>
     <h3>Hi {{ user }},</h3>
     <p>we are sorry that you want to leave our community <img

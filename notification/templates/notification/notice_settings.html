@@ -13,7 +13,7 @@
 <h1>{% trans "Notification Settings" %} {{ profile.user }}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <h2>{% trans "Settings" %}</h2>
 
@@ -41,16 +41,14 @@
                 {% endfor %}
             </tr>
             {% for setting in settings %}
-            <tr class="{% cycle " odd
-            " "even" %}">
+            <tr class="{% cycle 'odd' 'even' %}">
             <td>
                 {% trans setting.notice_type.display %}<br/>
                 {% trans setting.notice_type.description %}
             </td>
             <td style="width: 5em;">
                 {% for html_value in setting.html_values %}
-                <input type="checkbox" name="{{ html_value.0 }}" {% if html_value.1
-                       %}checked="checked" {% endif %}/>
+                <input type="checkbox" name="{{ html_value.0 }}" {% if html_value.1 %}checked="checked" {% endif %}/>
                 {% endfor %}
             </td>
             </tr>
@@ -59,7 +57,7 @@
         <br/>
         {% endfor %}
         {% csrf_token %}
-        <input class="posRight" type="submit" value="{% trans " Change" %}" />
+        <input class="posRight" type="submit" value="{% trans 'Change' %}" />
     </form>
 </section>
 {% endblock %}

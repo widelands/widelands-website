@@ -44,12 +44,6 @@ included here
     {% include "mainpage/navigation.html" %}
 </nav>
 
-<header>
-    <!-- the header of each section in article -->
-    {% block content_header %}
-    {% endblock %}
-</header>
-
 <main>
     <!-- main is the flex container for all below the navigation bar -->
     <!-- flex-direction: row -->
@@ -57,12 +51,18 @@ included here
         <!-- article is the flex container for all on the left side -->
         <!-- flex-direction: column -->
 
-        <!--{% block content_tabbing %}-->
-        <!-- used to display tabs on pages. For tabs which point to
-             other pages, use it in base.html of the main page -->
-        <!--{% endblock %}-->
+        <header>
+            {% block content_header %}
+            <!-- the header of each section in article -->
+            {% endblock %}
+        </header>
 
-        {% block content_main %}
+        {% block content_tabbing %}
+        <!-- used to display tabs on pages. For tabs which point to
+             other pages, use it in base.html of the apps main page -->
+        {% endblock %}
+
+        {% block content_section %}
         <!-- each entry in article is a section -->
         {% endblock %}
     </article>

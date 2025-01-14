@@ -1,6 +1,6 @@
 {% extends "wlmaps/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% load custom_date %}
@@ -11,7 +11,7 @@ vim:ft=htmldjango
 {% load static %}
 
 {% block content_header %}
-<h1>Maps</h1>
+    <h1>Maps</h1>
 {% endblock %}
 {% block content_tabbing %}
 <ul class="tab-list small">
@@ -47,9 +47,10 @@ vim:ft=htmldjango
         });
     });
 </script>
-{{ block.super}}{% endblock %}
+{{ block.super}}
+{% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 
 <section>
     <p>
@@ -71,29 +72,22 @@ vim:ft=htmldjango
         {{ form.non_field_errors }}
         <table class="maps-filter">
             <tr>
-                {% include 'wlmaps/inlines/form_field_td.html' with
-                field=filter.form.name__icontains %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.name__icontains %}
                 <td class="spacer"></td>
-                {% include 'wlmaps/inlines/form_field_td.html' with
-                field=filter.form.nr_players %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.nr_players %}
             </tr>
             <tr>
-                {% include 'wlmaps/inlines/form_field_td.html' with
-                field=filter.form.author__iexact %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.author__iexact %}
                 <td class="spacer"></td>
-                {% include 'wlmaps/inlines/form_field_td.html' with
-                field=filter.form.uploader %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.uploader %}
             </tr>
             <tr>
-                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.w
-                %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.w %}
                 <td class="spacer"></td>
-                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.h
-                %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.h %}
             </tr>
             <tr>
-                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o
-                %}
+                {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}
                 <td class="spacer" colspan="2"></td>
                 <td colspan="1" class="right"><input type="submit"
                                                      value="Apply filters"/></td>
@@ -109,8 +103,7 @@ vim:ft=htmldjango
                     class="minimap" src="{{ MEDIA_URL }}{{ map.minimap }}"
                     alt="{{ map.name }}"/></a></td>
             <td>
-                <h3><a class="invertedColor" href="{{ map.get_absolute_url }}">{{
-                    map.name }}</a></h3>
+                <h3><a class="invertedColor" href="{{ map.get_absolute_url }}">{{ map.name }}</a></h3>
                 <table>
                     <tr>
                         <td class="grey">Author:</td>
@@ -123,9 +116,9 @@ vim:ft=htmldjango
                         <td class="grey">World:</td>
                         <td>
                             {% if map.world_name %}
-                            {{ map.world_name|title }}
+                                {{ map.world_name|title }}
                             {% else %}
-                            One World
+                                One World
                             {% endif %}
                         </td>
                         <td class="spacer"></td>
@@ -144,8 +137,7 @@ vim:ft=htmldjango
                     </tr>
                     <tr>
                         <td class="grey">Upload:</td>
-                        <td colspan="4">by {{ map.uploader|user_link }} at {{
-                            map.pub_date|custom_date:user }}
+                        <td colspan="4">by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}
                         </td>
                     </tr>
                     {% if not map.world_name %}

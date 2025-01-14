@@ -1,17 +1,17 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
-Workers - {{ tribe.displayname }} - {{ block.super }}
+    Workers - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-<h1>{{ tribe.displayname }}: Workers</h1>
+    <h1>{{ tribe.displayname }}: Workers</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <div class="posRight">
         {% include 'wlhelp/inlines/js_form_scripting.html' %}
@@ -28,12 +28,11 @@ Workers - {{ tribe.displayname }} - {{ block.super }}
             <th style="width: 12em;">Works at</th>
         </tr>
         {% for worker in workers %}
-        <tr class="{% cycle " odd
-        " "even" %}" id="{{ worker.name }}">
+        <tr class="{% cycle 'odd' 'even' %}" id="{{ worker.name }}">
         <td>
             <a href="{% url 'wlhelp_worker_details' tribe.name worker.name %}"
                title="Show economy graph">
-                {{ worker.displayname }}<br/>
+                {{ worker.displayname }}<br />
                 <img src="{{ worker.image_url }}" alt="{{ worker.displayname }}"/>
             </a>
         </td>

@@ -1,8 +1,7 @@
 {% extends 'wiki/base.html' %}
 {% load i18n %}
 {% load wiki_extras %}
-{#{% load tagging_tags %}#}
-
+{% load tagging_tags %}
 {% block title %}
 {{ article.title }} - {{block.super}}
 {% endblock %}
@@ -18,19 +17,20 @@
 {% endblock %}
 
 {% block content_header %}
-<h1>{{ article.title }}</h1>
+    <h1>{{ article.title }}</h1>
 {% endblock %}
 
 {# add the wanted classes to the tabs #}
 {% block class_wiki_back %}class="hidden"{% endblock %}
 {% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 {% if messages %}
 {% for message in messages %}
-<p class="errormessage">{{ message }}</p>
+    <p class="errormessage">{{ message }}</p>
 {% endfor %}
 {% endif %}
+
 <section>
     {% if not article.id %}
     <p>
@@ -53,19 +53,18 @@
     <p class="errormessage">This article is marked as outdated.
         If you are familiar with this topic, please consider updating and improving this
         page.
-        In case of any questions, please ask in the forum! For pointers see <a
-                href="/wiki/WikiHelp">WikiHelp</a> in our wiki.
-        After finishing your work remove the 'outdated' tag.</p>
+        In case of any questions, please ask in the forum! For pointers see
+        <a href="/wiki/WikiHelp">WikiHelp</a>
+        in our wiki. After finishing your work remove the 'outdated' tag.</p>
     {% endif %}
     {% render_content article %}
-    {% comment %}
+
     {% tags_for_object article as article_tags %}
     {% if article_tags %}
-    <div class="right">Tagged with: {% include "wiki/inlines/tag_urls.html" with sep=","
-        tag_list=article_tags %}
+    <div class="right">
+        Tagged with: {% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}
     </div>
     {% endif %}
-    {% endcomment %}
 </section>
 {% endblock %}
 

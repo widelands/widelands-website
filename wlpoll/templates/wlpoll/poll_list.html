@@ -1,20 +1,21 @@
 {% extends "mainpage/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% load static %}
 
 {% block extra_head %}
 {{ block.super}}
-<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}"/>
 {% endblock %}
 
 {% load threadedcommentstags custom_date %}
+
 {% block title %}Poll Archive - {{ block.super }}{% endblock %}
 
 {% block content_header %}
-<h1>Poll Archive</h1>
+    <h1>Poll Archive</h1>
 {% endblock %}
 
 {% block content_tabbing %}
@@ -22,14 +23,14 @@ vim:ft=htmldjango
 <ul class="small tab-list">
     <li>
         {% if perms.wlpoll.add_poll %}
-        <a href="/admin/wlpoll/poll/add/">Add New Poll</a>
+            <a href="/admin/wlpoll/poll/add/">Add New Poll</a>
         {% endif %}
     </li>
 </ul>
 {% endif %}
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <div class="post">
         <table>

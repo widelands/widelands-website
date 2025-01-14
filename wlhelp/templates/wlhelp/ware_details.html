@@ -1,19 +1,20 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
-{{ ware.displayname }} - {{ tribe.displayname }} - {{ block.super }}
+    {{ ware.displayname }} - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-<h1>{{ tribe.displayname }}: {{ ware.displayname }}</h1>
+    <h1>{{ tribe.displayname }}: {{ ware.displayname }}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
-    <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187;
+    <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a>
+    &#187;
     <a href="{% url 'wlhelp_wares' tribe.name %}">{{ tribe.displayname }} Wares</a>
     &#187;
     {{ ware.displayname }}

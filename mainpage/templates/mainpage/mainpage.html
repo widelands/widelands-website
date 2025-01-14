@@ -11,26 +11,24 @@ they reach our homepage
 {% load news_extras %}
 
 {% block extra_head %}
-<meta name="google-site-verification"
-      content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y"/>
+<meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y"/>
 <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}"/>
-<link rel="alternate" type="application/rss+xml" title="Widelands News"
-      href="news/feed/"/>
+<link rel="alternate" type="application/rss+xml" title="Widelands News" href="news/feed/"/>
 
 {{ block.super}}{% endblock %}
 {% block content_header %}
-<h1>Welcome to Widelands.org</h1>
+    <h1>Welcome to Widelands.org</h1>
 {% endblock %}
-{% block content_main %}
+{% block content_section %}
 
 <section>
     <img class="landing posRight" src="{% static 'img/welcome.jpg' %}" alt="Welcome!"/>
     <p>
-        <a href="{% url 'wiki_article' " Description" %}">Widelands</a> is a
-        <a href="{% url 'wiki_article' " The Widelands Project" %}">free, open
+        <a href="{% url 'wiki_article' 'Description' %}">Widelands</a> is a
+        <a href="{% url 'wiki_article' 'The Widelands Project' %}">free, open
         source</a>
         real-time strategy game with singleplayer campaigns and a multiplayer mode.
-        The game was inspired by Settlers&nbsp;II&#8482; (&copy;&nbsp;Bluebyte) but
+        The game was inspired by Settlers II&#8482; (&copy;&nbsp;Bluebyte) but
         has significantly more variety and depth to it. Still, it is easy to get
         started through playable tutorials.
     </p>
@@ -52,23 +50,26 @@ they reach our homepage
         Everybody is invited to help out too - we need 2D and 3D artists, sound
         effect creators, composers, map makers, translators, test players,
         web programmers and C++ coders. All skill levels are welcome - just
-        start working on something or ask in the <a
-            href="{% url 'pybb_index' %}">forums</a>
-        for pointers.
+        start working on something or ask in the
+        <a href="{% url 'pybb_index' %}">forums</a> for pointers.
     </p>
-   <!-- <div style="clear: left"></div>-->
-    <!--</div>-->
 </section>
+
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
 <div id="content_header">
     <h1>News</h1>
 </div>
 {% for object in latest_posts_list %}
-{% include "news/inlines/post_detail.html" %}
+    {% include "news/inlines/post_detail.html" %}
 {% endfor %}
-<div class="center"><p><a class="invertedColor" href="{% url 'news_index' %}">News
-    archive</a></p></div>
+<div class="center">
+    <p>
+        <a class="invertedColor" href="{% url 'news_index' %}">
+            News archive
+        </a>
+    </p>
+</div>
 {% endif %}
 
 {% endblock %}

@@ -5,10 +5,10 @@
 {% block title %} Category: {{ cur_category }} - {{ block.super }}{% endblock %}
 
 {% block content_header %}
-<h1>Posts for Category: {{ cur_category }}</h1>
+    <h1>Posts for Category: {{ cur_category }}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <div>
     <div class="linksBox">
         <a href="{% url 'news_index' %}">News Archive</a>
@@ -16,7 +16,7 @@
     <br/>
     <div class="linksBox">All Categories:
         {% for category in categories %}
-        <a href="{% url 'category_posts' slug=category.slug %}">{{ category }} </a> |
+            <a href="{% url 'category_posts' slug=category.slug %}">{{ category }} </a> |
         {% endfor %}
         {# Speciallink to provide posts which have no category #}
         <a href="{% url 'category_posts' slug='none' %}"> None </a>
@@ -27,9 +27,11 @@
         {% include "pagination/pagination.html" %}
     </div>
     <table width="100%">
-        <th align="left">Title</th>
-        <th>Posted at</th>
-        <th>Comments</th>
+        <tr>
+            <th align="left">Title</th>
+            <th>Posted at</th>
+            <th>Comments</th>
+        </tr>
         {% for post in post_list %}
         {% get_comment_count for post as ccount %}
         <tr>

@@ -6,10 +6,10 @@
     <h1>News Archive: {{ year|date:"Y" }}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <div class="linksBox">
 <a href="{% url 'news_index' %}">News Archiv </a>&#187;
-<a href="{% url 'news_index' %}{{ year|date:"Y" }}">{{ year|date:"Y" }}</a> : 
+<a href="{% url 'news_index' %}{{ year|date:"Y" }}">{{ year|date:"Y" }}</a> :
 
 {% for month in date_list %}
 	<a href="{% url 'news_index' %}{{ year|date:"Y" }}/{{ month|date:"b" }}/">{{ month|date:"F" }}</a>

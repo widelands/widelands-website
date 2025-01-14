@@ -7,7 +7,7 @@
 <h1>Category: {{category.name}}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <a href="{% url 'pybb_index' %}">Forums</a> &#187; {{category.name}}
     {% if category.forums.all and user.is_authenticated %}

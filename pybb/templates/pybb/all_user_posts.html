@@ -9,7 +9,7 @@ Posts by {{ this_user }} - {{ block.super }}
 <h1>Posts by {{ this_user }}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 <section>
     <p>{{ this_user }} has written {{ posts|length }} post{{ posts|length|pluralize
         }}.</p>

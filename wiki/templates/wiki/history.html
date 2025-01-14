@@ -8,14 +8,14 @@
 {% endblock %}
 
 {% block content_header %}
-<h1>{% trans "Article History of" %} {{ article.title }}</h1>
+    <h1>{% trans "Article History of" %} {{ article.title }}</h1>
 {% endblock %}
 
 {# add the wanted classes to the tabs #}
 {% block class_wiki_edit %}class="hidden"{% endblock %}
 {% block class_wiki_hist %}class="hidden"{% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 {% if changes|length > 1 %}
 <script type="text/javascript">
     function check() {
@@ -117,12 +117,10 @@
             </tbody>
         </table>
         <br/>
-        <input type="submit" value="{% trans " Revert to selected revision" %}" />
+        <input type="submit" value="{% trans ' Revert to selected revision' %}" />
         {% if changes|length > 1 %}
-        <input type="button" value="{% trans " Compare selected revisions" %}"
-        onclick="location.pathname='/wiki/history/{{ article.title|urlencode
-        }}/changeset/'+$('input:radio[name=from]:checked').val()+'/'+$('input:radio[name=to]:checked').val()+'/';"
-        />
+            <input type="button" value="{% trans ' Compare selected revisions' %}"
+            onclick="location.pathname='/wiki/history/{{ article.title|urlencode }}/changeset/'+$('input:radio[name=from]:checked').val()+'/'+$('input:radio[name=to]:checked').val()+'/';" />
         {% endif %}
         {% csrf_token %}
     </form>
