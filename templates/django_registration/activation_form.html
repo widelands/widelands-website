@@ -12,7 +12,7 @@ Activation - {{ block.super }}
 {% endblock %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     <p>Please click on the button below to activate this account:</p>
     <form action="." method="POST">
         {% csrf_token %}

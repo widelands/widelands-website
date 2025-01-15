@@ -15,7 +15,7 @@
 
 {% block content_section %}
 {% for category in cats %}
-<section>
+<section class="blogEntry">
     <h3><a href="{{category.get_absolute_url}}"
            class="invertedColor">{{category.name}}</a></h3>
     {% include 'pybb/inlines/display_category.html' %}

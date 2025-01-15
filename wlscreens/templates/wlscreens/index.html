@@ -30,7 +30,7 @@
 
 {% block content_section %}
 {% for c in categories %}
-<section>
+<section class="blogEntry">
     <h2>{{ c.name }}</h2>
     <ul class="screenshot_list">
         {% for s in c.screenshots.all %}

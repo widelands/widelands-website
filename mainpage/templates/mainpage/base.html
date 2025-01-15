@@ -35,7 +35,7 @@ included here
 
 <body>
 <a id="top"></a>
-<header>
+<header id="header-top">
     <!-- logo with links to screenshot | maps and so on -->
     {% include "mainpage/header.html" %}
 </header>
@@ -51,7 +51,7 @@ included here
         <!-- article is the flex container for all on the left side -->
         <!-- flex-direction: column -->
 
-        <header>
+        <header class="header-article">
             {% block content_header %}
             <!-- the header of each section in article -->
             {% endblock %}

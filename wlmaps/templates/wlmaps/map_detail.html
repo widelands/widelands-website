@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     <div>
         <a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}
     </div>
@@ -115,7 +115,7 @@
     </div>
 </section>
 
-<section>
+<section class="blogEntry">
     <h3>Comments on this Map:</h3>
     {% with map as object %}
     {% include "threadedcomments/inlines/comments.html" %}

@@ -10,7 +10,7 @@ Posts by {{ this_user }} - {{ block.super }}
 {% endblock %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     <p>{{ this_user }} has written {{ posts|length }} post{{ posts|length|pluralize
         }}.</p>
     {% include "pagination/pagination.html" %}

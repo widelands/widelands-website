@@ -37,7 +37,7 @@
 {% endblock %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     <div id="chartContainer" style="width: 100%; height: 400px"></div>
     {% display_poll object %}
     <hr/>
@@ -46,7 +46,7 @@
     <span class="small posRight">Posted on {{ object.pub_date|custom_date:user }}</span>
 </section>
 
-<section>
+<section class="blogEntry">
     <h3>Comments on this Poll:</h3>
     {% include "threadedcomments/inlines/comments.html" %}
 </section>

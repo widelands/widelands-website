@@ -4,7 +4,7 @@
 {% endcomment %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     <form enctype="multipart/form-data" action="/images/upload/" method="POST">
         {{ upload_form.imagename.errors }}
         {% csrf_token %}

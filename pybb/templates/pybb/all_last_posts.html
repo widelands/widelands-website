@@ -16,7 +16,7 @@ Latest posts - {{ block.super }}
 {% endblock %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     <form action="." method="post" novalidate>
         {% csrf_token %}
         <span class="errormessage">{{ form.days.errors }}</span>

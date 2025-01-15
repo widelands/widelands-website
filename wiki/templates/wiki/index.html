@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content_section %}
-<section>
+<section class="blogEntry">
     {% if articles %}
         <p> There are {{ articles|length }} articles in this wiki.</p>
         <p><span style="font-weight: bold;"> Jump to articles starting with:</span> {% alphabet_links articles %}</p>
