@@ -35,5 +35,4 @@
 	{% get_comment_count for object as ccount %}
 	<span class="small posLeft"><a href="{{ object.get_absolute_url }}#comment_anchor">{{ ccount }} comment{{ ccount|pluralize }}</a></span>
 	<span class="small posRight">Posted by {{object.author|user_link}} on {{ object.publish|custom_date:user }}</span>
-<!--</div>-->
 </section>

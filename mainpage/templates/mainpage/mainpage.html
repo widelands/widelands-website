@@ -33,9 +33,11 @@ they reach our homepage
         started through playable tutorials.
     </p>
     <p>
-        For more information read <a href="{% url 'wiki_article' " Description" %}">the
-        full description</a> and look at some <a href="{% url 'wlscreens_index' %}">screenshots</a>.
-        Or you can <a href="{% url 'wiki_article' " Download" %}">download</a>
+        For more information read
+        <a href="{% url 'wiki_article' 'Description' %}">
+            the full description
+        </a> and look at some <a href="{% url 'wlscreens_index' %}">screenshots</a>.
+        Or you can <a href="{% url 'wiki_article' 'Download' %}">download</a>
         the latest release and just try it out for yourself.
     </p>
     <p>
@@ -57,9 +59,10 @@ they reach our homepage
 
 {% get_latest_posts 3 as latest_posts_list %}
 {% if latest_posts_list %}
-<div id="content_header">
+<header class="header-article">
     <h1>News</h1>
-</div>
+</header>
+
 {% for object in latest_posts_list %}
     {% include "news/inlines/post_detail.html" %}
 {% endfor %}

@@ -109,8 +109,8 @@ input, button, textarea, .button, select {
 	vertical-align: middle;
 	cursor: pointer;
 	font-family: inherit;
-	/*font-size: 0.85em;*/
-	/*font-weight: bold;*/
+	font-size: 0.85em;
+	font-weight: bold;
 }
 
 .profileHelp {
@@ -139,8 +139,8 @@ select > option {
 }
 
 textarea {
-	/*font-weight: normal;*/
-	/*font-size: 0.9em;*/
+	font-weight: normal;
+	font-size: 0.9em;
 }
 
 input:hover, button:hover, textarea:hover {
@@ -157,6 +157,7 @@ h1, h2, h3, h4, h5, h6 {
 	color: #181;
 	margin-top: 0px;
 	font-weight: normal;
+	margin-bottom: 0.4em;
 }
 
 /* different margin for headers where text could be written */
@@ -418,6 +419,7 @@ aside {
 	display: flex;
     flex-direction: column;
 	flex: 0 0 220px;
+	margin-top: 0.4em;
 }
 
 section.columnModule h3 {
