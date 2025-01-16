@@ -115,11 +115,14 @@
     {% endif %}
 
     {% include "pagination/pagination.html" %}
+</section>
 
-    {% if user.is_authenticated %}
+{% if user.is_authenticated %}
+    <section>
         {% if not topic.closed %}
             {% include "pybb/inlines/add_post_form.html" %}
         {% endif %}
     {% endif %}
-    {% endblock %}
-</section>
+    </section>
+{% endblock %}
+

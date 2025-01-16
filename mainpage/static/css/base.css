@@ -25,15 +25,28 @@ a img {
 
 a {
 	text-decoration: none;
+	color: rgba(254, 234, 138, 1);
+	/*color: #fefb8a;*/
+	font-weight: bold;
+}
+
+a:visited {
+	color: #e0d7b0;
+	/*color: rgba(254, 234, 138, 1);*/
+}
+
+section div.columnModuleBox ul li a {
+	text-decoration: none;
 	/*color: rgba(254, 234, 138, 1);*/
 	color: #fefb8a;
 	font-weight: bold;
 }
 
-a:visited {
+section div.columnModuleBox ul li a:visited {
 	/*color: #e0d7b0;*/
 	color: rgba(254, 234, 138, 1);
 }
+
 
 a.missingLink {
 	color: yellow;

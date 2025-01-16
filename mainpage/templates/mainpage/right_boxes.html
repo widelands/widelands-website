@@ -30,7 +30,10 @@
 				<form method="post" action="{% url 'wlpoll_vote' p.id %}">
 					<ul class="poll">
 					{% for c in p.choices.all %}
-						<li><input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" /><label for="{{ c.id }}">{{ c.choice }}</label></li>
+						<li>
+							<label for="{{ c.id }}">{{ c.choice }}</label>
+							<input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" />
+						</li>
 					{% endfor %}
 					</ul>
 					<div class="center">
