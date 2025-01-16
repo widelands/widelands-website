@@ -25,16 +25,14 @@ a img {
 
 a {
 	text-decoration: none;
-	color: rgba(254, 234, 138, 1);
+	/*color: rgba(254, 234, 138, 1);*/
+	color: #fefb8a;
 	font-weight: bold;
 }
 
-.blogEntry a {
-	font-weight: normal;
-}
-
 a:visited {
-	color: #e0d7b0;
+	/*color: #e0d7b0;*/
+	color: rgba(254, 234, 138, 1);
 }
 
 a.missingLink {
@@ -337,7 +335,7 @@ main {
 /* --------- */
 
 /* fix shrinking of h1 header in user agent stylesheets */
-:is(article, aside, nav, section) h1 {
+h1 {
     font-size: 2em;
 }
 
@@ -362,6 +360,10 @@ article section {
 	margin-bottom: 20px;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	/*margin-right: 1em;*/
+}
+
+.blogEntry a {
+	font-weight: normal;
 }
 
 /* give headers on dark background a bit more contrast */
@@ -523,10 +525,9 @@ footer p {
 }
 
 /* Pagination */
-
 .pagination .current.page{
-	/*font-weight: bold;*/
-	/*font-size: large;*/
+	font-weight: bold;
+	font-size: large;
 	color: #C8BE93;
 	/*vertical-align: bottom;*/
 }
