@@ -11,9 +11,6 @@ div.searchBoxInner {
 	padding: 0px 10px 0px 10px;
 	height: 20px;
 	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-khtml-border-radius: 10px;
 	background-image: url("../img/but1.png");
 }
 
@@ -67,9 +64,6 @@ nav {
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border-radius: 4px 0px 4px 0px;
-	-moz-border-radius: 4px 0px 4px 0px;
-	-webkit-border-radius: 4px 0px 4px 0px;
-	-khtml-border-radius: 4px 0px 4px 0px;
 }
 
 ul.menu {
@@ -115,9 +109,6 @@ ul.menu li ul {
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border-radius: 0px 0px 4px 4px;
-	-moz-border-radius: 0px 0px 4px 4px;
-	-webkit-border-radius: 0px 0px 4px 4px;
-	-khtml-border-radius: 0px 0px 4px 4px;
 }
 
 ul.menu li:hover ul {

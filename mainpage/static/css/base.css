@@ -285,8 +285,6 @@ a.small {
 	padding: 0px;
 	list-style-type: none;
 	border: 1px solid #474444;
-	/*-webkit-border-radius: 4px 4px 0px 0px;*/
-	/*-khtml-border-radius: 4px 4px 0px 0px;*/
 	border-radius: 4px 4px 4px 4px;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	background-image: url("../img/wood.png");
@@ -310,8 +308,6 @@ a.small {
 #header-top li.loginBox {
 	background-image: url("../img/black20.png");
 	border: 1px solid #474444;
-	/*-webkit-border-radius: 4px 4px 0px 0px;*/
-	/*-khtml-border-radius: 4px 4px 0px 0px;*/
 	border-radius: 4px 4px 4px 4px;
 }
 
@@ -360,9 +356,6 @@ article {
 
 article section {
 	background-image: url("../img/but1.png");
-	/*-moz-border-radius: 4px;*/
-	/*-webkit-border-radius: 4px;*/
-	/*-khtml-border-radius: 4px;*/
 	border-radius: 4px;
 	border: 1px solid black;
 	padding: 1em 1em 2em 1em;
@@ -432,9 +425,6 @@ section div.columnModuleBox {
 	background-image: url("../img/wood.png");
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	/*-moz-border-radius: 4px;*/
-	/*-webkit-border-radius: 4px;*/
-	/*-khtml-border-radius: 4px;*/
 	border-radius: 4px;
 }
 
@@ -525,9 +515,6 @@ footer {
 	text-align: center;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border: 1px solid black;
-	/*-moz-border-radius: 4px;*/
-	/*-khtml-border-radius: 4px;*/
-	/*-webkit-border-radius: 4px;*/
 	border-radius: 4px;
 }
 
