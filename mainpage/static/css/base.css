@@ -348,14 +348,8 @@ main {
 /* --------- */
 
 /* fix shrinking of h1 header in user agent stylesheets */
-h1 {
+article h1 {
     font-size: 2em;
-}
-
-article .header-article {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
 }
 
 article {
@@ -363,6 +357,13 @@ article {
     flex-direction: column;
     flex: 1;
     margin-right: 1em;
+    order: 1;
+}
+
+article .header-article {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 article section {
@@ -428,6 +429,12 @@ aside {
     flex-direction: column;
 	flex: 0 0 220px;
 	margin-top: 0.4em;
+	order: 2;
+}
+
+section #latest_posts {
+    display: flex;
+    flex-direction: column;
 }
 
 section.columnModule h3 {
@@ -484,7 +491,7 @@ section div.columnModuleBox ul.player li{
 }
 
 section div.columnModuleBox ul li {
-	display: block;
+	/*display: block;*/
 	padding: 8px;
 	border-top: 1px solid black;
 	font-size: 0.8em;
@@ -617,11 +624,49 @@ footer p {
 /* The max-width has to be adjusted
    depending on the width of the logo*/
 @media (max-width: 1000px) {
+    body {
+        padding: 0 3px;
+    }
+
 	#header-top {
 			justify-content: center;
 	}
+
 	.header_boxes {
 		justify-content: center;
 		margin-bottom: 10px !important;
+	}
+
+	main {
+	    flex-direction: column;
+	}
+
+	article {
+	    order: 2;
+	}
+
+	aside {
+	    flex-direction: row;
+	    order: 1;
+	}
+
+	#logged_in_users {
+	    display: none;
+	}
+
+    section.columnModule {
+        margin: 0 0.5em;
+        min-width: 220px;
+    }
+
+	section #latest_posts {
+	    flex-direction: row;
+	    flex-wrap: wrap;
+	    justify-content: space-between;
+	}
+
+	section div.columnModuleBox ul li {
+	    width: 14em;
+	    padding: 5px;
 	}
 }
