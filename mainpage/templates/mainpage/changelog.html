@@ -5,17 +5,17 @@
 {% block title %}Changelog - {{ block.super }}{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}"/>
 {{ block.super}}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Changelog</h1>
+<h1>Changelog</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	{{ changelog|wl_markdown }}
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    {{ changelog|wl_markdown }}
+</section>
 {% endblock %}
 

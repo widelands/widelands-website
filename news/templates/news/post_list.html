@@ -1,7 +1,7 @@
 {% extends "news/base_news.html" %}
 
 {% block content_header %}
-	<h1>News Archive</h1><br />
+	<h1>News Archive</h1>
 	<div class="linksBox">
 		<a href="{% url 'news_index' %}">News Archive: </a>
 		{% for dateobj in date_list reversed %}
@@ -24,7 +24,7 @@
 	{% endif %}
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 {% include "news/inlines/posts_table.html" %}
 
 {% endblock %}

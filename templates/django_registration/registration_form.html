@@ -12,8 +12,8 @@ Registration - {{ block.super }}
 <h1>Registration</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
+{% block content_section %}
+<section class="blogEntry">
     <p><span class="errormessage">Please note:</span> Unfortunately some big
         Emailproviders (namely google - gmail and Microsoft - outlook.com, hotmail) are
         known for overblocking Emails or marking them as spam. Please check your spam
@@ -67,5 +67,5 @@ Registration - {{ block.super }}
         <input type="submit" value="Register"/>
         {% csrf_token %}
     </form>
-</div>
+</section>
 {% endblock %}

@@ -32,6 +32,7 @@
 		<li>
 			<a {% block notifications %}{% endblock %} href="{% url 'notification_notices' %}">Notification Settings</a>
 		</li>
+		<!-- TODO: remove this if, otherwise the tab isn't shown when switching tabs -->
 		{% if addondb %}
 		<li>
 			<a {% block addon_settings %}{% endblock %} href="{% url 'addon_settings' %}">Add-On Settings</a>
