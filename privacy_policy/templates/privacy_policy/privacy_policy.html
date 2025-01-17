@@ -19,9 +19,7 @@
         This page is also available as:
         {% for lang, slug in languages %}
             {# The if statement has to be directly after the link, otherwise we have unwanted spaces #}
-            <a href="{% url 'policy_translated' slug %}">{{ lang }}</a>
-            {% if count > 1 and forloop.revcounter0 == 1 %} and
-            {% elif count > 1 and forloop.revcounter0 != 0 %},
+            <a href="{% url 'policy_translated' slug %}">{{ lang }}</a>{% if count > 1 and forloop.revcounter0 == 1 %} and {% elif count > 1 and forloop.revcounter0 != 0 %},
             {% endif %}
         {% endfor %}
     </p>
