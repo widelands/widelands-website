@@ -6,10 +6,11 @@
 	<a href="{% url 'mainpage' %}"><img src=
 	"{% static 'img/'%}{% wl_logo %}" alt=
 	"Widelands Logo"></a>
-</div>
+
 	{% if user.is_authenticated %}
-	<div class="green">{% git_data %}</div>
+	<div class="green center">{% git_data %}</div>
 	{% endif %}
+</div>
 <ul class="header_boxes">
     <li class="small">
         <a href="{% url 'wlscreens_index' %}" title="Screenshots">Screenshots<br />
