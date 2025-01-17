@@ -12,7 +12,7 @@ body {
     /*line-height: 1.4em;*/
     color: #ffffee;
     text-shadow: 1px 1px 0px #000000;
-    padding: 0px 20px;
+    padding: 0px 1em;
 }
 
 /*+++++++++++++++++++++++++*/
@@ -100,7 +100,7 @@ pre {
 
 code {
     background-image: url("../img/black50.png");
-    /*font-size: 14px;*/
+    font-size: 1.2em;
 }
 /*No double background*/
 pre > code {
@@ -192,6 +192,7 @@ td {
 
 .posRight {
     float: right;
+    align-self: end; /* flex box */
 }
 
 .clear {
@@ -623,7 +624,7 @@ footer p {
 
 /* The max-width has to be adjusted
    depending on the width of the logo*/
-@media (max-width: 100em) {
+@media (max-width: 65em) {
     body {
         padding: 0 3px;
     }
