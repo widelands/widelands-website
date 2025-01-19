@@ -646,7 +646,7 @@ footer p {
         display: none;
     }
 
-    .responsiveShow {
+    nav div.responsiveMenu {
         display: block;
     }
 
