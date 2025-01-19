@@ -14,7 +14,7 @@ nav {
 	align-items: center;
 }
 
-nav div.responsiveMenu {
+nav .responsiveMenu {
     margin-left: auto;
     margin-right: 1em;
     display: none;
@@ -126,12 +126,13 @@ ul.menu li:hover ul {
 ul.menu li ul li {
 	clear: both;
 	border-top: 1px solid black;
+	height: 2em;
 }
 
 ul.menu li ul li a {
 	display: block;
 	width: 21.5em;
-	height: 20px;
+	/*height: 20px;*/
 	line-height: 1.7em;
 	padding: 4px;
 	text-align: left;
