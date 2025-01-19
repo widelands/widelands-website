@@ -3,6 +3,7 @@
 {% endcomment %}
 
 {% load pybb_extras %}
+{% load static %}
 
 <script type="text/javascript">
 	/* Enable dropdown menus on touch devices */
@@ -45,7 +46,7 @@
 			<li><a href="/wiki/LinksPage/">Links</a></li>
 		</ul>
 	</li>
-	<li><a href="{% url 'wiki_index' %}">Wiki</a>
+	<li class="responsiveHidden"><a href="{% url 'wiki_index' %}">Wiki</a>
 		<ul>
 			<li><a href="{% url 'wiki_article' "Game Manual" %}">Game Manual</a></li>
 			<li><a href="{% url 'wiki_article' "Creating Game Content" %}">Creating Game Content</a></li>
@@ -57,11 +58,11 @@
 			{% endif %}
 		</ul>
 	</li>
-	<li><a href="{% url 'pybb_index' %}">Forums</a>
+	<li class="responsiveHidden"><a href="{% url 'pybb_index' %}">Forums</a>
 			{% forum_navigation %}
 	</li>
-	<li><a href="{% url 'webchat_index' %}">Chat</a></li>
-	<li><a href="{% url 'wiki_article' "Development" %}">Development</a>
+	<li class="responsiveHidden"><a href="{% url 'webchat_index' %}">Chat</a></li>
+	<li class="responsiveHidden"><a href="{% url 'wiki_article' "Development" %}">Development</a>
 		<ul>
 			<li><a href="{% url 'wiki_article' "Contribute" %}">Contribute</a></li>
 			<li><a href="{% url 'developers' %}">Widelands Development Team</a></li>
@@ -71,6 +72,9 @@
 		</ul>
 	</li>
 </ul>
+<div class="responsiveMenu">
+	<img src="{% static 'img/hamburger.png' %}" id="toggleMenu">
+</div>
 <div class="searchBox">
 	<form method="post" action="/search/">
 		<div class="searchBoxInner">

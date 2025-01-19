@@ -642,8 +642,12 @@ footer p {
         display: none;
     }
 
-    nav ul li:nth-child(n+3) {
+    nav ul li.responsiveHidden {
         display: none;
+    }
+
+    .responsiveShow {
+        display: block;
     }
 
     nav .searchBox {

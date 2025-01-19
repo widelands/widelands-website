@@ -1,8 +1,28 @@
 /* Top Menu */
 
+nav {
+	/*position: relative;
+	z-index: 5;
+	clear: both;
+	height: 50px;*/
+	display: flex;
+	margin-bottom: 22px;
+	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border-radius: 4px 0px 4px 0px;
+	align-items: center;
+}
+
+nav div.responsiveMenu {
+    margin-left: auto;
+    margin-right: 1em;
+    display: none;
+}
+
 div.searchBox {
-	height: 20px;
-	padding: 15px;
+	/*height: 20px;*/
+	/*padding: 15px;*/
     margin-left: auto;
 }
 
@@ -53,19 +73,6 @@ select.selection option {
 	color: #ffffee;
 }
 
-nav {
-	/*position: relative;
-	z-index: 5;
-	clear: both;
-	height: 50px;*/
-	display: flex;
-	margin-bottom: 22px;
-	background-image: url("../img/wood.png");
-	border: 1px solid black;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	border-radius: 4px 0px 4px 0px;
-}
-
 ul.menu {
 	margin: 0px;
 	padding: 0px;
@@ -80,7 +87,7 @@ ul.menu li {
 ul.menu  li a {
 	display: block;
 	width: 8.5em;
-	height: 50px;
+	/*height: 50px;*/
 	line-height: 3.5em;
 	float: left;
 	border-right: 1px solid black;
