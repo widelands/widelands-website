@@ -14,7 +14,7 @@ nav {
 	align-items: center;
 }
 
-nav .responsiveMenu {
+nav #respMenuButton {
     margin-left: auto;
     margin-right: 1em;
     display: none;
@@ -144,7 +144,7 @@ ul.menu li ul li:first-child {
 	border: none;
 }
 
-#loginButton {
+#respLoginButton {
   position: absolute;
   right: -1.5em;
   transform: rotate(-90deg);

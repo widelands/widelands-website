@@ -18,7 +18,7 @@
         </a>
     </li>
 	<li class="small">
-		<a href="{% url 'wiki_article' "Download" %}" title="Download">Download<br />
+		<a href="{% url 'wiki_article' 'Download' %}" title="Download">Download<br />
 		<img src="{% static '/img/download.png' %}" alt="Get Widelands" />
 		</a>
 	</li>
@@ -55,6 +55,6 @@
 		{% endif %}
 	</li>
 </ul>
-<div id="loginButton">
+<div id="respLoginButton">
 	<button>Login</button>
 </div>

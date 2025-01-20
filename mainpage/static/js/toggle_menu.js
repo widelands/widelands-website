@@ -1,12 +1,12 @@
 
 $( function() {
     $( "#toggleMenu" ).on( "click", function() {
-          $( ".responsiveHidden" ).toggle( "slow" );
+          $( ".respMenuHidden" ).toggle( "slow" );
     });
 });
 
 $( function() {
-    $( "#loginButton" ).on( "click", function() {
+    $( "#respLoginButton" ).on( "click", function() {
           $( "#responsiveLogin" ).toggle( "slow" );
     });
 });

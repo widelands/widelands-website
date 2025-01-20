@@ -642,23 +642,23 @@ footer p {
         display: none;
     }
 
-    #header-top #loginButton {
+    #header-top #respLoginButton {
         display: block;
     }
 
-    .responsiveHidden {
+    .respMenuHidden {
         display: none;
     }
 
     /* Add this class per js to hidden elements to show it,
        remove it to hide the elements again */
-    /*.responsiveHidden.responsiveShow {
+    /*.respMenuHidden.responsiveShow {
         display: block;
     }*/
 
-    /*nav div.responsiveMenu {
+    nav div#respMenuButton {
         display: block;
-    }*/
+    }
 
     nav .searchBox {
         display: none;
