@@ -642,7 +642,8 @@ footer p {
     }
 
     #header-top {
-            justify-content: center;
+        justify-content: center;
+        margin-right: 1.4em;
     }
 
     #header-top .header_boxes li {
