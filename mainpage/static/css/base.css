@@ -112,7 +112,7 @@ pre > code {
 }
 
 input, button, textarea, .button, select {
-    margin-bottom: 5px;
+    /*margin-bottom: 5px;*/
     padding: 2px 10px;
     border: 1px solid black;
     border-radius: 10px;
@@ -279,7 +279,7 @@ a.small {
 
 #header-top{
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
     /*font-size: 0.83em;*/
@@ -295,7 +295,7 @@ a.small {
 
 #header-top .header_boxes {
     display: flex;
-    flex-flow: row wrap;
+    /*flex-flow: row nowrap;*/
     margin: 0px;
     padding: 0px;
     list-style-type: none;
@@ -636,23 +636,34 @@ footer p {
             justify-content: center;
     }
 
-    #header-top .header_boxes {
-        justify-content: center;
-        margin-bottom: 10px !important;
+    #header-top .header_boxes li {
+        /*justify-content: center;*/
+        /*margin-bottom: 10px !important;*/
         display: none;
     }
 
-    nav ul li.responsiveHidden {
-        display: none;
-    }
-
-    nav div.responsiveMenu {
+    #header-top #loginButton {
         display: block;
     }
+
+    .responsiveHidden {
+        display: none;
+    }
+
+    /* Add this class per js to hidden elements to show it,
+       remove it to hide the elements again */
+    /*.responsiveHidden.responsiveShow {
+        display: block;
+    }*/
+
+    /*nav div.responsiveMenu {
+        display: block;
+    }*/
 
     nav .searchBox {
         display: none;
     }
+
     main {
         flex-direction: column;
     }

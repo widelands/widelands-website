@@ -1,10 +1,10 @@
 /* Top Menu */
 
 nav {
-	/*position: relative;
-	z-index: 5;
-	clear: both;
-	height: 50px;*/
+	/*position: relative;*/
+	/*z-index: 5;*/
+	/*clear: both;*/
+	/*height: 50px;*/
 	display: flex;
 	margin-bottom: 22px;
 	background-image: url("../img/wood.png");
@@ -22,7 +22,7 @@ nav .responsiveMenu {
 
 div.searchBox {
 	/*height: 20px;*/
-	/*padding: 15px;*/
+	margin-right: 2em;
     margin-left: auto;
 }
 
@@ -61,7 +61,7 @@ input.searchField {
 	background-repeat: no-repeat;
 	background-position: center;
 	appearance: none;
-   padding: 2px 20px 2px 2px;
+    padding: 2px 20px 2px 2px;
 }
 
 select::-ms-expand {
@@ -84,7 +84,7 @@ ul.menu li {
 	position: relative;
 }
 
-ul.menu  li a {
+ul.menu li a {
 	display: block;
 	width: 8.5em;
 	/*height: 50px;*/
@@ -116,7 +116,7 @@ ul.menu li ul {
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border-radius: 0px 0px 4px 4px;
-	z-index: 1;
+	z-index: 3;
 }
 
 ul.menu li:hover ul {
@@ -142,6 +142,13 @@ ul.menu li ul li a {
 
 ul.menu li ul li:first-child {
 	border: none;
+}
+
+#loginButton {
+  position: absolute;
+  right: -1.5em;
+  transform: rotate(-90deg);
+  display: none;
 }
 
 /***********************************************************/

@@ -36,7 +36,7 @@
 			<img src="{% static 'img/socialmedia/youtube.png' %}" alt="Youtube" />
 		</a>
 	</li>
-	<li class="loginBox small">
+	<li id="responsiveLogin" class="small">
 		{% if user.is_authenticated %}
 			<!-- Logged in -->
 			<a href="{% url 'profile_view' %}" title="Your Profile">Profile</a> |
@@ -55,3 +55,6 @@
 		{% endif %}
 	</li>
 </ul>
+<div id="loginButton">
+	<button>Login</button>
+</div>

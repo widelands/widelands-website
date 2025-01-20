@@ -5,7 +5,12 @@
 {% load pybb_extras %}
 {% load static %}
 
+
 <script type="text/javascript">
+	/*
+	  Probably a better solution:
+	 https://wiki.selfhtml.org/wiki/Navigation/Dropdown-Men%C3%BC#inklusives_Dropdown-Men.C3.BC
+	*/
 	/* Enable dropdown menus on touch devices */
 	$(document).ready(function(){
 		$(".menu li").on("touchstart", function() {
@@ -73,7 +78,7 @@
 	</li>
 </ul>
 <div class="responsiveMenu">
-	<img src="{% static 'img/hamburger.png' %}" id="toggleMenu">
+	<button><img src="{% static 'img/hamburger.png' %}" id="toggleMenu"></button>
 </div>
 <div class="searchBox">
 	<form method="post" action="/search/">
