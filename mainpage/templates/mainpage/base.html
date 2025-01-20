@@ -8,77 +8,82 @@ included here
 {% load static %}
 <html lang="en">
 
-<head>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Webmaster Site Verification token -->
-    <meta name="google-site-verification"
-          content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y"/>
+        <!-- Google Webmaster Site Verification token -->
+        <meta name="google-site-verification"
+              content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y"/>
 
-    <title>{% block title %}Widelands.org{% endblock %}</title>
-    <link href="{% static 'favicon.ico' %}" rel="icon"/>
+        <title>{% block title %}Widelands.org{% endblock %}</title>
+        <link href="{% static 'favicon.ico' %}" rel="icon"/>
 
-    <!--  CSS -->
-    <link rel="stylesheet" type="text/css" media="all"
-          href="{% static 'css/base.css' %}"/>
-    <link rel="stylesheet" type="text/css" media="all"
-          href="{% static 'css/navigation.css' %}"/>
-    <!--[if lt IE 9]>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base_ielt9.css' %}"/>
-    <![endif]-->
+        <!--  CSS -->
+        <link rel="stylesheet" type="text/css" media="all"
+              href="{% static 'css/base.css' %}"/>
+        <link rel="stylesheet" type="text/css" media="all"
+              href="{% static 'css/navigation.css' %}"/>
+        <!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/base_ielt9.css' %}"/>
+        <![endif]-->
 
-    <!-- Javascript Bread & Butter Scripts -->
-    <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/jquery_csrf_ajax.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/toggle_menu.js' %}"></script>
-    {% block extra_head %}{% endblock %}
-</head>
+        <!-- Javascript Bread & Butter Scripts -->
+        <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery_csrf_ajax.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/toggle_menu.js' %}"></script>
+        {% block extra_head %}{% endblock %}
+    </head>
 
-<body>
-<a id="top"></a>
-<header id="header-top">
-    <!-- logo with links to screenshot | maps and so on -->
-    {% include "mainpage/header.html" %}
-</header>
-<nav>
-    <!-- navigation -->
-    {% include "mainpage/navigation.html" %}
-</nav>
+    <body>
+        <a id="top"></a>
 
-<main id="main">
-    <!-- main is the flex container for all below the navigation bar -->
-    <!-- flex-direction: row -->
-   <div id="respAsideButton" class="sideButton">
-	    <button>Latest posts</button>
-    </div>     <article>
-        <!-- article is the flex container for all on the left side -->
-        <!-- flex-direction: column -->
-
-        <header class="header-article">
-            {% block content_header %}
-            <!-- the header of each section in article -->
-            {% endblock %}
+        <header id="header-top">
+            <!-- logo with links to screenshot | maps and so on -->
+            {% include "mainpage/header.html" %}
         </header>
 
-        {% block content_tabbing %}
-        <!-- used to display tabs on pages. For tabs which point to
-             other pages, use it in base.html of the apps main page -->
-        {% endblock %}
+        <nav>
+            <!-- navigation -->
+            {% include "mainpage/navigation.html" %}
+        </nav>
 
-        {% block content_section %}
-        <!-- each entry in article is a section -->
-        {% endblock %}
-    </article>
-    <aside>
-        <!-- aside is the container for all on the right side -->
-        {% include "mainpage/right_boxes.html" %}
-    </aside>
-</main>
+        <main id="main">
+            <!-- main is the flex container for all below the navigation bar -->
 
-<!-- Footer -->
-<footer>
-    {% include "mainpage/footer.html" %}
-</footer>
-</body>
+            <div id="respAsideButton" class="sideButton">
+                <button>More</button>
+            </div>
+
+            <article>
+                <!-- article is the flex container for all on the left side -->
+
+                <header class="header-article">
+                    {% block content_header %}
+                    <!-- the header of each section in article -->
+                    {% endblock %}
+                </header>
+
+                {% block content_tabbing %}
+                <!-- used to display tabs on pages. For tabs which point to
+                     other pages, use it in base.html of the apps main page -->
+                {% endblock %}
+
+                {% block content_section %}
+                <!-- each entry in article is a section -->
+                {% endblock %}
+
+            </article>
+
+            <aside>
+                <!-- aside is the flex container for all on the right side -->
+                {% include "mainpage/right_boxes.html" %}
+            </aside>
+
+        </main>
+
+        <footer>
+            {% include "mainpage/footer.html" %}
+        </footer>
+    </body>
 </html>

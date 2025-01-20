@@ -9,7 +9,6 @@ body {
     background-image: url("../img/parchment.png");
     font-family: sans-serif;
     font-size: 0.88em;
-    /*line-height: 1.4em;*/
     color: #ffffee;
     text-shadow: 1px 1px 0px #000000;
     padding: 0px 1em;
@@ -174,12 +173,6 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0.4em;
 }
 
-/* different margin for headers where text could be written */
-section .blogEntry h1, h2, h3, h4, h5, h6 {
-    /*margin: 0.8em 0em 0.5em 0em;*/
-    /*color: #4bba4b;*/
-}
-
 svg {
     text-shadow: none;
 }
@@ -305,7 +298,6 @@ a.small {
 
 #header-top .header_boxes {
     display: flex;
-    /*flex-flow: row nowrap;*/
     margin: 0px;
     padding: 0px;
     list-style-type: none;
@@ -387,7 +379,6 @@ article section {
     padding: 1em 1em 2em 1em;
     margin-bottom: 20px;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-    /*margin-right: 1em;*/
 }
 
 .blogEntry a {
@@ -415,7 +406,6 @@ section.blogEntry img.title {
 }
 
 section.blogEntry p {
-    /*text-align: justify;*/
     margin: 0px;
     margin-bottom: 10px;
 }
@@ -424,7 +414,6 @@ section.blogEntry hr {
     height: 1px;
     background: #998;
     border: none;
-    /*clear: left;*/
 }
 
 section.blogEntry .breadCrumb{
@@ -452,8 +441,7 @@ aside {
 }
 
 section.columnModule h3 {
-    margin-bottom: 10px;
-    margin-top: 8px;    /* Correction for first box */
+    margin-top: 0.5em;
 }
 
 section div.columnModuleBox {
@@ -480,14 +468,13 @@ section div.columnModuleBox ul.poll {
 section div.columnModuleBox ul.poll li {
     padding: 0px;
     border: none;
-    /*height: 20px;*/
     display: flex;
     justify-content: space-between;
 }
 
 section div.columnModuleBox p {
-    margin: 0px;
-    padding: 8px;
+    /*margin: 0px;*/
+    /*padding: 8px;*/
 }
 
 section div.columnModuleBox ul {
@@ -500,12 +487,10 @@ section div.columnModuleBox ul {
 
 section div.columnModuleBox ul.player li{
     /*padding: 4px;*/
-    border: none;
+    /*border: none;*/
 }
 
 section div.columnModuleBox ul li {
-    /*display: block;*/
-    /*padding: 8px;*/
     border-top: 1px solid black;
     font-size: 0.8em;
     padding: 5px;
@@ -529,19 +514,6 @@ img.landing {
     max-width: 100%;
 }
 
-/*div#wrapper {
-    min-width: 980px;
-    margin: 0px 20px;
-}*/
-
-/*
-div#content {
-    margin-right: 240px;
-    display: flex;
-    flex-direction: column;
-}
-*/
-
 /* footer */
 
 footer {
@@ -554,16 +526,12 @@ footer {
     border-radius: 4px;
 }
 
-footer p {
-    /*margin: 0;*/
-}
 
 /* Pagination */
 .pagination .current.page{
     font-weight: bold;
     font-size: large;
     color: #C8BE93;
-    /*vertical-align: bottom;*/
 }
 
 .pagination .summary{
@@ -592,7 +560,7 @@ footer p {
     padding: 0.5em;
     margin: 0 0 0 0.4em;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-    /*font-size: 0.83em;*/
+    font-size: 0.83em;
 }
 
 .tab-list a:hover {
@@ -635,7 +603,7 @@ footer p {
     padding: 2px 4px 2px 4px;
 }
 
-/* Below changes some parts of the website according to the width of the viewport*/
+/* Below changes some parts of the website according to the width of the viewport */
 @media screen and (max-width: 65em) {
     body {
         padding: 0 3px;
@@ -647,8 +615,6 @@ footer p {
     }
 
     #header-top .header_boxes li {
-        /*justify-content: center;*/
-        /*margin-bottom: 10px !important;*/
         display: none;
     }
 
@@ -661,12 +627,6 @@ footer p {
     .respMenuHidden {
         display: none;
     }
-
-    /* Add this class per js to hidden elements to show it,
-       remove it to hide the elements again */
-    /*.respMenuHidden.responsiveShow {
-        display: block;
-    }*/
 
     nav div#respMenuButton {
         display: block;
@@ -715,22 +675,17 @@ footer p {
     }
 
     aside section.columnModule {
-        /*margin: 0 0.5em;*/
-        /*min-width: 160px;*/
         flex-basis: 10em;
-        /*flex-grow: 1;*/
     }
 
     aside #latest_posts div.columnModuleBox ul{
         flex-direction: row;
         flex-wrap: wrap;
-        /*justify-content: space-between;*/
         flex-grow: 1;
         flex-shrink: 2;
 	 }
 
     aside section div.columnModuleBox ul li {
-        /*width: 14em;*/
         padding: 5px;
     }
 
