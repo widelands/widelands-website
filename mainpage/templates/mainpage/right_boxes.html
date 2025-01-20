@@ -15,7 +15,7 @@
 {% get_open_polls as polls %}
 {% if polls %}
 
-<section class="columnModule">
+<section class="columnModule" id="polls">
 	<h3>Polls</h3>
 	<div class="columnModuleBox">
 	{% for p in polls %}
@@ -60,7 +60,7 @@
 <!-- Future Events if any -->
 {% get_future_events as events %}
 {% if events.count %}
-<section class="columnModule"  id="important_dates">
+<section class="columnModule" id="important_dates">
 	<h3>Important Dates</h3>
 	<div class="columnModuleBox">
 		<ul>

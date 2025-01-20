@@ -10,6 +10,12 @@ $( function() {
           $( "#responsiveLogin" ).toggle( "slow" );
     });
 });
+
+$( function() {
+    $( "#respAsideButton" ).on( "click", function() {
+          $( ".columnModule" ).toggle( "slow" );
+    });
+});
 /*
 function toggleHidden(cl) {
   var x = document.getElementsByClassName(cl);

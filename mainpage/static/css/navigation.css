@@ -144,12 +144,14 @@ ul.menu li ul li:first-child {
 	border: none;
 }
 
+/*
 #respLoginButton {
   position: absolute;
   right: -1.5em;
   transform: rotate(-90deg);
   display: none;
 }
+*/
 
 /***********************************************************/
 /* CSS for overrriding browser color change of placeholder */

@@ -273,6 +273,16 @@ a.small {
     white-space: nowrap;
 }
 
+.sideButton {
+    margin-left: auto;
+    /*margin-right: 1em;*/
+    display: none;
+    position: absolute;
+    right: -1.5em;
+    transform: rotate(-90deg);
+    display: none;
+}
+
 /**************/
 /* Header top */
 /**************/
@@ -625,9 +635,8 @@ footer p {
     padding: 2px 4px 2px 4px;
 }
 
-/* The max-width has to be adjusted
-   depending on the width of the logo*/
-@media (max-width: 65em) {
+/* Below changes some parts of the website according to the width of the viewport*/
+@media screen and (max-width: 65em) {
     body {
         padding: 0 3px;
     }
@@ -642,8 +651,10 @@ footer p {
         display: none;
     }
 
-    #header-top #respLoginButton {
+    #respLoginButton.sideButton,
+    #respAsideButton.sideButton {
         display: block;
+        width: 5em;
     }
 
     .respMenuHidden {
@@ -679,7 +690,7 @@ footer p {
         order: 1;
         flex-wrap: wrap;
         justify-content: center;
-        display: none;
+        flex: 0 0 auto;
     }
 
     #important_dates {
@@ -687,8 +698,12 @@ footer p {
         display: none;
     }
 
+    #polls {
+        flex-grow: 0;
+        display: none;
+    }
+
     #logged_in_users {
-        /*display: none;*/
         flex-grow: 0;
         display: none
     }
