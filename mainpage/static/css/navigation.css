@@ -10,49 +10,90 @@ nav {
 	align-items: center;
 }
 
+nav ul.menu {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+nav ul.menu li {
+	float: left;
+	position: relative;
+	border-right: 1px solid black;
+}
+
+nav ul.menu li a {
+	display: block;
+	width: 8.5em;
+	line-height: 3.5em;
+	float: left;
+	text-align: center;
+	color: #ffffff;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
 nav > ul.menu > li > button {
     position: relative;
-    /*width: 1.7em;*/
 }
 
 nav ul.menu > li > button > img {
-    width: 20px;
+    width: 16px;
 }
 
-.visible {
+
+nav ul.menu li:hover ul {
+	/*display: block;*/
 	visibility: visible;
-	/*height: auto;*/
 }
 
 nav ul ul {
 	visibility: hidden;
-	/*height: 0;*/
-	z-index: 1000;
+	position: absolute;
+	top: 50px;
+	left: -1px;
+	padding: 0px;
 	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border-radius: 0px 0px 4px 4px;
+	z-index: 3;
+}
+
+nav ul.menu li ul li {
+	border-top: 1px solid black;
+	height: 2em;
+}
+
+nav ul.menu li ul li:first-child {
+	border: none;
+}
+
+nav ul.menu li a.active {
+	box-shadow: black 0px 0px 10px 0px inset;
+	background-image: url("../img/black50.png");
+}
+
+nav ul.menu li ul li a {
+	width: 21.5em;
+	line-height: 1.7em;
+	padding: 4px;
+	text-align: left;
+	font-size: 0.8em;
+	border: none;
+}
+
+.visible {
+	visibility: visible;
 }
 
 [aria-expanded] {
     position: absolute;
     top: 1em;
-    /*height: 30px;*/
     padding: 3px;
-    /*width: 30px;*/
-    /*background: transparent;*/
-    /*outline:transparent;*/
-    /*border: none;*/
-    /*background-image: url('/static/img/menu_expand.png');*/
-     /*url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Cpath d='M0.3,0.1 0.3,0.9 0.8,0.5z' fill='white'/%3E%3C/svg%3E");*/
-    /*background-repeat: no-repeat;*/
-    /*background: var(--background-color);*/
 }
 
 [aria-expanded] img {
 	pointer-events: none;
-}
-
-nav li:hover [aria-expanded] img {
-	background: var(--accent1-color);
-	fill: var(--background-color);
 }
 
 [aria-expanded="true"] img {
@@ -68,6 +109,10 @@ nav li:hover [aria-expanded] img {
 	height: 1px !important;
 	width: 1px !important;
 	overflow: hidden !important;
+}
+
+nav ul.menu li a:hover {
+	background-image: url("../img/black20.png");
 }
 
 nav #respMenuButton {
@@ -126,77 +171,6 @@ select::-ms-expand {
 /* Overwrite the color of selection entries */
 select.selection option {
 	color: #ffffee;
-}
-
-ul.menu {
-	margin: 0px;
-	padding: 0px;
-}
-
-ul.menu li {
-	list-style-type: none;
-	float: left;
-	position: relative;
-	border-right: 1px solid black;
-}
-
-ul.menu li a {
-	display: block;
-	width: 8.5em;
-	line-height: 3.5em;
-	float: left;
-	text-align: center;
-	color: #ffffff;
-	text-transform: uppercase;
-	font-weight: normal;
-}
-
-ul.menu li a:hover {
-	background-image: url("../img/black20.png");
-}
-
-ul.menu li a.active {
-	box-shadow: black 0px 0px 10px 0px inset;
-	background-image: url("../img/black50.png");
-}
-
-ul.menu li ul {
-	/*display: none;*/
-	/*visibility: hidden;*/
-	position: absolute;
-	top: 50px;
-	left: -1px;
-	padding: 0px;
-	border: 1px solid black;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	border-radius: 0px 0px 4px 4px;
-	z-index: 3;
-}
-
-ul.menu li:hover ul {
-	/*display: block;*/
-	/*visibility: visible;*/
-}
-
-ul.menu li ul li {
-	/*clear: both;*/
-	border-top: 1px solid black;
-	height: 2em;
-}
-
-ul.menu li ul li a {
-	/*display: block;*/
-	width: 21.5em;
-	/*height: 20px;*/
-	line-height: 1.7em;
-	padding: 4px;
-	text-align: left;
-	font-size: 0.8em;
-	border: none;
-}
-
-ul.menu li ul li:first-child {
-	border: none;
 }
 
 /***********************************************************/
