@@ -431,7 +431,7 @@ aside {
     display: flex;
     flex-direction: column;
     flex: 0 0 15em;
-    margin-top: 0.4em;
+    margin-top: 0.7em;
     order: 2;
 }
 
@@ -473,8 +473,8 @@ section div.columnModuleBox ul.poll li {
 }
 
 section div.columnModuleBox p {
-    /*margin: 0px;*/
-    /*padding: 8px;*/
+    margin: 0px;
+    padding: 8px;
 }
 
 section div.columnModuleBox ul {

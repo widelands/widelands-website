@@ -2,12 +2,72 @@
 
 nav {
 	display: flex;
-	margin-bottom: 22px;
+	margin-bottom: 1em;
 	background-image: url("../img/wood.png");
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border-radius: 4px 0px 4px 0px;
 	align-items: center;
+}
+
+nav > ul.menu > li > button {
+    position: relative;
+    /*width: 1.7em;*/
+}
+
+nav ul.menu > li > button > img {
+    width: 20px;
+}
+
+.visible {
+	visibility: visible;
+	/*height: auto;*/
+}
+
+nav ul ul {
+	visibility: hidden;
+	/*height: 0;*/
+	z-index: 1000;
+	background-image: url("../img/wood.png");
+}
+
+[aria-expanded] {
+    position: absolute;
+    top: 1em;
+    /*height: 30px;*/
+    padding: 3px;
+    /*width: 30px;*/
+    /*background: transparent;*/
+    /*outline:transparent;*/
+    /*border: none;*/
+    /*background-image: url('/static/img/menu_expand.png');*/
+     /*url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Cpath d='M0.3,0.1 0.3,0.9 0.8,0.5z' fill='white'/%3E%3C/svg%3E");*/
+    /*background-repeat: no-repeat;*/
+    /*background: var(--background-color);*/
+}
+
+[aria-expanded] img {
+	pointer-events: none;
+}
+
+nav li:hover [aria-expanded] img {
+	background: var(--accent1-color);
+	fill: var(--background-color);
+}
+
+[aria-expanded="true"] img {
+	transform: translate(0, 0) rotate(180deg);
+}
+
+.visually-hidden,
+[visually-hidden="true"] {
+	position: absolute !important;
+	clip-path: rect(1px, 1px, 1px, 1px) !important;
+	padding: 0 !important;
+	border: 0 !important;
+	height: 1px !important;
+	width: 1px !important;
+	overflow: hidden !important;
 }
 
 nav #respMenuButton {
@@ -77,6 +137,7 @@ ul.menu li {
 	list-style-type: none;
 	float: left;
 	position: relative;
+	border-right: 1px solid black;
 }
 
 ul.menu li a {
@@ -84,7 +145,6 @@ ul.menu li a {
 	width: 8.5em;
 	line-height: 3.5em;
 	float: left;
-	border-right: 1px solid black;
 	text-align: center;
 	color: #ffffff;
 	text-transform: uppercase;
@@ -101,11 +161,11 @@ ul.menu li a.active {
 }
 
 ul.menu li ul {
-	display: none;
+	/*display: none;*/
+	/*visibility: hidden;*/
 	position: absolute;
 	top: 50px;
 	left: -1px;
-	background-image: url("../img/wood.png");
 	padding: 0px;
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
@@ -114,17 +174,18 @@ ul.menu li ul {
 }
 
 ul.menu li:hover ul {
-	display: block;
+	/*display: block;*/
+	/*visibility: visible;*/
 }
 
 ul.menu li ul li {
-	clear: both;
+	/*clear: both;*/
 	border-top: 1px solid black;
 	height: 2em;
 }
 
 ul.menu li ul li a {
-	display: block;
+	/*display: block;*/
 	width: 21.5em;
 	/*height: 20px;*/
 	line-height: 1.7em;
