@@ -15,6 +15,7 @@ nav ul.menu {
 	padding: 0px;
 	list-style-type: none;
 }
+
 nav ul.menu li {
 	float: left;
 	position: relative;
@@ -121,6 +122,21 @@ nav #respMenuButton {
     display: none;
 }
 
+@media screen and (max-width: 65em) {
+    .respMenuHidden {
+        display: none;
+    }
+
+    nav div#respMenuButton {
+        display: block;
+    }
+
+    nav .searchBox {
+        display: none;
+    }
+}
+
+/* Searchbox */
 div.searchBox {
 	margin-right: 2em;
     margin-left: auto;

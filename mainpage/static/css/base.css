@@ -292,7 +292,8 @@ a.small {
     width: 100%;
 }
 
-#header-top .header_boxes li a, .header_boxes p {
+#header-top .header_boxes li a,
+.header_boxes p {
     font-weight: bold;
 }
 
@@ -622,18 +623,6 @@ footer {
     #respAsideButton.sideButton {
         display: block;
         width: 5em;
-    }
-
-    .respMenuHidden {
-        display: none;
-    }
-
-    nav div#respMenuButton {
-        display: block;
-    }
-
-    nav .searchBox {
-        display: none;
     }
 
     main {
