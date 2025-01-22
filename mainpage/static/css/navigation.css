@@ -41,12 +41,6 @@ nav ul.menu > li > button > img {
     width: 16px;
 }
 
-
-nav ul.menu li:hover ul {
-	/*display: block;*/
-	visibility: visible;
-}
-
 nav ul ul {
 	visibility: hidden;
 	position: absolute;
@@ -58,6 +52,11 @@ nav ul ul {
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border-radius: 0px 0px 4px 4px;
 	z-index: 3;
+}
+
+nav ul.menu li:hover ul {
+	/*display: block;*/
+	visibility: visible;
 }
 
 nav ul.menu li ul li {
@@ -122,7 +121,6 @@ nav #respMenuButton {
     display: none;
 }
 
-@media screen and (max-width: 65em) {
     .respMenuHidden {
         display: none;
     }
@@ -133,6 +131,26 @@ nav #respMenuButton {
 
     nav .searchBox {
         display: none;
+    }
+
+@media screen and (min-width: 65em) {
+    .respMenuHidden {
+        display: block;
+    }
+
+    nav div#respMenuButton {
+        display: none;
+    }
+
+    nav .searchBox {
+        display: block;
+    }
+}
+
+/* Hide the button for devices which support hover */
+@media (hover) {
+    nav ul button{
+    display: none;
     }
 }
 
