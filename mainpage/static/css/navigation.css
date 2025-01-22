@@ -2,7 +2,7 @@
 
 nav {
 	display: flex;
-	margin-bottom: 1em;
+	margin-bottom: 0.8em;
 	background-image: url("../img/wood.png");
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
@@ -10,32 +10,34 @@ nav {
 	align-items: center;
 }
 
-nav ul.menu {
+nav ul {
 	margin: 0px;
 	padding: 0px;
 	list-style-type: none;
 }
 
-nav ul.menu li {
+nav ul li {
 	float: left;
 	position: relative;
 	border-right: 1px solid black;
 }
 
-nav ul.menu li a {
+nav ul li a {
 	display: block;
 	width: 8.5em;
 	line-height: 3.5em;
 	float: left;
 	text-align: center;
-	color: #ffffff;
+	color: #ffffff !important;
 	text-transform: uppercase;
 	font-weight: normal;
 }
 
-nav > ul.menu > li > button {
+/*
+nav > ul > li > button {
     position: relative;
 }
+*/
 
 nav ul.menu > li > button > img {
     width: 16px;
@@ -54,26 +56,26 @@ nav ul ul {
 	z-index: 3;
 }
 
-nav ul.menu li:hover ul {
-	/*display: block;*/
+/*nav ul.menu li:hover ul {
+	display: block;
 	visibility: visible;
-}
+}*/
 
-nav ul.menu li ul li {
+nav ul li ul li {
 	border-top: 1px solid black;
 	height: 2em;
 }
 
-nav ul.menu li ul li:first-child {
+nav ul li ul li:first-child {
 	border: none;
 }
 
-nav ul.menu li a.active {
+nav ul li a.active {
 	box-shadow: black 0px 0px 10px 0px inset;
 	background-image: url("../img/black50.png");
 }
 
-nav ul.menu li ul li a {
+nav ul li ul li a {
 	width: 21.5em;
 	line-height: 1.7em;
 	padding: 4px;
@@ -82,12 +84,24 @@ nav ul.menu li ul li a {
 	border: none;
 }
 
-.visible {
-	visibility: visible;
+nav li:hover > ul {
+    visibility: visible;
+    /*height: auto;*/
+}
+
+nav li button:hover ~ ul {
+    visibility: hidden;
+    /*height: 0;*/
+}
+
+nav li button:hover ~ ul.visible,
+.visible  {
+    visibility: visible;
+    /*height: auto;*/
 }
 
 [aria-expanded] {
-    position: absolute;
+    position: relative;
     top: 1em;
     padding: 3px;
 }
@@ -121,17 +135,17 @@ nav #respMenuButton {
     display: none;
 }
 
-    .respMenuHidden {
-        display: none;
-    }
+.respMenuHidden {
+    display: none;
+}
 
-    nav div#respMenuButton {
-        display: block;
-    }
+nav div#respMenuButton {
+    display: block;
+}
 
-    nav .searchBox {
-        display: none;
-    }
+nav .searchBox {
+    display: none;
+}
 
 @media screen and (min-width: 65em) {
     .respMenuHidden {
