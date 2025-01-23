@@ -84,11 +84,6 @@ nav ul li ul li a {
 	border: none;
 }
 
-/*nav li:hover > ul {
-    visibility: visible;
-    height: auto;
-}*/
-
 /*nav li button:hover ~ ul {
     visibility: hidden;
     height: 0;
@@ -163,8 +158,14 @@ nav .searchBox {
 
 /* Hide the button for devices which support hover */
 @media (hover) {
-    nav ul button{
+
+    nav ul button {
     display: none;
+    }
+
+    nav li:hover > ul {
+    visibility: visible;
+    /*height: auto;*/
     }
 }
 
