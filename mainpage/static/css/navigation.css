@@ -84,15 +84,15 @@ nav ul li ul li a {
 	border: none;
 }
 
-nav li:hover > ul {
+/*nav li:hover > ul {
     visibility: visible;
-    /*height: auto;*/
-}
+    height: auto;
+}*/
 
-nav li button:hover ~ ul {
+/*nav li button:hover ~ ul {
     visibility: hidden;
-    /*height: 0;*/
-}
+    height: 0;
+}*/
 
 nav li button:hover ~ ul.visible,
 .visible  {
