@@ -11,14 +11,14 @@ they reach our homepage
 {% load news_extras %}
 
 {% block extra_head %}
-<meta name="google-site-verification" content="1A5uFV_zNuXazJ46-572-_lLzcCTEQ77iHaSPFZd53Y"/>
 <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/news.css' %}"/>
 <link rel="alternate" type="application/rss+xml" title="Widelands News" href="news/feed/"/>
-
 {{ block.super}}{% endblock %}
+
 {% block content_header %}
     <h1>Welcome to Widelands.org</h1>
 {% endblock %}
+
 {% block content_section %}
 
 <section class="blogEntry">
