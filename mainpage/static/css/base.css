@@ -34,7 +34,7 @@ a {
 }
 
 a:visited {
-    color: #e0d7b0;
+    color: #fefb8a; /*#e0d7b0;*/
     /*color: rgba(254, 234, 138, 1);*/
 }
 
@@ -306,6 +306,10 @@ a.small {
     border-radius: 4px 4px 4px 4px;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
     background-image: url("../img/wood.png");
+}
+
+#header-top .header_boxes #responsiveLogin {
+    display: none;
 }
 
 #header-top .header_boxes li {
@@ -620,10 +624,24 @@ footer {
         display: none;
     }
 
+    #header-top #responsiveLogin {
+        display: block;
+    }
+
     #respLoginButton.sideButton,
     #respAsideButton.sideButton {
         display: block;
         width: 5em;
+    }
+
+    #header-top .header_boxes li {
+        text-align: left;
+    }
+
+    #header-top .header_boxes li a,
+    .header_boxes p {
+        font-weight: bold;
+        line-height: 1.6em;
     }
 
     main {
