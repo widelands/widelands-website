@@ -112,7 +112,7 @@ nav li button:hover ~ ul.visible,
 .visually-hidden,
 [visually-hidden="true"] {
 	position: absolute !important;
-	clip-path: rect(1px, 1px, 1px, 1px) !important;
+	clip-path: circle(0%) !important;
 	padding: 0 !important;
 	border: 0 !important;
 	height: 1px !important;
@@ -160,12 +160,12 @@ nav .searchBox {
 @media (hover) {
 
     nav ul button {
-    display: none;
+        display: none;
     }
 
     nav li:hover > ul {
-    visibility: visible;
-    /*height: auto;*/
+        visibility: visible;
+        /*height: auto;*/
     }
 }
 

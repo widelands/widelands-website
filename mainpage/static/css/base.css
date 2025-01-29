@@ -11,7 +11,7 @@ body {
     font-size: 0.88em;
     color: #ffffee;
     text-shadow: 1px 1px 0px #000000;
-    padding: 0px 1em;
+    padding: 0 3px;
 }
 
 * {
@@ -41,7 +41,7 @@ a:visited {
 section div.columnModuleBox ul li a {
     text-decoration: none;
     /*color: rgba(254, 234, 138, 1);*/
-    color: #fefb8a;
+    color: #fefa8a ; /*#fefb8a;*/
     font-weight: bold;
 }
 
@@ -49,7 +49,6 @@ section div.columnModuleBox ul li a:visited {
     /*color: #e0d7b0;*/
     color: rgba(254, 234, 138, 1);
 }
-
 
 a.missingLink {
     color: yellow;
@@ -105,6 +104,7 @@ code {
     background-image: url("../img/black50.png");
     font-size: 1.2em;
 }
+
 /*No double background*/
 pre > code {
     background-image: none;
@@ -268,12 +268,10 @@ a.small {
 
 .sideButton {
     margin-left: auto;
-    /*margin-right: 1em;*/
-    display: none;
+    display: block;
     position: absolute;
     right: -1.5em;
     transform: rotate(-90deg);
-    display: none;
 }
 
 /**************/
@@ -283,7 +281,8 @@ a.small {
 #header-top{
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-between;
+    justify-content: center;
+    margin-right: 1.4em;
     align-items: center;
     /*font-size: 0.83em;*/
 }
@@ -316,10 +315,17 @@ a.small {
     border: 1px solid rgba(90, 74, 49, 0.84);
     padding: 2px 5px 2px 5px;
     text-align: center;
+    display: none;
 }
 
 #header-top .header_boxes img {
     margin: 0 2px 0 2px;
+}
+
+#respLoginButton.sideButton,
+#respAsideButton.sideButton {
+    display: block;
+    width: 5em;
 }
 
 #header-top .header_boxes .social img {
@@ -338,7 +344,6 @@ a.small {
     margin: 0px;
 }
 
-/* to prevent a space below */
 #header-top img {
     vertical-align: middle;
 }
@@ -353,6 +358,7 @@ a.small {
 main {
     /*min-height: 500px;*/
     display: flex;
+    order: 2;
 }
 
 /* left side */
@@ -434,10 +440,12 @@ section.blogEntry .posRight{
 
 aside {
     display: flex;
-    flex-direction: column;
-    flex: 0 0 15em;
-    margin-top: 0.7em;
-    order: 2;
+    flex-direction: row;
+    flex-flow: row wrap;
+    order: 1;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: 0em 0.5em;
 }
 
 #latest_posts {
@@ -509,6 +517,55 @@ section div.columnModuleBox ul li:first-child {
 
 /* Base */
 /* main page */
+
+main {
+    flex-direction: column;
+}
+
+article {
+    order: 2;
+    margin-right: 0;
+}
+
+#important_dates {
+    flex-grow: 0;
+    display: none;
+}
+
+#polls {
+    flex-grow: 0;
+    display: none;
+}
+
+#logged_in_users {
+    flex-grow: 0;
+    display: none
+}
+
+#latest_posts {
+    flex-grow: 1;
+    display:none
+}
+
+aside section.columnModule {
+    flex-basis: 10em;
+}
+
+aside #latest_posts div.columnModuleBox ul{
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    flex-shrink: 2;
+}
+
+aside section div.columnModuleBox ul li {
+    padding: 5px;
+}
+
+aside #latest_posts div.columnModuleBox ul li {
+    width: 14em;
+}
+
 img.landing {
     margin-left: 1em;
     margin-bottom: 1em;
@@ -609,33 +666,27 @@ footer {
     padding: 2px 4px 2px 4px;
 }
 
-/* Below changes some parts of the website according to the width of the viewport */
-@media screen and (max-width: 65em) {
+/* Settings for bigger viewports */
+@media screen and (min-width: 65em) {
     body {
-        padding: 0 3px;
+        padding: 0px 1em;
     }
 
     #header-top {
-        justify-content: center;
-        margin-right: 1.4em;
+        justify-content: space-between;
+        margin-right: 0;
     }
 
     #header-top .header_boxes li {
-        display: none;
+        display: block;
     }
 
     #header-top #responsiveLogin {
         display: block;
     }
 
-    #respLoginButton.sideButton,
-    #respAsideButton.sideButton {
-        display: block;
-        width: 5em;
-    }
-
     #header-top .header_boxes li {
-        text-align: left;
+        /*text-align: left;*/
     }
 
     #header-top .header_boxes li a,
@@ -644,54 +695,31 @@ footer {
         line-height: 1.6em;
     }
 
+    #respLoginButton.sideButton,
+    #respAsideButton.sideButton {
+        display: none;
+    }
+
     main {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     article {
-        order: 2;
-        margin-right: 0;
+        order: 1;
+        margin-right: 1.5em;
     }
 
     aside {
-        flex-direction: row;
-        gap: 0em 0.5em;
-        order: 1;
-        flex-wrap: wrap;
-        justify-content: center;
-        flex: 0 0 auto;
-    }
-
-    #important_dates {
-        flex-grow: 0;
-        display: none;
-    }
-
-    #polls {
-        flex-grow: 0;
-        display: none;
-    }
-
-    #logged_in_users {
-        flex-grow: 0;
-        display: none
-    }
-
-    #latest_posts {
-        flex-grow: 1;
-        display:none
-    }
-
-    aside section.columnModule {
-        flex-basis: 10em;
+        flex-direction: column;
+        justify-content: start;
+        margin-top: 1em;
+        order: 2;
     }
 
     aside #latest_posts div.columnModuleBox ul{
-        flex-direction: row;
+        flex-direction: column;
         flex-wrap: wrap;
-        flex-grow: 1;
-        flex-shrink: 2;
-	 }
+    }
 
     aside section div.columnModuleBox ul li {
         padding: 5px;
@@ -699,5 +727,24 @@ footer {
 
     aside #latest_posts div.columnModuleBox ul li {
         width: 14em;
+    }
+
+    #polls {
+        flex-grow: unset;
+        display: block;
+    }
+
+    #logged_in_users {
+        flex-grow: unset;
+        display: block;
+    }
+
+    #latest_posts {
+        flex-grow: unset;
+        display: block;
+    }
+
+    aside section.columnModule {
+        flex-basis: unset;
     }
 }

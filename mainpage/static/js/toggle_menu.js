@@ -1,16 +1,18 @@
-/* Functions to hide some elements on small viewports */
+/* Functions to show/hide some elements on small viewports */
+
+/* Main menu */
 $( function() {
     $( "#toggleMenu" ).on( "click", function() {
           $( ".respMenuHidden" ).toggle( "slow" );
     });
 });
-
+/* Login */
 $( function() {
     $( "#respLoginButton" ).on( "click", function() {
           $( "#responsiveLogin" ).toggle( "slow" );
     });
 });
-
+/* Aside = Polls, Important dates and Latest posts */
 $( function() {
     $( "#respAsideButton" ).on( "click", function() {
           $( ".columnModule" ).toggle( "slow" );
@@ -18,12 +20,13 @@ $( function() {
 });
 
 /*
-    Buttons for devices which have no hover functionality. Taken from:
+  Buttons for devices which have no hover functionality. Taken from:
 	https://wiki.selfhtml.org/wiki/Navigation/Dropdown-Men%C3%BC#inklusives_Dropdown-Men.C3.BC
 */
 document.addEventListener('DOMContentLoaded', function () {
 	dropdownExtension();
 
+  /* Add buttons into DOM */
 	function dropdownExtension() {
 		const submenus = document.querySelectorAll('nav li > ul');
 		for (let submenu of submenus) {
@@ -37,14 +40,23 @@ document.addEventListener('DOMContentLoaded', function () {
 		`
 			);
 		}
+
+    /* Add the click event to button */
 		document.documentElement.addEventListener('click', event => {
-			if (event.target.tagName == 'BUTTON' && event.target.hasAttribute(
-					'aria-expanded')) {
-				event.target.setAttribute('aria-expanded', event.target.getAttribute(
-					'aria-expanded') != 'true');
+		  console.log(event.target);
+			if ( event.target.tagName == 'BUTTON' && event.target.hasAttribute('aria-expanded') ) {
+				event.target.setAttribute( 'aria-expanded', event.target.getAttribute('aria-expanded') != 'true' );
 				event.target.nextElementSibling.classList.toggle('visible');
 			}
 		});
+
+    /* Hide open submenus */
+/*		document.addEventListener('mouseover', (event) => {
+			if (!event.target.classList.contains('visible')) {
+				hideSubmenu();
+			}
+		});*/
+
 		document.addEventListener('keyup', (event) => {
 			if (event.key === 'Escape') {
 				hideSubmenu();
@@ -66,16 +78,3 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 });
-
-/*
-function toggleHidden(cl) {
-  var x = document.getElementsByClassName(cl);
-  */
-/*if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }*//*
-
-}
-*/

@@ -55,7 +55,7 @@
 		{% endif %}
 	</li>
     <!-- special login section, shown only on small devices -->
-    <li id="responsiveLogin" class="small">
+    <li id="responsiveLogin" class="small respHidden">
 		{% if user.is_authenticated %}
 			<!-- Logged in -->
 			<a href="{% url 'profile_view' %}" title="Your Profile">Profile</a><br />
