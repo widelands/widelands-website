@@ -40,7 +40,7 @@ nav > ul > li > button {
 */
 
 nav ul.menu > li > button > img {
-    width: 16px;
+    width: 2em;
 }
 
 nav ul ul {
@@ -63,7 +63,7 @@ nav ul ul {
 
 nav ul li ul li {
 	border-top: 1px solid black;
-	height: 2em;
+	height: 2.5em;
 }
 
 nav ul li ul li:first-child {
@@ -77,8 +77,8 @@ nav ul li a.active {
 
 nav ul li ul li a {
 	width: 21.5em;
-	line-height: 1.7em;
-	padding: 4px;
+	/*line-height: 2.7em;*/
+	padding-left: 4px;
 	text-align: left;
 	font-size: 0.8em;
 	border: none;
@@ -124,17 +124,13 @@ nav ul.menu li a:hover {
 	background-image: url("../img/black20.png");
 }
 
-nav #respMenuButton {
-    margin-left: auto;
-    margin-right: 1em;
-    display: none;
-}
-
 .respMenuHidden {
     display: none;
 }
 
 nav div#respMenuButton {
+    margin-left: auto;
+    margin-right: 0.5em;
     display: block;
 }
 
@@ -153,6 +149,13 @@ nav .searchBox {
 
     nav .searchBox {
         display: block;
+    }
+    nav ul li ul li {
+	    height: 2em;
+    }
+
+    nav ul li ul li a {
+        line-height: 2.7em;
     }
 }
 

@@ -11,7 +11,7 @@ body {
     font-size: 0.88em;
     color: #ffffee;
     text-shadow: 1px 1px 0px #000000;
-    padding: 0 3px;
+    margin: 4px;
 }
 
 * {
@@ -314,7 +314,7 @@ a.small {
 #header-top .header_boxes li {
     border: 1px solid rgba(90, 74, 49, 0.84);
     padding: 2px 5px 2px 5px;
-    text-align: center;
+    /*text-align: center;*/
     display: none;
 }
 
@@ -355,10 +355,11 @@ a.small {
 /*  all below navigation bar  */
 /******************************/
 
+/* main is the container for main content (article) and right boxes (aside) */
+
 main {
-    /*min-height: 500px;*/
     display: flex;
-    order: 2;
+    flex-direction: column;
 }
 
 /* left side */
@@ -369,12 +370,23 @@ article h1 {
     font-size: 2em;
 }
 
+img.landing {
+    margin-left: 1em;
+    margin-bottom: 1em;
+    border: 10px solid transparent;
+    border-image: url(../img/image_border.png) 20 round;
+    -webkit-border-image: url(../img/image_border.png) 20 round; /* Safari 3.1-5 */
+    -o-border-image: url(../img/image_border.png) 20 round; /* Opera 11-12.1 */
+    max-height: 100%;
+    max-width: 100%;
+}
+
 article {
     display:flex;
     flex-direction: column;
     flex: 1;
-    margin-right: 1em;
-    order: 1;
+    /*margin-right: 1em;*/
+    order: 2;
 }
 
 article .header-article {
@@ -514,19 +526,6 @@ section div.columnModuleBox ul li:first-child {
     border-top: none;
 }
 
-
-/* Base */
-/* main page */
-
-main {
-    flex-direction: column;
-}
-
-article {
-    order: 2;
-    margin-right: 0;
-}
-
 #important_dates {
     flex-grow: 0;
     display: none;
@@ -564,17 +563,6 @@ aside section div.columnModuleBox ul li {
 
 aside #latest_posts div.columnModuleBox ul li {
     width: 14em;
-}
-
-img.landing {
-    margin-left: 1em;
-    margin-bottom: 1em;
-    border: 10px solid transparent;
-    border-image: url(../img/image_border.png) 20 round;
-    -webkit-border-image: url(../img/image_border.png) 20 round; /* Safari 3.1-5 */
-    -o-border-image: url(../img/image_border.png) 20 round; /* Opera 11-12.1 */
-    max-height: 100%;
-    max-width: 100%;
 }
 
 /* footer */
@@ -686,7 +674,7 @@ footer {
     }
 
     #header-top .header_boxes li {
-        /*text-align: left;*/
+        text-align: center;
     }
 
     #header-top .header_boxes li a,
@@ -714,6 +702,7 @@ footer {
         justify-content: start;
         margin-top: 1em;
         order: 2;
+        width: 14em;
     }
 
     aside #latest_posts div.columnModuleBox ul{
