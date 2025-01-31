@@ -20,6 +20,7 @@ nav ul li {
 	float: left;
 	position: relative;
 	border-right: 1px solid black;
+	width: 11em;
 }
 
 nav ul li a {
@@ -53,7 +54,7 @@ nav ul ul {
 	border: 1px solid black;
 	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
 	border-radius: 0px 0px 4px 4px;
-	z-index: 3;
+	z-index: 5;
 }
 
 /*nav ul.menu li:hover ul {
@@ -64,6 +65,7 @@ nav ul ul {
 nav ul li ul li {
 	border-top: 1px solid black;
 	height: 2.5em;
+	width: auto;
 }
 
 nav ul li ul li:first-child {
