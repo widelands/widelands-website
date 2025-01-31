@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <span class="visually-hidden">Open submenu</span>
         <img src="/static/img/menu_expand.png">
       </button>
+      `
       );
     }
 
