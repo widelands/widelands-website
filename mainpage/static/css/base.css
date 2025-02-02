@@ -385,7 +385,6 @@ article {
     display:flex;
     flex-direction: column;
     flex: 1;
-    /*margin-right: 1em;*/
     order: 2;
 }
 
@@ -508,11 +507,6 @@ section div.columnModuleBox ul {
     padding: 0px;
     margin: 0px;
     list-style-type: none;
-}
-
-section div.columnModuleBox ul.player li{
-    /*padding: 4px;*/
-    /*border: none;*/
 }
 
 section div.columnModuleBox ul li {
