@@ -575,7 +575,7 @@ footer {
 /* Pagination */
 .pagination .current.page{
     font-weight: bold;
-    font-size: large;
+    font-size: larger;
     color: #C8BE93;
 }
 
