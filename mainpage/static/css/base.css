@@ -704,12 +704,9 @@ footer {
         flex-wrap: wrap;
     }
 
-    aside section div.columnModuleBox ul li {
-        padding: 5px;
-    }
-
     aside #latest_posts div.columnModuleBox ul li {
-        width: 14em;
+        width: unset;
+        padding: 5px;
     }
 
     #polls {
