@@ -27,13 +27,12 @@ def show_subscriptions(request):
     used for more…
     """
 
-    notification_subscriptions = notification.ObservedItem.objects.filter(user=request.user)
+    notification_subscriptions = notification.ObservedItem.objects.filter(
+        user=request.user
+    )
     topic_subscriptions = Topic.objects.filter(subscribers=request.user)
 
-    context = {
-        "topics": topic_subscriptions,
-        "other": notification_subscriptions
-    }
+    context = {"topics": topic_subscriptions, "other": notification_subscriptions}
     return render(request, "wlprofile/subscriptions.html", context)
 
 
@@ -49,7 +48,9 @@ def unsubscribe_topics(request):
 
 @login_required
 def unsubscribe_other(request):
-    notification_subscriptions = notification.ObservedItem.objects.filter(user=request.user)
+    notification_subscriptions = notification.ObservedItem.objects.filter(
+        user=request.user
+    )
 
     for ns in notification_subscriptions:
         instance = ns.content_type.get_object_for_this_type(pk=ns.object_id)
