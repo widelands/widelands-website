@@ -20,6 +20,10 @@
 
 {% block content_main %}
 <div class="blogEntry">
+    {% if not topics and not other %}
+        <p>You have no subscriptions</p>
+    {% endif %}
+    {% if topics %}
     <h2>Topics</h2>
     <a class="button posRight" href="{% url 'unsubscribe_topics' %}">Unsubscribe from all topics</a>
     <table class="notifications">
@@ -40,6 +44,8 @@
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
+    {% if other %}
     <h2>Other</h2>
     <table class="notifications">
         <tr>
@@ -59,5 +65,6 @@
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
 </div>
 {% endblock %}

@@ -27,6 +27,16 @@ def show_subscriptions(request):
     }
     return render(request, "wlprofile/subscriptions.html", context)
 
+
+@login_required
+def unsubscribe_topics(request):
+    topic_subscriptions = Topic.objects.filter(subscribers=request.user)
+    for ts in topic_subscriptions:
+        ts.subscribers.remove(request.user)
+
+    return HttpResponseRedirect(reverse("subscriptions"))
+
+
 @login_required
 def delete_me(request):
     """Show a page to inform the user what deleting means."""
