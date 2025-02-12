@@ -12,13 +12,13 @@ from django.conf import settings
 from django.contrib import messages
 
 from .forms import EditProfileForm
-from notification.models import ObservedItem
+from notification import models as notification
 from pybb.models import Topic
 
 
 @login_required
 def show_subscriptions(request):
-    notification_subscriptions = ObservedItem.objects.filter(user=request.user)
+    notification_subscriptions = notification.ObservedItem.objects.filter(user=request.user)
     topic_subscriptions = Topic.objects.filter(subscribers=request.user)
 
     context = {
@@ -31,8 +31,20 @@ def show_subscriptions(request):
 @login_required
 def unsubscribe_topics(request):
     topic_subscriptions = Topic.objects.filter(subscribers=request.user)
+
     for ts in topic_subscriptions:
         ts.subscribers.remove(request.user)
+
+    return HttpResponseRedirect(reverse("subscriptions"))
+
+
+@login_required
+def unsubscribe_other(request):
+    notification_subscriptions = notification.ObservedItem.objects.filter(user=request.user)
+
+    for ns in notification_subscriptions:
+        instance = ns.content_type.get_object_for_this_type(pk=ns.object_id)
+        notification.stop_observing(instance, request.user)
 
     return HttpResponseRedirect(reverse("subscriptions"))
 
