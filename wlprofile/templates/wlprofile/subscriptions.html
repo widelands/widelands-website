@@ -1,0 +1,63 @@
+{% extends "mainpage/base.html" %}
+
+{% load custom_date %}
+{% load notification_extras %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/notice.css' %}" />{{ block.super}}
+{% endblock %}
+
+{% block title %}
+	Your Subscriptions
+{% endblock %}
+
+{# {% block profile %}class="active"{% endblock %} #}
+
+{% block content_header %}
+	<h1>Your Subscriptions</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+    <h2>Topics</h2>
+    <a class="button posRight" href="{% url 'unsubscribe_topics' %}">Unsubscribe from all topics</a>
+    <table class="notifications">
+        <tr>
+            <th>Topic</th>
+            <th>Forum</th>
+            <th>Category</th>
+            <th>Created</th>
+            <th>Last Updated</th>
+        </tr>
+        {% for obj in topics %}
+        <tr>
+            <td><a href="{% url 'pybb_topic' obj.id %}"> {{ obj.name }}</a></td>
+            <td>{{ obj.forum }}</td>
+            <td>{{ obj.forum.category }}</td>
+            <td>{{ obj.created|custom_date:user }}</a></td>
+            <td>{{ obj.updated|custom_date:user }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Other</h2>
+    <table class="notifications">
+        <tr>
+            <th>Name</th>
+            <th>What</th>
+            <th>?</th>
+            <th>?</th>
+            <th>?</th>
+        </tr>
+        {% for obj in other %}
+        <tr>
+            <td>{% get_obj_link obj %}</td>
+            <td>{{ obj.content_type }}</td>
+            <td>{{ obj }}</td>
+            <td>{{ obj }}</a></td>
+            <td>{{ obj }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -12,7 +12,20 @@ from django.conf import settings
 from django.contrib import messages
 
 from .forms import EditProfileForm
+from notification.models import ObservedItem
+from pybb.models import Topic
 
+
+@login_required
+def show_subscriptions(request):
+    notification_subscriptions = ObservedItem.objects.filter(user=request.user)
+    topic_subscriptions = Topic.objects.filter(subscribers=request.user)
+
+    context = {
+        "topics": topic_subscriptions,
+        "other": notification_subscriptions
+    }
+    return render(request, "wlprofile/subscriptions.html", context)
 
 @login_required
 def delete_me(request):
