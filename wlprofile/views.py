@@ -18,6 +18,15 @@ from pybb.models import Topic
 
 @login_required
 def show_subscriptions(request):
+    """There are currently two subscription systems:
+
+    1. Subscriptions of pybb topic
+    2. Subscriptions of the notification app
+
+    The second one is currently only used for our wiki, although it can be
+    used for more…
+    """
+
     notification_subscriptions = notification.ObservedItem.objects.filter(user=request.user)
     topic_subscriptions = Topic.objects.filter(subscribers=request.user)
 

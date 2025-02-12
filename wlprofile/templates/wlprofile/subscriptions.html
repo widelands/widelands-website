@@ -52,17 +52,11 @@
         <tr>
             <th>Object</th>
             <th>Name</th>
-            <th>?</th>
-            <th>?</th>
-            <th>?</th>
         </tr>
         {% for obj in other %}
         <tr>
             <td>{{ obj.content_type }}</td>
             <td>{% get_obj_link obj %}</td>
-            <td>{{ obj }}</td>
-            <td>{{ obj }}</a></td>
-            <td>{{ obj }}</a></td>
         </tr>
         {% endfor %}
     </table>
