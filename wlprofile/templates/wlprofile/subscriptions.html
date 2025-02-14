@@ -1,7 +1,6 @@
 {% extends "mainpage/base.html" %}
 
 {% load custom_date %}
-{% load notification_extras %}
 {% load static %}
 
 {% block extra_head %}
@@ -39,27 +38,30 @@
             <td><a href="{% url 'pybb_topic' obj.id %}"> {{ obj.name }}</a></td>
             <td>{{ obj.forum }}</td>
             <td>{{ obj.forum.category }}</td>
-            <td>{{ obj.created|custom_date:user }}</a></td>
-            <td>{{ obj.updated|custom_date:user }}</a></td>
+            <td>{{ obj.created|custom_date:user }}</td>
+            <td>{{ obj.updated|custom_date:user }}</td>
         </tr>
         {% endfor %}
     </table>
+
     {% endif %}
-    {% if other %}
-    <h2>Other</h2>
-    <a class="button posRight" href="{% url 'unsubscribe_other' %}">Unsubscribe from all other</a>
-    <table class="notifications">
-        <tr>
-            <th>Object</th>
-            <th>Name</th>
-        </tr>
-        {% for obj in other %}
-        <tr>
-            <td>{{ obj.content_type }}</td>
-            <td>{% get_obj_link obj %}</td>
-        </tr>
+
+    {% if observed_items %}
+        <h2>Observed Items</h2>
+        {% for content_item, data in observed_items.items %}
+        <a class="button posRight" href="{% url 'unsubscribe_other' %}">Unsubscribe from all observed items</a>
+        <table class="notifications">
+            <caption>{{ content_item|upper }}</caption>
+            <tr>
+                <th>Name</th>
+            </tr>
+            {% for obj in data %}
+            <tr>
+                <td><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
         {% endfor %}
-    </table>
     {% endif %}
 </div>
 {% endblock %}
