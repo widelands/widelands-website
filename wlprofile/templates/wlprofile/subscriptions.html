@@ -1,0 +1,66 @@
+{% extends "mainpage/base.html" %}
+
+{% load custom_date %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/notice.css' %}" />
+    {{ block.super}}
+{% endblock %}
+
+{% block title %}
+	Your Subscriptions
+{% endblock %}
+
+{% block content_header %}
+	<h1>Your Subscriptions</h1>
+{% endblock %}
+
+{% block content_main %}
+<div class="blogEntry">
+    {% if not topics and not other %}
+        <p>You have no subscriptions</p>
+    {% endif %}
+    {% if topics %}
+    <h2>Topics</h2>
+    <a class="button posRight" href="{% url 'unsubscribe_topics' %}">Unsubscribe from all topics</a>
+    <table class="notifications">
+        <tr>
+            <th>Topic</th>
+            <th>Forum</th>
+            <th>Category</th>
+            <th>Created</th>
+            <th>Last Updated</th>
+        </tr>
+        {% for obj in topics %}
+        <tr>
+            <td><a href="{% url 'pybb_topic' obj.id %}"> {{ obj.name }}</a></td>
+            <td>{{ obj.forum }}</td>
+            <td>{{ obj.forum.category }}</td>
+            <td>{{ obj.created|custom_date:user }}</td>
+            <td>{{ obj.updated|custom_date:user }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endif %}
+
+    {% if observed_items %}
+        <h2>Observed Items</h2>
+        {% for content_item, data in observed_items.items %}
+        <a class="button posRight" href="{% url 'unsubscribe_other' %}">Unsubscribe from all observed items</a>
+        <table class="notifications">
+            <caption>{{ content_item|upper }}</caption>
+            <tr>
+                <th>Name</th>
+            </tr>
+            {% for obj in data %}
+            <tr>
+                <td><a href="{{ obj.get_absolute_url }}">{{ obj }}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
