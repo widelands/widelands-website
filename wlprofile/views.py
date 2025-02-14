@@ -28,9 +28,7 @@ def show_subscriptions(request):
     """
 
     def get_rel_object(note_obj):
-        rel_obj = note_obj.content_type.get_object_for_this_type(
-            pk=note_obj.object_id
-        )
+        rel_obj = note_obj.content_type.get_object_for_this_type(pk=note_obj.object_id)
         return rel_obj
 
     topic_subscriptions = Topic.objects.filter(subscribers=request.user)
@@ -43,14 +41,11 @@ def show_subscriptions(request):
     for ns in notification_subscriptions:
         content_type_key = str(ns.content_type)
         if content_type_key not in observed_items.keys():
-            observed_items [content_type_key] = [get_rel_object(ns)]
+            observed_items[content_type_key] = [get_rel_object(ns)]
         else:
             observed_items[content_type_key].append(get_rel_object(ns))
 
-    context = {
-        "topics": topic_subscriptions,
-        "observed_items": observed_items
-    }
+    context = {"topics": topic_subscriptions, "observed_items": observed_items}
     return render(request, "wlprofile/subscriptions.html", context)
 
 
