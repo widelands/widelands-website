@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
 from check_input.models import SuspiciousInput
+from check_input.models import SuspiciousKeyword
 
 
 @admin.action(description="Delete selected posts")
@@ -45,4 +46,9 @@ class SuspiciousInputAdmin(admin.ModelAdmin):
     actions = [delete_objects, unhide_post]
 
 
+class SuspiciousKeywordAdmin(admin.ModelAdmin):
+    list_display = ("keyword", "description")
+
+
 admin.site.register(SuspiciousInput, SuspiciousInputAdmin)
+admin.site.register(SuspiciousKeyword, SuspiciousKeywordAdmin)
