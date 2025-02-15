@@ -10,9 +10,7 @@ class SuspiciousModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Set up data for the whole TestCase
-        cls.spam_keywords = SuspiciousKeyword.objects.create(
-            keyword="spamword"
-        )
+        cls.spam_keywords = SuspiciousKeyword.objects.create(keyword="spamword")
         cls.test_user = User.objects.create_user(
             "donald", "donald@duck.de", "donaldpwd"
         )
