@@ -71,7 +71,7 @@ class SuspiciousInput(models.Model):
 
     def is_suspicious(self):
         # check for keywords
-        for x in settings.ANTI_SPAM_KWRDS:
+        for x in SuspiciousKeyword.objects.as_list():
             if x in self.text.lower():
                 pos = self.text.lower().find(x)
                 self.strip_text(
@@ -112,3 +112,29 @@ class SuspiciousInput(models.Model):
                 pass
 
         return is_spam
+
+
+class SuspiciousKeywordManager(models.Manager):
+    def as_list(self):
+        return [x.keyword for x in self.all()]
+
+
+class SuspiciousKeyword(models.Model):
+
+    keyword = models.CharField(max_length=50,
+                               unique=True,
+                               verbose_name="Spam Keyword",
+                               help_text="Type lowercase only, spaces allowed"
+                               )
+    description = models.CharField(max_length=200,
+                                   blank=True,
+                                   verbose_name="Keyword Description",
+                                   )
+
+    class Meta:
+        verbose_name_plural = "Spam Keywords"
+
+    objects = SuspiciousKeywordManager()
+
+    def __str__(self):
+        return self.keyword
