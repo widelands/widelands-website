@@ -121,15 +121,17 @@ class SuspiciousKeywordManager(models.Manager):
 
 class SuspiciousKeyword(models.Model):
 
-    keyword = models.CharField(max_length=50,
-                               unique=True,
-                               verbose_name="Spam Keyword",
-                               help_text="Type lowercase only, spaces allowed"
-                               )
-    description = models.CharField(max_length=200,
-                                   blank=True,
-                                   verbose_name="Keyword Description",
-                                   )
+    keyword = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name="Spam Keyword",
+        help_text="Type lowercase only, spaces allowed",
+    )
+    description = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Keyword Description",
+    )
 
     class Meta:
         verbose_name_plural = "Spam Keywords"
