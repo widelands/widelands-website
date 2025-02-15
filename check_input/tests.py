@@ -3,13 +3,16 @@ from django.test import TestCase, override_settings
 
 from pybb.models import Category, Forum, Topic, Post
 from .models import SuspiciousInput
+from .models import SuspiciousKeyword
 
 
-@override_settings(ANTI_SPAM_KWRDS=["spammin"])
 class SuspiciousModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Set up data for the whole TestCase
+        cls.spam_keywords = SuspiciousKeyword.objects.create(
+            keyword="spamword"
+        )
         cls.test_user = User.objects.create_user(
             "donald", "donald@duck.de", "donaldpwd"
         )
@@ -25,7 +28,7 @@ class SuspiciousModelTests(TestCase):
         )
 
     def test_spam_topic(self):
-        spam_topic_text_with_spam = "This topic is spammin"
+        spam_topic_text_with_spam = "This topic is spamword"
         susp_input = SuspiciousInput(
             content_object=self.forum_topic,
             user=self.test_user,
@@ -55,7 +58,7 @@ class SuspiciousModelTests(TestCase):
         self.assertEqual(result, False)
 
     def test_spam_post_long_end(self):
-        text_with_spam_end = "x" * 220 + "spammin"
+        text_with_spam_end = "x" * 220 + "spamword"
         susp_input = SuspiciousInput(
             content_object=self.forum_post, user=self.test_user, text=text_with_spam_end
         )
@@ -63,7 +66,7 @@ class SuspiciousModelTests(TestCase):
         self.assertEqual(result, True)
 
     def test_suspicious_text_length(self):
-        text_with_spam_at_middle = "x" * 110 + "spammin" + "x" * 110
+        text_with_spam_at_middle = "x" * 110 + "spamword" + "x" * 110
         susp_input = SuspiciousInput(
             content_object=self.forum_post,
             user=self.test_user,
@@ -76,7 +79,7 @@ class SuspiciousModelTests(TestCase):
             msg="Test with spam at MIDDLE failed",
         )
 
-        text_with_spam_at_start = "spammin" + "x" * 220
+        text_with_spam_at_start = "spamword" + "x" * 220
         susp_input = SuspiciousInput(
             content_object=self.forum_post,
             user=self.test_user,
@@ -89,7 +92,7 @@ class SuspiciousModelTests(TestCase):
             "Test with spam at START failed",
         )
 
-        text_with_spam_at_end = "x" * 220 + "spammin"
+        text_with_spam_at_end = "x" * 220 + "spamword"
         susp_input = SuspiciousInput(
             content_object=self.forum_post,
             user=self.test_user,
