@@ -1,6 +1,6 @@
-{% load i18n %} 
-{% load wlprofile_extras %} 
-{% load custom_date %} 
+{% load i18n %}
+{% load wlprofile_extras %}
+{% load custom_date %}
 {% load pybb_extras %}
 
 {% if posts %}
@@ -9,11 +9,21 @@
 	<div class="columnModuleBox">
 		<ul>
 			{% for post in posts %}
-				<li>
-					{{ post.topic.forum.name }}<br />
+				{% if post.topic.forum.category.internal %}
+				<li class="internal">
+					{{ post.topic.forum.name }} <span class="errormessage">(internal)</span>
+					<br />
 					<a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|truncatechars:30 }}</a><br />
 					by {{ post.user|user_link }} {{ post.created|elapsed_time }} ago
 				</li>
+				{% else %}
+				<li>
+					{{ post.topic.forum.name }}
+					<br />
+					<a href="{{ post.get_absolute_url }}" title="{{ post.topic.name }}">{{ post.topic.name|truncatechars:30 }}</a><br />
+					by {{ post.user|user_link }} {{ post.created|elapsed_time }} ago
+				</li>
+				{% endif %}
 			{% endfor %}
 			<li class="small">
 				<a href="{% url 'all_latest_posts' %}">More latest posts</a>

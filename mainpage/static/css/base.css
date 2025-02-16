@@ -435,6 +435,10 @@ div.columnModuleBox ul li {
 	font-size: 0.8em;
 }
 
+div.columnModuleBox ul li.internal{
+   background-image: url("../img/black20.png");
+}
+
 div.columnModuleBox ul li:first-child {
 	border-top: none;
 }
