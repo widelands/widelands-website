@@ -101,7 +101,11 @@
 					{{ change.modified|custom_date:user }}
 				</td>
 				<td>
-					{{ change.editor|user_link }}
+					{% if change.editor %}
+						{{ change.editor|user_link }}
+					{% else %}
+						Deleted
+					{% endif %}
 				</td>
 				<td class="italic">
 					{% if change.comment %}'{{ change.comment }}'{% endif %}

@@ -44,7 +44,13 @@
 			<a href="{% url 'wiki_article' change.article.title %}">{{ change.article.title }}</a>
 		</td>
 		<td>{{ change.modified|custom_date:user }}</td>
-		<td>{{ change.editor|user_link }}</td>
+		<td>
+			{% if change.editor %}
+				{{ change.editor|user_link }}
+			{% else %}
+				Deleted
+			{% endif %}
+		</td>
 		<td>{{ change.comment }}</td>
 	</tr>
 {% endfor %}
