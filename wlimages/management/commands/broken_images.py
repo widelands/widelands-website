@@ -13,8 +13,8 @@ class Command(BaseCommand):
         def _is_used(f_path):
             # Try to find an article where this image is shown
             found_articles = []
+            f_name = f_path.rsplit("/", 1)[1]
             for article in Article.objects.all():
-                f_name = f_path.rsplit("/", 1)[1]
                 if f_name in article.content:
                     found_articles.append(article.__str__())
             return found_articles
