@@ -12,11 +12,12 @@ class Command(BaseCommand):
 
         def _is_used(f_path):
             # Try to find an article where this image is shown
+            found_articles = []
             for article in Article.objects.all():
                 f_name = f_path.rsplit("/", 1)[1]
                 if f_name in article.content:
-                    return article
-            return None
+                    found_articles.append(article.__str__())
+            return found_articles
 
         image_files = []
 
@@ -51,10 +52,10 @@ class Command(BaseCommand):
             files_wo_wlimage_used[img_file] = _is_used(img_file)
 
         self.stdout.write(self.style.ERROR("Theses files have no wlimage object:"))
-        for f_path, article in files_wo_wlimage_used.items():
+        for f_path, articles in files_wo_wlimage_used.items():
             self.stdout.write(f_path)
-            if article:
-                self.stdout.write("  Linked in article: {}".format(article))
+            if articles:
+                self.stdout.write("  Used in article: {}".format(", ".join(articles)))
 
         self.stdout.write(self.style.ERROR("These wlimage objects have no file:"))
         for x in wlimage_wo_file:
