@@ -14,17 +14,15 @@ class Command(BaseCommand):
         def _is_used(f_path):
             # Try to find an article where this image is shown
             for article in Article.objects.all():
-                f_name = f_path.rsplit("/",1)[1]
+                f_name = f_path.rsplit("/", 1)[1]
                 if f_name in article.content:
                     return article
             return None
 
-
         image_files = []
 
         for f in os.listdir(os.path.join(settings.MEDIA_ROOT, "wlimages")):
-            image_files.append(
-                os.path.join(settings.MEDIA_ROOT, "wlimages", f))
+            image_files.append(os.path.join(settings.MEDIA_ROOT, "wlimages", f))
 
         # Files without a wlimage object
         files_wo_wlimage = image_files.copy()
@@ -37,8 +35,7 @@ class Command(BaseCommand):
                 img.image.file
                 # no error
                 if img.image.path in image_files:
-                    files_wo_wlimage.pop(
-                        files_wo_wlimage.index(img.image.path))
+                    files_wo_wlimage.pop(files_wo_wlimage.index(img.image.path))
             except FileNotFoundError as e:
                 wlimage_wo_file.append(img.name)
             except IndexError as e:
