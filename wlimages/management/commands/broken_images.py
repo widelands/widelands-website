@@ -51,7 +51,7 @@ class Command(BaseCommand):
         for img_file in files_wo_wlimage:
             files_wo_wlimage_used[img_file] = _is_used(img_file)
 
-        self.stdout.write(self.style.ERROR("Theses files have no wlimage object:"))
+        self.stdout.write(self.style.ERROR("These files have no wlimage object:"))
         for f_path, articles in files_wo_wlimage_used.items():
             self.stdout.write(f_path)
             if articles:
