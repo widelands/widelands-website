@@ -91,7 +91,7 @@ class Command(BaseCommand):
         if errors:
             message = ""
             for e in errors:
-                message = "{}\n\n{}".format(e)
+                message = "{}\n\n{}".format(message, e)
 
             mail_admins(
                 "A failure happened during executing the django management command broken_images",
