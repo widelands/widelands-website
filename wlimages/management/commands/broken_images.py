@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand, CommandError
 from wlimages.models import Image
 from django.conf import settings
 from wiki.models import Article
-from django.core.exceptions import ObjectDoesNotExist
 import os
 
 
@@ -31,15 +30,15 @@ class Command(BaseCommand):
 
         for img in Image.objects.all():
             try:
-                # throws FileNotFoundError
+                # throws FileNotFoundError if the underlying file is not found
                 img.image.file
                 # no error
                 if img.image.path in image_files:
                     files_wo_wlimage.pop(files_wo_wlimage.index(img.image.path))
-            except FileNotFoundError as e:
+            except FileNotFoundError:
                 wlimage_wo_file.append(img.name)
             except IndexError as e:
-                error = "{}\nProbably the code is faulty".format(e)
+                error = "{}\nProbably the code is faulty?".format(e)
                 raise CommandError(error)
             except Exception as e:
                 error = "ERROR: {}\nFor object: {}".format(e, img)
@@ -47,16 +46,15 @@ class Command(BaseCommand):
 
         # An image file might have no wlimage object but is used in an article
         # Try to find an article where this file is shown
-        files_wo_wlimage_all = {}
+        files_wo_wlimage_used = {}
         for img_file in files_wo_wlimage:
-            res = _is_used(img_file)
-            files_wo_wlimage_all[img_file] = res
+            files_wo_wlimage_used[img_file] = _is_used(img_file)
 
         self.stdout.write(self.style.ERROR("Theses files have no wlimage object:"))
-        for f, a in files_wo_wlimage_all.items():
-            self.stdout.write(f)
-            if a:
-                self.stdout.write("  Linked in article: {}".format(a))
+        for f_path, article in files_wo_wlimage_used.items():
+            self.stdout.write(f_path)
+            if article:
+                self.stdout.write("  Linked in article: {}".format(article))
 
         self.stdout.write(self.style.ERROR("These wlimage objects have no file:"))
         for x in wlimage_wo_file:
