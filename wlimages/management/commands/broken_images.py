@@ -80,7 +80,9 @@ class Command(BaseCommand):
             for f_path, articles in files_wo_wlimage_used.items():
                 self.stdout.write(f_path)
                 if articles:
-                    self.stdout.write("  Used in article: {}".format(", ".join(articles)))
+                    self.stdout.write(
+                        "  Used in article: {}".format(", ".join(articles))
+                    )
 
             self.stdout.write(self.style.ERROR("These wlimage objects have no file:"))
             for x in wlimage_wo_file:
