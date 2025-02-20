@@ -79,7 +79,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for change in changes %}
+		{% for change in changes %}
+			{% if change.editor %}
 			<tr class="{% cycle 'odd' 'even' %}">
 				<td class="small_column">
 					<a href="{{ change.get_absolute_url }}">{{ change.revision }}</a>
@@ -101,17 +102,14 @@
 					{{ change.modified|custom_date:user }}
 				</td>
 				<td>
-					{% if change.editor %}
-						{{ change.editor|user_link }}
-					{% else %}
-						Deleted
-					{% endif %}
+					{{ change.editor|user_link }}
 				</td>
 				<td class="italic">
 					{% if change.comment %}'{{ change.comment }}'{% endif %}
 				</td>
 			</tr>
-			{% endfor %}
+			{% endif %}
+		{% endfor %}
 		</tbody>
 		</table>
 		<br />
