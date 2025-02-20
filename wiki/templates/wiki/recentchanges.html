@@ -32,6 +32,7 @@
 				<th class="comment">{% trans "Comment" %}</th>
 			</tr>
 	{% endifchanged %}
+			{% if change.editor %}
 	<tr class="{% cycle 'odd' 'even' %}">
 		<td>
 			{% if change.old_title %}
@@ -45,14 +46,11 @@
 		</td>
 		<td>{{ change.modified|custom_date:user }}</td>
 		<td>
-			{% if change.editor %}
-				{{ change.editor|user_link }}
-			{% else %}
-				Deleted
-			{% endif %}
+			{{ change.editor|user_link }}
 		</td>
 		<td>{{ change.comment }}</td>
 	</tr>
+			{% endif %}
 {% endfor %}
 	</table>
 	<br />
