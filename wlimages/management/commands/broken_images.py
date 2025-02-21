@@ -20,7 +20,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         def _is_used(f_path):
-            # Try to find an article where this image is shown
+            # Try to find any articles containing this file
             found_articles = []
             f_name = f_path.rsplit("/", 1)[1]
             for article in Article.objects.all():
@@ -29,7 +29,6 @@ class Command(BaseCommand):
             return found_articles
 
         image_files = []
-
         for f in os.listdir(os.path.join(settings.MEDIA_ROOT, "wlimages")):
             image_files.append(os.path.join(settings.MEDIA_ROOT, "wlimages", f))
 
@@ -55,38 +54,40 @@ class Command(BaseCommand):
                 raise CommandError(error)
 
         # An image file might have no wlimage object but is used in an article
-        # Try to find an article where this file is shown
         files_wo_wlimage_used = {}
         for img_file in files_wo_wlimage:
             files_wo_wlimage_used[img_file] = _is_used(img_file)
 
+        # Finally print the results or delete related objects
         errors = []
-        if options["delete_all"]:
-            for f_path, articles in files_wo_wlimage_used.items():
-                if not articles:
-                    try:
-                        os.remove(f_path)
-                    except FileNotFoundError as e:
-                        errors.append(e)
-
-            for wlimg in wlimage_wo_file:
-                obj = Image.objects.get(name=wlimg)
-                try:
-                    obj.delete()
-                except Exception as e:
-                    errors.append(e)
-        else:
+        if not files_wo_wlimage == {}:
             self.stdout.write(self.style.ERROR("These files have no wlimage object:"))
             for f_path, articles in files_wo_wlimage_used.items():
-                self.stdout.write(f_path)
-                if articles:
-                    self.stdout.write(
-                        "  Used in article: {}".format(", ".join(articles))
-                    )
+                if options["delete_all"]:
+                    if not articles:
+                        # delete the file only if it is NOT used in an wikiarticle
+                        try:
+                            os.remove(f_path)
+                        except FileNotFoundError as e:
+                            errors.append(e)
+                else:
+                    self.stdout.write(f_path)
+                    if articles:
+                        self.stdout.write(
+                            "  Used in article: {}".format(", ".join(articles))
+                        )
 
+        if wlimage_wo_file:
             self.stdout.write(self.style.ERROR("These wlimage objects have no file:"))
-            for x in wlimage_wo_file:
-                self.stdout.write(x)
+            for wlimg_name in wlimage_wo_file:
+                if options["delete_all"]:
+                    obj = Image.objects.get(name=wlimg_name)
+                    try:
+                        obj.delete()
+                    except Exception as e:
+                        errors.append(e)
+                else:
+                    self.stdout.write(wlimg_name)
 
         if errors:
             message = ""
@@ -94,6 +95,6 @@ class Command(BaseCommand):
                 message = "{}\n\n{}".format(message, e)
 
             mail_admins(
-                "A failure happened during executing the django management command broken_images",
+                "A failure happened during executing the django management command cleanup_images",
                 message,
             )
