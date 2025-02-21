@@ -33,7 +33,9 @@ class Command(BaseCommand):
             image_files.append(os.path.join(settings.MEDIA_ROOT, "wlimages", f))
 
         # Files without a wlimage object
-        files_wo_wlimage = image_files.copy()
+        files_wo_wlimage = {}
+        for img in image_files:
+            files_wo_wlimage[img] = []
         # wlimage objects without a file
         wlimage_wo_file = []
 
@@ -43,10 +45,10 @@ class Command(BaseCommand):
                 img.image.file
                 # no error
                 if img.image.path in image_files:
-                    files_wo_wlimage.pop(files_wo_wlimage.index(img.image.path))
+                    del files_wo_wlimage[img.image.path] #= None #.pop(files_wo_wlimage.index(img.image.path))
             except FileNotFoundError:
                 wlimage_wo_file.append(img.name)
-            except IndexError as e:
+            except KeyError as e:
                 error = "{}\nProbably the code is faulty?".format(e)
                 raise CommandError(error)
             except Exception as e:
@@ -54,15 +56,15 @@ class Command(BaseCommand):
                 raise CommandError(error)
 
         # An image file might have no wlimage object but is used in an article
-        files_wo_wlimage_used = {}
-        for img_file in files_wo_wlimage:
-            files_wo_wlimage_used[img_file] = _is_used(img_file)
+        for img_file in files_wo_wlimage.keys():
+            used = _is_used(img_file)
+            files_wo_wlimage[img_file] = used
 
         # Finally print the results or delete related objects
         errors = []
-        if not files_wo_wlimage == {}:
+        if files_wo_wlimage:
             self.stdout.write(self.style.ERROR("These files have no wlimage object:"))
-            for f_path, articles in files_wo_wlimage_used.items():
+            for f_path, articles in files_wo_wlimage.items():
                 if options["delete_all"]:
                     if not articles:
                         # delete the file only if it is NOT used in an wikiarticle
