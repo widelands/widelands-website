@@ -28,25 +28,13 @@ a img {
 
 a {
     text-decoration: none;
-    color: rgba(254, 234, 138, 1);
-    /*color: #fefb8a;*/
+    /*color: rgba(254, 234, 138, 1);*/
+    color: #fefb8a;
     font-weight: bold;
 }
 
 a:visited {
-    color: #fefb8a; /*#e0d7b0;*/
-    /*color: rgba(254, 234, 138, 1);*/
-}
-
-section div.columnModuleBox ul li a {
-    text-decoration: none;
-    /*color: rgba(254, 234, 138, 1);*/
-    color: #fefa8a ; /*#fefb8a;*/
-    font-weight: bold;
-}
-
-section div.columnModuleBox ul li a:visited {
-    /*color: #e0d7b0;*/
+    /*color: #fefb8a;*/
     color: rgba(254, 234, 138, 1);
 }
 
@@ -514,6 +502,15 @@ section div.columnModuleBox ul li {
     font-size: 0.8em;
     padding: 5px;
     line-height: 1.5em;
+}
+
+section div.columnModuleBox ul.player {
+	padding: 4px;
+}
+
+section div.columnModuleBox ul.player li {
+	padding: 4px;
+	border: none;
 }
 
 section div.columnModuleBox ul li.internal{
