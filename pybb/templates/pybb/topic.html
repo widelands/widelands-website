@@ -44,8 +44,6 @@
             {% endif %}
     {% endif %}
 
-    {% include "pybb/inlines/admin_buttons.html" %}
-
     {% if user.is_authenticated %}
         <div class="posRight">
         {% if subscribed %}
@@ -68,6 +66,8 @@
             </a>
         </div>
     {% endif %}
+
+    {% include "pybb/inlines/admin_buttons.html" %}
 
     {% include "pagination/pagination.html" %}
 
