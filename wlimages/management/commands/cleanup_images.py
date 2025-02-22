@@ -7,6 +7,10 @@ import os
 import datetime
 
 IMAGE_PATH = os.path.join(settings.MEDIA_ROOT, "wlimages")
+BACKUP_FOLDER = os.path.join(
+                IMAGE_PATH,
+                "cleanup_images_backup_{}".format(datetime.date.today().isoformat()),
+                )
 
 
 class Command(BaseCommand):
@@ -23,16 +27,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         def _move_to_backup(f_path):
-            backup_folder = os.path.join(
-                IMAGE_PATH,
-                "cleanup_images_backup_{}".format(datetime.date.today().isoformat()),
-            )
-
             try:
-                if not os.path.isdir(backup_folder):
-                    os.mkdir(backup_folder)
+                if not os.path.isdir(BACKUP_FOLDER):
+                    os.mkdir(BACKUP_FOLDER)
 
-                dest_path = os.path.join(backup_folder, os.path.basename(f_path))
+                dest_path = os.path.join(BACKUP_FOLDER, os.path.basename(f_path))
                 os.rename(f_path, dest_path)
             except Exception as e:
                 raise CommandError(e)
@@ -49,8 +48,10 @@ class Command(BaseCommand):
             return found_articles
 
         image_files = []
-        for f in os.listdir(IMAGE_PATH):
-            image_files.append(os.path.join(IMAGE_PATH, f))
+        for f in os.scandir(IMAGE_PATH):
+            if f.is_file(follow_symlinks=False):
+                # Don't include backup dir
+                image_files.append(os.path.join(IMAGE_PATH, f))
 
         # Files without a wlimage object
         files_wo_wlimage = {}
@@ -88,7 +89,7 @@ class Command(BaseCommand):
             for f_path, articles in files_wo_wlimage.items():
                 if options["delete_all"]:
                     if not articles:
-                        # backup the file only if it is NOT used in an wikiarticle
+                        # move the file only if it is NOT used in an wikiarticle
                         try:
                             _move_to_backup(f_path)
                         except FileNotFoundError as e:
