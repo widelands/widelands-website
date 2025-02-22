@@ -85,7 +85,13 @@ class Command(BaseCommand):
         # Finally print the results or delete related objects
         errors = []
         if files_wo_wlimage:
-            self.stdout.write(self.style.ERROR("These files have no wlimage object:")) if not options["delete_all"] else None
+            (
+                self.stdout.write(
+                    self.style.ERROR("These files have no wlimage object:")
+                )
+                if not options["delete_all"]
+                else None
+            )
             for f_path, articles in files_wo_wlimage.items():
                 if options["delete_all"]:
                     if not articles:
@@ -102,7 +108,13 @@ class Command(BaseCommand):
                         )
 
         if wlimage_wo_file:
-            self.stdout.write(self.style.ERROR("These wlimage objects have no file:")) if not options["delete_all"] else None
+            (
+                self.stdout.write(
+                    self.style.ERROR("These wlimage objects have no file:")
+                )
+                if not options["delete_all"]
+                else None
+            )
             for wlimg_name in wlimage_wo_file:
                 if options["delete_all"]:
                     obj = Image.objects.get(name=wlimg_name)
