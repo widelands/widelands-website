@@ -8,9 +8,9 @@ import datetime
 
 IMAGE_PATH = os.path.join(settings.MEDIA_ROOT, "wlimages")
 BACKUP_FOLDER = os.path.join(
-                IMAGE_PATH,
-                "cleanup_images_backup_{}".format(datetime.date.today().isoformat()),
-                )
+    IMAGE_PATH,
+    "cleanup_images_backup_{}".format(datetime.date.today().isoformat()),
+)
 
 
 class Command(BaseCommand):
