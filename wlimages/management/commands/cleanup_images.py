@@ -4,6 +4,9 @@ from wlimages.models import Image
 from django.conf import settings
 from wiki.models import Article
 import os
+import datetime
+
+IMAGE_PATH = os.path.join(settings.MEDIA_ROOT, "wlimages")
 
 
 class Command(BaseCommand):
@@ -19,23 +22,39 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        def _is_used(f_path):
-            # Try to find any articles containing this file
+        def _move_to_backup(f_path):
+            backup_folder = os.path.join(IMAGE_PATH, "cleanup_images_backup_{}".format(
+                datetime.date.today().isoformat()))
+
+            try:
+                if not os.path.isdir(backup_folder):
+                    os.mkdir(backup_folder)
+
+                dest_path = os.path.join(backup_folder, os.path.basename(f_path))
+                os.rename(f_path, dest_path)
+            except Exception as e:
+                raise CommandError(e)
+
+        def _get_usage(f_path):
+            # Try to find any articles containing this file name
             found_articles = []
-            f_name = f_path.rsplit("/", 1)[1]
+            f_name = os.path.basename(f_path)
+
             for article in Article.objects.all():
                 if f_name in article.content:
                     found_articles.append(article.__str__())
+
             return found_articles
 
         image_files = []
-        for f in os.listdir(os.path.join(settings.MEDIA_ROOT, "wlimages")):
-            image_files.append(os.path.join(settings.MEDIA_ROOT, "wlimages", f))
+        for f in os.listdir(IMAGE_PATH):
+            image_files.append(os.path.join(IMAGE_PATH, f))
 
         # Files without a wlimage object
         files_wo_wlimage = {}
         for img in image_files:
             files_wo_wlimage[img] = []
+
         # wlimage objects without a file
         wlimage_wo_file = []
 
@@ -45,7 +64,7 @@ class Command(BaseCommand):
                 img.image.file
                 # no error
                 if img.image.path in image_files:
-                    del files_wo_wlimage[img.image.path] #= None #.pop(files_wo_wlimage.index(img.image.path))
+                    del files_wo_wlimage[img.image.path]
             except FileNotFoundError:
                 wlimage_wo_file.append(img.name)
             except KeyError as e:
@@ -57,8 +76,8 @@ class Command(BaseCommand):
 
         # An image file might have no wlimage object but is used in an article
         for img_file in files_wo_wlimage.keys():
-            used = _is_used(img_file)
-            files_wo_wlimage[img_file] = used
+            used_in = _get_usage(img_file)
+            files_wo_wlimage[img_file] = used_in
 
         # Finally print the results or delete related objects
         errors = []
@@ -67,9 +86,9 @@ class Command(BaseCommand):
             for f_path, articles in files_wo_wlimage.items():
                 if options["delete_all"]:
                     if not articles:
-                        # delete the file only if it is NOT used in an wikiarticle
+                        # backup the file only if it is NOT used in an wikiarticle
                         try:
-                            os.remove(f_path)
+                            _move_to_backup(f_path)
                         except FileNotFoundError as e:
                             errors.append(e)
                 else:
