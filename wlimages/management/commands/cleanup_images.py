@@ -23,8 +23,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         def _move_to_backup(f_path):
-            backup_folder = os.path.join(IMAGE_PATH, "cleanup_images_backup_{}".format(
-                datetime.date.today().isoformat()))
+            backup_folder = os.path.join(
+                IMAGE_PATH,
+                "cleanup_images_backup_{}".format(datetime.date.today().isoformat()),
+            )
 
             try:
                 if not os.path.isdir(backup_folder):
