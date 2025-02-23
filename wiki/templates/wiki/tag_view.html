@@ -12,6 +12,8 @@ Tag-list: {{ tag.name }} - {{block.super}}
     <h1>Articles with tag '{{ tag.name }}'</h1>
 {% endblock %}
 
+{% block style_tab_list %}style="display: none;"{% endblock %}
+
 {% block content_section %}
 <section class="blogEntry">
     <table>

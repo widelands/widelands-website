@@ -12,7 +12,7 @@
 .forum {
 	border: none;
 	border-collapse: collapse;
-	/*table-layout: fixed;*/
+	table-layout: fixed;
 	width: 100%;
 	margin-bottom: 1em;
 }

@@ -12,6 +12,8 @@
     <h1>Wiki: {% trans "Recent Changes" %}</h1>
 {% endblock %}
 
+{% block style_tab_list %}style="display: none;"{% endblock %}
+
 {% block content_section %}
 <section class="blogEntry">
     {% include "pagination/pagination.html" %}
