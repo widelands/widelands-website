@@ -1,23 +1,26 @@
-
 {% extends "wlscheduling/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% block content_header %}
-<h1>Welcome to the scheduling module!</h1>
+    <h1>Welcome to the playtime scheduler!</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
+{% block content_section %}
+<section class="blogEntry">
     <div id="main-choices" class="main-choices">
-        <a href="{% url 'scheduling_scheduling' %}" >
-            <button title="You know when you will be available to play and want to display when you're available and find other players that will be available at these hours">Define your playtime and find a game</button>
+        <a href="{% url 'scheduling_scheduling' %}">
+            <button title="You know when you will be available to play and want to display when you're available and find other players that will be available at these hours">
+                Define your playtime and find a game
+            </button>
         </a>
-        <a href="{% url 'scheduling_find' %}" >
-            <button title="You just want to know when everybody is going to be playing" >Show other users playtime</button>
+        <a href="{% url 'scheduling_find' %}">
+            <button title="You just want to know when everybody is going to be playing">
+                Show other users playtime
+            </button>
         </a>
     </div>
-</div>
+</section>
 
 {% endblock %}

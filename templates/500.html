@@ -5,12 +5,13 @@ Internal server error - {{ block.super}}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Internal server error</h1>
+<h1>Internal server error</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-    <p>We are sorry about that!</p><br />
-    <p>The widelands website administrators have been automatically informed about this issue.</p>
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    <p>We are sorry about that!</p><br/>
+    <p>The widelands website administrators have been automatically informed about this
+        issue.</p>
+</section>
 {% endblock %}

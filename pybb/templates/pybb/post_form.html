@@ -30,7 +30,7 @@ in different parent templates.
 					  + "Status: " + status + "\n"
 					  + "What: " + error );
 			})
-			
+
 		});
 	});
 	$(document).ready(function() {
@@ -60,7 +60,7 @@ in different parent templates.
 		{% if not form.name.is_hidden %}
 		<p>
 			<p class="errormessage">{{ form.name.errors.as_text }}</p>
-			{{ form.name.label }}:
+			{{ form.name.label }}
 			{{ form.name }}
 		</p>
 		{% endif %}
@@ -74,7 +74,8 @@ in different parent templates.
 			{{ form.markup.label }}:
 			{{ form.markup }}
 		</p>
-		{% if not form.attachment.is_hidden %}
+
+		{% if form.attachment and not form.attachment.is_hidden %}
 		<p>
 			<p>
 				Please refer to the wiki page

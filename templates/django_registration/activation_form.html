@@ -11,8 +11,8 @@ Activation - {{ block.super }}
 <h1>Activation</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
+{% block content_section %}
+<section class="blogEntry">
     <p>Please click on the button below to activate this account:</p>
     <form action="." method="POST">
         {% csrf_token %}
@@ -42,5 +42,5 @@ Activation - {{ block.super }}
             <input type="submit" value="Activate your account"/>
         </p>
     </form>
-</div>
+</section>
 {% endblock %}

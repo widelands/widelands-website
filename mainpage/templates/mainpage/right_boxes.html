@@ -14,7 +14,8 @@
 <!-- Current polls if any -->
 {% get_open_polls as polls %}
 {% if polls %}
-<div class="columnModule">
+
+<section class="columnModule" id="polls">
 	<h3>Polls</h3>
 	<div class="columnModuleBox">
 	{% for p in polls %}
@@ -29,7 +30,10 @@
 				<form method="post" action="{% url 'wlpoll_vote' p.id %}">
 					<ul class="poll">
 					{% for c in p.choices.all %}
-						<li><input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" /><label for="{{ c.id }}">{{ c.choice }}</label></li>
+						<li>
+							<label for="{{ c.id }}">{{ c.choice }}</label>
+							<input id="{{ c.id }}" class="radio" type="radio" name="choice_id" value="{{ c.id }}" />
+						</li>
 					{% endfor %}
 					</ul>
 					<div class="center">
@@ -50,13 +54,13 @@
 			<p><a href="{% url 'wlpoll_archive' %}">Archive</a></p>
 		</div>
 	</div>
-</div>
+</section>
 {% endif %}
 
 <!-- Future Events if any -->
 {% get_future_events as events %}
 {% if events.count %}
-<div class="columnModule">
+<section class="columnModule" id="important_dates">
 	<h3>Important Dates</h3>
 	<div class="columnModuleBox">
 		<ul>
@@ -70,13 +74,13 @@
 			{% endfor %}
 		</ul>
 	</div>
-</div>
+</section>
 {% endif %}
 
 
 <!-- Logged in users -->
 {% if request.online_now %}
-<div class="columnModule">
+<section class="columnModule" id="logged_in_users">
 	<h3>Currently Online</h3>
 	<div class="columnModuleBox">
 		<ul class="player">
@@ -85,7 +89,7 @@
 			{% endfor %}
 		</ul>
 	</div>
-</div>
+</section>
 {% endif %}
 
 <!-- Latest Post -->

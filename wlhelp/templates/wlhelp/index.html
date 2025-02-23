@@ -1,6 +1,6 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
@@ -8,15 +8,15 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>Encyclopedia</h1>
+    <h1>Encyclopedia</h1>
 {% endblock %}
-{% block content_main %}
-<div class="blogEntry">
-Encyclopedia Index
-<h2>All Tribes in Widelands:</h2>
-{% for tribe in tribes %}
-	<h3>{{ tribe.displayname }}</h3>
-	{% include "wlhelp/inlines/tribes_details.html" %}
-{% endfor %}
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    <div>Encyclopedia Index</div>
+    <h2>All Tribes in Widelands:</h2>
+    {% for tribe in tribes %}
+        <h3>{{ tribe.displayname }}</h3>
+        {% include "wlhelp/inlines/tribes_details.html" %}
+    {% endfor %}
+</section>
 {% endblock %}

@@ -2,36 +2,39 @@
 {% load custom_date %}
 
 {% block title %}
-    Posts by {{ this_user }} - {{ block.super }}
+Posts by {{ this_user }} - {{ block.super }}
 {% endblock title %}
 
 {% block content_header %}
-    <h1>Posts by {{ this_user }}</h1>
+<h1>Posts by {{ this_user }}</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-<p>{{ this_user }} has written {{ posts|length }} post{{ posts|length|pluralize }}.</p>
-{% include "pagination/pagination.html" %}
-<table class='forum'>
-  <thead>
-    <tr>
-      <th style="text-align: left; width: 12em;">Date</th>
-      <th style="text-align: left; width: 14em;">Forum</th>
-      <th style="text-align: left; width: 24em;">Topic</th>
-      <th style="text-align: left;">Post{{ posts|length|pluralize }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for post in page_obj %}
-    <tr class="{% cycle 'odd' 'even' %}">
-      <td class='post'>{{ post.created|custom_date:user }}</td>
-      <td class='post'><a href="{% url 'pybb_forum' post.topic.forum.id %}">{{ post.topic.forum }}</a></td>
-      <td class='post'><a href="{% url 'pybb_topic' post.topic.id %}">{{ post.topic }}</a></td>
-      <td class='post'><a href="{{ post.get_absolute_url }}">"{{ post.body_text|truncatechars:80 }}"</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    <p>{{ this_user }} wrote {{ posts|length }} post{{ posts|length|pluralize }}.</p>
+    {% include "pagination/pagination.html" %}
+    <table class='forum'>
+        <thead>
+        <tr>
+            <th style="text-align: left; width: 12em;">Date</th>
+            <th style="text-align: left; width: 14em;">Forum</th>
+            <th style="text-align: left; width: 24em;">Topic</th>
+            <th style="text-align: left;">Post{{ posts|length|pluralize }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post in page_obj %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            <td class='post'>{{ post.created|custom_date:user }}</td>
+            <td class='post'><a href="{% url 'pybb_forum' post.topic.forum.id %}">
+                {{ post.topic.forum }}</a></td>
+            <td class='post'><a href="{% url 'pybb_topic' post.topic.id %}">
+                {{ post.topic }}</a></td>
+            <td class='post'><a href="{{ post.get_absolute_url }}">
+                "{{ post.body_text|truncatechars:80 }}"</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
 {% endblock %}

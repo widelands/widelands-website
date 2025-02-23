@@ -4,26 +4,29 @@
 {% load i18n %}
 
 {% block content_header %}
-    <h1>Category: {{category.name}}</h1>
+<h1>Category: {{category.name}}</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	<a href="{% url 'pybb_index' %}">Forums</a> &#187; {{category.name}}
-	{% if category.forums.all and user.is_authenticated %}
-	<a class="button posRight" href="{% url 'mark_as_read' category_id=category.id %}" title="Takes effect on all topics in each shown forum">
-		<span class="middle">{% trans "Mark all as Read" %}</span>
-	</a>
-	{% endif %}
-	<br /><br />
+{% block content_section %}
+<section class="blogEntry">
+    <a href="{% url 'pybb_index' %}">Forums</a> &#187; {{category.name}}
+    {% if category.forums.all and user.is_authenticated %}
+    <a class="button posRight" href="{% url 'mark_as_read' category_id=category.id %}"
+       title="Takes effect on all topics in each shown forum">
+        <span class="middle">{% trans "Mark all as Read" %}</span>
+    </a>
+    {% endif %}
+    <br/><br/>
 
-	{% include 'pybb/inlines/display_category.html' %}
-</div>
+    {% include 'pybb/inlines/display_category.html' %}
+</section>
 
 <div class="center green">
-	<img src="{% static 'forum/img/folder_big_work_star.png' %}" alt="Has unread posts" class="middle" />
-	= Unread posts
-	<img src="{% static 'forum/img/folder_big_work.png' %}" alt="Hasn't unread posts" class="middle" />
-	= No unread posts
+    <img src="{% static 'forum/img/folder_big_work_star.png' %}" alt="Has unread posts"
+         class="middle"/>
+    = Unread posts
+    <img src="{% static 'forum/img/folder_big_work.png' %}" alt="Hasn't unread posts"
+         class="middle"/>
+    = No unread posts
 </div>
 {% endblock %}

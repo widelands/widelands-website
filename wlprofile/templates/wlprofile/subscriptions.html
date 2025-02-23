@@ -16,8 +16,8 @@
 	<h1>Your Subscriptions</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
+{% block content_section %}
+<section>
     {% if not topics and not other %}
         <p>You have no subscriptions</p>
     {% endif %}
@@ -62,5 +62,5 @@
         </table>
         {% endfor %}
     {% endif %}
-</div>
+</section>
 {% endblock %}
