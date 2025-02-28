@@ -572,6 +572,16 @@ footer {
     border-radius: 4px;
 }
 
+/* contact page */
+.contact-form input, textarea{
+    width: 100%;
+    margin: 4px 0;
+    margin-left: 1em;
+}
+
+.contact-form :first-child {
+    margin-top: 1em;
+}
 
 /* Pagination */
 .pagination .current.page{
@@ -727,5 +737,18 @@ footer {
 
     aside section.columnModule {
         flex-basis: unset;
+    }
+
+    .contact-form .label {
+        width: 12em;
+        float: left;
+        clear: both;
+    }
+
+    .contact-form .label {
+    }
+
+    .contact-form input, textarea{
+        width: unset;
     }
 }

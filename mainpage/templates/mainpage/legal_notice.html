@@ -38,65 +38,50 @@
                     <li>{{ name }}: {{ recipient }}</li>
                 {% endfor %}
             </ul>
-
-            <form action="/legal_notice/" method="post">{% csrf_token %}
-                <table>
-                    <tr>
-                        <td><label for="id_forename">First name (optional): </label>
-                        </td>
-                        <td><input id="id_forename" type="text" name="forename"
-                                   maxlength="80"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="id_surname">Last name (optional): </label>
-                        </td>
-                        <td>
-                            <input id="id_surname" type="text" name="surname" maxlength="80">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="id_email">Email:</label>
-                        </td>
-                        <td>
-                            <input type="email" name="email" id="id_email" required>
-                            {% for error in form.email.errors %}
-                                <span class="errormessage">{{ error }}</span>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="id_inquiry">Inquiry: </label>
+            <div class="contact-form">
+                <form action="/legal_notice/" method="post">{% csrf_token %}
+                    <div class="label">
+                        <label for="id_forename">First name (optional): </label>
+                    </div>
+                    <div>
+                        <input id="id_forename" type="text" name="forename"
+                                           maxlength="80">
+                    </div>
+                    <div class="label">
+                        <label for="id_surname">Last name (optional): </label>
+                    </div>
+                    <div>
+                        <input id="id_surname" type="text" name="surname" maxlength="80">
+                    </div>
+                    <div class="label">
+                        <label for="id_email">Email:</label>
+                    </div>
+                    <div>
+                        <input type="email" name="email" id="id_email" required>
+                        {% for error in form.email.errors %}
+                            <span class="errormessage">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="label">
+                        <label for="id_inquiry">Inquiry: </label>
                             {{ form.inquiry.errors }}
-                        </td>
-                        <td>
-                            <textarea id="id_inquiry" rows="10" cols="40" name="inquiry" required></textarea>
+                    </div>
+                    <div>
+                        <textarea id="id_inquiry" rows="10" cols="40" name="inquiry" required></textarea>
                             {% for error in form.inquiry.errors %}
                                 <span class="errormessage">{{ error }}</span>
                             {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <label for="id_question">{{ question }}</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="id_question" type="hidden" name="question" value="{{ question }}">
-                        </td>
-                        <td>
-                            <input id="id_answer" type="text" name="answer" maxlength="80" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="submit" value="Submit"></td>
-                    </tr>
-                </table>
-            </form>
+                    </div>
+                    <div>
+                        <label for="id_question">{{ question }}</label>
+                        <input id="id_question" type="hidden" name="question" value="{{ question }}">
+                        <input id="id_answer" type="text" name="answer" maxlength="80" required>
+                    </div>
+                    <div class="label">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
         </li>
     </ul>
 </section>
