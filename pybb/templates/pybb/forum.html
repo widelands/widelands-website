@@ -7,8 +7,12 @@
 {% load static %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/atom+xml" title="Latest Posts on forum '{{ forum.name }}'" href="{% url 'pybb_feed_posts' %}{{forum.id}}/"  />
-<link rel="alternate" type="application/atom+xml" title="Latest Topics on forum '{{ forum.name }}'" href="{% url 'pybb_feed_topics' %}{{forum.id}}/" />
+<link rel="alternate" type="application/atom+xml"
+      title="Latest Posts on forum '{{ forum.name }}'"
+      href="{% url 'pybb_feed_posts' %}{{forum.id}}/"/>
+<link rel="alternate" type="application/atom+xml"
+      title="Latest Topics on forum '{{ forum.name }}'"
+      href="{% url 'pybb_feed_topics' %}{{forum.id}}/"/>
 {{ block.super }}
 {% endblock %}
 
@@ -17,87 +21,97 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>Forum: {{ forum }}</h1>
+<h1>Forum: {{ forum }}</h1>
 {% endblock %}
 
 {% block content_tabbing %}
-	<ul class="tab-list small">
-		<li>
-		<a href="{% url 'pybb_add_topic' forum.id %}">New Topic</a>
-		</li>
-	</ul>
+<ul class="tab-list small">
+    <li>
+        <a href="{% url 'pybb_add_topic' forum.id %}">New Topic</a>
+    </li>
+</ul>
 {% endblock %}
-{% block content_main %}
+{% block content_section %}
 
-<div class="blogEntry">
-	<div class="breadCrumb">
-	<a href="{% url 'pybb_index' %}">Forums</a> &#187;
-	{% pybb_link forum.category %} &#187;
-	{{ forum }}
-	</div>
+<section class="blogEntry">
+    <div class="breadCrumb">
+        <a href="{% url 'pybb_index' %}">Forums</a> &#187;
+        {% pybb_link forum.category %} &#187;
+        {{ forum }}
+    </div>
 
-	{% if forum.topics.all and user.is_authenticated %}
-	<a class="button posRight" href="{% url 'mark_as_read' forum_id=forum.id %}" title="Takes effect on all topics in this Forum">
-		<span class="middle">{% trans "Mark all as Read" %}</span>
-	</a>
-	{% endif %}
+    {% if forum.topics.all and user.is_authenticated %}
+    <a class="button posRight" href="{% url 'mark_as_read' forum_id=forum.id %}"
+       title="Takes effect on all topics in this Forum">
+        <span class="middle">{% trans "Mark all as Read" %}</span>
+    </a>
+    {% endif %}
 
-	{% include "pagination/pagination.html" %}
+    {% include "pagination/pagination.html" %}
 
-	<table class="forum">
-		<thead>
-			<tr>
-				<th class="forumIcon"></th>
-				<th class="forumTitle small">Topic</th>
-				<th class="forumCount"></th>
-				<th class="lastPost small">Last Post</th>
-			</tr>
-		</thead>
-		<tbody>
-		{% for topic in page_obj %}
-		<tr class="{% cycle 'odd' 'even' %}">
-			{% if not topic.is_hidden %}
-			<td class="center">
-				{% if topic|pybb_has_unreads:user %}
-				<img src="{% static 'forum/img/doc_big_work_star.png' %}" alt="Has unread posts" class="middle" />
-				{% else %}
-				<img src="{% static 'forum/img/doc_big_work.png' %}" alt="Hasn't unread posts" class="middle" />
-				{% endif %}
-			</td>
-			<td class="forumTitle">
-				{% if topic.sticky %}<img src="{% static 'forum/img/sticky.png' %}" alt="Sticky" title="Sticky" />{% endif %}
-				{% if topic.closed %}<img src="{% static 'forum/img/closed.png' %}" alt="Closed" title="Closed" />{% endif %}
-				<a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a><br />
-				<span class="small">Created by {{ topic.user|user_link }} on {{ topic.created|custom_date:user }}</span>
-			</td>
-			<td class="forumCount center small" style="width: 120px;">
-				Posts: {{ topic.post_count }}<br/>
-				Views: {{ topic.views }}
-			</td>
-			<td class="lastPost">
-				{% if topic.last_post %}
-				<a href="{{ topic.last_post.get_absolute_url }}">{{ topic.last_post.body_text|truncatechars:30 }}</a><br />
-				<span class="small">by {{ topic.last_post.user|user_link }} on {{ topic.last_post.created|custom_date:user }}</span>
-				{% endif %}
-			</td>
-			{% elif user_is_mod %}
-				<td colspan="4" class="center errormessage">Hidden Topic: <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
-			{% endif %}
-		</tr>
-		{% endfor %}
-		</tbody>
-	</table>
-	<a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
-		<img src="{% static 'forum/img/new_topic.png' %}" alt ="{% trans "New Topic" %}" class="middle" />
-		<span class="middle">{% trans "New Topic" %}</span>
-	</a>
-	{% include "pagination/pagination.html" %}
-</div>
+    <table class="forum">
+        <thead>
+        <tr>
+            <th class="forumIcon"></th>
+            <th class="forumTitle small">Topic</th>
+            <th class="forumCount"></th>
+            <th class="lastPost small">Last Post</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for topic in page_obj %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            {% if not topic.is_hidden %}
+            <td class="center">
+                {% if topic|pybb_has_unreads:user %}
+                <img src="{% static 'forum/img/doc_big_work_star.png' %}"
+                     alt="Has unread posts" class="middle"/>
+                {% else %}
+                <img src="{% static 'forum/img/doc_big_work.png' %}"
+                     alt="Hasn't unread posts" class="middle"/>
+                {% endif %}
+            </td>
+            <td class="forumTitle">
+                {% if topic.sticky %}<img src="{% static 'forum/img/sticky.png' %}"
+                                          alt="Sticky" title="Sticky"/>{% endif %}
+                {% if topic.closed %}<img src="{% static 'forum/img/closed.png' %}"
+                                          alt="Closed" title="Closed"/>{% endif %}
+                <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a><br/>
+                <span class="small">Created by {{ topic.user|user_link }} on {{ topic.created|custom_date:user }}</span>
+            </td>
+            <td class="forumCount center small" style="width: 120px;">
+                Posts: {{ topic.post_count }}<br/>
+                Views: {{ topic.views }}
+            </td>
+            <td class="lastPost">
+                {% if topic.last_post %}
+                <a href="{{ topic.last_post.get_absolute_url }}">
+                    {{ topic.last_post.body_text|truncatechars:30 }}
+                </a>
+                <br/>
+                <span class="small">by {{ topic.last_post.user|user_link }} on {{ topic.last_post.created|custom_date:user }}</span>
+                {% endif %}
+            </td>
+            {% elif user_is_mod %}
+            <td colspan="4" class="center errormessage">Hidden Topic: <a
+                    href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class="button posRight" href="{% url 'pybb_add_topic' forum.id %}">
+        <img src="{% static 'forum/img/new_topic.png' %}" alt="{% trans " New Topic" %}"
+        class="middle" />
+        <span class="middle">{% trans "New Topic" %}</span>
+    </a>
+    {% include "pagination/pagination.html" %}
+</section>
 
 <div class="center green">
-	<img src="{% static 'forum/img/doc_big_work_star.png' %}" alt="" class="middle" />
-	= Unread posts
-	<img src="{% static 'forum/img/doc_big_work.png' %}" alt="" class="middle" />
-	= No unread posts
+    <img src="{% static 'forum/img/doc_big_work_star.png' %}" alt="" class="middle"/>
+    = Unread posts
+    <img src="{% static 'forum/img/doc_big_work.png' %}" alt="" class="middle"/>
+    = No unread posts
 </div>
 {% endblock %}

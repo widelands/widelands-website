@@ -1,14 +1,14 @@
 {% comment %}
- vim:ft=htmldjango:
+vim:ft=htmldjango:
 
- This file is included by mainpage and contains the footer
+This file is included by mainpage and contains the footer
 {% endcomment %}
 
 {% load wl_extras %}
 
-<div id="footer">
-	Copyright &copy; 2009 - {% current_year %} By the Widelands Development Team<br />
-	<a class="small" href="{% url 'legal_notice' %}">Legal notice (contact)</a>
-	 <span class="small"> &#9679; </span>
-	<a class="small" href="{% url 'privacy_policy'%}">Privacy Policy</a>
-</div>
+<p>Copyright &copy; 2009 - {% current_year %} By the Widelands Development Team</p>
+<p>
+    <a class="small" href="{% url 'legal_notice' %}">Legal notice (contact)</a>
+    <span class="small"> &#9679; </span>
+    <a class="small" href="{% url 'privacy_policy'%}">Privacy Policy</a>
+</p>
