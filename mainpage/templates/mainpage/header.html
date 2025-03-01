@@ -7,7 +7,7 @@
 	"{% static 'img/'%}{% wl_logo %}" alt=
 	"Widelands Logo"></a>
 
-	{% if user.is_authenticated %}
+	{% if user.is_staff %}
 	<div class="green center">{% git_data %}</div>
 	{% endif %}
 </div>
@@ -74,7 +74,7 @@
 		{% endif %}
 	</li>
 </ul>
-<div id="respLoginButton" class="sideButton">
+<div id="respLoginButton" class="sideButton sideButtonLogin">
 	<button>Login</button>
 </div>
 

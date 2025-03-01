@@ -256,10 +256,15 @@ a.small {
 
 .sideButton {
     margin-left: auto;
+    margin-right: 0.7em;
+    margin-top: -7px;
     display: block;
     position: absolute;
     right: -1.5em;
-    transform: rotate(-90deg);
+}
+
+.sideButtonLogin {
+    top: 0.7em;
 }
 
 /**************/
@@ -270,9 +275,9 @@ a.small {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
-    margin-right: 1.4em;
-    align-items: center;
-    /*font-size: 0.83em;*/
+    align-items: flex-end;
+    margin-top: 1.45em;
+    margin-bottom: 0.4em;
 }
 
 #header-top #logo img {
@@ -297,6 +302,7 @@ a.small {
 
 #header-top .header_boxes #responsiveLogin {
     display: none;
+    line-height: 1.8em;
 }
 
 #header-top .header_boxes li {
@@ -453,7 +459,7 @@ aside {
 }
 
 section.columnModule h3 {
-    margin-top: 0.5em;
+    margin-top: 3px;
 }
 
 section div.columnModuleBox {
@@ -601,7 +607,7 @@ footer {
 .tab-list {
     align-self: flex-end;
     margin-bottom: 3px;
-    margin-top: -13px; /* Fix the margin of the header*/
+    margin-top: -10px; /* Fix the margin of the header*/
     z-index: 2;
     display: flex;
     flex-direction: row;
@@ -668,6 +674,9 @@ footer {
     #header-top {
         justify-content: space-between;
         margin-right: 0;
+        margin-top: unset;
+        margin-bottom: unset;
+        align-items: center;
     }
 
     #header-top .header_boxes li {
