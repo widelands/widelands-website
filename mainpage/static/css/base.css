@@ -566,6 +566,11 @@ aside #latest_posts div.columnModuleBox ul li {
     width: 14em;
 }
 
+aside #latest_posts div.columnModuleBox ul li:last-child {
+    background-image: url("../img/black50.png");
+    width: 100%;
+}
+
 /* footer */
 
 footer {
@@ -632,6 +637,10 @@ footer {
 .tab-list .active {
     border-bottom: none;
     box-shadow: none;
+}
+
+.tab-list li {
+    white-space: nowrap;
 }
 
 .tab-list li ul {
