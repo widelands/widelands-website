@@ -9,32 +9,35 @@
 {% block game_passwrd %}class="active"{% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Set Online Gaming Password" %}</h1>
+    <h1>{% trans "Set Online Gaming Password" %}</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	<p>The password set here can be used when playing widelands over the internet.
-	Although it is optional to use a password it is recommended to use one,
-	because your username will be reserved then. The password is stored encrypted.</p>
-	<p>To use the password in internet games:</p>
-	<ul>
-		<li>Start the game and click on 'Multiplayer -> Internet Game'</li>
-		<li>Enter your Widelands website username and the password you have set here</li>
-		<li>Click on 'Login'</li>
-	</ul>
-	<form method="post" enctype="multipart/form-data">
-		<table>
-		{% for field in ggz_form %}
-			<tr>
-				<td class="grey">{{ field.label_tag }}</td>
-				<td>{{ field }}</td>
-				<td class="errormessage">{{ field.errors }}</td>
-			</tr>
-		{% endfor %}
-		</table>
-		<input type="submit" value="{% trans "Save" %}" />
-		{% csrf_token %}
-	</form>
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    <p>The password set here can be used when playing widelands over the internet.
+        Although it is optional to use a password it is recommended to use one,
+        because your username will be reserved then. The password is stored
+        encrypted.</p>
+    <p>To use the password in internet games:</p>
+    <ul>
+        <li>Start the game and click on 'Multiplayer -> Internet Game'</li>
+        <li>
+            Enter your Widelands website username and the password you have set here
+        </li>
+        <li>Click on 'Login'</li>
+    </ul>
+    <form method="post" enctype="multipart/form-data">
+        <table>
+            {% for field in ggz_form %}
+            <tr>
+                <td class="grey">{{ field.label_tag }}</td>
+                <td>{{ field }}</td>
+                <td class="errormessage">{{ field.errors }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="{% trans " Save" %}" />
+        {% csrf_token %}
+    </form>
+</section>
 {% endblock %}

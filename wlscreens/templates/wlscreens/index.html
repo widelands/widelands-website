@@ -1,6 +1,6 @@
 {% extends "wlscreens/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% load wl_markdown %}
@@ -8,40 +8,43 @@
 
 {% block extra_head %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'lightbox_v2/css/lightbox.css' %}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{% static 'lightbox_v2/css/custom.css' %}" type="text/css" media="screen" />
-<!-- lightbox-plus-jquery.min.js supports also IE9+ -->
-<script type="text/javascript" src="{% static 'lightbox_v2/lightbox-plus-jquery.min.js' %}"></script>
-<script type="text/javascript">
-	lightbox.option({
-		  'resizeDuration': 400,
-		  'wrapAround': true,
-		  'showImageNumberLabel': false,
-		});
-</script>
+    <link rel="stylesheet" href="{% static 'lightbox_v2/css/lightbox.css' %}"
+          type="text/css" media="screen"/>
+    <link rel="stylesheet" href="{% static 'lightbox_v2/css/custom.css' %}" type="text/css"
+          media="screen"/>
+    <!-- lightbox-plus-jquery.min.js supports also IE9+ -->
+    <script type="text/javascript"
+            src="{% static 'lightbox_v2/lightbox-plus-jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        lightbox.option({
+            'resizeDuration': 400,
+            'wrapAround': true,
+            'showImageNumberLabel': false,
+        });
+    </script>
 {% endblock %}
 
 {% block content_header %}
-	<h1>Screenshots</h1>
+    <h1>Screenshots</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 {% for c in categories %}
-	<div class="blogEntry">
-		<h2>{{ c.name }}</h2>
-		<ul class="screenshot_list">
-		{% for s in c.screenshots.all %}
-			<li>
-				<a href="{{ s.screenshot.url }}"
-				   data-lightbox="{{ c.slug }}"
-				   data-title="{{ s.name }}: {{ s.comment }}">
-					<img src="{{ s.thumbnail.url }}" alt="" />
-				</a>
-				<br />
-				<span>{{ s.name }}</span>
-			</li>
-		{% endfor %}
-		</ul>
-	</div>
+<section class="blogEntry">
+    <h2>{{ c.name }}</h2>
+    <ul class="screenshot_list">
+        {% for s in c.screenshots.all %}
+        <li>
+            <a href="{{ s.screenshot.url }}"
+               data-lightbox="{{ c.slug }}"
+               data-title="{{ s.name }}: {{ s.comment }}">
+                <img src="{{ s.thumbnail.url }}" alt=""/>
+            </a>
+            <br/>
+            <span>{{ s.name }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
 {% endfor %}
 {% endblock %}

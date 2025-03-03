@@ -1,6 +1,6 @@
 {% extends "mainpage/base.html" %}
 {% comment %}
-vim:ft=htmldjango: 
+vim:ft=htmldjango:
 {% endcomment %}
 
 {% block title %}
@@ -8,19 +8,21 @@ Activation - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-    <h1>Activation</h1>
+<h1>Activation</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	<p>
-		You are now activated.
-	</p>
-	<p>
-	 After logging in it is recommended to edit your profile page and set your operating system and the widelands version you use.
-	</p>
-	<p>
-		<a class="button" href="{% url 'profile_edit' %}">Log in and directly edit your profile page</a> <a class="button" href="{% url 'login' %}">Just log in</a>
-	</p>
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    <p>
+        You are now activated.
+    </p>
+    <p>
+        After logging in it is recommended to edit your profile page and set your
+        operating system and the widelands version you use.
+    </p>
+    <p>
+        <a class="button" href="{% url 'profile_edit' %}">Log in and directly edit your
+            profile page</a> <a class="button" href="{% url 'login' %}">Just log in</a>
+    </p>
+</section>
 {% endblock %}

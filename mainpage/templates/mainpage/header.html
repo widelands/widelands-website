@@ -5,9 +5,10 @@
 <div id="logo">
 	<a href="{% url 'mainpage' %}"><img src=
 	"{% static 'img/'%}{% wl_logo %}" alt=
-	"Widelands Logo"></a></br>
-	{% if user.is_authenticated %}
-	<div class="green">{% git_data %}</div>
+	"Widelands Logo"></a>
+
+	{% if user.is_staff %}
+	<div class="green center">{% git_data %}</div>
 	{% endif %}
 </div>
 <ul class="header_boxes">
@@ -17,7 +18,7 @@
         </a>
     </li>
 	<li class="small">
-		<a href="{% url 'wiki_article' "Download" %}" title="Download">Download<br />
+		<a href="{% url 'wiki_article' 'Download' %}" title="Download">Download<br />
 		<img src="{% static '/img/download.png' %}" alt="Get Widelands" />
 		</a>
 	</li>
@@ -35,7 +36,7 @@
 			<img src="{% static 'img/socialmedia/youtube.png' %}" alt="Youtube" />
 		</a>
 	</li>
-	<li class="loginBox small">
+	<li class="small">
 		{% if user.is_authenticated %}
 			<!-- Logged in -->
 			<a href="{% url 'profile_view' %}" title="Your Profile">Profile</a> |
@@ -53,4 +54,27 @@
 			<a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login/Register</a>
 		{% endif %}
 	</li>
+    <!-- special login section, shown only on small devices -->
+    <li id="responsiveLogin" class="small respHidden">
+		{% if user.is_authenticated %}
+			<!-- Logged in -->
+			<a href="{% url 'profile_view' %}" title="Your Profile">Profile</a><br />
+			{% if messages_inbox_count %}
+				<a href="{% url 'messages_inbox' %}" title="New Messages">Messages ({{ messages_inbox_count }})</a>
+			{% else %}
+				<a href="{% url 'messages_inbox' %}" title="Show Inbox">Messages</a>
+			{% endif %}
+			<br />
+			<a href="{% url 'scheduling_main' %}" title="Playtime Scheduler">Playtime</a>
+			<br />
+			<a href="{% url 'logout' %}?next=/">Logout</a>
+		{% else %}
+			<!-- Not logged in -->
+			<a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login/Register</a>
+		{% endif %}
+	</li>
 </ul>
+<div id="respLoginButton" class="sideButton sideButtonLogin">
+	<button>Login</button>
+</div>
+

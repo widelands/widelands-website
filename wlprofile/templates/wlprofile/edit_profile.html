@@ -9,53 +9,60 @@
 {% block edit_profile %}class="active"{% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Profile Editing" %}</h1>
+    <h1>{% trans "Profile Editing" %}</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	<form method="post" enctype="multipart/form-data" action=".">
-		<table>
-		{% for field in profile_form %}
-			<tr>
-				<td class="grey">
-					{{ field.label_tag }}
-				</td>
-				<td>
-					{% if field.name == "avatar"%}
-					{% if profile.avatar %}
-						<img class="posLeft" src="{{ profile.avatar.url }}" alt="Avatar" />
-					{% endif %}
-					{% endif %}
+{% block content_section %}
+<section class="blogEntry">
+    <form method="post" enctype="multipart/form-data" action=".">
+        <table>
+            {% for field in profile_form %}
+            <tr>
+                <td class="grey">
+                    {{ field.label_tag }}
+                </td>
+                <td>
+                    {% if field.name == "avatar"%}
+                        {% if profile.avatar %}
+                            <img class="posLeft" src="{{ profile.avatar.url }}" alt="Avatar"/>
+                        {% endif %}
+                    {% endif %}
 
-					{{ field }}
-					{% if field.name == "widelands_version" %}
-						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify the widelands version to help developers in case of questions.">
-					{% endif %}
-					{% if field.name == "operating_system" %}
-						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Specify your operating system to help developers in case of questions.">
-					{% endif %}
-					{% if field.name == "webservice_nick" %}
-						<img class="profileHelp" src="{% static "img/menu_help_borderless.png" %}" alt="Info" title="Examples: IRC/NickName, Facebook/NickName, Youtube/NickName, ...">
-					{% endif %}
-					{% if field.name == "time_zone" %}
-						Your local time zone offset from <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>
-					{% endif %}
-					{% if field.name == "time_display" %}
-						<a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
-					{% endif %}
-				</td>
-				<td class="errormessage">
-				{% if field.errors %}
-					{{ field.errors }}
-				{% endif %}
-				</td>
-			</tr>
-		{% endfor %}
-		</table>
-		<input type="submit" value="{% trans "Save" %}" />
-		{% csrf_token %}
-	</form>
+                    {{ field }}
+                    {% if field.name == "widelands_version" %}
+                        <img class="profileHelp" src="{% static 'img/menu_help_borderless.png' %}"
+                            alt="Info" title="Specify the widelands version to help
+                            developers in case of questions.">
+                    {% endif %}
+                    {% if field.name == "operating_system" %}
+                        <img class="profileHelp" src="{% static 'img/menu_help_borderless.png' %}"
+                        alt="Info" title="Specify your operating system to help
+                            developers in case of questions.">
+                    {% endif %}
+                    {% if field.name == "webservice_nick" %}
+                    <img class="profileHelp" src="{% static 'img/menu_help_borderless.png' %}"
+                        alt="Info" title="Examples: IRC/NickName, Facebook/NickName,
+                            Youtube/NickName, ...">
+                    {% endif %}
+                    {% if field.name == "time_zone" %}
+                    Your local time zone offset from <a
+                        href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>
+                    {% endif %}
+                    {% if field.name == "time_display" %}
+                        <a href="/wiki/HomepageDocuTimeDisplay">Documented here</a>
+                    {% endif %}
+                </td>
+                <td class="errormessage">
+                    {% if field.errors %}
+                        {{ field.errors }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="{% trans " Save" %}" />
+        {% csrf_token %}
+    </form>
 
 	<h2>Other options:</h2>
 	<ul>
@@ -63,5 +70,6 @@
 		<li><a href="{% url 'password_change' %}">Change website password</a></li>
 		<li><a href="{% url 'delete_me' %}">Delete me</a></li>
 	</ul>
-</div>
+</section>
+
 {% endblock %}
