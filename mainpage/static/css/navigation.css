@@ -41,7 +41,7 @@ nav ul.menu > li > button > img {
 nav ul ul {
 	visibility: hidden;
 	position: absolute;
-	top: 50px;
+	top: 3.5em;
 	left: -1px;
 	padding: 0px;
 	background-image: url("../img/wood.png");
