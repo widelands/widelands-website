@@ -28,14 +28,12 @@ a img {
 
 a {
     text-decoration: none;
-    /*color: rgba(254, 234, 138, 1);*/
-    color: #fefb8a;
+    color: #FFE673;
     font-weight: bold;
 }
 
 a:visited {
-    /*color: #fefb8a;*/
-    color: rgba(254, 234, 138, 1);
+    color: #F2F0AA;
 }
 
 a.missingLink {
