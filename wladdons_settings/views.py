@@ -2,7 +2,7 @@ from django.shortcuts import render
 from wladdons_settings.models import AddonNoticeType
 from wladdons_settings.models import get_addon_usersetting
 from wladdons_settings.models import get_addons_for_user
-
+from django.utils.connection import ConnectionDoesNotExist
 from django.contrib.auth.decorators import login_required
 
 
@@ -28,7 +28,11 @@ def addon_settings(request):
             else:
                 settings.append(usersetting)
 
-    addons = get_addons_for_user(request.user.pk)
+    try:
+        addons = get_addons_for_user(request.user.pk)
+    except ConnectionDoesNotExist:
+        addons = None
+
     return render(
         request,
         "wladdons_settings/settings.html",
