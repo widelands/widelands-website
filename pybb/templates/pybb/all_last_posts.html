@@ -81,8 +81,8 @@ Latest posts - {{ block.super }}
         <table>
             <thead>
             <tr>
-                <th style="text-align: left; width: 30%;">Topic{{
-                    topic_list|length|pluralize }}
+                <th style="text-align: left; width: 30%;">
+                    Topic{{ topic_list|length|pluralize }}
                 </th>
                 <th style="text-align: left;">Post{{ posts|length|pluralize }}</th>
             </tr>
@@ -92,8 +92,8 @@ Latest posts - {{ block.super }}
             <tr class={% cycle
             'odd' 'even' %}>
             <td class='post'>
-                <a href="{% url 'pybb_topic' topic.id %}" id="{{ topic.pk }}">{{ topic
-                    }}</a>
+                <a href="{% url 'pybb_topic' topic.id %}" id="{{ topic.pk }}">
+                    {{ topic }}</a>
             </td>
             <td>
                 {% include 'pybb/inlines/latest_posts_table.html'%}

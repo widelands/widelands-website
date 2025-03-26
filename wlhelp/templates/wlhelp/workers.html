@@ -17,8 +17,8 @@
         {% include 'wlhelp/inlines/js_form_scripting.html' %}
     </div>
     <div class="breadCrumb">
-        <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{
-        tribe.displayname }} Workers
+        <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a>
+        &#187; {{ tribe.displayname }} Workers
     </div>
 
     <table class="help">
@@ -42,8 +42,8 @@
             <ul>
                 {% if worker.becomes %}
                 <li>At experience level {{ worker.exp }} he will become:
-                    <a href="#{{ worker.becomes.name }}">{{
-                        worker.becomes.displayname}}</a>
+                    <a href="#{{ worker.becomes.name }}">
+                        {{ worker.becomes.displayname}}</a>
                 </li>
                 {% endif %}
                 {% if worker.trained_by_experience %}
@@ -59,8 +59,8 @@
         </td>
         <td> {# works at #}
             {% for building in worker.workers_for_buildings.all %}
-            <a href="../buildings/#{{ building.name }}" class="small">{{
-                building.displayname }}<br/>
+            <a href="../buildings/#{{ building.name }}" class="small">
+                {{ building.displayname }}<br/>
                 <img src="{{ building.image_url }}" alt="{{building.displayname}}"/>
             </a>
             <br/>
