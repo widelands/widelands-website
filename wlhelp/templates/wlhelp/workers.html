@@ -59,8 +59,8 @@
         </td>
         <td> {# works at #}
             {% for building in worker.workers_for_buildings.all %}
-            <a href="../buildings/#{{ building.name }}" class="small">{{
-                building.displayname }}<br/>
+            <a href="../buildings/#{{ building.name }}" class="small">
+                {{ building.displayname }}<br/>
                 <img src="{{ building.image_url }}" alt="{{building.displayname}}"/>
             </a>
             <br/>
