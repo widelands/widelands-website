@@ -169,7 +169,7 @@ def quote_text(post, markup, request):
     else:
         quoted_username = "[{name}]({profile_url})".format(
             name=post.user.username,
-            profile_url="{}/profile/{}".format(base_url, post.user.username)
+            profile_url="{}/profile/{}".format(base_url, post.user.username),
         )
 
     quote_header = "*{name} [wrote]({post_url}) at {date}:*".format(
