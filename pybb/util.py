@@ -166,11 +166,11 @@ def quote_text(text, user, markup, post):
         settings.DELETED_USERNAME if user.wlprofile.deleted else user.username
     )
     quote_header = "*[{}](/profile/{}) [wrote]({}) at {}:*".format(
-                               quoted_username,
-                                quoted_username,
-                                post.get_absolute_url(),
-                                post.updated if post.updated else post.created
-                               )
+        quoted_username,
+        quoted_username,
+        post.get_absolute_url(),
+        post.updated if post.updated else post.created,
+    )
 
     text = "{}\n\n{}".format(quote_header, text)
 
