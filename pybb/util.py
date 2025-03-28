@@ -158,16 +158,18 @@ def urlize(data):
     return str(soup)
 
 
-def quote_text(post, markup):
+def quote_text(post, markup, request):
     """Quote message using selected markup.
     Not really, markup will always be markdown atm."""
 
     quoted_username = (
         settings.DELETED_USERNAME if post.user.wlprofile.deleted else post.user.username
     )
-    quote_header = "*[{name}](/profile/{name}) [wrote]({url}) at {date}:*".format(
-        name= quoted_username,
-        url=post.get_absolute_url(),
+    url_scheme = "{}/{}".format(request.scheme, request.site)
+    quote_header = "*[{name}]({profile_url}) [wrote]({post_url}) at {date}:*".format(
+        name=quoted_username,
+        profile_url="{}/profile/{}".format(url_scheme, quoted_username),
+        post_url="{}{}".format(url_scheme, post.get_absolute_url()),
         date=post.updated if post.updated else post.created,
     )
 

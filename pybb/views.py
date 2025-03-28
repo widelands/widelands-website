@@ -208,7 +208,7 @@ def add_post_ctx(request, forum_id, topic_id):
         quote = ""
     else:
         post = get_object_or_404(Post, pk=quote_id)
-        quote = quote_text(post, "markdown")
+        quote = quote_text(post, "markdown", request)
 
     form = build_form(
         AddPostForm,
