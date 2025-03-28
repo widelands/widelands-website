@@ -158,21 +158,20 @@ def urlize(data):
     return str(soup)
 
 
-def quote_text(text, user, markup, post):
+def quote_text(post, markup):
     """Quote message using selected markup.
     Not really, markup will always be markdown atm."""
 
     quoted_username = (
-        settings.DELETED_USERNAME if user.wlprofile.deleted else user.username
+        settings.DELETED_USERNAME if post.user.wlprofile.deleted else post.user.username
     )
-    quote_header = "*[{}](/profile/{}) [wrote]({}) at {}:*".format(
-        quoted_username,
-        quoted_username,
-        post.get_absolute_url(),
-        post.updated if post.updated else post.created,
+    quote_header = "*[{name}](/profile/{name}) [wrote]({url}) at {date}:*".format(
+        name= quoted_username,
+        url=post.get_absolute_url(),
+        date=post.updated if post.updated else post.created,
     )
 
-    text = "{}\n\n{}".format(quote_header, text)
+    text = "{}\n\n{}".format(quote_header, post.body)
 
     if markup == "markdown":
         # Inserting a space after ">" will not change the generated HTML,
