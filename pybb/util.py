@@ -9,7 +9,6 @@ from django.utils.functional import Promise
 from django.utils.encoding import force_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.html import format_html
 
 from pybb import settings as pybb_settings
 import magic
