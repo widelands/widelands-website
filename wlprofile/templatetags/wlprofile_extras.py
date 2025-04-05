@@ -21,19 +21,23 @@ register = template.Library()
 
 @register.filter
 def user_link(user):
-    if user.is_authenticated and user.wlprofile.deleted:
-        # Check for is_authenticated is needed for threadedcomments reply_to.js
-        return mark_safe(
-            '<span title="This user has left our community">{}</span>'.format(
-                settings.DELETED_USERNAME
+    try:
+        if user.is_authenticated and user.wlprofile.deleted:
+            # Check for is_authenticated is needed for threadedcomments reply_to.js
+            return mark_safe(
+                '<span title="This user has left our community">{}</span>'.format(
+                    settings.DELETED_USERNAME
+                )
             )
-        )
-    else:
-        data = '<a href="%s">%s</a>' % (
-            reverse("profile_view", args=[user.username]),
-            user.username,
-        )
-    return mark_safe(data)
+        else:
+            data = '<a href="%s">%s</a>' % (
+                reverse("profile_view", args=[user.username]),
+                user.username,
+            )
+        return mark_safe(data)
+    except AttributeError:
+        # User not found
+        return "–"
 
 
 @register.filter
