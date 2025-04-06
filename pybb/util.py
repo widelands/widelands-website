@@ -171,7 +171,7 @@ def quote_text(post, markup, request):
             profile_url="{}/profile/{}".format(base_url, post.user.username),
         )
 
-    quote_header = "*{name} [wrote]({post_url}) at {date}:*".format(
+    quote_header = "*{name} [wrote]({post_url}) on {date}:*".format(
         name=quoted_username,
         post_url="{}{}".format(base_url, post.get_absolute_url()),
         date=post.updated if post.updated else post.created,
