@@ -147,7 +147,7 @@ class ChangeSet(models.Model):
 
     # Editor identification -- logged
     editor = models.ForeignKey(
-        User, verbose_name=_("Editor"), null=True, on_delete=models.CASCADE
+        User, verbose_name=_("Editor"), null=True, on_delete=models.SET_NULL
     )
 
     # Revision number, starting from 1
