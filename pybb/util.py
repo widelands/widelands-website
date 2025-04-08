@@ -9,6 +9,7 @@ from django.utils.functional import Promise
 from django.utils.encoding import force_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
+
 from pybb import settings as pybb_settings
 import magic
 import zipfile
@@ -156,14 +157,26 @@ def urlize(data):
     return str(soup)
 
 
-def quote_text(text, user, markup):
-    """Quote message using selected markup."""
+def quote_text(post, markup, request):
+    """Quote message using selected markup.
+    Not really, markup will always be markdown atm."""
 
-    quoted_username = (
-        settings.DELETED_USERNAME if user.wlprofile.deleted else user.username
+    base_url = "{}://{}".format(request.scheme, request.site)
+
+    if post.user.wlprofile.deleted:
+        quoted_username = settings.DELETED_USERNAME
+    else:
+        quoted_username = "[{name}]({profile_url})".format(
+            name=post.user.username,
+            profile_url="{}/profile/{}".format(base_url, post.user.username),
+        )
+
+    quote_header = "*{name} [wrote]({post_url})*".format(
+        name=quoted_username,
+        post_url="{}{}".format(base_url, post.get_absolute_url()),
     )
 
-    text = "*" + quoted_username + " wrote:*\n\n" + text
+    text = "{}\n\n{}".format(quote_header, post.body)
 
     if markup == "markdown":
         # Inserting a space after ">" will not change the generated HTML,
