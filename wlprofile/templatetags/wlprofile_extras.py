@@ -21,7 +21,10 @@ register = template.Library()
 
 @register.filter
 def user_link(user):
-    if user.is_authenticated and user.wlprofile.deleted:
+
+    if user is None:
+        return "User not found"
+    elif user.is_authenticated and user.wlprofile.deleted:
         # Check for is_authenticated is needed for threadedcomments reply_to.js
         return mark_safe(
             '<span title="This user has left our community">{}</span>'.format(
@@ -33,7 +36,7 @@ def user_link(user):
             reverse("profile_view", args=[user.username]),
             user.username,
         )
-    return mark_safe(data)
+        return mark_safe(data)
 
 
 @register.filter
