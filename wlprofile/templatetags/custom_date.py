@@ -148,12 +148,12 @@ def custom_date(date, user):
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
-        return do_custom_date(userprofile.time_display, date, tz_offset=userprofile.time_zone)
+        return do_custom_date(
+            userprofile.time_display, date, tz_offset=userprofile.time_zone
+        )
     except ObjectDoesNotExist:
         return do_custom_date(
-            settings.DEFAULT_TIME_DISPLAY,
-            date,
-            tz_offset=_get_offset(date)
+            settings.DEFAULT_TIME_DISPLAY, date, tz_offset=_get_offset(date)
         )
 
 
