@@ -18,6 +18,8 @@ import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
 from django.conf import settings
 import time
+from zoneinfo import ZoneInfo
+
 
 register = template.Library()
 
@@ -75,9 +77,9 @@ def do_custom_date(format, date, timezone=1.0, now=None):
         tz_info = "UTC" + str(timezone)
     else:
         tz_info = "UTC"
-    # set the server timezone for tzinfo
-    dst = time.localtime().tm_gmtoff / 60 / 60
-    ForumStdTimeZone = FixedOffset(dst * 60, "UTC+%s".format(dst))
+    # set the current server timezone for tzinfo
+    current_tz_offset = time.localtime().tm_gmtoff / 60 / 60
+    ForumStdTimeZone = FixedOffset(current_tz_offset * 60, "UTC+{}".format(current_tz_offset))
 
     # set the user's timezone information
     ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
@@ -120,18 +122,30 @@ def do_custom_date(format, date, timezone=1.0, now=None):
         data = django_date(date, format)
     except NotImplementedError:
         return format
-
     return data
 
 
 @register.filter
 def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
-    a sane default."""
+    a sane default.
+
+    Each date is stored with the servers local date and time. A post in wintertime
+    is saved with UTC+1, whereas in summertime it will be saved with UTC+2.
+    """
+
+    def _get_offset(date):
+        # Try to find out if the date is UTC+1 or UTC+2 and return the offset
+        if isinstance(date, datetime):
+            dt = datetime(date.year, date.month, date.day, date.hour, tzinfo=ZoneInfo(settings.TIME_ZONE))
+            return dt.utcoffset().seconds / 60 / 60
+        return 1.0
+
     if not user.is_authenticated:
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
+            timezone=_get_offset(date),
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
@@ -140,6 +154,7 @@ def custom_date(date, user):
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
+            timezone=_get_offset(date)
         )
 
 

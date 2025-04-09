@@ -197,7 +197,7 @@ FORBIDDEN_WIKI_TITLES = [
 ######################
 # User configuration #
 ######################
-DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i"  # According to ISO 8601
+DEFAULT_TIME_DISPLAY = r"%ND(Y-m-d,) H:i e"  # According to ISO 8601
 DEFAULT_MARKUP = "markdown"
 SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
