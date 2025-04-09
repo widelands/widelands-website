@@ -17,7 +17,6 @@ from django.contrib.auth.models import User
 import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
 from django.conf import settings
-import time
 from zoneinfo import ZoneInfo
 
 
@@ -48,7 +47,7 @@ class FixedOffset(tzinfo):
         return ZERO
 
 
-def do_custom_date(format, date, timezone=1.0, now=None):
+def do_custom_date(format, date, tz_offset=1.0, now=None):
     """Returns a string formatted representation of date according to format.
     This accepts all formats that strftime also accepts, but it also accepts
     some new options which are dependant on the current date.
@@ -60,7 +59,7 @@ def do_custom_date(format, date, timezone=1.0, now=None):
 
     format      - format string as described above
     date        - datetime object to display
-    timezone    - valid timezone as int
+    tz_offset   - the offset from UTC
     now         - overwrite the value for now; only for debug reasons
 
     """
@@ -71,22 +70,16 @@ def do_custom_date(format, date, timezone=1.0, now=None):
     # Set Timezone Information's
     #
     # set the timezone named info
-    if timezone > 0:
-        tz_info = "UTC+" + str(timezone)
-    elif timezone < 0:
-        tz_info = "UTC" + str(timezone)
+    if tz_offset > 0:
+        tz_info = "UTC+" + str(tz_offset)
+    elif tz_offset < 0:
+        tz_info = "UTC" + str(tz_offset)
     else:
         tz_info = "UTC"
-    # set the current server timezone for tzinfo
-    current_tz_offset = time.localtime().tm_gmtoff / 60 / 60
-    ForumStdTimeZone = FixedOffset(current_tz_offset * 60, "UTC+{}".format(current_tz_offset))
 
     # set the user's timezone information
-    ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
-    # if there is tzinfo not set
+    ForumUserTimeZone = FixedOffset(tz_offset * 60, tz_info)
     try:
-        if not date.tzinfo:
-            date = date.replace(tzinfo=ForumStdTimeZone)
         date = date.astimezone(ForumUserTimeZone)
     except AttributeError:  # maybe this is no valid date object?
         return format
@@ -130,31 +123,37 @@ def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
     a sane default.
 
-    Each date is stored with the servers local date and time. A post in wintertime
-    is saved with UTC+1, whereas in summertime it will be saved with UTC+2.
+    We are currently store only "naive" date objects, that are objects with no timezone
+    information. But we are using the current servertime for storing the dates for
+    objects. This has the issue of dst: E.g. A post in wintertime
+    is saved as UTC+1, whereas in summertime it will be saved as UTC+2.
     """
 
     def _get_offset(date):
-        # Try to find out if the date is UTC+1 or UTC+2 and return the offset
-        if isinstance(date, datetime):
-            dt = datetime(date.year, date.month, date.day, date.hour, tzinfo=ZoneInfo(settings.TIME_ZONE))
-            return dt.utcoffset().seconds / 60 / 60
-        return 1.0
+        # Return the utc-offset depending whether if the date is UTC+1 or UTC+2
+        return date.utcoffset().seconds / 60 / 60
+
+    if not isinstance(date, datetime):
+        return date
+
+    # Add timezone information
+    if date.tzinfo is None:
+        date = date.replace(tzinfo=ZoneInfo(settings.TIME_ZONE))
 
     if not user.is_authenticated:
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
-            timezone=_get_offset(date),
+            tz_offset=_get_offset(date),
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
-        return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
+        return do_custom_date(userprofile.time_display, date, tz_offset=userprofile.time_zone)
     except ObjectDoesNotExist:
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
-            timezone=_get_offset(date)
+            tz_offset=_get_offset(date)
         )
 
 
