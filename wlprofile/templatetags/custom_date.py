@@ -210,4 +210,4 @@ def current_time(user):
 @register.filter
 def sec_since_epoch(date):
     # Return seconds from epoch
-    return date.timestamp() #replace(tzinfo=timezone.utc).timestamp()
+    return date.timestamp()  # replace(tzinfo=timezone.utc).timestamp()
