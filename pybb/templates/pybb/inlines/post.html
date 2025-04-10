@@ -24,7 +24,7 @@
 		<a href="{{ topic.get_absolute_url }}" title="Switch to first post">Topic Opener</a>
 	{% endif %}
 	<div class="authorStats">
-		<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
+		<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user }}<br />
 		<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
 		{% if post.user.wlprofile.operating_system %}
 		<strong>OS:</strong> {{ post.user.wlprofile.operating_system }}<br />
@@ -54,7 +54,7 @@
 	{{ post.body_html|safe }}
 
 	{% if post.updated %}
-		<div class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</div>
+		<div class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user}}</div>
 	{% endif %}
 
     {% include 'pybb/inlines/attachment.html' %}
