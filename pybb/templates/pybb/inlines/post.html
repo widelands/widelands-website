@@ -48,7 +48,11 @@
 	{% endif %}
 
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
-	<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
+	{% if user.is_authenticated %}
+        <span class="small">Posted at: {{ post.created|custom_date:user}}</span>
+    {% else %}
+        <span class="small datetime" data-seconds="{{ post.created|sec_since_epoch }}">Posted at: {{ post.created }}</span>
+    {% endif %}
 	<hr />
 
 	{{ post.body_html|safe }}

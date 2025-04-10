@@ -15,7 +15,7 @@ from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import re
-from datetime import date as ddate, tzinfo, timedelta, datetime
+from datetime import date as ddate, tzinfo, timedelta, datetime, timezone
 from django.conf import settings
 from zoneinfo import ZoneInfo
 
@@ -205,3 +205,9 @@ def current_time(user):
     time = datetime.today()
     time = custom_date(time, user)
     return time
+
+
+@register.filter
+def sec_since_epoch(date):
+    # Return seconds from epoch
+    return date.timestamp() #replace(tzinfo=timezone.utc).timestamp()
