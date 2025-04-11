@@ -20,7 +20,6 @@ from django.conf import settings
 from zoneinfo import ZoneInfo
 
 
-
 register = template.Library()
 
 
