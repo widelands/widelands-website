@@ -15,9 +15,10 @@ from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import re
-from datetime import date as ddate, tzinfo, timedelta, datetime, timezone
+from datetime import date as ddate, tzinfo, timedelta, datetime
 from django.conf import settings
 from zoneinfo import ZoneInfo
+
 
 
 register = template.Library()
@@ -28,6 +29,17 @@ natural_year_expr = re.compile(r"""\%NY\((.*?)\)""")
 
 ZERO = timedelta(0)
 HOUR = timedelta(hours=1)
+
+
+def make_aware_date(date):
+    """We are currently store only "naive" date objects, that are objects with no timezone
+    information. But we are using the current servertime for storing the dates for
+    objects.
+    Make the naive date an aware date by assigning the time zone of the server."""
+
+    if date.tzinfo is None:
+        return date.replace(tzinfo=ZoneInfo(settings.TIME_ZONE))
+    return date
 
 
 class FixedOffset(tzinfo):
@@ -122,11 +134,6 @@ def do_custom_date(format, date, tz_offset=1.0, now=None):
 def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
     a sane default.
-
-    We are currently store only "naive" date objects, that are objects with no timezone
-    information. But we are using the current servertime for storing the dates for
-    objects. This has the issue of dst: E.g. A post in wintertime
-    is saved as UTC+1, whereas in summertime it will be saved as UTC+2.
     """
 
     def _get_offset(date):
@@ -137,8 +144,7 @@ def custom_date(date, user):
         return date
 
     # Add timezone information
-    if date.tzinfo is None:
-        date = date.replace(tzinfo=ZoneInfo(settings.TIME_ZONE))
+    date = make_aware_date(date)
 
     if not user.is_authenticated:
         return do_custom_date(
@@ -209,5 +215,6 @@ def current_time(user):
 
 @register.filter
 def sec_since_epoch(date):
-    # Return seconds from epoch
-    return date.timestamp()  # replace(tzinfo=timezone.utc).timestamp()
+    """Return seconds since epoch and make sure we have the correct timezone attached."""
+    date = make_aware_date(date)
+    return date.timestamp()
