@@ -36,7 +36,11 @@
         {% get_comment_count for post as ccount %}
         <tr>
             <td><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></td>
-            <td align="center">{{ post.publish|custom_date:user }}</td>
+            <td align="center">
+                {% with post.created as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
             <td align="center"> {{ ccount }}</td>
         </tr>
         {% endfor %}

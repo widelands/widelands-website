@@ -24,7 +24,11 @@ List all news in a table
         {% get_comment_count for object as ccount %}
         <tr>
             <td><a href="{{object.get_absolute_url}}">{{ object.title }}</a></td>
-            <td align="center">{{ object.publish|custom_date:user }}</td>
+            <td align="center">
+                {% with object.publish as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
             <td align="center">{{ ccount }}</td>
             <td align="right">
                 <a href=" {% url 'category_posts' slug=object.get_category_slug %}">

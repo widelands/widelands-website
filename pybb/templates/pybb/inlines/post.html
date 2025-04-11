@@ -24,7 +24,11 @@
 		<a href="{{ topic.get_absolute_url }}" title="Switch to first post">Topic Opener</a>
 	{% endif %}
 	<div class="authorStats">
-		<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user }}<br />
+		<strong>Joined:</strong>
+        {% with post.user.date_joined as date %}
+            {% include 'wlprofile/inlines/date.html' %}
+        {% endwith %}
+        <br />
 		<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
 		{% if post.user.wlprofile.operating_system %}
 		<strong>OS:</strong> {{ post.user.wlprofile.operating_system }}<br />
@@ -48,17 +52,24 @@
 	{% endif %}
 
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
-	{% if user.is_authenticated %}
-        <span class="small">Posted at: {{ post.created|custom_date:user}}</span>
-    {% else %}
-        <span class="small datetime" data-seconds="{{ post.created|sec_since_epoch }}">Posted at: {{ post.created }}</span>
-    {% endif %}
+    {% with post.created as date %}
+        <span class="small">Postet at:
+        {% include 'wlprofile/inlines/date.html' %}
+        </span>
+    {% endwith %}
+    <!-- Remove the following line before merging into master -->
+    <span class="small grey">Original date: {{ post.created|custom_date:user }}</span>
+
 	<hr />
 
 	{{ post.body_html|safe }}
 
 	{% if post.updated %}
-		<div class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user}}</div>
+        {% with post.updated as date %}
+            <div class="small">{% trans "Edited" %}:
+            {% include 'wlprofile/inlines/date.html' %}
+            </div>
+        {% endwith %}
 	{% endif %}
 
     {% include 'pybb/inlines/attachment.html' %}

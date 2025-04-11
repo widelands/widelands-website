@@ -46,7 +46,11 @@
         </tr>
         <tr>
             <td class="grey">Joined:</td>
-            <td>{{ profile.user.date_joined|custom_date:user }}</td>
+            <td>
+                {% with profile.user.date_joined as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
         </tr>
         <tr>
             <td class="grey">Forum Posts:</td>
