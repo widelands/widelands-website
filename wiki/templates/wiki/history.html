@@ -99,7 +99,9 @@
 					{% endif %}
 				</td>
 				<td>
-					{{ change.modified|custom_date:user }}
+					{% with change.modified as date %}
+                        {% include 'wlprofile/inlines/date.html' %}
+                    {% endwith %}
 				</td>
 				<td>
 					{{ change.editor|user_link }}

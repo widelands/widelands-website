@@ -43,7 +43,11 @@
     <hr/>
     {% get_comment_count for object as ccount %}
     <span class="small posLeft"><a href="{{ object.get_absolute_url }}">{{ ccount }} comments, {{object.total_votes}} votes</a></span>
-    <span class="small posRight">Posted on {{ object.pub_date|custom_date:user }}</span>
+    {% with object.pub_date as date %}
+        <span class="small posRight">Posted on
+            {% include 'wlprofile/inlines/date.html' %}
+        </span>
+        {% endwith %}
 </section>
 
 <section class="blogEntry">

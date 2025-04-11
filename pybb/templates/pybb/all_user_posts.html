@@ -25,7 +25,11 @@ Posts by {{ this_user }} - {{ block.super }}
         <tbody>
         {% for post in page_obj %}
         <tr class="{% cycle 'odd' 'even' %}">
-            <td class='post'>{{ post.created|custom_date:user }}</td>
+            <td class='post'>
+                {% with post.created as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
             <td class='post'><a href="{% url 'pybb_forum' post.topic.forum.id %}">
                 {{ post.topic.forum }}</a></td>
             <td class='post'><a href="{% url 'pybb_topic' post.topic.id %}">

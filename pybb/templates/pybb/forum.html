@@ -77,7 +77,11 @@
                 {% if topic.closed %}<img src="{% static 'forum/img/closed.png' %}"
                                           alt="Closed" title="Closed"/>{% endif %}
                 <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a><br/>
-                <span class="small">Created by {{ topic.user|user_link }} on {{ topic.created|custom_date:user }}</span>
+                {% with topic.created as date %}
+                    <span class="small">Created by {{ topic.user|user_link }} on
+                        {% include 'wlprofile/inlines/date.html' %}
+                    </span>
+                {% endwith %}
             </td>
             <td class="forumCount center small" style="width: 120px;">
                 Posts: {{ topic.post_count }}<br/>
@@ -89,7 +93,12 @@
                     {{ topic.last_post.body_text|truncatechars:30 }}
                 </a>
                 <br/>
-                <span class="small">by {{ topic.last_post.user|user_link }} on {{ topic.last_post.created|custom_date:user }}</span>
+                {% with topic.last_post.created as date %}
+                    <span class="small">by {{ topic.last_post.user|user_link }} on
+                        {% include 'wlprofile/inlines/date.html' %}
+                    </span>
+                {% endwith %}
+
                 {% endif %}
             </td>
             {% elif user_is_mod %}

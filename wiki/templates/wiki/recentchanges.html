@@ -45,7 +45,11 @@
                 <td>
                     <a href="{% url 'wiki_article' change.article.title %}">{{ change.article.title }}</a>
                 </td>
-                <td>{{ change.modified|custom_date:user }}</td>
+                <td>
+                    {% with change.modified as date %}
+                        {% include 'wlprofile/inlines/date.html' %}
+                    {% endwith %}
+                </td>
                 <td>{{ change.editor|user_link }}</td>
                 <td>{{ change.comment }}</td>
             </tr>

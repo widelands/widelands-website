@@ -1,7 +1,9 @@
 {% load custom_date %}
 {% load wlprofile_extras %}
 
-    <a href=" {{ topic.topic_link }}">{{ topic.name }}</a><span class="small"> @ </span> 
+    <a href=" {{ topic.topic_link }}">{{ topic.name }}</a><span class="small"> @ </span>
     Forum <a href="{{ topic.object.forum.get_absolute_url }}">{{ topic.object.forum }}</a>
     by {{topic.user|user_status}},
-    {{topic.date|custom_date:user}}
+    {% with topic.date as date %}
+        {% include 'wlprofile/inlines/date.html' %}
+    {% endwith %}
