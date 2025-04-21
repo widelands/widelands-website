@@ -35,7 +35,11 @@
         <tr>
             <td><a href="{% url 'wiki_article' article.title %}"> {{ article.title }}</a></td>
             <td>{{ article.summary }}</td>
-            <td class="nolinebreak">{{ article.last_update|custom_date:user }}</td>
+            <td class="nolinebreak">
+                {% with article.last_update as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
             <td>{{ redirect.new_path }}</td>
             <td class="middle nolinebreak">
                 <a href="{% url 'wiki_edit_deleted' article.title %}" class="button">

@@ -33,7 +33,11 @@
                     <td><a href="{% url 'wiki_article' article.title %}"
                        id="{{ article.title|slugify }}">{{ article.title }}</a></td>
                     <td>{{ article.summary }}</td>
-                    <td class="nolinebreak">{{ article.last_update|custom_date:user }}</td>
+                    <td class="nolinebreak">
+                        {% with article.last_update as date %}
+                            {% include 'wlprofile/inlines/date.html' %}
+                        {% endwith %}
+                    </td>
                     {% tags_for_object article as article_tags %}
                     <td>
                         {% include "wiki/inlines/tag_urls.html" with sep="," tag_list=article_tags %}

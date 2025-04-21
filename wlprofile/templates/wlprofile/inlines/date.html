@@ -1,0 +1,7 @@
+{% load custom_date %}
+
+{% if user.is_authenticated %}
+    {{ date|custom_date:user}}
+{% else %}
+    <span class="datetime" data-seconds="{{ date|sec_since_epoch }}">{{ date|custom_date:user }}</span>
+{% endif %}

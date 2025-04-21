@@ -37,8 +37,16 @@
             <td><a href="{% url 'pybb_topic' obj.id %}"> {{ obj.name }}</a></td>
             <td>{{ obj.forum }}</td>
             <td>{{ obj.forum.category }}</td>
-            <td>{{ obj.created|custom_date:user }}</td>
-            <td>{{ obj.updated|custom_date:user }}</td>
+            <td>
+                {% with obj.created as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
+            <td>
+                {% with obj.updated as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
         </tr>
         {% endfor %}
     </table>
