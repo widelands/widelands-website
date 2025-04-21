@@ -27,7 +27,7 @@
       <td class="even" align="center" valign="middle">{{ forum.topics.count }} </td>
       <td class="odd" align="center" valign="middle">{{ forum.posts.count }}</td>
       <td class="even" align="right" valign="middle">
-          {%if forum.last_post %}
+          {% if forum.last_post %}
             {% with forum.last_post.created as date %}
                 {% include 'wlprofile/inlines/date.html' %}
             {% endwith %}

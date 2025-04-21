@@ -53,7 +53,7 @@
 
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
     {% with post.created as date %}
-        <span class="small">Postet at:
+        <span class="small">Posted at:
         {% include 'wlprofile/inlines/date.html' %}
         </span>
     {% endwith %}
