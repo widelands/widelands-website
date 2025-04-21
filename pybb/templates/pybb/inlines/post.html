@@ -52,22 +52,24 @@
 	{% endif %}
 
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
-    {% with post.created as date %}
-        <span class="small">Posted at:
-        {% include 'wlprofile/inlines/date.html' %}
-        </span>
-    {% endwith %}
+    <span class="small">
+        Posted at:
+        {% with post.created as date %}
+            {% include 'wlprofile/inlines/date.html' %}
+        {% endwith %}
+    </span>
 
 	<hr />
 
 	{{ post.body_html|safe }}
 
 	{% if post.updated %}
-        {% with post.updated as date %}
-            <div class="small">{% trans "Edited" %}:
-            {% include 'wlprofile/inlines/date.html' %}
-            </div>
-        {% endwith %}
+        <div class="small">
+            {% trans "Edited" %}:
+            {% with post.updated as date %}
+                {% include 'wlprofile/inlines/date.html' %}
+            {% endwith %}
+        </div>
 	{% endif %}
 
     {% include 'pybb/inlines/attachment.html' %}

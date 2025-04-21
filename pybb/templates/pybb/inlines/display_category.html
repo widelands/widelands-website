@@ -43,11 +43,12 @@
 			{% if forum.last_post %}
 				{% with last_post=forum.last_post %}
 					<a href="{{last_post.get_absolute_url}}">{{ last_post.topic.name|truncatechars:30 }}</a><br />
-                    {% with last_post.created as date %}
-                        <span class="small">by {{ last_post.user|user_link }} on
+                    <span class="small">
+                        by {{ last_post.user|user_link }} on
+                        {% with last_post.created as date %}
                             {% include 'wlprofile/inlines/date.html' %}
-                        </span>
-                    {% endwith %}
+                        {% endwith %}
+                    </span>
 				{% endwith %}
 			{% else %}
 				&nbsp;
