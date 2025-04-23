@@ -15,7 +15,7 @@ from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import re
-from datetime import date as ddate, tzinfo, timedelta, datetime
+from datetime import date as ddate, tzinfo, timedelta, datetime, timezone
 from django.conf import settings
 from zoneinfo import ZoneInfo
 
@@ -74,8 +74,6 @@ def do_custom_date(format, date, tz_offset=1.0, now=None):
     now         - overwrite the value for now; only for debug reasons
 
     """
-    if now is None:
-        now = datetime.now()
 
     ############################
     # Set Timezone Information's
@@ -90,6 +88,11 @@ def do_custom_date(format, date, tz_offset=1.0, now=None):
 
     # set the user's timezone information
     ForumUserTimeZone = FixedOffset(tz_offset * 60, tz_info)
+
+    if now is None:
+        # We need the users local time for comparison
+        now = datetime.now(tz=ForumUserTimeZone)
+
     try:
         date = date.astimezone(ForumUserTimeZone)
     except AttributeError:  # maybe this is no valid date object?
