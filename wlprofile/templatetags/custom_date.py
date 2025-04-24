@@ -15,7 +15,7 @@ from django.template.defaultfilters import date as django_date
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 import re
-from datetime import date as ddate, tzinfo, timedelta, datetime, timezone
+from datetime import date as ddate, tzinfo, timedelta, datetime
 from django.conf import settings
 from zoneinfo import ZoneInfo
 
