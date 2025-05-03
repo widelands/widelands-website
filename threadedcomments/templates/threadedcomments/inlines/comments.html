@@ -23,6 +23,13 @@
 						<span class="small">{{ comment.user|user_link }}</span>
 					</td>
 					<td class="text">
+                        <span class="small">
+                            Published:
+                            {% with comment.date_submitted as date %}
+                                {% include 'wlprofile/inlines/date.html' %}
+                            {% endwith %}
+                        </span>
+                        <hr />
 						{% auto_transform_markup comment %}
 					</td>
 				</tr>
@@ -40,7 +47,7 @@
 	<br />
 
 	<h3 class="title">Reply to Original:</h3>
-	{% if user.is_authenticated %}        
+	{% if user.is_authenticated %}
 	<form method="POST" action="{% get_comment_url object %}?next={{object.get_absolute_url}}">
 		<span class="errormessage">{{ form.comment.errors }}</span>
 		{{ form.comment }}
