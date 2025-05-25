@@ -401,6 +401,21 @@ class Post(RenderableItem):
         return False
 
 
+class Reaction(models.Model):
+    """ Possibility to react on a certain post with an image
+    The available images are stored in the sprite 'reaction_sprite.png'
+    """
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # the number of the image in the sprite, currently:
+    # 1 = thumbsup, 2 = thumbsdown, 3 = applause
+    image_nr = models.PositiveIntegerField(null=True, blank=True)
+    count = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ['user', 'image_nr']
+
+
 class Read(models.Model):
     """For each topic that user has entered the time is logged to this
     model."""

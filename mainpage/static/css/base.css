@@ -428,6 +428,7 @@ section.blogEntry hr {
     height: 1px;
     background: #998;
     border: none;
+    clear: both;
 }
 
 section.blogEntry .breadCrumb{

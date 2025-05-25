@@ -4,11 +4,15 @@ import os
 from django import forms
 from django.utils.translation import gettext as _
 
-from pybb.models import Topic, Post, Attachment
+from pybb.models import Topic, Post, Attachment, Reaction
 from pybb import settings as pybb_settings
 from django.conf import settings
 from .util import validate_file
 from mainpage.validators import virus_scan, check_utf8mb3
+
+
+class ReactionForm(forms.Form):
+    pass
 
 
 class AddPostForm(forms.ModelForm):

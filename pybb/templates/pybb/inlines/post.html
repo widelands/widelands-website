@@ -74,6 +74,12 @@
 
     {% include 'pybb/inlines/attachment.html' %}
 
+    <span class="posRight">
+        <span style="display: inline-block; background-image: url('{% static 'img/reaction_sprite.png' %}'); background-position: 0 0; width: 22px; height: 22px"></span>
+        {% if user.is_authenticated %}
+        <span>+</span>
+        {% endif %}
+    </span>
 	<hr />
 	{% if user.is_authenticated %}
 		{% if user.wlprofile.show_signatures %}
