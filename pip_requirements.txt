@@ -47,7 +47,7 @@ Pygments==2.18.0
 pyparsing==3.2.0
 python-magic==0.4.27
 python-ptrace==0.9.9
-requests==2.32.3
+requests==2.32.4
 six==1.17.0
 snowballstemmer==2.2.0
 soupsieve==2.6
