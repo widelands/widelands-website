@@ -20,15 +20,17 @@
             <span class="item">
                <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a>
                <br />
-               {{ forum.description }} 
+               {{ forum.description }}
             </span>
          </div>
       </td>
       <td class="even" align="center" valign="middle">{{ forum.topics.count }} </td>
       <td class="odd" align="center" valign="middle">{{ forum.posts.count }}</td>
       <td class="even" align="right" valign="middle">
-         {%if forum.last_post %}
-         {{ forum.last_post.created|custom_date:user}}
+         {% if forum.last_post %}
+            {% with forum.last_post.created as date %}
+                {% include 'wlprofile/inlines/date.html' %}
+            {% endwith %}
          <br />
          by {{ forum.last_post.user|user_link }}
          in <br />

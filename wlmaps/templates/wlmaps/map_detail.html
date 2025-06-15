@@ -1,6 +1,6 @@
 {% extends "wlmaps/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% load custom_date %}
@@ -14,99 +14,115 @@
 
 {% block extra_head %}
 {{ block.super }}
-	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/comments.css' %}" />
+<link rel="stylesheet" type="text/css" media="all"
+      href="{% static 'css/comments.css' %}"/>
 {% endblock %}
 
 {% block content_header %}
     <h1>Map: {{ map.name }}</h1>
 {% endblock %}
-{% block content_main %}
-<div class="blogEntry" style="padding-bottom: 3em">
-	<div>
-		<a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}
-	</div>
-		<img class="posLeft map" style="float: left" src="{{ MEDIA_URL }}{{ map.minimap }}" alt="{{ map.name }}" />
-	<div>
-		<h3>Description:</h3>
-		<p>{{ map.descr|wl_markdown:"bleachit" }}</p>
-	</div>
-	{% if map.hint %}
-	<div style="clear: left;">
-		<h3>Hint:</h3>
-		<p>{{ map.hint|wl_markdown:"bleachit" }}</p>
-	</div>
-	{% endif %}
 
-	<div style="clear: left;">
-		<h3>Comment by uploader:</h3>
-		<div>{{ map.uploader_comment|wl_markdown:"bleachit" }}</div>
-		{% if user == map.uploader %}
-			<a class="button posLeft" href="{% url 'wlmaps_edit_comment' map.slug %}">
-				<img alt="Edit" title="Edit your comment" class="middle" src="{% static 'forum/img/edit.png' %}">
-				<span class="middle">Edit</span>
-			</a>
-		{% endif %}
-	</div><br />
+{% block content_section %}
+<section class="blogEntry">
+    <div>
+        <a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}
+    </div>
+    <img class="posLeft map" src="{{ MEDIA_URL }}{{ map.minimap }}"
+         alt="{{ map.name }}"/>
+    <div>
+        <h3>Description:</h3>
+        <p>{{ map.descr|wl_markdown:"bleachit" }}</p>
+    </div>
+    {% if map.hint %}
+    <div style="clear: left;">
+        <h3>Hint:</h3>
+        <p>{{ map.hint|wl_markdown:"bleachit" }}</p>
+    </div>
+    {% endif %}
 
-	<div style="display: block" >
-		<h3>Basic Information:</h3>
-		<table>
-			<tr>
-				<td class="grey">Author:</td><td>{{ map.author }}</td>
-			</tr>
-			<tr>
-				<td class="grey">World:</td>
-				<td>
-				{% if map.world_name %}
-				{{ map.world_name|title }}
-				{% else %}
-				One World
-				{% endif %}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Dimensions:</td><td>{{ map.w }} x {{ map.h }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Max. Players:</td><td>{{ map.nr_players }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Downloads:</td><td>{{ map.nr_downloads }}</td>
-			</tr>
-			<tr>
-				{% get_comment_count for map as ccount %}
-				<td class="grey">Comments:</td><td>{{ ccount }}</td>
-			</tr>
-			<tr>
-				<td class="grey">Rating:</td>
-				<td>
-					{% ratings map template_name='star_rating/rate.html' %}
-				</td>
-			</tr>
-			<tr>
-				<td class="grey">Upload:</td><td>by {{ map.uploader|user_link }} at {{ map.pub_date|custom_date:user }}</td>
-			</tr>
-		</table>
-		
-		{% if not map.world_name %}
-		<div>
-			{% include 'wlmaps/inlines/version_info.html'%}
-		</div>
-		{% endif %}
-	</div>
-	
-	<div style="margin: 1em 0px 1em 0px">
-	<a class="button posLeft" href="{% url 'wlmaps_download' map.slug %}">
-		<img src="{% static 'img/arrow_down_short.png' %}" alt ="" class="middle" />
-		<span class="middle">Download this map</span>
-	</a>
-	</div>
-</div>
+    <div style="clear: left;">
+        <h3>Comment by uploader:</h3>
+        <div>{{ map.uploader_comment|wl_markdown:"bleachit" }}</div>
+        {% if user == map.uploader %}
+        <a class="button posLeft" href="{% url 'wlmaps_edit_comment' map.slug %}">
+            <img alt="Edit" title="Edit your comment" class="middle"
+                 src="{% static 'forum/img/edit.png' %}">
+            <span class="middle">Edit</span>
+        </a>
+        {% endif %}
+    </div>
+    <br/>
 
-<div class="blogEntry">
-	<h3>Comments on this Map:</h3>
-	{% with map as object %}
-		{% include "threadedcomments/inlines/comments.html" %}
-	{% endwith %}
-</div>
+    <div>
+        <h3>Basic Information:</h3>
+        <table>
+            <tr>
+                <td class="grey">Author:</td>
+                <td>{{ map.author }}</td>
+            </tr>
+            <tr>
+                <td class="grey">World:</td>
+                <td>
+                    {% if map.world_name %}
+                        {{ map.world_name|title }}
+                    {% else %}
+                        One World
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">Dimensions:</td>
+                <td>{{ map.w }} x {{ map.h }}</td>
+            </tr>
+            <tr>
+                <td class="grey">Max. Players:</td>
+                <td>{{ map.nr_players }}</td>
+            </tr>
+            <tr>
+                <td class="grey">Downloads:</td>
+                <td>{{ map.nr_downloads }}</td>
+            </tr>
+            <tr>
+                {% get_comment_count for map as ccount %}
+                <td class="grey">Comments:</td>
+                <td>{{ ccount }}</td>
+            </tr>
+            <tr>
+                <td class="grey">Rating:</td>
+                <td>
+                    {% ratings map template_name='star_rating/rate.html' %}
+                </td>
+            </tr>
+            <tr>
+                <td class="grey">Upload:</td>
+                <td>
+                    by {{ map.uploader|user_link }} at
+                    {% with map.pub_date as date %}
+                        {% include 'wlprofile/inlines/date.html' %}
+                    {% endwith %}
+                </td>
+            </tr>
+        </table>
+
+        {% if not map.world_name %}
+        <div>
+            {% include 'wlmaps/inlines/version_info.html'%}
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin: 1em 0px 1em 0px">
+        <a class="button posLeft" href="{% url 'wlmaps_download' map.slug %}">
+            <img src="{% static 'img/arrow_down_short.png' %}" alt="" class="middle"/>
+            <span class="middle">Download this map</span>
+        </a>
+    </div>
+</section>
+
+<section class="blogEntry">
+    <h3>Comments on this Map:</h3>
+    {% with map as object %}
+    {% include "threadedcomments/inlines/comments.html" %}
+    {% endwith %}
+</section>
 {% endblock %}

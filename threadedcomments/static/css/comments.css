@@ -1,4 +1,4 @@
-/* 
+/*
  * Comment
  */
 .comment {
@@ -17,7 +17,7 @@
 	text-align: center;
 	border-right: 1px solid #998;
 	height: 100%;
-	min-width: 54px;
+	min-width: 5em;
 }
 
 .comment .text {

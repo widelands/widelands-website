@@ -343,7 +343,7 @@ def queue(users, label, extra_context=None, on_site=True):
 class ObservedItemManager(models.Manager):
     def all_for(self, observed, signal):
         """Returns all ObservedItems for an observed object, to be sent when a
-        signal is emited."""
+        signal is emitted."""
         content_type = ContentType.objects.get_for_model(observed)
         observed_items = self.filter(
             content_type=content_type, object_id=observed.id, signal=signal
@@ -351,6 +351,7 @@ class ObservedItemManager(models.Manager):
         return observed_items
 
     def get_for(self, observed, observer, signal):
+        """Returns a single observed item for an observer"""
         content_type = ContentType.objects.get_for_model(observed)
         observed_item = self.get(
             content_type=content_type,

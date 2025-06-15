@@ -1,8 +1,170 @@
 /* Top Menu */
 
+nav {
+	display: flex;
+	margin-bottom: 0.8em;
+	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border-radius: 4px 0px 4px 0px;
+	align-items: center;
+}
+
+nav ul {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+
+nav ul li {
+	float: left;
+	position: relative;
+	border-right: 1px solid black;
+	width: 11em;
+}
+
+nav ul li a {
+	display: block;
+	width: 8.5em;
+	line-height: 3.5em;
+	float: left;
+	text-align: center;
+	color: #ffffff !important;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+nav ul.menu > li > button > img {
+    width: 2em;
+}
+
+nav ul ul {
+	visibility: hidden;
+	position: absolute;
+	top: 3.5em;
+	left: -1px;
+	padding: 0px;
+	background-image: url("../img/wood.png");
+	border: 1px solid black;
+	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+	border-radius: 0px 0px 4px 4px;
+	z-index: 5;
+}
+
+nav ul li ul li {
+	border-top: 1px solid black;
+	height: 2.5em;
+	width: auto;
+}
+
+nav ul li ul li:first-child {
+	border: none;
+}
+
+nav ul li a.active {
+	box-shadow: black 0px 0px 10px 0px inset;
+	background-image: url("../img/black50.png");
+}
+
+nav ul li ul li a {
+	width: 21.5em;
+	padding-left: 4px;
+	text-align: left;
+	font-size: 0.8em;
+	border: none;
+}
+
+nav li button:hover ~ ul.visible,
+.visible  {
+    visibility: visible;
+}
+
+[aria-expanded] {
+    position: relative;
+    top: 1em;
+    right: 0.5em;
+    padding: 3px;
+}
+
+[aria-expanded] img {
+	pointer-events: none;
+}
+
+[aria-expanded="true"] img {
+	transform: translate(0, 0) rotate(180deg);
+}
+
+.visually-hidden,
+[visually-hidden="true"] {
+	position: absolute !important;
+	clip-path: circle(0%) !important;
+	padding: 0 !important;
+	border: 0 !important;
+	height: 1px !important;
+	width: 1px !important;
+	overflow: hidden !important;
+}
+
+nav ul.menu li a:hover {
+	background-image: url("../img/black20.png");
+}
+
+.respMenuHidden {
+    display: none;
+}
+
+nav div#respMenuButton {
+    margin-left: auto;
+    margin-right: 0.5em;
+    display: block;
+}
+
+nav .searchBox {
+    display: none;
+}
+
+@media screen and (min-width: 60em) {
+    .respMenuHidden {
+        display: block;
+    }
+
+    nav div#respMenuButton {
+        display: none;
+    }
+
+    nav .searchBox {
+        display: block;
+    }
+
+    nav ul li {
+        width: unset;
+    }
+
+    nav ul li ul li {
+	    height: 2em;
+    }
+
+    nav ul li ul li a {
+        line-height: 2.7em;
+    }
+}
+
+/* Hide the button for devices which support hover */
+@media (hover) {
+
+    nav ul button {
+        display: none;
+    }
+
+    nav li:hover > ul {
+        visibility: visible;
+    }
+}
+
+/* Searchbox */
 div.searchBox {
-	height: 20px;
-	padding: 15px;
+	margin-right: 2em;
+    margin-left: auto;
 }
 
 div.searchBoxInner {
@@ -10,10 +172,6 @@ div.searchBoxInner {
 	padding: 0px 10px 0px 10px;
 	height: 20px;
 	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-khtml-border-radius: 10px;
-	background-color: #332f29;
 	background-image: url("../img/but1.png");
 }
 
@@ -44,7 +202,7 @@ input.searchField {
 	background-repeat: no-repeat;
 	background-position: center;
 	appearance: none;
-   padding: 2px 20px 2px 2px;
+    padding: 2px 20px 2px 2px;
 }
 
 select::-ms-expand {
@@ -54,95 +212,6 @@ select::-ms-expand {
 /* Overwrite the color of selection entries */
 select.selection option {
 	color: #ffffee;
-}
-
-div#topmenu {
-	position: relative;
-	z-index: 5;
-	clear: both;
-	height: 50px;
-	margin-bottom: 22px;
-	background-color: #695536;
-	background-image: url("../img/wood.png");
-	border: 1px solid black;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	border-radius: 4px 0px 4px 0px;
-	-moz-border-radius: 4px 0px 4px 0px;
-	-webkit-border-radius: 4px 0px 4px 0px;
-	-khtml-border-radius: 4px 0px 4px 0px;
-}
-
-ul.menu {
-	margin: 0px;
-	padding: 0px;
-}
-
-ul.menu li {
-	list-style-type: none;
-	float: left;
-	position: relative;
-}
-
-ul.menu  li a {
-	display: block;
-	width: 8.5em;
-	height: 50px;
-	line-height: 3.5em;
-	float: left;
-	border-right: 1px solid black;
-	text-align: center;
-	color: #ffffff;
-	text-transform: uppercase;
-	font-weight: normal;
-}
-
-ul.menu li a:hover {
-	background-image: url("../img/black20.png");
-}
-
-ul.menu li a.active {
-	box-shadow: black 0px 0px 10px 0px inset;
-	background-image: url("../img/black50.png");
-}
-
-ul.menu li ul {
-	display: none;
-	position: absolute;
-	top: 50px;
-	left: -1px;
-	background-color: #695536;
-	background-image: url("../img/wood.png");
-	padding: 0px;
-	border: 1px solid black;
-	box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
-	border-radius: 0px 0px 4px 4px;
-	-moz-border-radius: 0px 0px 4px 4px;
-	-webkit-border-radius: 0px 0px 4px 4px;
-	-khtml-border-radius: 0px 0px 4px 4px;	
-}
-
-ul.menu li:hover ul {
-	display: block;
-}
-
-ul.menu li ul li {
-	clear: both;
-	border-top: 1px solid black;
-}
-
-ul.menu li ul li a {
-	display: block;
-	width: 21.5em;
-	height: 20px;
-	line-height: 1.7em;
-	padding: 4px;
-	text-align: left;
-	font-size: 0.8em;
-	border: none;
-}
-
-ul.menu li ul li:first-child {
-	border: none;
 }
 
 /***********************************************************/

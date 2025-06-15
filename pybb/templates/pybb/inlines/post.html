@@ -21,32 +21,55 @@
 	{% endif %}
 	<br />
 	{% if topic.user == post.user %}
-	<a href="{{ topic.get_absolute_url }}" title="Switch to first post">Topic Opener</a>
+		<a href="{{ topic.get_absolute_url }}" title="Switch to first post">Topic Opener</a>
 	{% endif %}
 	<div class="authorStats">
-	<strong>Joined:</strong> {{ post.user.date_joined|custom_date:user|title }}<br />
-	<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
-	{% if post.user.wlprofile.operating_system %}
-	<strong>OS:</strong> {{ post.user.wlprofile.operating_system }}<br />
+		<strong>Joined:</strong>
+        {% with post.user.date_joined as date %}
+            {% include 'wlprofile/inlines/date.html' %}
+        {% endwith %}
+        <br />
+		<strong>Posts:</strong> {{ post.user.wlprofile.post_count }}<br />
+		{% if post.user.wlprofile.operating_system %}
+		<strong>OS:</strong> {{ post.user.wlprofile.operating_system }}<br />
 	{% endif %}
 	{% if post.user.wlprofile.widelands_version %}
-	<strong>Version:</strong> {{ post.user.wlprofile.widelands_version }}<br />
+		<strong>Version:</strong> {{ post.user.wlprofile.widelands_version }}<br />
 	{% endif %}
-	<img src="{% static 'img/'%}{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
-	<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
+		<img src="{% static 'img/'%}{{ post.user.wlprofile.user_status.image }}" alt="Ranking" /><br />
+		<strong>{{ post.user.wlprofile.user_status.text }}</strong><br />
 	{% if post.user.wlprofile.location %}
-	<strong>Location:</strong> {{ post.user.wlprofile.location }}
+		<strong>Location:</strong> {{ post.user.wlprofile.location }}
 	{% endif %}
 	</div>
 </td>
 <td class="post">
+	{% if post.hidden %}
+		<p class="errormessage">Moderator info: This post is hidden.
+			You can delete it right here. More options are available at
+			<a href="{{ site }}/admin/check_input/suspiciousinput/">the admin page for suspicious inputs.</a>
+		</p>
+	{% endif %}
+
 	<a id="post-{{ post.id }}" href="{{post.get_absolute_url}}" title="{% trans "Permalink" %}" class="posRight small permalink">&nbsp;</a>
-	<span class="small">Posted at: {{ post.created|custom_date:user}}</span>
+    <span class="small">
+        Posted at:
+        {% with post.created as date %}
+            {% include 'wlprofile/inlines/date.html' %}
+        {% endwith %}
+    </span>
+
 	<hr />
-		{{ post.body_html|safe }}
+
+	{{ post.body_html|safe }}
 
 	{% if post.updated %}
-		<div class="small">{% trans "Edited" %}: {{ post.updated|custom_date:user|title}}</div>
+        <div class="small">
+            {% trans "Edited" %}:
+            {% with post.updated as date %}
+                {% include 'wlprofile/inlines/date.html' %}
+            {% endwith %}
+        </div>
 	{% endif %}
 
     {% include 'pybb/inlines/attachment.html' %}

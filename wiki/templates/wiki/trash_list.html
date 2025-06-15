@@ -5,45 +5,53 @@
 {% block title %}Trash Index -{{ block.super }}{% endblock %}
 
 {% block content_header %}
-	<h1>Wiki: Trash</h1>
+<h1>Wiki: Trash</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	{% if articles %}
-		<p> There are {{ articles|length }} articles in this trash.</p>
-		<p> The column 'Redirected to' shows if this article was redirected to a destination outside our wiki.</p>
-		<p> You can restore an article or change the redirects destination or remove the redirect by clicking on the button 'Edit in Trash'
-			which opens the article in edit mode.</p>
-		<table>
-		<thead>
-			<tr>
-				<th>
-					{% trans "Page" %}<br />
-					<span class="small">Links are just here to verify deletions or redirects</span>
-				</th>
-				<th>{% trans "Summary" %}</th>
-				<th>{% trans "Last update" %}</th>
-				<th>{% trans "Redirected to" %}</th>
-				<th>{% trans "Change" %}</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for article, redirect in articles %}
-			<tr>
-				<td><a href="{% url 'wiki_article' article.title %}"> {{ article.title }}</a></td>
-				<td>{{ article.summary }}</td>
-				<td class="nolinebreak">{{ article.last_update|custom_date:user	}}</td>
-				<td>{{ redirect.new_path }}</td>
-				<td class="middle nolinebreak">
-					<a href="{% url 'wiki_edit_deleted' article.title %}" class="button">Edit in Trash</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-		</table>
-	{% else %}
-		<p>No deleted articles yet.</p>
-	{% endif %}
-</div>
+{% block content_section %}
+<section class="blogEntry">
+    {% if articles %}
+    <p> There are {{ articles|length }} articles in this trash.</p>
+    <p> The column 'Redirected to' shows if this article was redirected to a destination
+        outside our wiki.</p>
+    <p> You can restore an article or change the redirects destination or remove the
+        redirect by clicking on the button 'Edit in Trash'
+        which opens the article in edit mode.</p>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                {% trans "Page" %}<br/>
+                <span class="small">Links are just here to verify deletions or redirects</span>
+            </th>
+            <th>{% trans "Summary" %}</th>
+            <th>{% trans "Last update" %}</th>
+            <th>{% trans "Redirected to" %}</th>
+            <th>{% trans "Change" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for article, redirect in articles %}
+        <tr>
+            <td><a href="{% url 'wiki_article' article.title %}"> {{ article.title }}</a></td>
+            <td>{{ article.summary }}</td>
+            <td class="nolinebreak">
+                {% with article.last_update as date %}
+                    {% include 'wlprofile/inlines/date.html' %}
+                {% endwith %}
+            </td>
+            <td>{{ redirect.new_path }}</td>
+            <td class="middle nolinebreak">
+                <a href="{% url 'wiki_edit_deleted' article.title %}" class="button">
+                    Edit in Trash
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No deleted articles yet.</p>
+    {% endif %}
+</section>
 {% endblock %}

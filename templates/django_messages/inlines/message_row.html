@@ -17,6 +17,10 @@
           {% if message.replied %}</em>{% endif %}
           {% if message.new %}</u>{% endif %}
       </td>
-      <td>{{ message.sent_at|custom_date:user }}</td>
+      <td>
+          {% with message.sent_at as date %}
+            {% include 'wlprofile/inlines/date.html' %}
+          {% endwith %}
+      </td>
       <td><a href="{% url 'django_messages.views.delete' message.id %}">{% trans "delete" %}</a></td>
    </tr>

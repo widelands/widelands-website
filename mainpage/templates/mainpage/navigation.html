@@ -1,79 +1,79 @@
 {% comment %}
-   vim:ft=htmldjango
+vim:ft=htmldjango
 {% endcomment %}
 
 {% load pybb_extras %}
+{% load static %}
+
 
 <script type="text/javascript">
-	/* Enable dropdown menus on touch devices */
-	$(document).ready(function(){
-		$(".menu li").on("touchstart", function() {
-			$(this).next("ul").css("display", "block");
-		});
-	});
-
-	/* Change the placeholder to show which section to search for */
-	$( function() {
-      $("#selector").change(function() {
-        input = $('#id_nav_search');
+    /* Change the placeholder to show which section to search for */
+    $( function() {
+        $("#selector").change(function() {
+            input = $('#id_nav_search');
         /* Run the search if a search string is already given */
         if ( input[0].value !== "") {
-          input[0].form.submit();
+              input[0].form.submit();
         }
         input.attr("placeholder", "Search "+this.value);
-      });
-});
+          });
+    });
 </script>
 
-<ul class="menu posLeft">
-	<li><a href="/">Home</a>
-		<ul>
-			<li><a href="{% url 'news_index' %}">News Archive</a></li>
-			<li><a href="{% url 'wlpoll_archive' %}">Poll Archive</a></li>
-		</ul>
-	</li>
-	<li><a href="{% url 'wiki_article' "Description" %}">The Game</a>
-		<ul>
-			<li><a href="{% url 'wiki_article' "Description" %}">Description</a></li>
-			<li><a href="{% url 'wiki_article' "Download" %}">Download</a></li>
-			<li><a href="{% url 'wlscreens_index' %}">Screenshots</a></li>
-			<li><a href="{% url 'wiki_article' "Artwork" %}">Artwork</a></li>
-			<li><a href="{% url 'wlmaps_index' %}">Maps</a></li>
-			<li><a href="{% url 'wlhelp_index' %}">Encyclopedia</a></li>
-			<li><a href="{% url 'changelog' %}">Changelog</a></li>
-			<li><a href="{% url 'developers' %}">Widelands Development Team</a></li>
-			<li><a href="/wiki/LinksPage/">Links</a></li>
-		</ul>
-	</li>
-	<li><a href="{% url 'wiki_index' %}">Wiki</a>
-		<ul>
-			<li><a href="{% url 'wiki_article' "Game Manual" %}">Game Manual</a></li>
-			<li><a href="{% url 'wiki_article' "Creating Game Content" %}">Creating Game Content</a></li>
-			<li><a href="{% url 'wiki_article' "The Widelands Project" %}">The Widelands Project</a></li>
-			<li><a href="/wiki/list/">List Of All Pages</a></li>
-			<li><a href="/wiki/history/">Recent changes</a></li>
-			{% if request.user.is_staff %}
-			<li><a href="{% url 'wiki_list_deleted' %}" class="permissionLink">Deleted articles</a></li>
-			{% endif %}
-		</ul>
-	</li>
-	<li><a href="{% url 'pybb_index' %}">Forums</a>
-			{% forum_navigation %}
-	</li>
-	<li><a href="{% url 'webchat_index' %}">Chat</a></li>
-	<li><a href="{% url 'wiki_article' "Development" %}">Development</a>
-		<ul>
-			<li><a href="{% url 'wiki_article' "Contribute" %}">Contribute</a></li>
-			<li><a href="{% url 'developers' %}">Widelands Development Team</a></li>
-			<li><a href="/documentation/" target="_blank">Documentation</a></li>
-			<li><a href="https://github.com/widelands/widelands/issues" target="_blank">Widelands Bugtracker</a></li>
-			<li><a href="https://github.com/widelands/widelands-website/issues" target="_blank">Website Bugtracker</a></li>
-		</ul>
-	</li>
+<ul class="menu">
+    <li><a href="/">Home</a>
+        <ul>
+            <li><a href="{% url 'news_index' %}">News Archive</a></li>
+            <li><a href="{% url 'wlpoll_archive' %}">Poll Archive</a></li>
+        </ul>
+    </li>
+    <li><a href="{% url 'wiki_article' 'Description' %}">The Game</a>
+        <ul>
+            <li><a href="{% url 'wiki_article' 'Description' %}">Description</a></li>
+            <li><a href="{% url 'wiki_article' 'Download' %}">Download</a></li>
+            <li><a href="{% url 'wlscreens_index' %}">Screenshots</a></li>
+            <li><a href="{% url 'wiki_article' 'Artwork' %}">Artwork</a></li>
+            <li><a href="{% url 'wlmaps_index' %}">Maps</a></li>
+            <li><a href="{% url 'wiki_article' 'Add-Ons' %}">Add-Ons</a></li>
+            <li><a href="{% url 'wlhelp_index' %}">Encyclopedia</a></li>
+            <li><a href="{% url 'changelog' %}">Changelog</a></li>
+            <li><a href="{% url 'developers' %}">Widelands Development Team</a></li>
+            <li><a href="/wiki/LinksPage/">Links</a></li>
+        </ul>
+    </li>
+    <li class="respMenuHidden"><a href="{% url 'wiki_index' %}">Wiki</a>
+        <ul>
+            <li><a href="{% url 'wiki_article' 'Game Manual' %}">Game Manual</a></li>
+            <li><a href="{% url 'wiki_article' 'The Tribes' %}">The Tribes</a></li>
+            <li><a href="{% url 'wiki_article' 'Creating Game Content' %}">Creating Game Content</a></li>
+            <li><a href="{% url 'wiki_article' 'The Widelands Project' %}">The Widelands Project</a></li>
+            <li><a href="/wiki/list/">List Of All Pages</a></li>
+            <li><a href="/wiki/history/">Recent changes</a></li>
+            {% if request.user.is_staff %}
+            <li><a href="{% url 'wiki_list_deleted' %}" class="permissionLink">Deleted articles</a></li>
+            {% endif %}
+        </ul>
+    </li>
+    <li class="respMenuHidden"><a href="{% url 'pybb_index' %}">Forums</a>
+        {% forum_navigation %}
+    </li>
+    <li class="respMenuHidden"><a href="{% url 'webchat_index' %}">Chat</a></li>
+    <li class="respMenuHidden"><a href="{% url 'wiki_article' 'Development' %}">Development</a>
+        <ul>
+            <li><a href="{% url 'wiki_article' 'Contribute' %}">Contribute</a></li>
+            <li><a href="{% url 'developers' %}">Widelands Development Team</a></li>
+            <li><a href="/documentation/" target="_blank">Documentation</a></li>
+            <li><a href="https://github.com/widelands/widelands/issues" target="_blank">Widelands Bugtracker</a></li>
+            <li><a href="https://github.com/widelands/widelands-website/issues" target="_blank">Website Bugtracker</a></li>
+        </ul>
+    </li>
 </ul>
-<div class="searchBox posRight">
-	<form method="post" action="/search/">
-		<div class="searchBoxInner">
+<div id="respMenuButton">
+    <button><img src="{% static 'img/hamburger.png' %}" id="toggleMenu"></button>
+</div>
+<div class="searchBox">
+    <form method="post" action="/search/">
+        <div class="searchBoxInner">
 			<span class="fake_selector">
 			<select name="section" id="selector" title="Search in">
 				<option>Forum</option>
@@ -86,6 +86,6 @@
 			<input id="id_nav_search" type="text" name="q" class="searchField" placeholder="Search Forum" size="15" maxlength="200" />
 			{% csrf_token %}
 			</span>
-		</div>
-	</form>
+        </div>
+    </form>
 </div>

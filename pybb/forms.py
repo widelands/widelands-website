@@ -14,6 +14,7 @@ from mainpage.validators import virus_scan, check_utf8mb3
 class AddPostForm(forms.ModelForm):
     name = forms.CharField(
         label=_("Subject"),
+        max_length=255,
         validators=[
             check_utf8mb3,
         ],

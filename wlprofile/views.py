@@ -12,6 +12,64 @@ from django.conf import settings
 from django.contrib import messages
 
 from .forms import EditProfileForm
+from notification import models as notification
+from pybb.models import Topic
+
+
+@login_required
+def show_subscriptions(request):
+    """There are currently two subscription systems:
+
+    1. Subscriptions of pybb topic
+    2. Subscriptions of the notification app (observed items)
+
+    The second one is currently only used for our wiki, although it can be
+    used for more…
+    """
+
+    def get_rel_object(note_obj):
+        rel_obj = note_obj.content_type.get_object_for_this_type(pk=note_obj.object_id)
+        return rel_obj
+
+    topic_subscriptions = Topic.objects.filter(subscribers=request.user)
+
+    notification_subscriptions = notification.ObservedItem.objects.filter(
+        user=request.user
+    ).order_by("content_type")
+
+    observed_items = {}
+    for ns in notification_subscriptions:
+        content_type_key = str(ns.content_type)
+        if content_type_key not in observed_items.keys():
+            observed_items[content_type_key] = [get_rel_object(ns)]
+        else:
+            observed_items[content_type_key].append(get_rel_object(ns))
+
+    context = {"topics": topic_subscriptions, "observed_items": observed_items}
+    return render(request, "wlprofile/subscriptions.html", context)
+
+
+@login_required
+def unsubscribe_topics(request):
+    topic_subscriptions = Topic.objects.filter(subscribers=request.user)
+
+    for ts in topic_subscriptions:
+        ts.subscribers.remove(request.user)
+
+    return HttpResponseRedirect(reverse("subscriptions"))
+
+
+@login_required
+def unsubscribe_other(request):
+    notification_subscriptions = notification.ObservedItem.objects.filter(
+        user=request.user
+    )
+
+    for ns in notification_subscriptions:
+        instance = ns.content_type.get_object_for_this_type(pk=ns.object_id)
+        notification.stop_observing(instance, request.user)
+
+    return HttpResponseRedirect(reverse("subscriptions"))
 
 
 @login_required

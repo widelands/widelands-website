@@ -9,46 +9,53 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>Wiki: {% trans "Recent Changes" %}</h1>
+    <h1>Wiki: {% trans "Recent Changes" %}</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	{% include "pagination/pagination.html" %}
-<br />
-{% for change in page_obj %}
-	{% ifchanged change.modified.date %}
-		{% if not forloop.first %}
-		</table>
-		<br />
-		{% endif %}
-		<h3>{{ change.modified|naturalday:_("MONTH_DAY_FORMAT")|title }}</h3>
-		<table class="history_list">
-			<tr>
-				<th class="action">{% trans "Action" %}</th>
-				<th class="article">{% trans "Article" %}</th>
-				<th class="at">{% trans "At" %}</th>
-				<th class="user">{% trans "User" %}</th>
-				<th class="comment">{% trans "Comment" %}</th>
-			</tr>
-	{% endifchanged %}
-	<tr class="{% cycle 'odd' 'even' %}">
-		<td>
-			{% if change.old_title %}
-				<a href="{% url 'wiki_changeset' change.article.title change.revision %}">Modified</a>
-			{% else %}
-				<a href="{% url 'wiki_article' change.article.title %}">Added</a>
-			{% endif %}
-		</td>
-		<td>
-			<a href="{% url 'wiki_article' change.article.title %}">{{ change.article.title }}</a>
-		</td>
-		<td>{{ change.modified|custom_date:user }}</td>
-		<td>{{ change.editor|user_link }}</td>
-		<td>{{ change.comment }}</td>
-	</tr>
-{% endfor %}
-	</table>
-	<br />
-</div>
+{% block style_tab_list %}style="display: none;"{% endblock %}
+
+{% block content_section %}
+<section class="blogEntry">
+    {% include "pagination/pagination.html" %}
+    <br/>
+    {% for change in page_obj %}
+        {% ifchanged change.modified.date %}
+            {% if not forloop.first %}
+                </table>
+            {% endif %}
+        <h3>{{ change.modified|naturalday:_("MONTH_DAY_FORMAT")|title }}</h3>
+        <table class="history_list">
+            <tr>
+                <th class="action">{% trans "Action" %}</th>
+                <th class="article">{% trans "Article" %}</th>
+                <th class="at">{% trans "At" %}</th>
+                <th class="user">{% trans "User" %}</th>
+                <th class="comment">{% trans "Comment" %}</th>
+            </tr>
+        {% endifchanged %}
+            {% if change.editor %}
+            <tr class="{% cycle 'odd' 'even' %}">
+                <td>
+                    {% if change.old_title %}
+                        <a href="{% url 'wiki_changeset' change.article.title change.revision %}">Modified</a>
+                    {% else %}
+                        <a href="{% url 'wiki_article' change.article.title %}">Added</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'wiki_article' change.article.title %}">{{ change.article.title }}</a>
+                </td>
+                <td>
+                    {% with change.modified as date %}
+                        {% include 'wlprofile/inlines/date.html' %}
+                    {% endwith %}
+                </td>
+                <td>{{ change.editor|user_link }}</td>
+                <td>{{ change.comment }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+
+</section>
 {% endblock %}

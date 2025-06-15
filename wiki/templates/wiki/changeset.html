@@ -6,29 +6,29 @@
 {% endblock %}
 
 {% block content_header %}
-	<h1>{% trans "Changes in" %} {{ article.title }}</h1>
+<h1>{% trans "Changes in" %} {{ article.title }}</h1>
 {% endblock %}
 
-{% block content_main %}
+{% block content_section %}
 
-<div class="blogEntry">
-	{% if changeset.old_title != article.title %}
-		<h3>{% trans "Old Title" %}</h3>
-		<p>{{ changeset.old_title }}</p>
-		<br />
-	{% endif %}
-	{% if changeset.comment %}
-		<h3>Editor Comment</h3>
-		<p>{{changeset.comment}}</p>
-		<br />
-	{% endif %}
-	<h3>Revision Differences
-	{% if from %}
-	between Revision {{ from }} and Revision {{ to }}
-	{% else %}
-	of Revision {{ to }}
-	{% endif %}
-	</h3>
-	{{ differences|safe }}
-</div>
+<section class="blogEntry">
+    {% if changeset.old_title != article.title %}
+    <h3>{% trans "Old Title" %}</h3>
+    <p>{{ changeset.old_title }}</p>
+    <br/>
+    {% endif %}
+    {% if changeset.comment %}
+    <h3>Editor Comment</h3>
+    <p>{{changeset.comment}}</p>
+    <br/>
+    {% endif %}
+    <h3>Revision Differences
+        {% if from %}
+        between Revision {{ from }} and Revision {{ to }}
+        {% else %}
+        of Revision {{ to }}
+        {% endif %}
+    </h3>
+    {{ differences|safe }}
+</section>
 {% endblock %}

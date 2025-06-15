@@ -1,6 +1,6 @@
 {% extends "mainpage/base.html" %}
 {% comment %}
-   vim:ft=htmldjango:
+    vim:ft=htmldjango:
 {% endcomment %}
 
 {% block title %}Webchat - {{ block.super }}{% endblock %}
@@ -9,24 +9,34 @@
     <h1>Webchat</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	<p>
-	This is a webchat applet provided by the <a href="https://libera.chat">libera.chat network</a>. This is a convenient
-	solution if you just want to chat in the #widelands channel on libera.chat.
-	</p>
+{% block content_section %}
+<section class="blogEntry">
+    <p>
+        This is a webchat applet provided by the <a href="https://libera.chat">libera.chat
+        network</a>. This is a convenient
+        solution if you just want to chat in the #widelands channel on libera.chat.
+    </p>
 
-	<!-- Start of Webchat -->
-	<iframe src="https://web.libera.chat?nick={% if user.is_authenticated %}{{ user.username }}{% else %}widelands_?{% endif %}&amp;channels=#widelands" style="width: 100%; height: 610px;"></iframe>
-	<!-- End of Webchat -->
+    <!-- Start of Webchat -->
+    <iframe src="https://web.libera.chat/?nick={% if user.is_authenticated %}{{ user.username }}{% else %}widelands_?{% endif %}#widelands"
+            style="width: 100%; height: 500px;"
+            referrerpolicy="origin">
+    </iframe>
+    <!-- End of Webchat -->
 
-	<p>
-	If you are not familiar with IRC (Internet Relay Chat), here's a few tips:
-	</p>
-	<ul>
-		<li>Please be patient. #widelands is fairly low traffic so it might take a while before someone sees your question and replies.</li>
-		<li>If you wish to change your nickname, do this with the command <kbd>/nick</kbd>. For instance type <kbd>/nick wl</kbd> in order to change it to wl.</li>
-		<li>We also have a german speaking IRC channel. To join it, simply type <kbd>/join #widelands-de</kbd></li>
-	</ul>
-</div>
+    <p>
+        If you are not familiar with IRC (Internet Relay Chat), here's a few tips:
+    </p>
+    <ul>
+        <li>Please be patient. #widelands is fairly low traffic so it might take a while
+            before someone sees your question and replies.
+        </li>
+        <li>If you wish to change your nickname, do this with the command
+            <kbd>/nick</kbd>. For instance type <kbd>/nick wl</kbd> in order to change
+            it to wl.
+        </li>
+        <li>We also have a german speaking IRC channel. To join it, simply type <kbd>/join
+            #widelands-de</kbd></li>
+    </ul>
+</section>
 {% endblock %}

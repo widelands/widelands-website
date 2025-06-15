@@ -17,7 +17,8 @@ from django.contrib.auth.models import User
 import re
 from datetime import date as ddate, tzinfo, timedelta, datetime
 from django.conf import settings
-import time
+from zoneinfo import ZoneInfo
+
 
 register = template.Library()
 
@@ -27,6 +28,17 @@ natural_year_expr = re.compile(r"""\%NY\((.*?)\)""")
 
 ZERO = timedelta(0)
 HOUR = timedelta(hours=1)
+
+
+def make_aware_date(date):
+    """We are currently store only "naive" date objects, that are objects with no timezone
+    information. But we are using the current servertime for storing the dates for
+    objects.
+    Make the naive date an aware date by assigning the time zone of the server."""
+
+    if date.tzinfo is None:
+        return date.replace(tzinfo=ZoneInfo(settings.TIME_ZONE))
+    return date
 
 
 class FixedOffset(tzinfo):
@@ -46,7 +58,7 @@ class FixedOffset(tzinfo):
         return ZERO
 
 
-def do_custom_date(format, date, timezone=1.0, now=None):
+def do_custom_date(format, date, tz_offset=1.0, now=None):
     """Returns a string formatted representation of date according to format.
     This accepts all formats that strftime also accepts, but it also accepts
     some new options which are dependant on the current date.
@@ -58,33 +70,30 @@ def do_custom_date(format, date, timezone=1.0, now=None):
 
     format      - format string as described above
     date        - datetime object to display
-    timezone    - valid timezone as int
+    tz_offset   - the offset from UTC
     now         - overwrite the value for now; only for debug reasons
 
     """
-    if now is None:
-        now = datetime.now()
 
     ############################
     # Set Timezone Information's
     #
     # set the timezone named info
-    if timezone > 0:
-        tz_info = "UTC+" + str(timezone)
-    elif timezone < 0:
-        tz_info = "UTC" + str(timezone)
+    if tz_offset > 0:
+        tz_info = "UTC+" + str(tz_offset)
+    elif tz_offset < 0:
+        tz_info = "UTC" + str(tz_offset)
     else:
         tz_info = "UTC"
-    # set the server timezone for tzinfo
-    dst = time.localtime().tm_gmtoff / 60 / 60
-    ForumStdTimeZone = FixedOffset(dst * 60, "UTC+%s".format(dst))
 
     # set the user's timezone information
-    ForumUserTimeZone = FixedOffset(timezone * 60, tz_info)
-    # if there is tzinfo not set
+    ForumUserTimeZone = FixedOffset(tz_offset * 60, tz_info)
+
+    if now is None:
+        # We need the users local time for comparison
+        now = datetime.now(tz=ForumUserTimeZone)
+
     try:
-        if not date.tzinfo:
-            date = date.replace(tzinfo=ForumStdTimeZone)
         date = date.astimezone(ForumUserTimeZone)
     except AttributeError:  # maybe this is no valid date object?
         return format
@@ -120,26 +129,39 @@ def do_custom_date(format, date, timezone=1.0, now=None):
         data = django_date(date, format)
     except NotImplementedError:
         return format
-
     return data
 
 
 @register.filter
 def custom_date(date, user):
     """If this user is logged in, return his representation, otherwise, return
-    a sane default."""
+    a sane default.
+    """
+
+    def _get_offset(date):
+        # Return the utc-offset depending whether if the date is UTC+1 or UTC+2
+        return date.utcoffset().seconds / 60 / 60
+
+    if not isinstance(date, datetime):
+        return date
+
+    # Add timezone information
+    date = make_aware_date(date)
+
     if not user.is_authenticated:
         return do_custom_date(
             settings.DEFAULT_TIME_DISPLAY,
             date,
+            tz_offset=_get_offset(date),
         )
     try:
         userprofile = User.objects.get(username=user).wlprofile
-        return do_custom_date(userprofile.time_display, date, userprofile.time_zone)
+        return do_custom_date(
+            userprofile.time_display, date, tz_offset=userprofile.time_zone
+        )
     except ObjectDoesNotExist:
         return do_custom_date(
-            settings.DEFAULT_TIME_DISPLAY,
-            date,
+            settings.DEFAULT_TIME_DISPLAY, date, tz_offset=_get_offset(date)
         )
 
 
@@ -191,3 +213,10 @@ def current_time(user):
     time = datetime.today()
     time = custom_date(time, user)
     return time
+
+
+@register.filter
+def sec_since_epoch(date):
+    """Return seconds since epoch and make sure we have the correct timezone attached."""
+    date = make_aware_date(date)
+    return date.timestamp()

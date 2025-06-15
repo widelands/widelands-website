@@ -1,69 +1,73 @@
 {% extends "wlhelp/base.html" %}
 {% comment %}
-   vim:ft=htmldjango
+    vim:ft=htmldjango
 {% endcomment %}
 
 {% block title %}
-Workers - {{ tribe.displayname }} - {{ block.super }}
+    Workers - {{ tribe.displayname }} - {{ block.super }}
 {% endblock %}
 
 {% block content_header %}
-	<h1>{{ tribe.displayname }}: Workers</h1>
+    <h1>{{ tribe.displayname }}: Workers</h1>
 {% endblock %}
 
-{% block content_main %}
-<div class="blogEntry">
-	<div class="posRight">
-		{% include 'wlhelp/inlines/js_form_scripting.html' %}
-	</div>
-	<div class="breadCrumb">
-		<a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a> &#187; {{ tribe.displayname }} Workers
-	</div>
+{% block content_section %}
+<section class="blogEntry">
+    <div class="posRight">
+        {% include 'wlhelp/inlines/js_form_scripting.html' %}
+    </div>
+    <div class="breadCrumb">
+        <a href="{% url 'wlhelp_index' %}">Encyclopedia Index</a>
+        &#187; {{ tribe.displayname }} Workers
+    </div>
 
-	<table class="help">
-		<tr>
-			<th style="width: 9em;">Worker</th>
-			<th>Description</th>
-			<th style="width: 12em;">Works at</th>
-		</tr>
-	{% for worker in workers %}
-		<tr class="{% cycle "odd" "even" %}" id="{{ worker.name }}">
-			<td>
-				<a href="{% url 'wlhelp_worker_details' tribe.name worker.name %}" title="Show economy graph">
-					{{ worker.displayname }}<br />
-					<img src="{{ worker.image_url }}"  alt="{{ worker.displayname }}" />
-				</a>
-			</td>
-			<td>
-				{{ worker.help }}
-				{% if worker.becomes or worker.trained_by_experience%}
-				<ul>
-					{% if worker.becomes %}
-					<li>At experience level {{ worker.exp }} he will become:
-						<a href="#{{ worker.becomes.name }}">{{ worker.becomes.displayname}}</a>
-					</li>
-					{% endif %}
-					{% if worker.trained_by_experience %}
-					<li>
-						Enhanced from: <a href="#{{ worker.trained_by_experience.name }}">
-						{{ worker.trained_by_experience.displayname}}</a>
-						(at experience level {{ worker.trained_by_experience.exp }})
-					</li>
-					{% endif %}
-				</ul>
-				{% endif %}
-				<div class="small scripting">Internal name: "{{ worker.name }}"</div>
-			</td>
-			<td> {# works at #}
-				{% for building in worker.workers_for_buildings.all %}
-				<a href="../buildings/#{{ building.name }}" class="small">{{ building.displayname }}<br />
-					<img src="{{ building.image_url }}" alt="{{building.displayname}}" />
-				</a>
-				<br />
-				{% endfor %}
-			</td>
-		</tr>
-	{% endfor %}
-	</table>
-</div>
+    <table class="help">
+        <tr>
+            <th style="width: 9em;">Worker</th>
+            <th>Description</th>
+            <th style="width: 12em;">Works at</th>
+        </tr>
+        {% for worker in workers %}
+        <tr class="{% cycle 'odd' 'even' %}" id="{{ worker.name }}">
+        <td>
+            <a href="{% url 'wlhelp_worker_details' tribe.name worker.name %}"
+               title="Show economy graph">
+                {{ worker.displayname }}<br />
+                <img src="{{ worker.image_url }}" alt="{{ worker.displayname }}"/>
+            </a>
+        </td>
+        <td>
+            {{ worker.help }}
+            {% if worker.becomes or worker.trained_by_experience%}
+            <ul>
+                {% if worker.becomes %}
+                <li>At experience level {{ worker.exp }} he will become:
+                    <a href="#{{ worker.becomes.name }}">
+                        {{ worker.becomes.displayname}}</a>
+                </li>
+                {% endif %}
+                {% if worker.trained_by_experience %}
+                <li>
+                    Enhanced from: <a href="#{{ worker.trained_by_experience.name }}">
+                    {{ worker.trained_by_experience.displayname}}</a>
+                    (at experience level {{ worker.trained_by_experience.exp }})
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+            <div class="small scripting">Internal name: "{{ worker.name }}"</div>
+        </td>
+        <td> {# works at #}
+            {% for building in worker.workers_for_buildings.all %}
+            <a href="../buildings/#{{ building.name }}" class="small">
+                {{ building.displayname }}<br/>
+                <img src="{{ building.image_url }}" alt="{{building.displayname}}"/>
+            </a>
+            <br/>
+            {% endfor %}
+        </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
 {% endblock %}

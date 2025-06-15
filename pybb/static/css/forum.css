@@ -31,7 +31,7 @@
 
 .forum td {
 	vertical-align: middle;
-	padding: 8px;
+	padding: 0.5em;
 }
 
 /********************/
@@ -39,7 +39,7 @@
 /********************/
 
 .forumIcon {
-	width: 64px;
+	width: 4.5em;
 }
 
 .forumIcon img {
@@ -52,7 +52,7 @@
 }
 
 .forumCount {
-	width: 120px;
+	width: 8em;
 }
 
 .lastPost {
@@ -73,10 +73,11 @@ tr.spacer {
 /******************/
 
 .forum .author {
-	width: 140px;
+	width: 9em;
 	text-align: center;
 	border-right: 1px solid black;
 	vertical-align: top;
+	overflow-wrap: anywhere;
 }
 
 .authorStats {

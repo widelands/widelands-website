@@ -19,7 +19,7 @@ class Command(BaseCommand):
                 message += "\n User '%s' wrote: %s" % (spam.user, spam.text)
 
             message += (
-                "\n\nAdmin page: https://%s/admin/pybb/post/"
+                "\n\nAdmin page: https://%s/admin/check_input/suspiciousinput/"
                 % Site.objects.get_current().domain
             )
             mail_admins(

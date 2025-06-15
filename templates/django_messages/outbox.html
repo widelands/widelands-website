@@ -1,5 +1,5 @@
-{% extends "django_messages/base.html" %} 
-{% load i18n %} 
+{% extends "django_messages/base.html" %}
+{% load i18n %}
 {% load custom_date %}
 {% load wlprofile_extras %}
 {% load static %}
@@ -9,7 +9,7 @@ Outbox - {{ block.super }}
 {% endblock %}
 
 {% block msg_title %}Outbox{% endblock %}
-{% block msg_content %} 
+{% block msg_content %}
 	<table class="messages">
 		<thead>
 			<tr>
@@ -20,13 +20,17 @@ Outbox - {{ block.super }}
 			</tr>
 		</thead>
 		<tbody>
-		{% for message in message_list %} 
+		{% for message in message_list %}
 			<tr {% if message.new %}class="italic" title="The recipient hasn&apos;t read your message yet"{% endif %}>
 				<td>{{ message.recipient|user_link }}</td>
 				<td>
 					<a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
 				</td>
-				<td>{{ message.sent_at|custom_date:user }}</td>
+				<td>
+                    {% with message.sent_at as date %}
+                        {% include 'wlprofile/inlines/date.html' %}
+                    {% endwith %}
+                </td>
 				<td>
 					<a href="{% url 'messages_delete' message.id %}?next={{ request.path|iriencode }}">
 						<img src="{% static 'img/delete.png' %}" alt="delete" title="delete" />
