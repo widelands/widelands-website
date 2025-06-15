@@ -303,6 +303,9 @@ def edit_article(
     *args,
     **kw,
 ):
+    if not request.user.has_perm('wiki.change_article'):
+        return HttpResponseForbidden()
+
     group = None
     article_args = {"title": title}
     if group_slug is not None:
@@ -615,6 +618,9 @@ def revert_to_revision(
     *args,
     **kw,
 ):
+    if not request.user.has_perm('wiki.change_article'):
+        return HttpResponseForbidden()
+
     if request.method == "POST":
         revision = int(request.POST["revision"])
 
