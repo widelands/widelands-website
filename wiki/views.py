@@ -303,7 +303,7 @@ def edit_article(
     *args,
     **kw,
 ):
-    if not request.user.has_perm('wiki.change_article'):
+    if not request.user.has_perm("wiki.change_article"):
         return HttpResponseForbidden()
 
     group = None
@@ -618,7 +618,7 @@ def revert_to_revision(
     *args,
     **kw,
 ):
-    if not request.user.has_perm('wiki.change_article'):
+    if not request.user.has_perm("wiki.change_article"):
         return HttpResponseForbidden()
 
     if request.method == "POST":
