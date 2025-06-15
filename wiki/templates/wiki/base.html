@@ -19,15 +19,19 @@ We disable or change them in the subpages. #}
 {% block content_tabbing %}
 <ul class="small tab-list"{% block style_tab_list %}{% endblock %}>
 	{% if article.id %}
-		<li>
+    {% if perms.wiki.can_change %}
+        <li>
 			<a {% block class_wiki_edit %}{% endblock %} href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
 		</li>
+    {% endif %}
 		<li>
 			<a {% block class_wiki_back %}{% endblock %}href="{% url 'wiki_article' article.title %}">{% trans "Back to article" %}</a>
 		</li>
+    {% if perms.wiki.can_change %}
 		<li>
 			<a {% block class_wiki_hist %}{% endblock %} href="{% url 'wiki_article_history' article.title %}">{% trans "History" %}</a>
 		</li>
+    {% endif %}
 		<li>
 			<a {% block class_wiki_backl %}{% endblock %} href="{% url 'backlinks' article.title %}">{% trans "Backlinks" %}</a>
 		</li>
