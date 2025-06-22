@@ -37,5 +37,6 @@ Tag-list: {{ tag.name }} - {{block.super}}
     <p>
         <span style="font-weight: bold;"> Show articles tagged with:</span> {% tag_links tag.name sep=" |" %}
     </p>
-    {% endblock %}
+    {% include 'wiki/inlines/licensing.html' %}
 </section>
+{% endblock %}
