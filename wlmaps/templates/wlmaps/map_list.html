@@ -47,7 +47,7 @@
         });
     });
 </script>
-{{ block.super}}
+{{ block.super }}
 {% endblock %}
 
 {% block content_section %}
@@ -59,7 +59,7 @@
         you can publish your map as an add-on directly from the Editor by using the menu entry
         "Publish Map Online…" in the main menu.
     </p>
-    {% include 'wlmaps/inlines/licensing.html'%}
+    {% include 'wlmaps/inlines/licensing.html' %}
     <p>
         The map files have to be placed in the Widelands map directory to be found by
         the game. Check the <a
@@ -89,7 +89,7 @@
                 {% include 'wlmaps/inlines/form_field_td.html' with field=filter.form.o %}
                 <td class="spacer" colspan="2"></td>
                 <td colspan="1" class="right"><input type="submit"
-                                                     value="Apply filters"/></td>
+                                                     value="Apply filters" /></td>
             </tr>
         </table>
     </form>
@@ -158,7 +158,7 @@
                             <a class="button"
                                href="{% url 'wlmaps_download' map.slug %}">
                                 <img src="{% static 'img/arrow_down_short.png' %}"
-                                     alt="" class="middle"/>
+                                     alt="" class="middle" />
                                 <span class="middle">Direct Download</span>
                             </a>
                         </td>
@@ -168,7 +168,7 @@
         </tr>
         {% endfor %}
     </table>
-    <br/>
+    <br />
     {% include "pagination/pagination.html" %}
 </section>
 {% endblock %}

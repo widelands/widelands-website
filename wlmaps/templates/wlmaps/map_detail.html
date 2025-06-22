@@ -27,9 +27,9 @@
     <div>
         <a href="{% url 'wlmaps_index' %}">Maps</a> &#187; {{ map.name }}
     </div>
-    {% include 'wlmaps/inlines/licensing.html'%}
+    {% include 'wlmaps/inlines/licensing.html' %}
     <img class="posLeft map" src="{{ MEDIA_URL }}{{ map.minimap }}"
-         alt="{{ map.name }}"/>
+         alt="{{ map.name }}" />
     <div>
         <h3>Description:</h3>
         <p>{{ map.descr|wl_markdown:"bleachit" }}</p>
@@ -47,12 +47,12 @@
         {% if user == map.uploader %}
         <a class="button posLeft" href="{% url 'wlmaps_edit_comment' map.slug %}">
             <img alt="Edit" title="Edit your comment" class="middle"
-                 src="{% static 'forum/img/edit.png' %}">
+                 src="{% static 'forum/img/edit.png' %}" />
             <span class="middle">Edit</span>
         </a>
         {% endif %}
     </div>
-    <br/>
+    <br />
 
     <div>
         <h3>Basic Information:</h3>
@@ -107,14 +107,14 @@
 
         {% if not map.world_name %}
         <div>
-            {% include 'wlmaps/inlines/version_info.html'%}
+            {% include 'wlmaps/inlines/version_info.html' %}
         </div>
         {% endif %}
     </div>
 
     <div style="margin: 1em 0px 1em 0px">
         <a class="button posLeft" href="{% url 'wlmaps_download' map.slug %}">
-            <img src="{% static 'img/arrow_down_short.png' %}" alt="" class="middle"/>
+            <img src="{% static 'img/arrow_down_short.png' %}" alt="" class="middle" />
             <span class="middle">Download this map</span>
         </a>
     </div>
