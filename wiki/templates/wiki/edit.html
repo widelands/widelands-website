@@ -177,6 +177,7 @@
             </div>
             {% csrf_token %}
         </form>
-    {% endif%}
+    {% endif %}
+    {% include 'wiki/inlines/licensing.html' %}
 </section>
 {% endblock %}
