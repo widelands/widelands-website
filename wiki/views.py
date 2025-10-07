@@ -46,6 +46,7 @@ except ImportError:
 # default querysets
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
+OFFICIAL_CHANGES = ChangeSet.official.all()
 
 
 def get_redirect(article):
@@ -663,7 +664,7 @@ def history(
     group_slug_field=None,
     group_qs=None,
     article_qs=ALL_ARTICLES,
-    changes_qs=ALL_CHANGES,
+    changes_qs=OFFICIAL_CHANGES,
     template_name="recentchanges.html",
     template_dir="wiki",
     extra_context=None,
