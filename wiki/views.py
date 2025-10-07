@@ -685,8 +685,6 @@ def history(
         if not allow_read:
             return HttpResponseForbidden()
 
-        changes_qs = changes_qs.exclude(article__deleted=True)
-
         template_params = {
             "changes": changes_qs.order_by("-modified"),
             "allow_write": allow_write,
