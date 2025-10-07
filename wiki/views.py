@@ -580,7 +580,7 @@ def article_history(
 
         # changes = article.changeset_set.filter(
         #    reverted=False).order_by('-revision')
-        changes = article.changeset_set.all().order_by("-revision")
+        changes = article.changeset_set(manager="official").order_by("-revision")
 
         template_params = {
             "article": article,
