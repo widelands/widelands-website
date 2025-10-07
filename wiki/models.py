@@ -141,7 +141,9 @@ class ChangeSetManager(models.Manager):
 class ChangeSetOfficial(models.Manager):
     def get_queryset(self):
         """Return a queryset which contains data for the public."""
-        return super().get_queryset().exclude(article__deleted=True).exclude(editor=None)
+        return (
+            super().get_queryset().exclude(article__deleted=True).exclude(editor=None)
+        )
 
 
 class ChangeSet(models.Model):
