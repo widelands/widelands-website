@@ -14,9 +14,7 @@ class RssHistoryFeed(Feed):
     description_template = "wiki/feeds/history_description.html"
 
     def items(self):
-        return ChangeSet.objects.exclude(article__deleted=True).order_by("-modified")[
-            :30
-        ]
+        return ChangeSet.official.order_by("-modified")[:30]
 
     def item_pubdate(self, item):
         """Return the item's pubdate.

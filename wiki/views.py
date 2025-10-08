@@ -46,6 +46,7 @@ except ImportError:
 # default querysets
 ALL_ARTICLES = Article.objects.all()
 ALL_CHANGES = ChangeSet.objects.all()
+OFFICIAL_CHANGES = ChangeSet.official.all()
 
 
 def get_redirect(article):
@@ -580,7 +581,7 @@ def article_history(
 
         # changes = article.changeset_set.filter(
         #    reverted=False).order_by('-revision')
-        changes = article.changeset_set.all().order_by("-revision")
+        changes = article.changeset_set(manager="official").order_by("-revision")
 
         template_params = {
             "article": article,
@@ -663,7 +664,7 @@ def history(
     group_slug_field=None,
     group_qs=None,
     article_qs=ALL_ARTICLES,
-    changes_qs=ALL_CHANGES,
+    changes_qs=OFFICIAL_CHANGES,
     template_name="recentchanges.html",
     template_dir="wiki",
     extra_context=None,
@@ -683,8 +684,6 @@ def history(
 
         if not allow_read:
             return HttpResponseForbidden()
-
-        changes_qs = changes_qs.exclude(article__deleted=True)
 
         template_params = {
             "changes": changes_qs.order_by("-modified"),
