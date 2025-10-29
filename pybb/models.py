@@ -416,12 +416,13 @@ class Post(RenderableItem):
 
 
 class Reaction(models.Model):
-    """ Possibility to react on a certain post with an image
+    """Possibility to react on a certain post with an image
 
     The available images are stored in the sprite 'reaction_sprite.png'
     The choices (see below) must represent the position inside the sprite, e.g. "Happy"
     refers to image at position 34px.
     """
+
     class ReactionImages(models.IntegerChoices):
         THUMBSUP = 0
         THUMBSDOWN = 17
@@ -433,13 +434,13 @@ class Reaction(models.Model):
         CHEER = 119
         ROCKET = 136
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='reactions')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reactions")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.IntegerField(choices=ReactionImages.choices, null=True, blank=True)
 
     class Meta:
         ordering = ["image"]
-        unique_together = ['user', 'post']
+        unique_together = ["user", "post"]
 
     def __str__(self):
         return "{} ({})".format(self.get_image_display(), self.image)

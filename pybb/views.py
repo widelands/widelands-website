@@ -13,7 +13,15 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb import settings as pybb_settings
 from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb.markups import mypostmarkup
-from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES, Reaction
+from pybb.models import (
+    Category,
+    Forum,
+    Topic,
+    Post,
+    Attachment,
+    MARKUP_CHOICES,
+    Reaction,
+)
 from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import (
     pybb_moderated_by,
