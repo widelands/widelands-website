@@ -74,13 +74,9 @@
 
     {% include 'pybb/inlines/attachment.html' %}
 
-    <span class="posRight">
-        <span style="display: inline-block; background-image: url('{% static 'img/reaction_sprite.png' %}'); background-position: 0 0; width: 22px; height: 22px"></span>
-        {% if user.is_authenticated %}
-        <span>+</span>
-        {% endif %}
-    </span>
 	<hr />
+    <!-- Signature -->
+    <div class="signature">
 	{% if user.is_authenticated %}
 		{% if user.wlprofile.show_signatures %}
 			{% if post.user.wlprofile.signature %}
@@ -92,6 +88,27 @@
 			{{ post.user.wlprofile.signature|urlize|linebreaks }}
 		{% endif %}
 	{% endif %}
+    <div class="reaction">
+        {% for img_pos, count in post.get_reactions.items %}
+            <span class="reactionList" style="background-position: -{{ img_pos }}px 0; width: 17px; height: 17px"></span> {{ count }}
+        {% endfor %}
+
+        {% if user.is_authenticated and post.user != user %}
+        <ul>
+            <li>React on this Post
+                <ul class="reactionButtons">
+                    {% for choice in reaction_choices %}
+                        <li>
+                            <a href=""><span class="reactionList" style="background-position: -{{ choice.0 }}px 0; width: 17px; height: 17px"></span> {{ choice.1 }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+    </div>
+    <!-- Buttons -->
 	<a class="button posRight" href="#top">
 		<img src="{% static 'forum/img/top.png' %}" alt ="" class="middle" />
 		<span class="middle">{% trans "Top" %}</span>

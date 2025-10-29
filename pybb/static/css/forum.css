@@ -133,6 +133,36 @@ div.blogEntry .post p {
 	border: 1px solid #474444;
 }
 
+.post .signature {
+    display: flex;
+}
+
+.post .signature .reaction {
+    margin-left: auto;
+}
+
+.post .reactionList {
+    display: inline-block;
+    background-image: url('../img/reaction_sprite.png');
+}
+
+.post .signature ul {
+    list-style-type: none;
+    display: inline-block;
+    margin-left: -1em;
+}
+
+.post .signature ul.reactionButtons  {
+    display: none;
+    position: absolute;
+
+}
+.post .signature ul li:hover ul.reactionButtons{
+     display: flex;
+     flex-direction: column;
+     background-color: black;
+}
+
 /*****************/
 /* Edit/add Post */
 /*   related     */

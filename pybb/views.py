@@ -13,7 +13,7 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb import settings as pybb_settings
 from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
 from pybb.markups import mypostmarkup
-from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES
+from pybb.models import Category, Forum, Topic, Post, Attachment, MARKUP_CHOICES, Reaction
 from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import (
     pybb_moderated_by,
@@ -174,8 +174,11 @@ def show_topic_ctx(request, topic_id):
 
     context.update(get_pagination(request, posts, pybb_settings.TOPIC_PAGE_SIZE))
 
+    reaction_choices = Reaction.ReactionImages.choices
+
     context.update(
         {
+            "reaction_choices": reaction_choices,
             "form_url": reverse("pybb_add_post", args=[topic.id]),
             "wikipage": settings.ATTACHMENT_DESCR_PAGE,
         }
