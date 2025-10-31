@@ -157,10 +157,15 @@ div.blogEntry .post p {
     position: absolute;
 
 }
+
 .post .signature ul li:hover ul.reactionButtons{
      display: flex;
      flex-direction: column;
      background-color: black;
+}
+
+.post .signature ul ul.reactionButtons li {
+     margin-left: -2em;
 }
 
 /*****************/

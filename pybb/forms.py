@@ -22,9 +22,6 @@ class ReactionForm(forms.ModelForm):
     class Meta:
         model = Reaction
         fields = ["image"]
-        labels = {
-            "image": "React on this Post",
-        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
