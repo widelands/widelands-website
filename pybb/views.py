@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb import settings as pybb_settings
-from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm
+from pybb.forms import AddPostForm, EditPostForm, LastPostsDayForm, ReactionForm
 from pybb.markups import mypostmarkup
 from pybb.models import (
     Category,
@@ -186,12 +186,12 @@ def show_topic_ctx(request, topic_id):
 
     context.update(
         {
+            "reaction_form": ReactionForm,
             "reaction_choices": reaction_choices,
             "form_url": reverse("pybb_add_post", args=[topic.id]),
             "wikipage": settings.ATTACHMENT_DESCR_PAGE,
         }
     )
-
     return context
 
 
@@ -321,6 +321,23 @@ add_post = render_to("pybb/add_post.html")(add_post_ctx)
 
 def show_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+
+    # Reaction on a post
+    if request.POST:
+        form = ReactionForm(request.POST)
+        if form.is_valid():
+            try:
+                reaction = Reaction.objects.get(user=request.user, post=post_id)
+            except Reaction.DoesNotExist:
+                # Create new reaction
+                reaction = form.save(commit=False)
+                reaction.post = post
+                reaction.user = request.user
+            else:
+                # Change reaction
+                reaction.image = request.POST.get("image", None)
+            reaction.save()
+
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
     url = "%s?page=%d#post-%d" % (

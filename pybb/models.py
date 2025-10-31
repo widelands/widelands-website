@@ -433,6 +433,7 @@ class Reaction(models.Model):
         HEART = 102
         CHEER = 119
         ROCKET = 136
+        __empty__ = "React on this Post"
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reactions")
     user = models.ForeignKey(User, on_delete=models.CASCADE)

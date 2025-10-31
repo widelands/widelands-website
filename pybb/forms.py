@@ -11,8 +11,26 @@ from .util import validate_file
 from mainpage.validators import virus_scan, check_utf8mb3
 
 
-class ReactionForm(forms.Form):
-    pass
+class ReactionForm(forms.ModelForm):
+    user = forms.IntegerField(
+        widget=forms.HiddenInput,
+    )
+    post = forms.IntegerField(
+        widget=forms.HiddenInput,
+    )
+
+    class Meta:
+        model = Reaction
+        fields = ["image"]
+        labels = {
+            "image": "React on this Post",
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        self.post = kwargs.pop("post", None)
+        self.image = kwargs.pop("image", None)
+        super(ReactionForm, self).__init__(*args, **kwargs)
 
 
 class AddPostForm(forms.ModelForm):

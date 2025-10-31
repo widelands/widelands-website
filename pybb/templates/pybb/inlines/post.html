@@ -94,6 +94,19 @@
         {% endfor %}
 
         {% if user.is_authenticated and post.user != user %}
+
+        <form action="{% url 'pybb_post' post.id %}" method="post">
+            {{ reaction_form.non_field_errors }}
+            {{ reaction_form.errors }}
+            {% csrf_token %}
+            <div>
+                {{ reaction_form.image }}
+            </div>
+            <input type="hidden" name="user" value="{{ user.pk }}">
+            <input type="hidden" name="post" value="{{ post.pk }}">
+            <input type="submit" value="Submit">
+        </form>
+
         <ul>
             <li>React on this Post
                 <ul class="reactionButtons">
