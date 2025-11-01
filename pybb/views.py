@@ -186,7 +186,6 @@ def show_topic_ctx(request, topic_id):
 
     context.update(
         {
-            "reaction_form": ReactionForm,
             "reaction_choices": reaction_choices,
             "form_url": reverse("pybb_add_post", args=[topic.id]),
             "wikipage": settings.ATTACHMENT_DESCR_PAGE,
@@ -329,7 +328,7 @@ def show_post(request, post_id):
             try:
                 reaction = Reaction.objects.get(user=request.user, post=post_id)
             except Reaction.DoesNotExist:
-                # Create new reaction
+                # Create new Reaction
                 reaction = form.save(commit=False)
                 reaction.post = post
                 reaction.user = request.user

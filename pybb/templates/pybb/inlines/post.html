@@ -8,13 +8,14 @@
 {% load custom_date %}
 {% load static %}
 <script>
-    function abschicken(form, image, p) {
-        console.log(image)
-        element = document.getElementById("img-"+p)
-        console.log(element)
+    function sendReaction(image, p) {
+        const element = document.getElementById("img-" + p)
         element.value = image
+        const form = document.getElementById("form-" + p)
+        form.submit()
     }
 </script>
+
 
 <td class="author">
 	{{ post.user|user_link }}<br />
@@ -83,7 +84,7 @@
     {% include 'pybb/inlines/attachment.html' %}
 
 	<hr />
-    <!-- Signature -->
+    <!-- Signature row -->
     <div class="signature">
 	{% if user.is_authenticated %}
 		{% if user.wlprofile.show_signatures %}
@@ -103,28 +104,20 @@
 
         {% if user.is_authenticated and post.user != user %}
 
-        <form action="{% url 'pybb_post' post.id %}" method="post">
+        <form id="form-{{ post.pk }}" action="{% url 'pybb_post' post.id %}" method="post">
             {{ reaction_form.non_field_errors }}
             {{ reaction_form.errors }}
             {% csrf_token %}
-<!--            <div>-->
-<!--                {{ reaction_form.image }}-->
-<!--            </div>-->
             <input type="hidden" name="image" id="img-{{ post.pk }}" value="">
             <input type="hidden" name="user" value="{{ user.pk }}">
             <input type="hidden" name="post" value="{{ post.pk }}">
-<!--            <input type="submit" value="Submit">-->
-
         <ul>
             <li>React on this Post
                 <ul class="reactionButtons">
                     {% for choice in reaction_choices %}
-<!--                    Skip first loop because it's None-->
-                        {% if forloop.first is not True %}
                         <li>
-                            <button onclick="abschicken(this, {{ choice.0 }}, {{ post.pk }})"><span class="reactionList" style="background-position: -{{ choice.0 }}px 0; width: 17px; height: 17px"></span> {{ choice.1 }}</button>
+                            <button type='button' onclick="sendReaction({{ choice.0 }}, {{ post.pk }})"><span class="reactionList" style="background-position: -{{ choice.0 }}px 0; width: 17px; height: 17px"></span> {{ choice.1 }}</button>
                         </li>
-                        {% endif %}
                     {% endfor %}
                 </ul>
             </li>
