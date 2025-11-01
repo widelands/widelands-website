@@ -400,6 +400,51 @@ class Post(RenderableItem):
             pass
         return False
 
+    def get_reactions(self):
+        """Get reactions to this post.
+        Returns a dictionary in form of {image_pos_in_sprite, count}
+        """
+
+        reactions = self.reactions.all().order_by("image")
+        rt = {}
+        for reaction in reactions:
+            if reaction.image not in rt.keys():
+                rt[reaction.image] = 1
+            else:
+                rt[reaction.image] = rt[reaction.image] + 1
+        return rt
+
+
+class Reaction(models.Model):
+    """Possibility to react on a certain post with an image
+
+    The available images are stored in the sprite 'reaction_sprite.png'
+    The choices (see below) must represent the position inside the sprite, e.g. "Happy"
+    refers to image at position 34px.
+    """
+
+    class ReactionImages(models.IntegerChoices):
+        THUMBSUP = 0
+        THUMBSDOWN = 17
+        HAPPY = 34
+        SAD = 51
+        CONFUSED = 68
+        THINKING = 85
+        HEART = 102
+        CHEER = 119
+        ROCKET = 136
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reactions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.IntegerField(choices=ReactionImages.choices, null=True, blank=True)
+
+    class Meta:
+        ordering = ["image"]
+        unique_together = ["user", "post"]
+
+    def __str__(self):
+        return "{} ({})".format(self.get_image_display(), self.image)
+
 
 class Read(models.Model):
     """For each topic that user has entered the time is logged to this

@@ -2,7 +2,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from pybb.models import Category, Forum, Topic, Post, Read, Attachment
-from check_input.models import SuspiciousInput
+from pybb.models import Reaction
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -125,6 +125,12 @@ class ReadAdmin(admin.ModelAdmin):
     search_fields = ["user__username", "topic__name"]
 
 
+class ForumReactionAdmin(admin.ModelAdmin):
+    list_display = ["__str__", "post", "user"]
+    search_fields = ["user__username", "image"]
+
+
+admin.site.register(Reaction, ForumReactionAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Forum, ForumAdmin)
 admin.site.register(Topic, TopicAdmin)
