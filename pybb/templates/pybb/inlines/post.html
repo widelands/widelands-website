@@ -7,15 +7,6 @@
 {% load wlprofile_extras %}
 {% load custom_date %}
 {% load static %}
-<script>
-    function sendReaction(image, p) {
-        const element = document.getElementById("img-" + p)
-        element.value = image
-        const form = document.getElementById("form-" + p)
-        form.submit()
-    }
-</script>
-
 
 <td class="author">
 	{{ post.user|user_link }}<br />
@@ -116,6 +107,9 @@
                 <ul class="reactionButtons">
                     {% for choice in reaction_choices %}
                         <li>
+                            <noscript>
+                                Works only with JS!
+                            </noscript>
                             <button type='button' onclick="sendReaction({{ choice.0 }}, {{ post.pk }})"><span class="reactionList" style="background-position: -{{ choice.0 }}px 0; width: 17px; height: 17px"></span> {{ choice.1 }}</button>
                         </li>
                     {% endfor %}

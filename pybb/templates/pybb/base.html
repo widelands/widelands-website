@@ -11,7 +11,15 @@ Forum - {{ block.super }}
 
 <link rel="alternate" type="application/atom+xml" title="Latest Posts on all forums" href="{% url 'pybb_feed_posts' %}" />
 <link rel="alternate" type="application/atom+xml" title="Latest Topics on all forums" href="{% url 'pybb_feed_topics' %}" />
-
+<!-- For reactions on a post -->
+<script>
+    function sendReaction(image, p) {
+        const element = document.getElementById("img-" + p)
+        element.value = image
+        const form = document.getElementById("form-" + p)
+        form.submit()
+    }
+</script>
 {{ block.super }}
 {% endblock %}
 
