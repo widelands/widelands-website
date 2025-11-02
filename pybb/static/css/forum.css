@@ -149,7 +149,8 @@ div.blogEntry .post p {
 .post .signature ul {
     list-style-type: none;
     display: inline-block;
-    margin-left: -1em;
+    margin-left: 1em;
+    padding: 0;
 }
 
 .post .signature ul.reactionButtons  {
@@ -171,8 +172,10 @@ div.blogEntry .post p {
      border-radius: 0px;
 }
 
-.post .signature ul ul.reactionButtons li {
-     margin-left: -2em;
+.post .signature ul ul.reactionButtons li button {
+    /* margin-left: -2em;*/
+     width: 100%;
+     text-align: left;
 }
 
 /*****************/

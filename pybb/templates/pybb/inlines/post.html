@@ -105,10 +105,10 @@
             <input type="hidden" name="user" value="{{ user.pk }}">
             <input type="hidden" name="post" value="{{ post.pk }}">
         <ul>
-            <li>React on this Post
-                <ul class="reactionButtons">
+            <li class="button">React on this Post
+                <ul class="button reactionButtons">
                     {% for choice in reaction_choices %}
-                        <li class="button">
+                        <li>
                             <noscript>
                                 Works only with JS!
                             </noscript>
