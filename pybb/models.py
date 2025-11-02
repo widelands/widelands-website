@@ -400,15 +400,25 @@ class Post(RenderableItem):
             pass
         return False
 
-    def get_reactions(self):
+    def reaction_users(self):
+        reactions = self.reactions.all()
+        rt = {}
+        for r in reactions:
+            if r.image not in rt:
+                rt[r.image] = [r.user]
+            else:
+                rt[r.image].append(r.user)
+        return rt
+
+    def reaction_count(self):
         """Get reactions to this post.
         Returns a dictionary in form of {image_pos_in_sprite, count}
         """
 
-        reactions = self.reactions.all().order_by("image")
+        reactions = self.reactions.all()
         rt = {}
         for reaction in reactions:
-            if reaction.image not in rt.keys():
+            if reaction.image not in rt:
                 rt[reaction.image] = 1
             else:
                 rt[reaction.image] = rt[reaction.image] + 1
