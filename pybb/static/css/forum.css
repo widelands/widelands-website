@@ -151,6 +151,7 @@ div.blogEntry .post p {
     display: inline-block;
     margin-left: 1em;
     padding: 0;
+    border-radius: 0px;
 }
 
 .post .signature ul.reactionButtons  {
@@ -178,7 +179,6 @@ div.blogEntry .post p {
      width: 100%;
      font-size: 1em;
      width: 14em;
-     margin-left: -1em;
 }
 
 /*****************/
