@@ -332,10 +332,16 @@ def show_post(request, post_id):
                 reaction = form.save(commit=False)
                 reaction.post = post
                 reaction.user = request.user
+                reaction.save()
             else:
                 # Change reaction
-                reaction.image = request.POST.get("image", None)
-            reaction.save()
+                new_img = int(request.POST.get("image", None))
+                if new_img == reaction.image:
+                    # Clicking on the same image will delete the reaction
+                    reaction.delete()
+                else:
+                    reaction.image = new_img
+                    reaction.save()
 
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
