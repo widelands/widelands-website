@@ -2,10 +2,11 @@
 
 # These things should never be crawled
 User-agent: *
-Disallow: /
+Disallow: /profile/
+Disallow: /admin/
+Disallow: /accounts/
 
-# Delay between requests
-Crawl-delay: 42
+Crawl-delay: 10
 
 # url to sitemap
-Sitemap: https://alpha.widelands.org/sitemap.xml
+Sitemap: https://www.widelands.org/sitemap.xml/
