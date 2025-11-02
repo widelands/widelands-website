@@ -158,10 +158,17 @@ div.blogEntry .post p {
 
 }
 
-.post .signature ul li:hover ul.reactionButtons{
+.post .signature ul li:hover ul.reactionButtons {
      display: flex;
      flex-direction: column;
      background-color: black;
+}
+
+.post .signature ul li ul.reactionButtons li button:hover {
+     background-color: #646464;
+     color: black;
+     width: 100%;
+     border-radius: 0px;
 }
 
 .post .signature ul ul.reactionButtons li {
