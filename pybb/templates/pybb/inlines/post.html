@@ -119,7 +119,7 @@
                                 {{ choice.1 }}
                                 {% for img_pos, users in post.reaction_users.items %}
                                     {% if choice.0 == img_pos and request.user in users %}
-                                        <span><img src="{% static 'img/delete.png' %}" alt="Your reaction" title="Click again to remove"></span>
+                                        <span><img src="{% static 'img/delete.png' %}" alt="Your reaction" title="Remove"></span>
                                     {% endif %}
                                 {% endfor %}
                             </button>

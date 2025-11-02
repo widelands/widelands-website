@@ -173,9 +173,12 @@ div.blogEntry .post p {
 }
 
 .post .signature ul ul.reactionButtons li button {
-    /* margin-left: -2em;*/
+     display: flex;
+     justify-content: space-between;
      width: 100%;
-     text-align: left;
+     font-size: 1em;
+     width: 14em;
+     margin-left: -1em;
 }
 
 /*****************/
