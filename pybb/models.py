@@ -389,7 +389,8 @@ class Post(RenderableItem):
         self.topic.save()
         self.topic.forum.save()
 
-        if self_id == head_post_id:
+        # Delete the topic only if it has no further posts
+        if self_id == head_post_id and self.topic.posts.count() == 0:
             self.topic.delete()
 
     def is_spam(self):
