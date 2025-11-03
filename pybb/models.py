@@ -401,18 +401,21 @@ class Post(RenderableItem):
         return False
 
     def reaction_users(self):
+        """Get reactions with users for this post.
+        Returns e.g. {img_pos: [user1, user2], …}
+        """
         reactions = self.reactions.all()
         rt = {}
-        for r in reactions:
-            if r.image not in rt:
-                rt[r.image] = [r.user]
+        for reaction in reactions:
+            if reaction.image not in rt:
+                rt[reaction.image] = [reaction.user]
             else:
-                rt[r.image].append(r.user)
+                rt[reaction.image].append(reaction.user)
         return rt
 
-    def reaction_count(self):
-        """Get reactions to this post.
-        Returns a dictionary in form of {image_pos_in_sprite, count}
+    def reaction_counts(self):
+        """Get reactions with counts for this post.
+        Returns e.g. {image_pos: count, …}
         """
 
         reactions = self.reactions.all()
