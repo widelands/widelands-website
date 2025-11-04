@@ -133,6 +133,10 @@ div.blogEntry .post p {
 	border: 1px solid #474444;
 }
 
+/*********************************/
+/*  Signature and post recations */
+/*********************************/
+
 .post .signature {
     display: flex;
 }
@@ -164,21 +168,19 @@ div.blogEntry .post p {
      display: flex;
      flex-direction: column;
      background-color: black;
+     margin-left: -1em;
 }
 
 .post .signature ul li ul.reactionButtons li button:hover {
      background-color: #646464;
-     color: black;
-     width: 100%;
-     border-radius: 0px;
 }
 
 .post .signature ul ul.reactionButtons li button {
      display: flex;
      justify-content: space-between;
-     width: 100%;
      font-size: 1em;
-     width: 14em;
+     width: 13em;
+     border-radius: 0px;
 }
 
 /*****************/
