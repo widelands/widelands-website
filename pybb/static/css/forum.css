@@ -183,7 +183,8 @@ div.blogEntry .post p {
 }
 
 .post .signature .reactionList:hover .reactionUsers{
-    display: block;
+    display: flex;
+    flex-flow: wrap;
 }
 
 .post .signature .reactionUsers {
@@ -195,6 +196,7 @@ div.blogEntry .post p {
     margin-left: -1em;
     border: 1px solid black;
     border-radius: 4px;
+    max-width: 14em;
 }
 
 /*****************/

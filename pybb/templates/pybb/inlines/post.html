@@ -91,10 +91,14 @@
 	    {% endif %}
         </div>
         <div class="reaction">
-            {% for img_pos, users in post.reaction_users.items %}
+            <!-- Hit the database just once -->
+            {% with img_users=post.reaction_users.items %}
+            {% for img_pos, users in img_users %}
                 <span class="reactionList"
                       style="background-position: -{{ img_pos }}px 0; width: 17px; height: 17px">
+                    {% if user.is_authenticated %}
                     <span class="reactionUsers"> {{ users|join:", " }}</span>
+                    {% endif %}
                 </span>
                 {{ users|length }}
             {% endfor %}
@@ -119,7 +123,7 @@
                                           style="background-position: -{{ choice.0 }}px 0; width: 17px; height: 17px">
                                     </span>
                                     {{ choice.1 }}
-                                    {% for img_pos, users in post.reaction_users.items %}
+                                    {% for img_pos, users in img_users %}
                                         {% if choice.0 == img_pos and request.user in users %}
                                             <span><img src="{% static 'img/delete.png' %}" alt="Your reaction" title="Remove"></span>
                                         {% endif %}
@@ -132,6 +136,7 @@
             </ul>
             </form>
             {% endif %}
+            {% endwith %}
         </div>
     </div>
     <!-- Buttons -->
