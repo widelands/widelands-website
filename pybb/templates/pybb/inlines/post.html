@@ -91,11 +91,12 @@
 	    {% endif %}
         </div>
         <div class="reaction">
-            {% for img_pos, count in post.reaction_counts.items %}
+            {% for img_pos, users in post.reaction_users.items %}
                 <span class="reactionList"
                       style="background-position: -{{ img_pos }}px 0; width: 17px; height: 17px">
+                    <span class="reactionUsers"> {{ users|join:", " }}</span>
                 </span>
-                {{ count }}
+                {{ users|length }}
             {% endfor %}
 
             {% if user.is_authenticated and post.user != user %}

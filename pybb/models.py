@@ -413,20 +413,6 @@ class Post(RenderableItem):
                 rt[reaction.image].append(reaction.user)
         return rt
 
-    def reaction_counts(self):
-        """Get reactions with counts for this post.
-        Returns e.g. {image_pos: count, …}
-        """
-
-        reactions = self.reactions.all()
-        rt = {}
-        for reaction in reactions:
-            if reaction.image not in rt:
-                rt[reaction.image] = 1
-            else:
-                rt[reaction.image] = rt[reaction.image] + 1
-        return rt
-
 
 class Reaction(models.Model):
     """Possibility to react on a certain post with an image

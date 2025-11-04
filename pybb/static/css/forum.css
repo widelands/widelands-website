@@ -161,7 +161,6 @@ div.blogEntry .post p {
 .post .signature ul.reactionButtons  {
     display: none;
     position: absolute;
-
 }
 
 .post .signature ul li:hover ul.reactionButtons {
@@ -181,6 +180,21 @@ div.blogEntry .post p {
      font-size: 1em;
      width: 13em;
      border-radius: 0px;
+}
+
+.post .signature .reactionList:hover .reactionUsers{
+    display: block;
+}
+
+.post .signature .reactionUsers {
+    display: None;
+    position: absolute;
+    margin-top: 2em;
+    background-image: url("../img/wood.png");
+    padding: 0.25em;
+    margin-left: -1em;
+    border: 1px solid black;
+    border-radius: 4px;
 }
 
 /*****************/
