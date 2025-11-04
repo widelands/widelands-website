@@ -437,15 +437,15 @@ class Reaction(models.Model):
     """
 
     class ReactionImages(models.IntegerChoices):
-        THUMBSUP = 0
-        THUMBSDOWN = 17
-        HAPPY = 34
-        SAD = 51
-        CONFUSED = 68
-        THINKING = 85
-        HEART = 102
-        CHEER = 119
-        ROCKET = 136
+        THUMBSUP = 0, _("Thumbs Up")
+        THUMBSDOWN = 17, _("Thumbs Down")
+        HAPPY = 34, _("Happy")
+        SAD = 51, _("Sad")
+        CONFUSED = 68, _("Confused")
+        THINKING = 85, _("Thinking")
+        HEART = 102, _("Heart")
+        CHEER = 119, _("Cheer")
+        ROCKET = 136, _("Rocket")
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reactions")
     user = models.ForeignKey(User, on_delete=models.CASCADE)

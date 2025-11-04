@@ -30,8 +30,8 @@ class Migration(migrations.Migration):
                     models.IntegerField(
                         blank=True,
                         choices=[
-                            (0, "Thumbsup"),
-                            (17, "Thumbsdown"),
+                            (0, "Thumbs Up"),
+                            (17, "Thumbs Down"),
                             (34, "Happy"),
                             (51, "Sad"),
                             (68, "Confused"),
