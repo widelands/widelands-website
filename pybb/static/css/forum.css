@@ -145,9 +145,11 @@ div.blogEntry .post p {
     margin-left: auto;
 }
 
-.post .reactionList {
+.post .reactionIcon {
     display: inline-block;
     background-image: url('../img/reaction_sprite.png');
+    width: 17px;
+    height:17px;
 }
 
 .post .signature ul {
@@ -161,13 +163,13 @@ div.blogEntry .post p {
 .post .signature ul.reactionButtons  {
     display: none;
     position: absolute;
+    background-color: black;
+    margin-left: -10em;  /* overwritten for big viewports */
 }
 
 .post .signature ul li:hover ul.reactionButtons {
      display: flex;
      flex-direction: column;
-     background-color: black;
-     margin-left: -1em;
 }
 
 .post .signature ul li ul.reactionButtons li button:hover {
@@ -187,16 +189,21 @@ div.blogEntry .post p {
     flex-flow: wrap;
 }
 
+.post .signature .reactionList {
+    cursor: none;
+}
+
 .post .signature .reactionUsers {
     display: None;
     position: absolute;
     margin-top: 2em;
     background-image: url("../img/wood.png");
-    padding: 0.25em;
+    padding: 2px 0.5em 2px 0.5em;
     margin-left: -1em;
     border: 1px solid black;
     border-radius: 4px;
     max-width: 14em;
+    overflow: clip;
 }
 
 /*****************/
@@ -215,3 +222,8 @@ div.blogEntry .post p {
    width: 100%;
 }
 
+@media screen and (min-width: 65em) {
+    .post .signature ul.reactionButtons  {
+        margin-left: -1em;
+    }
+}

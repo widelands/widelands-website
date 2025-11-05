@@ -91,16 +91,16 @@
 	    {% endif %}
         </div>
         <div class="reaction">
-            <!-- Hit the database just once -->
             {% with img_users=post.reaction_users.items %}
             {% for img_pos, users in img_users %}
-                <span class="reactionList"
-                      style="background-position: -{{ img_pos }}px 0; width: 17px; height: 17px">
+            <span class="reactionList">
+                <span class="reactionIcon" style="background-position: -{{ img_pos }}px 0;">
                     {% if user.is_authenticated %}
-                    <span class="reactionUsers"> {{ users|join:", " }}</span>
+                        <span class="reactionUsers"> {{ users|join:", " }}</span>
                     {% endif %}
                 </span>
                 {{ users|length }}
+            </span>
             {% endfor %}
 
             {% if user.is_authenticated and post.user != user %}
@@ -119,8 +119,7 @@
                                     Works only with JS!
                                 </noscript>
                                 <button type='button' onclick="sendReaction({{ choice.0 }}, {{ post.pk }})">
-                                    <span class="reactionList"
-                                          style="background-position: -{{ choice.0 }}px 0; width: 17px; height: 17px">
+                                    <span class="reactionIcon" style="background-position: -{{ choice.0 }}px 0;">
                                     </span>
                                     {{ choice.1 }}
                                     {% for img_pos, users in img_users %}
