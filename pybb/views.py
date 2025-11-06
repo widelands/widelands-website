@@ -182,11 +182,9 @@ def show_topic_ctx(request, topic_id):
 
     context.update(get_pagination(request, posts, pybb_settings.TOPIC_PAGE_SIZE))
 
-    reaction_choices = Reaction.ReactionImages.choices
-
     context.update(
         {
-            "reaction_choices": reaction_choices,
+            "reaction_choices": Reaction.ReactionImages.choices,
             "form_url": reverse("pybb_add_post", args=[topic.id]),
             "wikipage": settings.ATTACHMENT_DESCR_PAGE,
         }
