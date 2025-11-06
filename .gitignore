@@ -4,6 +4,7 @@ __pycache__/
 mainpage/local*.py
 /debug_log.txt
 .idea
+templates/robots.txt
 
 # Uploaded images.
 media/*
