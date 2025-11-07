@@ -70,7 +70,7 @@ a.invertedColor:hover {
 }
 
 form {
-    /*display: inline;*/
+    display: inline;
 }
 
 /**************/
@@ -428,6 +428,7 @@ section.blogEntry hr {
     height: 1px;
     background: #998;
     border: none;
+    clear: both;
 }
 
 section.blogEntry .breadCrumb{

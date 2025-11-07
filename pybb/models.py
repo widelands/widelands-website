@@ -400,6 +400,50 @@ class Post(RenderableItem):
             pass
         return False
 
+    def reaction_users(self):
+        """Get reactions with users for this post.
+        Returns e.g. {img_pos: [user1, user2], …}
+        """
+        reactions = self.reactions.all()
+        rt = {}
+        for reaction in reactions:
+            if reaction.image not in rt:
+                rt[reaction.image] = [reaction.user]
+            else:
+                rt[reaction.image].append(reaction.user)
+        return rt
+
+
+class Reaction(models.Model):
+    """Possibility to react on a certain post with an image
+
+    The available images are stored in the sprite 'reaction_sprite.png'
+    The choices (see below) must represent the position inside the sprite, e.g. "Happy"
+    refers to image at position 34px.
+    """
+
+    class ReactionImages(models.IntegerChoices):
+        THUMBSUP = 0, _("Thumbs Up")
+        THUMBSDOWN = 17, _("Thumbs Down")
+        HAPPY = 34, _("Happy")
+        SAD = 51, _("Sad")
+        CONFUSED = 68, _("Confused")
+        THINKING = 85, _("Thinking")
+        HEART = 102, _("Heart")
+        CHEER = 119, _("Cheer")
+        ROCKET = 136, _("Rocket")
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="reactions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.IntegerField(choices=ReactionImages.choices, null=True, blank=True)
+
+    class Meta:
+        ordering = ["image"]
+        unique_together = ["user", "post"]
+
+    def __str__(self):
+        return "{} ({})".format(self.get_image_display(), self.image)
+
 
 class Read(models.Model):
     """For each topic that user has entered the time is logged to this
