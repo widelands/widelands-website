@@ -49,6 +49,7 @@ class PybbFeed(Feed):
     def item_author_name(self, item):
         return item.user
 
+
 # Validated through http://validator.w3.org/feed/
 
 
