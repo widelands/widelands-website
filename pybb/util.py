@@ -154,7 +154,8 @@ def urlize(data):
         # Apply the new content
         found_string.parent.contents = new_content
 
-    return str(soup)
+    # Remove <html><body> tags inserted by lxml
+    return "".join([str(x) for x in soup.body.children])
 
 
 def quote_text(post, markup, request):
