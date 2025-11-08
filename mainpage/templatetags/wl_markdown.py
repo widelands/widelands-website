@@ -55,7 +55,7 @@ def _insert_smileys(text):
     reassembled.
     """
 
-    tmp_content = []
+    tmp_content = BeautifulSoup()
     for content in text.parent.contents:
         try:
             # If this fails, content is probably '\n' or not a string, e.g.  <br />
@@ -239,8 +239,7 @@ def do_wl_markdown(value, *args, **keyw):
         for text in smiley_text:
             content = _insert_smileys(text)
             # Remove content and apply the new one
-            text.parent.contents = []
-            text.parent.extend(content)
+            text.replace_with(content)
 
         # Classify links
         for tag in soup.find_all("a"):
