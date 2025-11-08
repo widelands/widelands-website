@@ -82,8 +82,7 @@ def _insert_smileys(text):
                     # Apply a space after each word, except the last word
                     word = word + " "
                 tmp_content.append(NavigableString(word))
-
-    text.parent.contents = tmp_content
+    return tmp_content
 
 
 def _classify_link(tag):
@@ -96,7 +95,7 @@ def _classify_link(tag):
 
     # No class change for image links
     if tag.next_element and tag.next_element.name == "img":
-        return
+        return None
 
     try:
         href = tag["href"].lower()
@@ -105,7 +104,7 @@ def _classify_link(tag):
             # Just to be sure tag.next_element is never None
             tag.string = href
     except KeyError:
-        return
+        return None
 
     # Check for external link
     if href.startswith("http"):
@@ -118,12 +117,12 @@ def _classify_link(tag):
             tag["class"] = "externalLink"
             tag["title"] = "This link refers to outer space"
             tag["target"] = "_blank"
-            return
+            return tag
 
     if "/profile/" in (tag["href"]):
         tag["class"] = "userLink"
         tag["title"] = "This link refers to a userpage"
-        return
+        return tag
 
     if check_for_missing_wikipages and href.startswith("/wiki/"):
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
@@ -133,27 +132,26 @@ def _classify_link(tag):
         if not len(article_name):  # Wiki root link is not a page
             tag["class"] = "wrongLink"
             tag["title"] = "This Link misses an articlename"
-            return
+            return tag
 
         # Wiki special pages are also not counted
         if article_name in settings.WIKI_SPECIAL_PAGES:
             tag["class"] = "specialLink"
-            return
+            return tag
 
         # Check for a redirect
         try:
             # try to get the article id; if this fails an IndexError is raised
-            a_id = ChangeSet.objects.filter(old_title=article_name).values_list(
-                "article_id"
-            )[0]
+            a_id = ChangeSet.objects.filter(
+                old_title=article_name).values_list("article_id")[0]
 
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
             if article_name != act_t:
                 tag["title"] = 'This is a redirect and points to "' + act_t + '"'
-                return
+                return tag
             else:
-                return
+                return None
         except IndexError:
             pass
 
@@ -163,8 +161,8 @@ def _classify_link(tag):
             tag["title"] = (
                 "This Link is misspelled or missing. Click to create it anyway."
             )
-            return
-    return
+            return tag
+    return None
 
 
 def _make_clickable_images(tag):
@@ -182,8 +180,8 @@ def _make_clickable_images(tag):
             except KeyError:
                 pass
             new_link.append(new_img)
-            tag.replace_with(new_link)
-    return
+            return new_link
+    return None
 
 
 def find_smiley_Strings(bs4_string):
@@ -236,7 +234,7 @@ def do_wl_markdown(value, *args, **keyw):
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return str(soup)
-
+    print("soup initial", soup)
     if beautify:
         # Insert smileys
         smiley_text = soup.find_all(string=find_smiley_Strings)
@@ -245,12 +243,16 @@ def do_wl_markdown(value, *args, **keyw):
 
         # Classify links
         for tag in soup.find_all("a"):
-            _classify_link(tag)
+            new_tag = _classify_link(tag)
+            if new_tag:
+                tag.replace_with(new_tag)
 
         # All external images gets clickable
         # This applies only in forum
         for tag in soup.find_all("img"):
-            _make_clickable_images(tag)
+            new_tag = _make_clickable_images(tag)
+            if new_tag:
+                tag.replace_with(new_tag)
 
     # Remove <html><body> tags inserted by lxml
     return "".join([str(x) for x in soup.body.children])
