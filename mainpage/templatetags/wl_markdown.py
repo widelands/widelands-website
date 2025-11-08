@@ -143,8 +143,9 @@ def _classify_link(tag):
         # Check for a redirect
         try:
             # try to get the article id; if this fails an IndexError is raised
-            a_id = ChangeSet.objects.filter(
-                old_title=article_name).values_list("article_id")[0]
+            a_id = ChangeSet.objects.filter(old_title=article_name).values_list(
+                "article_id"
+            )[0]
 
             # get actual title of article
             act_t = Article.objects.get(id=a_id[0]).title
