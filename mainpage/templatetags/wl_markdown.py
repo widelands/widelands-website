@@ -82,6 +82,7 @@ def _insert_smileys(text):
                     # Apply a space after each word, except the last word
                     word = word + " "
                 tmp_content.append(NavigableString(word))
+
     return tmp_content
 
 
@@ -227,19 +228,18 @@ def do_wl_markdown(value, *args, **keyw):
         )
 
     # Prepare the html and apply smileys and classes.
-    # BeautifulSoup objects are all references, so changing a variable
-    # derived from the soup will take effect on the soup itself.
-    # Because of that the called functions will modify the soup directly.
     soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return str(soup)
-    print("soup initial", soup)
     if beautify:
         # Insert smileys
         smiley_text = soup.find_all(string=find_smiley_Strings)
         for text in smiley_text:
-            _insert_smileys(text)
+            content = _insert_smileys(text)
+            # Remove content and apply the new one
+            text.parent.contents = []
+            text.parent.extend(content)
 
         # Classify links
         for tag in soup.find_all("a"):
