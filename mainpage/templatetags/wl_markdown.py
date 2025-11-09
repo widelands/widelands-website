@@ -47,43 +47,37 @@ except:
 register = template.Library()
 
 
-def _insert_smileys(text):
+def _make_smileys(text):
     """This searches for smiley symbols in the current text and replaces them
     with the correct images.
-
-    Contents get splitted into words and after this the whole contents must be
-    reassembled.
     """
 
-    tmp_content = BeautifulSoup()
-    for content in text.parent.contents:
-        try:
-            # If this fails, content is probably '\n' or not a string, e.g.  <br />
-            words = content.split(" ")
-        except:
-            # apply the unsplittable content and continue
-            tmp_content.append(content)
-            continue
+    new_soup = BeautifulSoup()
+    words = text.split(" ")
+    if not words:
+        # apply the unsplittable text
+        new_soup.append(text)
+        return new_soup
 
-        for i, word in enumerate(words):
-            smiley = ""
-            for sc, img in settings.SMILEYS:
-                if word == sc:
-                    smiley = img
-            if smiley:
-                img_tag = BeautifulSoup(features="lxml").new_tag("img")
-                img_tag["src"] = "{}{}".format(settings.SMILEY_DIR, smiley)
-                img_tag["alt"] = smiley
-                tmp_content.append(img_tag)
-                # apply a space after the smiley
-                tmp_content.append(NavigableString(" "))
-            else:
-                if i < (len(words) - 1):
-                    # Apply a space after each word, except the last word
-                    word = word + " "
-                tmp_content.append(NavigableString(word))
+    for i, word in enumerate(words):
+        smiley = ""
+        for sc, img in settings.SMILEYS:
+            if word == sc:
+                smiley = img
+        if smiley:
+            img_tag = new_soup.new_tag("img")
+            img_tag["src"] = "{}{}".format(settings.SMILEY_DIR, smiley)
+            img_tag["alt"] = smiley
+            new_soup.append(img_tag)
+            # apply a space after the smiley
+            new_soup.append(NavigableString(" "))
+        else:
+            if i < (len(words) - 1):
+                # Apply a space after each word, except the last word
+                word = word + " "
+            new_soup.append(NavigableString(word))
 
-    return tmp_content
+    return new_soup
 
 
 def _classify_link(tag):
@@ -186,7 +180,7 @@ def _make_clickable_images(tag):
     return None
 
 
-def find_smiley_Strings(bs4_string):
+def find_smiley_strings(bs4_string):
     """Find strings that contain a smiley symbol.
 
     Don't find a smiley in code tags.
@@ -235,11 +229,10 @@ def do_wl_markdown(value, *args, **keyw):
         return str(soup)
     if beautify:
         # Insert smileys
-        smiley_text = soup.find_all(string=find_smiley_Strings)
+        smiley_text = soup.find_all(string=find_smiley_strings)
         for text in smiley_text:
-            content = _insert_smileys(text)
             # Remove content and apply the new one
-            text.replace_with(content)
+            text.replace_with(_make_smileys(text))
 
         # Classify links
         for tag in soup.find_all("a"):
