@@ -54,10 +54,6 @@ def _make_smileys(text):
 
     new_soup = BeautifulSoup()
     words = text.split()
-    if not words:
-        # apply the unsplittable text
-        new_soup.append(text)
-        return new_soup
 
     for i, word in enumerate(words):
         smiley = ""
@@ -103,6 +99,7 @@ def _classify_link(tag):
 
     # Check for external link
     if href.startswith("http"):
+        external = False
         for domain in LOCAL_DOMAINS:
             external = True
             if href.find(domain) != -1:
