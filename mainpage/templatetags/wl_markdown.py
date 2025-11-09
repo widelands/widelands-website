@@ -53,7 +53,7 @@ def _make_smileys(text):
     """
 
     new_soup = BeautifulSoup()
-    words = text.split(" ")
+    words = text.split()
     if not words:
         # apply the unsplittable text
         new_soup.append(text)
