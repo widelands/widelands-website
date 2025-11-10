@@ -239,3 +239,8 @@ def view_locale(request):
         + os.environ.get("DISPLAY", "Not set")
     )
     return HttpResponse(loc_info)
+
+
+def honeypot(request):
+    html = "<p>Ätsch <br /> Your IP will be blocked now</p>"
+    return HttpResponse(html)
