@@ -23,9 +23,9 @@ included here
         <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/navigation.css' %}"/>
 
         <!-- Javascript Bread & Butter Scripts -->
-        <script src="{% static 'js/jquery-3.2.1.js' %}" async></script>
-        <script src="{% static 'js/jquery-ui.min.js' %}" async></script>
-        <script type="text/javascript" src="{% static 'js/jquery_csrf_ajax.js' %}" async></script>
+        <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
+        <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'js/jquery_csrf_ajax.js' %}" defer></script>
         <script src="{% static 'js/toggle_menu.js' %}" defer></script>
         <script src="{% static 'js/browser_date.js' %}" defer></script>
         {% block extra_head %}{% endblock %}
