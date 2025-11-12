@@ -7,8 +7,8 @@ in different parent templates.
 {% endcomment %}
 
 {% block extra_head %}
-<script type="text/javascript" src="{% static 'js/disableOnSubmit.js' %}"></script>
-<script type="text/javascript">
+<script src="{% static 'js/disableOnSubmit.js' %}" defer></script>
+<script>
 	$(function() {
 		$('form').disableOnSubmit();
 		$('.post-form .preview-button').click(function() {
