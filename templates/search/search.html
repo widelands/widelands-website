@@ -5,7 +5,7 @@
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" media="all"
       href="{% static 'css/search.css' %}"/>
-<script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/search.js' %}" defer></script>
 {{block.super}}
 {% endblock %}
 
