@@ -241,6 +241,11 @@ def view_locale(request):
     return HttpResponse(loc_info)
 
 
+# Fake links, aka honeypots, are used to trap some bots.
+# The page name is mentioned in robots.txt as Disallow and if a bot does not
+# respects this and enters the page a script by janus is used to block the IP
+# of the bot. See also the corresponding post in the topic "Server Maintenance"
+# in the internal forum.
 def honeypot(request):
-    html = "<p>Ätsch <br /> Your IP will be blocked now</p>"
+    html = "<p>You are not allowed to be here!</p>"
     return HttpResponse(html)
