@@ -138,6 +138,14 @@ class ChangeSetManager(models.Manager):
         return self.filter(revision__gt=int(revision))
 
 
+class ChangeSetOfficial(models.Manager):
+    def get_queryset(self):
+        """Return a queryset which contains data for the public."""
+        return (
+            super().get_queryset().exclude(article__deleted=True).exclude(editor=None)
+        )
+
+
 class ChangeSet(models.Model):
     """A report of an older version of some Article."""
 
@@ -169,6 +177,7 @@ class ChangeSet(models.Model):
     reverted = models.BooleanField(_("Reverted Revision"), default=False)
 
     objects = ChangeSetManager()
+    official = ChangeSetOfficial()
 
     class Meta:
         verbose_name = _("Change set")

@@ -111,7 +111,7 @@ def build_form(Form, _request, GET=False, *args, **kwargs):
     return form
 
 
-PLAIN_LINK_RE = re.compile(r"(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?]+)")
+PLAIN_LINK_RE = re.compile(r"\b(http[s]?:\/\/[-a-zA-Z0-9@:%._\+~#=/?&]+)")
 
 
 def exclude_code_tag(bs4_string):
@@ -132,29 +132,25 @@ def urlize(data):
 
     soup = BeautifulSoup(data, "lxml")
     for found_string in soup.find_all(string=exclude_code_tag):
-        new_content = []
-        strings_or_tags = found_string.parent.contents
-        for string_or_tag in strings_or_tags:
-            try:
-                for string in PLAIN_LINK_RE.split(string_or_tag):
-                    if string.startswith("http"):
-                        # Apply an a-Tag
-                        tag = soup.new_tag("a")
-                        tag["href"] = string
-                        tag.string = string
-                        tag["nofollow"] = "true"
-                        new_content.append(tag)
-                    else:
-                        # This is just a string, apply a bs4-string
-                        new_content.append(NavigableString(string))
-            except:
-                # Regex failed, so apply what ever it is
-                new_content.append(string_or_tag)
 
-        # Apply the new content
-        found_string.parent.contents = new_content
+        new_soup = BeautifulSoup()
+        for string in PLAIN_LINK_RE.split(found_string):
+            if string.startswith("http"):
+                # Apply an a-Tag
+                tag = soup.new_tag("a")
+                tag["href"] = string
+                tag.string = string
+                tag["nofollow"] = "true"
+                new_soup.append(tag)
+            else:
+                # This is just a string, apply a bs4-string
+                new_soup.append(NavigableString(string))
 
-    return str(soup)
+        # Replace the old content
+        found_string.replace_with(new_soup)
+
+    # Remove <html><body> tags inserted by lxml
+    return "".join([str(x) for x in soup.body.children])
 
 
 def quote_text(post, markup, request):

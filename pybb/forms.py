@@ -4,11 +4,30 @@ import os
 from django import forms
 from django.utils.translation import gettext as _
 
-from pybb.models import Topic, Post, Attachment
+from pybb.models import Topic, Post, Attachment, Reaction
 from pybb import settings as pybb_settings
 from django.conf import settings
 from .util import validate_file
 from mainpage.validators import virus_scan, check_utf8mb3
+
+
+class ReactionForm(forms.ModelForm):
+    user = forms.IntegerField(
+        widget=forms.HiddenInput,
+    )
+    post = forms.IntegerField(
+        widget=forms.HiddenInput,
+    )
+
+    class Meta:
+        model = Reaction
+        fields = ["image"]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        self.post = kwargs.pop("post", None)
+        self.image = kwargs.pop("image", None)
+        super(ReactionForm, self).__init__(*args, **kwargs)
 
 
 class AddPostForm(forms.ModelForm):

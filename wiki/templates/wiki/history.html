@@ -80,7 +80,6 @@
 		</thead>
 		<tbody>
 		{% for change in changes %}
-			{% if change.editor %}
 			<tr class="{% cycle 'odd' 'even' %}">
 				<td class="small_column">
 					<a href="{{ change.get_absolute_url }}">{{ change.revision }}</a>
@@ -110,7 +109,6 @@
 					{% if change.comment %}'{{ change.comment }}'{% endif %}
 				</td>
 			</tr>
-			{% endif %}
 		{% endfor %}
 		</tbody>
 		</table>
