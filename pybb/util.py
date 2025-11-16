@@ -132,7 +132,8 @@ def urlize(data):
 
     soup = BeautifulSoup(data, "lxml")
     for found_string in soup.find_all(string=exclude_code_tag):
-        new_content = []
+
+        new_content = BeautifulSoup()
         strings_or_tags = found_string.parent.contents
         for string_or_tag in strings_or_tags:
             try:
@@ -151,8 +152,8 @@ def urlize(data):
                 # Regex failed, so apply what ever it is
                 new_content.append(string_or_tag)
 
-        # Apply the new content
-        found_string.parent.contents = new_content
+        # Replace the old content
+        found_string.replace_with(new_content)
 
     # Remove <html><body> tags inserted by lxml
     return "".join([str(x) for x in soup.body.children])

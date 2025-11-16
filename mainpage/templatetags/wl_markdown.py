@@ -47,43 +47,33 @@ except:
 register = template.Library()
 
 
-def _insert_smileys(text):
+def _make_smileys(text):
     """This searches for smiley symbols in the current text and replaces them
     with the correct images.
-
-    Contents get splitted into words and after this the whole contents must be
-    reassembled.
     """
 
-    tmp_content = []
-    for content in text.parent.contents:
-        try:
-            # If this fails, content is probably '\n' or not a string, e.g.  <br />
-            words = content.split(" ")
-        except:
-            # apply the unsplittable content and continue
-            tmp_content.append(content)
-            continue
+    new_soup = BeautifulSoup()
+    words = text.split()
 
-        for i, word in enumerate(words):
-            smiley = ""
-            for sc, img in settings.SMILEYS:
-                if word == sc:
-                    smiley = img
-            if smiley:
-                img_tag = BeautifulSoup(features="lxml").new_tag("img")
-                img_tag["src"] = "{}{}".format(settings.SMILEY_DIR, smiley)
-                img_tag["alt"] = smiley
-                tmp_content.append(img_tag)
-                # apply a space after the smiley
-                tmp_content.append(NavigableString(" "))
-            else:
-                if i < (len(words) - 1):
-                    # Apply a space after each word, except the last word
-                    word = word + " "
-                tmp_content.append(NavigableString(word))
+    for i, word in enumerate(words):
+        smiley = ""
+        for sc, img in settings.SMILEYS:
+            if word == sc:
+                smiley = img
+        if smiley:
+            img_tag = new_soup.new_tag("img")
+            img_tag["src"] = "{}{}".format(settings.SMILEY_DIR, smiley)
+            img_tag["alt"] = smiley
+            new_soup.append(img_tag)
+            # apply a space after the smiley
+            new_soup.append(NavigableString(" "))
+        else:
+            if i < (len(words) - 1):
+                # Apply a space after each word, except the last word
+                word = word + " "
+            new_soup.append(NavigableString(word))
 
-    text.parent.contents = tmp_content
+    return new_soup
 
 
 def _classify_link(tag):
@@ -96,7 +86,7 @@ def _classify_link(tag):
 
     # No class change for image links
     if tag.next_element and tag.next_element.name == "img":
-        return
+        return None
 
     try:
         href = tag["href"].lower()
@@ -105,10 +95,11 @@ def _classify_link(tag):
             # Just to be sure tag.next_element is never None
             tag.string = href
     except KeyError:
-        return
+        return None
 
     # Check for external link
     if href.startswith("http"):
+        external = False
         for domain in LOCAL_DOMAINS:
             external = True
             if href.find(domain) != -1:
@@ -118,12 +109,12 @@ def _classify_link(tag):
             tag["class"] = "externalLink"
             tag["title"] = "This link refers to outer space"
             tag["target"] = "_blank"
-            return
+            return tag
 
     if "/profile/" in (tag["href"]):
         tag["class"] = "userLink"
         tag["title"] = "This link refers to a userpage"
-        return
+        return tag
 
     if check_for_missing_wikipages and href.startswith("/wiki/"):
         # Check for missing wikilink /wiki/PageName[/additionl/stuff]
@@ -133,12 +124,12 @@ def _classify_link(tag):
         if not len(article_name):  # Wiki root link is not a page
             tag["class"] = "wrongLink"
             tag["title"] = "This Link misses an articlename"
-            return
+            return tag
 
         # Wiki special pages are also not counted
         if article_name in settings.WIKI_SPECIAL_PAGES:
             tag["class"] = "specialLink"
-            return
+            return tag
 
         # Check for a redirect
         try:
@@ -151,9 +142,9 @@ def _classify_link(tag):
             act_t = Article.objects.get(id=a_id[0]).title
             if article_name != act_t:
                 tag["title"] = 'This is a redirect and points to "' + act_t + '"'
-                return
+                return tag
             else:
-                return
+                return None
         except IndexError:
             pass
 
@@ -163,8 +154,8 @@ def _classify_link(tag):
             tag["title"] = (
                 "This Link is misspelled or missing. Click to create it anyway."
             )
-            return
-    return
+            return tag
+    return None
 
 
 def _make_clickable_images(tag):
@@ -182,11 +173,11 @@ def _make_clickable_images(tag):
             except KeyError:
                 pass
             new_link.append(new_img)
-            tag.replace_with(new_link)
-    return
+            return new_link
+    return None
 
 
-def find_smiley_Strings(bs4_string):
+def find_smiley_strings(bs4_string):
     """Find strings that contain a smiley symbol.
 
     Don't find a smiley in code tags.
@@ -229,28 +220,29 @@ def do_wl_markdown(value, *args, **keyw):
         )
 
     # Prepare the html and apply smileys and classes.
-    # BeautifulSoup objects are all references, so changing a variable
-    # derived from the soup will take effect on the soup itself.
-    # Because of that the called functions will modify the soup directly.
     soup = BeautifulSoup(html, features="lxml")
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return str(soup)
-
     if beautify:
         # Insert smileys
-        smiley_text = soup.find_all(string=find_smiley_Strings)
+        smiley_text = soup.find_all(string=find_smiley_strings)
         for text in smiley_text:
-            _insert_smileys(text)
+            # Remove content and apply the new one
+            text.replace_with(_make_smileys(text))
 
         # Classify links
         for tag in soup.find_all("a"):
-            _classify_link(tag)
+            new_tag = _classify_link(tag)
+            if new_tag:
+                tag.replace_with(new_tag)
 
         # All external images gets clickable
         # This applies only in forum
         for tag in soup.find_all("img"):
-            _make_clickable_images(tag)
+            new_tag = _make_clickable_images(tag)
+            if new_tag:
+                tag.replace_with(new_tag)
 
     # Remove <html><body> tags inserted by lxml
     return "".join([str(x) for x in soup.body.children])
