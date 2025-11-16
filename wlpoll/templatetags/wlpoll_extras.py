@@ -23,7 +23,7 @@ class DisplayPollNode(template.Node):
         data = ",\n".join("[ '%s', %i ]" % (_esc(c.choice), c.votes) for c in choices)
 
         s = r"""
-        <script type="text/javascript">
+        <script>
         $(document).ready(function() {
               Highcharts.chart('chartContainer', {
                  chart: {
@@ -37,7 +37,7 @@ class DisplayPollNode(template.Node):
                                 width: '150px',
                             }
                         }
-                    } 
+                    }
                  },
                  title: {
                     text: '%(name)s'
