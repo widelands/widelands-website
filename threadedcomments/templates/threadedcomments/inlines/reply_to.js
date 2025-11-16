@@ -4,7 +4,7 @@
 {% load threadedcommentstags %}
 {% load wlprofile_extras %}
 
-<script type="text/javascript">
+<script>
 function show_reply_form(comment_id, url, depth) {
 	var comment = $('#' + comment_id);
 	var reply_link = $('#' + comment_id + ' .reply_link');

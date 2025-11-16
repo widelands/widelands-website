@@ -17,7 +17,7 @@
 
 {% block content_section %}
 {% if changes|length > 1 %}
-<script type="text/javascript">
+<script>
     function check() {
         $revisions = $('input:radio[name=revision]');
         if ($revisions.is(':checked') === false) {
