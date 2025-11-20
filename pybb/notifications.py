@@ -6,6 +6,8 @@ from django.db.models import Q
 from notification import models as notification
 from pybb import settings as pybb_settings
 
+MENTION_RE = re.compile(r'@(\S+\b)')
+
 
 def notify(request, topic, post):
     if not topic:
@@ -39,7 +41,10 @@ def notify(request, topic, post):
         post.topic.subscribers.add(request.user)
 
     else:
-        # Handle auto subscriptions to topics
+        # Handle auto subscriptions to topics and mentions with @username
+        # Either send a mail for new post or mention, not both
+
+        # add post subscribers
         notice_type = notification.NoticeType.objects.get(
             label="forum_auto_subscribe"
         )
@@ -49,30 +54,36 @@ def notify(request, topic, post):
         if notice_setting.send:
             post.topic.subscribers.add(request.user)
 
-        # Send mails about a new post to topic subscribers
-        notification.send(
-            post.topic.subscribers.exclude(username=post.user),
-            "forum_new_post",
-            {"post": post, "topic": topic, "user": post.user},
-        )
-        # Handle mentions with @username
-        mention_re = re.compile(r'@(\S+\b)')
-        mentioned_users = mention_re.findall(post.body)
-        subscribers = []
-        for username in mentioned_users:
+        # mentions
+        mentioned_names = MENTION_RE.findall(post.body)
+        mentioned_users = []
+        for username in mentioned_names:
             try:
                 user_obj = User.objects.get(username=username)
 
                 notice_type = notification.NoticeType.objects.get(
                     label="forum_mention"
                 )
-                if notification.get_notification_setting(
-                    user_obj, notice_type, "1").send:
-                    subscribers.append(user_obj)
 
-                notification.send(
-                    subscribers, "forum_mention",
-                    {"post": post, "user": post.user}
-                )
+                if notification.get_notification_setting(user_obj, notice_type, "1").send:
+                    mentioned_users.append(user_obj)
+
             except User.DoesNotExist:
                 pass
+
+        # Remove mentioned users from topic subscribers
+        topic_subscribers = post.topic.subscribers.exclude(
+            username=post.user).exclude(
+            username__in=mentioned_users)
+
+        # finally send the mails
+        notification.send(mentioned_users, "forum_mention",
+                          {"post": post, "topic": topic, "user": post.user}
+                          )
+
+        # Send mails about a new post to topic subscribers
+        notification.send(
+            topic_subscribers,
+            "forum_new_post",
+            {"post": post, "topic": topic, "user": post.user},
+        )

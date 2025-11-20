@@ -1,5 +1,5 @@
 {% autoescape off %}
-{% load i18n %}Your name was mentioned in a forum post by "{{ user }}":
+{% load i18n %}Your name was mentioned in a forum post by "{{ user }}" on topic "{{ topic }}"":
 
 "{{ user }}" wrote:
 
