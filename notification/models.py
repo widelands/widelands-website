@@ -85,7 +85,7 @@ class NoticeSetting(models.Model):
 
 
 def get_notification_setting(user, notice_type, medium):
-    """Return NotceSetting for a specific user. If a NoticeSetting of
+    """Return NoticeSetting for a specific user. If a NoticeSetting of
     given NoticeType didn't exist for given user, a NoticeSetting is created.
 
     If a new NoticeSetting is created, the field 'default' of a NoticeType

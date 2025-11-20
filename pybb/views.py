@@ -32,6 +32,7 @@ from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_f
 from mainpage.wl_utils import get_pagination
 import math
 from mainpage.validators import check_utf8mb3_preview
+import re
 
 try:
     from notification import models as notification
@@ -296,6 +297,29 @@ def add_post_ctx(request, forum_id, topic_id):
                     "forum_new_post",
                     {"post": post, "topic": topic, "user": post.user},
                 )
+                # Handle mentions with @username
+                mention_re = re.compile(r'@(\S+)')
+                mentioned_users = mention_re.findall(post.body)
+                subscribers = []
+                for username in mentioned_users:
+                    try:
+                        user_obj = User.objects.get(username=username)
+
+                        notice_type = notification.NoticeType.objects.get(
+                            label="forum_mention"
+                        )
+                        if notification.get_notification_setting(
+                            user_obj, notice_type, "1").send:
+
+                            subscribers.append(user_obj)
+
+                        notification.send(
+                            subscribers, "forum_mention",
+                            {"post": post, "user": post.user}
+                        )
+                    except User.DoesNotExist:
+                        pass
+
 
         return HttpResponseRedirect(post.get_absolute_url())
 

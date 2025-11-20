@@ -1,0 +1,11 @@
+{% autoescape off %}
+{% load i18n %}Your name was mentioned in a forum post by "{{ user }}":
+
+"{{ user }}" wrote:
+
+{{ post.body }}
+{% blocktrans with post.get_absolute_url as post_url and topic.get_absolute_url as topic_url %}
+-------------------------
+Link to post: https://{{ current_site }}{{ post_url }}
+Link to topic: https://{{ current_site }}{{ topic_url }}
+{% endblocktrans %}{% endautoescape %}
