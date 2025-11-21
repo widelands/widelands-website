@@ -30,7 +30,7 @@ try:
             _(
                 "someone has mentioned your name with '@name' in a post"
             ),
-            default=1,
+            default=2,
         )
 
 
