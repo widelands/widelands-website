@@ -10,12 +10,23 @@ MENTION_RE = re.compile(r'@([\w.@+\-_]+)')
 
 
 def notify(request, topic, post):
+    """"Send mails for mentions, topic subscribers and users who are auto subscribers.
 
-    # mentions
+    - topic subscribers are all users who clicked 'subscribe' to a topic and the topic author
+     himself
+    - auto subscribers are all who enabled 'auto subscriptions' and wrote a post in a topic
+    - mentioned are all whose name is mentioned like @username in a post
+    mentioning takes precedence over all. That is if a user is mentioned he will get only one
+     email for mentioning and no email for new topic or new post.
+    """
+
     def _get_mentions():
+        """Return usernames which are mentioned in a post like @username."""
+
         mentioned_names = MENTION_RE.findall(post.body)
         mentioned_users = []
         for username in mentioned_names:
+            # Make sure this is an existing user
             try:
                 user_obj = User.objects.get(username=username)
 
@@ -30,8 +41,8 @@ def notify(request, topic, post):
                 pass
         return mentioned_users
 
-    def _inform_mentioned(mentioned):
-        notification.send(mentioned, "forum_mention",
+    def _inform_mentioned(mentions):
+        notification.send(mentions, "forum_mention",
                           {"post": post, "topic": topic, "user": post.user}
                           )
 
@@ -41,7 +52,7 @@ def notify(request, topic, post):
             # Inform only users which have the permission to enter the
             # internal forum and superusers. Those users have to:
             # - enable 'forum_new_topic' in the notification settings, or
-            # - subscribe to an existing topic
+            # - subscribed to an existing topic
             subscribers = User.objects.filter(
                 Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM)
                 | Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
@@ -49,7 +60,7 @@ def notify(request, topic, post):
             superusers = User.objects.filter(is_superuser=True).exclude(
                 username=request.user.username
             )
-            # Combine the querysets, excluding double entrys.
+            # Combine the query sets, excluding double entries.
             subscribers = subscribers.union(superusers)
         else:
             # Normal users
@@ -59,12 +70,11 @@ def notify(request, topic, post):
 
         mentions = _get_mentions()
 
-        # remove mentioned user from subscribers
+        # Remove mentioned users from subscribers
         new_subscribers = set(subscribers) - set(mentions)
 
-        # send the mails
+        # Send the mails
         _inform_mentioned(mentions)
-
         notification.send(
             new_subscribers,
             "forum_new_topic",
@@ -91,9 +101,8 @@ def notify(request, topic, post):
         topic_subscribers = set(post.topic.subscribers.exclude(
             username=post.user)) - set(mentions)
 
-        # finally send the mails
+        # Finally send the mails
         _inform_mentioned(mentions)
-
         # Send mails about a new post to topic subscribers
         notification.send(
             topic_subscribers,
