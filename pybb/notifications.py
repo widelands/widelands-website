@@ -10,7 +10,7 @@ MENTION_RE = re.compile(r'@([\w.@+\-_]+)')
 
 
 def notify(request, topic, post):
-    """"Send mails for mentions, topic subscribers and users who are auto subscribers.
+    """Send mails for mentions, topic subscribers and users who are auto subscribers.
 
     - topic subscribers are all users who clicked 'subscribe' to a topic and the topic author
      himself
@@ -41,8 +41,8 @@ def notify(request, topic, post):
                 pass
         return mentioned_users
 
-    def _inform_mentioned(mentions):
-        notification.send(mentions, "forum_mention",
+    def _inform_mentioned(mentioned):
+        notification.send(mentioned, "forum_mention",
                           {"post": post, "topic": topic, "user": post.user}
                           )
 
