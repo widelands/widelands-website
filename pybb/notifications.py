@@ -6,10 +6,35 @@ from django.db.models import Q
 from notification import models as notification
 from pybb import settings as pybb_settings
 
-MENTION_RE = re.compile(r'@(\S+\b)')
+MENTION_RE = re.compile(r'@([\w.@+\-_]+)')
 
 
 def notify(request, topic, post):
+
+    # mentions
+    def _get_mentions():
+        mentioned_names = MENTION_RE.findall(post.body)
+        mentioned_users = []
+        for username in mentioned_names:
+            try:
+                user_obj = User.objects.get(username=username)
+
+                notice_type = notification.NoticeType.objects.get(
+                    label="forum_mention"
+                )
+
+                if notification.get_notification_setting(user_obj, notice_type, "1").send:
+                    mentioned_users.append(user_obj)
+
+            except User.DoesNotExist:
+                pass
+        return mentioned_users
+
+    def _inform_mentioned(mentioned):
+        notification.send(mentioned, "forum_mention",
+                          {"post": post, "topic": topic, "user": post.user}
+                          )
+
     if not topic:
         # Inform subscribers of a new topic
         if post.topic.forum.category.internal:
@@ -27,24 +52,30 @@ def notify(request, topic, post):
             # Combine the querysets, excluding double entrys.
             subscribers = subscribers.union(superusers)
         else:
-            # Inform normal users
+            # Normal users
             subscribers = notification.get_observers_for(
                 "forum_new_topic", excl_user=request.user
             )
 
+        mentions = _get_mentions()
+
+        # remove mentioned user from subscribers
+        new_subscribers = set(subscribers) - set(mentions)
+
+        # send the mails
+        _inform_mentioned(mentions)
+
         notification.send(
-            subscribers,
+            new_subscribers,
             "forum_new_topic",
             {"topic": post.topic, "post": post, "user": post.topic.user},
         )
+
         # Topics author is subscriber for all new posts in his topic
         post.topic.subscribers.add(request.user)
 
     else:
-        # Handle auto subscriptions to topics and mentions with @username
-        # Either send a mail for new post or mention, not both
-
-        # add post subscribers
+        # Inform users who auto subscribed to topics
         notice_type = notification.NoticeType.objects.get(
             label="forum_auto_subscribe"
         )
@@ -54,32 +85,14 @@ def notify(request, topic, post):
         if notice_setting.send:
             post.topic.subscribers.add(request.user)
 
-        # mentions
-        mentioned_names = MENTION_RE.findall(post.body)
-        mentioned_users = []
-        for username in mentioned_names:
-            try:
-                user_obj = User.objects.get(username=username)
-
-                notice_type = notification.NoticeType.objects.get(
-                    label="forum_mention"
-                )
-
-                if notification.get_notification_setting(user_obj, notice_type, "1").send:
-                    mentioned_users.append(user_obj)
-
-            except User.DoesNotExist:
-                pass
+        mentions = _get_mentions()
 
         # Remove mentioned users from topic subscribers
-        topic_subscribers = post.topic.subscribers.exclude(
-            username=post.user).exclude(
-            username__in=mentioned_users)
+        topic_subscribers = set(post.topic.subscribers.exclude(
+            username=post.user)) - set(mentions)
 
         # finally send the mails
-        notification.send(mentioned_users, "forum_mention",
-                          {"post": post, "topic": topic, "user": post.user}
-                          )
+        _inform_mentioned(mentions)
 
         # Send mails about a new post to topic subscribers
         notification.send(
