@@ -6,7 +6,7 @@ from django.db.models import Q
 from notification import models as notification
 from pybb import settings as pybb_settings
 
-MENTION_RE = re.compile(r'@([\w.@+\-_]+)')
+MENTION_RE = re.compile(r"@([\w.@+\-_]+)")
 
 
 def notify(request, topic, post):
@@ -30,11 +30,11 @@ def notify(request, topic, post):
             try:
                 user_obj = User.objects.get(username=username)
 
-                notice_type = notification.NoticeType.objects.get(
-                    label="forum_mention"
-                )
+                notice_type = notification.NoticeType.objects.get(label="forum_mention")
 
-                if notification.get_notification_setting(user_obj, notice_type, "1").send:
+                if notification.get_notification_setting(
+                    user_obj, notice_type, "1"
+                ).send:
                     mentioned_users.append(user_obj)
 
             except User.DoesNotExist:
@@ -43,9 +43,11 @@ def notify(request, topic, post):
         return mentioned_users
 
     def _inform_mentioned(mentioned):
-        notification.send(mentioned, "forum_mention",
-                          {"post": post, "topic": post.topic, "user": post.user}
-                          )
+        notification.send(
+            mentioned,
+            "forum_mention",
+            {"post": post, "topic": post.topic, "user": post.user},
+        )
 
     if not topic:
         # Inform subscribers of a new topic
@@ -87,9 +89,7 @@ def notify(request, topic, post):
 
     else:
         # Inform users who auto subscribed to topics
-        notice_type = notification.NoticeType.objects.get(
-            label="forum_auto_subscribe"
-        )
+        notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")
         notice_setting = notification.get_notification_setting(
             post.user, notice_type, "1"
         )
@@ -99,8 +99,9 @@ def notify(request, topic, post):
         mentions = _get_mentions()
 
         # Remove mentioned users from topic subscribers
-        topic_subscribers = set(post.topic.subscribers.exclude(
-            username=post.user)) - set(mentions)
+        topic_subscribers = set(
+            post.topic.subscribers.exclude(username=post.user)
+        ) - set(mentions)
 
         # Finally send the mails
         _inform_mentioned(mentions)
