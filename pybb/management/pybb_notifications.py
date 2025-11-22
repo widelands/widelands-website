@@ -24,6 +24,12 @@ try:
             ),
             default=0,
         )
+        notification.create_notice_type(
+            "forum_mention",
+            _("Your name was mentioned"),
+            _("someone has mentioned your name with '@name' in a post"),
+            default=2,
+        )
 
 except ImportError:
     print("Skipping creation of NoticeTypes as notification app not found")
