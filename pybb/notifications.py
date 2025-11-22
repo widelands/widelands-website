@@ -6,7 +6,7 @@ from django.db.models import Q
 from notification import models as notification
 from pybb import settings as pybb_settings
 
-MENTION_RE = re.compile(r"@([\w.@+\-_]+)")
+MENTION_RE = re.compile(r"@([\w.@+\-]+)")
 
 
 def notify(request, topic, post):
