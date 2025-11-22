@@ -39,11 +39,12 @@ def notify(request, topic, post):
 
             except User.DoesNotExist:
                 pass
+
         return mentioned_users
 
     def _inform_mentioned(mentioned):
         notification.send(mentioned, "forum_mention",
-                          {"post": post, "topic": topic, "user": post.user}
+                          {"post": post, "topic": post.topic, "user": post.user}
                           )
 
     if not topic:
