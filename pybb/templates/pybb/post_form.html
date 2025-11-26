@@ -8,6 +8,9 @@ in different parent templates.
 
 {% block extra_head %}
 <script type="text/javascript" src="{% static 'js/disableOnSubmit.js' %}"></script>
+<link rel="stylesheet" href="{% static 'js/tribute/tribute.css' %}" />
+<script src="{% static 'js/tribute/tribute.js' %}"></script>
+<script src="{% static 'js/tribute_mention.js' %}"></script>
 <script type="text/javascript">
 	$(function() {
 		$('form').disableOnSubmit();
