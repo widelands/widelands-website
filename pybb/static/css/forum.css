@@ -220,6 +220,9 @@ div.blogEntry .post p {
 
 .post-form #id_body {
    width: 100%;
+   height: auto; /* Höhe automatisch anpassen */
+   resize: none; /* Größenänderung durch den Benutzer verhindern */
+   overflow: hidden; /* Scrollbalken ausblenden */
 }
 
 @media screen and (min-width: 65em) {
