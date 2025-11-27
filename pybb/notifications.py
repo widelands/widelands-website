@@ -23,7 +23,13 @@ def notify(request, topic, post):
     def _get_mentions():
         """Return usernames which are mentioned in a post like @username."""
 
-        mentioned_names = MENTION_RE.findall(post.body)
+        mentioned_names = []
+        for line in post.body.splitlines():
+            # Didn't found a way to exclude quoted lines with the regex :(
+            if not line.startswith(">"):
+                mentioned = MENTION_RE.findall(line)
+                mentioned_names.extend(mentioned)
+
         mentioned_users = []
         for username in mentioned_names:
             # Make sure this is an existing user

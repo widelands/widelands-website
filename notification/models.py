@@ -232,7 +232,8 @@ def send_now(users, label, extra_context=None, on_site=True):
 
         formats = (
             "short.txt",  # used for subject
-            "full.txt",  # used for email body
+            "full.txt",   # used for email body
+            "full_html.txt",
         )  # TODO make formats configurable
 
         for user in users:
@@ -280,6 +281,14 @@ def send_now(users, label, extra_context=None, on_site=True):
                 },
             ).lstrip()
 
+            html_message = render_to_string(
+                "notification/email_body_html.txt",
+                {
+                    "message": messages["full_html.txt"],
+                    "notices_url": notices_url,
+                }
+            )
+
             if should_send(user, notice_type, "1") and user.email:  # Email
                 recipients.append(user.email)
 
@@ -289,6 +298,7 @@ def send_now(users, label, extra_context=None, on_site=True):
                 settings.DEFAULT_FROM_EMAIL,
                 recipients,
                 fail_silently=True,
+                html_message=html_message,
             )
 
         # reset environment to original language
