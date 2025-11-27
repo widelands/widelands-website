@@ -73,7 +73,6 @@ urlpatterns = [
     ),
     # ajax for Tribute mentions
     re_path("^get_tribute_usernames/", views.get_tribute_usernames),
-
     # Attachment
     re_path(
         "^attachment/(?P<hash>\w+)/$", views.show_attachment, name="pybb_attachment"

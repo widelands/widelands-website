@@ -603,7 +603,7 @@ def get_tribute_usernames(request):
         results = []
         current_site = get_current_site(request)
         for user in usernames:
-            userlink = f'[@{user.username}]({request.scheme}://{current_site}/profile/{user.username})'
+            userlink = f"[@{user.username}]({request.scheme}://{current_site}/profile/{user.username})"
             name_json = {"key": user.username, "value": userlink}
             results.append(name_json)
         data = json.dumps(results)
