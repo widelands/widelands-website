@@ -1,3 +1,7 @@
+import json
+
+from django.contrib.sites.shortcuts import get_current_site
+
 from check_input.models import SuspiciousInput
 from collections import OrderedDict
 from datetime import date, timedelta
@@ -28,7 +32,7 @@ from pybb.templatetags.pybb_extras import (
     pybb_has_unreads,
 )
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
-from mainpage.wl_utils import get_pagination
+from mainpage.wl_utils import get_pagination, is_ajax
 import math
 from mainpage.validators import check_utf8mb3_preview
 from pybb.notifications import notify
@@ -580,3 +584,30 @@ def all_user_posts(request, this_user=None):
 
 
 user_posts = render_to("pybb/all_user_posts.html")(all_user_posts)
+
+
+@login_required
+def get_tribute_usernames(request):
+    """AJAX Callback for Tribute autocomplete.
+
+    This is used for Tribute autocompletion of usernames when writing Posts.
+    The path.name of this function has to be used in each place:
+    1. Argument of source of the JS widget
+    2. urls.py
+
+    """
+    if is_ajax(request):
+        q = request.GET.get("term", "")
+
+        usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)
+        results = []
+        current_site = get_current_site(request)
+        for user in usernames:
+            userlink = f'[@{user.username}]({request.scheme}://{current_site}/profile/{user.username})'
+            name_json = {"key": user.username, "value": userlink}
+            results.append(name_json)
+        data = json.dumps(results)
+    else:
+        data = "fail"
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)

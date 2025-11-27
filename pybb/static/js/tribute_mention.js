@@ -6,7 +6,7 @@
  */
 
 function remoteSearch(term, cb) {
-    $.ajax('/messages/django_messages_wl/get_usernames/', {
+    $.ajax('/forum/get_tribute_usernames/', {
         data: { term: term },
         dataType: 'json',
     }).done(function (users) {
@@ -32,7 +32,8 @@ var tribute = new Tribute({
 
   // function called on select that returns the content to insert
   selectTemplate: function (item) {
-    return '@' + item.original.value;
+    return item.original.value;
+    // return '@' + item.original.value;
   },
 
   // template for displaying item in menu
@@ -50,7 +51,7 @@ var tribute = new Tribute({
   menuContainer: document.body,
 
   // column to search against in the object (accepts function or string)
-  lookup: 'value',
+  lookup: 'key',
 
   // column that contains the content to insert by default
   fillAttr: 'value',
@@ -88,7 +89,7 @@ var tribute = new Tribute({
   searchOpts: {
     pre: '<span>',
     post: '</span>',
-    skip: false // true will skip local search, useful if doing server-side search
+    skip: true // true will skip local search, useful if doing server-side search
   },
 
   // Limits the number of items in the menu
