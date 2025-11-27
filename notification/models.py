@@ -232,7 +232,7 @@ def send_now(users, label, extra_context=None, on_site=True):
 
         formats = (
             "short.txt",  # used for subject
-            "full.txt",   # used for email body
+            "full.txt",  # used for email body
             "full_html.txt",
         )  # TODO make formats configurable
 
@@ -286,7 +286,7 @@ def send_now(users, label, extra_context=None, on_site=True):
                 {
                     "message": messages["full_html.txt"],
                     "notices_url": notices_url,
-                }
+                },
             )
 
             if should_send(user, notice_type, "1") and user.email:  # Email
