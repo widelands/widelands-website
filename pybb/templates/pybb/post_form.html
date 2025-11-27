@@ -4,7 +4,6 @@
 {% comment %}
 This template is used to prevent using same code
 in different parent templates.
-{% endcomment %}
 
 {% block extra_head %}
 <script type="text/javascript" src="{% static 'js/disableOnSubmit.js' %}"></script>
@@ -44,6 +43,7 @@ in different parent templates.
 });
 </script>
 {% endblock %}
+{% endcomment %}
 
 {# HMTL included to parent templates, no block tag #}
 	<div class="preview-box" style="display: none">
