@@ -1,12 +1,12 @@
 {% autoescape off %}
 {% load i18n %}
-<p>The Forum topic <strong>{{ topic }}</strong> has been created by {{ user }}</strong></p>
+<p>The Forum topic <strong>{{ topic }}</strong> has been created by {{ user }}</p>
 <hr>
-<p><a href="https://profile/{{ user }}">{{ user }}</a> wrote:</p>
+<p><a href="https://{{ current_site }}/profile/{{ user }}">{{ user }}</a> wrote:</p>
 
 {{ post.body_html }}
 {% blocktrans with post.get_absolute_url as post_url and topic.get_absolute_url as topic_url %}
 <hr>
-<p><a href="https://{{ current_site }}{{ topic_url }}">Link to topic {{ topic }}</a></p>
 <p><a href="https://{{ current_site }}{{ post_url }}">Link to post</a></p>
+<p><a href="https://{{ current_site }}{{ topic_url }}">Link to topic {{ topic }}</a></p>
 {% endblocktrans %}{% endautoescape %}
