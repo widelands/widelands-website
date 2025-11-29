@@ -4,6 +4,6 @@
 <p>Comment for this revision: "{{ rev_comment }}"</p>
 
 <hr>
-<p>A diff is available <a href="https://{{ current_site }}{{ diff_url }}>here</a></p>
+<p>A diff is available <a href="https://{{ current_site }}{{ diff_url }}">here</a></p>
 <p><a href="https://{{ current_site }}{{ article_url }}">Link to article</a></p>
 {% endblocktrans %}{% endautoescape %}
