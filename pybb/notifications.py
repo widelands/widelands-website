@@ -9,6 +9,43 @@ from pybb import settings as pybb_settings
 MENTION_RE = re.compile(r"@([\w.@+\-]+)")
 
 
+def get_mentions(post):
+    """Return usernames which are mentioned in a post like @username."""
+
+    mentioned_names = []
+    for line in post.body.splitlines():
+        # Didn't found a way to exclude quoted lines with the regex :(
+        if not line.startswith(">"):
+            mentioned = MENTION_RE.findall(line)
+            mentioned_names.extend(mentioned)
+
+    mentioned_users = []
+    for username in mentioned_names:
+        # Make sure this is an existing user
+        try:
+            user_obj = User.objects.get(username=username)
+
+            notice_type = notification.NoticeType.objects.get(label="forum_mention")
+
+            if notification.get_notification_setting(
+                user_obj, notice_type, "1"
+            ).send:
+                mentioned_users.append(user_obj)
+
+        except User.DoesNotExist:
+            pass
+
+    return mentioned_users
+
+
+def inform_mentioned(mentioned, post):
+    notification.send(
+        mentioned,
+        "forum_mention",
+        {"post": post, "topic": post.topic, "user": post.user},
+    )
+
+
 def notify(request, topic, post):
     """Send mails for mentions, topic subscribers and users who are auto subscribers.
 
@@ -19,41 +56,6 @@ def notify(request, topic, post):
     mentioning takes precedence over all. That is if a user is mentioned he will get only one
      email for mentioning and no email for new topic or new post.
     """
-
-    def _get_mentions():
-        """Return usernames which are mentioned in a post like @username."""
-
-        mentioned_names = []
-        for line in post.body.splitlines():
-            # Didn't found a way to exclude quoted lines with the regex :(
-            if not line.startswith(">"):
-                mentioned = MENTION_RE.findall(line)
-                mentioned_names.extend(mentioned)
-
-        mentioned_users = []
-        for username in mentioned_names:
-            # Make sure this is an existing user
-            try:
-                user_obj = User.objects.get(username=username)
-
-                notice_type = notification.NoticeType.objects.get(label="forum_mention")
-
-                if notification.get_notification_setting(
-                    user_obj, notice_type, "1"
-                ).send:
-                    mentioned_users.append(user_obj)
-
-            except User.DoesNotExist:
-                pass
-
-        return mentioned_users
-
-    def _inform_mentioned(mentioned):
-        notification.send(
-            mentioned,
-            "forum_mention",
-            {"post": post, "topic": post.topic, "user": post.user},
-        )
 
     if not topic:
         # Inform subscribers of a new topic
@@ -77,13 +79,13 @@ def notify(request, topic, post):
                 "forum_new_topic", excl_user=request.user
             )
 
-        mentions = _get_mentions()
+        mentions = get_mentions(post)
 
         # Remove mentioned users from subscribers
         new_subscribers = set(subscribers) - set(mentions)
 
         # Send the mails
-        _inform_mentioned(mentions)
+        inform_mentioned(mentions, post)
         notification.send(
             new_subscribers,
             "forum_new_topic",
@@ -102,7 +104,7 @@ def notify(request, topic, post):
         if notice_setting.send:
             post.topic.subscribers.add(request.user)
 
-        mentions = _get_mentions()
+        mentions = get_mentions(post)
 
         # Remove mentioned users from topic subscribers
         topic_subscribers = set(
@@ -110,7 +112,7 @@ def notify(request, topic, post):
         ) - set(mentions)
 
         # Finally send the mails
-        _inform_mentioned(mentions)
+        inform_mentioned(mentions, post)
         # Send mails about a new post to topic subscribers
         notification.send(
             topic_subscribers,

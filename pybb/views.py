@@ -35,7 +35,7 @@ from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_f
 from mainpage.wl_utils import get_pagination, is_ajax
 import math
 from mainpage.validators import check_utf8mb3_preview
-from pybb.notifications import notify
+from pybb.notifications import notify, get_mentions, inform_mentioned
 
 
 def index_ctx(request):
@@ -310,8 +310,9 @@ def edit_post_ctx(request, post_id):
         return HttpResponseRedirect(post.get_absolute_url())
 
     form = build_form(EditPostForm, request, instance=post)
+    already_mentioned = get_mentions(post)
 
-    if form.is_valid():
+    if request.method == "POST" and form.is_valid():
         post = form.save()
         is_spam = SuspiciousInput.check_input(
             content_object=post, user=post.user, text=post.body
@@ -320,6 +321,12 @@ def edit_post_ctx(request, post_id):
             post.hidden = is_spam
             post.save()
             return HttpResponseRedirect("/moderated/")
+
+        all_mentioned = get_mentions(post)
+        new_mentioned = set(all_mentioned) - set(already_mentioned)
+        if new_mentioned:
+            inform_mentioned(new_mentioned, post)
+
         return HttpResponseRedirect(post.get_absolute_url())
 
     return {
