@@ -8,5 +8,5 @@
 {% blocktrans with post.get_absolute_url as post_url and topic.get_absolute_url as topic_url %}
 <hr>
 <p><a href="https://{{ current_site }}{{ post_url }}">Link to post</a></p>
-<p><a href="https://{{ current_site }}{{ topic_url }}">Link to topic {{ topic }}</a></p>
+<p><a href="https://{{ current_site }}{{ topic_url }}">Link to topic "{{ topic }}"</a></p>
 {% endblocktrans %}{% endautoescape %}

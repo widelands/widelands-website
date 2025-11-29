@@ -60,7 +60,7 @@ def _make_smileys(text):
     for count, word in enumerate(words):
         found_smiley = False
 
-        for i, smiley in enumerate(smileys):
+        for i, _ in enumerate(smileys):
             if word == smileys[i][0]:
                 found_smiley = smileys[i]
 
@@ -74,6 +74,7 @@ def _make_smileys(text):
         else:
             if preceding_space:
                 word = " " + word
+                preceding_space = False
 
             if count < (len(words) - 1):
                 # Apply a space after each word, except the last word
@@ -194,7 +195,7 @@ def find_smiley_strings(bs4_string):
     if bs4_string.parent.name.lower() == "code":
         return False
 
-    for sc, name in settings.SMILEYS:
+    for sc, _ in settings.SMILEYS:
         if sc in bs4_string:
             return True
     return False

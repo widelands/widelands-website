@@ -28,6 +28,7 @@ try:
             "forum_mention",
             _("Your name was mentioned"),
             _("someone has mentioned your name with '@name' in a post"),
+            # enabled by default
             default=2,
         )
 
