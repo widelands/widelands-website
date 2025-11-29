@@ -5,12 +5,15 @@ from django.db.models import Q
 
 from notification import models as notification
 from pybb import settings as pybb_settings
+from pybb.models import Post, Topic
 
 MENTION_RE = re.compile(r"@([\w.@+\-]+)")
 
 
 def get_mentions(post):
     """Return usernames which are mentioned in a post like @username."""
+    if not isinstance(post, Post):
+        raise TypeError(f"First argument has to be an instance of pybb.Post!")
 
     mentioned_names = []
     for line in post.body.splitlines():
@@ -37,6 +40,9 @@ def get_mentions(post):
 
 
 def inform_mentioned(mentioned, post):
+    if not isinstance(post, Post):
+        raise TypeError(f"Second argument has to be an instance of pybb.Post!")
+
     notification.send(
         mentioned,
         "forum_mention",
@@ -54,6 +60,12 @@ def notify(request, topic, post):
     mentioning takes precedence over all. That is if a user is mentioned he will get only one
      email for mentioning and no email for new topic or new post.
     """
+
+    if not isinstance(topic, Topic):
+        raise TypeError(f"Second argument has to be an instance of pybb.Topic!")
+
+    if not isinstance(post, Post):
+        raise TypeError(f"Third argument has to be an instance of pybb.Post!")
 
     if not topic:
         # Inform subscribers of a new topic

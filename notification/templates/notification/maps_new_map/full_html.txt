@@ -5,5 +5,5 @@
 <p>Description: {{ uploader_comment }}</p>
 
 <hr>
-<p><a href="https://{{ current_site }}{{ url }}>Link to map {{ mapname }}</a></p>
+<p><a href="https://{{ current_site }}{{ url }}>Link to map "{{ mapname }}"</a></p>
 {% endblocktrans %}{% endautoescape %}
