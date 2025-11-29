@@ -27,9 +27,7 @@ def get_mentions(post):
 
             notice_type = notification.NoticeType.objects.get(label="forum_mention")
 
-            if notification.get_notification_setting(
-                user_obj, notice_type, "1"
-            ).send:
+            if notification.get_notification_setting(user_obj, notice_type, "1").send:
                 mentioned_users.append(user_obj)
 
         except User.DoesNotExist:
