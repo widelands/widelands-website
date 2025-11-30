@@ -39,7 +39,9 @@ class AddPostForm(forms.ModelForm):
         ],
     )
     body = forms.CharField(
-        widget=forms.Textarea(attrs={"cols": 80, "rows": 15}),
+        widget=forms.Textarea(
+            attrs={"cols": 80, "rows": 15, "oninput": "autoResizeTextarea()"}
+        ),
         validators=[
             check_utf8mb3,
         ],

@@ -1,10 +1,13 @@
+import json
+
+from django.contrib.sites.shortcuts import get_current_site
+
 from check_input.models import SuspiciousInput
 from collections import OrderedDict
 from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -29,14 +32,10 @@ from pybb.templatetags.pybb_extras import (
     pybb_has_unreads,
 )
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
-from mainpage.wl_utils import get_pagination
+from mainpage.wl_utils import get_pagination, is_ajax
 import math
 from mainpage.validators import check_utf8mb3_preview
-
-try:
-    from notification import models as notification
-except ImportError:
-    notification = None
+from pybb.notifications import notify, get_mentions, inform_mentioned
 
 
 def index_ctx(request):
@@ -248,54 +247,7 @@ def add_post_ctx(request, forum_id, topic_id):
             post.save(update_fields=["hidden"])
             return HttpResponseRedirect("/moderated/")
 
-        if notification:
-            if not topic:
-                # Inform subscribers of a new topic
-                if post.topic.forum.category.internal:
-                    # Inform only users which have the permission to enter the
-                    # internal forum and superusers. Those users have to:
-                    # - enable 'forum_new_topic' in the notification settings, or
-                    # - subscribe to an existing topic
-                    subscribers = User.objects.filter(
-                        Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM)
-                        | Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
-                    ).exclude(username=request.user.username)
-                    superusers = User.objects.filter(is_superuser=True).exclude(
-                        username=request.user.username
-                    )
-                    # Combine the querysets, excluding double entrys.
-                    subscribers = subscribers.union(superusers)
-                else:
-                    # Inform normal users
-                    subscribers = notification.get_observers_for(
-                        "forum_new_topic", excl_user=request.user
-                    )
-
-                notification.send(
-                    subscribers,
-                    "forum_new_topic",
-                    {"topic": post.topic, "post": post, "user": post.topic.user},
-                )
-                # Topics author is subscriber for all new posts in his topic
-                post.topic.subscribers.add(request.user)
-
-            else:
-                # Handle auto subscriptions to topics
-                notice_type = notification.NoticeType.objects.get(
-                    label="forum_auto_subscribe"
-                )
-                notice_setting = notification.get_notification_setting(
-                    post.user, notice_type, "1"
-                )
-                if notice_setting.send:
-                    post.topic.subscribers.add(request.user)
-
-                # Send mails about a new post to topic subscribers
-                notification.send(
-                    post.topic.subscribers.exclude(username=post.user),
-                    "forum_new_post",
-                    {"post": post, "topic": topic, "user": post.user},
-                )
+        notify(request, topic, post)
 
         return HttpResponseRedirect(post.get_absolute_url())
 
@@ -358,8 +310,9 @@ def edit_post_ctx(request, post_id):
         return HttpResponseRedirect(post.get_absolute_url())
 
     form = build_form(EditPostForm, request, instance=post)
+    already_mentioned = get_mentions(post)
 
-    if form.is_valid():
+    if request.method == "POST" and form.is_valid():
         post = form.save()
         is_spam = SuspiciousInput.check_input(
             content_object=post, user=post.user, text=post.body
@@ -368,6 +321,12 @@ def edit_post_ctx(request, post_id):
             post.hidden = is_spam
             post.save()
             return HttpResponseRedirect("/moderated/")
+
+        all_mentioned = get_mentions(post)
+        new_mentioned = set(all_mentioned) - set(already_mentioned)
+        if new_mentioned:
+            inform_mentioned(new_mentioned, post)
+
         return HttpResponseRedirect(post.get_absolute_url())
 
     return {
@@ -632,3 +591,30 @@ def all_user_posts(request, this_user=None):
 
 
 user_posts = render_to("pybb/all_user_posts.html")(all_user_posts)
+
+
+@login_required
+def get_tribute_usernames(request):
+    """AJAX Callback for Tribute autocomplete.
+
+    This is used for Tribute autocompletion of usernames when writing Posts.
+    The path.name of this function has to be used in each place:
+    1. Argument of source of the JS widget
+    2. urls.py
+
+    """
+    if is_ajax(request):
+        q = request.GET.get("term", "")
+
+        usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)
+        results = []
+        current_site = get_current_site(request)
+        for user in usernames:
+            userlink = f"[@{user.username}]({request.scheme}://{current_site}/profile/{user.username})"
+            name_json = {"key": user.username, "value": userlink}
+            results.append(name_json)
+        data = json.dumps(results)
+    else:
+        data = "fail"
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)

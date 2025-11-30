@@ -1,4 +1,4 @@
-{% extends "django_messages/base.html" %} 
+{% extends "django_messages/base.html" %}
 {% load i18n %}
 {% load wl_extras %}
 
@@ -13,7 +13,7 @@ Compose - {{ block.super }}
 		source: '/messages/django_messages_wl/get_usernames/',
 		minLength: 3,
 		});
-});
+    });
 </script>
 {{ block.super}}{% endblock %}
 

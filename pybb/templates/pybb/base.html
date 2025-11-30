@@ -7,10 +7,52 @@ Forum - {{ block.super }}
 {% endblock %}
 
 {% block extra_head %}
+<!-- extra head of pybb/base_html -->
 <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/forum.css' %}?v2" />
 
 <link rel="alternate" type="application/atom+xml" title="Latest Posts on all forums" href="{% url 'pybb_feed_posts' %}" />
 <link rel="alternate" type="application/atom+xml" title="Latest Topics on all forums" href="{% url 'pybb_feed_topics' %}" />
+
+<!-- mentions with @username -->
+<link rel="stylesheet" href="{% static 'css/tribute.css' %}" />
+<script src="{% static 'js/tribute/tribute.js' %}"></script>
+<script src="{% static 'js/tribute_mention.js' %}"></script>
+<script src="{% static 'js/autoresize.js' %}"></script>
+
+<!-- prevent sending new posts twice -->
+<script src="{% static 'js/disableOnSubmit.js' %}"></script>
+<script >
+	$(function() {
+		$('form').disableOnSubmit();
+		$('.post-form .preview-button').click(function() {
+			var raw_content = $.trim($('.post-form #id_body').val());
+			var markup = $('.post-form #id_markup').val();
+
+			args = {'content': raw_content, 'markup': markup}
+			$.post("{% url 'pybb_post_ajax_preview' %}", args, function(data) {
+				if (data.error) {
+					alert(data.error);
+				} else {
+					$('.preview-box .content').html(data.content);
+					$('.preview-box').show();
+				}
+			}, 'json')
+			.fail(function(o, status, error) {
+				alert( "Something has gone wrong. Please inform the Webmaster in the forum.\n"
+					  + "Object: " + o + "\n"
+					  + "Status: " + status + "\n"
+					  + "What: " + error );
+			})
+
+		});
+	});
+	$(document).ready(function() {
+		$('#btn-file-reset').on('click', function() {
+			$('#id_attachment').val('');
+	});
+});
+</script>
+
 <!-- For reactions on a post -->
 <script>
     function sendReaction(image, p) {

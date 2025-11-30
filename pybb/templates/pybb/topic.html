@@ -10,6 +10,7 @@
 {% endblock title %}
 
 {% block extra_head %}
+<!-- extra head of topic.html -->
 <link rel="alternate" type="application/atom+xml"
       title="Latest Posts on forum '{{ topic.forum.name }}'"
       href="{% url 'pybb_feed_posts' %}{{topic.forum.id}}/"/>
@@ -119,7 +120,14 @@
 
 {% if user.is_authenticated %}
     {% if not topic.closed %}
-        {% include "pybb/inlines/add_post_form.html" %}
+    <section class="blogEntry">
+    <h3>
+        {% trans "New Reply" %}
+    </h3>
+
+    {% include "pybb/post_form.html" %}
+
+    </section>
     {% endif %}
 {% endif %}
 {% endblock %}

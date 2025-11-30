@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from mainpage.wl_utils import is_ajax
 import json
 
 
+@login_required
 def get_usernames(request):
     """AJAX Callback for JS autocomplete.
 
