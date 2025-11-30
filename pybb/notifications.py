@@ -61,14 +61,13 @@ def notify(request, topic, post):
      email for mentioning and no email for new topic or new post.
     """
 
-    if not isinstance(topic, Topic):
-        raise TypeError(f"Second argument has to be an instance of pybb.Topic!")
-
     if not isinstance(post, Post):
         raise TypeError(f"Third argument has to be an instance of pybb.Post!")
 
     if not topic:
         # Inform subscribers of a new topic
+        # Sound's wrong but for new topics there is no topic instance yet.
+
         if post.topic.forum.category.internal:
             # Inform only users which have the permission to enter the
             # internal forum and superusers. Those users have to:
@@ -106,6 +105,10 @@ def notify(request, topic, post):
         post.topic.subscribers.add(request.user)
 
     else:
+
+        if not isinstance(topic, Topic):
+            raise TypeError(f"Second argument has to be an instance of pybb.Topic!")
+
         # Inform users who auto subscribed to topics
         notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")
         notice_setting = notification.get_notification_setting(
