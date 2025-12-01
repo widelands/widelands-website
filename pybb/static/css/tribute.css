@@ -1,0 +1,46 @@
+/* See pybb/static/js/tribute/ directory for license */
+
+.tribute-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto;
+    overflow: auto;
+    display: block;
+    z-index: 999999;
+    border: 1px solid black;
+    border-radius: 3px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.7);
+}
+
+.tribute-container ul {
+    margin: 0;
+    margin-top: 2px;
+    padding: 0;
+    list-style: none;
+    /*background: #efefef;*/
+    background-image: url("../img/wood.png");
+}
+
+.tribute-container li {
+    padding: 5px 5px;
+    cursor: pointer;
+    border-bottom: 1px solid black;
+}
+
+.tribute-container li.highlight {
+    /*background: #ddd;*/
+    background-image: url("../img/black50.png");
+}
+
+.tribute-container li span {
+    font-weight: bold;
+}
+
+.tribute-container li.no-match {
+    cursor: default;
+}
+
+.tribute-container .menu-highlighted {
+    font-weight: bold;
+}

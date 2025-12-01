@@ -1,0 +1,5 @@
+{% load i18n %}{% blocktrans %}
+{{ message }}
+
+<p>To change how you receive notifications, please go to <a href="{{ notices_url }}">notification settings</a>.</p>
+{% endblocktrans %}
