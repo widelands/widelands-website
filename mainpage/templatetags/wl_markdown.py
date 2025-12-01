@@ -54,21 +54,29 @@ def _make_smileys(text):
 
     new_soup = BeautifulSoup()
     words = text.split()
+    preceding_space = text.startswith(" ")
+    smileys = settings.SMILEYS
 
-    for i, word in enumerate(words):
-        smiley = ""
-        for sc, img in settings.SMILEYS:
-            if word == sc:
-                smiley = img
-        if smiley:
+    for count, word in enumerate(words):
+        found_smiley = False
+
+        for i, _ in enumerate(smileys):
+            if word == smileys[i][0]:
+                found_smiley = smileys[i]
+
+        if found_smiley:
             img_tag = new_soup.new_tag("img")
-            img_tag["src"] = "{}{}".format(settings.SMILEY_DIR, smiley)
-            img_tag["alt"] = smiley
+            img_tag["src"] = f"{settings.SMILEY_DIR}{found_smiley[1]}"
+            img_tag["alt"] = found_smiley[0]
             new_soup.append(img_tag)
             # apply a space after the smiley
             new_soup.append(NavigableString(" "))
         else:
-            if i < (len(words) - 1):
+            if preceding_space:
+                word = " " + word
+                preceding_space = False
+
+            if count < (len(words) - 1):
                 # Apply a space after each word, except the last word
                 word = word + " "
             new_soup.append(NavigableString(word))
@@ -184,12 +192,11 @@ def find_smiley_strings(bs4_string):
     Attention: This returns also True for ':/' in 'http://'. This get
     fixed in _insert_smileys().
     """
-
     if bs4_string.parent.name.lower() == "code":
         return False
 
-    for sc in settings.SMILEYS:
-        if sc[0] in bs4_string:
+    for sc, _ in settings.SMILEYS:
+        if sc in bs4_string:
             return True
     return False
 
@@ -224,6 +231,7 @@ def do_wl_markdown(value, *args, **keyw):
     if len(soup.contents) == 0:
         # well, empty soup. Return it
         return str(soup)
+
     if beautify:
         # Insert smileys
         smiley_text = soup.find_all(string=find_smiley_strings)
