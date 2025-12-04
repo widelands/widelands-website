@@ -7,6 +7,6 @@ Encyclopedia - {{ block.super }}
 
 {% block extra_head %}
 	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/encyclopedia.css' %}" />
-	<script src="{% static 'js/encyclopedia.js' %}"></script>
+	<script src="{% static 'js/encyclopedia.js' %}" defer></script>
 {{ block.super}}
 {% endblock %}
