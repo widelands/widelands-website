@@ -126,6 +126,15 @@ class AddPostForm(forms.ModelForm):
 
 
 class EditPostForm(forms.ModelForm):
+    body = forms.CharField(
+        widget=forms.Textarea(
+            attrs={"cols": 80, "rows": 15, "oninput": "autoResizeTextarea()"}
+        ),
+        validators=[
+            check_utf8mb3,
+        ],
+    )
+
     class Meta:
         model = Post
         fields = ["body", "markup"]
