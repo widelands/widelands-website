@@ -28,10 +28,10 @@ urlpatterns = [
     # re_path("^feeds/posts/(?P<topic_id>\d+)/$", LastPosts(), name="pybb_feed_posts"),
     re_path(
         "^feeds/topics/$",
-        RedirectView.as_view(url="/feeds/forum/topics", permanent=True),
+        RedirectView.as_view(pattern_name="pybb_feed_topics", permanent=True),
     ),
     re_path(
-        "^feeds/posts/$", RedirectView.as_view(url="/feeds/forum/posts", permanent=True)
+        "^feeds/posts/$", RedirectView.as_view(pattern_name="pybb_feed_posts", permanent=True)
     ),
     # re_path("^feeds/posts/$", LastPosts(), name="pybb_feed_posts"),
     # Topic
