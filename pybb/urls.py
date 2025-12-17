@@ -1,4 +1,5 @@
 from django.urls import re_path
+from django.views.generic import RedirectView
 
 from pybb import views
 from pybb.feeds import LastPosts, LastTopics
@@ -21,11 +22,18 @@ urlpatterns = [
         views.mark_as_read,
         name="mark_as_read",
     ),
-    # Feeds
-    re_path("^feeds/topics/(?P<topic_id>\d+)/$", LastTopics(), name="pybb_feed_topics"),
-    re_path("^feeds/posts/(?P<topic_id>\d+)/$", LastPosts(), name="pybb_feed_posts"),
-    re_path("^feeds/topics/$", LastTopics(), name="pybb_feed_topics"),
-    re_path("^feeds/posts/$", LastPosts(), name="pybb_feed_posts"),
+    # Feeds are now handled in feed_urls-py
+    # Redirect old links
+    # re_path("^feeds/topics/(?P<topic_id>\d+)/$", LastTopics(), name="pybb_feed_topics"),
+    # re_path("^feeds/posts/(?P<topic_id>\d+)/$", LastPosts(), name="pybb_feed_posts"),
+    re_path("^feeds/topics/$",
+            RedirectView.as_view(url="/feeds/forum/topics", permanent = True)
+    ),
+    re_path("^feeds/posts/$",
+            RedirectView.as_view(url="/feeds/forum/posts", permanent = True)
+    ),
+    # re_path("^feeds/posts/$", LastPosts(), name="pybb_feed_posts"),
+
     # Topic
     re_path("^topic/(?P<topic_id>\d+)/$", views.show_topic, name="pybb_topic"),
     re_path(
