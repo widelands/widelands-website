@@ -31,7 +31,8 @@ urlpatterns = [
         RedirectView.as_view(pattern_name="pybb_feed_topics", permanent=True),
     ),
     re_path(
-        "^feeds/posts/$", RedirectView.as_view(pattern_name="pybb_feed_posts", permanent=True)
+        "^feeds/posts/$",
+        RedirectView.as_view(pattern_name="pybb_feed_posts", permanent=True),
     ),
     # re_path("^feeds/posts/$", LastPosts(), name="pybb_feed_posts"),
     # Topic
