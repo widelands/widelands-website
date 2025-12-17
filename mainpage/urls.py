@@ -78,7 +78,6 @@ urlpatterns = [
     #     r"^feeds/news/",
     #     RedirectView.as_view(url="/news/feed", permanent=True),
     # ),
-
 ]
 
 try:
