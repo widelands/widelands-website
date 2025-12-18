@@ -23,10 +23,14 @@ urlpatterns = [
     ),
     # Feeds are handled in feed_urls.py to have the base path '/feeds/*' for all feeds
     # Redirect old feed urls
-    re_path(r"^feeds/topics/(?P<topic_id>\d+)/$",
-            RedirectView.as_view(pattern_name="pybb_feed_topics")),
-    re_path(r"^feeds/posts/(?P<topic_id>\d+)/$",
-            RedirectView.as_view(pattern_name="pybb_feed_posts")),
+    re_path(
+        r"^feeds/topics/(?P<topic_id>\d+)/$",
+        RedirectView.as_view(pattern_name="pybb_feed_topics"),
+    ),
+    re_path(
+        r"^feeds/posts/(?P<topic_id>\d+)/$",
+        RedirectView.as_view(pattern_name="pybb_feed_posts"),
+    ),
     re_path(
         "^feeds/topics/$",
         RedirectView.as_view(pattern_name="pybb_feed_topics", permanent=True),
@@ -35,7 +39,6 @@ urlpatterns = [
         "^feeds/posts/$",
         RedirectView.as_view(pattern_name="pybb_feed_posts", permanent=True),
     ),
-
     # Topic
     re_path("^topic/(?P<topic_id>\d+)/$", views.show_topic, name="pybb_topic"),
     re_path(
