@@ -37,9 +37,10 @@ urlpatterns = [
     ),
     re_path(r"^trash/list/$", views.trash_list, name="wiki_list_deleted"),
     re_path(r"^history/$", views.history, name="wiki_history"),
-    # Feeds
-    re_path(r"^feeds/rss/$", RssHistoryFeed(), name="wiki_history_feed_rss"),
-    re_path(r"^feeds/atom/$", AtomHistoryFeed(), name="wiki_history_feed_atom"),
+    # Feeds are handled in feed_urls.py to have the base path '/feeds/*' for all feeds
+    # Redirect old feed urls
+    re_path(r"^feeds/rss/$", RedirectView.as_view(pattern_name="wiki_history_feed_rss")),
+    re_path(r"^feeds/atom/$", RedirectView.as_view(pattern_name="wiki_history_feed_atom")),
     re_path(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/rss/$",
         RssArticleHistoryFeed(),

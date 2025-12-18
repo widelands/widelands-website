@@ -49,6 +49,7 @@ urlpatterns = [
         name="docs",
     ),
     # 3rd party, modified for widelands
+    re_path(r"^feeds/wiki/", include("wiki.feed_urls")),
     re_path(r"^wiki/", include("wiki.urls")),
     re_path(r"^feeds/news/", include("news.feed_urls")),
     re_path(r"^news/", include("news.urls")),
