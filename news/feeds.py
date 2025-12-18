@@ -16,7 +16,7 @@ class NewsPostsFeed(Feed):
         return Post.objects.published()[:10]
 
     def link(self):
-        return reverse("news_index")
+        return reverse("news_feed")
 
     def item_pubdate(self, item):
         return item.publish

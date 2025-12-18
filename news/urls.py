@@ -2,7 +2,6 @@ from django.urls import re_path
 from django.views.generic import RedirectView
 
 from news.views import NewsList, YearNews, MonthNews, NewsDetail, CategoryView
-from news.feeds import NewsPostsFeed
 
 
 urlpatterns = [
@@ -23,7 +22,8 @@ urlpatterns = [
     re_path(
         r"^$", NewsList.as_view(template_name="news/post_list.html"), name="news_index"
     ),
-    # Redirect old urls
+    # Feeds are handled in feed_urls.py to have the base path '/feeds/*' for all feeds
+    # Redirect old feed urls
     re_path(
         r"^feed/$",
         RedirectView.as_view(url="/feeds/news", permanent=True),

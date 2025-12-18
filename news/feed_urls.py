@@ -1,8 +1,7 @@
 from django.urls import re_path
-from django.views.generic import RedirectView
 
-from news.feeds import NewsPostsFeed
+from .feeds import NewsPostsFeed
 
 urlpatterns = [
-    re_path(r"", NewsPostsFeed()),
+    re_path(r"^", NewsPostsFeed(), name="news_feed"),
 ]
