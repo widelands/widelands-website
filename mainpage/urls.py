@@ -74,11 +74,6 @@ urlpatterns = [
     re_path(r"^scheduling/", include("wlscheduling.urls")),
     re_path(r"^privacy/", include("privacy_policy.urls")),
     re_path(r"^addons/", include("wladdons_settings.urls")),
-    # # See: https://github.com/widelands/widelands-website/issues/376
-    # re_path(
-    #     r"^feeds/news/",
-    #     RedirectView.as_view(url="/news/feed", permanent=True),
-    # ),
 ]
 
 try:
