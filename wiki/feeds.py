@@ -9,7 +9,7 @@ class RssHistoryFeed(Feed):
     feed_type = Rss201rev2Feed
     title = "History for all articles"
     description = "Recent changes in wiki"
-    link = "/wiki/feeds/rss/"
+    link = "/feeds/wiki/rss/"
     title_template = "wiki/feeds/history_title.html"
     description_template = "wiki/feeds/history_description.html"
 
@@ -31,7 +31,7 @@ class RssHistoryFeed(Feed):
 class AtomHistoryFeed(RssHistoryFeed):
     feed_type = Atom1Feed
     subtitle = "Recent changes in wiki"
-    link = "/wiki/feeds/atom/"
+    link = "/feeds/wiki/atom/"
 
     def item_updateddate(self, item):
         return item.modified

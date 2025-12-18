@@ -43,14 +43,13 @@ urlpatterns = [
     re_path(r"^feeds/atom/$", RedirectView.as_view(pattern_name="wiki_history_feed_atom")),
     re_path(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/rss/$",
-        RssArticleHistoryFeed(),
-        name="wiki_article_history_feed_rss",
+        RedirectView.as_view(pattern_name="wiki_article_history_feed_rss"),
     ),
     re_path(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/atom/$",
-        AtomArticleHistoryFeed(),
-        name="wiki_article_history_feed_atom",
+        RedirectView.as_view(pattern_name="wiki_article_history_feed_atom"),
     ),
+
     re_path(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/$",
         views.view_article,
