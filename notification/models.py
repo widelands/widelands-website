@@ -38,8 +38,8 @@ class NoticeType(models.Model):
     label: A unique name used to query a NoticeType. E.g. 'forum_new_post'
     display: A short description for display in templates, e.g. 'Forum new Post'
     description: A verbose description, e.g. 'a new comment has been posted to a topic you observe'
-    send_default: The default value for NoticeSetting.send
-    default: Do not use this anymore
+    send_default: The default value for NoticeSetting.send. Defaults to True but might be changed
+                  by create_notice_type()
     """
     label = models.CharField(_("label"), unique=True, max_length=40)
     display = models.CharField(
@@ -47,10 +47,6 @@ class NoticeType(models.Model):
     )
     description = models.CharField(_("description"), max_length=100)
     send_default = models.BooleanField(default=True)
-
-    # by default only on for media with sensitivity less than or equal to this
-    # number
-    default = models.IntegerField(_("default"))
 
     def __str__(self):
         return self.label
@@ -132,7 +128,7 @@ class NoticeQueueBatch(models.Model):
     pickled_data = models.TextField()
 
 
-def create_notice_type(label, display, description, send_default=True, default=2):
+def create_notice_type(label, display, description, send_default=True):
     """Creates a new NoticeType.
 
     This is intended to be used by other apps as a post_migrate
@@ -148,18 +144,15 @@ def create_notice_type(label, display, description, send_default=True, default=2
         if description != notice_type.description:
             notice_type.description = description
             updated = True
-        if default != notice_type.default:
-            notice_type.default = default
-            updated = True
         if send_default != notice_type.send_default:
-            notice_type.default = default
+            notice_type.send_default = send_default
             updated = True
         if updated:
             notice_type.save()
             print(f"Updated NoticeType: {label}")
     except NoticeType.DoesNotExist:
         NoticeType(
-            label=label, display=display, description=description, default=default
+            label=label, display=display, description=description, send_default=send_default
         ).save()
         print(f"Created NoticeType: {label}")
 
