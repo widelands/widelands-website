@@ -23,12 +23,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, activate
-
-# favour django-mailer but fall back to django.core.mail
-if "mailer" in settings.INSTALLED_APPS:
-    from mailer import send_mail
-else:
-    from django.core.mail import send_mail
+from django.core.mail import send_mail
 
 QUEUE_ALL = getattr(settings, "NOTIFICATION_QUEUE_ALL", False)
 
@@ -38,11 +33,20 @@ class LanguageStoreNotAvailable(Exception):
 
 
 class NoticeType(models.Model):
-    label = models.CharField(_("label"), max_length=40)
+    """A predefined Notice type with fields:
+
+    label: A unique name used to query a NoticeType. E.g. 'forum_new_post'
+    display: A short description for display in templates, e.g. 'Forum new Post'
+    description: A verbose description, e.g. 'a new comment has been posted to a topic you observe'
+    send_default: The default value for NoticeSetting.send
+    default: Do not use this anymore
+    """
+    label = models.CharField(_("label"), unique=True, max_length=40)
     display = models.CharField(
         _("display"), max_length=50, help_text=_("Used as subject when sending emails.")
     )
     description = models.CharField(_("description"), max_length=100)
+    send_default = models.BooleanField(default=True)
 
     # by default only on for media with sensitivity less than or equal to this
     # number
@@ -56,26 +60,26 @@ class NoticeType(models.Model):
         verbose_name_plural = _("notice types")
 
 
-# if this gets updated, the create() method below needs to be as well...
+# Maybe someone wants to be informed by a messenger or whatever the future brings
+# If this gets updated, the create() method below needs to be as well...
 NOTICE_MEDIA = (("1", _("Email")),)
-
-# how spam-sensitive is the medium
-NOTICE_MEDIA_DEFAULTS = {"1": 2}  # email
 
 
 class NoticeSetting(models.Model):
-    """Indicates, for a given user, whether to send notifications of a given
-    type to a given medium.
+    """Stores all NoticeSetting's for each NoticeType for all users. Additional fields:
 
-    Notice types for each user are added if he/she enters the notification page.
+    medium: The medium to send the notice with, defaults to E-Mail
+    send: Whether the user wants to receive a notice on the given medium, defaults to
+          NoticeType.send_default
 
+    Notice types for each user are added if he/she enters the notification settings page.
     """
 
     user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
     notice_type = models.ForeignKey(
         NoticeType, verbose_name=_("notice type"), on_delete=models.CASCADE
     )
-    medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA)
+    medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA, default="1")
     send = models.BooleanField(_("send"))
 
     class Meta:
@@ -84,28 +88,27 @@ class NoticeSetting(models.Model):
         unique_together = ("user", "notice_type", "medium")
 
 
-def get_notification_setting(user, notice_type, medium):
+def get_notification_setting(user, notice_type):
     """Return NoticeSetting for a specific user. If a NoticeSetting of
-    given NoticeType didn't exist for given user, a NoticeSetting is created.
+    given NoticeType doesn't exist for given user, a NoticeSetting is created.
 
     If a new NoticeSetting is created, the field 'default' of a NoticeType
     decides whether NoticeSetting.send is True or False as default.
     """
     try:
         return NoticeSetting.objects.get(
-            user=user, notice_type=notice_type, medium=medium
+            user=user, notice_type=notice_type
         )
     except NoticeSetting.DoesNotExist:
-        default = NOTICE_MEDIA_DEFAULTS[medium] <= notice_type.default
         setting = NoticeSetting(
-            user=user, notice_type=notice_type, medium=medium, send=default
+            user=user, notice_type=notice_type, send=notice_type.send_default
         )
         setting.save()
         return setting
 
 
-def should_send(user, notice_type, medium):
-    return get_notification_setting(user, notice_type, medium).send
+def should_send(user, notice_type):
+    return get_notification_setting(user, notice_type).send
 
 
 def get_observers_for(notice_type, excl_user=None):
@@ -129,7 +132,7 @@ class NoticeQueueBatch(models.Model):
     pickled_data = models.TextField()
 
 
-def create_notice_type(label, display, description, default=2, verbosity=1):
+def create_notice_type(label, display, description, send_default=True, default=2):
     """Creates a new NoticeType.
 
     This is intended to be used by other apps as a post_migrate
@@ -148,16 +151,17 @@ def create_notice_type(label, display, description, default=2, verbosity=1):
         if default != notice_type.default:
             notice_type.default = default
             updated = True
+        if send_default != notice_type.send_default:
+            notice_type.default = default
+            updated = True
         if updated:
             notice_type.save()
-            if verbosity > 1:
-                print("Updated %s NoticeType" % label)
+            print(f"Updated NoticeType: {label}")
     except NoticeType.DoesNotExist:
         NoticeType(
             label=label, display=display, description=description, default=default
         ).save()
-        if verbosity > 1:
-            print("Created %s NoticeType" % label)
+        print(f"Created NoticeType: {label}")
 
 
 def get_notification_language(user):
@@ -166,6 +170,7 @@ def get_notification_language(user):
     LanguageStoreNotAvailable if this site does not use translated
     notifications.
     """
+    # TODO: WE never used this and the used functions do not exist anymore. Remove?
     if getattr(settings, "NOTIFICATION_LANGUAGE_MODULE", False):
         try:
             app_label, model_name = settings.NOTIFICATION_LANGUAGE_MODULE.split(".")
@@ -289,7 +294,7 @@ def send_now(users, label, extra_context=None, on_site=True):
                 },
             )
 
-            if should_send(user, notice_type, "1") and user.email:  # Email
+            if should_send(user, notice_type) and user.email:  # Email
                 recipients.append(user.email)
 
             send_mail(
