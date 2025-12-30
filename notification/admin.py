@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class NoticeTypeAdmin(admin.ModelAdmin):
-    list_display = ("label", "display", "description", "default")
+    list_display = ("label", "display", "description", "send_default")
 
 
 class NoticeSettingAdmin(admin.ModelAdmin):
@@ -14,7 +14,7 @@ class NoticeSettingAdmin(admin.ModelAdmin):
     list_display = ("user", "notice_type", "medium", "send")
 
 
-class ObserverdItemAdmin(admin.ModelAdmin):
+class ObservedItemAdmin(admin.ModelAdmin):
     readonly_fields = ("observed_object", "content_type", "object_id")
     search_fields = ["user__username", "notice_type__label"]
     list_display = ("user", "notice_type", "content_type", "get_content_object")
@@ -30,4 +30,4 @@ class ObserverdItemAdmin(admin.ModelAdmin):
 
 admin.site.register(NoticeType, NoticeTypeAdmin)
 admin.site.register(NoticeSetting, NoticeSettingAdmin)
-admin.site.register(ObservedItem, ObserverdItemAdmin)
+admin.site.register(ObservedItem, ObservedItemAdmin)
