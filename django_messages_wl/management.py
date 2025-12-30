@@ -16,13 +16,13 @@ if "notification" in settings.INSTALLED_APPS and getattr(
             "messages_received",
             _("Message Received"),
             _("you have received a message"),
-            default=2,
+            send_default=True,
         )
         notification.create_notice_type(
             "messages_reply_received",
             _("Reply Received"),
             _("you have received a reply to a message"),
-            default=2,
+            send_default=True,
         )
 
 else:
