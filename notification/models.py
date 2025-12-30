@@ -57,7 +57,6 @@ class NoticeType(models.Model):
 
 
 # Maybe someone wants to be informed by a messenger or whatever the future brings
-# If this gets updated, the create() method below needs to be as well...
 NOTICE_MEDIA = (("1", _("Email")),)
 
 
@@ -85,12 +84,7 @@ class NoticeSetting(models.Model):
 
 
 def get_notification_setting(user, notice_type):
-    """Return NoticeSetting for a specific user. If a NoticeSetting of
-    given NoticeType doesn't exist for given user, a NoticeSetting is created.
-
-    If a new NoticeSetting is created, the field 'default' of a NoticeType
-    decides whether NoticeSetting.send is True or False as default.
-    """
+    """Return NoticeSetting for a specific user."""
     try:
         return NoticeSetting.objects.get(
             user=user, notice_type=notice_type
@@ -109,7 +103,7 @@ def should_send(user, notice_type):
 
 def get_observers_for(notice_type, excl_user=None):
     """Returns the list of users which wants to get a message (email) for this
-    type of notice."""
+    NoticeType."""
     query = NoticeSetting.objects.filter(notice_type__label=notice_type, send=True)
 
     if excl_user:
@@ -158,8 +152,7 @@ def create_notice_type(label, display, description, send_default=True):
 
 
 def get_notification_language(user):
-    """
-    Returns site-specific notification language for this user. Raises
+    """Returns site-specific notification language for this user. Raises
     LanguageStoreNotAvailable if this site does not use translated
     notifications.
     """
@@ -179,7 +172,7 @@ def get_notification_language(user):
 def get_formatted_messages(formats, label, context):
     """Returns a dictionary with the format identifier as the key.
 
-    The values are are fully rendered templates with the given context.
+    The values are fully rendered templates with the given context.
 
     """
     format_templates = {}
