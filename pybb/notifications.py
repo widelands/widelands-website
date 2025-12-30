@@ -111,9 +111,7 @@ def notify(request, topic, post):
 
         # Inform users who auto subscribed to topics
         notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")
-        notice_setting = notification.get_notification_setting(
-            post.user, notice_type
-        )
+        notice_setting = notification.get_notification_setting(post.user, notice_type)
         if notice_setting.send:
             post.topic.subscribers.add(request.user)
 

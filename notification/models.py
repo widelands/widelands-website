@@ -41,6 +41,7 @@ class NoticeType(models.Model):
     send_default: The default value for NoticeSetting.send. Defaults to True but might be changed
                   by create_notice_type()
     """
+
     label = models.CharField(_("label"), unique=True, max_length=40)
     display = models.CharField(
         _("display"), max_length=50, help_text=_("Used as subject when sending emails.")
@@ -74,7 +75,9 @@ class NoticeSetting(models.Model):
     notice_type = models.ForeignKey(
         NoticeType, verbose_name=_("notice type"), on_delete=models.CASCADE
     )
-    medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA, default="1")
+    medium = models.CharField(
+        _("medium"), max_length=1, choices=NOTICE_MEDIA, default="1"
+    )
     send = models.BooleanField(_("send"))
 
     class Meta:
@@ -86,9 +89,7 @@ class NoticeSetting(models.Model):
 def get_notification_setting(user, notice_type):
     """Return NoticeSetting for a specific user."""
     try:
-        return NoticeSetting.objects.get(
-            user=user, notice_type=notice_type
-        )
+        return NoticeSetting.objects.get(user=user, notice_type=notice_type)
     except NoticeSetting.DoesNotExist:
         setting = NoticeSetting(
             user=user, notice_type=notice_type, send=notice_type.send_default
@@ -146,7 +147,10 @@ def create_notice_type(label, display, description, send_default=True):
             print(f"Updated NoticeType: {label}")
     except NoticeType.DoesNotExist:
         NoticeType(
-            label=label, display=display, description=description, send_default=send_default
+            label=label,
+            display=display,
+            description=description,
+            send_default=send_default,
         ).save()
         print(f"Created NoticeType: {label}")
 
