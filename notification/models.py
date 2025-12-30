@@ -36,7 +36,7 @@ class NoticeType(models.Model):
     """A predefined Notice type with fields:
 
     label: A unique name used to query a NoticeType. E.g. 'forum_new_post'
-    display: A short description for display in templates, e.g. 'Forum new Post'
+    display: A short description to display in templates, e.g. 'Forum new Post'
     description: A verbose description, e.g. 'a new comment has been posted to a topic you observe'
     send_default: The default value for NoticeSetting.send. Defaults to True but might be changed
                   by create_notice_type()
@@ -181,7 +181,7 @@ def get_formatted_messages(formats, label, context):
         # Switch off escaping for .txt templates was done here, but now it
         # resides in the templates
         format_templates[format] = render_to_string(
-            ("notification/%s/%s" % (label, format), "notification/%s" % format),
+            (f"notification/{label}/{format}", f"notification/{format}"),
             context,
         )
 
@@ -214,10 +214,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         notice_type = NoticeType.objects.get(label=label)
 
         current_site = Site.objects.get_current()
-        notices_url = "https://%s%s" % (
-            str(current_site),
-            reverse("notification_notices"),
-        )
+        notices_url = f"https://{str(current_site)}{reverse('notification_notices')}"
 
         current_language = get_language()
 
@@ -280,7 +277,7 @@ def send_now(users, label, extra_context=None, on_site=True):
                 },
             )
 
-            if should_send(user, notice_type) and user.email:  # Email
+            if should_send(user, notice_type) and user.email:
                 recipients.append(user.email)
 
             send_mail(
