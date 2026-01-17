@@ -193,6 +193,7 @@ WIKI_SPECIAL_PAGES = [
 FORBIDDEN_WIKI_TITLES = [
     "trash",
 ]
+
 ######################
 # User configuration #
 ######################
@@ -202,6 +203,7 @@ SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
 AVATARS_UPLOAD_TO = "profile/avatars"
 AVATAR_HEIGHT = AVATAR_WIDTH = 80
+LOGOUT_REDIRECT_URL = '/'
 
 ######################
 # Pybb Configuration #
