@@ -22,7 +22,9 @@ urlpatterns = [
         name="mark_as_read",
     ),
     # Feeds
-    re_path(r"^feeds/topics/(?P<topic_id>\d+)/$", LastTopics(), name="pybb_feed_topics"),
+    re_path(
+        r"^feeds/topics/(?P<topic_id>\d+)/$", LastTopics(), name="pybb_feed_topics"
+    ),
     re_path(r"^feeds/posts/(?P<topic_id>\d+)/$", LastPosts(), name="pybb_feed_posts"),
     re_path(r"^feeds/topics/$", LastTopics(), name="pybb_feed_topics"),
     re_path(r"^feeds/posts/$", LastPosts(), name="pybb_feed_posts"),
