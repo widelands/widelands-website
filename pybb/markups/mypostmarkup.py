@@ -1,7 +1,7 @@
 from pybb.markups import postmarkup
 import re
 
-RE_FIRST_LF = re.compile("^\s*\r?\n")
+RE_FIRST_LF = re.compile(r"^\s*\r?\n")
 markup = postmarkup.create(exclude=["link", "url", "code"], use_pygments=False)
 
 

@@ -172,7 +172,6 @@ ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
 # https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
-    "django.contrib.auth.hashers.SHA1PasswordHasher",
 ]
 
 ######################

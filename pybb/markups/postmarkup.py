@@ -36,7 +36,7 @@ re_url = re.compile(
 )
 
 
-re_html = re.compile("<.*?>|\&.*?\;")
+re_html = re.compile(r"<.*?>|\&.*?\;")
 
 
 def textilize(s):
