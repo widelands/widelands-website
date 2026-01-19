@@ -14,6 +14,13 @@ Registration - {{ block.super }}
 
 {% block content_section %}
 <section class="blogEntry">
+    {% if "alpha" in request.site.name %}
+        <h2>Are you sure this is the correct site?</h2>
+        <p>The current site <b>alpha.widelands.org</b> is <b>NOT</b> the official site of the
+            Widelands game! Please go to
+            <a href="https://www.widelands.org">https://www.widelands.org</a> to reach the
+            official website and register over there.</p>
+    {% endif %}
     <p><span class="errormessage">Please note:</span> Unfortunately some big
         Emailproviders (namely google - gmail and Microsoft - outlook.com, hotmail) are
         known for overblocking Emails or marking them as spam. Please check your spam
