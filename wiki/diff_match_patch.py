@@ -1280,7 +1280,7 @@ class diff_match_patch:
                 )
         if pointer != len(text1):
             raise ValueError(
-                f"Delta length (pointer) does not equal source text length ({len(text1)})."
+                f"Delta length ({pointer}) does not equal source text length ({len(text1)})."
             )
         return diffs
 
