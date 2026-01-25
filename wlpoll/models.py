@@ -46,7 +46,7 @@ class Choice(models.Model):
     votes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return "%i:%s" % (self.votes, self.choice)
+        return f"{self.votes}:{self.choice}"
 
 
 class Vote(models.Model):

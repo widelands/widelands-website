@@ -197,12 +197,12 @@ class LockBase:
         self.hostname = socket.gethostname()
         self.pid = os.getpid()
         if threaded:
-            tname = "%s-" % threading.current_thread().get_name()
+            tname = f"{threading.current_thread().get_name()}-"
         else:
             tname = ""
         dirname = os.path.dirname(self.lock_file)
         self.unique_name = os.path.join(
-            dirname, "%s.%s%s" % (self.hostname, tname, self.pid)
+            dirname, f"{self.hostname}.{tname}{self.pid}"
         )
 
     def acquire(self, timeout=None):
@@ -325,13 +325,13 @@ class MkdirFileLock(LockBase):
         """
         LockBase.__init__(self, path, threaded)
         if threaded:
-            tname = "%x-" % thread.get_ident()
+            tname = f"{thread.get_ident():x}-"
         else:
             tname = ""
         # Lock file itself is a directory.  Place the unique file name into
         # it.
         self.unique_name = os.path.join(
-            self.lock_file, "%s.%s%s" % (self.hostname, tname, self.pid)
+            self.lock_file, f"{self.hostname}.{tname}{self.pid}"
         )
 
     def acquire(self, timeout=None):

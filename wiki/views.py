@@ -648,8 +648,7 @@ def revert_to_revision(
         # An article with this name exists
         messages.error(
             request,
-            "Reverting not possible because an article with name '%s' already exists"
-            % old_title,
+            f"Reverting not possible because an article with name '{old_title}' already exists",
         )
         return redirect(article)
 
@@ -822,11 +821,11 @@ def backlinks(request, title):
 
     # Search for semantic wiki links. The regexpr was copied from there
     # and slightly modified
-    search_title = [re.compile(r"\[\[\s*(%s)/?\s*(\|\s*.+?\s*)?\]\]" % title)]
+    search_title = [re.compile(rf"$$\[\s*({title})/?\s*(\|\s*.+?\s*)?$$\]")]
 
     # Search for links in MarkDown syntax, like [Foo](wiki/FooBar)
     # The regexpr matches the title between '/' and ')'
-    search_title.append(re.compile(r"\/%s\)" % title))
+    search_title.append(re.compile(rf"\/{title}\)"))
 
     # Search for current and previous titles
     found_old_links = []

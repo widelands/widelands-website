@@ -38,7 +38,7 @@ class _TestUploadingBase(TestCase):
 
         i.save(sio, type)
 
-        return SimpleUploadedFile(name, sio.read(), content_type="image/%s" % type)
+        return SimpleUploadedFile(name, sio.read(), content_type=f"image/{type}")
 
     def setUp(self):
         # We need some dummy objects

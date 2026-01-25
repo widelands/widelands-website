@@ -79,8 +79,7 @@ def add_building(
         for worker in b.workers:
             wo = b.tribe.workers[worker]
             workers += (
-                '<tr><td border="0px"><img src="%s"/></td><td border="0px">%s</td></tr>'
-                % (wo.image, wo.descname)
+                f'<tr><td border="0px"><img src="{wo.image}"/></td><td border="0px">{wo.descname}</td></tr>'
             )
             if link_workers:
                 add_worker(g, wo)
@@ -93,20 +92,19 @@ def add_building(
         workers += r"""</table>"""
 
     if isinstance(b, MilitarySite):
-        workers = r"""<table border="0px" cellspacing="0">"""
-        workers += (
-            r"""<tr><td border="0px">Keeps %s Soldiers</td></tr>"""
-            r"""<tr><td border="0px">Conquers %s fields</td></tr>"""
-            r"""<tr><td border="0px">Heals %s HP per second</td></tr>"""
-        ) % (b.max_soldiers, b.conquers, b.heal_per_second)
-        workers += r"""</table>"""
+        workers = (
+            f"""<table border="0px" cellspacing="0">"""
+            f"""<tr><td border="0px">Keeps {b.max_soldiers} Soldiers</td></tr>"""
+            f"""<tr><td border="0px">Conquers {b.conquers} fields</td></tr>"""
+            f"""<tr><td border="0px">Heals {b.heal_per_second} HP per second</td></tr>"""
+            """</table>"""
+        )
 
     costs = r"""<tr><td colspan="2"><table border="0px" cellspacing="0">"""
     for ware, count in list(b.buildcost.items()):
         w = b.tribe.wares[ware]
         costs += (
-            '<tr><td border="0px">%s x </td><td border="0px"><img src="%s"/></td><td border="0px">%s</td></tr>'
-            % (count, w.image, w.descname)
+            f'<tr><td border="0px">{count} x </td><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'
         )
     costs += r"""</table></td></tr>"""
     if not b.buildcost:
@@ -114,23 +112,22 @@ def add_building(
 
     n = Node(
         b.name,
-        shape="none",
-        label=(
-            r"""<<TABLE border="1px" cellborder="0px" cellspacing="0px" cellpadding="0px">
-<TR><TD><IMG SRC="%s"/></TD>
-<TD valign="bottom">%s</TD>
+        shape = "none",
+        label = (
+            rf"""<<TABLE border="1px" cellborder="0px" cellspacing="0px" cellpadding="0px">
+<TR><TD><IMG SRC="{b.image}"/></TD>
+<TD valign="bottom">{workers}</TD>
 </TR>
-<TR><TD align="left" colspan="2">%s</TD></TR>
-%s
+<TR><TD align="left" colspan="2">{b.descname}</TD></TR>
+{costs}
 </TABLE>>"""
-            % (b.image, workers, b.descname, costs)
         ).replace("\n", ""),
-        URL="../../buildings/%s/" % b.name,
-        fillcolor="orange",
-        style="filled",
+        URL = f"../../buildings/{b.name}/",
+        fillcolor = "orange",
+        style = "filled",
     )
 
-    sg = Subgraph("%s_enhancements" % b.name, ordering="out", rankdir="TB", rank="same")
+    sg = Subgraph(f"{b.name}_enhancements", ordering="out", rankdir="TB", rank="same")
     if b.enhancement and not b.enhanced_building:
         cb = b
         while cb.enhancement:
@@ -164,17 +161,16 @@ def add_ware(g, w):
     # Add the nice node
     n = Node(
         w.name,
-        shape="ellipse",
-        label=(
-            r"""<<TABLE border="0px">
-<TR><TD><IMG SRC="%s"/></TD></TR>
-<TR><TD>%s</TD></TR>
+        shape = "ellipse",
+        label = (
+            rf"""<<TABLE border="0px">
+<TR><TD><IMG SRC="{w.image}"/></TD></TR>
+<TR><TD>{w.descname}</TD></TR>
 </TABLE>>"""
-        )
-        % (w.image, w.descname),
-        URL="../../wares/%s/" % (w.name),
-        fillcolor="#dddddd",
-        style="filled",
+        ),
+        URL = f"../../wares/{w.name}/",
+        fillcolor = "#dddddd",
+        style = "filled",
     )
 
     g.add_node(n)
@@ -184,16 +180,15 @@ def add_worker(g, w, as_recruit=False):
     # Add the nice node
     n = Node(
         w.name,
-        shape="octagon" if not as_recruit else "ellipse",
-        label=(
-            r"""<<TABLE border="0px">
-<TR><TD><IMG SRC="%s"/></TD>
-<TD>%s</TD></TR>
+        shape = "octagon" if not as_recruit else "ellipse",
+        label = (
+            rf"""<<TABLE border="0px">
+<TR><TD><IMG SRC="{w.image}"/></TD>
+<TD>{w.descname}</TD></TR>
 </TABLE>>"""
-        )
-        % (w.image, w.descname),
-        URL="../../workers/%s/" % w.name,
-        style="filled",
+        ),
+        URL = f"../../workers/{w.name}/",
+        style = "filled",
     )
 
     g.add_node(n)
@@ -228,10 +223,10 @@ def make_graph(tribe_name):
     for name, b in list(t.buildings.items()):
         add_building(g, b, link_workers=False)
 
-    g.write_pdf(path.join(tdir, "%s.pdf" % tribe_name))
+    g.write_pdf(path.join(tdir, f"{tribe_name}.pdf"))
 
     g.set_size("32")
-    g.write_gif(path.join(tdir, "%s.gif" % tribe_name))
+    g.write_gif(path.join(tdir, f"{tribe_name}.gif"))
 
     rtdir, tdir = tdir, ""
     return rtdir
@@ -276,11 +271,11 @@ def make_building_graph(t, building_name):
     [add_ware(g, w) for w in inputs + outputs]
 
     try:
-        makedirs(path.join(tdir, "help/%s/buildings/%s/" % (t.name, building_name)))
+        makedirs(path.join(tdir, f"help/{t.name}/buildings/{building_name}/"))
     except:
         pass
     g.write(
-        path.join(tdir, "help/%s/buildings/%s/source.dot" % (t.name, building_name))
+        path.join(tdir, f"help/{t.name}/buildings/{building_name}/source.dot")
     )
 
 
@@ -318,7 +313,7 @@ def make_worker_graph(t, worker_name):
         if w.name in bld.workers:
             g.add_edge(Edge(bld.name, w.name, color="orange", arrowhead="none"))
 
-    sg = Subgraph("%s_enhancements" % w.name, ordering="out", rankdir="TB", rank="same")
+    sg = Subgraph(f"{w.name}_enhancements", ordering="out", rankdir="TB", rank="same")
     # find exactly one level of enhancement
     for other in list(t.workers.values()):
         if other.becomes == w.name:
@@ -332,10 +327,10 @@ def make_worker_graph(t, worker_name):
     g.add_subgraph(sg)
 
     try:
-        makedirs(path.join(tdir, "help/%s/workers/%s/" % (t.name, w.name)))
+        makedirs(path.join(tdir, f"help/{t.name}/workers/{w.name}/"))
     except OSError:
         pass
-    g.write(path.join(tdir, "help/%s/workers/%s/source.dot" % (t.name, w.name)))
+    g.write(path.join(tdir, f"help/{t.name}/workers/{w.name}/source.dot"))
 
 
 def make_ware_graph(t, ware_name):
@@ -372,17 +367,16 @@ def make_ware_graph(t, ware_name):
     add_ware(g, w)
 
     try:
-        makedirs(path.join(tdir, "help/%s/wares/%s/" % (t.name, ware_name)))
+        makedirs(path.join(tdir, f"help/{t.name}/wares/{ware_name}/"))
     except OSError:
         pass
-    g.write(path.join(tdir, "help/%s/wares/%s/source.dot" % (t.name, ware_name)))
+    g.write(path.join(tdir, f"help/{t.name}/wares/{ware_name}/source.dot"))
 
 
 def process_dotfile(directory):
     subprocess.Popen(
         (
-            "dot -Tpng -o %s/menu.png -Tcmapx -o %s/map.map %s/source.dot"
-            % (directory, directory, directory)
+            f"dot -Tpng -o {directory}/menu.png -Tcmapx -o {directory}/map.map {directory}/source.dot"
         ).split(" ")
     ).wait()
     # with open(directory,"w") as html:
@@ -395,28 +389,28 @@ def make_all_subgraphs(t):
     tdir = mkdtemp(prefix="widelands-help")
     if isinstance(t, str):
         t = Tribe(t)
-    print("making all subgraphs for tribe", t.name, "in", tdir)
+    print("making all subgraphs for tribe {t.name} in {tdir}")
 
     print("  making wares")
 
     for w in t.wares:
         print("    " + w)
         make_ware_graph(t, w)
-        process_dotfile(path.join(tdir, "help/%s/wares/%s/" % (t.name, w)))
+        process_dotfile(path.join(tdir, f"help/{t.name}/wares/{w}/"))
 
     print("  making workers")
 
     for w in t.workers:
         print("    " + w)
         make_worker_graph(t, w)
-        process_dotfile(path.join(tdir, "help/%s/workers/%s/" % (t.name, w)))
+        process_dotfile(path.join(tdir, f"help/{t.name}/workers/{w}/"))
 
     print("  making buildings")
 
     for b in t.buildings:
         print("    " + b)
         make_building_graph(t, b)
-        process_dotfile(path.join(tdir, "help/%s/buildings/%s/" % (t.name, b)))
+        process_dotfile(path.join(tdir, f"help/{t.name}/buildings/{b}/"))
 
     rtdir, tdir = tdir, ""
     return rtdir

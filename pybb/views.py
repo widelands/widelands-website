@@ -295,11 +295,7 @@ def show_post(request, post_id):
 
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
-    url = "%s?page=%d#post-%d" % (
-        reverse("pybb_topic", args=[post.topic.id]),
-        page,
-        post.id,
-    )
+    url = f"{reverse('pybb_topic', args=[post.topic.id])}?page={page}#post-{post.id}"
     return HttpResponseRedirect(url)
 
 

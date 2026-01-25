@@ -20,9 +20,9 @@ class DisplayPollNode(template.Node):
 
         _esc = lambda s: s.replace("'", "\\'")
 
-        data = ",\n".join("[ '%s', %i ]" % (_esc(c.choice), c.votes) for c in choices)
+        data = ",\n".join(f"[ '{_esc(c.choice)}', {c.votes} ]" for c in choices)
 
-        s = r"""
+        s = rf"""
         <script type="text/javascript">
         $(document).ready(function() {
               Highcharts.chart('chartContainer', {
@@ -37,10 +37,10 @@ class DisplayPollNode(template.Node):
                                 width: '150px',
                             }
                         }
-                    } 
+                    }
                  },
                  title: {
-                    text: '%(name)s'
+                    text: '{_esc(p.name)}'
                  },
                  tooltip: {
                      formatter: function() {
@@ -50,17 +50,14 @@ class DisplayPollNode(template.Node):
                  series: [{
                     type: 'pie',
                     data: [
-                        %(data)s
+                        {data}
                     ],
                  },
                  ]
               });
            });
        </script>
-        """ % {
-            "name": _esc(p.name),
-            "data": data,
-        }
+        """
 
         return s
 
@@ -70,7 +67,7 @@ def do_display_poll(parser, token):
         tag_name, poll_var = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag requires a single argument" % token.contents.split()[0]
+            f"{token.contents.split()[0]!r} tag requires a single argument"
         )
 
     return DisplayPollNode(poll_var)
@@ -99,7 +96,7 @@ def do_get_open_polls(parser, token):
         tag_name, as_name, variable = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "required: %r as <variable name>" % token.contents.split()[0]
+            f"required: {token.contents.split()[0]!r} as <variable name>"
         )
 
     return GetOpenPolls(variable)

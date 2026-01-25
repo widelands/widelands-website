@@ -50,20 +50,10 @@ class Command(BaseCommand):
             tribe = Tribe.objects.get(name=tribename)
             if tribe:
                 tribe.network_pdf_url = path.normpath(
-                    "%s/%s/%s"
-                    % (
-                        settings.MEDIA_URL,
-                        targetdir[len(settings.MEDIA_ROOT) :],
-                        tribename + ".pdf",
-                    )
+                    f"{settings.MEDIA_URL}/{targetdir[len(settings.MEDIA_ROOT) :]}/{tribename}.pdf"
                 )
                 tribe.network_gif_url = path.normpath(
-                    "%s/%s/%s"
-                    % (
-                        settings.MEDIA_URL,
-                        targetdir[len(settings.MEDIA_ROOT) :],
-                        tribename + ".gif",
-                    )
+                    f"{settings.MEDIA_URL}/{targetdir[len(settings.MEDIA_ROOT) :]}/{tribename}.gif"
                 )
                 tribe.save()
             else:

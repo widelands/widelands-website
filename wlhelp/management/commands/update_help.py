@@ -60,7 +60,7 @@ class TribeParser(object):
         self._to.descr = tribeinfo["tooltip"]
         # copy icon
         dn = os.path.normpath(
-            "%s/wlhelp/img/%s/" % (settings.MEDIA_ROOT, tribeinfo["name"])
+            f"{settings.MEDIA_ROOT}/wlhelp/img/{tribeinfo['name']}/"
         )
         try:
             os.makedirs(dn)
@@ -71,7 +71,7 @@ class TribeParser(object):
         file = os.path.normpath(base_directory + "/" + tribeinfo["icon"])
         shutil.copy(file, new_name)
         self._to.icon_url = path.normpath(
-            "%s/%s" % (settings.MEDIA_URL, new_name[len(settings.MEDIA_ROOT) :])
+            f"{settings.MEDIA_URL}/{new_name[len(settings.MEDIA_ROOT) :]}"
         )
         self._to.save()
 
@@ -107,7 +107,7 @@ class TribeParser(object):
             for inst in obj.objects.all().filter(tribe=self._to):
                 try:
                     fpath = path.join(
-                        tdir, "help/%s/%s/%s/" % (self._tribe.name, cls, inst.name)
+                        tdir, f"help/{self._tribe.name}/{cls}/{inst.name}/"
                     )
                     url = self._copy_picture(
                         path.join(fpath, "menu.png"), inst.name, "graph.png"
@@ -165,7 +165,7 @@ class TribeParser(object):
 
         """
         dn = os.path.normpath(
-            "%s/wlhelp/img/%s/%s/" % (settings.MEDIA_ROOT, self._to.name, name)
+            f"{settings.MEDIA_ROOT}/wlhelp/img/{self._to.name}/{name}/"
         )
         try:
             os.makedirs(dn)
@@ -175,7 +175,7 @@ class TribeParser(object):
         new_name = path.join(dn, fname)
         shutil.copy(file, new_name)
 
-        return "%s%s" % (settings.MEDIA_URL, new_name[len(settings.MEDIA_ROOT) :])
+        return f"{settings.MEDIA_URL}{new_name[len(settings.MEDIA_ROOT) :]}"
 
     def _parse_workers(self, base_directory, workersinfo):
         """Put the workers into the database."""

@@ -175,7 +175,7 @@ def quote_text(post, markup, request):
         # but it will unbreak certain constructs like '>:-))'.
         return "> " + text.replace("\r", "").replace("\n", "\n> ") + "\n"
     elif markup == "bbcode":
-        return "[quote]\n%s\n[/quote]\n" % text
+        return f"[quote]\n{text}\n[/quote]\n"
     else:
         return text
 

@@ -10,7 +10,7 @@ class WlHelpTribeSitemap(SitemapHTTPS):
         return Tribe.objects.all()
 
     def location(self, obj):
-        return "/encyclopedia/%s" % obj.name
+        return f"/encyclopedia/{obj.name}"
 
 
 class WlHelpBuildingSitemap(SitemapHTTPS):
@@ -21,7 +21,7 @@ class WlHelpBuildingSitemap(SitemapHTTPS):
         return Building.objects.all()
 
     def location(self, obj):
-        return "/encyclopedia/%s/buildings/%s" % (obj.tribe.name, obj.name)
+        return f"/encyclopedia/{obj.tribe.name}/buildings/{obj.name}"
 
 
 class WlHelpWareSitemap(SitemapHTTPS):
@@ -32,7 +32,7 @@ class WlHelpWareSitemap(SitemapHTTPS):
         return Ware.objects.all()
 
     def location(self, obj):
-        return "/encyclopedia/%s/wares/%s" % (obj.tribe.name, obj.name)
+        return f"/encyclopedia/{obj.tribe.name}/wares/{obj.name}"
 
 
 class WlHelpWorkerSitemap(SitemapHTTPS):
@@ -43,4 +43,4 @@ class WlHelpWorkerSitemap(SitemapHTTPS):
         return Worker.objects.all()
 
     def location(self, obj):
-        return "/encyclopedia/%s/workers/%s" % (obj.tribe.name, obj.name)
+        return f"/encyclopedia/{obj.tribe.name}/workers/{obj.name}"

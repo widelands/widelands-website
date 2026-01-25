@@ -1146,11 +1146,11 @@ class diff_match_patch:
                 .replace("\n", "&para;<br>")
             )
             if op == self.DIFF_INSERT:
-                html.append('<ins class="inserted">%s</ins>' % text)
+                html.append(f'<ins class="inserted">{text}</ins>')
             elif op == self.DIFF_DELETE:
-                html.append('<del class="removed">%s</del>' % text)
+                html.append(f'<del class="removed">{text}</del>')
             elif op == self.DIFF_EQUAL:
-                html.append("<span>%s</span>" % text)
+                html.append(f"<span>{text}</span>")
         return "".join(html)
 
     def diff_text1(self, diffs):
@@ -1228,9 +1228,9 @@ class diff_match_patch:
                 data = data.encode("utf-8")
                 text.append("+" + urllib.parse.quote(data, "!~*'();/?:@&=+$,# "))
             elif op == self.DIFF_DELETE:
-                text.append("-%d" % len(data))
+                text.append(f"-{len(data)}")
             elif op == self.DIFF_EQUAL:
-                text.append("=%d" % len(data))
+                text.append(f"={len(data)}")
         return "\t".join(text)
 
     def diff_fromDelta(self, text1, delta):
@@ -1280,8 +1280,7 @@ class diff_match_patch:
                 )
         if pointer != len(text1):
             raise ValueError(
-                "Delta length (%d) does not equal source text length (%d)."
-                % (pointer, len(text1))
+                f"Delta length (pointer) does not equal source text length ({len(text1)})."
             )
         return diffs
 
@@ -1971,7 +1970,7 @@ class diff_match_patch:
                     pass
                 else:
                     # WTF?
-                    raise ValueError("Invalid patch mode: '%s'\n%s" % (sign, line))
+                    raise ValueError(f"Invalid patch mode: '{sign}'\n{line}")
                 del text[0]
         return patches
 

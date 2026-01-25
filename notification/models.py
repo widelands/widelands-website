@@ -151,13 +151,13 @@ def create_notice_type(label, display, description, default=2, verbosity=1):
         if updated:
             notice_type.save()
             if verbosity > 1:
-                print("Updated %s NoticeType" % label)
+                print(f"Updated {label} NoticeType")
     except NoticeType.DoesNotExist:
         NoticeType(
             label=label, display=display, description=description, default=default
         ).save()
         if verbosity > 1:
-            print("Created %s NoticeType" % label)
+            print(f"Created {label} NoticeType")
 
 
 def get_notification_language(user):
@@ -190,7 +190,7 @@ def get_formatted_messages(formats, label, context):
         # Switch off escaping for .txt templates was done here, but now it
         # resides in the templates
         format_templates[format] = render_to_string(
-            ("notification/%s/%s" % (label, format), "notification/%s" % format),
+            (f"notification/{label}/{format}", f"notification/{format}"),
             context,
         )
 
@@ -223,10 +223,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         notice_type = NoticeType.objects.get(label=label)
 
         current_site = Site.objects.get_current()
-        notices_url = "https://%s%s" % (
-            str(current_site),
-            reverse("notification_notices"),
-        )
+        notices_url = f"https://{current_site}{reverse('notification_notices')}"
 
         current_language = get_language()
 
