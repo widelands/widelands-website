@@ -94,6 +94,12 @@ def do_custom_date(format, date, tz_offset=1.0, now=None):
         now = datetime.now(tz=ForumUserTimeZone)
 
     try:
+        # If date is naive (no timezone), treat it as UTC+1 for backward compatibility
+        # This matches the original behavior where naive datetimes were assumed to be
+        # in Europe/Berlin standard time (UTC+1, not considering DST)
+        if date.tzinfo is None:
+            utc_plus_one = FixedOffset(60, "UTC+1")
+            date = date.replace(tzinfo=utc_plus_one)
         date = date.astimezone(ForumUserTimeZone)
     except AttributeError:  # maybe this is no valid date object?
         return format

@@ -56,7 +56,8 @@ class UploadMapForm(ModelForm):
             # change working directory so that the datadir is found
             old_cwd = os.getcwd()
             os.chdir(settings.WIDELANDS_SVN_DIR)
-            check_call(["wl_map_info", copied_file])
+            wl_map_info = getattr(settings, 'WIDELANDS_MAP_INFO_TOOL', 'wl_map_info')
+            check_call([wl_map_info, copied_file])
             os.chdir(old_cwd)
         except CalledProcessError:
             self._errors["file"] = self.error_class(
