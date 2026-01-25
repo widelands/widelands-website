@@ -24,38 +24,38 @@ class DisplayPollNode(template.Node):
 
         s = rf"""
         <script type="text/javascript">
-        $(document).ready(function() {
-              Highcharts.chart('chartContainer', {
-                 chart: {
+        $(document).ready(function() {{
+              Highcharts.chart('chartContainer', {{
+                 chart: {{
                     type: 'pie'
-                 },
-                 plotOptions: {
-                    pie: {
-                        center: ["50%%", "50%%"],
-                        dataLabels: {
-                            style: {
+                 }},
+                 plotOptions: {{
+                    pie: {{
+                        center: ["50%", "50%"],
+                        dataLabels: {{
+                            style: {{
                                 width: '150px',
-                            }
-                        }
-                    }
-                 },
-                 title: {
+                            }}
+                        }}
+                    }}
+                 }},
+                 title: {{
                     text: '{_esc(p.name)}'
-                 },
-                 tooltip: {
-                     formatter: function() {
-                        return '<b>'+ this.y +' votes</b>: '+ this.percentage +' %%';
-                     }
-                  },
-                 series: [{
+                 }},
+                 tooltip: {{
+                     formatter: function() {{
+                        return '<b>'+ this.y +' votes</b>: '+ this.percentage +' %';
+                     }}
+                  }},
+                 series: [{{
                     type: 'pie',
                     data: [
                         {data}
                     ],
-                 },
+                 }},
                  ]
-              });
-           });
+              }});
+           }});
        </script>
         """
 

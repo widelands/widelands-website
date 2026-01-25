@@ -72,7 +72,7 @@ def send_all():
             # email people
             current_site = Site.objects.get_current()
             subject = f"[{current_site.name} emit_notices] {e!r}"
-            message = f"{'\n'.join(traceback.format_exception(*sys.exc_info()))}"
+            message = '\n'.join(traceback.format_exception(*sys.exc_info()))
             mail_admins(subject, message, fail_silently=True)
             # log it as critical
             logging.critical(f"an exception occurred: {e!r}")
