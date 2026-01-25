@@ -100,9 +100,7 @@ class Command(BaseCommand):
                 else:
                     self.stdout.write(f_path)
                     if articles:
-                        self.stdout.write(
-                            f"  Used in article: {', '.join(articles)}"
-                        )
+                        self.stdout.write(f"  Used in article: {', '.join(articles)}")
 
         if wlimage_wo_file:
             if not options["delete_all"]:

@@ -162,7 +162,9 @@ def quote_text(post, markup, request):
     if post.user.wlprofile.deleted:
         quoted_username = settings.DELETED_USERNAME
     else:
-        quoted_username = f"[{post.user.username}]({base_url}/profile/{post.user.username})"
+        quoted_username = (
+            f"[{post.user.username}]({base_url}/profile/{post.user.username})"
+        )
 
     quote_header = f"*{quoted_username} [wrote]({base_url}{post.get_absolute_url()})*"
 
