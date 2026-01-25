@@ -23,11 +23,6 @@ from django.test import TestCase as DBTestCase
 
 from ..templatetags.wl_markdown import do_wl_markdown
 
-def get_domain():
-    """Lazy function to get domain to avoid database access at import time."""
-    return Site.objects.get(pk=settings.SITE_ID).domain
-
-
 class TestWlMarkdown(DBTestCase):
     def setUp(self):
         a = Article.objects.create(title="MainPage")
