@@ -821,7 +821,7 @@ def backlinks(request, title):
 
     # Search for semantic wiki links. The regexpr was copied from there
     # and slightly modified
-    search_title = [re.compile(rf"$$\[\s*({title})/?\s*(\|\s*.+?\s*)?$$\]")]
+    search_title = [re.compile(rf"\[\[\s*({title})/?\s*(\|\s*.+?\s*)?\]\]")]
 
     # Search for links in MarkDown syntax, like [Foo](wiki/FooBar)
     # The regexpr matches the title between '/' and ')'
