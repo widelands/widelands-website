@@ -442,7 +442,7 @@ class Reaction(models.Model):
         unique_together = ["user", "post"]
 
     def __str__(self):
-        return "{} ({})".format(self.get_image_display(), self.image)
+        return f"{self.get_image_display()} ({self.image})"
 
 
 class Read(models.Model):

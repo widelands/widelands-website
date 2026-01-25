@@ -107,7 +107,7 @@ def get_pagination(request, objects, per_page=20):
     if query_dict:
         # If this is not empty after popping we have an additional
         # search querystring.
-        search_query = "&{}".format(query_dict.urlencode())
+        search_query = f"&{query_dict.urlencode()}"
 
     context.update({"search_query": search_query})
 

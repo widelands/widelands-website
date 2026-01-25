@@ -385,12 +385,8 @@ def edit_article(
                     if r:
                         path = r.new_path
                         if not path.startswith("http"):
-                            path = "{}://{}{}".format(
-                                request.scheme, get_current_site(request), path
-                            )
-                        comment = "{}\nWe made a redirect and the new content can be found at {}".format(
-                            comment, path
-                        )
+                            path = f"{request.scheme}://{get_current_site(request)}{path}"
+                        comment = f"{comment}\nWe made a redirect and the new content can be found at {path}"
                 else:
                     comment = changeset.comment
 

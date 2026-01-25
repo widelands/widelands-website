@@ -9,7 +9,7 @@ import datetime
 IMAGE_PATH = os.path.join(settings.MEDIA_ROOT, "wlimages")
 BACKUP_FOLDER = os.path.join(
     IMAGE_PATH,
-    "cleanup_images_backup_{}".format(datetime.date.today().isoformat()),
+    f"cleanup_images_backup_{datetime.date.today().isoformat()}",
 )
 
 
@@ -71,10 +71,10 @@ class Command(BaseCommand):
             except FileNotFoundError:
                 wlimage_wo_file.append(img.name)
             except KeyError as e:
-                error = "{}\nProbably the code is faulty?".format(e)
+                error = f"{e}\nProbably the code is faulty?"
                 raise CommandError(error)
             except Exception as e:
-                error = "ERROR: {}\nFor object: {}".format(e, img)
+                error = f"ERROR: {e}\nFor object: {img}"
                 raise CommandError(error)
 
         # An image file might have no wlimage object but is used in an article
@@ -101,7 +101,7 @@ class Command(BaseCommand):
                     self.stdout.write(f_path)
                     if articles:
                         self.stdout.write(
-                            "  Used in article: {}".format(", ".join(articles))
+                            f"  Used in article: {', '.join(articles)}"
                         )
 
         if wlimage_wo_file:
@@ -122,7 +122,7 @@ class Command(BaseCommand):
         if errors:
             message = ""
             for e in errors:
-                message = "{}\n\n{}".format(message, e)
+                message = f"{message}\n\n{e}"
 
             mail_admins(
                 "A failure happened during executing the django management command cleanup_images",

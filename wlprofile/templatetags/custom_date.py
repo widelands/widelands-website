@@ -182,9 +182,9 @@ def pluralize(value, name):
     """
 
     if value > 1:
-        return "{:-.0f} {}".format(value, name + "s")
+        return f"{value:-.0f} {name}s"
 
-    return "{:-.0f} {}".format(value, name)
+    return f"{value:-.0f} {name}"
 
 
 @register.filter

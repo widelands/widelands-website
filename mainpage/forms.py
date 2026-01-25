@@ -62,9 +62,7 @@ class LoginTimezoneForm(AuthenticationForm):
             if found is False:
                 mail_admins(
                     "Missing Time Zone?",
-                    "Automatic applying a time zone for user '{user}' has failed. Please check if '{tz}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models".format(
-                        user=profile.user.username, tz=br_time_zone
-                    ),
+                    f"Automatic applying a time zone for user '{profile.user.username}' has failed. Please check if '{br_time_zone}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models",
                 )
                 self.add_error(
                     "set_timezone",

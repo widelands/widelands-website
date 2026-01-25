@@ -132,7 +132,7 @@ class Command(BaseCommand):
                 ]
             )
         except CalledProcessError as why:
-            print("An error occured: {0}".format(why))
+            print(f"An error occured: {why}")
             sys.exit(1)
 
         self.move_docs()
