@@ -10,9 +10,7 @@ import re
 # images for avatars, wiki, wlscreens, news cathegories and also mapfiles
 MEDIA_ROOT = os.path.join(os.getcwd(), 'media/')
 
-# If you are using the developer version of widelands from Launchpad
-# set WIDELANDS_SVN_DIR to the correct path. See also:
-# https://wl.widelands.org/wiki/BzrPrimer/
+# Point to the path of your checkout of the widelands source repository.
 WIDELANDS_SVN_DIR = "/path/to/widelands/trunk/"
 
 os.environ['PATH'] = WIDELANDS_SVN_DIR + ':' + os.environ['PATH']
