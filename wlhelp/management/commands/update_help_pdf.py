@@ -1,15 +1,13 @@
-from ...models import Tribe as TribeModel
-
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 
 import os
 import shutil
 from os import path
+# was genau wird aus widelandslib.tribe genutzt?
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_graph
 from wlhelp.models import Tribe
-from glob import glob
 import json
 
 

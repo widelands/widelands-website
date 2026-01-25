@@ -1003,7 +1003,7 @@ class PostMarkup(object):
 
 
 def _tests():
-    import sys
+    #import sys
 
     # sys.stdout=open('test.htm', 'w')
 

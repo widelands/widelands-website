@@ -18,7 +18,6 @@ from wlimages.models import Image
 
 try:
     from notification import models as notification
-    from django.db.models import signals
 except ImportError:
     notification = None
 

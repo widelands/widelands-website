@@ -17,8 +17,6 @@ sys.path.append("..")
 
 import unittest
 from wiki.models import Article
-from django.contrib.sites.models import Site
-from django.conf import settings
 from django.test import TestCase as DBTestCase
 
 from ..templatetags.wl_markdown import do_wl_markdown
