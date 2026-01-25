@@ -187,7 +187,7 @@ class ChangeSet(models.Model):
         app_label = "wiki"
 
     def __str__(self):
-        return f"{self.revision}"
+        return f"#{self.revision}"
 
     def get_absolute_url(self):
         if self.article.group is None:
