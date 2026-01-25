@@ -1,2 +1,2 @@
 format:
-	find . -name '*.py' -print0 | xargs -0 black
+	rg --files --hidden -g '*.py' --null | xargs -0 uv run black
