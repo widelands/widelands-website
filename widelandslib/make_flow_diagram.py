@@ -389,7 +389,7 @@ def make_all_subgraphs(t):
     tdir = mkdtemp(prefix="widelands-help")
     if isinstance(t, str):
         t = Tribe(t)
-    print("making all subgraphs for tribe {t.name} in {tdir}")
+    print(f"making all subgraphs for tribe {t.name} in {tdir}")
 
     print("  making wares")
 
