@@ -348,7 +348,9 @@ class Command(BaseCommand):
         is_json_valid = False
         os.chdir(settings.WIDELANDS_SVN_DIR)
         try:
-            wl_map_object_info = getattr(settings, 'WIDELANDS_MAP_OBJECT_INFO_TOOL', 'wl_map_object_info')
+            wl_map_object_info = getattr(
+                settings, "WIDELANDS_MAP_OBJECT_INFO_TOOL", "wl_map_object_info"
+            )
 
             subprocess.check_call(
                 [os.path.normpath(wl_map_object_info), json_directory]
