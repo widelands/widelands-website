@@ -23,6 +23,7 @@ from django.test import TestCase as DBTestCase
 
 from ..templatetags.wl_markdown import do_wl_markdown
 
+
 class TestWlMarkdown(DBTestCase):
     def setUp(self):
         a = Article.objects.create(title="MainPage")
@@ -74,17 +75,23 @@ class TestWlMarkdown(DBTestCase):
     # Check smileys
     def test_smiley_angel(self):
         input = """O:-)"""
-        wanted = """<p><img alt="O:-)" src="/static/img/smileys/face-angel.png"/> </p>"""
+        wanted = (
+            """<p><img alt="O:-)" src="/static/img/smileys/face-angel.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_crying(self):
         input = """:'-("""
-        wanted = """<p><img alt=":'-(" src="/static/img/smileys/face-crying.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":'-(" src="/static/img/smileys/face-crying.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_glasses(self):
         input = """8-)"""
-        wanted = """<p><img alt="8-)" src="/static/img/smileys/face-glasses.png"/> </p>"""
+        wanted = (
+            """<p><img alt="8-)" src="/static/img/smileys/face-glasses.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_kiss(self):
@@ -104,7 +111,9 @@ class TestWlMarkdown(DBTestCase):
 
     def test_smiley_smilebig(self):
         input = """:))"""
-        wanted = """<p><img alt=":))" src="/static/img/smileys/face-smile-big.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":))" src="/static/img/smileys/face-smile-big.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_smile(self):
@@ -114,7 +123,9 @@ class TestWlMarkdown(DBTestCase):
 
     def test_smiley_surprise(self):
         input = """:-O"""
-        wanted = """<p><img alt=":-O" src="/static/img/smileys/face-surprise.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":-O" src="/static/img/smileys/face-surprise.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_wink(self):
@@ -149,7 +160,9 @@ class TestWlMarkdown(DBTestCase):
 
     def test_smiley_monkey(self):
         input = """:(|)"""
-        wanted = """<p><img alt=":(|)" src="/static/img/smileys/face-monkey.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":(|)" src="/static/img/smileys/face-monkey.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     # Occured errors
