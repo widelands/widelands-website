@@ -3,10 +3,9 @@ from django.utils.feedgenerator import Atom1Feed
 from django.urls import reverse
 from news.models import Post
 
-# Validated through http://validator.w3.org/feed/ on 2026-01-28
-
 
 class NewsPostsFeed(Feed):
+    # Validated through http://validator.w3.org/feed/ on 2026-01-28
     feed_type = Atom1Feed
     title = "Widelands news feed"
     subtitle = "The news section from the widelands.org homepage"

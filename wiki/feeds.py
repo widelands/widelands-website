@@ -1,63 +1,35 @@
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from wiki.models import ChangeSet, Article
-from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
-
-# Validated through http://validator.w3.org/feed/
+from django.utils.feedgenerator import Atom1Feed
 
 
-class RssHistoryFeed(Feed):
-    feed_type = Rss201rev2Feed
+class WikiHistoryFeed(Feed):
+    # Validated through http://validator.w3.org/feed/ on 2026-01-28
+    feed_type = Atom1Feed
     title = "History for all articles"
-    description = "Recent changes in wiki"
-    link = "/feeds/wiki/rss/"
+    subtitle = "Recent changes in wiki"
+    link = "/feeds/wiki/"
     title_template = "wiki/feeds/history_title.html"
     description_template = "wiki/feeds/history_description.html"
 
     def items(self):
         return ChangeSet.official.order_by("-modified")[:30]
 
-    def item_pubdate(self, item):
-        """Return the item's pubdate.
+    def item_author_name(self, item):
+        return item.editor
 
-        It's this modified date
-
-        """
-        return item.modified
-
-
-# Validated through http://validator.w3.org/feed/
-
-
-class AtomHistoryFeed(RssHistoryFeed):
-    feed_type = Atom1Feed
-    subtitle = "Recent changes in wiki"
-    link = "/feeds/wiki/atom/"
+    def item_updateddate(self, item):
+        return item.last_update
 
     def item_updateddate(self, item):
         return item.modified
 
 
-# Validated through http://validator.w3.org/feed/
-
-
-class RssArticleHistoryFeed(Feed):
-    feed_type = Rss201rev2Feed
+class WikiArticleHistoryFeed(Feed):
+    # Validated through http://validator.w3.org/feed/ on 2026-01-28
+    feed_type = Atom1Feed
     title_template = "wiki/feeds/history_title.html"
     description_template = "wiki/feeds/history_description.html"
-
-    def get_object(self, request, *args, **kwargs):
-        return Article.objects.get(title=kwargs["title"])
-
-    def title(self, item):
-        return "History for: %s " % item.title
-
-    def link(self, item):
-        if not item:
-            raise FeedDoesNotExist
-        return item.get_absolute_url()
-
-    def description(self, item):
-        return "Recent changes in %s" % item.title
 
     def items(self, item):
         return (
@@ -66,19 +38,26 @@ class RssArticleHistoryFeed(Feed):
             .order_by("-modified")[:30]
         )
 
-    def item_pubdate(self, item):
-        """Returns the modified date."""
-        return item.modified
+    def link(self, item):
+        if not item:
+            raise FeedDoesNotExist
+        return item.get_absolute_url()
 
+    def get_object(self, request, *args, **kwargs):
+        return Article.objects.get(title=kwargs["title"])
 
-# Validated through http://validator.w3.org/feed/
-
-
-class AtomArticleHistoryFeed(RssArticleHistoryFeed):
-    feed_type = Atom1Feed
+    def title(self, item):
+        return "History for: %s " % item.title
 
     def subtitle(self, item):
         return "Recent changes in %s" % item.title
+
+    def item_author_name(self, item):
+        return item.editor
+
+    def item_pubdate(self, item):
+        """Returns the modified date."""
+        return item.modified
 
     def item_updateddate(self, item):
         return item.modified
