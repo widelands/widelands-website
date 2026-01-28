@@ -7,7 +7,7 @@ from wiki.feeds import (
 )
 
 urlpatterns = [
-    re_path(r"^atom/$", WikiHistoryFeed(), name="wiki_history_feed"),
+    re_path(r"^$", WikiHistoryFeed(), name="wiki_history_feed"),
     re_path(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/$",
         WikiArticleHistoryFeed(),
