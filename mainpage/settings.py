@@ -97,7 +97,6 @@ INSTALLED_APPS = [
     "django.contrib.redirects",
     "django_recaptcha",
     # Our own apps
-    "wiki.templatetags.restructuredtext",
     "mainpage",
     "wlhelp",
     "wlimages",

@@ -31,26 +31,12 @@ def diff(txt1, txt2):
     return dmp.patch_toText(patch)
 
 
-try:
-    markup_choices = settings.WIKI_MARKUP_CHOICES
-except AttributeError:
-    markup_choices = (
-        ("crl", _("Creole")),
-        ("rst", _("reStructuredText")),
-        ("txl", _("Textile")),
-        ("mrk", _("Markdown")),
-    )
-
-
 class Article(models.Model):
     """A wiki page reflecting the actual revision."""
 
     title = models.CharField(_("Title"), max_length=50, unique=True)
     content = models.TextField(_("Content"))
     summary = models.CharField(_("Summary"), max_length=150, null=True, blank=True)
-    markup = models.CharField(
-        _("Content Markup"), max_length=3, choices=markup_choices, null=True, blank=True
-    )
     creator = models.ForeignKey(
         User, verbose_name=_("Article Creator"), null=True, on_delete=models.SET_NULL
     )
@@ -97,7 +83,7 @@ class Article(models.Model):
     def all_images(self):
         return self.images.all()
 
-    def new_revision(self, old_content, old_title, old_markup, comment, editor):
+    def new_revision(self, old_content, old_title, comment, editor):
         """Create a new ChangeSet with the old content."""
 
         content_diff = diff(self.content, old_content)
@@ -107,7 +93,6 @@ class Article(models.Model):
             comment=comment,
             editor=editor,
             old_title=old_title,
-            old_markup=old_markup,
             content_diff=content_diff,
         )
 
@@ -162,13 +147,6 @@ class ChangeSet(models.Model):
 
     # How to recreate this version
     old_title = models.CharField(_("Old Title"), max_length=50, blank=True)
-    old_markup = models.CharField(
-        _("Article Content Markup"),
-        max_length=3,
-        choices=markup_choices,
-        null=True,
-        blank=True,
-    )
     content_diff = models.TextField(_("Content Patch"), blank=True)
 
     comment = models.TextField(_("Editor comment"), blank=True)
@@ -229,17 +207,14 @@ class ChangeSet(models.Model):
 
         old_content = article.content
         old_title = article.title
-        old_markup = article.markup
 
         article.content = content
         article.title = changeset.old_title
-        article.markup = changeset.old_markup
         article.save()
 
         article.new_revision(
             old_content=old_content,
             old_title=old_title,
-            old_markup=old_markup,
             comment=f"Reverted to revision #{self.revision}",
             editor=editor,
         )
