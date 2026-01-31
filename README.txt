@@ -6,6 +6,12 @@ Used python version
 The website is tested with python 3.10. This README reflects setting up the
 website with this python version.
 
+Framework versions
+------------------
+This project targets Django LTS (Long Term Support) releases for stability and
+extended support. We currently use Django 5.2 LTS, which is supported until
+April 2028. We will not upgrade to non-LTS versions.
+
 Install prerequisites
 ---------------------
 
@@ -203,6 +209,24 @@ in the DATABASES-section in local_settings.py called 'addonserver':
 Then define some notification-types in the admin page for WLADDONS_SETTINGS.
 If a user has uploaded add-on(s) the noticetypes are created for this user if
 he enters his profile page and clicks on the tab 'Add-On Settings'.
+
+Known Dependency Issues
+=======================
+
+The following dependencies require attention for long-term maintenance:
+
+**whoosh (2.7.4)** - Unmaintained since 2016. The search indexing library has not
+been updated in over 10 years and poses security and compatibility risks. Consider
+migrating to whoosh-reloaded (community fork), Elasticsearch, Meilisearch, or
+Typesense when resources allow.
+
+**bleach (6.3.0)** - Deprecated as of January 2023. While currently up-to-date,
+this HTML sanitization library is no longer maintained. Consider migrating to nh3
+or similar alternatives in the future.
+
+**gunicorn (23.0.0)** - An update to 24.1.1 is available with security improvements
+and ASGI support. The update requires testing in a staging environment due to
+stricter HTTP parsing that may affect proxy setups.
 
 Contact
 =======

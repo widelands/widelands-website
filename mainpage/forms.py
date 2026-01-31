@@ -3,7 +3,7 @@
 
 from django import forms
 from django_registration.forms import RegistrationForm
-from captcha.fields import ReCaptchaField
+from django_recaptcha.fields import ReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from wlprofile.models import TZ_CHOICES
