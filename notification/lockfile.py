@@ -201,9 +201,7 @@ class LockBase:
         else:
             tname = ""
         dirname = os.path.dirname(self.lock_file)
-        self.unique_name = os.path.join(
-            dirname, f"{self.hostname}.{tname}{self.pid}"
-        )
+        self.unique_name = os.path.join(dirname, f"{self.hostname}.{tname}{self.pid}")
 
     def acquire(self, timeout=None):
         """Acquire the lock.

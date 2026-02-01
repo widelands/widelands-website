@@ -20,9 +20,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ("title", "creator", "last_update", "deleted")
     list_filter = ("title",)
     ordering = ["-last_update"]
-    fieldsets = (
-        (None, {"fields": ("title", "content", "creator", "deleted")}),
-    )
+    fieldsets = ((None, {"fields": ("title", "content", "creator", "deleted")}),)
     raw_id_fields = ("creator",)
     inlines = [InlineImages]
 

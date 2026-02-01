@@ -32,7 +32,7 @@ def render_to(template_path):
 
     def decorator(func):
         def wrapper(request, *args, **kwargs):
-            #import pdb
+            # import pdb
 
             # output = pdb.runcall(func, request, *args, **kwargs)
             output = func(request, *args, **kwargs)

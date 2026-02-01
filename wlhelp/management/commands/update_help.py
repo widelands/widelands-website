@@ -59,9 +59,7 @@ class TribeParser(object):
         self._to.displayname = tribeinfo["descname"]
         self._to.descr = tribeinfo["tooltip"]
         # copy icon
-        dn = os.path.normpath(
-            f"{settings.MEDIA_ROOT}/wlhelp/img/{tribeinfo['name']}/"
-        )
+        dn = os.path.normpath(f"{settings.MEDIA_ROOT}/wlhelp/img/{tribeinfo['name']}/")
         try:
             os.makedirs(dn)
         except OSError as o:
