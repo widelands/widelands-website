@@ -49,7 +49,7 @@ class RssArticleHistoryFeed(Feed):
         return Article.objects.get(title=kwargs["title"])
 
     def title(self, item):
-        return "History for: %s " % item.title
+        return f"History for: {item.title} "
 
     def link(self, item):
         if not item:
@@ -57,7 +57,7 @@ class RssArticleHistoryFeed(Feed):
         return item.get_absolute_url()
 
     def description(self, item):
-        return "Recent changes in %s" % item.title
+        return f"Recent changes in {item.title}"
 
     def items(self, item):
         return (
@@ -78,7 +78,7 @@ class AtomArticleHistoryFeed(RssArticleHistoryFeed):
     feed_type = Atom1Feed
 
     def subtitle(self, item):
-        return "Recent changes in %s" % item.title
+        return f"Recent changes in {item.title}"
 
     def item_updateddate(self, item):
         return item.modified

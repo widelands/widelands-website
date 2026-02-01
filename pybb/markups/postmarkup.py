@@ -28,7 +28,7 @@ def annotate_link(domain):
     domain -- Domain parsed from url
 
     """
-    return " [%s]" % _escape(domain)
+    return f" [{_escape(domain)}]"
 
 
 re_url = re.compile(
@@ -36,7 +36,7 @@ re_url = re.compile(
 )
 
 
-re_html = re.compile("<.*?>|\&.*?\;")
+re_html = re.compile(r"<.*?>|\&.*?\;")
 
 
 def textilize(s):
@@ -245,7 +245,7 @@ class TagBase(object):
         parser.skip_to_node(self.close_node_index)
 
     def __str__(self):
-        return "[%s]" % self.name
+        return f"[{self.name}]"
 
 
 class SimpleTag(TagBase):
@@ -257,10 +257,10 @@ class SimpleTag(TagBase):
         self.html_name = html_name
 
     def render_open(self, parser, node_index):
-        return "<%s>" % self.html_name
+        return f"<{self.html_name}>"
 
     def render_close(self, parser, node_index):
-        return "</%s>" % self.html_name
+        return f"</{self.html_name}>"
 
 
 class DivStyleTag(TagBase):
@@ -272,7 +272,7 @@ class DivStyleTag(TagBase):
         self.value = value
 
     def render_open(self, parser, node_index):
-        return '<div style="%s:%s;">' % (self.style, self.value)
+        return f'<div style="{self.style}:{self.value};">'
 
     def render_close(self, parser, node_index):
         return "</div>"
@@ -339,7 +339,7 @@ class LinkTag(TagBase):
             return ""
 
         if self.domain:
-            return '<a href="%s">' % self.url
+            return f'<a href="{self.url}">'
         else:
             return ""
 
@@ -374,8 +374,8 @@ class QuoteTag(TagBase):
 
     def render_open(self, parser, node_index):
         if self.params:
-            return "<blockquote><em>%s</em><br/>" % (
-                PostMarkup.standard_replace(self.params)
+            return (
+                f"<blockquote><em>{PostMarkup.standard_replace(self.params)}</em><br/>"
             )
         else:
             return "<blockquote>"
@@ -396,7 +396,7 @@ class SearchTag(TagBase):
             search = self.params
         else:
             search = self.get_contents(parser)
-        link = '<a href="%s">' % self.url
+        link = f'<a href="{self.url}">'
         if "%" in link:
             return link % quote_plus(search.encode("UTF-8"))
         else:
@@ -425,7 +425,7 @@ class PygmentsCodeTag(TagBase):
             lexer = get_lexer_by_name(self.params, stripall=True)
         except ClassNotFound:
             contents = _escape(contents)
-            return '<div class="code"><pre>%s</pre></div>' % contents
+            return f'<div class="code"><pre>{contents}</pre></div>'
 
         formatter = HtmlFormatter(linenos=self.line_numbers, cssclass="code")
         return highlight(contents, lexer, formatter)
@@ -438,7 +438,7 @@ class CodeTag(TagBase):
     def render_open(self, parser, node_index):
         contents = _escape_no_breaks(self.get_contents(parser))
         self.skip_contents(parser)
-        return '<div class="code"><pre>%s</pre></div>' % contents
+        return f'<div class="code"><pre>{contents}</pre></div>'
 
 
 class ImgTag(TagBase):
@@ -451,7 +451,7 @@ class ImgTag(TagBase):
 
         contents = strip_bbcode(contents).replace('"', "%22")
 
-        return '<img src="%s"></img>' % contents
+        return f'<img src="{contents}"></img>'
 
 
 class ListTag(TagBase):
@@ -531,7 +531,7 @@ class SizeTag(TagBase):
 
         self.size = self.validate_size(self.size)
 
-        return '<span style="font-size:%spx">' % self.size
+        return f'<span style="font-size:{self.size}px">'
 
     def render_close(self, parser, node_index):
         if self.size is None:
@@ -559,7 +559,7 @@ class ColorTag(TagBase):
         if not self.color:
             return ""
 
-        return '<span style="color:%s">' % self.color
+        return f'<span style="color:{self.color}">'
 
     def render_close(self, parser, node_index):
         if not self.color:
@@ -774,7 +774,7 @@ class PostMarkup(object):
         """Surrounds urls with url bbcode tags."""
 
         def repl(match):
-            return "[url]%s[/url]" % match.group(0)
+            return f"[url]{match.group(0)}[/url]"
 
         text_tokens = []
         for tag_type, tag_token, start_pos, end_pos in self.tokenize(postmarkup):
@@ -1005,7 +1005,7 @@ class PostMarkup(object):
 
 
 def _tests():
-    import sys
+    # import sys
 
     # sys.stdout=open('test.htm', 'w')
 
@@ -1148,8 +1148,8 @@ asdasdasdasdqweqwe
     # tests=["""[b]b[i]i[/b][/i]"""]
 
     for test in tests:
-        print("<pre>%s</pre>" % str(test.encode("ascii", "xmlcharrefreplace")))
-        print("<p>%s</p>" % str(post_markup(test).encode("ascii", "xmlcharrefreplace")))
+        print(f"<pre>{test.encode('ascii', 'xmlcharrefreplace')}</pre>")
+        print(f"<p>{post_markup(test).encode('ascii', 'xmlcharrefreplace')}</p>")
         print("<hr/>")
         print()
 

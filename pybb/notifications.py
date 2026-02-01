@@ -13,7 +13,7 @@ MENTION_RE = re.compile(r"@([\w.@+\-]+)")
 def get_mentions(post):
     """Return usernames which are mentioned in a post like @username."""
     if not isinstance(post, Post):
-        raise TypeError(f"First argument has to be an instance of pybb.Post!")
+        raise TypeError("First argument has to be an instance of pybb.Post!")
 
     mentioned_names = []
     for line in post.body.splitlines():
@@ -41,7 +41,7 @@ def get_mentions(post):
 
 def inform_mentioned(mentioned, post):
     if not isinstance(post, Post):
-        raise TypeError(f"Second argument has to be an instance of pybb.Post!")
+        raise TypeError("Second argument has to be an instance of pybb.Post!")
 
     notification.send(
         mentioned,
@@ -62,7 +62,7 @@ def notify(request, topic, post):
     """
 
     if not isinstance(post, Post):
-        raise TypeError(f"Third argument has to be an instance of pybb.Post!")
+        raise TypeError("Third argument has to be an instance of pybb.Post!")
 
     if not topic:
         # Inform subscribers of a new topic
@@ -107,7 +107,7 @@ def notify(request, topic, post):
     else:
 
         if not isinstance(topic, Topic):
-            raise TypeError(f"Second argument has to be an instance of pybb.Topic!")
+            raise TypeError("Second argument has to be an instance of pybb.Topic!")
 
         # Inform users who auto subscribed to topics
         notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")

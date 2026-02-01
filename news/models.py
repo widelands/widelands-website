@@ -11,7 +11,7 @@ def get_upload_name(inst, fn):
         extension = fn.split(".")[-1].lower()
     except:
         extension = "png"
-    return "news/img/%s.%s" % (inst.title, extension)
+    return f"news/img/{inst.title}.{extension}"
 
 
 class Category(models.Model):
@@ -28,7 +28,7 @@ class Category(models.Model):
         ordering = ("title",)
 
     def __str__(self):
-        return "%s" % self.title
+        return f"{self.title}"
 
     def get_absolute_url(self):
         return reverse("category_posts", args=(self.slug,))
@@ -65,7 +65,7 @@ class Post(models.Model):
         get_latest_by = "publish"
 
     def __str__(self):
-        return "%s" % self.title
+        return f"{self.title}"
 
     #########
     # IMAGE #

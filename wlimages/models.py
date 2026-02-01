@@ -46,20 +46,20 @@ class ImageManager(models.Manager):
             revision=1,
             name=image.name,
         )
-        path = "%swlimages/%s" % (settings.MEDIA_ROOT, safe_filename)
+        path = f"{settings.MEDIA_ROOT}wlimages/{safe_filename}"
 
-        base_path = "%swlimages" % (settings.MEDIA_ROOT)
+        base_path = f"{settings.MEDIA_ROOT}wlimages"
         # Make sure directory exists
         if not os.path.isdir(base_path):
             os.mkdir(base_path)
 
-        full_path = "%s/%s" % (base_path, safe_filename)
+        full_path = f"{base_path}/{safe_filename}"
 
         with open(full_path, "wb+") as destination:
             for chunk in image.chunks():
                 destination.write(chunk)
 
-        im.image = "wlimages/%s" % (safe_filename)
+        im.image = f"wlimages/{safe_filename}"
 
         im.save()
 

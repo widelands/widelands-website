@@ -110,27 +110,27 @@ def dumps(data, charset="utf-8", errors="strict"):
     def _serialize(obj, keypos):
         if keypos:
             if isinstance(obj, (int, float, bool)):
-                return "i:%i;" % obj
+                return f"i:{obj};"
             if isinstance(obj, str):
                 if isinstance(obj, str):
                     obj = obj.encode(charset, errors)
-                return 's:%i:"%s";' % (len(obj), obj)
+                return f's:{len(obj)}:"{obj}";'
             if obj is None:
                 return 's:0:"";'
-            raise TypeError("can't serialize %r as key" % type(obj))
+            raise TypeError(f"can't serialize {type(obj)!r} as key")
         else:
             if obj is None:
                 return "N;"
             if isinstance(obj, bool):
-                return "b:%i;" % obj
+                return f"b:{obj};"
             if isinstance(obj, int):
-                return "i:%s;" % obj
+                return f"i:{obj};"
             if isinstance(obj, float):
-                return "d:%s;" % obj
+                return f"d:{obj};"
             if isinstance(obj, str):
                 if isinstance(obj, str):
                     obj = obj.encode(charset, errors)
-                return 's:%i:"%s";' % (len(obj), obj)
+                return f's:{len(obj)}:"{obj}";'
             if isinstance(obj, (list, tuple, dict)):
                 out = []
                 if isinstance(obj, dict):
@@ -140,8 +140,8 @@ def dumps(data, charset="utf-8", errors="strict"):
                 for key, value in iterable:
                     out.append(_serialize(key, True))
                     out.append(_serialize(value, False))
-                return "a:%i:{%s}" % (len(obj), "".join(out))
-            raise TypeError("can't serialize %r" % type(obj))
+                return f"a:{len(obj)}:{{{''.join(out)}}}"
+            raise TypeError(f"can't serialize {type(obj)!r}")
 
     return _serialize(data, False)
 
@@ -163,7 +163,7 @@ def load(fp, charset="utf-8", errors="strict", decode_strings=False):
     def _expect(e):
         v = fp.read(len(e))
         if v != e:
-            raise ValueError("failed expectation, expected %r got %r" % (e, v))
+            raise ValueError(f"failed expectation, expected {e!r} got {v!r}")
 
     def _read_until(delim):
         buf = []

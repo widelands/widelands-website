@@ -39,8 +39,7 @@ roles.short_description = "Groups/Permissions"
 def persons(self):
     return ", ".join(
         [
-            '<a href="%s">%s</a>'
-            % (reverse("admin:auth_user_change", args=(x.id,)), x.username)
+            f'<a href="{reverse("admin:auth_user_change", args=(x.id,))}">{x.username}</a>'
             for x in self.user_set.all().order_by("username")
         ]
     )

@@ -31,7 +31,7 @@ def switch(parser, token):
     # Parse out the arguments.
     args = token.split_contents()
     if len(args) != 2:
-        raise template.TemplateSyntaxError("%s tag tags exactly 2 arguments." % args[0])
+        raise template.TemplateSyntaxError(f"{args[0]} tag tags exactly 2 arguments.")
 
     # Pull out all the children of the switch tag (until {% endswitch %}).
     childnodes = parser.parse(("endswitch",))

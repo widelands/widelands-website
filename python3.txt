@@ -1,14 +1,11 @@
 Anmerkungen zum update auf python3:
 
-Der code für die implementierung vom gravatar-service ist ungetestet, da es nie
-implementiert wurde.
-
 virtualenvironment
 ------------------
 
 Installiere die richtige python Version (hier python3.6).
 Erstellen des virtualenvironments:
-    
+
     $:> virtualenv --python=python3.6 wlwebsite
 
 Getestet

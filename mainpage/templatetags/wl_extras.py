@@ -43,9 +43,7 @@ def git_data():
                 [git_path, "symbolic-ref", "--short", "HEAD"]
             )
             commit = subprocess.check_output([git_path, "rev-parse", "--short", "HEAD"])
-            text = "On branch '{}' with commit '{}'".format(
-                branch.decode(), commit.decode()
-            )
+            text = f"On branch '{branch.decode()}' with commit '{commit.decode()}'"
         except subprocess.CalledProcessError as e:
             text = e
     return text

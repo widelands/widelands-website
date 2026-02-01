@@ -14,7 +14,7 @@ def notice_settings(request):
         app_tables.setdefault(app, [])
         checkbox_values = []
         for medium_id, medium_display in NOTICE_MEDIA:
-            form_label = "%s_%s" % (notice_type.label, medium_id)
+            form_label = f"{notice_type.label}_{medium_id}"
             setting = get_notification_setting(request.user, notice_type, medium_id)
             if request.method == "POST":
                 if request.POST.get(form_label) == "on":

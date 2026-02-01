@@ -32,10 +32,7 @@ def user_link(user):
             )
         )
     else:
-        data = '<a href="%s">%s</a>' % (
-            reverse("profile_view", args=[user.username]),
-            user.username,
-        )
+        data = f'<a href="{reverse("profile_view", args=[user.username])}">{user.username}</a>'
         return mark_safe(data)
 
 

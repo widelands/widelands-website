@@ -98,12 +98,7 @@ def do_auto_transform_markup(parser, token):
         split = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag must be of format {%% %r COMMENT %%} or of format {%% %r COMMENT as CONTEXT_VARIABLE %%}"
-            % (
-                token.contents.split()[0],
-                token.contents.split()[0],
-                token.contents.split()[0],
-            )
+            f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} COMMENT %%}} or of format {{%% {token.contents.split()[0]!r} COMMENT as CONTEXT_VARIABLE %%}}"
         )
     if len(split) == 2:
         return AutoTransformMarkupNode(split[1])
@@ -111,7 +106,7 @@ def do_auto_transform_markup(parser, token):
         return AutoTransformMarkupNode(split[1], context_name=split[3])
     else:
         raise template.TemplateSyntaxError(
-            "Invalid number of arguments for tag %r" % split[0]
+            f"Invalid number of arguments for tag {split[0]!r}"
         )
 
 
@@ -133,10 +128,7 @@ def do_get_threaded_comment_tree(parser, token):
     """Gets a tree (list of objects ordered by preorder tree traversal, and
     with an additional ``depth`` integer attribute annotated onto each
     ``ThreadedComment``."""
-    error_string = (
-        "%r tag must be of format {%% get_threaded_comment_tree for OBJECT [TREE_ROOT] as CONTEXT_VARIABLE %%}"
-        % token.contents.split()[0]
-    )
+    error_string = f"{token.contents.split()[0]!r} tag must be of format {{%% get_threaded_comment_tree for OBJECT [TREE_ROOT] as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:
@@ -177,10 +169,7 @@ class CommentTreeNode(template.Node):
 def do_get_comment_count(parser, token):
     """Gets a count of how many ThreadedComment objects are attached to the
     given object."""
-    error_message = (
-        "%r tag must be of format {%% %r for OBJECT as CONTEXT_VARIABLE %%}"
-        % (token.contents.split()[0], token.contents.split()[0])
-    )
+    error_message = f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} for OBJECT as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:
@@ -214,10 +203,7 @@ def oneline(value):
 
 def do_get_threaded_comment_form(parser, token):
     """Gets a ThreadedCommentForm and inserts it into the context."""
-    error_message = "%r tag must be of format {%% %r as CONTEXT_VARIABLE %%}" % (
-        token.contents.split()[0],
-        token.contents.split()[0],
-    )
+    error_message = f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:
@@ -242,10 +228,7 @@ class ThreadedCommentFormNode(template.Node):
 
 def do_get_latest_comments(parser, token):
     """Gets the latest comments by date_submitted."""
-    error_message = (
-        "%r tag must be of format {%% %r NUM_TO_GET as CONTEXT_VARIABLE %%}"
-        % (token.contents.split()[0], token.contents.split()[0])
-    )
+    error_message = f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} NUM_TO_GET as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:
@@ -271,10 +254,7 @@ class LatestCommentsNode(template.Node):
 
 def do_get_user_comments(parser, token):
     """Gets all comments submitted by a particular user."""
-    error_message = (
-        "%r tag must be of format {%% %r for OBJECT as CONTEXT_VARIABLE %%}"
-        % (token.contents.split()[0], token.contents.split()[0])
-    )
+    error_message = f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} for OBJECT as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:
@@ -298,10 +278,7 @@ class UserCommentsNode(template.Node):
 
 def do_get_user_comment_count(parser, token):
     """Gets the count of all comments submitted by a particular user."""
-    error_message = (
-        "%r tag must be of format {%% %r for OBJECT as CONTEXT_VARIABLE %%}"
-        % (token.contents.split()[0], token.contents.split()[0])
-    )
+    error_message = f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} for OBJECT as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:

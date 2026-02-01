@@ -1,15 +1,14 @@
-from ...models import Tribe as TribeModel
-
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 
 import os
 import shutil
 from os import path
+
+# was genau wird aus widelandslib.tribe genutzt?
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_graph
 from wlhelp.models import Tribe
-from glob import glob
 import json
 
 
@@ -50,20 +49,10 @@ class Command(BaseCommand):
             tribe = Tribe.objects.get(name=tribename)
             if tribe:
                 tribe.network_pdf_url = path.normpath(
-                    "%s/%s/%s"
-                    % (
-                        settings.MEDIA_URL,
-                        targetdir[len(settings.MEDIA_ROOT) :],
-                        tribename + ".pdf",
-                    )
+                    f"{settings.MEDIA_URL}/{targetdir[len(settings.MEDIA_ROOT) :]}/{tribename}.pdf"
                 )
                 tribe.network_gif_url = path.normpath(
-                    "%s/%s/%s"
-                    % (
-                        settings.MEDIA_URL,
-                        targetdir[len(settings.MEDIA_ROOT) :],
-                        tribename + ".gif",
-                    )
+                    f"{settings.MEDIA_URL}/{targetdir[len(settings.MEDIA_ROOT) :]}/{tribename}.gif"
                 )
                 tribe.save()
             else:
