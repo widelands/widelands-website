@@ -22,14 +22,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import get_language, activate
 from django.core.mail import send_mail
 
 QUEUE_ALL = getattr(settings, "NOTIFICATION_QUEUE_ALL", False)
-
-
-class LanguageStoreNotAvailable(Exception):
-    pass
 
 
 class NoticeType(models.Model):
@@ -155,24 +150,6 @@ def create_notice_type(label, display, description, send_default=True):
         print(f"Created NoticeType: {label}")
 
 
-def get_notification_language(user):
-    """Returns site-specific notification language for this user. Raises
-    LanguageStoreNotAvailable if this site does not use translated
-    notifications.
-    """
-    # TODO: WE never used this and the used functions do not exist anymore. Remove?
-    if getattr(settings, "NOTIFICATION_LANGUAGE_MODULE", False):
-        try:
-            app_label, model_name = settings.NOTIFICATION_LANGUAGE_MODULE.split(".")
-            model = models.get_model(app_label, model_name)
-            language_model = model._default_manager.get(user__id__exact=user.id)
-            if hasattr(language_model, "language"):
-                return language_model.language
-        except (ImportError, ImproperlyConfigured, model.DoesNotExist):
-            raise LanguageStoreNotAvailable
-    raise LanguageStoreNotAvailable
-
-
 def get_formatted_messages(formats, label, context):
     """Returns a dictionary with the format identifier as the key.
 
@@ -220,8 +197,6 @@ def send_now(users, label, extra_context=None, on_site=True):
         current_site = Site.objects.get_current()
         notices_url = f"https://{str(current_site)}{reverse('notification_notices')}"
 
-        current_language = get_language()
-
         formats = (
             "short.txt",  # used for subject
             "full.txt",  # used for email body
@@ -230,16 +205,6 @@ def send_now(users, label, extra_context=None, on_site=True):
 
         for user in users:
             recipients = []
-            # get user language for user from language store defined in
-            # NOTIFICATION_LANGUAGE_MODULE setting
-            try:
-                language = get_notification_language(user)
-            except LanguageStoreNotAvailable:
-                language = None
-
-            if language is not None:
-                # activate the user's language
-                activate(language)
 
             # update context with user specific translations
             context = {
@@ -293,8 +258,6 @@ def send_now(users, label, extra_context=None, on_site=True):
                 html_message=html_message,
             )
 
-        # reset environment to original language
-        activate(current_language)
     except NoticeType.DoesNotExist:
         pass
 
