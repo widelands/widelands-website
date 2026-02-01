@@ -7,12 +7,9 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="alternate" type="application/rss+xml"
-      title="Wiki History for article {{ article.title }} (RSS)"
-      href="{% url 'wiki_article_history_feed_rss' article.title %}"/>
 <link rel="alternate" type="application/atom+xml"
-      title="Wiki History for article {{ article.title }} (Atom)"
-      href="{% url 'wiki_article_history_feed_atom' article.title %}"/>
+      title="Wiki History for article {{ article.title }}"
+      href="{% url 'wiki_article_history_feed' article.title %}"/>
 {{ block.super}}
 {% endblock %}
 
@@ -22,7 +19,6 @@
 
 {# add the wanted classes to the tabs #}
 {% block class_wiki_back %}class="hidden"{% endblock %}
-{% block class_wiki_hist_atom %}class="hidden"{% endblock %}
 
 {% block content_section %}
 {% if messages %}
