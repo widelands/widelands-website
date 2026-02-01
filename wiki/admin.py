@@ -20,9 +20,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ("title", "creator", "last_update", "deleted")
     list_filter = ("title",)
     ordering = ["-last_update"]
-    fieldsets = (
-        (None, {"fields": ("title", "content", "creator", "markup", "deleted")}),
-    )
+    fieldsets = ((None, {"fields": ("title", "content", "creator", "deleted")}),)
     raw_id_fields = ("creator",)
     inlines = [InlineImages]
 
@@ -35,7 +33,6 @@ class ChangeSetAdmin(admin.ModelAdmin):
     list_display = (
         "article",
         "old_title",
-        "old_markup",
         "editor",
         "reverted",
         "modified",
@@ -45,7 +42,7 @@ class ChangeSetAdmin(admin.ModelAdmin):
     ordering = ("-modified",)
     fieldsets = (
         ("Article", {"fields": ("article", "editor")}),
-        ("Differences", {"fields": ("old_title", "old_markup", "content_diff")}),
+        ("Differences", {"fields": ("old_title", "content_diff")}),
         (
             "Other",
             {

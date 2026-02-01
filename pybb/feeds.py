@@ -12,7 +12,7 @@ class PybbFeed(Feed):
         if obj == self.all_objects:
             return self.all_title
         else:
-            return self.one_title % obj.name
+            return f"{self.one_title.replace('%s', obj.name)}"
 
     def items(self, obj):
         if obj == self.all_objects:
@@ -23,7 +23,7 @@ class PybbFeed(Feed):
     def link(self, obj):
         if obj == self.all_objects:
             return reverse("pybb_index")
-        return "/ewfwevw%s" % reverse("pybb_forum", args=(obj.pk,))
+        return f"/ewfwevw{reverse('pybb_forum', args=(obj.pk,))}"
 
     def get_object(self, request, *args, **kwargs):
         """Implement getting feeds for a specific subforum."""

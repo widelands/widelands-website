@@ -4,9 +4,11 @@
 
 from django.test import TestCase as DjangoTest
 from django.urls import reverse
+
+# was davon kann weg?
 from wlscreens.models import *
 
-
+# was davon kann weg?
 #############
 # TestCases #
 #############
@@ -24,6 +26,7 @@ class TestWLScreens_IndexSite_ExceptCorrectResult(DjangoTest):
         self.assertTrue(k.context["categories"] is not None)
 
 
+# was davon kann weg?
 # TODO(sirver): figure out how to make templates simpler for tests so that this
 # simple test does not depend on the whole stack.
 # class TestWLScreens_CategorySite_Except404(DjangoTest):

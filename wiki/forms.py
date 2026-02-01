@@ -110,12 +110,11 @@ class ArticleForm(forms.ModelForm):
 
     def cache_old_content(self):
         if self.instance.id is None:
-            self.old_title = self.old_content = self.old_markup = ""
+            self.old_title = self.old_content = ""
             self.is_new = True
         else:
             self.old_title = self.instance.title
             self.old_content = self.instance.content
-            self.old_markup = self.instance.markup
             self.is_new = False
 
     def save(self, *args, **kwargs):
@@ -138,7 +137,7 @@ class ArticleForm(forms.ModelForm):
 
         # 4 - Create new revision
         changeset = article.new_revision(
-            self.old_content, self.old_title, self.old_markup, comment, editor
+            self.old_content, self.old_title, comment, editor
         )
 
         return article, changeset

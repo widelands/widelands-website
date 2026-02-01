@@ -295,11 +295,7 @@ def show_post(request, post_id):
 
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(pybb_settings.TOPIC_PAGE_SIZE))
-    url = "%s?page=%d#post-%d" % (
-        reverse("pybb_topic", args=[post.topic.id]),
-        page,
-        post.id,
-    )
+    url = f"{reverse('pybb_topic', args=[post.topic.id])}?page={page}#post-{post.id}"
     return HttpResponseRedirect(url)
 
 
@@ -488,9 +484,7 @@ def all_latest_posts(request):
         if form.is_valid():
             days = form.cleaned_data["days"]
             sort_by = form.cleaned_data["sort_by"]
-            url = "{}?days={days}&sort_by={sort_by}".format(
-                reverse("all_latest_posts"), days=days, sort_by=sort_by
-            )
+            url = f"{reverse('all_latest_posts')}?days={days}&sort_by={sort_by}"
 
             return HttpResponseRedirect(url)
 

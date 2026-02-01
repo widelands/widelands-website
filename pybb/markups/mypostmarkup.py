@@ -1,7 +1,7 @@
 from pybb.markups import postmarkup
 import re
 
-RE_FIRST_LF = re.compile("^\s*\r?\n")
+RE_FIRST_LF = re.compile(r"^\s*\r?\n")
 markup = postmarkup.create(exclude=["link", "url", "code"], use_pygments=False)
 
 
@@ -15,7 +15,7 @@ class CodeTagNoBreak(postmarkup.CodeTag):
         contents = self._escape(self.get_contents(parser))
         contents = RE_FIRST_LF.sub("", contents)
         self.skip_contents(parser)
-        return "<pre><code>%s</code></pre>" % contents
+        return f"<pre><code>{contents}</code></pre>"
 
     def _escape(self, s):
         return postmarkup.PostMarkup.standard_replace_no_break(s.rstrip("\n"))
