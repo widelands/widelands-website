@@ -374,7 +374,9 @@ class QuoteTag(TagBase):
 
     def render_open(self, parser, node_index):
         if self.params:
-            return f"<blockquote><em>{PostMarkup.standard_replace(self.params)}</em><br/>"
+            return (
+                f"<blockquote><em>{PostMarkup.standard_replace(self.params)}</em><br/>"
+            )
         else:
             return "<blockquote>"
 
@@ -1003,7 +1005,7 @@ class PostMarkup(object):
 
 
 def _tests():
-    #import sys
+    # import sys
 
     # sys.stdout=open('test.htm', 'w')
 

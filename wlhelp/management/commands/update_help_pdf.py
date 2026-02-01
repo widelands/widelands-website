@@ -4,6 +4,7 @@ from django.conf import settings
 import os
 import shutil
 from os import path
+
 # was genau wird aus widelandslib.tribe genutzt?
 from widelandslib.tribe import *
 from widelandslib.make_flow_diagram import make_graph

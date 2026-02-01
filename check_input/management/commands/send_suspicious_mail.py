@@ -18,9 +18,7 @@ class Command(BaseCommand):
                 message += f"\nIn {app.app_label}/{app.model}: "
                 message += f"\n User '{spam.user}' wrote: {spam.text}"
 
-            message += (
-                f"\n\nAdmin page: https://{Site.objects.get_current().domain}/admin/check_input/suspiciousinput/"
-            )
+            message += f"\n\nAdmin page: https://{Site.objects.get_current().domain}/admin/check_input/suspiciousinput/"
             mail_admins(
                 "Hidden posts were found",
                 message,

@@ -78,9 +78,7 @@ def add_building(
         workers = r"""<table border="0px" cellspacing="0">"""
         for worker in b.workers:
             wo = b.tribe.workers[worker]
-            workers += (
-                f'<tr><td border="0px"><img src="{wo.image}"/></td><td border="0px">{wo.descname}</td></tr>'
-            )
+            workers += f'<tr><td border="0px"><img src="{wo.image}"/></td><td border="0px">{wo.descname}</td></tr>'
             if link_workers:
                 add_worker(g, wo)
                 g.add_edge(Edge(b.name, wo.name, color="orange", arrowhead="none"))
@@ -103,17 +101,15 @@ def add_building(
     costs = r"""<tr><td colspan="2"><table border="0px" cellspacing="0">"""
     for ware, count in list(b.buildcost.items()):
         w = b.tribe.wares[ware]
-        costs += (
-            f'<tr><td border="0px">{count} x </td><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'
-        )
+        costs += f'<tr><td border="0px">{count} x </td><td border="0px"><img src="{w.image}"/></td><td border="0px">{w.descname}</td></tr>'
     costs += r"""</table></td></tr>"""
     if not b.buildcost:
         costs = ""
 
     n = Node(
         b.name,
-        shape = "none",
-        label = (
+        shape="none",
+        label=(
             rf"""<<TABLE border="1px" cellborder="0px" cellspacing="0px" cellpadding="0px">
 <TR><TD><IMG SRC="{b.image}"/></TD>
 <TD valign="bottom">{workers}</TD>
@@ -122,9 +118,9 @@ def add_building(
 {costs}
 </TABLE>>"""
         ).replace("\n", ""),
-        URL = f"../../buildings/{b.name}/",
-        fillcolor = "orange",
-        style = "filled",
+        URL=f"../../buildings/{b.name}/",
+        fillcolor="orange",
+        style="filled",
     )
 
     sg = Subgraph(f"{b.name}_enhancements", ordering="out", rankdir="TB", rank="same")
@@ -161,16 +157,16 @@ def add_ware(g, w):
     # Add the nice node
     n = Node(
         w.name,
-        shape = "ellipse",
-        label = (
+        shape="ellipse",
+        label=(
             rf"""<<TABLE border="0px">
 <TR><TD><IMG SRC="{w.image}"/></TD></TR>
 <TR><TD>{w.descname}</TD></TR>
 </TABLE>>"""
         ),
-        URL = f"../../wares/{w.name}/",
-        fillcolor = "#dddddd",
-        style = "filled",
+        URL=f"../../wares/{w.name}/",
+        fillcolor="#dddddd",
+        style="filled",
     )
 
     g.add_node(n)
@@ -180,15 +176,15 @@ def add_worker(g, w, as_recruit=False):
     # Add the nice node
     n = Node(
         w.name,
-        shape = "octagon" if not as_recruit else "ellipse",
-        label = (
+        shape="octagon" if not as_recruit else "ellipse",
+        label=(
             rf"""<<TABLE border="0px">
 <TR><TD><IMG SRC="{w.image}"/></TD>
 <TD>{w.descname}</TD></TR>
 </TABLE>>"""
         ),
-        URL = f"../../workers/{w.name}/",
-        style = "filled",
+        URL=f"../../workers/{w.name}/",
+        style="filled",
     )
 
     g.add_node(n)
@@ -274,9 +270,7 @@ def make_building_graph(t, building_name):
         makedirs(path.join(tdir, f"help/{t.name}/buildings/{building_name}/"))
     except:
         pass
-    g.write(
-        path.join(tdir, f"help/{t.name}/buildings/{building_name}/source.dot")
-    )
+    g.write(path.join(tdir, f"help/{t.name}/buildings/{building_name}/source.dot"))
 
 
 def make_worker_graph(t, worker_name):
