@@ -195,7 +195,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         notice_type = NoticeType.objects.get(label=label)
 
         current_site = Site.objects.get_current()
-        notices_url = f"https://{str(current_site)}{reverse('notification_notices')}"
+        notices_url = f"https://{current_site}{reverse('notification_notices')}"
 
         formats = (
             "short.txt",  # used for subject
