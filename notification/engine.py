@@ -47,7 +47,7 @@ def send_all():
             try:
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
-                    logging.info("emitting notice to %s" % user)
+                    logging.info(f"emitting notice to {user}")
 
                     # call this once per user to be atomic and allow for logging to
                     # accurately show how long each takes.
