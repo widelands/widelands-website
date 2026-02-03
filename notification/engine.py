@@ -47,9 +47,7 @@ def send_all():
             try:
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
-                    # FrankU: commented, because not all users get e-mailed
-                    # and to supress useless logging
-                    # logging.info('emitting notice to %s' % user)
+                    logging.info('emitting notice to %s' % user)
 
                     # call this once per user to be atomic and allow for logging to
                     # accurately show how long each takes.
@@ -62,25 +60,19 @@ def send_all():
             batches += 1
     except:
         # get the exception
-        exc_class, e, t = sys.exc_info()
+        _, e, t = sys.exc_info()
         # email admins
         current_site = Site.objects.get_current()
-        subject = "[%s emit_notices] %r" % (current_site.name, e)
-        message = "%s" % ("\n".join(traceback.format_exception(*sys.exc_info())),)
+        subject = f"{current_site.name} emit_notices: {e}"
+        message = f"Traceback in engine.py:\n{traceback.format_tb(t)}"
         mail_admins(subject, message, fail_silently=True)
         # log it as critical
-        logging.critical("an exception occurred: %r" % e)
+        logging.critical(f"an exception occurred: {e}, {traceback.format_tb(t)}")
     finally:
         logging.debug("releasing lock...")
         lock.release()
         logging.debug("released.")
 
     logging.info("")
-    logging.info(
-        "%s batches, %s sent"
-        % (
-            batches,
-            sent,
-        )
-    )
-    logging.info("done in %.2f seconds" % (time.time() - start_time))
+    logging.info(f"{batches} batches, {sent} sent")
+    logging.info(f"done in {time.time() - start_time:.2f} seconds")
