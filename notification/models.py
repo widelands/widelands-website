@@ -146,23 +146,21 @@ def create_notice_type(label, display, description, send_default=True):
         print(f"Created NoticeType: {label}")
 
 
-def get_formatted_messages(formats, label, context):
+def get_formatted_messages(templates, label, context):
     """Returns a dictionary with the format identifier as the key.
 
     The values are fully rendered templates with the given context.
 
     """
-    format_templates = {}
+    formatted_templates = {}
 
-    for format in formats:
-        # Switch off escaping for .txt templates was done here, but now it
-        # resides in the templates
-        format_templates[format] = render_to_string(
-            (f"notification/{label}/{format}", f"notification/{format}"),
+    for template in templates:
+        formatted_templates[template] = render_to_string(
+            (f"notification/{label}/{template}", f"notification/{template}"),
             context,
         )
 
-    return format_templates
+    return formatted_templates
 
 
 def send_now(users, label, extra_context=None, on_site=True):
@@ -193,7 +191,7 @@ def send_now(users, label, extra_context=None, on_site=True):
         current_site = Site.objects.get_current()
         notices_url = f"https://{current_site}{reverse('notification_notices')}"
 
-        formats = (
+        templates = (
             "short.txt",  # used for subject
             "full.txt",  # used for email body
             "full_html.txt",
@@ -211,7 +209,7 @@ def send_now(users, label, extra_context=None, on_site=True):
             context.update(extra_context)
 
             # get prerendered format messages and subjects
-            messages = get_formatted_messages(formats, label, context)
+            messages = get_formatted_messages(templates, label, context)
 
             # Create the subject
             # Use 'email_subject.txt' to add Strings in every emails subject
