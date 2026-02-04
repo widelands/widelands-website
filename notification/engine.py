@@ -73,6 +73,5 @@ def send_all():
         lock.release()
         logging.debug("released.")
 
-    logging.info("")
-    logging.info(f"{batches} batches, {sent} sent")
     logging.info(f"done in {time.time() - start_time:.2f} seconds")
+    logging.info(f"{batches} batches, {sent} sent")
