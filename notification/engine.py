@@ -42,51 +42,36 @@ def send_all():
     start_time = time.time()
 
     try:
-        # nesting the try statement to be Python 2.4
-        try:
-            for queued_batch in NoticeQueueBatch.objects.all():
-                # TODO(sirver): This is an unfortunate historic development:
-                # base64.b64encode used to return a string which got saved into
-                # the database as a string. Now, it returns a bytes object, on
-                # conversion to a string, django prepends turns this into
-                # "b'<data>'". We fix it here.
-                text_in_database = queued_batch.pickled_data
-                if text_in_database.startswith("b'"):
-                    text_in_database = text_in_database[2:-1]
-                notices = pickle.loads(base64.b64decode(text_in_database))
+        for queued_batch in NoticeQueueBatch.objects.all():
+            notices = pickle.loads(base64.b64decode(queued_batch.pickled_data))
+            try:
                 for user, label, extra_context, on_site in notices:
                     user = User.objects.get(pk=user)
-                    # FrankU: commented, because not all users get e-mailed
-                    # and to supress useless logging
-                    # logging.info('emitting notice to %s' % user)
+                    logging.info(f"emitting notice to {user}")
 
                     # call this once per user to be atomic and allow for logging to
                     # accurately show how long each takes.
                     notification.send_now([user], label, extra_context, on_site)
                     sent += 1
-                queued_batch.delete()
-                batches += 1
-        except:
-            # get the exception
-            exc_class, e, t = sys.exc_info()
-            # email people
-            current_site = Site.objects.get_current()
-            subject = "[%s emit_notices] %r" % (current_site.name, e)
-            message = "%s" % ("\n".join(traceback.format_exception(*sys.exc_info())),)
-            mail_admins(subject, message, fail_silently=True)
-            # log it as critical
-            logging.critical("an exception occurred: %r" % e)
+            except User.DoesNotExist:
+                # There might be a notice addressing a meanwhile deleted User
+                pass
+            queued_batch.delete()
+            batches += 1
+    except:
+        # get the exception
+        _, e, t = sys.exc_info()
+        # email admins
+        current_site = Site.objects.get_current()
+        subject = f"{current_site.name} emit_notices: {e!r}"
+        message = f"Traceback in engine.py:\n{traceback.format_tb(t)}"
+        mail_admins(subject, message, fail_silently=True)
+        # log it as critical
+        logging.critical(f"an exception occurred: {e!r}, {traceback.format_tb(t)}")
     finally:
         logging.debug("releasing lock...")
         lock.release()
         logging.debug("released.")
 
-    logging.info("")
-    logging.info(
-        "%s batches, %s sent"
-        % (
-            batches,
-            sent,
-        )
-    )
-    logging.info("done in %.2f seconds" % (time.time() - start_time))
+    logging.info(f"done in {time.time() - start_time:.2f} seconds")
+    logging.info(f"{batches} batches, {sent} sent")

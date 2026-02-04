@@ -9,11 +9,13 @@ try:
             "wiki_revision_reverted",
             _("Article Revision Reverted"),
             _("your revision has been reverted"),
+            send_default=True,
         )
         notification.create_notice_type(
             "wiki_observed_article_changed",
             _("Observed Article Changed"),
             _("an article you observe has changed"),
+            send_default=True,
         )
 
 except ImportError:
