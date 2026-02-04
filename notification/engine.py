@@ -63,11 +63,11 @@ def send_all():
         _, e, t = sys.exc_info()
         # email admins
         current_site = Site.objects.get_current()
-        subject = f"{current_site.name} emit_notices: {e}"
+        subject = f"{current_site.name} emit_notices: {e!r}"
         message = f"Traceback in engine.py:\n{traceback.format_tb(t)}"
         mail_admins(subject, message, fail_silently=True)
         # log it as critical
-        logging.critical(f"an exception occurred: {e}, {traceback.format_tb(t)}")
+        logging.critical(f"an exception occurred: {e!r}, {traceback.format_tb(t)}")
     finally:
         logging.debug("releasing lock...")
         lock.release()
