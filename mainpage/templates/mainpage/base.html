@@ -19,17 +19,29 @@ included here
         <link href="{% static 'favicon.ico' %}" rel="icon"/>
 
         <!--  CSS -->
-        <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/base.css' %}"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/base.css' %}?v1"/>
         <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/navigation.css' %}"/>
-        <!--[if lt IE 9]>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/base_ielt9.css' %}"/>
-        <![endif]-->
 
         <!-- Javascript Bread & Butter Scripts -->
-        <script type="text/javascript" src="{% static 'js/jquery-3.2.1.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/jquery_csrf_ajax.js' %}"></script>
-        <script src="{% static 'js/toggle_menu.js' %}"></script>
-        <script src="{% static 'js/browser_date.js' %}"></script>
+        <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
+        <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'js/jquery_csrf_ajax.js' %}" defer></script>
+        <script src="{% static 'js/toggle_menu.js' %}" defer></script>
+        <script src="{% static 'js/browser_date.js' %}" defer></script>
+
+        <script>
+            /* Change the placeholder to show which section to search for */
+            $( function() {
+                $("#selector").change(function() {
+                    input = $('#id_nav_search');
+                    /* Run the search if a search string is already given */
+                    if ( input[0].value !== "") {
+                        input[0].form.submit();
+                    }
+                input.attr("placeholder", "Search "+this.value);
+                });
+            });
+</script>
         {% block extra_head %}{% endblock %}
     </head>
 
