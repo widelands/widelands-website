@@ -422,10 +422,5 @@ def make_all_subgraphs(t):
     return rtdir
 
 
-def add_bases(tribe, building, g):
-    if b.enhanced_building:
-        add_building()
-
-
 if __name__ == "__main__":
     make_all_subgraphs()
