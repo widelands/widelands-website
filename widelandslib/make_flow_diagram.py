@@ -125,7 +125,7 @@ def add_building(
 </TABLE>>"""
             % (b.image, workers, b.descname, costs)
         ).replace("\n", ""),
-        URL="../../buildings/%s/" % b.name,
+        URL=f"/encyclopedia/{b.tribe.name}/buildings/{b.name}/",
         fillcolor="orange",
         style="filled",
     )
@@ -172,7 +172,7 @@ def add_ware(g, w):
 </TABLE>>"""
         )
         % (w.image, w.descname),
-        URL="../../wares/%s/" % (w.name),
+        URL=f"/encyclopedia/{w.tribe.name}/wares/{w.name}/",
         fillcolor="#dddddd",
         style="filled",
     )
