@@ -1,7 +1,7 @@
 from django.urls import re_path
+from django.views.generic import RedirectView
 
 from pybb import views
-from pybb.feeds import LastPosts, LastTopics
 
 urlpatterns = [
     # Misc
@@ -21,17 +21,10 @@ urlpatterns = [
         views.mark_as_read,
         name="mark_as_read",
     ),
-    # Feeds
-    re_path(
-        r"^feeds/topics/(?P<topic_id>\d+)/$", LastTopics(), name="pybb_feed_topics"
-    ),
-    re_path(r"^feeds/posts/(?P<topic_id>\d+)/$", LastPosts(), name="pybb_feed_posts"),
-    re_path(r"^feeds/topics/$", LastTopics(), name="pybb_feed_topics"),
-    re_path(r"^feeds/posts/$", LastPosts(), name="pybb_feed_posts"),
     # Topic
-    re_path(r"^topic/(?P<topic_id>\d+)/$", views.show_topic, name="pybb_topic"),
+    re_path("^topic/(?P<topic_id>\d+)/$", views.show_topic, name="pybb_topic"),
     re_path(
-        r"^forum/(?P<forum_id>\d+)/topic/add/$",
+        "^forum/(?P<forum_id>\d+)/topic/add/$",
         views.add_post,
         {"topic_id": None},
         name="pybb_add_topic",
@@ -81,7 +74,7 @@ urlpatterns = [
     ),
     # API
     re_path(
-        r"^api/post_ajax_preview/$",
+        "^api/post_ajax_preview/$",
         views.post_ajax_preview,
         name="pybb_post_ajax_preview",
     ),
@@ -95,5 +88,23 @@ urlpatterns = [
         r"^topic/(?P<topic_id>\d+)/unsubscribe/$",
         views.delete_subscription,
         name="pybb_delete_subscription",
+    ),
+    # Feeds are handled in feed_urls.py to have the base path '/feeds/*' for all feeds
+    # Redirect old feed urls
+    re_path(
+        r"^feeds/topics/(?P<topic_id>\d+)/$",
+        RedirectView.as_view(pattern_name="pybb_feed_topics"),
+    ),
+    re_path(
+        r"^feeds/posts/(?P<topic_id>\d+)/$",
+        RedirectView.as_view(pattern_name="pybb_feed_posts"),
+    ),
+    re_path(
+        "^feeds/topics/$",
+        RedirectView.as_view(pattern_name="pybb_feed_topics", permanent=True),
+    ),
+    re_path(
+        "^feeds/posts/$",
+        RedirectView.as_view(pattern_name="pybb_feed_posts", permanent=True),
     ),
 ]

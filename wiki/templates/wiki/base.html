@@ -8,8 +8,7 @@ Wiki - {{ block.super }}
 
 {% block extra_head %}
 {{ block.super}}
-<link rel="alternate" type="application/rss+xml" title="Wiki History (RSS)" href="{% url 'wiki_history_feed_rss' %}" />
-<link rel="alternate" type="application/atom+xml" title="Wiki History (Atom)" href="{% url 'wiki_history_feed_atom' %}" />
+<link rel="alternate" type="application/atom+xml" title="Wiki History" href="{% url 'wiki_history_feed' %}" />
 <link rel="stylesheet" type="text/css" media="all" href="{% static 'css/wiki.css' %}" />
 {% endblock %}
 
@@ -30,9 +29,6 @@ We disable or change them in the subpages. #}
 		</li>
 		<li>
 			<a {% block class_wiki_backl %}{% endblock %} href="{% url 'backlinks' article.title %}">{% trans "Backlinks" %}</a>
-		</li>
-		<li>
-			<a {% block class_wiki_hist_atom %}{% endblock %} href="{% url 'wiki_article_history_feed_atom' article.title %}">{% trans "Atom feed" %}</a>
 		</li>
 
 		{% if can_observe %}
