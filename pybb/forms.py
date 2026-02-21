@@ -115,7 +115,7 @@ class AddPostForm(forms.ModelForm):
             if not os.path.exists(dir):
                 os.makedirs(dir)
 
-            fname = "{}.0".format(post.id)
+            fname = f"{post.id}.0"
             path = os.path.join(dir, fname)
 
             with open(path, "wb") as f:

@@ -17,11 +17,7 @@ sys.path.append("..")
 
 import unittest
 from wiki.models import Article
-from django.contrib.sites.models import Site
-from django.conf import settings
 from django.test import TestCase as DBTestCase
-
-_domain = Site.objects.get(pk=settings.SITE_ID).domain
 
 from ..templatetags.wl_markdown import do_wl_markdown
 
@@ -77,82 +73,94 @@ class TestWlMarkdown(DBTestCase):
     # Check smileys
     def test_smiley_angel(self):
         input = """O:-)"""
-        wanted = """<p><img alt="face-angel.png" src="/static/img/smileys/face-angel.png"/> </p>"""
+        wanted = (
+            """<p><img alt="O:-)" src="/static/img/smileys/face-angel.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_crying(self):
         input = """:'-("""
-        wanted = """<p><img alt="face-crying.png" src="/static/img/smileys/face-crying.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":'-(" src="/static/img/smileys/face-crying.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_glasses(self):
         input = """8-)"""
-        wanted = """<p><img alt="face-glasses.png" src="/static/img/smileys/face-glasses.png"/> </p>"""
+        wanted = (
+            """<p><img alt="8-)" src="/static/img/smileys/face-glasses.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_kiss(self):
         input = """:-x"""
-        wanted = """<p><img alt="face-kiss.png" src="/static/img/smileys/face-kiss.png"/> </p>"""
+        wanted = """<p><img alt=":-x" src="/static/img/smileys/face-kiss.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_plain(self):
         input = """:-|"""
-        wanted = """<p><img alt="face-plain.png" src="/static/img/smileys/face-plain.png"/> </p>"""
+        wanted = """<p><img alt=":-|" src="/static/img/smileys/face-plain.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_sad(self):
         input = """:-("""
-        wanted = """<p><img alt="face-sad.png" src="/static/img/smileys/face-sad.png"/> </p>"""
+        wanted = """<p><img alt=":-(" src="/static/img/smileys/face-sad.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_smilebig(self):
         input = """:))"""
-        wanted = """<p><img alt="face-smile-big.png" src="/static/img/smileys/face-smile-big.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":))" src="/static/img/smileys/face-smile-big.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_smile(self):
         input = """:-)"""
-        wanted = """<p><img alt="face-smile.png" src="/static/img/smileys/face-smile.png"/> </p>"""
+        wanted = """<p><img alt=":-)" src="/static/img/smileys/face-smile.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_surprise(self):
         input = """:-O"""
-        wanted = """<p><img alt="face-surprise.png" src="/static/img/smileys/face-surprise.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":-O" src="/static/img/smileys/face-surprise.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     def test_smiley_wink(self):
         input = """;-)"""
-        wanted = """<p><img alt="face-wink.png" src="/static/img/smileys/face-wink.png"/> </p>"""
+        wanted = """<p><img alt=";-)" src="/static/img/smileys/face-wink.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_grin(self):
         input = """:D"""
-        wanted = """<p><img alt="face-grin.png" src="/static/img/smileys/face-grin.png"/> </p>"""
+        wanted = """<p><img alt=":D" src="/static/img/smileys/face-grin.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_sad(self):
         input = """:("""
-        wanted = """<p><img alt="face-sad.png" src="/static/img/smileys/face-sad.png"/> </p>"""
+        wanted = """<p><img alt=":(" src="/static/img/smileys/face-sad.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_smile(self):
         input = """:)"""
-        wanted = """<p><img alt="face-smile.png" src="/static/img/smileys/face-smile.png"/> </p>"""
+        wanted = """<p><img alt=":)" src="/static/img/smileys/face-smile.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_surprise(self):
         input = """:O"""
-        wanted = """<p><img alt="face-shock.png" src="/static/img/smileys/face-shock.png"/> </p>"""
+        wanted = """<p><img alt=":O" src="/static/img/smileys/face-shock.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_wink(self):
         input = """;)"""
-        wanted = """<p><img alt="face-wink.png" src="/static/img/smileys/face-wink.png"/> </p>"""
+        wanted = """<p><img alt=";)" src="/static/img/smileys/face-wink.png"/> </p>"""
         self._check(input, wanted)
 
     def test_smiley_monkey(self):
         input = """:(|)"""
-        wanted = """<p><img alt="face-monkey.png" src="/static/img/smileys/face-monkey.png"/> </p>"""
+        wanted = (
+            """<p><img alt=":(|)" src="/static/img/smileys/face-monkey.png"/> </p>"""
+        )
         self._check(input, wanted)
 
     # Occured errors

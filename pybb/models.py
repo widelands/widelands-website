@@ -228,7 +228,7 @@ class RenderableItem(models.Model):
         elif self.markup == "markdown":
             self.body_html = str(do_wl_markdown(self.body, "bleachit"))
         else:
-            raise Exception("Invalid markup property: %s" % self.markup)
+            raise Exception(f"Invalid markup property: {self.markup}")
 
         # Remove tags which was generated with the markup processor
         text = strip_tags(self.body_html)
@@ -442,7 +442,7 @@ class Reaction(models.Model):
         unique_together = ["user", "post"]
 
     def __str__(self):
-        return "{} ({})".format(self.get_image_display(), self.image)
+        return f"{self.get_image_display()} ({self.image})"
 
 
 class Read(models.Model):
@@ -464,7 +464,7 @@ class Read(models.Model):
         super(Read, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "T[%d], U[%d]: %s" % (self.topic.id, self.user.id, str(self.time))
+        return f"T[{self.topic.id}], U[{self.user.id}]: {self.time}"
 
 
 class Attachment(models.Model):
