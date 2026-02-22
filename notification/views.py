@@ -15,7 +15,7 @@ def notice_settings(request):
         checkbox_values = []
         for medium_id, medium_display in NOTICE_MEDIA:
             form_label = "%s_%s" % (notice_type.label, medium_id)
-            setting = get_notification_setting(request.user, notice_type, medium_id)
+            setting = get_notification_setting(request.user, notice_type)
             if request.method == "POST":
                 if request.POST.get(form_label) == "on":
                     setting.send = True
