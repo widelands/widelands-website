@@ -91,7 +91,7 @@ urlpatterns = [
         name="backlinks",
     ),
     re_path(
-        r"^tag_list/(?P<tag>[^/]+(?u))/$",
+        r"^tag_list/(?P<tag>[^/]+)/$",
         TaggedObjectList.as_view(
             queryset=Article.objects.exclude(deleted=True),
             # model=Article,

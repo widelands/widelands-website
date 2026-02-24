@@ -16,7 +16,7 @@ def get_online_now(self):
 @receiver(user_logged_out)
 def logout(sender, **kwargs):
     try:
-        cache.delete("online-%s" % kwargs["user"].id)
+        cache.delete(f"online-{kwargs['user'].id}")
     except AttributeError:
         pass
 
@@ -35,7 +35,7 @@ class OnlineNowMiddleware(MiddlewareMixin):
         uids = cache.get("online-now", [])
 
         # Perform the multiget on the individual online uid keys
-        online_keys = ["online-%s" % (u,) for u in uids]
+        online_keys = [f"online-{u}" for u in uids]
         fresh = list(cache.get_many(online_keys).keys())
         online_now_ids = [int(k.replace("online-", "")) for k in fresh]
 
@@ -55,5 +55,5 @@ class OnlineNowMiddleware(MiddlewareMixin):
         request.__class__.online_now = property(get_online_now)
 
         # Set the new cache
-        cache.set("online-%s" % (request.user.pk,), True, ONLINE_THRESHOLD)
+        cache.set(f"online-{request.user.pk}", True, ONLINE_THRESHOLD)
         cache.set("online-now", online_now_ids, ONLINE_THRESHOLD)

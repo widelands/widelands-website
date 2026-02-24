@@ -52,7 +52,7 @@ class SuspiciousInput(models.Model):
 
         """
 
-        which = "{}: …".format(name.upper())
+        which = f"{name.upper()}: …"
         max_chars = self._meta.get_field("text").max_length - len(which) - 1
         spam_middle = ((spam_end - spam_start) // 2) + spam_start
 
@@ -67,7 +67,7 @@ class SuspiciousInput(models.Model):
                 end_pos = end_pos + 1
             tmp_text = self.text[start_pos:end_pos]
 
-        self.text = "{} {}".format(which, tmp_text)
+        self.text = f"{which} {tmp_text}"
 
     def is_suspicious(self):
         # check for keywords

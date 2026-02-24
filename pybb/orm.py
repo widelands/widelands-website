@@ -4,9 +4,9 @@ def load_related(objects, rel_qs, rel_field_name, cache_field_name=None):
 
     obj_map = dict((x.id, x) for x in objects)
     rel_field = rel_qs.model._meta.get_field(rel_field_name)
-    cache_field_name = "%s_cache" % rel_qs.model.__name__.lower()
+    cache_field_name = f"{rel_qs.model.__name__.lower()}_cache"
 
-    rel_objects = rel_qs.filter(**{"%s__in" % rel_field.name: list(obj_map.keys())})
+    rel_objects = rel_qs.filter(**{f"{rel_field.name}__in": list(obj_map.keys())})
 
     temp_map = {}
     for rel_obj in rel_objects:

@@ -22,9 +22,9 @@ urlpatterns = [
         name="mark_as_read",
     ),
     # Topic
-    re_path("^topic/(?P<topic_id>\d+)/$", views.show_topic, name="pybb_topic"),
+    re_path(r"^topic/(?P<topic_id>\d+)/$", views.show_topic, name="pybb_topic"),
     re_path(
-        "^forum/(?P<forum_id>\d+)/topic/add/$",
+        r"^forum/(?P<forum_id>\d+)/topic/add/$",
         views.add_post,
         {"topic_id": None},
         name="pybb_add_topic",

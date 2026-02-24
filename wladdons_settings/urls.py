@@ -1,6 +1,5 @@
 from django.urls import re_path
 
-from wladdons_settings.views import addon_settings
 from . import views
 
 urlpatterns = [

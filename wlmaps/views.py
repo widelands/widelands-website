@@ -87,14 +87,14 @@ def download(request, map_slug):
 
     file = open(m.file.path, "rb")
     data = file.read()
-    filename = os.path.basename("%s.wmf" % m.name)
+    filename = os.path.basename(f"{m.name}.wmf")
 
     # Remember that this has been downloaded
     m.nr_downloads += 1
     m.save(update_fields=["nr_downloads"])
 
     response = HttpResponse(data, content_type="application/octet-stream")
-    response["Content-Disposition"] = 'attachment; filename="%s"' % filename
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
 
     return response
 

@@ -49,7 +49,10 @@
 			<br />
 			<a href="{% url 'scheduling_main' %}" title="Playtime Scheduler">Playtime Scheduler</a>
 			<br />
-			<a href="{% url 'logout' %}?next=/">Logout</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="linkButton" type="submit">Logout</button>
+            </form>
 		{% else %}
 			<!-- Not logged in -->
 			<a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Login/Register</a>

@@ -37,19 +37,15 @@ class Category(models.Model):
         return super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "%s" % self.name
+        return f"{self.name}"
 
 
 def screenshot_path(instance, filename):
-    return "wlscreens/screens/%s/%s.%s" % (
-        instance.category,
-        instance.name,
-        filename.rsplit(".", 1)[-1].lower(),
-    )
+    return f"wlscreens/screens/{instance.category}/{instance.name}.{filename.rsplit('.', 1)[-1].lower()}"
 
 
 def thumbnail_path(instance, filename):
-    return "wlscreens/thumbs/%s/%s.png" % (instance.category, instance.name)
+    return f"wlscreens/thumbs/{instance.category}/{instance.name}.png"
 
 
 class Screenshot(models.Model):
@@ -119,4 +115,4 @@ class Screenshot(models.Model):
             pass
 
     def __str__(self):
-        return "%s:%s" % (self.category.name, self.name)
+        return f"{self.category.name}:{self.name}"

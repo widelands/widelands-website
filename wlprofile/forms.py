@@ -60,11 +60,11 @@ class EditProfileForm(forms.ModelForm):
         value = self.cleaned_data["signature"].strip()
         if len(re.findall(r"\n", value)) > settings.SIGNATURE_MAX_LINES:
             raise forms.ValidationError(
-                "Number of lines is limited to %d" % settings.SIGNATURE_MAX_LINES
+                f"Number of lines is limited to {settings.SIGNATURE_MAX_LINES}"
             )
         if len(value) > settings.SIGNATURE_MAX_LENGTH:
             raise forms.ValidationError(
-                "Length of signature is limited to %d" % settings.SIGNATURE_MAX_LENGTH
+                f"Length of signature is limited to {settings.SIGNATURE_MAX_LENGTH}"
             )
         return value
 

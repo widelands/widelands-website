@@ -27,7 +27,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test.client import Client
 
 from .models import Image
-from .forms import UploadImageForm
+
+# kann das weg weil weiter unter ist es auskommentiert
+# from .forms import UploadImageForm
 
 
 class _TestUploadingBase(TestCase):
@@ -38,7 +40,7 @@ class _TestUploadingBase(TestCase):
 
         i.save(sio, type)
 
-        return SimpleUploadedFile(name, sio.read(), content_type="image/%s" % type)
+        return SimpleUploadedFile(name, sio.read(), content_type=f"image/{type}")
 
     def setUp(self):
         # We need some dummy objects
@@ -100,6 +102,7 @@ class TestImages_TestModelAddingTwiceTheSameNameDifferentRevision_ExceptRaises(
         self.assertEqual(Image.objects.filter(name="test").count(), 2)
 
 
+# kann das weg??
 ###############
 # Other Tests #
 ###############
@@ -111,5 +114,6 @@ class TestImages_TestModelAddingTwiceTheSameNameDifferentRevision_ExceptRaises(
 
 if __name__ == "__main__":
     unittest.main()
+    # kann das weg??
     # k = TestWlMarkdown_WikiWordsInLink_ExceptCorrectResult()
     # unittest.TextTestRunner().run(k)

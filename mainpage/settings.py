@@ -74,6 +74,7 @@ SECRET_KEY = "#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu"
 
 # See https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-cookie-secure
 CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ROOT_URLCONF = "mainpage.urls"
 
@@ -94,7 +95,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.sitemaps",
     "django.contrib.redirects",
-    "captcha",
+    "django_recaptcha",
     # Our own apps
     "wiki.templatetags.restructuredtext",
     "mainpage",
@@ -172,7 +173,6 @@ ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
 # https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
-    "django.contrib.auth.hashers.SHA1PasswordHasher",
 ]
 
 ######################
@@ -194,6 +194,7 @@ WIKI_SPECIAL_PAGES = [
 FORBIDDEN_WIKI_TITLES = [
     "trash",
 ]
+
 ######################
 # User configuration #
 ######################
@@ -203,6 +204,7 @@ SIGNATURE_MAX_LENGTH = 255
 SIGNATURE_MAX_LINES = 8
 AVATARS_UPLOAD_TO = "profile/avatars"
 AVATAR_HEIGHT = AVATAR_WIDTH = 80
+LOGOUT_REDIRECT_URL = "/"
 
 ######################
 # Pybb Configuration #

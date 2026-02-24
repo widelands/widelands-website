@@ -17,7 +17,7 @@ def display(request, image, revision):
         extension = "png"
 
     r = HttpResponse()
-    r["Content-Type"] = "image/%s" % extension
+    r["Content-Type"] = f"image/{extension}"
     r.write(img.image.read())
 
     return r
