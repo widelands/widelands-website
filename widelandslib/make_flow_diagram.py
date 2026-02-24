@@ -118,7 +118,7 @@ def add_building(
 {costs}
 </TABLE>>"""
         ).replace("\n", ""),
-        URL=f"../../buildings/{b.name}/",
+        URL=f"/encyclopedia/{b.tribe.name}/buildings/{b.name}/",
         fillcolor="orange",
         style="filled",
     )
@@ -164,7 +164,7 @@ def add_ware(g, w):
 <TR><TD>{w.descname}</TD></TR>
 </TABLE>>"""
         ),
-        URL=f"../../wares/{w.name}/",
+        URL=f"/encyclopedia/{w.tribe.name}/wares/{w.name}/",
         fillcolor="#dddddd",
         style="filled",
     )
@@ -408,11 +408,6 @@ def make_all_subgraphs(t):
 
     rtdir, tdir = tdir, ""
     return rtdir
-
-
-def add_bases(tribe, building, g):
-    if b.enhanced_building:
-        add_building()
 
 
 if __name__ == "__main__":

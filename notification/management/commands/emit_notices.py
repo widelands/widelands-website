@@ -9,7 +9,5 @@ class Command(BaseCommand):
     help = "Emit queued notices."
 
     def handle(self, *args, **options):
-        # Franku: Uncomment for debugging purposes
-        # logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-        logging.info("-" * 72)
+        logging.info("Calling send_all()")
         send_all()

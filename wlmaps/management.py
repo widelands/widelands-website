@@ -9,7 +9,7 @@ try:
             "maps_new_map",
             _("A new Map is available"),
             _("a new map is available for download"),
-            1,
+            send_default=False,
         )
 
 except ImportError:
