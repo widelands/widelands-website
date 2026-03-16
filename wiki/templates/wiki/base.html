@@ -16,7 +16,7 @@ Wiki - {{ block.super }}
 We disable or change them in the subpages. #}
 
 {% block content_tabbing %}
-<ul class="small tab-list"{% block style_tab_list %}{% endblock %}>
+<ul class="small tab-list" {% block style_tab_list %}{% endblock %}>
 	{% if article.id %}
 		<li>
 			<a {% block class_wiki_edit %}{% endblock %} href="{% url 'wiki_edit' article.title %}">{% trans "Edit this article" %}</a>
