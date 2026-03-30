@@ -43,7 +43,7 @@ prompt_toolkit==3.0.48
 ptyprocess==0.7.0
 pure_eval==0.2.3
 pydot==3.0.3
-Pygments==2.18.0
+Pygments==2.20.0
 pyparsing==3.2.0
 python-magic==0.4.27
 python-ptrace==0.9.9
