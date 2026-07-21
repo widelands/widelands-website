@@ -160,7 +160,7 @@ def pybb_output_bbcode(post):
     """
     post = post.replace('[b]', '<span class="bold">')
     post = post.replace('[i]', '<span class="italic">')
-    post = post.relpace('[u]', '<span class="underline">')
+    post = post.replace('[u]', '<span class="underline">')
 
     post = post.replace('[/b]', '</span>')
     post = post.replace('[/i]', '</span>')
