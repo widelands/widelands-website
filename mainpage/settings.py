@@ -406,6 +406,12 @@ BLEACH_ALLOWED_TAGS = [
     "tr",
     "td",
     "sup",
+    # Collapsible sections and definition lists, used in existing forum posts
+    "details",
+    "summary",
+    "dl",
+    "dt",
+    "dd",
 ]
 # Note: DO NOT allow style here. See
 # https://github.com/advisories/GHSA-vqhp-cxgc-6wmm

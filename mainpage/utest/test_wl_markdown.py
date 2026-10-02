@@ -251,6 +251,15 @@ class TestWlMarkdownBleached(DBTestCase):
             'src="/static/img/smileys/face-smile.png"/> </p>',
         )
 
+    def test_collapsible_and_definition_list_tags_are_kept(self):
+        res = do_wl_markdown(
+            "<details><summary>Spoiler</summary>hidden</details>\n\n"
+            "<dl><dt>Term</dt><dd>Definition</dd></dl>",
+            "bleachit",
+        )
+        self.assertIn("<details><summary>Spoiler</summary>hidden</details>", res)
+        self.assertIn("<dl><dt>Term</dt><dd>Definition</dd></dl>", res)
+
 
 if __name__ == "__main__":
     unittest.main()
