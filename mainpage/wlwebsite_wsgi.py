@@ -1,25 +1,11 @@
 import os
 import sys
 
+# Run gunicorn from the project's virtualenv (uv's `.venv/bin/gunicorn`);
+# the interpreter then already has the right site-packages.
 parent_dir = lambda dir: os.path.abspath(os.path.join(dir, os.pardir))
 
 code_directory = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
-
-current_dir = code_directory
-activate_this = None
-while current_dir != "/":
-    current_dir = parent_dir(current_dir)
-    if os.path.exists(os.path.join(current_dir, "bin", "activate_this.py")):
-        activate_this = os.path.join(current_dir, "bin", "activate_this.py")
-        break
-
-if activate_this is None:
-    raise RuntimeException("Could not find virtualenv to start up!")
-
-exec(
-    compile(open(activate_this, "rb").read(), activate_this, "exec"),
-    dict(__file__=activate_this),
-)
 
 sys.path.append(parent_dir(code_directory))
 sys.path.append(code_directory)
