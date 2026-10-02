@@ -55,13 +55,13 @@
         </li>
     </ul>
     <p class="errormessage"><b>This step can't be undone!</b></p>
-    <p>
-        <button type="button" onclick="location.href='{% url 'do_delete' %}';"
-                style="font-weight: normal;">I am sure, please delete me
+    <form method="post" action="{% url 'do_delete' %}">
+        {% csrf_token %}
+        <button type="submit" style="font-weight: normal;">I am sure, please delete me
         </button>
         <button type="button" onclick="location.href='{% url 'profile_edit' %}';">
             Cancel
         </button>
-    </p>
+    </form>
 </section>
 {% endblock %}

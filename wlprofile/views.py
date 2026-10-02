@@ -10,6 +10,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 from .forms import EditProfileForm
 from notification import models as notification
@@ -50,6 +51,7 @@ def show_subscriptions(request):
 
 
 @login_required
+@require_POST
 def unsubscribe_topics(request):
     topic_subscriptions = Topic.objects.filter(subscribers=request.user)
 
@@ -60,6 +62,7 @@ def unsubscribe_topics(request):
 
 
 @login_required
+@require_POST
 def unsubscribe_other(request):
     notification_subscriptions = notification.ObservedItem.objects.filter(
         user=request.user
@@ -84,6 +87,7 @@ def delete_me(request):
 
 
 @login_required
+@require_POST
 def do_delete(request):
     """Delete user specific data.
 

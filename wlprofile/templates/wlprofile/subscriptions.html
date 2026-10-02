@@ -23,7 +23,10 @@
     {% endif %}
     {% if topics %}
     <h2>Topics</h2>
-    <a class="button posRight" href="{% url 'unsubscribe_topics' %}">Unsubscribe from all topics</a>
+    <form class="posRight" method="post" action="{% url 'unsubscribe_topics' %}">
+        {% csrf_token %}
+        <button type="submit" class="button">Unsubscribe from all topics</button>
+    </form>
     <table class="notifications">
         <tr>
             <th>Topic</th>
@@ -56,7 +59,10 @@
     {% if observed_items %}
         <h2>Observed Items</h2>
         {% for content_item, data in observed_items.items %}
-        <a class="button posRight" href="{% url 'unsubscribe_other' %}">Unsubscribe from all observed items</a>
+        <form class="posRight" method="post" action="{% url 'unsubscribe_other' %}">
+            {% csrf_token %}
+            <button type="submit" class="button">Unsubscribe from all observed items</button>
+        </form>
         <table class="notifications">
             <caption>{{ content_item|upper }}</caption>
             <tr>
