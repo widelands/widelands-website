@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.redirects.models import Redirect
 from django.test import TestCase
 from django.urls import reverse
@@ -166,3 +167,70 @@ class TestEditArticleStaffFields(_WikiTestBase):
         self.assertEqual(response.status_code, 302)
         self.article.refresh_from_db()
         self.assertFalse(self.article.deleted)
+
+    def test_group_fields_are_ignored(self):
+        """The group of an article cannot be set through the form."""
+        ct = ContentType.objects.get_for_model(ContentType)
+        self.client.login(username="testuser", password="pass")
+        response = self._post_edit("wiki_edit", content_type=ct.pk, object_id=ct.pk)
+        self.assertEqual(response.status_code, 302)
+        self.article.refresh_from_db()
+        self.assertEqual(self.article.content, "Edited content")
+        self.assertIsNone(self.article.content_type)
+        self.assertIsNone(self.article.object_id)
+        self.assertEqual(self.client.get("/sitemap.xml").status_code, 200)
+        url = reverse("wiki_article_history", args=[self.article.title])
+        self.assertEqual(self.client.get(url).status_code, 200)
+
+
+class TestRevertToRevision(_WikiTestBase):
+    def setUp(self):
+        super().setUp()
+        self.article.new_revision("", self.article.title, "Created", self.user)
+        self.article.content = "Changed content"
+        self.article.save()
+        self.article.new_revision("Some content", self.article.title, "", self.user)
+        self.client.login(username="testuser", password="pass")
+
+    def _revert(self, revision=1):
+        url = reverse("wiki_revert_to_revision", args=[self.article.title])
+        return self.client.post(url, {"revision": revision})
+
+    def test_revert(self):
+        response = self._revert()
+        self.assertEqual(response.status_code, 302)
+        self.article.refresh_from_db()
+        self.assertEqual(self.article.content, "Some content")
+
+    def test_unknown_revision_not_found(self):
+        response = self._revert(revision=5)
+        self.assertEqual(response.status_code, 404)
+
+    def test_non_staff_cannot_revert_deleted_article(self):
+        self.article.deleted = True
+        self.article.save()
+        response = self._revert()
+        self.assertEqual(response.status_code, 404)
+        self.article.refresh_from_db()
+        self.assertEqual(self.article.content, "Changed content")
+
+    def test_staff_can_revert_deleted_article(self):
+        self.user.is_staff = True
+        self.user.save()
+        self.article.deleted = True
+        self.article.save()
+        response = self._revert()
+        self.assertEqual(response.status_code, 302)
+        self.article.refresh_from_db()
+        self.assertEqual(self.article.content, "Some content")
+
+
+class TestBacklinks(_WikiTestBase):
+    def test_deleted_articles_are_not_listed(self):
+        Article.objects.create(title="LinkingArticle", content="[[ TestArticle ]]")
+        Article.objects.create(
+            title="DeletedArticle", content="[[ TestArticle ]]", deleted=True
+        )
+        response = self.client.get(reverse("backlinks", args=[self.article.title]))
+        self.assertContains(response, "LinkingArticle")
+        self.assertNotContains(response, "DeletedArticle")

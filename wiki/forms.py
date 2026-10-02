@@ -2,7 +2,6 @@
 import re
 
 from django import forms
-from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext_lazy as _
 
 from wiki.models import Article
@@ -23,18 +22,22 @@ class ArticleForm(forms.ModelForm):
 
     comment = forms.CharField(required=False)
 
-    content_type = forms.ModelChoiceField(
-        queryset=ContentType.objects.all(), required=False, widget=forms.HiddenInput
-    )
-    object_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
-
     action = forms.CharField(widget=forms.HiddenInput)
 
     redirect_to = forms.CharField(required=False)
 
     class Meta:
         model = Article
-        exclude = ("creator", "group", "created_at", "last_update")
+        # 'content_type' and 'object_id' make up 'group', which only the view
+        # sets, never the submitted data.
+        exclude = (
+            "creator",
+            "group",
+            "content_type",
+            "object_id",
+            "created_at",
+            "last_update",
+        )
 
     def __init__(self, *args, is_staff=False, **kwargs):
         super().__init__(*args, **kwargs)
@@ -97,7 +100,6 @@ class ArticleForm(forms.ModelForm):
 
     def clean(self):
         super(ArticleForm, self).clean()
-        kw = {}
         # After clean_redirect_to() raises a ValidationError the field will be
         # removed from self.cleaned_data
         redirect_to = self.cleaned_data.get("redirect_to", None)
@@ -105,15 +107,6 @@ class ArticleForm(forms.ModelForm):
             self.add_error(
                 "deleted", "Applying a redirect needs deleted to be checked."
             )
-
-        if self.cleaned_data["action"] == "create":
-            try:
-                kw["title"] = self.cleaned_data["title"]
-                kw["content_type"] = self.cleaned_data["content_type"]
-                kw["object_id"] = self.cleaned_data["object_id"]
-            except KeyError:
-                pass  # some error in this fields
-
         return self.cleaned_data
 
     def cache_old_content(self):

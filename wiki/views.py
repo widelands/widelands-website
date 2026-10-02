@@ -437,9 +437,6 @@ def edit_article(
             lock = ArticleEditLock(get_valid_cache_key(title), request)
         lock.create_message(request)
         initial = {}
-        if group_slug is not None:
-            initial.update({"content_type": group_ct.id, "object_id": group.id})
-
         if article is None:
             initial.update({"title": title, "action": "create"})
             form = ArticleFormClass(initial=initial, is_staff=request.user.is_staff)
@@ -644,10 +641,14 @@ def revert_to_revision(
             return HttpResponseForbidden()
 
         article = get_object_or_404(article_qs, **article_args)
+        if article.deleted and not request.user.is_staff:
+            raise Http404()
 
         # Check whether there is another Article with the same name to which this article
         # wants to be reverted to. If so: prevent it and show a message.
-        old_title = article.changeset_set.filter(revision=revision + 1).get().old_title
+        old_title = get_object_or_404(
+            article.changeset_set, revision=revision + 1
+        ).old_title
         try:
             art = Article.objects.exclude(pk=article.pk).get(title=old_title)
         except Article.DoesNotExist:
@@ -852,7 +853,7 @@ def backlinks(request, title):
     # Search for current and previous titles
     found_old_links = []
     found_links = []
-    articles_all = Article.objects.all().exclude(title=title, deleted=True)
+    articles_all = Article.objects.exclude(title=title).exclude(deleted=True)
     for article in articles_all:
         for regexp in search_title:
             # Need to unquote the content to match
