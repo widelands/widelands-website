@@ -5,9 +5,7 @@ from django import forms
 from django_registration.forms import RegistrationForm
 from django_recaptcha.fields import ReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 from wlprofile.models import TZ_CHOICES
-from django.shortcuts import get_object_or_404
 from django.core.mail import mail_admins
 
 
@@ -42,12 +40,15 @@ class LoginTimezoneForm(AuthenticationForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        # now the user is logged in
+        # Only touch the profile of a successfully authenticated user. The
+        # parent's clean() skips authentication if a field (e.g. the password)
+        # is missing, so do not rely on it having raised.
+        user = self.get_user()
+        if user is None:
+            return cleaned_data
         br_time_zone = cleaned_data.get("browser_timezone", None)
         set_timezone = cleaned_data.get("set_timezone")
-        profile = get_object_or_404(
-            User, username=cleaned_data.get("username")
-        ).wlprofile
+        profile = user.wlprofile
         if (
             set_timezone
             and br_time_zone is not None
@@ -68,3 +69,4 @@ class LoginTimezoneForm(AuthenticationForm):
                     "set_timezone",
                     "The time zone can't be found in our list of time zones. Please disable the checkbox and try again. After successful login please check your time zone in the 'Edit Profile' page. Admins got already informed about this.",
                 )
+        return cleaned_data
