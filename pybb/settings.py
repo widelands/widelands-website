@@ -22,6 +22,8 @@ ATTACHMENT_ENABLE = get("PYBB_ATTACHMENT_ENABLE", True)
 INTERNAL_PERM = get("INTERNAL_PERM", "pybb.can_access_internal")
 LAST_POSTS_DAYS = get("LAST_POSTS_DAYS", 30)
 EDIT_HOURS = get("EDIT_HOURS", 24)
+# Only the first MAX_MENTIONS different @names of a post notify anybody
+MAX_MENTIONS = get("PYBB_MAX_MENTIONS", 10)
 
 # That is used internally
 DISABLE_NOTIFICATION = False

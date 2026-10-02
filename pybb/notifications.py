@@ -1,42 +1,69 @@
 import re
 
 from django.contrib.auth.models import User
-from django.db.models import Q
 
 from notification import models as notification
 from pybb import settings as pybb_settings
 from pybb.models import Post, Topic
+from pybb.util import allowed_for
 
 MENTION_RE = re.compile(r"@([\w.@+\-]+)")
 
 
+def readers(users, post):
+    """Return the users of 'users' who may read 'post' in the forum.
+
+    Hidden posts and posts of hidden topics are only shown to moderators, so
+    nobody gets them by mail. Posts of internal forums only go to users who
+    may enter internal forums.
+    """
+    if post.hidden or post.topic.is_hidden:
+        return []
+    if post.topic.forum.category.internal:
+        return [user for user in users if allowed_for(user)]
+    return list(users)
+
+
 def get_mentions(post):
-    """Return usernames which are mentioned in a post like @username."""
+    """Return the users to inform about being mentioned like @username in a post.
+
+    Every user is returned once, the author never, and only the first
+    MAX_MENTIONS different names count, so that a post cannot be used to
+    mail bomb people.
+    """
     if not isinstance(post, Post):
         raise TypeError("First argument has to be an instance of pybb.Post!")
 
-    mentioned_names = []
+    names = {}
     for line in post.body.splitlines():
         # Didn't find a way to exclude quoted lines with the regex :(
         if not line.startswith(">"):
-            mentioned = MENTION_RE.findall(line)
-            mentioned_names.extend(mentioned)
+            names.update(dict.fromkeys(MENTION_RE.findall(line)))
+    names.pop(post.user.username, None)
+    names = list(names)[: pybb_settings.MAX_MENTIONS]
+    if not names:
+        return []
 
-    mentioned_users = []
-    for username in mentioned_names:
-        # Make sure this is an existing user
-        try:
-            user_obj = User.objects.get(username=username)
+    mentioned = User.objects.filter(username__in=names).exclude(pk=post.user_id)
+    notice_type = notification.NoticeType.objects.get(label="forum_mention")
+    return [
+        user
+        for user in readers(mentioned, post)
+        if notification.get_notification_setting(user, notice_type).send
+    ]
 
-            notice_type = notification.NoticeType.objects.get(label="forum_mention")
 
-            if notification.get_notification_setting(user_obj, notice_type).send:
-                mentioned_users.append(user_obj)
+def new_topic_subscribers(post):
+    """Return the users to inform about the new topic started by 'post'."""
+    observers = notification.get_observers_for(
+        "forum_new_topic", excl_user=post.topic.user
+    )
+    return set(readers(observers, post))
 
-        except User.DoesNotExist:
-            pass
 
-    return mentioned_users
+def topic_subscribers(post):
+    """Return the subscribers of the topic of 'post' to inform about it."""
+    return set(readers(post.topic.subscribers.exclude(pk=post.user_id), post))
 
 
 def inform_mentioned(mentioned, post):
@@ -68,30 +95,10 @@ def notify(request, topic, post):
         # Inform subscribers of a new topic
         # Sound's wrong but for new topics there is no topic instance yet.
 
-        if post.topic.forum.category.internal:
-            # Inform only users which have the permission to enter the
-            # internal forum and superusers. Those users have to:
-            # - enable 'forum_new_topic' in the notification settings, or
-            # - subscribed to an existing topic
-            subscribers = User.objects.filter(
-                Q(groups__permissions__codename=pybb_settings.INTERNAL_PERM)
-                | Q(user_permissions__codename=pybb_settings.INTERNAL_PERM)
-            ).exclude(username=request.user.username)
-            superusers = User.objects.filter(is_superuser=True).exclude(
-                username=request.user.username
-            )
-            # Combine the query sets, excluding double entries.
-            subscribers = subscribers.union(superusers)
-        else:
-            # Normal users
-            subscribers = notification.get_observers_for(
-                "forum_new_topic", excl_user=request.user
-            )
-
         mentions = get_mentions(post)
 
         # Remove mentioned users from subscribers
-        new_subscribers = set(subscribers) - set(mentions)
+        new_subscribers = new_topic_subscribers(post) - set(mentions)
 
         # Send the mails
         inform_mentioned(mentions, post)
@@ -118,15 +125,13 @@ def notify(request, topic, post):
         mentions = get_mentions(post)
 
         # Remove mentioned users from topic subscribers
-        topic_subscribers = set(
-            post.topic.subscribers.exclude(username=post.user)
-        ) - set(mentions)
+        subscribers = topic_subscribers(post) - set(mentions)
 
         # Finally send the mails
         inform_mentioned(mentions, post)
         # Send mails about a new post to topic subscribers
         notification.send(
-            topic_subscribers,
+            subscribers,
             "forum_new_post",
             {"post": post, "topic": topic, "user": post.user},
         )
