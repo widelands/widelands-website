@@ -10,21 +10,26 @@ from django.views.generic import (
 from mainpage.wl_utils import get_pagination
 
 
-class NewsList(ArchiveIndexView):
+class PublishedPostsMixin:
+    """Only show published posts: no drafts and nothing scheduled for later."""
+
+    def get_queryset(self):
+        return Post.objects.published()
+
+
+class NewsList(PublishedPostsMixin, ArchiveIndexView):
     template_name = "news/category_posts.html"
-    model = Post
     date_field = "publish"
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(NewsList, self).get_context_data(**kwargs)
-        context.update(get_pagination(self.request, Post.objects.all(), 20))
+        context.update(get_pagination(self.request, self.get_queryset(), 20))
 
         return context
 
 
-class YearNews(YearArchiveView):
-    model = Post
+class YearNews(PublishedPostsMixin, YearArchiveView):
     template_name = "news/post_archive_year.html"
     date_field = "publish"
     make_object_list = True
@@ -37,8 +42,7 @@ class YearNews(YearArchiveView):
         return context
 
 
-class MonthNews(MonthArchiveView):
-    model = Post
+class MonthNews(PublishedPostsMixin, MonthArchiveView):
     template_name = "news/post_archive_month.html"
     date_field = "publish"
 
@@ -51,9 +55,17 @@ class MonthNews(MonthArchiveView):
 
 
 class NewsDetail(DateDetailView):
-    model = Post
     template_name = "news/post_detail.html"
     date_field = "publish"
+
+    # News editors may preview drafts and scheduled posts via "View on site"
+    def get_allow_future(self):
+        return self.request.user.has_perm("news.change_post")
+
+    def get_queryset(self):
+        if self.get_allow_future():
+            return Post.objects.all()
+        return Post.objects.published()
 
 
 class CategoryView(ListView):

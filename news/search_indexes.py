@@ -1,6 +1,5 @@
 from haystack import indexes
 from news.models import Post
-import datetime
 
 
 class PostIndex(indexes.SearchIndex, indexes.Indexable):
@@ -26,8 +25,8 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
         return Post
 
     def index_queryset(self, using=None):
-        "Don't index news of the future"
-        return self.get_model().objects.filter(publish__lte=datetime.datetime.now())
+        "Don't index drafts and news of the future"
+        return self.get_model().objects.published()
 
     def get_updated_field(self):
         return "created"
