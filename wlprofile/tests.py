@@ -5,10 +5,12 @@ import unittest
 import datetime
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
 
 from .hashers import wrap_legacy_sha1_hashes
 from .templatetags.custom_date import do_custom_date
@@ -148,3 +150,72 @@ class TestLegacySha1Passwords(TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestStateChangingViewsRequirePost(TestCase):
+    def setUp(self):
+        from notification.models import NoticeType, observe
+        from pybb.models import Category, Forum, Topic
+        from .models import Profile
+
+        self.user = User.objects.create_user("alice", "alice@example.com", "pw")
+        Profile.objects.create(user=self.user)
+        forum = Forum.objects.create(
+            category=Category.objects.create(name="Cat"), name="Forum"
+        )
+        self.topic = Topic.objects.create(forum=forum, name="Topic", user=self.user)
+        self.topic.subscribers.add(self.user)
+        NoticeType.objects.create(label="test_notice", display="d", description="d")
+        observe(self.topic, self.user, "test_notice")
+        self.client.force_login(self.user)
+
+    def _observed_count(self):
+        from notification.models import ObservedItem
+
+        return ObservedItem.objects.filter(user=self.user).count()
+
+    def test_do_delete_get_is_rejected(self):
+        response = self.client.get(reverse("do_delete"))
+        self.assertEqual(response.status_code, 405)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.is_active)
+        self.assertEqual(self.user.email, "alice@example.com")
+
+    def test_do_delete_post_deactivates_user(self):
+        response = self.client.post(reverse("do_delete"))
+        self.assertRedirects(
+            response, reverse("mainpage"), fetch_redirect_response=False
+        )
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.is_active)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_unsubscribe_topics_get_is_rejected(self):
+        response = self.client.get(reverse("unsubscribe_topics"))
+        self.assertEqual(response.status_code, 405)
+        self.assertIn(self.user, self.topic.subscribers.all())
+
+    def test_unsubscribe_topics_post_unsubscribes(self):
+        response = self.client.post(reverse("unsubscribe_topics"))
+        self.assertRedirects(response, reverse("subscriptions"))
+        self.assertNotIn(self.user, self.topic.subscribers.all())
+
+    def test_unsubscribe_other_get_is_rejected(self):
+        response = self.client.get(reverse("unsubscribe_other"))
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(self._observed_count(), 1)
+
+    def test_unsubscribe_other_post_unsubscribes(self):
+        response = self.client.post(reverse("unsubscribe_other"))
+        self.assertRedirects(response, reverse("subscriptions"))
+        self.assertEqual(self._observed_count(), 0)
+
+    def test_anonymous_is_redirected_to_login(self):
+        self.client.logout()
+        for name in ("do_delete", "unsubscribe_topics", "unsubscribe_other"):
+            response = self.client.post(reverse(name))
+            self.assertEqual(response.status_code, 302)
+            self.assertIn(settings.LOGIN_URL, response["Location"])
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.is_active)
+        self.assertIn(self.user, self.topic.subscribers.all())
