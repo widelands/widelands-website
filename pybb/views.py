@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -131,8 +132,8 @@ def show_topic_ctx(request, topic_id):
     if topic.forum.category.internal and not allowed_for(request.user):
         raise Http404()
 
+    Topic.objects.filter(pk=topic.pk).update(views=F("views") + 1)
     topic.views += 1
-    topic.save()
 
     if request.user.is_authenticated:
         topic.update_read(request.user)
@@ -445,9 +446,12 @@ def add_subscription(request, topic_id):
 def show_attachment(request, hash):
     attachment = get_object_or_404(Attachment, hash=hash)
 
-    with open(attachment.get_absolute_path(), "rb") as file_obj:
+    try:
+        file_obj = open(attachment.get_absolute_path(), "rb")
+    except FileNotFoundError:
+        raise Http404()
+    with file_obj:
         return HttpResponse(file_obj, content_type=attachment.content_type)
-    return HTTP404
 
 
 @login_required

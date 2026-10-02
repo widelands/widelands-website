@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pprint import pprint
 
 from django import template
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_str
@@ -110,7 +111,8 @@ def pybb_moderated_by(instance, user):
                 user.is_superuser
                 or user in instance.topic.forum.moderator_group.user_set.all()
             )
-    except:
+    except AttributeError, ObjectDoesNotExist:
+        # No moderator group set, or a related object is missing.
         pass
 
     return False
