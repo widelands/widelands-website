@@ -75,6 +75,9 @@ in mainpage/local_settings.py::
    $ cp local_urls.py.sample mainpage/local_urls.py
    $ cp local_settings.py.sample mainpage/local_settings.py
 
+mainpage/settings.py defaults to DEBUG = False and has no SECRET_KEY, so the
+local_settings.py must set both (the sample does this for development).
+
 Setting up the database
 -----------------------
 

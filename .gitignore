@@ -1,5 +1,7 @@
 __pycache__/
 /dev.db
+# Database backups, see docker-compose.yml
+/dbdump/
 *.pyc
 mainpage/local*.py
 /debug_log.txt

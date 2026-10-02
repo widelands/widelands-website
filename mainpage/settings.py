@@ -5,7 +5,9 @@
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEBUG = True
+# Never enable this in production. local_settings.py.sample enables it for
+# development.
+DEBUG = False
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -69,8 +71,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "media/static_collected/")
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = "/static/"
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = "#*bc7*q0-br42fc&6l^x@zzk&(=-#gr!)fn@t30n54n05jkqcu"
+# Make this unique, and don't share it with anybody. Set it in the environment
+# or in local_settings.py; Django refuses to start without it.
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 
 # See https://docs.djangoproject.com/en/4.2/ref/settings/#csrf-cookie-secure
 CSRF_COOKIE_SECURE = True
