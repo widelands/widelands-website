@@ -7,6 +7,7 @@
 #
 
 from django import forms
+from .fields import MAX_IMAGE_PIXELS
 from .models import Profile
 from mainpage.validators import check_utf8mb3
 from django.conf import settings
@@ -55,6 +56,18 @@ class EditProfileForm(forms.ModelForm):
         super(EditProfileForm, self).__init__(instance=instance, *args, **kwargs)
 
         self.fields["email"].initial = instance.user.email
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data["avatar"]
+        # 'image' is set by forms.ImageField for new uploads. It is not
+        # decoded yet, only the header has been read.
+        image = getattr(avatar, "image", None)
+        if image is not None and image.width * image.height > MAX_IMAGE_PIXELS:
+            raise forms.ValidationError(
+                f"The image is too large, it may have at most "
+                f"{MAX_IMAGE_PIXELS // 1000000} megapixels"
+            )
+        return avatar
 
     def clean_signature(self):
         value = self.cleaned_data["signature"].strip()

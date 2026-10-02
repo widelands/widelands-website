@@ -3,15 +3,19 @@
 import hashlib
 import unittest
 import datetime
+from io import BytesIO
 from unittest import mock
 
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
+from PIL import Image
 
+from .forms import EditProfileForm
 from .hashers import wrap_legacy_sha1_hashes
 from .templatetags.custom_date import do_custom_date
 
@@ -219,3 +223,30 @@ class TestStateChangingViewsRequirePost(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.is_active)
         self.assertIn(self.user, self.topic.subscribers.all())
+
+
+class TestAvatarUpload(TestCase):
+    def setUp(self):
+        self.profile = User.objects.create_user("avatar_user").wlprofile
+
+    def _form_with_png(self, size):
+        png = BytesIO()
+        Image.new("1", size).save(png, format="PNG")
+        upload = SimpleUploadedFile("avatar.png", png.getvalue(), "image/png")
+        return EditProfileForm({}, {"avatar": upload}, instance=self.profile)
+
+    def test_huge_image_is_rejected_before_decoding(self):
+        form = self._form_with_png((5000, 4000))
+        with mock.patch("wlprofile.fields.ExtendedImageField.resize_image") as resize:
+            form.is_valid()
+
+        self.assertIn("avatar", form.errors)
+        resize.assert_not_called()
+
+    def test_image_is_resized_to_avatar_size(self):
+        form = self._form_with_png((300, 200))
+        form.is_valid()
+
+        self.assertNotIn("avatar", form.errors)
+        avatar = Image.open(form.instance.avatar)
+        self.assertEqual(avatar.size, (settings.AVATAR_WIDTH, settings.AVATAR_HEIGHT))

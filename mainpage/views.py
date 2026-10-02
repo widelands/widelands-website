@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from .templatetags.wl_markdown import do_wl_markdown
 from operator import itemgetter
 from django.core.mail import send_mail
@@ -90,7 +91,8 @@ def check_question(question, answer):
 def get_chieftains():
     # get chieftains from development.json
     # chieftains backup hard coded
-    chieftains = settings.INQUIRY_CHIEFTAINS
+    # Copy, the error lines below must not be added to the setting itself
+    chieftains = list(settings.INQUIRY_CHIEFTAINS)
     try:
         with open(settings.WIDELANDS_SVN_DIR + "data/txts/developers.json", "r") as f:
             json_data = json.load(f)["developers"]
@@ -222,6 +224,7 @@ def custom_http_500(request):
     return render(request, "500.html", status=500)
 
 
+@staff_member_required
 def view_locale(request):
     loc_info = (
         "Server time: "

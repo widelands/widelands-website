@@ -3,6 +3,9 @@ from django.db import models
 import logging
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+# Larger images are rejected, decoding them would need too much memory
+MAX_IMAGE_PIXELS = 4096 * 4096
+
 
 class ExtendedImageField(models.ImageField):
     """Extended ImageField that can resize image before saving it."""
@@ -30,20 +33,19 @@ class ExtendedImageField(models.ImageField):
 
     def resize_image(self, rawdata, width, height):
         """Resize image to fit it into (width, height) box."""
-        from PIL import Image
+        from PIL import Image, ImageOps
 
         image = Image.open(BytesIO(rawdata))
         try:
             oldw, oldh = image.size
 
             if oldw > width or oldh > height:
-                if oldw >= oldh:
-                    x = int(round((oldw - oldh) / 2.0))
-                    image = image.crop((x, 0, (x + oldh) - 1, oldh - 1))
-                else:
-                    y = int(round((oldh - oldw) / 2.0))
-                    image = image.crop((0, y, oldw - 1, (y + oldw) - 1))
-                image = image.resize((width, height), resample=Image.Resampling.LANCZOS)
+                # Let JPEGs decode at a reduced scale, then crop the centered
+                # square and resize it in one pass
+                image.draft(None, (width, height))
+                image = ImageOps.fit(
+                    image, (width, height), method=Image.Resampling.LANCZOS
+                )
         except Exception as err:
             logging.error(err)
             return ""
