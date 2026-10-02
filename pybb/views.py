@@ -7,6 +7,7 @@ from collections import OrderedDict
 from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
@@ -335,6 +336,7 @@ edit_post = render_to("pybb/edit_post.html")(edit_post_ctx)
 
 
 @login_required
+@require_POST
 def stick_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
@@ -345,6 +347,7 @@ def stick_topic(request, topic_id):
 
 
 @login_required
+@require_POST
 def unstick_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
@@ -389,6 +392,7 @@ delete_post = render_to("pybb/delete_post.html")(delete_post_ctx)
 
 
 @login_required
+@require_POST
 def close_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
@@ -399,6 +403,7 @@ def close_topic(request, topic_id):
 
 
 @login_required
+@require_POST
 def open_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if pybb_moderated_by(topic, request.user):
@@ -459,14 +464,14 @@ def post_ajax_preview(request):
     return {"content": html}
 
 
+@login_required
+@require_POST
 def toggle_hidden_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
-    first_post = topic.posts.all()[0]
-    if first_post.hidden:
-        first_post.hidden = False
-    else:
-        first_post.hidden = True
-    first_post.save()
+    if pybb_moderated_by(topic, request.user):
+        first_post = topic.posts.all()[0]
+        first_post.hidden = not first_post.hidden
+        first_post.save()
 
     return redirect(topic)
 

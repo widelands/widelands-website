@@ -3,32 +3,47 @@
 
 {% if user_is_mod %}
     <div class="posRight">
-        <a class="button" href="{% url 'pybb_toggle_hid_topic' topic.id %}">
-            <img src="{% static 'forum/img/topic_hide.png' %}" alt=""
-                 class="middle"/>
-            <span class="middle">{% trans "Toggle Visibility" %}</span>
-        </a>
+        <form action="{% url 'pybb_toggle_hid_topic' topic.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button class="button" type="submit">
+                <img src="{% static 'forum/img/topic_hide.png' %}" alt=""
+                     class="middle"/>
+                <span class="middle">{% trans "Toggle Visibility" %}</span>
+            </button>
+        </form>
         {% if topic.sticky %}
-            <a class="button" href="{% url 'pybb_unstick_topic' topic.id %}">
-                <img src="{% static 'forum/img/unstick.png' %}" alt="" class="middle"/>
-                <span class="middle">{% trans "Unstick Topic" %}</span>
-            </a>
+            <form action="{% url 'pybb_unstick_topic' topic.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="button" type="submit">
+                    <img src="{% static 'forum/img/unstick.png' %}" alt="" class="middle"/>
+                    <span class="middle">{% trans "Unstick Topic" %}</span>
+                </button>
+            </form>
         {% else %}
-            <a class="button" href="{% url 'pybb_stick_topic' topic.id %}">
-                <img src="{% static 'forum/img/sticky.png' %}" alt="" class="middle"/>
-                <span class="middle">{% trans "Stick Topic" %}</span>
-            </a>
+            <form action="{% url 'pybb_stick_topic' topic.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="button" type="submit">
+                    <img src="{% static 'forum/img/sticky.png' %}" alt="" class="middle"/>
+                    <span class="middle">{% trans "Stick Topic" %}</span>
+                </button>
+            </form>
         {% endif %}
         {% if topic.closed %}
-            <a class="button" href="{% url 'pybb_open_topic' topic.id %}">
-                <img src="{% static 'forum/img/open.png' %}" alt="" class="middle"/>
-                <span class="middle">{% trans "Open Topic" %}</span>
-            </a>
+            <form action="{% url 'pybb_open_topic' topic.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="button" type="submit">
+                    <img src="{% static 'forum/img/open.png' %}" alt="" class="middle"/>
+                    <span class="middle">{% trans "Open Topic" %}</span>
+                </button>
+            </form>
         {% else %}
-            <a class="button" href="{% url 'pybb_close_topic' topic.id %}">
-                <img src="{% static 'forum/img/closed.png' %}" alt="" class="middle"/>
-                <span class="middle">{% trans "Close Topic" %}</span>
-            </a>
+            <form action="{% url 'pybb_close_topic' topic.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="button" type="submit">
+                    <img src="{% static 'forum/img/closed.png' %}" alt="" class="middle"/>
+                    <span class="middle">{% trans "Close Topic" %}</span>
+                </button>
+            </form>
         {% endif %}
     </div>
 {% endif %}
