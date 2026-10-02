@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import FileResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -443,15 +443,35 @@ def add_subscription(request, topic_id):
     return HttpResponseRedirect(reverse("pybb_topic", args=[topic.id]))
 
 
+# Only these types are shown inline by the browser. Everything else is sent
+# as a download, so an uploaded file can never render as a page on our origin.
+INLINE_ATTACHMENT_TYPES = {"image/jpeg", "image/png", "image/gif"}
+
+
 def show_attachment(request, hash):
-    attachment = get_object_or_404(Attachment, hash=hash)
+    attachment = get_object_or_404(
+        Attachment.objects.select_related("post__topic__forum__category"), hash=hash
+    )
+    post = attachment.post
+    if post.topic.forum.category.internal and not allowed_for(request.user):
+        raise Http404()
+    if post.hidden and not pybb_moderated_by(post, request.user):
+        raise Http404()
 
     try:
         file_obj = open(attachment.get_absolute_path(), "rb")
     except FileNotFoundError:
         raise Http404()
-    with file_obj:
-        return HttpResponse(file_obj, content_type=attachment.content_type)
+
+    inline = attachment.content_type in INLINE_ATTACHMENT_TYPES
+    response = FileResponse(
+        file_obj,
+        as_attachment=not inline,
+        filename=attachment.name,
+        content_type=attachment.content_type if inline else "application/octet-stream",
+    )
+    response["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 @login_required
