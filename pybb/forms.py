@@ -1,6 +1,8 @@
 from datetime import datetime
 import os
 
+import magic
+
 from django import forms
 from django.utils.translation import gettext as _
 
@@ -105,9 +107,11 @@ class AddPostForm(forms.ModelForm):
 
     def save_attachment(self, post, memfile):
         if memfile:
+            # Store the type we detect ourselves; the one sent by the browser
+            # is controlled by the uploader.
             obj = Attachment(
                 size=memfile.size,
-                content_type=memfile.content_type,
+                content_type=magic.from_file(memfile.temporary_file_path(), mime=True),
                 name=memfile.name,
                 post=post,
             )
