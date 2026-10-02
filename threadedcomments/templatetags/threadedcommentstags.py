@@ -3,7 +3,7 @@ from django import template
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from threadedcomments.models import ThreadedComment
+from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_DEPTH
 from threadedcomments.forms import ThreadedCommentForm
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
@@ -304,6 +304,13 @@ register = template.Library()
 register.simple_tag(get_comment_url)
 register.simple_tag(get_comment_url_json)
 register.simple_tag(get_comment_url_xml)
+
+
+@register.simple_tag
+def get_max_reply_depth():
+    """Comments at this depth or deeper cannot be replied to."""
+    return DEFAULT_MAX_COMMENT_DEPTH - 1
+
 
 register.filter("oneline", oneline)
 

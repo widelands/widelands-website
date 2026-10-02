@@ -26,17 +26,25 @@ DEFAULT_MARKUP = getattr(settings, "DEFAULT_MARKUP", PLAINTEXT)
 
 def dfs(node, all_nodes, depth):
     """
-    Performs a recursive depth-first search starting at ``node``.  This function
+    Performs a depth-first search starting at ``node``.  This function
     also annotates an attribute, ``depth``, which is an integer that represents
     how deeply nested this node is away from the original object.
+
+    The search is iterative, so arbitrarily deep threads cannot exhaust the
+    recursion limit.
     """
-    node.depth = depth
-    to_return = [
-        node,
-    ]
+    children = {}
     for subnode in all_nodes:
-        if subnode.parent and subnode.parent.id == node.id:
-            to_return.extend(dfs(subnode, all_nodes, depth + 1))
+        if subnode.parent_id is not None:
+            children.setdefault(subnode.parent_id, []).append(subnode)
+    to_return = []
+    stack = [(node, depth)]
+    while stack:
+        current, current_depth = stack.pop()
+        current.depth = current_depth
+        to_return.append(current)
+        for subnode in reversed(children.get(current.id, [])):
+            stack.append((subnode, current_depth + 1))
     return to_return
 
 
