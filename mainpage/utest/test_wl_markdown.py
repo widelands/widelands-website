@@ -237,6 +237,21 @@ Value 3 | Value 4
         self._check(input, wanted)
 
 
+class TestWlMarkdownBleached(DBTestCase):
+    def test_raw_script_block_stays_escaped(self):
+        res = do_wl_markdown("Before\n\n<script>alert(1)</script>\n\nAfter", "bleachit")
+        self.assertNotIn("<script", res)
+        self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", res)
+
+    def test_smiley_and_entities_next_to_escaped_text(self):
+        res = do_wl_markdown("<iframe src=x></iframe>\n\na < b & c :)", "bleachit")
+        self.assertEqual(
+            res,
+            '&lt;iframe src=x&gt;&lt;/iframe&gt;\n\n<p>a &lt; b &amp; c <img alt=":)" '
+            'src="/static/img/smileys/face-smile.png"/> </p>',
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
     # k = TestWlMarkdown_WikiWordsInLink_ExceptCorrectResult()
