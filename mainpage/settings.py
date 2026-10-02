@@ -169,10 +169,11 @@ TEMPLATES = [
 DEFAULT_FROM_EMAIL = "noreply@widelands.org"
 ACCOUNT_ACTIVATION_DAYS = 2  # Days an activation token keeps active
 
-# SHA1 Needed as compatibility for old passwords
-# https://docs.djangoproject.com/en/1.11/releases/1.10/#removed-weak-password-hashers-from-the-default-password-hashers-setting
+# Accounts not used since ~2016 still have plain SHA1 hashes; migration
+# wlprofile 0006 wraps them in PBKDF2. They are upgraded on the next login.
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "wlprofile.hashers.PBKDF2WrappedSHA1PasswordHasher",
 ]
 
 ######################

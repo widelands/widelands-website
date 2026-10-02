@@ -49,8 +49,11 @@ urlpatterns = [
         name="docs",
     ),
     # 3rd party, modified for widelands
+    re_path(r"^feeds/wiki/", include("wiki.feed_urls")),
     re_path(r"^wiki/", include("wiki.urls")),
+    re_path(r"^feeds/news/", include("news.feed_urls")),
     re_path(r"^news/", include("news.urls")),
+    re_path(r"^feeds/forum/", include("pybb.feed_urls")),
     re_path(r"^forum/", include("pybb.urls")),
     # WL specific:
     re_path(r"^", include("mainpage.mainpage_urls")),
@@ -71,11 +74,6 @@ urlpatterns = [
     re_path(r"^scheduling/", include("wlscheduling.urls")),
     re_path(r"^privacy/", include("privacy_policy.urls")),
     re_path(r"^addons/", include("wladdons_settings.urls")),
-    # See: https://github.com/widelands/widelands-website/issues/376
-    re_path(
-        r"^feeds/news/",
-        RedirectView.as_view(url="/news/feed", permanent=True),
-    ),
 ]
 
 try:

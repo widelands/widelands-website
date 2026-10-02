@@ -3,8 +3,8 @@ Installing the homepage
 
 Used python version
 -------------------
-The website is tested with python 3.10. This README reflects setting up the
-website with this python version.
+The website is tested with python 3.14 (the default python of Ubuntu 26.04).
+pyproject.toml requires it; uv downloads it if the system python is older.
 
 Framework versions
 ------------------
@@ -23,7 +23,7 @@ Install uv and system dependencies:
 
 On Ubuntu:
    $ curl -LsSf https://astral.sh/uv/install.sh | sh
-   $ sudo apt-get install git libmysqlclient-dev
+   $ sudo apt-get install git build-essential pkg-config libmariadb-dev libmagic1
 
 On Mac:
    $ curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -45,6 +45,11 @@ Install all dependencies (uv creates and manages the .venv/ automatically):
 That's it! uv handles virtualenv creation, activation, and dependency
 installation in one step. Dependencies are defined in pyproject.toml and
 locked in uv.lock for reproducible builds.
+
+On the production server install exactly the locked versions and skip the
+development tools (black, ipython):
+
+   $ uv sync --frozen --no-dev
 
 To run commands in the virtual environment, prefix them with 'uv run':
 
@@ -130,9 +135,15 @@ Starting the website locally with gunicorn
 This might be useful for testing thread-safety:
 
  $ cd mainpage
- $ gunicorn --workers 4 wlwebsite_wsgi:application
+ $ uv run gunicorn --no-control-socket --workers 4 wlwebsite_wsgi:application
 
-This will run the website with 4 workers (threads).
+This will run the website with 4 workers (processes).
+
+Since gunicorn 25.1 a control socket is created by default in
+$XDG_RUNTIME_DIR or ~/.gunicorn; --no-control-socket disables it. The
+production systemd units need the same flag and must start
+.venv/bin/gunicorn from the uv environment, since wlwebsite_wsgi.py does not
+activate a virtualenv itself.
 
 Dependencies between website and widelands source code
 ======================================================
@@ -215,18 +226,15 @@ Known Dependency Issues
 
 The following dependencies require attention for long-term maintenance:
 
-**whoosh (2.7.4)** - Unmaintained since 2016. The search indexing library has not
-been updated in over 10 years and poses security and compatibility risks. Consider
-migrating to whoosh-reloaded (community fork), Elasticsearch, Meilisearch, or
-Typesense when resources allow.
+**whoosh (2.7.4)** - Unmaintained since 2016 and emits SyntaxWarnings on python
+3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
+MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
 
-**bleach (6.3.0)** - Deprecated as of January 2023. While currently up-to-date,
-this HTML sanitization library is no longer maintained. Consider migrating to nh3
-or similar alternatives in the future.
+**bleach (6.4.0)** - Unmaintained; the repository was archived in June 2026.
+Migrate to nh3; the allowed tags and attributes live in mainpage/settings.py.
 
-**gunicorn (23.0.0)** - An update to 24.1.1 is available with security improvements
-and ASGI support. The update requires testing in a staging environment due to
-stricter HTTP parsing that may affect proxy setups.
+**django-star-ratings, django-tagging, django-messages (fork)** - Archived or
+dormant upstream. Vendor them or replace them (e.g. django-taggit).
 
 Contact
 =======

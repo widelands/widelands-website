@@ -1,8 +1,16 @@
 #!/usr/bin/python -tt
 
+import hashlib
 import unittest
 import datetime
+from unittest import mock
 
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import PBKDF2PasswordHasher
+from django.contrib.auth.models import User
+from django.test import TestCase
+
+from .hashers import wrap_legacy_sha1_hashes
 from .templatetags.custom_date import do_custom_date
 
 
@@ -112,6 +120,30 @@ class TestCustomDate_FaultyDate_ExceptNoop(unittest.TestCase):
     def runTest(self):
         rv = do_custom_date("%c", (93, 93), 0)
         self.assertEqual("%c", rv)
+
+
+class TestLegacySha1Passwords(TestCase):
+    def setUp(self):
+        # Keep PBKDF2 cheap; production uses Django's default iterations.
+        patcher = mock.patch.object(PBKDF2PasswordHasher, "iterations", 1000)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        digest = hashlib.sha1(b"saltsecret").hexdigest()
+        self.user = User.objects.create(username="old", password=f"sha1$salt${digest}")
+        wrap_legacy_sha1_hashes(User)
+        self.user.refresh_from_db()
+
+    def test_wrapped_hash_replaces_sha1(self):
+        self.assertTrue(self.user.password.startswith("pbkdf2_wrapped_sha1$"))
+
+    def test_wrong_password_rejected(self):
+        self.assertIsNone(authenticate(username="old", password="wrong"))
+
+    def test_login_works_and_upgrades_to_default_hasher(self):
+        self.assertEqual(self.user, authenticate(username="old", password="secret"))
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.password.startswith("pbkdf2_sha256$"))
+        self.assertEqual(self.user, authenticate(username="old", password="secret"))
 
 
 if __name__ == "__main__":

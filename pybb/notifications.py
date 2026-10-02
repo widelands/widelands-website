@@ -17,7 +17,7 @@ def get_mentions(post):
 
     mentioned_names = []
     for line in post.body.splitlines():
-        # Didn't found a way to exclude quoted lines with the regex :(
+        # Didn't find a way to exclude quoted lines with the regex :(
         if not line.startswith(">"):
             mentioned = MENTION_RE.findall(line)
             mentioned_names.extend(mentioned)
@@ -30,7 +30,7 @@ def get_mentions(post):
 
             notice_type = notification.NoticeType.objects.get(label="forum_mention")
 
-            if notification.get_notification_setting(user_obj, notice_type, "1").send:
+            if notification.get_notification_setting(user_obj, notice_type).send:
                 mentioned_users.append(user_obj)
 
         except User.DoesNotExist:
@@ -111,9 +111,7 @@ def notify(request, topic, post):
 
         # Inform users who auto subscribed to topics
         notice_type = notification.NoticeType.objects.get(label="forum_auto_subscribe")
-        notice_setting = notification.get_notification_setting(
-            post.user, notice_type, "1"
-        )
+        notice_setting = notification.get_notification_setting(post.user, notice_type)
         if notice_setting.send:
             post.topic.subscribers.add(request.user)
 

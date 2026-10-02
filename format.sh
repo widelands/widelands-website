@@ -1,1 +1,1 @@
-/usr/bin/env python -m black --safe --target-version py310 .
+uv run black --safe --target-version py314 .

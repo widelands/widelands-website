@@ -4,12 +4,6 @@ from django.urls import re_path
 from wiki import views
 from django.conf import settings
 from django.views.generic import RedirectView
-from wiki.feeds import (
-    RssHistoryFeed,
-    AtomHistoryFeed,
-    RssArticleHistoryFeed,
-    AtomArticleHistoryFeed,
-)
 from wiki.models import Article
 
 from tagging.views import TaggedObjectList
@@ -37,19 +31,6 @@ urlpatterns = [
     ),
     re_path(r"^trash/list/$", views.trash_list, name="wiki_list_deleted"),
     re_path(r"^history/$", views.history, name="wiki_history"),
-    # Feeds
-    re_path(r"^feeds/rss/$", RssHistoryFeed(), name="wiki_history_feed_rss"),
-    re_path(r"^feeds/atom/$", AtomHistoryFeed(), name="wiki_history_feed_atom"),
-    re_path(
-        r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/rss/$",
-        RssArticleHistoryFeed(),
-        name="wiki_article_history_feed_rss",
-    ),
-    re_path(
-        r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/atom/$",
-        AtomArticleHistoryFeed(),
-        name="wiki_article_history_feed_atom",
-    ),
     re_path(
         r"^(?P<title>" + settings.WIKI_URL_RE + r")/$",
         views.view_article,
@@ -118,5 +99,17 @@ urlpatterns = [
             template_name="wiki/tag_view.html",
         ),
         name="article_tag_detail",
+    ),
+    # Feeds are handled in feed_urls.py to have the base path '/feeds/*' for all feeds
+    # Redirect old feed urls
+    re_path(r"^feeds/rss/$", RedirectView.as_view(pattern_name="wiki_history_feed")),
+    re_path(r"^feeds/atom/$", RedirectView.as_view(pattern_name="wiki_history_feed")),
+    re_path(
+        r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/rss/$",
+        RedirectView.as_view(pattern_name="wiki_article_history_feed"),
+    ),
+    re_path(
+        r"^(?P<title>" + settings.WIKI_URL_RE + r")/feeds/atom/$",
+        RedirectView.as_view(pattern_name="wiki_article_history_feed"),
     ),
 ]
