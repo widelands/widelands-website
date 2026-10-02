@@ -54,3 +54,10 @@ class Vote(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     date_voted = models.DateTimeField("voted at", default=datetime.datetime.now)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "poll"], name="wlpoll_vote_unique_user_poll"
+            )
+        ]

@@ -4,6 +4,7 @@
 
 from wlpoll.models import Poll
 from django import template
+from django.utils.html import json_script
 
 register = template.Library()
 
@@ -16,15 +17,21 @@ class DisplayPollNode(template.Node):
         """Render this Poll using Highcharts"""
         p = self._poll.resolve(context)
 
-        choices = p.choices.all()
-
-        _esc = lambda s: s.replace("'", "\\'")
-
-        data = ",\n".join(f"[ '{_esc(c.choice)}', {c.votes} ]" for c in choices)
+        # Pass the poll as JSON data block, so that names and choices can't
+        # break out of the JavaScript strings or the <script> element
+        poll_data = json_script(
+            {
+                "name": p.name,
+                "choices": [[c.choice, c.votes] for c in p.choices.all()],
+            },
+            "pollData",
+        )
 
         s = rf"""
+        {poll_data}
         <script type="text/javascript">
         $(document).ready(function() {{
+              const poll = JSON.parse(document.getElementById('pollData').textContent);
               Highcharts.chart('chartContainer', {{
                  chart: {{
                     type: 'pie'
@@ -40,7 +47,7 @@ class DisplayPollNode(template.Node):
                     }}
                  }},
                  title: {{
-                    text: '{_esc(p.name)}'
+                    text: poll.name
                  }},
                  tooltip: {{
                      formatter: function() {{
@@ -49,9 +56,7 @@ class DisplayPollNode(template.Node):
                   }},
                  series: [{{
                     type: 'pie',
-                    data: [
-                        {data}
-                    ],
+                    data: poll.choices,
                  }},
                  ]
               }});
