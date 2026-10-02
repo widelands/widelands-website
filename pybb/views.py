@@ -207,6 +207,9 @@ def add_post_ctx(request, forum_id, topic_id):
     elif topic_id:
         topic = get_object_or_404(Topic, pk=topic_id)
 
+    if (forum or topic.forum).category.internal and not allowed_for(request.user):
+        raise Http404()
+
     if topic and topic.closed:
         return HttpResponseRedirect(topic.get_absolute_url())
 
@@ -215,7 +218,11 @@ def add_post_ctx(request, forum_id, topic_id):
     except TypeError:
         quote = ""
     else:
-        post = get_object_or_404(Post, pk=quote_id)
+        # Only posts of this topic can be quoted, and hidden ones only by
+        # moderators, just like show_topic displays them.
+        post = get_object_or_404(Post, pk=quote_id, topic=topic)
+        if post.hidden and not pybb_moderated_by(topic, request.user):
+            raise Http404()
         quote = quote_text(post, "markdown", request)
 
     form = build_form(
@@ -426,6 +433,8 @@ def delete_subscription(request, topic_id):
 @login_required
 def add_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
+    if topic.forum.category.internal and not allowed_for(request.user):
+        raise Http404()
     topic.subscribers.add(request.user)
     return HttpResponseRedirect(reverse("pybb_topic", args=[topic.id]))
 
