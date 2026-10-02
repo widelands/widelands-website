@@ -213,7 +213,7 @@ def validate_file(attachment):
         try:
             with Image.open(tmp_file_path) as im:
                 im.verify()
-        except:
+        except OSError, SyntaxError, ValueError, Image.DecompressionBombError:
             return False
         return True
 
@@ -283,14 +283,9 @@ def validate_file(attachment):
         wai = configparser.ConfigParser()
         try:
             wai.read(tmp_file_path)
-            wai_sections = wai.sections()
-            if len(settings.ALLOWED_WAI_SECTIONS) == len(wai_sections):
-                for section in settings.ALLOWED_WAI_SECTIONS:
-                    if section not in wai_sections:
-                        raise
-            else:
-                raise
-        except:
+        except configparser.Error, UnicodeDecodeError:
+            raise ValidationError("This not a valid wai file.")
+        if set(wai.sections()) != set(settings.ALLOWED_WAI_SECTIONS):
             raise ValidationError("This not a valid wai file.")
 
     # Checks by MimeType

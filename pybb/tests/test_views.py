@@ -1,8 +1,12 @@
+from unittest import mock
+
 from django.contrib.auth.models import Group, User
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 
-from pybb.models import Category, Forum, Post, Read, Topic
+from check_input.models import SuspiciousInput
+from pybb.models import Attachment, Category, Forum, Post, Read, Topic
 from pybb.templatetags.pybb_extras import pybb_has_unreads
 
 
@@ -231,3 +235,59 @@ class TestMarkAsRead(_ForumTestBase):
                 response = self.client.post(url)
                 self.assertEqual(response.status_code, 302)
                 self.assertFalse(pybb_has_unreads(self.topic, self.regular_user))
+
+
+class TestTopicViewCounter(_ForumTestBase):
+    def test_view_increments_counter(self):
+        url = reverse("pybb_topic", args=[self.topic.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["topic"].views, 1)
+        self.client.get(url)
+        self.topic.refresh_from_db()
+        self.assertEqual(self.topic.views, 2)
+
+    def test_view_does_not_revert_concurrent_change(self):
+        # Close the topic from "another request" after the view loaded it,
+        # but before the counter is incremented.
+        self.category.internal = True
+        self.category.save()
+
+        def close_topic_concurrently(user):
+            Topic.objects.filter(pk=self.topic.pk).update(closed=True)
+            return True
+
+        with mock.patch("pybb.views.allowed_for", close_topic_concurrently):
+            response = self.client.get(reverse("pybb_topic", args=[self.topic.id]))
+        self.assertEqual(response.status_code, 200)
+        self.topic.refresh_from_db()
+        self.assertTrue(self.topic.closed)
+        self.assertEqual(self.topic.views, 1)
+
+
+class TestPostIsSpam(_ForumTestBase):
+    def test_multiple_suspicious_inputs_are_spam(self):
+        post = self.topic.posts.first()
+        self.assertFalse(post.is_spam())
+        for text in ("spam one", "spam two"):
+            SuspiciousInput.objects.create(
+                text=text,
+                user=self.moderator,
+                content_type=ContentType.objects.get_for_model(Post),
+                object_id=post.pk,
+            )
+        self.assertTrue(post.is_spam())
+
+
+class TestShowAttachment(_ForumTestBase):
+    def test_missing_file_is_404(self):
+        attachment = Attachment(
+            post=self.topic.posts.first(),
+            size=1,
+            content_type="text/plain",
+            path="does-not-exist.txt",
+            name="does-not-exist.txt",
+        )
+        attachment.save()
+        response = self.client.get(attachment.get_absolute_url())
+        self.assertEqual(response.status_code, 404)

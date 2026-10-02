@@ -6,7 +6,7 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 import os.path
 import hashlib
 
-from django.db import models
+from django.db import DatabaseError, models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.urls import reverse
@@ -172,7 +172,7 @@ class Topic(models.Model):
     def head(self):
         try:
             return self.posts.all().order_by("created").select_related()[0]
-        except:
+        except IndexError:
             return None
 
     @property
@@ -184,7 +184,7 @@ class Topic(models.Model):
         # If the first post of this topic is hidden, the topic is hidden
         try:
             return self.posts.first().hidden
-        except:
+        except AttributeError:
             return False
 
     @property
@@ -261,7 +261,9 @@ class HiddenTopicsManager(models.Manager):
                 if post.topic.is_hidden:
                     hidden_topics.append(post.topic)
             return hidden_topics
-        except:
+        except ObjectDoesNotExist, DatabaseError:
+            # pybb.feeds evaluates this at import time, when the tables may
+            # not exist yet (e.g. before the first migrate).
             return []
 
 
@@ -393,12 +395,7 @@ class Post(RenderableItem):
             self.topic.delete()
 
     def is_spam(self):
-        try:
-            SuspiciousInput.objects.get(object_id=self.pk)
-            return True
-        except:
-            pass
-        return False
+        return SuspiciousInput.objects.filter(object_id=self.pk).exists()
 
     def reaction_users(self):
         """Get reactions with users for this post.
