@@ -1,14 +1,3 @@
-{% load wiki_extras %}
-{#{% load markup %}#}
 {% load wl_markdown %}
-{% load switchcase %}
-{% load restructuredtext %}
-{% load creole %}
 
-{% switch markup %}
-    {% case 'crl' %} {{ content|creole|safe }} {% endcase %}
-    {% case 'rst' %} {{ content|restructuredtext|safe }} {% endcase %}
-    {% case 'mrk' %} {{ content|wl_markdown:"bleachit"}} {% endcase %}
-    {#{% case 'txl' %} {{ content|force_escape|restore_commandsymbols|textile }} {% endcase %}#}
-    {% case '' %} {{ content|force_escape|linebreaks|safe }} {% endcase %}
-{% endswitch %}
+{{ content|wl_markdown:"bleachit" }}
