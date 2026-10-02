@@ -1,3 +1,4 @@
+import logging
 import traceback
 import json
 import re
@@ -9,6 +10,8 @@ from django.utils.functional import Promise
 from django.utils.encoding import force_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
+
+logger = logging.getLogger(__name__)
 
 from pybb import settings as pybb_settings
 import magic
@@ -67,8 +70,12 @@ def ajax(func):
         if request.method == "POST":
             try:
                 response = func(request, *args, **kwargs)
-            except Exception as ex:
-                response = {"error": traceback.format_exc()}
+            except Exception:
+                logger.exception("Error in AJAX view %s", func.__name__)
+                if settings.DEBUG:
+                    response = {"error": traceback.format_exc()}
+                else:
+                    response = {"error": "An internal error occurred."}
         else:
             response = {"error": {"type": 403, "message": "Accepts only POST request"}}
         if isinstance(response, dict):
