@@ -156,8 +156,9 @@ def urlize(data):
         # Replace the old content
         found_string.replace_with(new_soup)
 
-    # Remove <html><body> tags inserted by lxml
-    return "".join([str(x) for x in soup.body.children])
+    # Remove <html><body> tags inserted by lxml. decode_contents() escapes
+    # text nodes, whereas str() of a NavigableString would not.
+    return soup.body.decode_contents()
 
 
 def quote_text(post, markup, request):

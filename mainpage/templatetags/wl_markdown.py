@@ -256,8 +256,9 @@ def do_wl_markdown(value, *args, **keyw):
             if new_tag:
                 tag.replace_with(new_tag)
 
-    # Remove <html><body> tags inserted by lxml
-    return "".join([str(x) for x in soup.body.children])
+    # Remove <html><body> tags inserted by lxml. decode_contents() escapes
+    # text nodes, whereas str() of a NavigableString would not.
+    return soup.body.decode_contents()
 
 
 @register.filter
