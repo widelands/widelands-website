@@ -84,6 +84,7 @@ show_forum = render_to("pybb/forum.html")(show_forum_ctx)
 
 
 @login_required
+@require_POST
 def mark_as_read(request, **kwargs):
     """Mark topics as read.
 
@@ -414,16 +415,18 @@ def open_topic(request, topic_id):
 
 
 @login_required
+@require_POST
 def delete_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     topic.subscribers.remove(request.user)
     if "from_topic" in request.GET:
         return HttpResponseRedirect(reverse("pybb_topic", args=[topic.id]))
     else:
-        return HttpResponseRedirect(reverse("pybb_edit_profile"))
+        return HttpResponseRedirect(reverse("subscriptions"))
 
 
 @login_required
+@require_POST
 def add_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     topic.subscribers.add(request.user)

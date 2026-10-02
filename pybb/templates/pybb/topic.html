@@ -48,18 +48,23 @@
     {% if user.is_authenticated %}
         <div class="posRight">
         {% if subscribed %}
-            <a class="button"
-               href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
-                <img src="{% static 'forum/img/unsubscribe.png' %}" alt=""
-                     class="middle"/>
-                <span class="middle">{% trans "Unsubscribe" %}</span>
-            </a>
+            <form action="{% url 'pybb_delete_subscription' topic.id %}?from_topic" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="button" type="submit">
+                    <img src="{% static 'forum/img/unsubscribe.png' %}" alt=""
+                         class="middle"/>
+                    <span class="middle">{% trans "Unsubscribe" %}</span>
+                </button>
+            </form>
             {% else %}
-            <a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
-                <img src="{% static 'forum/img/subscribe.png' %}" alt=""
-                     class="middle"/>
-                <span class="middle">{% trans "Subscribe" %}</span>
-            </a>
+            <form action="{% url 'pybb_add_subscription' topic.id %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button class="button" type="submit">
+                    <img src="{% static 'forum/img/subscribe.png' %}" alt=""
+                         class="middle"/>
+                    <span class="middle">{% trans "Subscribe" %}</span>
+                </button>
+            </form>
             {% endif %}
             <a class="button" href="{% url 'pybb_add_post' topic.id %}">
                 <img src="{% static 'forum/img/send.png' %}" alt="" class="middle"/>
@@ -93,18 +98,23 @@
     {% if user.is_authenticated %}
         <div class="posRight">
             {% if subscribed %}
-                <a class="button"
-                   href="{% url 'pybb_delete_subscription' topic.id %}?from_topic">
-                    <img src="{% static 'forum/img/unsubscribe.png' %}" alt=""
-                         class="middle"/>
-                    <span class="middle">{% trans "Unsubscribe" %}</span>
-                </a>
+                <form action="{% url 'pybb_delete_subscription' topic.id %}?from_topic" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button class="button" type="submit">
+                        <img src="{% static 'forum/img/unsubscribe.png' %}" alt=""
+                             class="middle"/>
+                        <span class="middle">{% trans "Unsubscribe" %}</span>
+                    </button>
+                </form>
             {% else %}
-                <a class="button" href="{% url 'pybb_add_subscription' topic.id %}">
-                    <img src="{% static 'forum/img/subscribe.png' %}" alt=""
-                         class="middle"/>
-                    <span class="middle">{% trans "Subscribe" %}</span>
-                </a>
+                <form action="{% url 'pybb_add_subscription' topic.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button class="button" type="submit">
+                        <img src="{% static 'forum/img/subscribe.png' %}" alt=""
+                             class="middle"/>
+                        <span class="middle">{% trans "Subscribe" %}</span>
+                    </button>
+                </form>
             {% endif %}
             <a class="button" href="{% url 'pybb_add_post' topic.id %}">
                 <img src="{% static 'forum/img/send.png' %}" alt="" class="middle"/>

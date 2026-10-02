@@ -2,7 +2,8 @@ from django.contrib.auth.models import Group, User
 from django.test import TestCase
 from django.urls import reverse
 
-from pybb.models import Category, Forum, Post, Topic
+from pybb.models import Category, Forum, Post, Read, Topic
+from pybb.templatetags.pybb_extras import pybb_has_unreads
 
 
 class _ForumTestBase(TestCase):
@@ -161,3 +162,72 @@ class TestToggleHiddenTopic(_ForumTestBase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)  # redirect to login
         self.assertIn("login", response.url)
+
+
+class TestSubscriptions(_ForumTestBase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="regular", password="pass")
+        self.add_url = reverse("pybb_add_subscription", args=[self.topic.id])
+        self.delete_url = reverse("pybb_delete_subscription", args=[self.topic.id])
+
+    def test_add_get_rejected(self):
+        response = self.client.get(self.add_url)
+        self.assertEqual(response.status_code, 405)
+        self.assertNotIn(self.regular_user, self.topic.subscribers.all())
+
+    def test_add_post(self):
+        response = self.client.post(self.add_url)
+        self.assertRedirects(
+            response, self.topic.get_absolute_url(), fetch_redirect_response=False
+        )
+        self.assertIn(self.regular_user, self.topic.subscribers.all())
+
+    def test_delete_get_rejected(self):
+        self.topic.subscribers.add(self.regular_user)
+        response = self.client.get(self.delete_url + "?from_topic")
+        self.assertEqual(response.status_code, 405)
+        self.assertIn(self.regular_user, self.topic.subscribers.all())
+
+    def test_delete_post_from_topic(self):
+        self.topic.subscribers.add(self.regular_user)
+        response = self.client.post(self.delete_url + "?from_topic")
+        self.assertRedirects(
+            response, self.topic.get_absolute_url(), fetch_redirect_response=False
+        )
+        self.assertNotIn(self.regular_user, self.topic.subscribers.all())
+
+    def test_delete_post_without_from_topic(self):
+        self.topic.subscribers.add(self.regular_user)
+        response = self.client.post(self.delete_url)
+        self.assertRedirects(
+            response, reverse("subscriptions"), fetch_redirect_response=False
+        )
+        self.assertNotIn(self.regular_user, self.topic.subscribers.all())
+
+
+class TestMarkAsRead(_ForumTestBase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="regular", password="pass")
+        self.urls = [
+            reverse("mark_as_read"),
+            reverse("mark_as_read", kwargs={"category_id": self.category.id}),
+            reverse("mark_as_read", kwargs={"forum_id": self.forum.id}),
+        ]
+
+    def test_get_rejected(self):
+        for url in self.urls:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 405)
+                self.assertTrue(pybb_has_unreads(self.topic, self.regular_user))
+
+    def test_post_marks_read(self):
+        for url in self.urls:
+            with self.subTest(url=url):
+                Read.objects.all().delete()
+                self.assertTrue(pybb_has_unreads(self.topic, self.regular_user))
+                response = self.client.post(url)
+                self.assertEqual(response.status_code, 302)
+                self.assertFalse(pybb_has_unreads(self.topic, self.regular_user))

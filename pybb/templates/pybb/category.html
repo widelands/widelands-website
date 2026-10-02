@@ -11,10 +11,12 @@
 <section class="blogEntry">
     <a href="{% url 'pybb_index' %}">Forums</a> &#187; {{category.name}}
     {% if category.forums.all and user.is_authenticated %}
-    <a class="button posRight" href="{% url 'mark_as_read' category_id=category.id %}"
-       title="Takes effect on all topics in each shown forum">
-        <span class="middle">{% trans "Mark all as Read" %}</span>
-    </a>
+    <form class="posRight" action="{% url 'mark_as_read' category_id=category.id %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button class="button" type="submit" title="Takes effect on all topics in each shown forum">
+            <span class="middle">{% trans "Mark all as Read" %}</span>
+        </button>
+    </form>
     {% endif %}
     <br/><br/>
 
