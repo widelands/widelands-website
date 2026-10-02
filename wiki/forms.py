@@ -36,6 +36,14 @@ class ArticleForm(forms.ModelForm):
         model = Article
         exclude = ("creator", "group", "created_at", "last_update")
 
+    def __init__(self, *args, is_staff=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_staff:
+            # Deleting and redirecting articles is reserved for staff. Without
+            # the field, the ModelForm keeps the instance's 'deleted' value.
+            del self.fields["deleted"]
+            del self.fields["redirect_to"]
+
     def clean_title(self):
         """Check for some errors regarding the title:
 

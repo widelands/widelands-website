@@ -324,6 +324,11 @@ def edit_article(
     if not allow_write:
         return HttpResponseForbidden()
 
+    # Deleted articles can only be viewed and edited by staff in the trash
+    in_trash = "/trash/" in request.path_info
+    if in_trash and not request.user.is_staff:
+        return HttpResponseForbidden()
+
     try:
         # Try to fetch an existing article
         article = article_qs.get(**article_args)
@@ -336,8 +341,15 @@ def edit_article(
             # No Article found and no redirect found
             article = None
 
+    if article and article.deleted and not in_trash:
+        return render(
+            request, "wiki/gone.html", context={"article": article}, status=410
+        )
+
     if request.method == "POST":
-        form = ArticleFormClass(request.POST, instance=article)
+        form = ArticleFormClass(
+            request.POST, instance=article, is_staff=request.user.is_staff
+        )
 
         form.cache_old_content()
         if form.is_valid():
@@ -354,19 +366,20 @@ def edit_article(
                 # Clean the lock
                 cache.delete(get_valid_cache_key(title))
 
-            redirect_to = form.cleaned_data["redirect_to"]
-            if redirect_to != "":
-                # Create or update the redirect
-                obj, created = Redirect.objects.update_or_create(
-                    site=get_current_site(request),
-                    old_path=new_article.get_absolute_url(),
-                    defaults={"new_path": redirect_to},
-                )
-            else:
-                # Remove redirect
-                r = get_redirect(new_article)
-                if r:
-                    r.delete()
+            if request.user.is_staff:
+                redirect_to = form.cleaned_data["redirect_to"]
+                if redirect_to != "":
+                    # Create or update the redirect
+                    obj, created = Redirect.objects.update_or_create(
+                        site=get_current_site(request),
+                        old_path=new_article.get_absolute_url(),
+                        defaults={"new_path": redirect_to},
+                    )
+                else:
+                    # Remove redirect
+                    r = get_redirect(new_article)
+                    if r:
+                        r.delete()
 
             if new_article.deleted and new_article.tags:
                 # Remove all tags
@@ -419,15 +432,6 @@ def edit_article(
             return redirect(new_article)
 
     elif request.method == "GET":
-        if (
-            article
-            and article.deleted
-            and "/trash/" not in request.path_info  # for new articles
-        ):
-            return render(
-                request, "wiki/gone.html", context={"article": article}, status=410
-            )
-
         lock = cache.get(get_valid_cache_key(title))
         if lock is None:
             lock = ArticleEditLock(get_valid_cache_key(title), request)
@@ -438,14 +442,16 @@ def edit_article(
 
         if article is None:
             initial.update({"title": title, "action": "create"})
-            form = ArticleFormClass(initial=initial)
+            form = ArticleFormClass(initial=initial, is_staff=request.user.is_staff)
         else:
             initial["action"] = "edit"
             r = get_redirect(article)
             if r:
                 initial.update({"redirect_to": r.new_path})
 
-            form = ArticleFormClass(instance=article, initial=initial)
+            form = ArticleFormClass(
+                instance=article, initial=initial, is_staff=request.user.is_staff
+            )
     if not article:
         template_params = {"form": form, "new_article": True}
     else:
@@ -794,10 +800,16 @@ def article_preview(request):
     return HttpResponse(rv, content_type="text/html")
 
 
+@login_required
+@require_POST
 def article_diff(request):
     """This is a AJAX function that diffs the body of the article as it is
     currently displayed with the current version of the article."""
     current_article = get_object_or_404(Article, pk=int(request.POST["article"]))
+
+    if current_article.deleted and not request.user.is_staff:
+        # Only staff may edit (and thus diff) deleted articles in the trash
+        raise Http404()
 
     if current_article.group is not None:
         return HttpResponseForbidden()
