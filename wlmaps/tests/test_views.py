@@ -130,3 +130,38 @@ class TestWLMapsViews_Viewing(DjangoTest):
     def test_ViewingNonExistingMap_Except404(self):
         c = self.client.get(reverse("wlmaps_view", args=("a-map-that-doesnt-exist",)))
         self.assertEqual(c.status_code, 404)
+
+
+class TestWLMapsViews_EditComment(DjangoTest):
+    def setUp(self):
+        self.uploader = User.objects.create_user(username="uploader", password="pw")
+        self.other = User.objects.create_user(username="other", password="pw")
+        self.map = Map.objects.create(
+            name="Map",
+            author="Author",
+            w=128,
+            h=64,
+            nr_players=4,
+            descr="a good map to play with",
+            minimap="/wlmaps/minimaps/Map.png",
+            world_name="blackland",
+            uploader=self.uploader,
+            uploader_comment="original",
+        )
+        self.url = reverse("wlmaps_edit_comment", args=(self.map.slug,))
+
+    def test_other_user_is_denied(self):
+        self.client.login(username="other", password="pw")
+        self.assertEqual(self.client.get(self.url).status_code, 403)
+        response = self.client.post(self.url, {"uploader_comment": "defaced"})
+        self.assertEqual(response.status_code, 403)
+        self.map.refresh_from_db()
+        self.assertEqual(self.map.uploader_comment, "original")
+
+    def test_uploader_can_edit(self):
+        self.client.login(username="uploader", password="pw")
+        self.assertEqual(self.client.get(self.url).status_code, 200)
+        response = self.client.post(self.url, {"uploader_comment": "updated"})
+        self.assertRedirects(response, self.map.get_absolute_url())
+        self.map.refresh_from_db()
+        self.assertEqual(self.map.uploader_comment, "updated")

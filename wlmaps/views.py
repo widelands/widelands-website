@@ -13,6 +13,7 @@ from django.http import (
     HttpResponse,
     JsonResponse,
     HttpResponseBadRequest,
+    HttpResponseForbidden,
 )
 
 from django.conf import settings
@@ -110,6 +111,8 @@ def view(request, map_slug):
 @login_required
 def edit_comment(request, map_slug):
     map = get_object_or_404(models.Map, slug=map_slug)
+    if request.user != map.uploader:
+        return HttpResponseForbidden()
     if request.method == "POST":
         form = EditCommentForm(request.POST)
         if form.is_valid():
