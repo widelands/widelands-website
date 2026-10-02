@@ -11,7 +11,7 @@ from django.conf import settings
 
 try:
     from notification import models as notification
-except:
+except ImportError:
     notification = None
 
 

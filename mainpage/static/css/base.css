@@ -632,7 +632,7 @@ footer {
     list-style: none;
 }
 
-.tab-list a {
+.tab-list a, .tab-list button {
     background-image: url("../img/but1.png");
     border-radius: 4px;
     border: 1px solid black;
@@ -642,9 +642,27 @@ footer {
     font-size: 0.83em;
 }
 
-.tab-list a:hover {
+.tab-list a:hover, .tab-list button:hover {
     border-bottom: none;
     box-shadow: none;
+}
+
+/* POST forms in the tab list (e.g. wiki "Observe") look like the tab links. */
+.tab-list form {
+    display: inline;
+}
+
+/* Tab links are inline, so their padding does not grow the line box. The
+   button is inline-block; negative vertical margins give it the same box. */
+.tab-list button {
+    color: #FFE673 !important;
+    margin-top: calc(-0.5em - 2px);
+    margin-bottom: calc(-0.5em - 2px);
+}
+
+.tab-list button:hover {
+    background-image: url("../img/but1.png");
+    color: #181 !important;
 }
 
 .tab-list .active {

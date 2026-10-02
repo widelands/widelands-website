@@ -22,6 +22,7 @@ from wiki.models import Article, ChangeSet, dmp
 
 from wiki.utils import get_ct
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 
 from mainpage.wl_utils import get_valid_cache_key, get_pagination
@@ -264,7 +265,12 @@ def view_article(
         )
 
         if notification is not None:
-            template_params.update({"is_observing": is_observing, "can_observe": True})
+            template_params.update(
+                {
+                    "is_observing": is_observing,
+                    "can_observe": request.user.is_authenticated,
+                }
+            )
 
         if group_slug is not None:
             template_params["group"] = group
@@ -648,7 +654,7 @@ def revert_to_revision(
         # An article with this name exists
         messages.error(
             request,
-            f"Reverting not possible because an article with name '{old_title}' already exists",
+            "Reverting not possible due to a naming conflict.",
         )
         return redirect(article)
 
@@ -703,6 +709,7 @@ def history(
 
 
 @login_required
+@require_POST
 def observe_article(
     request,
     title,
@@ -737,10 +744,9 @@ def observe_article(
 
     return redirect(article)
 
-    return HttpResponseNotAllowed(["POST"])
-
 
 @login_required
+@require_POST
 def stop_observing_article(
     request,
     title,
@@ -792,6 +798,10 @@ def article_diff(request):
     """This is a AJAX function that diffs the body of the article as it is
     currently displayed with the current version of the article."""
     current_article = get_object_or_404(Article, pk=int(request.POST["article"]))
+
+    if current_article.group is not None:
+        return HttpResponseForbidden()
+
     content = request.POST["body"]
 
     diffs = dmp.diff_main(current_article.content, content)

@@ -34,9 +34,15 @@ We disable or change them in the subpages. #}
 		{% if can_observe %}
 		<li>
 			{% if is_observing %}
-			<a {% block class_wiki_stop_obs %}{% endblock %}href="{% url 'wiki_stop_observing' article.title %}">{% trans "Stop observing" %}</a>
+			<form action="{% url 'wiki_stop_observing' article.title %}" method="post">
+				{% csrf_token %}
+				<button type="submit">{% trans "Stop observing" %}</button>
+			</form>
 			{% else %}
-			<a {% block class_wiki_obs %}{% endblock %}href="{% url 'wiki_observe' article.title %}">{% trans "Observe" %}</a>
+			<form action="{% url 'wiki_observe' article.title %}" method="post">
+				{% csrf_token %}
+				<button type="submit">{% trans "Observe" %}</button>
+			</form>
 			{% endif %}
 		</li>
 		{% endif %}
