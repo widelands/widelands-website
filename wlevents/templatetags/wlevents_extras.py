@@ -23,7 +23,7 @@ def do_get_future_events(parser, token):
         tag_name, as_name, variable = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "required: %r as <variable name>" % token.contents.split()[0]
+            f"required: {token.contents.split()[0]!r} as <variable name>"
         )
 
     return GetFutureEvents(variable)

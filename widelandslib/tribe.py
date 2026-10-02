@@ -26,7 +26,7 @@ class BaseDescr(object):
 
 class Ware(BaseDescr):
     def __str__(self):
-        return "Ware(%s)" % self.name
+        return f"Ware({self.name})"
 
 
 class Worker(BaseDescr):
@@ -38,7 +38,7 @@ class Worker(BaseDescr):
             return None
 
     def __str__(self):
-        return "Worker(%s)" % self.name
+        return f"Worker({self.name})"
 
 
 class Building(BaseDescr):
@@ -58,12 +58,11 @@ class Building(BaseDescr):
         ]
         if len(bases) == 0 and self.enhanced_building:
             raise Exception(
-                "Building %s has no bases in tribe %s" % (self.name, self.tribe.name)
+                f"Building {self.name} has no bases in tribe {self.tribe.name}"
             )
         if len(bases) > 1:
             raise Exception(
-                "Building %s seems to have more than one base in tribe %s."
-                % (self.name, self.tribe.name)
+                f"Building {self.name} seems to have more than one base in tribe {self.tribe.name}."
             )
         return bases[0]
 
@@ -202,4 +201,4 @@ class Tribe(object):
                 )
 
     def __str__(self):
-        return "Tribe(%s)" % self.name
+        return f"Tribe({self.name})"

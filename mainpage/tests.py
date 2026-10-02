@@ -29,11 +29,11 @@ def suite():
 
     dname = os.path.dirname(__file__)
 
-    for f in glob("%s/utest/*.py" % dname):
+    for f in glob(f"{dname}/utest/*.py"):
         if os.path.basename(f) == "__init__.py":
             continue
 
-        modname = "%sutest.%s" % (prefix, os.path.basename(f)[:-3])
+        modname = f"{prefix}utest.{os.path.basename(f)[:-3]}"
 
         # Load tests
         tests = l.loadTestsFromName(modname)

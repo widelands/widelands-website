@@ -11,17 +11,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         spams = SuspiciousInput.objects.all()
         if spams:
-            message = "There were %d hidden posts found:" % len(spams)
+            message = f"There were {len(spams)} hidden posts found:"
 
             for spam in spams:
                 app = ContentType.objects.get_for_id(spam.content_type_id)
-                message += "\nIn %s/%s: " % (app.app_label, app.model)
-                message += "\n User '%s' wrote: %s" % (spam.user, spam.text)
+                message += f"\nIn {app.app_label}/{app.model}: "
+                message += f"\n User '{spam.user}' wrote: {spam.text}"
 
-            message += (
-                "\n\nAdmin page: https://%s/admin/check_input/suspiciousinput/"
-                % Site.objects.get_current().domain
-            )
+            message += f"\n\nAdmin page: https://{Site.objects.get_current().domain}/admin/check_input/suspiciousinput/"
             mail_admins(
                 "Hidden posts were found",
                 message,

@@ -13,7 +13,7 @@ class Tribe(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return "%s" % self.displayname
+        return f"{self.displayname}"
 
 
 class Worker(models.Model):
@@ -41,7 +41,7 @@ class Worker(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return "%s" % self.name
+        return f"{self.name}"
 
 
 class Ware(models.Model):
@@ -61,7 +61,7 @@ class Ware(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return "%s" % self.name
+        return f"{self.name}"
 
 
 class BuildingManager(models.Manager):
@@ -215,4 +215,4 @@ class Building(models.Model):
             yield [w] * c
 
     def __str__(self):
-        return "%s/%s" % (self.tribe.name, self.name)
+        return f"{self.tribe.name}/{self.name}"

@@ -1,0 +1,53 @@
+[project]
+name = "widelands-website"
+version = "0.1.0"
+requires-python = ">=3.14"
+# Only packages the code imports or invokes directly. Everything else is
+# resolved transitively and pinned in uv.lock.
+dependencies = [
+    # Django LTS policy (README.txt): stay on the 5.2.x series.
+    "django>=5.2.17,<5.3",
+    "beautifulsoup4>=4.14.3",
+    "bleach>=6.4.0",
+    "django-filter>=26.1",
+    "django-haystack>=3.4.0",
+    "django-messages",
+    "django-recaptcha>=4.1.0",
+    "django-registration>=5.2.1",
+    "django-star-ratings>=0.9.2",
+    "django-tagging",
+    # Sphinx 9.1 caps docutils below 0.23.
+    "docutils>=0.22.4",
+    "gunicorn>=26.2.0",
+    "lxml>=6.1.0",
+    "markdown>=3.11",
+    "mdx-wikilink-plus>=1.4.1",
+    "mysqlclient>=2.3.0",
+    "pillow>=12.3.0",
+    "pydot>=4.0.1",
+    "python-magic>=0.4.27",
+    "sphinx>=9.1.0",
+    "whoosh>=2.7.4",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+    "ipython>=9.17.1",
+]
+
+[tool.uv]
+# Security floors for transitive dependencies (pip-audit findings); they are
+# not imported by the code, so they are constraints, not dependencies.
+constraint-dependencies = [
+    "idna>=3.15",
+    "pygments>=2.20.0",
+    "requests>=2.33.0",
+    "soupsieve>=2.9.0",
+    "sqlparse>=0.6.0",
+    "urllib3>=2.8.0",
+]
+
+[tool.uv.sources]
+django-messages = { git = "https://github.com/frankystone/django-messages.git", rev = "8f6605be2e4f4c05817ed9922c0011aaedf18f57" }
+django-tagging = { url = "https://github.com/jazzband/django-tagging/releases/download/0.5.1/django_tagging-0.5.1-py3-none-any.whl" }

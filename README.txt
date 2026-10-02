@@ -3,61 +3,61 @@ Installing the homepage
 
 Used python version
 -------------------
-The website is tested with python 3.10. This README reflects setting up the
-website with this python version.
+The website is tested with python 3.14 (the default python of Ubuntu 26.04).
+pyproject.toml requires it; uv downloads it if the system python is older.
+
+Framework versions
+------------------
+This project targets Django LTS (Long Term Support) releases for stability and
+extended support. We currently use Django 5.2 LTS, which is supported until
+April 2028. We will not upgrade to non-LTS versions.
 
 Install prerequisites
 ---------------------
 
-Getting the homepage to run locally is best supported using virtualenv and
-pip. Install those two tools first, either via easy_install or via your local
-package manager. To get the sources you will need to install git.
+This project uses uv for dependency management. uv is a fast Python package
+installer (10-100x faster than pip) that automatically manages a virtual
+environment in .venv/ and ensures reproducible installs via lockfiles.
 
-Example:
-On Ubuntu, installing all required tools and dependencies in two commands:
+Install uv and system dependencies:
 
-   $ sudo apt-get install python3-virtualenv python3-pip git libmysqlclient-dev
-   $ sudo apt-get build-dep
+On Ubuntu:
+   $ curl -LsSf https://astral.sh/uv/install.sh | sh
+   $ sudo apt-get install git build-essential pkg-config libmariadb-dev libmagic1
 
-On Mac, you might need something like:
-
+On Mac:
+   $ curl -LsSf https://astral.sh/uv/install.sh | sh
    $ brew install mysql libmagic
 
 
 Setting up the local environment
 --------------------------------
 
-Go to the directory you want to install the homepage to, then run:
+Clone the repository:
 
-   $ export PYTHONPATH=
-
-This will make sure that your virtual environment is not tainted with python
-packages from your global site packages. Very important!
-Now, we create and activate our environment:
-
-   $ virtualenv --python=python3.6 wlwebsite
-   $ cd wlwebsite
-   $ source bin/activate
-
-Next, we download the website source code::
-
-   $ mkdir code
-   $ cd code
    $ git clone https://github.com/widelands/widelands-website widelands
    $ cd widelands
 
-All fine and good. Now we have to install all the third party modules the
-website needs. We use pip for that.
+Install all dependencies (uv creates and manages the .venv/ automatically):
 
-Installation of the third party libraries should be easy, given you have
-development tools installed and in your path. The most difficult package here
-is PIL; you can also try to migrate them over from your global site dir or add
-your global site dir to your PYTHONPATH. Installation via pip should work like
-this:
+   $ uv sync
 
-   $ pip install -r pip_requirements.txt
+That's it! uv handles virtualenv creation, activation, and dependency
+installation in one step. Dependencies are defined in pyproject.toml and
+locked in uv.lock for reproducible builds.
 
-This will take a while. If no errors are shown we should be fine.
+On the production server install exactly the locked versions and skip the
+development tools (black, ipython):
+
+   $ uv sync --frozen --no-dev
+
+To run commands in the virtual environment, prefix them with 'uv run':
+
+   $ uv run ./manage.py runserver
+
+Or activate the environment manually if preferred:
+
+   $ source .venv/bin/activate
 
 
 Setting up the website
@@ -80,16 +80,16 @@ Setting up the database
 
 Now creating the tables in the database:
 
-   $ ./manage.py migrate
-   $ ./manage.py createcachetable
+   $ uv run ./manage.py migrate
+   $ uv run ./manage.py createcachetable
 
 Create a superuser:
 
-   $ ./manage.py createsuperuser
+   $ uv run ./manage.py createsuperuser
 
-Now, let's run the page::
+Now, let's run the page:
 
-   $ ./manage.py runserver
+   $ uv run ./manage.py runserver
 
 Open your browser to http://localhost:8000. You should see something that
 resembles the widelands homepage quite closely. All content is missing though.
@@ -109,7 +109,7 @@ Runnning with DEBUG=False
 In case you want to test the site with the setting DEBUG=False, you might
 notice that at least the admin site is missing all css. To fix this run:
 
-  $ ./manage.py collectstatic -l
+  $ uv run ./manage.py collectstatic -l
 
 This will create symbolic links (-l) to static contents of third party apps in
 the folder defined by STATIC_ROOT. See:
@@ -124,7 +124,7 @@ the website from other machines you need to specify an IP-address and
 port number. Please note, however, that this server is NOT intended for
 production environments, only for development/testing.
 
-   $ ./manage.py runserver 169.254.1.0:8000
+   $ uv run ./manage.py runserver 169.254.1.0:8000
 
 See also https://docs.djangoproject.com/en/dev/ref/django-admin/#examples-of-using-different-ports-and-addresses
 for further details.
@@ -135,9 +135,15 @@ Starting the website locally with gunicorn
 This might be useful for testing thread-safety:
 
  $ cd mainpage
- $ gunicorn --workers 4 wlwebsite_wsgi:application
+ $ uv run gunicorn --no-control-socket --workers 4 wlwebsite_wsgi:application
 
-This will run the website with 4 workers (threads).
+This will run the website with 4 workers (processes).
+
+Since gunicorn 25.1 a control socket is created by default in
+$XDG_RUNTIME_DIR or ~/.gunicorn; --no-control-socket disables it. The
+production systemd units need the same flag and must start
+.venv/bin/gunicorn from the uv environment, since wlwebsite_wsgi.py does not
+activate a virtualenv itself.
 
 Dependencies between website and widelands source code
 ======================================================
@@ -214,6 +220,21 @@ in the DATABASES-section in local_settings.py called 'addonserver':
 Then define some notification-types in the admin page for WLADDONS_SETTINGS.
 If a user has uploaded add-on(s) the noticetypes are created for this user if
 he enters his profile page and clicks on the tab 'Add-On Settings'.
+
+Known Dependency Issues
+=======================
+
+The following dependencies require attention for long-term maintenance:
+
+**whoosh (2.7.4)** - Unmaintained since 2016 and emits SyntaxWarnings on python
+3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
+MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
+
+**bleach (6.4.0)** - Unmaintained; the repository was archived in June 2026.
+Migrate to nh3; the allowed tags and attributes live in mainpage/settings.py.
+
+**django-star-ratings, django-tagging, django-messages (fork)** - Archived or
+dormant upstream. Vendor them or replace them (e.g. django-taggit).
 
 Contact
 =======

@@ -44,7 +44,7 @@ def pybb_link(object, anchor=""):
 
     url = hasattr(object, "get_absolute_url") and object.get_absolute_url() or None
     anchor = anchor or smart_str(object)
-    return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
+    return mark_safe(f'<a href="{url}">{escape(anchor)}</a>')
 
 
 @register.filter

@@ -30,7 +30,7 @@ def search(request):
         form = WlSearchForm(request.POST)
         if form.is_valid() and form.cleaned_data["q"] != "":
             # Query string
-            search_url = "q=%s" % (form.cleaned_data["q"])
+            search_url = f"q={form.cleaned_data['q']}"
 
             section = choices.get(request.POST["section"], "all")
             if section == "all":
@@ -39,14 +39,14 @@ def search(request):
                     if field == "q":
                         # Don't change the query string
                         continue
-                    search_url += "&%s=%s" % (field, v.initial)
+                    search_url += f"&{field}={v.initial}"
             else:
                 # A particular section was chosen
-                search_url += "&%s=True" % (section)
+                search_url += f"&{section}=True"
                 # Set initial start date
-                search_url += "&start_date=%s" % (form.fields["start_date"].initial)
+                search_url += f"&start_date={form.fields['start_date'].initial}"
 
-            return HttpResponseRedirect("%s?%s" % (reverse("search"), search_url))
+            return HttpResponseRedirect(f"{reverse('search')}?{search_url}")
 
         # Form invalid or no search query was given
         form = WlSearchForm()

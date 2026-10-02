@@ -15,10 +15,7 @@ register = template.Library()
 
 def do_get_upload_image_form(parser, token):
     """TODO."""
-    error_message = "%r tag must be of format {%% %r as CONTEXT_VARIABLE %%}" % (
-        token.contents.split()[0],
-        token.contents.split()[0],
-    )
+    error_message = f"{token.contents.split()[0]!r} tag must be of format {{%% {token.contents.split()[0]!r} as CONTEXT_VARIABLE %%}}"
     try:
         split = token.split_contents()
     except ValueError:

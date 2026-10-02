@@ -8,7 +8,7 @@ from privacy_policy.models import PrivacyPolicy
 
 
 def _format_text(language, text):
-    return "[TOC]\n\n#{}\n{}".format(language, text)
+    return f"[TOC]\n\n#{language}\n{text}"
 
 
 def privacy_policy(request, *args, **kwargs):

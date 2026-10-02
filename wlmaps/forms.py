@@ -56,7 +56,8 @@ class UploadMapForm(ModelForm):
             # change working directory so that the datadir is found
             old_cwd = os.getcwd()
             os.chdir(settings.WIDELANDS_SVN_DIR)
-            check_call(["wl_map_info", copied_file])
+            wl_map_info = getattr(settings, "WIDELANDS_MAP_INFO_TOOL", "wl_map_info")
+            check_call([wl_map_info, copied_file])
             os.chdir(old_cwd)
         except CalledProcessError:
             self._errors["file"] = self.error_class(
@@ -100,8 +101,8 @@ class UploadMapForm(ModelForm):
                 "minimum_required_widelands_version"
             ]
         else:
-            self.instance.wl_version_after = "build {}".format(
-                mapinfo["needs_widelands_version_after"] + 1
+            self.instance.wl_version_after = (
+                f"build {mapinfo['needs_widelands_version_after'] + 1}"
             )
 
         # mapinfo["minimap"] is the absolute path to the image file

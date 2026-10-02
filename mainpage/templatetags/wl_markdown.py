@@ -32,16 +32,20 @@ except ImportError:
 # We will also need the site domain
 from django.contrib.sites.models import Site
 
-try:
-    _domain = Site.objects.get(pk=settings.SITE_ID).domain
-except:
-    _domain = ""
 
-# Getting local domain lists
-try:
-    LOCAL_DOMAINS = [_domain] + settings.LOCAL_DOMAINS
-except:
-    LOCAL_DOMAINS = [_domain]
+def _get_domains():
+    # Converted to a function to fix APPS_NOT_READY_WARNING_MSG in Django 5.2
+    # Every database query should be in a function or Class…
+    try:
+        _domain = Site.objects.get(pk=settings.SITE_ID).domain
+    except Site.DoesNotExist:
+        _domain = ""
+    # Getting local domain lists
+    try:
+        local_domains = [_domain] + settings.LOCAL_DOMAINS
+    except:
+        locaL_domains = [_domain]
+    return local_domains
 
 
 register = template.Library()
@@ -108,7 +112,7 @@ def _classify_link(tag):
     # Check for external link
     if href.startswith("http"):
         external = False
-        for domain in LOCAL_DOMAINS:
+        for domain in _get_domains():
             external = True
             if href.find(domain) != -1:
                 external = False

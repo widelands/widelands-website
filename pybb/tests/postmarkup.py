@@ -10,7 +10,7 @@ class PostmarkupTestCase(unittest.TestCase):
     def testLinkTag(self):
         link = "http://ya.ru/"
         self.assertEqual(
-            '<a href="%s">%s</a>' % (link, link), self.markup("[url]%s[/url]" % link)
+            f'<a href="{link}">{link}</a>', self.markup(f"[url]{link}[/url]")
         )
 
     def testPlainTest(self):
