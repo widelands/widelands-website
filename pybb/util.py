@@ -257,10 +257,8 @@ def validate_file(attachment):
 
     # Widelands map file
     if ext == "wmf":
-        raise ValidationError(
-            "This seems to be a widelands map file. Please upload \
-            it at our maps section."
-        )
+        raise ValidationError("This seems to be a widelands map file. Please upload \
+            it at our maps section.")
 
     # Widelands savegame (*.wgf) and widelands replay (*.wrpl.wgf)
     # are not the same.
