@@ -171,7 +171,7 @@ def _classify_link(tag):
     return None
 
 
-def _make_clickable_images(tag):
+def _make_clickable_images(tag, rel=None):
     # is external link?
     if tag["src"].startswith("http"):
         # Do not change if it is already a link
@@ -179,6 +179,8 @@ def _make_clickable_images(tag):
             # add link to image
             new_link = BeautifulSoup(features="lxml").new_tag("a")
             new_link["href"] = tag["src"]
+            if rel:
+                new_link["rel"] = rel
             new_img = BeautifulSoup(features="lxml").new_tag("img")
             new_img["src"] = tag["src"]
             try:
@@ -217,10 +219,13 @@ md_configs = {
 # The start of a tag ("<name" or "</name") as the HTML parser tokenizes it
 _TAG_START = re.compile(r"<(/?)([A-Za-z][^\s/>]*)")
 
+# Links in user content get no ranking credit from search engines.
+USER_CONTENT_LINK_REL = "nofollow ugc"
+
 
 def _sanitize(html):
     """Remove all tags, attributes and URL schemes that are not allowed in the
-    settings.
+    settings, and mark all links with USER_CONTENT_LINK_REL.
 
     nh3 drops disallowed tags, but users often write placeholders like
     '<username>' or types like 'vector<int>' outside of code blocks. To show
@@ -241,18 +246,19 @@ def _sanitize(html):
             for tag, attributes in settings.SANITIZER_ALLOWED_ATTRIBUTES.items()
         },
         url_schemes=set(settings.SANITIZER_ALLOWED_URL_SCHEMES),
-        link_rel=None,
+        link_rel=USER_CONTENT_LINK_REL,
     )
 
 
-def do_wl_markdown(value, *args, **keyw):
-    """Apply wl specific things, like smileys or colored links."""
+def do_wl_markdown(value, *, sanitize=False, beautify=True):
+    """Apply wl specific things, like smileys or colored links.
 
-    beautify = keyw.pop("beautify", True)
+    sanitize: set for content from untrusted users (forum, wiki, maps,
+    comments): removes disallowed HTML and marks links as user content.
+    """
     html = markdown(value, extensions=md_extensions, extension_configs=md_configs)
 
-    # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
-    if "bleachit" in args:
+    if sanitize:
         html = _sanitize(html)
 
     # Prepare the html and apply smileys and classes.
@@ -277,7 +283,9 @@ def do_wl_markdown(value, *args, **keyw):
         # All external images gets clickable
         # This applies only in forum
         for tag in soup.find_all("img"):
-            new_tag = _make_clickable_images(tag)
+            new_tag = _make_clickable_images(
+                tag, rel=USER_CONTENT_LINK_REL if sanitize else None
+            )
             if new_tag:
                 tag.replace_with(new_tag)
 
@@ -288,8 +296,8 @@ def do_wl_markdown(value, *args, **keyw):
 
 @register.filter
 def wl_markdown(content, arg=""):
-    """A Filter which decides when to sanitize the content."""
-    if arg == "bleachit":
-        return mark_safe(do_wl_markdown(content, "bleachit"))
-    else:
-        return mark_safe(do_wl_markdown(content))
+    """Render markdown; use wl_markdown:"sanitize" for untrusted content."""
+    if arg not in ("", "sanitize"):
+        # A typo must not silently skip the sanitizer.
+        raise ValueError(f'wl_markdown: unknown argument "{arg}"')
+    return mark_safe(do_wl_markdown(content, sanitize=arg == "sanitize"))

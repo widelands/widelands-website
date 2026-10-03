@@ -19,7 +19,7 @@ import unittest
 from wiki.models import Article
 from django.test import TestCase as DBTestCase
 
-from ..templatetags.wl_markdown import do_wl_markdown
+from ..templatetags.wl_markdown import do_wl_markdown, wl_markdown
 
 
 class TestWlMarkdown(DBTestCase):
@@ -241,16 +241,18 @@ class TestWlMarkdownSanitized(DBTestCase):
     def assertSanitized(self, cases):
         for value, wanted in cases:
             with self.subTest(value=value):
-                res = do_wl_markdown(value, "bleachit", beautify=False)
+                res = do_wl_markdown(value, sanitize=True, beautify=False)
                 self.assertEqual(res, wanted)
 
     def test_raw_script_block_stays_escaped(self):
-        res = do_wl_markdown("Before\n\n<script>alert(1)</script>\n\nAfter", "bleachit")
+        res = do_wl_markdown(
+            "Before\n\n<script>alert(1)</script>\n\nAfter", sanitize=True
+        )
         self.assertNotIn("<script", res)
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", res)
 
     def test_smiley_and_entities_next_to_escaped_text(self):
-        res = do_wl_markdown("<iframe src=x></iframe>\n\na < b & c :)", "bleachit")
+        res = do_wl_markdown("<iframe src=x></iframe>\n\na < b & c :)", sanitize=True)
         self.assertEqual(
             res,
             '&lt;iframe src=x&gt;&lt;/iframe&gt;\n\n<p>a &lt; b &amp; c <img alt=":)" '
@@ -261,7 +263,7 @@ class TestWlMarkdownSanitized(DBTestCase):
         res = do_wl_markdown(
             "<details><summary>Spoiler</summary>hidden</details>\n\n"
             "<dl><dt>Term</dt><dd>Definition</dd></dl>",
-            "bleachit",
+            sanitize=True,
         )
         self.assertIn("<details><summary>Spoiler</summary>hidden</details>", res)
         self.assertIn("<dl><dt>Term</dt><dd>Definition</dd></dl>", res)
@@ -274,7 +276,8 @@ class TestWlMarkdownSanitized(DBTestCase):
                     "[x](javascript:alert(1)) "
                     '<a href="JaVaScRiPt:alert(1)">y</a> '
                     '<a href="&#106;avascript:alert(1)">z</a>',
-                    "<p><a>x</a> <a>y</a> <a>z</a></p>",
+                    '<p><a rel="nofollow ugc">x</a> <a rel="nofollow ugc">y</a> '
+                    '<a rel="nofollow ugc">z</a></p>',
                 ),
                 (
                     '<img src="data:image/svg+xml;base64,PHN2Zz4=" alt="d">',
@@ -287,8 +290,9 @@ class TestWlMarkdownSanitized(DBTestCase):
                 (
                     '<a href="/wiki/Foo" onclick="alert(1)">wiki</a> '
                     '<a href="mailto:a@b.c">mail</a> <a href="ftp://x/y">ftp</a>',
-                    '<p><a href="/wiki/Foo">wiki</a> <a href="mailto:a@b.c">mail</a> '
-                    "<a>ftp</a></p>",
+                    '<p><a href="/wiki/Foo" rel="nofollow ugc">wiki</a> '
+                    '<a href="mailto:a@b.c" rel="nofollow ugc">mail</a> '
+                    '<a rel="nofollow ugc">ftp</a></p>',
                 ),
             ]
         )
@@ -355,6 +359,36 @@ class TestWlMarkdownSanitized(DBTestCase):
                 ),
             ]
         )
+
+    def test_user_content_links_are_nofollow_ugc(self):
+        self.assertSanitized(
+            [
+                (
+                    "[a](https://example.org/) "
+                    '<a href="https://example.org/" rel="follow">b</a>',
+                    '<p><a href="https://example.org/" rel="nofollow ugc">a</a> '
+                    '<a href="https://example.org/" rel="nofollow ugc">b</a></p>',
+                ),
+            ]
+        )
+        # External images become links after sanitizing; they are user
+        # content too.
+        res = do_wl_markdown("![i](https://example.org/i.png)", sanitize=True)
+        self.assertEqual(
+            res,
+            '<p><a href="https://example.org/i.png" rel="nofollow ugc">'
+            '<img alt="i" src="https://example.org/i.png"/></a></p>',
+        )
+
+    def test_trusted_content_links_have_no_rel(self):
+        res = do_wl_markdown("[a](/wiki/list) ![i](https://example.org/i.png)")
+        self.assertNotIn("rel=", res)
+
+    def test_filter_rejects_unknown_argument(self):
+        # A typo must not render untrusted content unsanitized.
+        with self.assertRaises(ValueError):
+            wl_markdown("<script>x</script>", "bleachit")
+        self.assertNotIn("<script", wl_markdown("<script>x</script>", "sanitize"))
 
 
 if __name__ == "__main__":

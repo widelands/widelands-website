@@ -12,5 +12,5 @@ class TestUrlize(SimpleTestCase):
         self.assertEqual(
             urlize("<p>a &lt; b see https://example.org/x?a=1&amp;b=2</p>"),
             '<p>a &lt; b see <a href="https://example.org/x?a=1&amp;b=2" '
-            'nofollow="true">https://example.org/x?a=1&amp;b=2</a></p>',
+            'rel="nofollow ugc">https://example.org/x?a=1&amp;b=2</a></p>',
         )
