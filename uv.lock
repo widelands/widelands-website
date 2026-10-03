@@ -250,14 +250,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/08/00/2fee5c12b650bbc643f0b65ead96b6f7533f5fa76573449f814d820dda6f/django_haystack-3.4.0.tar.gz", hash = "sha256:1226a7c9ce13e1e7ead8ac83f6e87bfef4996f146ed24971fde7896115b1c530", size = 454662, upload-time = "2026-06-04T19:12:33.644Z" }
 
 [[package]]
-name = "django-messages"
-version = "0.6.0"
-source = { git = "https://github.com/frankystone/django-messages.git?rev=8f6605be2e4f4c05817ed9922c0011aaedf18f57#8f6605be2e4f4c05817ed9922c0011aaedf18f57" }
-dependencies = [
-    { name = "django" },
-]
-
-[[package]]
 name = "django-recaptcha"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1017,7 +1009,6 @@ dependencies = [
     { name = "django" },
     { name = "django-filter" },
     { name = "django-haystack" },
-    { name = "django-messages" },
     { name = "django-recaptcha" },
     { name = "django-registration" },
     { name = "docutils" },
@@ -1046,7 +1037,6 @@ requires-dist = [
     { name = "django", specifier = ">=5.2.17,<5.3" },
     { name = "django-filter", specifier = ">=26.1" },
     { name = "django-haystack", specifier = ">=3.4.0" },
-    { name = "django-messages", git = "https://github.com/frankystone/django-messages.git?rev=8f6605be2e4f4c05817ed9922c0011aaedf18f57" },
     { name = "django-recaptcha", specifier = ">=4.1.0" },
     { name = "django-registration", specifier = ">=5.2.1" },
     { name = "docutils", specifier = ">=0.22.4" },

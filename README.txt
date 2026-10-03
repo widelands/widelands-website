@@ -148,6 +148,9 @@ production systemd units need the same flag and must start
 .venv/bin/gunicorn from the uv environment, since wlwebsite_wsgi.py does not
 activate a virtualenv itself.
 
+The headers and the login throttling nginx has to provide in production are
+described in _ops/nginx.md.
+
 Dependencies between website and widelands source code
 ======================================================
 
@@ -233,12 +236,13 @@ The following dependencies require attention for long-term maintenance:
 3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
 MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
 
-**django-messages (fork)** - Dormant upstream. Vendor it or replace it.
-
 django-tagging 0.5.1 is vendored as the tagging app; see tagging/README.
 
 django-star-ratings 0.9.2 is vendored as the star_ratings app; see
 star_ratings/README.
+
+The django-messages fork is vendored as the django_messages app; see
+django_messages/README.md.
 
 Contact
 =======
