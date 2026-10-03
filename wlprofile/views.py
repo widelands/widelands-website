@@ -192,12 +192,7 @@ def view(request, user=None):
     if profile.deleted:
         raise Http404("User has been deleted")
 
-    template_params = {
-        "profile": profile,
-        "addondb": settings.DATABASES.get("addonserver"),
-    }
-
-    return render(request, "wlprofile/view_profile.html", template_params)
+    return render(request, "wlprofile/view_profile.html", {"profile": profile})
 
 
 @login_required
