@@ -1,10 +1,15 @@
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, render
 from django.template import Context, Template
+from django.utils.http import url_has_allowed_host_and_scheme
 from threadedcomments.forms import ThreadedCommentForm
-from threadedcomments.models import ThreadedComment, DEFAULT_MAX_COMMENT_LENGTH
+from threadedcomments.models import (
+    ThreadedComment,
+    DEFAULT_MAX_COMMENT_DEPTH,
+    DEFAULT_MAX_COMMENT_LENGTH,
+)
 from threadedcomments.utils import JSONResponse, XMLResponse
 
 
@@ -28,13 +33,24 @@ def _get_next(request):
     redirect to that previous page.
     4. Otherwise, the view raise a 404 Not Found.
 
+    Candidates pointing to other hosts are skipped.
     """
-    next = request.POST.get(
-        "next", request.GET.get("next", request.META.get("HTTP_REFERER", None))
-    )
-    if not next or next == request.path:
-        raise Http404  # No next url was supplied in GET or POST.
-    return next
+    for next in (
+        request.POST.get("next"),
+        request.GET.get("next"),
+        request.META.get("HTTP_REFERER"),
+    ):
+        if (
+            next
+            and next != request.path
+            and url_has_allowed_host_and_scheme(
+                next,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            )
+        ):
+            return next
+    raise Http404  # No usable next url was supplied.
 
 
 def _preview(
@@ -94,23 +110,40 @@ def comment(
             request, context_processors, extra_context, form_class=form_class
         )
     if edit_id:
-        instance = get_object_or_404(model, id=edit_id)
+        # Only the author may edit a comment.
+        instance = get_object_or_404(model, id=edit_id, user=request.user)
+        parent_id = None
     else:
         instance = None
+        ct = get_object_or_404(ContentType, id=int(content_type))
+        target_model = ct.model_class()
+        if target_model is None or not (
+            target_model._default_manager.filter(pk=int(object_id)).exists()
+        ):
+            raise Http404
+        parent = None
+        if parent_id:
+            parent = get_object_or_404(
+                model, id=int(parent_id), content_type=ct, object_id=int(object_id)
+            )
+            depth = 1
+            ancestor = parent.parent
+            while ancestor is not None:
+                depth += 1
+                ancestor = ancestor.parent
+                if depth >= DEFAULT_MAX_COMMENT_DEPTH:
+                    return HttpResponseBadRequest(
+                        "Comment thread is nested too deeply."
+                    )
     _adjust_max_comment_length(form_class)
     form = form_class(request.POST, instance=instance)
     if form.is_valid():
         new_comment = form.save(commit=False)
         if not edit_id:
-            new_comment.content_type = get_object_or_404(
-                ContentType, id=int(content_type)
-            )
+            new_comment.content_type = ct
             new_comment.object_id = int(object_id)
-
-        new_comment.user = request.user
-
-        if parent_id:
-            new_comment.parent = get_object_or_404(model, id=int(parent_id))
+            new_comment.user = request.user
+            new_comment.parent = parent
         new_comment.save()
         if add_messages:
             request.user.message_set.create(

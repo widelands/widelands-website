@@ -9,6 +9,7 @@
 	{% include "threadedcomments/inlines/reply_to.js" %}
 
 	{% get_threaded_comment_tree for object as tree %}
+	{% get_max_reply_depth as max_reply_depth %}
 	{% for comment in tree %}
 		<div id="c{{ comment.id }}" class="comment {% cycle "odd" "even" %}" style="margin-left: {{ comment.depth }}cm;">
 			<table>
@@ -35,7 +36,7 @@
 				</tr>
 				<tr>
 					<td class="reply_link small">
-						{% if user.is_authenticated %}
+						{% if user.is_authenticated and comment.depth < max_reply_depth %}
 						<a href="javascript:show_reply_form('c{{ comment.id }}', '{% get_comment_url object comment %}', {{ comment.depth }})">Reply</a>
 						{% endif %}
 					</td>
