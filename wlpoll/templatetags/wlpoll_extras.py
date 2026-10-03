@@ -14,57 +14,18 @@ class DisplayPollNode(template.Node):
         self._poll = template.Variable(poll_var)
 
     def render(self, context):
-        """Render this Poll using Highcharts"""
+        """Render this Poll as JSON data block for js/poll_chart.js"""
         p = self._poll.resolve(context)
 
         # Pass the poll as JSON data block, so that names and choices can't
         # break out of the JavaScript strings or the <script> element
-        poll_data = json_script(
+        return json_script(
             {
                 "name": p.name,
                 "choices": [[c.choice, c.votes] for c in p.choices.all()],
             },
             "pollData",
         )
-
-        s = rf"""
-        {poll_data}
-        <script type="text/javascript">
-        $(document).ready(function() {{
-              const poll = JSON.parse(document.getElementById('pollData').textContent);
-              Highcharts.chart('chartContainer', {{
-                 chart: {{
-                    type: 'pie'
-                 }},
-                 plotOptions: {{
-                    pie: {{
-                        center: ["50%", "50%"],
-                        dataLabels: {{
-                            style: {{
-                                width: '150px',
-                            }}
-                        }}
-                    }}
-                 }},
-                 title: {{
-                    text: poll.name
-                 }},
-                 tooltip: {{
-                     formatter: function() {{
-                        return '<b>'+ this.y +' votes</b>: '+ this.percentage +' %';
-                     }}
-                  }},
-                 series: [{{
-                    type: 'pie',
-                    data: poll.choices,
-                 }},
-                 ]
-              }});
-           }});
-       </script>
-        """
-
-        return s
 
 
 def do_display_poll(parser, token):

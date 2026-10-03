@@ -240,18 +240,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-braces"
-version = "1.17.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8a/c0/eb3e27e817eb4ba39d9c66fbd53139cb4db7073f5e6e71c28ce4d8b706da/django_braces-1.17.0.tar.gz", hash = "sha256:3a6fe630d3d91fef0711bfe1088d14af00c245559f79f6298040ed2b2f757337", size = 54227, upload-time = "2025-03-18T02:03:02.354Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/34/966fd4a68cbe7a80e29868bcb9d43e6ba5d562120e272e27e61ab795eea9/django_braces-1.17.0-py3-none-any.whl", hash = "sha256:18c9fe889bc673bddee6110f23a8c57fefe99663c8c683a7c2ac4f8f8743674d", size = 15330, upload-time = "2025-03-18T02:03:01.217Z" },
-]
-
-[[package]]
 name = "django-filter"
 version = "26.1"
 source = { registry = "https://pypi.org/simple" }
@@ -282,18 +270,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "django-model-utils"
-version = "5.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/81/60/5e232c32a2c977cc1af8c70a38ef436598bc649ad89c2c4568454edde2c9/django_model_utils-5.0.0.tar.gz", hash = "sha256:041cdd6230d2fbf6cd943e1969318bce762272077f4ecd333ab2263924b4e5eb", size = 80559, upload-time = "2024-09-04T11:35:22.858Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/fd/13/87a42048700c54bfce35900a34e2031245132775fb24363fc0e33664aa9c/django_model_utils-5.0.0-py3-none-any.whl", hash = "sha256:fec78e6c323d565a221f7c4edc703f4567d7bb1caeafe1acd16a80c5ff82056b", size = 42630, upload-time = "2024-09-04T11:36:23.166Z" },
-]
-
-[[package]]
 name = "django-recaptcha"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -316,29 +292,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9a/a0/f6e6d0a59b94eb4ab14983853334cb25401d677c5a3799aaca6819acf2eb/django_registration-5.2.1.tar.gz", hash = "sha256:06864f9da0bc4d7b073fb2da98d95d12428357ab0bc46e33f79c26707ec06bbe", size = 94187, upload-time = "2025-04-07T05:54:48.558Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/78/5d/aa2f82b3c809db66eb986963db1d4b89de190b4eac2e3021a725112e3b13/django_registration-5.2.1-py3-none-any.whl", hash = "sha256:7079e2364b15fc6bef18b81ae94c5e947b556abdbbfb19c9bcca14feafde6a3d", size = 105277, upload-time = "2025-04-07T05:54:46.981Z" },
-]
-
-[[package]]
-name = "django-star-ratings"
-version = "0.9.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-    { name = "django-braces" },
-    { name = "django-model-utils" },
-    { name = "swapper" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f0/04/c502ae52bdea3a83373ef439271dc9615812a9286beff11e095fcd2c1cc7/django-star-ratings-0.9.2.tar.gz", hash = "sha256:7c7f55c1847087b932ca09c2cefb11240510fe384188250d15961024c9c8f2d8", size = 41716, upload-time = "2021-12-10T10:00:54.337Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d8/1a/8548d1bfb52bc9dbe4ec4802ea2197f8a4d09ecb1d8343baf817acad51d4/django_star_ratings-0.9.2-py2.py3-none-any.whl", hash = "sha256:8789275e11612295379cf5db7aafce43e2cf6d9aea63f4ba762220fe440997f3", size = 62951, upload-time = "2021-12-10T10:00:52.821Z" },
-]
-
-[[package]]
-name = "django-tagging"
-version = "0.5.1"
-source = { url = "https://github.com/jazzband/django-tagging/releases/download/0.5.1/django_tagging-0.5.1-py3-none-any.whl" }
-wheels = [
-    { url = "https://github.com/jazzband/django-tagging/releases/download/0.5.1/django_tagging-0.5.1-py3-none-any.whl", hash = "sha256:30b255099485e093dd40d726833a1e77d44d22ece7e1a9e648a911ef732354d6" },
 ]
 
 [[package]]
@@ -961,15 +914,6 @@ wheels = [
 ]
 
 [[package]]
-name = "swapper"
-version = "1.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c2/3e/a28d29aa28570b09257dad52cc5e5ebda9fe8802eeca0d9e254ccf8e5788/swapper-1.5.0.tar.gz", hash = "sha256:405f934265aa0c8d8b8e6b1be584875d1a3b7de6b1cd6f47367a4dbdc028609a", size = 24119, upload-time = "2026-09-01T21:51:07.192Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/29/5f/eab0a39f9c16c5d32c00f1f9b7ee9e8823686d1fd40a7fd1f0fc3247a59c/swapper-1.5.0-py2.py3-none-any.whl", hash = "sha256:67ae5a01bc12159dede567b98212a83baa53aa466a8eb5cf44af226b8219d21c", size = 7273, upload-time = "2026-09-01T21:51:05.953Z" },
-]
-
-[[package]]
 name = "traitlets"
 version = "5.16.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1064,8 +1008,6 @@ dependencies = [
     { name = "django-messages" },
     { name = "django-recaptcha" },
     { name = "django-registration" },
-    { name = "django-star-ratings" },
-    { name = "django-tagging" },
     { name = "docutils" },
     { name = "gunicorn" },
     { name = "lxml" },
@@ -1095,8 +1037,6 @@ requires-dist = [
     { name = "django-messages", git = "https://github.com/frankystone/django-messages.git?rev=8f6605be2e4f4c05817ed9922c0011aaedf18f57" },
     { name = "django-recaptcha", specifier = ">=4.1.0" },
     { name = "django-registration", specifier = ">=5.2.1" },
-    { name = "django-star-ratings", specifier = ">=0.9.2" },
-    { name = "django-tagging", url = "https://github.com/jazzband/django-tagging/releases/download/0.5.1/django_tagging-0.5.1-py3-none-any.whl" },
     { name = "docutils", specifier = ">=0.22.4" },
     { name = "gunicorn", specifier = ">=26.2.0" },
     { name = "lxml", specifier = ">=6.1.0" },
