@@ -1,5 +1,3 @@
-import os
-
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -8,8 +6,6 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.db import IntegrityError
 from datetime import datetime
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 
 
 class ImageManager(models.Manager):
@@ -36,9 +32,6 @@ class ImageManager(models.Manager):
         return super(ImageManager, self).create(**keyw)
 
     def create_and_save_image(self, user, image, content_type, object_id):
-        # Use Django's get_valid_name() to get a safe filename
-        storage = FileSystemStorage()
-        safe_filename = storage.get_valid_name(image.name)
         im = self.create(
             content_type=content_type,
             object_id=object_id,
@@ -46,22 +39,9 @@ class ImageManager(models.Manager):
             revision=1,
             name=image.name,
         )
-        path = f"{settings.MEDIA_ROOT}wlimages/{safe_filename}"
-
-        base_path = f"{settings.MEDIA_ROOT}wlimages"
-        # Make sure directory exists
-        if not os.path.isdir(base_path):
-            os.mkdir(base_path)
-
-        full_path = f"{base_path}/{safe_filename}"
-
-        with open(full_path, "wb+") as destination:
-            for chunk in image.chunks():
-                destination.write(chunk)
-
-        im.image = f"wlimages/{safe_filename}"
-
-        im.save()
+        # The storage sanitizes the file name and picks a free one, so an
+        # upload never overwrites the file of another image.
+        im.image.save(image.name, image)
 
 
 class Image(models.Model):
