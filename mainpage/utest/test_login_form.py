@@ -47,3 +47,12 @@ class LoginTimezoneTest(TestCase):
         self._login("secret", "5", set_timezone=False)
         self.assertEqual(self._time_zone(), 1.0)
         self.assertEqual(int(self.client.session["_auth_user_id"]), self.user.pk)
+
+    def test_successful_login_with_unknown_time_zone_logs_without_mail(self):
+        with self.assertLogs("mainpage.forms", level="WARNING") as logs:
+            response = self._login("secret", "1.234")
+        self.assertEqual(mail.outbox, [])
+        self.assertIn("1.234", logs.output[0])
+        self.assertContains(response, "The time zone can&#x27;t be found")
+        self.assertEqual(self._time_zone(), 1.0)
+        self.assertNotIn("_auth_user_id", self.client.session)

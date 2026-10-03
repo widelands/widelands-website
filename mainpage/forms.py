@@ -1,12 +1,15 @@
 #!/usr/bin/env python -tt
 # encoding: utf-8
 
+import logging
+
 from django import forms
 from django_registration.forms import RegistrationForm
 from django_recaptcha.fields import ReCaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from wlprofile.models import TZ_CHOICES
-from django.core.mail import mail_admins
+
+logger = logging.getLogger(__name__)
 
 
 class FormWithCaptcha(RegistrationForm):
@@ -61,12 +64,13 @@ class LoginTimezoneForm(AuthenticationForm):
                     profile.save()
                     found = True
             if found is False:
-                mail_admins(
-                    "Missing Time Zone?",
-                    f"Automatic applying a time zone for user '{profile.user.username}' has failed. Please check if '{br_time_zone}' is a valid time zone and add it to TZ_CHOICES in wlprofile.models",
+                logger.warning(
+                    "Unknown browser time zone offset %r on login of user %r",
+                    br_time_zone,
+                    profile.user.username,
                 )
                 self.add_error(
                     "set_timezone",
-                    "The time zone can't be found in our list of time zones. Please disable the checkbox and try again. After successful login please check your time zone in the 'Edit Profile' page. Admins got already informed about this.",
+                    "The time zone can't be found in our list of time zones. Please disable the checkbox and try again. After successful login please check your time zone in the 'Edit Profile' page.",
                 )
         return cleaned_data
