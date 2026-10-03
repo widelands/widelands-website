@@ -237,7 +237,13 @@ Value 3 | Value 4
         self._check(input, wanted)
 
 
-class TestWlMarkdownBleached(DBTestCase):
+class TestWlMarkdownSanitized(DBTestCase):
+    def assertSanitized(self, cases):
+        for value, wanted in cases:
+            with self.subTest(value=value):
+                res = do_wl_markdown(value, "bleachit", beautify=False)
+                self.assertEqual(res, wanted)
+
     def test_raw_script_block_stays_escaped(self):
         res = do_wl_markdown("Before\n\n<script>alert(1)</script>\n\nAfter", "bleachit")
         self.assertNotIn("<script", res)
@@ -259,6 +265,96 @@ class TestWlMarkdownBleached(DBTestCase):
         )
         self.assertIn("<details><summary>Spoiler</summary>hidden</details>", res)
         self.assertIn("<dl><dt>Term</dt><dd>Definition</dd></dl>", res)
+
+    def test_unsafe_attributes_and_url_schemes_are_removed(self):
+        self.assertSanitized(
+            [
+                ("<img src=x onerror=alert(1)>", '<p><img src="x"/></p>'),
+                (
+                    "[x](javascript:alert(1)) "
+                    '<a href="JaVaScRiPt:alert(1)">y</a> '
+                    '<a href="&#106;avascript:alert(1)">z</a>',
+                    "<p><a>x</a> <a>y</a> <a>z</a></p>",
+                ),
+                (
+                    '<img src="data:image/svg+xml;base64,PHN2Zz4=" alt="d">',
+                    '<p><img alt="d"/></p>',
+                ),
+                (
+                    '<p style="background:url(x)" class="c" id="i" title="t">s</p>',
+                    '<p class="c" id="i" title="t">s</p>',
+                ),
+                (
+                    '<a href="/wiki/Foo" onclick="alert(1)">wiki</a> '
+                    '<a href="mailto:a@b.c">mail</a> <a href="ftp://x/y">ftp</a>',
+                    '<p><a href="/wiki/Foo">wiki</a> <a href="mailto:a@b.c">mail</a> '
+                    "<a>ftp</a></p>",
+                ),
+            ]
+        )
+
+    def test_disallowed_tags_are_shown_as_text(self):
+        self.assertSanitized(
+            [
+                (
+                    "Saves are in C:/Documents and Settings/<Username>/.widelands",
+                    "<p>Saves are in C:/Documents and Settings/&lt;Username&gt;"
+                    "/.widelands</p>",
+                ),
+                (
+                    "clear(boost::shared_ptr<Widelands::Pathfields> const&) <grin>",
+                    "<p>clear(boost::shared_ptr&lt;Widelands::Pathfields&gt; "
+                    "const&amp;) &lt;grin&gt;</p>",
+                ),
+                (
+                    "<SCRIPT>alert(1)</SCRIPT> <script/x>alert(1)</script>",
+                    "&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;\n"
+                    "<p>&lt;script/x&gt;alert(1)&lt;/script&gt;\n</p>",
+                ),
+                (
+                    "<scr<script>ipt>alert(1)</script>",
+                    "<p>&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/script&gt;</p>",
+                ),
+                (
+                    "```\n<b>not bold</b>\n```",
+                    "<pre><code>&lt;b&gt;not bold&lt;/b&gt;\n</code></pre>",
+                ),
+            ]
+        )
+
+    def test_markup_cannot_be_smuggled_through_parser_quirks(self):
+        self.assertSanitized(
+            [
+                (
+                    "<svg><script>alert(1)</script></svg>",
+                    "<p>&lt;svg&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;/svg&gt;</p>",
+                ),
+                (
+                    "<math><mi><mglyph><style><img src=x onerror=alert(1)>"
+                    "</style></mglyph></mi></math>",
+                    "&lt;math&gt;&lt;mi&gt;&lt;mglyph&gt;&lt;style&gt;"
+                    '<img src="x"/>&lt;/style&gt;&lt;/mglyph&gt;&lt;/mi&gt;&lt;/math&gt;',
+                ),
+                (
+                    '<noscript><p title="</noscript><img src=x onerror=alert(1)>">',
+                    '&lt;noscript&gt;<p title="&lt;/noscript&gt;&lt;img src=x '
+                    'onerror=alert(1)&gt;"></p>',
+                ),
+                ("<!--<script>alert(1)</script>-->", ""),
+            ]
+        )
+
+    def test_table_alignment_is_kept(self):
+        self.assertSanitized(
+            [
+                (
+                    "| a | b |\n|:-:|--:|\n| 1 | 2 |",
+                    "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n"
+                    '<tbody>\n<tr>\n<td align="center">1</td>\n'
+                    '<td align="right">2</td>\n</tr>\n</tbody>\n</table>',
+                ),
+            ]
+        )
 
 
 if __name__ == "__main__":
