@@ -32,8 +32,12 @@ Latest posts - {{ block.super }}
         </p>
         {% else %}
         <p>
-            Found {{ posts_count }} posts. The list is always sorted by the most recent
-            post first.
+            {% if truncated %}
+            Showing only the {{ posts_count }} most recent posts.
+            {% else %}
+            Found {{ posts_count }} posts.
+            {% endif %}
+            The list is always sorted by the most recent post first.
         </p>
         {% endif %}
     </form>

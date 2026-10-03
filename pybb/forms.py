@@ -152,7 +152,7 @@ class EditPostForm(forms.ModelForm):
 
 class LastPostsDayForm(forms.Form):
     days = forms.IntegerField(
-        max_value=1000,
+        max_value=60,
         min_value=5,
     )
 
