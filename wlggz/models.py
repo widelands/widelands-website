@@ -28,10 +28,12 @@ class GGZAuth(models.Model):
         verbose_name = _("ggz")
         verbose_name_plural = _("ggz")
 
-    def save(self, *args, **kwargs):
-        # hash the password
-        pw_hash = hashlib.sha1(self.password.encode("utf-8")).digest()
-        pw_base64 = base64.standard_b64encode(pw_hash).decode("ascii")
-        self.password = pw_base64
-        # Save into the database
-        super(GGZAuth, self).save(*args, **kwargs)
+    def set_password(self, raw_password):
+        """Store raw_password in the format the metaserver expects."""
+        self.password = ggz_password_hash(raw_password)
+
+
+def ggz_password_hash(raw_password):
+    """base64(sha1(password)), as checked by the metaserver and add-on server."""
+    pw_hash = hashlib.sha1(raw_password.encode("utf-8")).digest()
+    return base64.standard_b64encode(pw_hash).decode("ascii")

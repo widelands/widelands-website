@@ -13,10 +13,11 @@ from .models import GGZAuth
 
 
 class GGZAdmin(admin.ModelAdmin):
-    list_display = ["user", "password", "permissions"]
+    list_display = ["user", "permissions"]
     list_per_page = 20
     ordering = ["-user"]
     search_fields = ["user__username", "user__first_name", "user__last_name"]
+    readonly_fields = ["password"]
     fieldsets = ((None, {"fields": ("user", "password", "permissions")}),)
 
 
