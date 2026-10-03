@@ -8,12 +8,18 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 from .forms import EditGGZForm
+from .models import GGZAuth
 
 
 @login_required
 def change_password(request):
-    """empty text."""
-    instance = request.user.wlggz
+    """Set the online gaming password.
+
+    The GGZAuth row is only created when a password is actually saved.
+    """
+    instance = GGZAuth.objects.filter(user=request.user).first()
+    if instance is None:
+        instance = GGZAuth(user=request.user)
 
     if request.method == "POST":
         form = EditGGZForm(request.POST, instance=instance, files=request.FILES)
@@ -27,7 +33,6 @@ def change_password(request):
         form = EditGGZForm(instance=instance)
 
     template_params = {
-        "wlggz": instance,
         "ggz_form": form,
     }
 

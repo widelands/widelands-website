@@ -29,14 +29,16 @@ class EditGGZForm(forms.ModelForm):
             "password",
         ]
 
-    def __init__(self, *args, **kwargs):
-        instance = kwargs.pop("instance")
-
-        super(EditGGZForm, self).__init__(instance=instance, *args, **kwargs)
-
     def clean(self):
         cleaned_data = super(EditGGZForm, self).clean()
         pw = cleaned_data.get("password")
         pw2 = cleaned_data.get("password2")
         if pw != pw2:
             self.add_error("password2", "The passwords didn't match")
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.set_password(self.cleaned_data["password"])
+        if commit:
+            instance.save()
+        return instance
