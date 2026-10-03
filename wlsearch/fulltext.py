@@ -202,7 +202,9 @@ def fulltext_search(queryset, fields, query, also_matches=None):
         alternative = alternatives.get(term)
         if alternative is not None:
             term_match = match([term])
-            queryset = queryset.exclude(term_match | alternative if term_match else alternative)
+            queryset = queryset.exclude(
+                term_match | alternative if term_match else alternative
+            )
         elif not against:
             # The MATCH() above has no required words to exclude this from
             if term_match := match([term]):

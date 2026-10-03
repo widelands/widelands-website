@@ -283,6 +283,7 @@ class TestTopicStarter(_ForumSearchTestBase):
 
         self.assertNotIn("Spam", self.found_topics("zzqxalice"))
 
+
 class TestDeletedWikiArticles(_SearchTestBase):
     def test_deleted_article_is_not_found(self):
         Article.objects.create(title="Kept", creator=self.user, content="zzqxwiki")
