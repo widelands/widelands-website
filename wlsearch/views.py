@@ -1,8 +1,14 @@
-from django.core.paginator import InvalidPage, Page, Paginator
+from collections.abc import Callable
+from typing import NamedTuple
+
+from django.core.paginator import InvalidPage, Paginator
+from django.contrib.auth.models import User
+from django.db.models import Q, QuerySet
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import WlSearchForm
+from .fulltext import SearchQuery, fulltext_search, substring_search
 from pybb.models import Topic
 from pybb.models import Post as ForumPost
 from wiki.models import Article
@@ -20,30 +26,120 @@ choices = {
 
 RESULTS_PER_PAGE = 50
 
-# The result lists shown for each section checkbox of the search form
+
+class ResultList(NamedTuple):
+    objects: Callable[[], QuerySet]  # All searchable objects
+    search: Callable  # fulltext_search() or substring_search()
+    fields: list[str]  # For fulltext_search() exactly the FULLTEXT index
+    order_by: tuple[str, ...]
+    date_field: str | None = None  # Filtered by the start date, if any
+    also_matches: Callable | None = None  # See fulltext_search()
+
+    def results(self, query, start_date):
+        objects = self.objects()
+        if self.date_field and start_date:
+            objects = objects.filter(**{f"{self.date_field}__gte": start_date})
+        results = self.search(objects, self.fields, query, self.also_matches)
+        return results.order_by(*self.order_by)
+
+
+def _forum_topics():
+    """Topics without hidden posts outside of internal forums."""
+    return (
+        Topic.objects.filter(forum__category__internal=False)
+        .exclude(posts__hidden=True)
+        .select_related("forum", "user")
+    )
+
+
+def _forum_posts():
+    """Visible posts of visible topics outside of internal forums."""
+    return (
+        ForumPost.objects.filter(topic__forum__category__internal=False)
+        .exclude(hidden=True)
+        .exclude(topic__in=Topic.objects.hidden())
+        .select_related("topic__forum", "user")
+    )
+
+
+def _topic_starter(term):
+    """A term also matches the topics started by the user with exactly this
+    name (ignoring case), unless the user deleted their account."""
+    starters = list(
+        User.objects.filter(username__iexact=term.text)
+        .exclude(wlprofile__deleted=True)
+        .values_list("pk", flat=True)
+    )
+    return Q(user__in=starters) if starters else None
+
+
+def _encyclopedia(model):
+    # The encyclopedia is small and its search also matches the tribe name,
+    # so it has no FULLTEXT index.
+    return ResultList(
+        lambda: model.objects.select_related("tribe"),
+        substring_search,
+        ["help", "displayname", "tribe__name"],
+        ("tribe__name", "displayname"),
+    )
+
+
+# The result lists shown for each section checkbox of the search form. The
+# FULLTEXT indexes are created by the wlsearch migrations.
 sections = {
-    "incl_forum": {"topics": Topic, "posts": ForumPost},
-    "incl_wiki": {"wiki": Article},
-    "incl_news": {"news": NewsPost},
-    "incl_maps": {"maps": Map},
-    "incl_help": {"workers": Worker, "wares": Ware, "buildings": Building},
+    "incl_forum": {
+        "topics": ResultList(
+            _forum_topics,
+            fulltext_search,
+            ["name"],
+            ("-created",),
+            "created",
+            _topic_starter,
+        ),
+        "posts": ResultList(
+            _forum_posts, fulltext_search, ["body_text"], ("-created",), "created"
+        ),
+    },
+    "incl_wiki": {
+        "wiki": ResultList(
+            lambda: Article.objects.filter(deleted=False),
+            fulltext_search,
+            ["title", "content", "summary"],
+            ("title",),
+        ),
+    },
+    "incl_news": {
+        "news": ResultList(
+            NewsPost.objects.published,
+            fulltext_search,
+            ["title", "body"],
+            ("-publish",),
+            "publish",
+        ),
+    },
+    "incl_maps": {
+        "maps": ResultList(
+            Map.objects.all,
+            fulltext_search,
+            ["name", "author", "descr", "uploader_comment"],
+            ("name",),
+        ),
+    },
+    "incl_help": {
+        "workers": _encyclopedia(Worker),
+        "wares": _encyclopedia(Ware),
+        "buildings": _encyclopedia(Building),
+    },
 }
 
 
-def _results_page(search_query_set, number):
+def _results_page(results, number):
     """Return the requested page of search results, or None if it does not
-    exist.
-
-    Paginator.page() shortens the slice of the last page, which the Whoosh
-    backend maps to the wrong offset, so always slice whole pages.
-    """
-    paginator = Paginator(search_query_set, RESULTS_PER_PAGE)
+    exist."""
     try:
-        number = paginator.validate_number(number)
+        return Paginator(results, RESULTS_PER_PAGE).page(number)
     except InvalidPage:
         return None
-    bottom = (number - 1) * RESULTS_PER_PAGE
-    return Page(search_query_set[bottom : bottom + RESULTS_PER_PAGE], number, paginator)
 
 
 def search(request):
@@ -86,12 +182,16 @@ def search(request):
             context = {"form": form, "query": form.cleaned_data["q"], "result": {}}
             # Search the models depending on the given sections and add one
             # page of results of each model, if any is found, to the context
+            query = SearchQuery(form.cleaned_data["q"])
+            start_date = form.cleaned_data["start_date"]
             page = request.GET.get("page", 1)
             for section, result_lists in sections.items():
                 if not form.cleaned_data[section]:
                     continue
-                for name, model in result_lists.items():
-                    results = _results_page(form.search(model), page)
+                for name, result_list in result_lists.items():
+                    results = _results_page(
+                        result_list.results(query, start_date), page
+                    )
                     if results:
                         context["result"][name] = results
 

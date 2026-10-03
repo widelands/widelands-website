@@ -11,4 +11,3 @@ templates/robots.txt
 # Uploaded images.
 media/*
 !media/wlprofile/avatars/anonymous.png
-whoosh_index

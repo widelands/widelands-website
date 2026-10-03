@@ -1,19 +1,16 @@
-import shutil
-import tempfile
-from datetime import timedelta
-from unittest import mock
+from datetime import datetime, timedelta
+from unittest import skipUnless
 
 from django.contrib.auth.models import User
-from django.core.management import call_command
-from django.test import SimpleTestCase, TestCase
+from django.db import connection
+from django.test import SimpleTestCase, TransactionTestCase
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.safestring import mark_safe
-from haystack import connections
 
 from news.models import Post as NewsPost
 from pybb.models import Category, Forum, Post, Topic
 from wiki.models import Article
+from wlsearch.fulltext import SearchQuery
 from wlsearch.highlighting import EscapingHighlighter
 
 
@@ -45,29 +42,88 @@ class TestEscapingHighlighter(SimpleTestCase):
             snippet, '...<span class="highlighted">word</span> &lt;&lt;&lt;&lt;&lt;...'
         )
 
+    def test_phrase_words_are_highlighted_and_excluded_words_not(self):
+        snippet = EscapingHighlighter('"main page" -barbarians').highlight(
+            "The main page of the barbarians"
+        )
+        self.assertEqual(
+            snippet,
+            '...<span class="highlighted">main</span> '
+            '<span class="highlighted">page</span> of the barbarians',
+        )
 
-class _SearchTestBase(TestCase):
-    """Searches a Whoosh index in a temporary directory."""
+    def test_words_beginning_with_a_query_word_or_its_stem_are_highlighted(self):
+        snippet = EscapingHighlighter("mining").highlight("Mines determine mining")
+        self.assertEqual(
+            snippet,
+            '<span class="highlighted">Mines</span> determine '
+            '<span class="highlighted">mining</span>',
+        )
+
+
+class TestSearchQuery(SimpleTestCase):
+    def boolean_mode(self, query, ignored=()):
+        return SearchQuery(query).boolean_mode(lambda word: word in ignored)
+
+    def test_words_phrases_and_exclusions(self):
+        self.assertEqual(
+            self.boolean_mode('mine "main page" std::vector -barbarian -"big hut"'),
+            '+mine* +"main page" +"std vector" -barbarian* -"big hut"',
+        )
+
+    def test_operators_in_the_query_are_not_passed_on(self):
+        self.assertEqual(
+            self.boolean_mode('+a* (b) @3 ~c <d >e "f -'),
+            '+a* +b* +3* +c* +d* +e* +"f"',
+        )
+
+    def test_words_also_match_by_their_stem(self):
+        self.assertEqual(
+            self.boolean_mode("Mining buildings settings -Barbarians"),
+            "+(mining* mine*) +build* +settings* -barbarian*",
+        )
+
+    def test_words_missing_from_the_index_are_left_out(self):
+        self.assertEqual(
+            self.boolean_mode('the mines -of "of the" "the hut"', {"the", "of"}),
+            '+mine* +"the hut"',
+        )
+
+    def test_nothing_to_search_for(self):
+        self.assertEqual(self.boolean_mode("the -mines", {"the"}), "")
+        self.assertEqual(self.boolean_mode('- "" -mines'), "")
+
+
+class _SearchTestBase(TransactionTestCase):
+    # MariaDB's FULLTEXT indexes only contain committed rows
+    serialized_rollback = True
 
     def setUp(self):
-        index_dir = tempfile.mkdtemp()
-        self.addCleanup(shutil.rmtree, index_dir)
-        patcher = mock.patch.dict(
-            connections.connections_info["default"], {"PATH": index_dir}
-        )
-        patcher.start()
-        self.addCleanup(patcher.stop)
-        connections.reload("default")
-        self.addCleanup(connections.reload, "default")
         self.user = User.objects.create_user(username="mallory", password="pass")
-
-    def rebuild_index(self):
-        call_command("rebuild_index", interactive=False, verbosity=0)
 
     def search(self, **params):
         response = self.client.get(reverse("search"), params)
         self.assertEqual(response.status_code, 200)
         return response
+
+
+class _ForumSearchTestBase(_SearchTestBase):
+    def setUp(self):
+        super().setUp()
+        category = Category.objects.create(name="General")
+        self.forum = Forum.objects.create(category=category, name="Forum")
+        self.topic = Topic.objects.create(
+            forum=self.forum, name="Topic", user=self.user
+        )
+
+    def post(self, body, **kwargs):
+        return Post.objects.create(
+            topic=self.topic, user=self.user, markup="markdown", body=body, **kwargs
+        )
+
+    def found_posts(self, **params):
+        response = self.search(incl_forum="on", **params)
+        return {post.body for post in response.context["result"].get("posts", [])}
 
 
 class TestSearchSnippetsAreEscaped(_SearchTestBase):
@@ -86,7 +142,6 @@ class TestSearchSnippetsAreEscaped(_SearchTestBase):
             markup="markdown",
             body="zzqxforum `<img src=x onerror=alert(1)//`",
         )
-        self.rebuild_index()
 
         response = self.search(q="zzqxforum", incl_forum="on")
 
@@ -100,7 +155,6 @@ class TestSearchSnippetsAreEscaped(_SearchTestBase):
             creator=self.user,
             content="zzqxwiki\n\n<script><img src=x onerror=alert(2)//</script>\n",
         )
-        self.rebuild_index()
 
         response = self.search(q="zzqxwiki", incl_wiki="on")
 
@@ -112,37 +166,130 @@ class TestSearchSnippetsAreEscaped(_SearchTestBase):
             slug="news",
             author=self.user,
             body="zzqxnews\n\n<script><img src=x onerror=alert(3)//</script>\n",
-            publish=timezone.now() - timedelta(days=1),
+            publish=datetime.now() - timedelta(days=1),
         )
-        self.rebuild_index()
 
         response = self.search(q="zzqxnews", incl_news="on")
 
         self.assertSnippetEscaped(response, "zzqxnews", "<img src=x onerror=alert(3)//")
 
 
-class TestDeletedWikiArticles(_SearchTestBase):
+class TestSearchTerms(_ForumSearchTestBase):
     def setUp(self):
         super().setUp()
-        Article.objects.create(title="Kept", creator=self.user, content="zzqxwiki")
-        self.deleted = Article.objects.create(
-            title="Gone", creator=self.user, content="zzqxwiki"
+        self.post("zzqx mines of the barbarians")
+        self.post("zzqx main page")
+        self.post("zzqx page about the main road")
+
+    def test_all_words_must_match(self):
+        self.assertEqual(
+            self.found_posts(q="zzqx barbarians"), {"zzqx mines of the barbarians"}
         )
 
-    def test_deleted_article_is_not_indexed(self):
-        self.deleted.deleted = True
-        self.deleted.save()
-        self.rebuild_index()
+    def test_words_match_other_forms_of_the_word(self):
+        for query in ("mine", "mining", "Barbarian"):
+            with self.subTest(query=query):
+                self.assertEqual(
+                    self.found_posts(q=query), {"zzqx mines of the barbarians"}
+                )
 
-        response = self.search(q="zzqxwiki", incl_wiki="on")
+    def test_phrases_match_exactly(self):
+        self.assertEqual(self.found_posts(q='"main page"'), {"zzqx main page"})
 
-        self.assertContains(response, "Kept")
-        self.assertNotContains(response, "Gone")
+    def test_excluded_words_must_not_match(self):
+        self.assertEqual(
+            self.found_posts(q="zzqx -barbarians -road"), {"zzqx main page"}
+        )
 
-    def test_article_deleted_after_indexing_is_not_shown(self):
-        self.rebuild_index()
-        self.deleted.deleted = True
-        self.deleted.save()
+    @skipUnless(connection.vendor == "mysql", "FULLTEXT stopwords")
+    def test_words_missing_from_the_index_are_ignored(self):
+        self.assertEqual(
+            self.found_posts(q="the barbarians"), {"zzqx mines of the barbarians"}
+        )
+
+
+class TestForumSearch(_ForumSearchTestBase):
+    def test_start_date(self):
+        self.post("zzqx old", created=datetime.now() - timedelta(days=400))
+        self.post("zzqx new")
+
+        self.assertEqual(
+            self.found_posts(q="zzqx", start_date="2000-01-01"),
+            {"zzqx old", "zzqx new"},
+        )
+        last_month = (datetime.now() - timedelta(days=30)).date().isoformat()
+        self.assertEqual(
+            self.found_posts(q="zzqx", start_date=last_month), {"zzqx new"}
+        )
+
+    def test_hidden_posts_are_not_found(self):
+        self.post("zzqx visible")
+        self.post("zzqx spam", hidden=True)
+
+        self.assertEqual(self.found_posts(q="zzqx"), {"zzqx visible"})
+
+    def test_topics_are_found_by_name(self):
+        Topic.objects.create(forum=self.forum, name="Zzqx topic", user=self.user)
+
+        response = self.search(q="zzqx", incl_forum="on")
+
+        topics = response.context["result"]["topics"]
+        self.assertEqual([topic.name for topic in topics], ["Zzqx topic"])
+
+
+class TestTopicStarter(_ForumSearchTestBase):
+    def setUp(self):
+        super().setUp()
+        self.alice = User.objects.create_user(username="Zzqxalice", password="pass")
+        self.topic_by(self.alice, "Wood economy")
+        self.topic_by(self.alice, "Quarry help")
+        self.topic_by(self.user, "zzqxalice wood tips")
+        self.topic_by(self.user, "Wood stock")
+
+    def topic_by(self, user, name, **post_kwargs):
+        topic = Topic.objects.create(forum=self.forum, name=name, user=user)
+        Post.objects.create(
+            topic=topic, user=user, markup="markdown", body="text", **post_kwargs
+        )
+
+    def found_topics(self, q):
+        response = self.search(q=q, incl_forum="on")
+        return {topic.name for topic in response.context["result"].get("topics", [])}
+
+    def test_every_word_matches_the_name_or_the_starter(self):
+        for query, topics in (
+            ("zzqxalice", {"Wood economy", "Quarry help", "zzqxalice wood tips"}),
+            ("ZZQXALICE wood", {"Wood economy", "zzqxalice wood tips"}),
+            ("wood -zzqxalice", {"Wood stock"}),
+            # Unlike words of the name, the username must match completely
+            ("zzqxali", {"zzqxalice wood tips"}),
+        ):
+            with self.subTest(query=query):
+                self.assertEqual(self.found_topics(query), topics)
+
+    def test_username_with_punctuation(self):
+        self.topic_by(User.objects.create_user(username="zzqx.bob"), "Help")
+
+        self.assertEqual(self.found_topics("zzqx.bob"), {"Help"})
+
+    def test_deleted_users_are_not_found(self):
+        self.alice.wlprofile.deleted = True
+        self.alice.wlprofile.save()
+
+        self.assertEqual(self.found_topics("zzqxalice wood"), {"zzqxalice wood tips"})
+
+    def test_hidden_topics_are_not_found(self):
+        self.topic_by(self.alice, "Spam", hidden=True)
+
+        self.assertNotIn("Spam", self.found_topics("zzqxalice"))
+
+
+class TestDeletedWikiArticles(_SearchTestBase):
+    def test_deleted_article_is_not_found(self):
+        Article.objects.create(title="Kept", creator=self.user, content="zzqxwiki")
+        Article.objects.create(
+            title="Gone", creator=self.user, content="zzqxwiki", deleted=True
+        )
 
         response = self.search(q="zzqxwiki", incl_wiki="on")
 
@@ -158,7 +305,6 @@ class TestSearchResultPages(_SearchTestBase):
             Article(title=f"Article{i}", creator=self.user, content="zzqxwiki")
             for i in range(70)
         )
-        self.rebuild_index()
 
     def titles(self, response):
         return {result.title for result in response.context["result"]["wiki"]}

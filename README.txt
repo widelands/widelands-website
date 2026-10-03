@@ -227,15 +227,6 @@ Then define some notification-types in the admin page for WLADDONS_SETTINGS.
 If a user has uploaded add-on(s) the noticetypes are created for this user if
 he enters his profile page and clicks on the tab 'Add-On Settings'.
 
-Known Dependency Issues
-=======================
-
-The following dependencies require attention for long-term maintenance:
-
-**whoosh (2.7.4)** - Unmaintained since 2016 and emits SyntaxWarnings on python
-3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
-MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
-
 Contact
 =======
 

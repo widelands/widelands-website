@@ -1,3 +1,0 @@
-{{ object.help }}
-{{ object.displayname }}
-{{ object.tribe.name }}

@@ -240,16 +240,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-haystack"
-version = "3.4.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-    { name = "packaging" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/08/00/2fee5c12b650bbc643f0b65ead96b6f7533f5fa76573449f814d820dda6f/django_haystack-3.4.0.tar.gz", hash = "sha256:1226a7c9ce13e1e7ead8ac83f6e87bfef4996f146ed24971fde7896115b1c530", size = 454662, upload-time = "2026-06-04T19:12:33.644Z" }
-
-[[package]]
 name = "django-recaptcha"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -992,15 +982,6 @@ wheels = [
 ]
 
 [[package]]
-name = "whoosh"
-version = "2.7.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/25/2b/6beed2107b148edc1321da0d489afc4617b9ed317ef7b72d4993cad9b684/Whoosh-2.7.4.tar.gz", hash = "sha256:7ca5633dbfa9e0e0fa400d3151a8a0c4bec53bd2ecedc0a67705b17565c31a83", size = 968741, upload-time = "2016-04-04T01:19:32.327Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ba/19/24d0f1f454a2c1eb689ca28d2f178db81e5024f42d82729a4ff6771155cf/Whoosh-2.7.4-py2.py3-none-any.whl", hash = "sha256:aa39c3c3426e3fd107dcb4bde64ca1e276a65a889d9085a6e4b54ba82420a852", size = 468790, upload-time = "2016-04-04T01:19:40.379Z" },
-]
-
-[[package]]
 name = "widelands-website"
 version = "0.1.0"
 source = { virtual = "." }
@@ -1008,7 +989,6 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "django" },
     { name = "django-filter" },
-    { name = "django-haystack" },
     { name = "django-recaptcha" },
     { name = "django-registration" },
     { name = "docutils" },
@@ -1021,8 +1001,8 @@ dependencies = [
     { name = "pillow" },
     { name = "pydot" },
     { name = "python-magic" },
+    { name = "snowballstemmer" },
     { name = "sphinx" },
-    { name = "whoosh" },
 ]
 
 [package.dev-dependencies]
@@ -1036,7 +1016,6 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
     { name = "django", specifier = ">=5.2.17,<5.3" },
     { name = "django-filter", specifier = ">=26.1" },
-    { name = "django-haystack", specifier = ">=3.4.0" },
     { name = "django-recaptcha", specifier = ">=4.1.0" },
     { name = "django-registration", specifier = ">=5.2.1" },
     { name = "docutils", specifier = ">=0.22.4" },
@@ -1049,8 +1028,8 @@ requires-dist = [
     { name = "pillow", specifier = ">=12.3.0" },
     { name = "pydot", specifier = ">=4.0.1" },
     { name = "python-magic", specifier = ">=0.4.27" },
+    { name = "snowballstemmer", specifier = ">=3.1.1" },
     { name = "sphinx", specifier = ">=9.1.0" },
-    { name = "whoosh", specifier = ">=2.7.4" },
 ]
 
 [package.metadata.requires-dev]
