@@ -148,6 +148,9 @@ production systemd units need the same flag and must start
 .venv/bin/gunicorn from the uv environment, since wlwebsite_wsgi.py does not
 activate a virtualenv itself.
 
+The headers and the login throttling nginx has to provide in production are
+described in _ops/nginx.md.
+
 Dependencies between website and widelands source code
 ======================================================
 
