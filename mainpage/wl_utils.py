@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor
 from django.db.models import OneToOneField
 import os
@@ -119,3 +120,16 @@ def is_ajax(request):
     See: https://docs.djangoproject.com/en/4.1/releases/3.1/#id2
     """
     return request.headers.get("x-requested-with") == "XMLHttpRequest"
+
+
+def username_suggestions(term, limit=20, min_length=2):
+    """Active users whose name contains term, for username autocompletion.
+
+    Shorter terms would match nearly every user, so they get no suggestions.
+    """
+    term = term.strip()
+    if len(term) < min_length:
+        return User.objects.none()
+    return User.objects.filter(is_active=True, username__icontains=term).order_by(
+        "username"
+    )[:limit]

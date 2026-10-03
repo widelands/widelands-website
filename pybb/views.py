@@ -27,14 +27,13 @@ from pybb.models import (
     MARKUP_CHOICES,
     Reaction,
 )
-from pybb.orm import load_related
 from pybb.templatetags.pybb_extras import (
     pybb_moderated_by,
     pybb_editable_by,
     pybb_has_unreads,
 )
 from pybb.util import render_to, build_form, quote_text, ajax, urlize, allowed_for
-from mainpage.wl_utils import get_pagination, is_ajax
+from mainpage.wl_utils import get_pagination, is_ajax, username_suggestions
 import math
 from mainpage.validators import check_utf8mb3_preview
 from pybb.notifications import notify, get_mentions, inform_mentioned
@@ -180,7 +179,8 @@ def show_topic_ctx(request, topic_id):
     #     post.user.pybb_profile = profiles[post.user.id]
 
     if pybb_settings.PYBB_ATTACHMENT_ENABLE:
-        load_related(posts, Attachment.objects.all(), "post")
+        # Prefetched when the paginator evaluates the current page only
+        posts = posts.prefetch_related("attachments")
 
     context.update(get_pagination(request, posts, pybb_settings.TOPIC_PAGE_SIZE))
 
@@ -556,9 +556,14 @@ def all_latest_posts(request):
     try:
         search_date = date.today() - timedelta(int(days))
 
-        # Create a QuerySet with only public posts
-        last_posts = Post.objects.public(date_from=search_date)
-
+        # Only public posts, capped, so a large value of days stays cheap
+        last_posts = list(
+            Post.objects.public(date_from=search_date).select_related(
+                "topic__forum", "user__wlprofile"
+            )[: pybb_settings.LAST_POSTS_LIMIT + 1]
+        )
+        truncated = len(last_posts) > pybb_settings.LAST_POSTS_LIMIT
+        last_posts = last_posts[: pybb_settings.LAST_POSTS_LIMIT]
         posts_count = len(last_posts)
 
         if sort_by == "topic":
@@ -591,11 +596,13 @@ def all_latest_posts(request):
         # Needed variables
         object_list = []
         posts_count = 0
+        truncated = False
         sort_by = sort_by_default
 
     return {
         "object_list": object_list,
         "posts_count": posts_count,
+        "truncated": truncated,
         "form": form,
         "sort_by": sort_by,
     }
@@ -639,9 +646,7 @@ def get_tribute_usernames(request):
 
     """
     if is_ajax(request):
-        q = request.GET.get("term", "")
-
-        usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)
+        usernames = username_suggestions(request.GET.get("term", ""))
         results = []
         current_site = get_current_site(request)
         for user in usernames:

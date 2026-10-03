@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import HttpResponse
-from mainpage.wl_utils import is_ajax
+from mainpage.wl_utils import is_ajax, username_suggestions
 import json
 
 
@@ -16,9 +15,7 @@ def get_usernames(request):
 
     """
     if is_ajax(request):
-        q = request.GET.get("term", "")
-
-        usernames = User.objects.exclude(is_active=False).filter(username__icontains=q)
+        usernames = username_suggestions(request.GET.get("term", ""))
         results = []
         for user in usernames:
             name_json = {"value": user.username}
