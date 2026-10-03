@@ -1,0 +1,33 @@
+Vendored django-star-ratings
+============================
+
+This app is a trimmed copy of django-star-ratings 0.9.2
+(https://github.com/wildfish/django-star-ratings, PyPI release
+django-star-ratings 0.9.2), written by Wildfish and contributors. Upstream
+is dormant, so the website carries the code it needs. It is distributed
+under the license in LICENSE.
+
+The app label, the models, their database tables and the migrations are
+unchanged, so existing databases keep working. The swappable rating model
+setting STAR_RATINGS_RATING_MODEL is still honoured.
+
+Local modifications:
+
+- Removed everything the website does not use: anonymous ratings, clearing
+  a rating, deleting a rating by re-rating with the same score, the
+  STAR_RATINGS_ANONYMOUS/CLEARABLE/RERATE/RERATE_SAME_DELETE/STAR_SPRITE/
+  OBJECT_ID_PATTERN settings and their system check, the default widget
+  template, the admin include template, the translations, the JavaScript
+  sources, the Sass sources and the minified JavaScript bundle (the readable
+  bundle static/star-ratings/js/star-ratings.js is served instead).
+- Dropped the dependencies on django-model-utils, django-braces and
+  swapper. UserRating.created/modified are plain DateTimeFields with
+  auto_now_add/auto_now (also in migration 0001); the database columns are
+  the same.
+- The rater IP is no longer recorded; UserRating.ip stays in the schema and
+  is NULL for new ratings. Upstream stored the X-Real-IP header, which is
+  only trustworthy behind a proxy that overwrites it.
+- The rate view only follows a "next" URL on the requesting host and
+  rejects scores outside 1..STAR_RATINGS_RANGE.
+- Dropped default_app_config and Python 2 leftovers; reformatted with
+  black.
