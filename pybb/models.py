@@ -6,7 +6,8 @@ from mainpage.templatetags.wl_markdown import do_wl_markdown
 import os.path
 import hashlib
 
-from django.db import DatabaseError, models
+from django.db import models
+from django.db.models import OuterRef, Subquery
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
@@ -128,7 +129,6 @@ class Forum(models.Model):
 
     @property
     def last_post(self):
-        # This has better performance than using the posts manager hidden_topics
         # We search only for the last 10 topics
         topics = self.topics.order_by("-updated")[:10]
         posts = []
@@ -146,6 +146,19 @@ class Forum(models.Model):
             return None
 
 
+class TopicQuerySet(models.QuerySet):
+    def hidden(self):
+        """Topics whose first post is hidden, see Topic.is_hidden.
+
+        This is a single subquery, so it can be used as a filter, e.g.
+        Post.objects.exclude(topic__in=Topic.objects.hidden()).
+        """
+        first_post = Post.objects.filter(topic=OuterRef("pk")).order_by("created")
+        return self.alias(
+            first_post_hidden=Subquery(first_post.values("hidden")[:1])
+        ).filter(first_post_hidden=True)
+
+
 class Topic(models.Model):
     forum = models.ForeignKey(
         Forum, related_name="topics", verbose_name=_("Forum"), on_delete=models.CASCADE
@@ -160,6 +173,8 @@ class Topic(models.Model):
     subscribers = models.ManyToManyField(
         User, related_name="subscriptions", verbose_name=_("Subscribers"), blank=True
     )
+
+    objects = TopicQuerySet.as_manager()
 
     class Meta:
         ordering = ["-updated"]
@@ -240,34 +255,6 @@ class RenderableItem(models.Model):
         self.body_html = urlize(self.body_html)
 
 
-class HiddenTopicsManager(models.Manager):
-    """Find all hidden topics by posts.
-
-    A whole topic is hidden, if the first post is hidden.
-    This manager returns the hidden topics and can be used to filter them out
-    like so:
-
-    Post.objects.exclude(topic__in=Post.hidden_topics.all()).filter(...)
-
-    Use this with caution, because it affects performance, see:
-    https://docs.djangoproject.com/en/dev/ref/models/querysets/#in
-    """
-
-    def get_queryset(self, *args, **kwargs):
-        qs = super(HiddenTopicsManager, self).get_queryset().filter(hidden=True)
-
-        hidden_topics = []
-        try:
-            for post in qs:
-                if post.topic.is_hidden:
-                    hidden_topics.append(post.topic)
-            return hidden_topics
-        except ObjectDoesNotExist, DatabaseError:
-            # pybb.feeds evaluates this at import time, when the tables may
-            # not exist yet (e.g. before the first migrate).
-            return []
-
-
 class PublicPostsManager(models.Manager):
     def public(self, limit=None, date_from=None):
         """Get public posts.
@@ -283,7 +270,7 @@ class PublicPostsManager(models.Manager):
         qs = (
             self.get_queryset()
             .filter(topic__forum__category__internal=False, hidden=False)
-            .exclude(topic__in=Post.hidden_topics.all())
+            .exclude(topic__in=Topic.objects.hidden())
             .order_by("-created")
         )
 
@@ -316,7 +303,6 @@ class Post(RenderableItem):
     hidden = models.BooleanField(_("Hidden"), blank=True, default=False)
 
     objects = PublicPostsManager()  # Normal manager, extended
-    hidden_topics = HiddenTopicsManager()  # Custom manager
 
     class Meta:
         ordering = ["created"]

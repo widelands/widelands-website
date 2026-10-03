@@ -7,7 +7,7 @@ class ForumSitemap(SitemapHTTPS):
     priority = 0.5
 
     def items(self):
-        return Forum.objects.all()
+        return Forum.objects.filter(category__internal=False)
 
     def lastmod(self, obj):
         return obj.updated

@@ -1,6 +1,5 @@
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.feedgenerator import Atom1Feed
 from pybb.models import Post, Topic, Forum
 
@@ -9,35 +8,29 @@ class PybbFeed(Feed):
     feed_type = Atom1Feed
 
     def title(self, obj):
-        if obj == self.all_objects:
+        if obj is None:
             return self.all_title
-        else:
-            return self.one_title % obj.name
+        return self.one_title % obj.name
 
     def items(self, obj):
-        if obj == self.all_objects:
-            return obj.order_by("-created")[:15]
-        else:
-            return self.items_for_object(obj)
+        qs = self.public_items()
+        if obj is not None:
+            qs = qs.filter(**{self.forum_lookup: obj})
+        return qs.order_by("-created")[:15]
 
     def link(self, obj):
-        if obj == self.all_objects:
+        if obj is None:
             return reverse("pybb_index")
         return reverse("pybb_forum", args=(obj.pk,))
 
     def get_object(self, request, *args, **kwargs):
-        """Implement getting feeds for a specific subforum."""
-        if not "topic_id" in kwargs:
-            # Latest Posts/Topics on all forums
-            return self.all_objects
-        else:
-            # Latest Posts/Topics for specific Forum
-            try:
-                forum = Forum.objects.get(pk=int(kwargs["topic_id"]))
-                return forum
-            except ValueError:
-                pass
-        raise ObjectDoesNotExist
+        """Return the forum of the feed, or None for the feed of all forums.
+
+        Internal forums have no feed: Forum.DoesNotExist results in a 404.
+        """
+        if "topic_id" not in kwargs:
+            return None
+        return Forum.objects.get(pk=kwargs["topic_id"], category__internal=False)
 
     # Must be used for valid Atom feeds
     def item_updateddate(self, obj):
@@ -59,11 +52,10 @@ class LastPosts(PybbFeed):
     title_template = "pybb/feeds/posts_title.html"
     description_template = "pybb/feeds/posts_description.html"
 
-    all_objects = Post.objects.public()
+    forum_lookup = "topic__forum"
 
-    def items_for_object(self, obj):
-        # Latest posts for forum 'xy'
-        return Post.objects.public(limit=15)
+    def public_items(self):
+        return Post.objects.public()
 
 
 # Validated through http://validator.w3.org/feed/
@@ -75,15 +67,9 @@ class LastTopics(PybbFeed):
     title_template = "pybb/feeds/topics_title.html"
     description_template = "pybb/feeds/topics_description.html"
 
-    all_objects = Topic.objects.exclude(forum__category__internal=True).exclude(
-        posts__hidden=True
-    )
+    forum_lookup = "forum"
 
-    def items_for_object(self, item):
-        # Latest topics on forum 'xy'
-        return (
-            Topic.objects.exclude(forum__category__internal=True)
-            .exclude(posts__hidden=True)
-            .filter(forum=item)
-            .order_by("-created")[:15]
+    def public_items(self):
+        return Topic.objects.exclude(forum__category__internal=True).exclude(
+            posts__hidden=True
         )
