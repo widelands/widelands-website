@@ -11,7 +11,8 @@ def delete_objects(modeladmin, request, queryset):
         try:
             obj.content_type.get_object_for_this_type(pk=obj.object_id).delete()
         except ObjectDoesNotExist:
-            # this post was probably deleted elsewhere
+            # this post was probably deleted elsewhere, or the input was
+            # refused and never stored (object_id is None)
             pass
         obj.delete()
 
@@ -19,16 +20,16 @@ def delete_objects(modeladmin, request, queryset):
 @admin.action(description="Unhide posts and inform subscribers")
 def unhide_post(modeladmin, request, queryset):
     for obj in queryset:
-        post_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
-        if obj.content_type.model == "topic":
-            # A topic has no function unhide_post(),
-            # but the first Post object has it
-            # Remember: A topic is hidden if the first post is hidden
-            post_obj = obj.content_type.get_object_for_this_type(
-                pk=obj.object_id
-            ).posts.all()[0]
-
-        post_obj.unhide_post()
+        # None if the input was refused (e.g. a private message) or the
+        # object was deleted elsewhere: there is nothing to unhide.
+        post_obj = obj.content_object
+        if post_obj is not None:
+            if obj.content_type.model == "topic":
+                # A topic has no function unhide_post(),
+                # but the first Post object has it
+                # Remember: A topic is hidden if the first post is hidden
+                post_obj = post_obj.posts.all()[0]
+            post_obj.unhide_post()
         obj.delete()
 
 

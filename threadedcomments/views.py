@@ -2,8 +2,10 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.template import Context, Template
 from django.utils.http import url_has_allowed_host_and_scheme
+from check_input.models import SuspiciousInput
 from threadedcomments.forms import ThreadedCommentForm
 from threadedcomments.models import (
     ThreadedComment,
@@ -145,6 +147,13 @@ def comment(
             new_comment.user = request.user
             new_comment.parent = parent
         new_comment.save()
+        is_spam = SuspiciousInput.check_input(
+            content_object=new_comment, user=request.user, text=new_comment.comment
+        )
+        if is_spam:
+            # Hidden until a moderator unhides it in the check_input admin.
+            new_comment.is_public = False
+            new_comment.save(update_fields=["is_public"])
         if add_messages:
             request.user.message_set.create(
                 message="Your message has been posted successfully."
@@ -162,6 +171,8 @@ def comment(
                     new_comment,
                 ]
             )
+        elif is_spam:
+            return HttpResponseRedirect(reverse("found_spam"))
         else:
             return HttpResponseRedirect(_get_next(request))
     elif ajax == "json":

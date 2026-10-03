@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from django.utils import timezone
 
+from check_input.models import SuspiciousInput, SuspiciousKeyword
 from news.models import Post
 from threadedcomments.models import DEFAULT_MAX_COMMENT_DEPTH, ThreadedComment
 
@@ -140,3 +141,73 @@ class CommentViewTestCase(TestCase):
         tree = ThreadedComment.public.get_tree(self.post)
         self.assertEqual(len(tree), 1500)
         self.assertEqual(tree[-1].depth, 1499)
+
+
+@override_settings(MAX_HIDDEN_POSTS=2)
+class CommentSpamCheckTestCase(TestCase):
+    def setUp(self):
+        SuspiciousKeyword.objects.create(keyword="spamword")
+        self.user = User.objects.create_user(username="user", password="pass")
+        self.post = Post.objects.create(
+            title="News",
+            slug="news",
+            author=self.user,
+            body="Body",
+            publish=timezone.now(),
+        )
+        self.url = reverse(
+            "tc_comment",
+            kwargs={
+                "content_type": ContentType.objects.get_for_model(Post).id,
+                "object_id": self.post.pk,
+            },
+        )
+        self.client.login(username="user", password="pass")
+
+    def _comment(self, text, url=None):
+        return self.client.post(
+            url or self.url, {"comment": text, "markup": 1, "next": "/news/"}
+        )
+
+    def test_spam_comment_is_hidden_and_recorded(self):
+        response = self._comment("buy spamword now")
+        self.assertRedirects(
+            response, reverse("found_spam"), fetch_redirect_response=False
+        )
+        comment = ThreadedComment.objects.get()
+        self.assertFalse(comment.is_public)
+        flagged = SuspiciousInput.objects.get()
+        self.assertEqual(flagged.content_object, comment)
+        self.assertEqual(flagged.user, self.user)
+        self.assertEqual(ThreadedComment.public.get_tree(self.post), [])
+        self.assertEqual(ThreadedComment.public.all_for_object(self.post).count(), 0)
+
+    def test_clean_comment_is_published(self):
+        response = self._comment("nice news")
+        self.assertRedirects(response, "/news/", fetch_redirect_response=False)
+        comment = ThreadedComment.objects.get()
+        self.assertTrue(comment.is_public)
+        self.assertEqual(ThreadedComment.public.get_tree(self.post), [comment])
+        self.assertFalse(SuspiciousInput.objects.exists())
+
+    def test_spam_edit_hides_comment(self):
+        self._comment("nice news")
+        comment = ThreadedComment.objects.get()
+        response = self._comment(
+            "now with spamword",
+            url=reverse("tc_comment_edit", kwargs={"edit_id": comment.id}),
+        )
+        self.assertRedirects(
+            response, reverse("found_spam"), fetch_redirect_response=False
+        )
+        comment.refresh_from_db()
+        self.assertEqual(comment.comment, "now with spamword")
+        self.assertFalse(comment.is_public)
+
+    def test_spam_comments_lock_out_user(self):
+        self._comment("spamword one")
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.is_active)
+        self._comment("spamword two")
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.is_active)
