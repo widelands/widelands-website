@@ -12,9 +12,17 @@ from mainpage.validators import check_utf8mb3
 from django.conf import settings
 import re
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
 
 class EditProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True)
+    current_password = forms.CharField(
+        required=False,
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
+    )
 
     signature = forms.CharField(
         required=False,
@@ -37,6 +45,7 @@ class EditProfileForm(forms.ModelForm):
             "avatar",
             "location",
             "email",
+            "current_password",
             "operating_system",
             "widelands_version",
             "webservice_nick",
@@ -68,10 +77,36 @@ class EditProfileForm(forms.ModelForm):
             )
         return value
 
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        user = self.instance.user
+        # Without this check a hijacked session could set a new address and
+        # take over the account via a password reset.
+        if email and email != user.email:
+            if not user.check_password(cleaned_data.get("current_password")):
+                self.add_error(
+                    "current_password",
+                    "Enter your current password to change your email address.",
+                )
+        return cleaned_data
+
     def save(self, *args, **kwargs):
         super(EditProfileForm, self).save(*args, **kwargs)
 
         u = self.instance.user
+        old_email = u.email
         u.email = self.cleaned_data["email"]
 
         u.save(*args, **kwargs)
+
+        if old_email and old_email != u.email:
+            send_mail(
+                "Your email address on widelands.org was changed",
+                render_to_string(
+                    "wlprofile/email_changed.txt",
+                    {"user": u, "new_email": u.email},
+                ),
+                settings.DEFAULT_FROM_EMAIL,
+                [old_email],
+            )

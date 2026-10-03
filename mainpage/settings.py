@@ -175,6 +175,16 @@ PASSWORD_HASHERS = [
     "wlprofile.hashers.PBKDF2WrappedSHA1PasswordHasher",
 ]
 
+# Checked for new passwords on registration, password change and reset.
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
 ######################
 # Wiki configuration #
 ######################

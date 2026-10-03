@@ -7,6 +7,7 @@ from django_registration.backends.activation.views import RegistrationView
 
 from mainpage.forms import LoginTimezoneForm
 from mainpage.forms import FormWithCaptcha
+from mainpage.registration import ActivationView
 
 admin.autodiscover()
 
@@ -26,6 +27,11 @@ urlpatterns = [
         r"^accounts/register/$",
         RegistrationView.as_view(form_class=FormWithCaptcha),
         name="django_registration_register",
+    ),
+    re_path(
+        r"^accounts/activate/$",
+        ActivationView.as_view(),
+        name="django_registration_activate",
     ),
     re_path(r"^accounts/", include("django_registration.backends.activation.urls")),
     re_path(
