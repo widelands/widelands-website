@@ -116,7 +116,6 @@ INSTALLED_APPS = [
     "documentation",
     "privacy_policy.apps.PrivacyPolicyConfig",
     "wladdons_settings.apps.WladdonsSettingsConfig",
-    "haystack",  # search engine; see option HAYSTACK_CONNECTIONS
     # Modified 3rd party apps
     "wiki.apps.WikiConfig",  # This is based on wikiapp, but has some local modifications
     "news",  # This is based on simple-blog, but has some local modifications
@@ -345,18 +344,6 @@ SMILEYS = [
     (";-)", "face-wink.png"),
     (";)", "face-wink.png"),
 ]
-
-#################
-# Search Config #
-#################
-HAYSTACK_CONNECTIONS = {
-    "default": {
-        "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
-        "PATH": os.path.join(os.path.dirname(__file__), "whoosh_index"),
-    },
-}
-# Escapes the snippets of the {% highlight %} template tag
-HAYSTACK_CUSTOM_HIGHLIGHTER = "wlsearch.highlighting.EscapingHighlighter"
 
 ###########################
 # Widelands SVN directory #

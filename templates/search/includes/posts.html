@@ -2,10 +2,10 @@
 {% load custom_date %}
 {% load wlprofile_extras %}
 
-<a href=" {{ post.post_link }}">Post by {{ post.user|user_status }}</a><span class="small"> @ </span>
- Topic <a href="{{ post.object.topic.get_absolute_url }}">{{ post.object.topic }}</a><span class="small"> @ </span>
- Forum <a href="{{ post.object.topic.forum.get_absolute_url }}">{{ post.object.topic.forum }}</a>,
- {% with post.date as date %}
+<a href=" {{ post.get_absolute_url }}">Post by {{ post.user|user_status }}</a><span class="small"> @ </span>
+ Topic <a href="{{ post.topic.get_absolute_url }}">{{ post.topic }}</a><span class="small"> @ </span>
+ Forum <a href="{{ post.topic.forum.get_absolute_url }}">{{ post.topic.forum }}</a>,
+ {% with post.created as date %}
     {% include 'wlprofile/inlines/date.html' %}
  {% endwith %}<br>
- {% highlight post.body_text with query max_length 100 %}
+ {% highlight post.body_text query max_length=100 %}

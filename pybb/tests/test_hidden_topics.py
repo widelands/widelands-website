@@ -5,9 +5,9 @@ from django.test import TestCase
 from django.urls import reverse
 
 from pybb.models import Category, Forum, Post, Reaction, Topic
-from pybb.search_indexes import PostIndex
 from pybb.sitemap import ForumSitemap
 from pybb.tests.test_views import _ForumTestBase
+from wlsearch.views import sections
 
 
 class _HiddenTopicTestBase(_ForumTestBase):
@@ -61,10 +61,10 @@ class TestHiddenTopicQuerySet(_HiddenTopicTestBase):
             bodies = [p.body for p in Post.objects.public()]
         self.assertEqual(bodies, ["First post"])
 
-    def test_search_index_skips_posts_of_hidden_topics(self):
-        indexed = PostIndex().index_queryset()
-        self.assertNotIn(self.hidden_reply, indexed)
-        self.assertIn(self.topic.posts.first(), indexed)
+    def test_search_skips_posts_of_hidden_topics(self):
+        searchable = sections["incl_forum"]["posts"].objects()
+        self.assertNotIn(self.hidden_reply, searchable)
+        self.assertIn(self.topic.posts.first(), searchable)
 
 
 class TestHiddenTopicViews(_HiddenTopicTestBase):
