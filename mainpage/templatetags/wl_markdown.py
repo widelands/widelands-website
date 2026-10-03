@@ -14,8 +14,9 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 
 from markdown import markdown
+import nh3
+import re
 import urllib.request, urllib.parse, urllib.error
-import bleach
 
 from bs4 import BeautifulSoup, NavigableString
 
@@ -213,6 +214,36 @@ md_configs = {
     "tables": {"use_align_attribute": "True"},
 }
 
+# The start of a tag ("<name" or "</name") as the HTML parser tokenizes it
+_TAG_START = re.compile(r"<(/?)([A-Za-z][^\s/>]*)")
+
+
+def _sanitize(html):
+    """Remove all tags, attributes and URL schemes that are not allowed in the
+    settings.
+
+    nh3 drops disallowed tags, but users often write placeholders like
+    '<username>' or types like 'vector<int>' outside of code blocks. To show
+    them as text, the '<' starting a disallowed tag is escaped first. nh3
+    sanitizes the result, so this pre-pass only turns markup into text and
+    is not needed for safety.
+    """
+    allowed_tags = set(settings.SANITIZER_ALLOWED_TAGS)
+    html = _TAG_START.sub(
+        lambda m: m[0] if m[2].lower() in allowed_tags else f"&lt;{m[1]}{m[2]}",
+        html,
+    )
+    return nh3.clean(
+        html,
+        tags=allowed_tags,
+        attributes={
+            tag: set(attributes)
+            for tag, attributes in settings.SANITIZER_ALLOWED_ATTRIBUTES.items()
+        },
+        url_schemes=set(settings.SANITIZER_ALLOWED_URL_SCHEMES),
+        link_rel=None,
+    )
+
 
 def do_wl_markdown(value, *args, **keyw):
     """Apply wl specific things, like smileys or colored links."""
@@ -222,13 +253,7 @@ def do_wl_markdown(value, *args, **keyw):
 
     # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
     if "bleachit" in args:
-        html = mark_safe(
-            bleach.clean(
-                html,
-                tags=settings.BLEACH_ALLOWED_TAGS,
-                attributes=settings.BLEACH_ALLOWED_ATTRIBUTES,
-            )
-        )
+        html = _sanitize(html)
 
     # Prepare the html and apply smileys and classes.
     soup = BeautifulSoup(html, features="lxml")
@@ -263,7 +288,7 @@ def do_wl_markdown(value, *args, **keyw):
 
 @register.filter
 def wl_markdown(content, arg=""):
-    """A Filter which decides when to 'bleach' the content."""
+    """A Filter which decides when to sanitize the content."""
     if arg == "bleachit":
         return mark_safe(do_wl_markdown(content, "bleachit"))
     else:
