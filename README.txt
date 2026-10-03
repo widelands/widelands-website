@@ -148,6 +148,9 @@ production systemd units need the same flag and must start
 .venv/bin/gunicorn from the uv environment, since wlwebsite_wsgi.py does not
 activate a virtualenv itself.
 
+The headers and the login throttling nginx has to provide in production are
+described in _ops/nginx.md.
+
 Dependencies between website and widelands source code
 ======================================================
 
@@ -223,17 +226,6 @@ in the DATABASES-section in local_settings.py called 'addonserver':
 Then define some notification-types in the admin page for WLADDONS_SETTINGS.
 If a user has uploaded add-on(s) the noticetypes are created for this user if
 he enters his profile page and clicks on the tab 'Add-On Settings'.
-
-Known Dependency Issues
-=======================
-
-The following dependencies require attention for long-term maintenance:
-
-**bleach (6.4.0)** - Unmaintained; the repository was archived in June 2026.
-Migrate to nh3; the allowed tags and attributes live in mainpage/settings.py.
-
-**django-star-ratings, django-tagging, django-messages (fork)** - Archived or
-dormant upstream. Vendor them or replace them (e.g. django-taggit).
 
 Contact
 =======

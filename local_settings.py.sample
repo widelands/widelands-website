@@ -93,8 +93,9 @@ PASSWORD_HASHERS = [
 # SECRET_KEY = "..."  # or set the environment variable DJANGO_SECRET_KEY
 # ALLOWED_HOSTS = ["www.widelands.org", "widelands.org", "wl.widelands.org"]
 # SECURE_HSTS_SECONDS = 31536000
-# Only if nginx sets X-Forwarded-Proto:
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# mainpage/settings.py trusts X-Forwarded-Proto, so the proxy in front of
+# gunicorn must set it (see _ops/nginx.md). Without such a proxy use:
+# SECURE_PROXY_SSL_HEADER = None
 # Remove the test keys from above and the SILENCED_SYSTEM_CHECKS, then check:
 #   uv run ./manage.py check --deploy
 

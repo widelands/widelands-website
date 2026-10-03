@@ -93,6 +93,52 @@ class CommentViewTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertFalse(ThreadedComment.objects.filter(comment="orphan").exists())
 
+    def test_non_commentable_target_rejected(self):
+        self.client.login(username="other", password="pass")
+        user_ct = ContentType.objects.get_for_model(User)
+        response = self.client.post(
+            reverse(
+                "tc_comment",
+                kwargs={"content_type": user_ct.id, "object_id": self.author.pk},
+            ),
+            {"comment": "on user", "markup": 1, "next": "/news/"},
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(ThreadedComment.objects.filter(comment="on user").exists())
+
+    def test_comment_on_map_and_poll(self):
+        from wlmaps.models import Map
+        from wlpoll.models import Poll
+
+        self.client.login(username="other", password="pass")
+        targets = (
+            Map.objects.create(
+                name="M",
+                slug="m",
+                author="a",
+                w=64,
+                h=64,
+                nr_players=2,
+                descr="d",
+                uploader=self.author,
+            ),
+            Poll.objects.create(name="P"),
+        )
+        for obj in targets:
+            ct = ContentType.objects.get_for_model(obj)
+            response = self.client.post(
+                reverse(
+                    "tc_comment", kwargs={"content_type": ct.id, "object_id": obj.pk}
+                ),
+                {"comment": "ok", "markup": 1, "next": "/news/"},
+            )
+            self.assertEqual(response.status_code, 302)
+            self.assertTrue(
+                ThreadedComment.objects.filter(
+                    content_type=ct, object_id=obj.pk, comment="ok"
+                ).exists()
+            )
+
     def test_nesting_is_capped(self):
         parent = self.comment
         for depth in range(1, DEFAULT_MAX_COMMENT_DEPTH):

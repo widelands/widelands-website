@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 logger = logging.getLogger(__name__)
 
 from pybb import settings as pybb_settings
+from mainpage.templatetags.wl_markdown import USER_CONTENT_LINK_REL
 import magic
 import zipfile
 import configparser
@@ -147,7 +148,7 @@ def urlize(data):
                 tag = soup.new_tag("a")
                 tag["href"] = string
                 tag.string = string
-                tag["nofollow"] = "true"
+                tag["rel"] = USER_CONTENT_LINK_REL
                 new_soup.append(tag)
             else:
                 # This is just a string, apply a bs4-string
@@ -256,10 +257,8 @@ def validate_file(attachment):
 
     # Widelands map file
     if ext == "wmf":
-        raise ValidationError(
-            "This seems to be a widelands map file. Please upload \
-            it at our maps section."
-        )
+        raise ValidationError("This seems to be a widelands map file. Please upload \
+            it at our maps section.")
 
     # Widelands savegame (*.wgf) and widelands replay (*.wrpl.wgf)
     # are not the same.

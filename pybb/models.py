@@ -242,7 +242,7 @@ class RenderableItem(models.Model):
         if self.markup == "bbcode":
             self.body_html = mypostmarkup.markup(self.body, auto_urls=False)
         elif self.markup == "markdown":
-            self.body_html = str(do_wl_markdown(self.body, "bleachit"))
+            self.body_html = str(do_wl_markdown(self.body, sanitize=True))
         else:
             raise Exception(f"Invalid markup property: {self.markup}")
 

@@ -514,7 +514,7 @@ def post_ajax_preview(request):
     if markup == "bbcode":
         html = mypostmarkup.markup(content, auto_urls=False)
     elif markup == "markdown":
-        html = str(do_wl_markdown(content, "bleachit"))
+        html = str(do_wl_markdown(content, sanitize=True))
 
     html = urlize(html)
     return {"content": html}

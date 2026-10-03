@@ -38,15 +38,17 @@ Trash - {{ block.super }}
                     {% endwith %}
                 </td>
 				<td>
-					{% if message.sender == request.user %}
-					<a href="{% url 'messages_undelete' message.id %}?next=/messages/outbox/">
-						<img src="{% static 'img/undelete.png' %}" alt="undelete" title="undelete" />
-					</a>
-					{% else %}
-					<a href="{% url 'messages_undelete' message.id %}?next=/messages/inbox/">
-						<img src="{% static 'img/undelete.png' %}" alt="undelete" title="undelete" />
-					</a>
-					{% endif %}
+					<form action="{% url 'messages_undelete' message.id %}" method="post">
+						{% csrf_token %}
+						{% if message.sender == request.user %}
+						<input type="hidden" name="next" value="{% url 'messages_outbox' %}" />
+						{% else %}
+						<input type="hidden" name="next" value="{% url 'messages_inbox' %}" />
+						{% endif %}
+						<button class="iconButton" type="submit" title="undelete">
+							<img src="{% static 'img/undelete.png' %}" alt="undelete" />
+						</button>
+					</form>
 				</td>
 			</tr>
 		{% endfor %}

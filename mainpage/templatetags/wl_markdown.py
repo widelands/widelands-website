@@ -14,8 +14,9 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 
 from markdown import markdown
+import nh3
+import re
 import urllib.request, urllib.parse, urllib.error
-import bleach
 
 from bs4 import BeautifulSoup, NavigableString
 
@@ -170,7 +171,7 @@ def _classify_link(tag):
     return None
 
 
-def _make_clickable_images(tag):
+def _make_clickable_images(tag, rel=None):
     # is external link?
     if tag["src"].startswith("http"):
         # Do not change if it is already a link
@@ -178,6 +179,8 @@ def _make_clickable_images(tag):
             # add link to image
             new_link = BeautifulSoup(features="lxml").new_tag("a")
             new_link["href"] = tag["src"]
+            if rel:
+                new_link["rel"] = rel
             new_img = BeautifulSoup(features="lxml").new_tag("img")
             new_img["src"] = tag["src"]
             try:
@@ -213,22 +216,50 @@ md_configs = {
     "tables": {"use_align_attribute": "True"},
 }
 
+# The start of a tag ("<name" or "</name") as the HTML parser tokenizes it
+_TAG_START = re.compile(r"<(/?)([A-Za-z][^\s/>]*)")
 
-def do_wl_markdown(value, *args, **keyw):
-    """Apply wl specific things, like smileys or colored links."""
+# Links in user content get no ranking credit from search engines.
+USER_CONTENT_LINK_REL = "nofollow ugc"
 
-    beautify = keyw.pop("beautify", True)
+
+def _sanitize(html):
+    """Remove all tags, attributes and URL schemes that are not allowed in the
+    settings, and mark all links with USER_CONTENT_LINK_REL.
+
+    nh3 drops disallowed tags, but users often write placeholders like
+    '<username>' or types like 'vector<int>' outside of code blocks. To show
+    them as text, the '<' starting a disallowed tag is escaped first. nh3
+    sanitizes the result, so this pre-pass only turns markup into text and
+    is not needed for safety.
+    """
+    allowed_tags = set(settings.SANITIZER_ALLOWED_TAGS)
+    html = _TAG_START.sub(
+        lambda m: m[0] if m[2].lower() in allowed_tags else f"&lt;{m[1]}{m[2]}",
+        html,
+    )
+    return nh3.clean(
+        html,
+        tags=allowed_tags,
+        attributes={
+            tag: set(attributes)
+            for tag, attributes in settings.SANITIZER_ALLOWED_ATTRIBUTES.items()
+        },
+        url_schemes=set(settings.SANITIZER_ALLOWED_URL_SCHEMES),
+        link_rel=USER_CONTENT_LINK_REL,
+    )
+
+
+def do_wl_markdown(value, *, sanitize=False, beautify=True):
+    """Apply wl specific things, like smileys or colored links.
+
+    sanitize: set for content from untrusted users (forum, wiki, maps,
+    comments): removes disallowed HTML and marks links as user content.
+    """
     html = markdown(value, extensions=md_extensions, extension_configs=md_configs)
 
-    # Sanitize posts from potencial untrusted users (Forum/Wiki/Maps)
-    if "bleachit" in args:
-        html = mark_safe(
-            bleach.clean(
-                html,
-                tags=settings.BLEACH_ALLOWED_TAGS,
-                attributes=settings.BLEACH_ALLOWED_ATTRIBUTES,
-            )
-        )
+    if sanitize:
+        html = _sanitize(html)
 
     # Prepare the html and apply smileys and classes.
     soup = BeautifulSoup(html, features="lxml")
@@ -252,7 +283,9 @@ def do_wl_markdown(value, *args, **keyw):
         # All external images gets clickable
         # This applies only in forum
         for tag in soup.find_all("img"):
-            new_tag = _make_clickable_images(tag)
+            new_tag = _make_clickable_images(
+                tag, rel=USER_CONTENT_LINK_REL if sanitize else None
+            )
             if new_tag:
                 tag.replace_with(new_tag)
 
@@ -263,8 +296,8 @@ def do_wl_markdown(value, *args, **keyw):
 
 @register.filter
 def wl_markdown(content, arg=""):
-    """A Filter which decides when to 'bleach' the content."""
-    if arg == "bleachit":
-        return mark_safe(do_wl_markdown(content, "bleachit"))
-    else:
-        return mark_safe(do_wl_markdown(content))
+    """Render markdown; use wl_markdown:"sanitize" for untrusted content."""
+    if arg not in ("", "sanitize"):
+        # A typo must not silently skip the sanitizer.
+        raise ValueError(f'wl_markdown: unknown argument "{arg}"')
+    return mark_safe(do_wl_markdown(content, sanitize=arg == "sanitize"))
