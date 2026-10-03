@@ -9,6 +9,7 @@ import hashlib
 from django.db import DatabaseError, models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
@@ -375,16 +376,9 @@ class Post(RenderableItem):
             for attach in self.attachments.all():
                 attach.delete()
 
-        # Deleting a hidden post should also delete the SuspiciousInput
-        # Toggling a topics visibility sets post.hidden to false,
-        # make sure to have a SuspiciousInput object in this case
-        try:
-            susp_obj = SuspiciousInput.objects.get(object_id=self.id)
-        except ObjectDoesNotExist:
-            susp_obj = None
-
-        if self.hidden or susp_obj:
-            susp_obj.delete()
+        # Deleting a post also deletes its SuspiciousInput. Toggling a topics
+        # visibility can unhide a post that still has one.
+        self.suspicious_inputs().delete()
 
         super(Post, self).delete(*args, **kwargs)
 
@@ -394,8 +388,13 @@ class Post(RenderableItem):
         if self_id == head_post_id:
             self.topic.delete()
 
+    def suspicious_inputs(self):
+        return SuspiciousInput.objects.filter(
+            content_type=ContentType.objects.get_for_model(Post), object_id=self.pk
+        )
+
     def is_spam(self):
-        return SuspiciousInput.objects.filter(object_id=self.pk).exists()
+        return self.suspicious_inputs().exists()
 
     def reaction_users(self):
         """Get reactions with users for this post.

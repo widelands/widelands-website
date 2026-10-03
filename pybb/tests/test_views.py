@@ -278,6 +278,35 @@ class TestPostIsSpam(_ForumTestBase):
             )
         self.assertTrue(post.is_spam())
 
+    def _flag(self, model, object_id):
+        return SuspiciousInput.objects.create(
+            text="spam",
+            user=self.regular_user,
+            content_type=ContentType.objects.get_for_model(model),
+            object_id=object_id,
+        )
+
+    def test_input_of_another_model_with_same_id_is_not_spam(self):
+        post = self.topic.posts.first()
+        self._flag(Topic, post.pk)
+        self.assertFalse(post.is_spam())
+
+    def test_delete_keeps_input_of_another_model_with_same_id(self):
+        reply = Post.objects.create(
+            topic=self.topic, user=self.regular_user, body="Reply", hidden=True
+        )
+        topic_input = self._flag(Topic, reply.pk)
+        self._flag(Post, reply.pk)
+        reply.delete()
+        self.assertEqual(list(SuspiciousInput.objects.all()), [topic_input])
+
+    def test_delete_hidden_post_without_input(self):
+        reply = Post.objects.create(
+            topic=self.topic, user=self.regular_user, body="Reply", hidden=True
+        )
+        reply.delete()
+        self.assertFalse(Post.objects.filter(pk=reply.pk).exists())
+
 
 class TestShowAttachment(_ForumTestBase):
     def test_missing_file_is_404(self):

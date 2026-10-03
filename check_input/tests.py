@@ -1,5 +1,7 @@
+from django.contrib.auth import SESSION_KEY
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, override_settings
+from django.urls import reverse
 
 from pybb.models import Category, Forum, Topic, Post
 from .models import SuspiciousInput
@@ -102,3 +104,61 @@ class SuspiciousModelTests(TestCase):
             SuspiciousInput._meta.get_field("text").max_length,
             msg="Test with spam at END failed",
         )
+
+
+@override_settings(MAX_HIDDEN_POSTS=2)
+class SpamLockoutTests(TestCase):
+    def setUp(self):
+        SuspiciousKeyword.objects.create(keyword="spamword")
+        self.user = User.objects.create_user("spammer", password="pass")
+        category = Category.objects.create(name="General")
+        forum = Forum.objects.create(category=category, name="Forum")
+        self.topic = Topic.objects.create(forum=forum, name="Topic", user=self.user)
+        self.post = Post.objects.create(topic=self.topic, user=self.user, body="Hi")
+
+    def _flag(self):
+        return SuspiciousInput.check_input(
+            content_object=self.post, user=self.user, text="spamword"
+        )
+
+    def test_check_input_deactivates_user_at_limit(self):
+        self.assertTrue(self._flag())
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.is_active)
+        self.assertTrue(self._flag())
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.is_active)
+
+    def test_lockout_does_not_need_the_redirect(self):
+        self.client.force_login(self.user)
+        url = reverse("pybb_add_post", args=[self.topic.id])
+        for _ in range(2):
+            response = self.client.post(
+                url, {"body": "buy spamword", "markup": "markdown"}
+            )
+            self.assertRedirects(response, "/moderated/", fetch_redirect_response=False)
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.is_active)
+
+    def test_moderated_page_warns_before_limit(self):
+        self.client.force_login(self.user)
+        self._flag()
+        response = self.client.get("/moderated/")
+        self.assertContains(response, "The next time you will get logged out")
+        self.assertIn(SESSION_KEY, self.client.session)
+
+    def test_moderated_page_logs_out_locked_user(self):
+        self.client.force_login(self.user)
+        self._flag()
+        self._flag()
+        response = self.client.get("/moderated/")
+        self.assertContains(response, "You can't login anymore")
+        self.assertNotIn(SESSION_KEY, self.client.session)
+
+    def test_moderated_page_without_flagged_input_redirects(self):
+        self.client.force_login(self.user)
+        response = self.client.get("/moderated/")
+        self.assertRedirects(response, "/", fetch_redirect_response=False)
+        self.client.logout()
+        response = self.client.get("/moderated/")
+        self.assertRedirects(response, "/", fetch_redirect_response=False)

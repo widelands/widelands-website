@@ -110,8 +110,24 @@ class SuspiciousInput(models.Model):
                 user_input.save()
             except ValidationError:
                 pass
+            else:
+                user_input.lock_out_user()
 
         return is_spam
+
+    def lock_out_user(self):
+        """Deactivate the user once MAX_HIDDEN_POSTS inputs were flagged.
+
+        This runs right after saving the flagged input, so it does not depend
+        on the client following the redirect to the moderation info page.
+        """
+        user = self.user
+        if not user.is_active:
+            return
+        flagged = SuspiciousInput.objects.filter(user=user).count()
+        if flagged >= settings.MAX_HIDDEN_POSTS:
+            user.is_active = False
+            user.save(update_fields=["is_active"])
 
 
 class SuspiciousKeywordManager(models.Manager):
