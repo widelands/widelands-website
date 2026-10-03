@@ -1,9 +1,15 @@
 from django.contrib.auth import SESSION_KEY
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
+from django_messages.models import Message
 
+from news.models import Post as NewsPost
 from pybb.models import Category, Forum, Topic, Post
+from threadedcomments.models import ThreadedComment
+from .admin import delete_objects, unhide_post
 from .models import SuspiciousInput
 from .models import SuspiciousKeyword
 
@@ -162,3 +168,35 @@ class SpamLockoutTests(TestCase):
         self.client.logout()
         response = self.client.get("/moderated/")
         self.assertRedirects(response, "/", fetch_redirect_response=False)
+
+
+class ModerationActionTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("spammer")
+        self.post = NewsPost.objects.create(
+            title="News",
+            slug="news",
+            author=self.user,
+            body="Body",
+            publish=timezone.now(),
+        )
+
+    def test_unhide_comment(self):
+        comment = ThreadedComment.objects.create(
+            content_object=self.post, user=self.user, comment="x", is_public=False
+        )
+        SuspiciousInput.objects.create(content_object=comment, user=self.user, text="x")
+        unhide_post(None, None, SuspiciousInput.objects.all())
+        comment.refresh_from_db()
+        self.assertTrue(comment.is_public)
+        self.assertFalse(SuspiciousInput.objects.exists())
+
+    def test_actions_on_refused_message(self):
+        message_type = ContentType.objects.get_for_model(Message)
+        for action in (unhide_post, delete_objects):
+            SuspiciousInput.objects.create(
+                content_type=message_type, user=self.user, text="x"
+            )
+            action(None, None, SuspiciousInput.objects.all())
+            self.assertFalse(SuspiciousInput.objects.exists())
+        self.assertTrue(User.objects.filter(pk=self.user.pk).exists())

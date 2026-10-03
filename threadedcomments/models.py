@@ -76,7 +76,7 @@ class ThreadedCommentManager(models.Manager):
         """
         content_type = ContentType.objects.get_for_model(content_object)
         children = list(
-            self.get_query_set()
+            self.get_queryset()
             .filter(
                 content_type=content_type,
                 object_id=getattr(content_object, "pk", getattr(content_object, "id")),
@@ -140,7 +140,7 @@ class PublicThreadedCommentManager(ThreadedCommentManager):
     (in other words, ``is_public = True``).
     """
 
-    def get_query_set(self):
+    def get_queryset(self):
         return (
             super(ThreadedCommentManager, self)
             .get_queryset()
@@ -220,6 +220,14 @@ class ThreadedComment(models.Model):
         """Wrapper around the GenericForeignKey due to compatibility reasons
         and due to ``list_display`` limitations."""
         return self.content_object
+
+    def unhide_post(self):
+        """Publish a comment hidden by the spam check.
+
+        Called by the unhide action of the check_input admin.
+        """
+        self.is_public = True
+        self.save(update_fields=["is_public"])
 
     class Meta:
         ordering = ("-date_submitted",)

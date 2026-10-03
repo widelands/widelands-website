@@ -21,6 +21,10 @@ class SuspiciousInput(models.Model):
         is_suspicious = SuspiciousInput.check_input(content_object=post,
     user=post.user, text=post.body)
 
+        Input that is refused instead of being stored hidden (e.g. private
+        messages) passes content_type instead of content_object, so the
+        record has no object_id.
+
     """
 
     text = models.CharField(max_length=200, verbose_name="suspicious user input")
@@ -30,7 +34,7 @@ class SuspiciousInput(models.Model):
     content_type = models.ForeignKey(
         ContentType, verbose_name="related model", on_delete=models.CASCADE
     )
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey("content_type", "object_id")
 
     class Meta:

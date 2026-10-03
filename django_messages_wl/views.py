@@ -1,7 +1,25 @@
+from functools import partial
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django_messages import views as messages_views
+from django_messages_wl.forms import ExtendedComposeForm
 from mainpage.wl_utils import is_ajax, username_suggestions
 import json
+
+
+@login_required
+def compose(request, *args, **kwargs):
+    """django_messages' compose with a form that knows the sender."""
+    form_class = partial(ExtendedComposeForm, sender=request.user)
+    return messages_views.compose(request, *args, form_class=form_class, **kwargs)
+
+
+@login_required
+def reply(request, *args, **kwargs):
+    """django_messages' reply with a form that knows the sender."""
+    form_class = partial(ExtendedComposeForm, sender=request.user)
+    return messages_views.reply(request, *args, form_class=form_class, **kwargs)
 
 
 @login_required
