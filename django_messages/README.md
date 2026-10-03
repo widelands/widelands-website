@@ -18,8 +18,10 @@ extensions live in `django_messages_wl`, and the templates in
   in `templates/django_messages/`), the pinax notification templates and
   hooks, the translations (`USE_I18N = False`), the `inbox_count` template
   tag, `format_subject()`, the unused `management.py` and
-  `delete_deleted_messages` command, `signals.py`, the tests, the docs and
-  the packaging files.
+  `delete_deleted_messages` command, `signals.py`, the upstream tests, the
+  docs and the packaging files.
 - Removed compatibility code for old Django versions and the django-mailer
   fallback; uses `django.contrib.auth.get_user_model()` directly.
 - Reformatted with black.
+- `delete` and `undelete` accept only POST requests, and the `next`
+  redirect of `delete`, `undelete` and `compose` must point to this site.

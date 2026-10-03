@@ -35,6 +35,14 @@ td.msg_box {
 	width: 100%;
 }
 
+/* Delete/undelete are POST forms; show their buttons as plain icons. */
+.messages button.iconButton,
+.messages button.iconButton:hover {
+	padding: 0px;
+	border: none;
+	background: none;
+}
+
 /******************************************/
 /* Styles for autocompletion of usernames */
 /******************************************/
