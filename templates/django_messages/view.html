@@ -38,5 +38,8 @@ View - {{ block.super }}
 		{{ context.deleted_email_address }}
 		<button type="button" onclick="location.href='{% url 'messages_reply' message.id %}';">{% trans "Reply" %}</button>
 	{% endif %}
-	<button type="button" onclick="location.href='{% url 'messages_delete' message.id %}';">{% trans "Delete" %}</button>
+	<form action="{% url 'messages_delete' message.id %}" method="post">
+		{% csrf_token %}
+		<button type="submit">{% trans "Delete" %}</button>
+	</form>
 {% endblock %}
