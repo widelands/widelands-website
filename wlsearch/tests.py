@@ -237,6 +237,52 @@ class TestForumSearch(_ForumSearchTestBase):
         self.assertEqual([topic.name for topic in topics], ["Zzqx topic"])
 
 
+class TestTopicStarter(_ForumSearchTestBase):
+    def setUp(self):
+        super().setUp()
+        self.alice = User.objects.create_user(username="Zzqxalice", password="pass")
+        self.topic_by(self.alice, "Wood economy")
+        self.topic_by(self.alice, "Quarry help")
+        self.topic_by(self.user, "zzqxalice wood tips")
+        self.topic_by(self.user, "Wood stock")
+
+    def topic_by(self, user, name, **post_kwargs):
+        topic = Topic.objects.create(forum=self.forum, name=name, user=user)
+        Post.objects.create(
+            topic=topic, user=user, markup="markdown", body="text", **post_kwargs
+        )
+
+    def found_topics(self, q):
+        response = self.search(q=q, incl_forum="on")
+        return {topic.name for topic in response.context["result"].get("topics", [])}
+
+    def test_every_word_matches_the_name_or_the_starter(self):
+        for query, topics in (
+            ("zzqxalice", {"Wood economy", "Quarry help", "zzqxalice wood tips"}),
+            ("ZZQXALICE wood", {"Wood economy", "zzqxalice wood tips"}),
+            ("wood -zzqxalice", {"Wood stock"}),
+            # Unlike words of the name, the username must match completely
+            ("zzqxali", {"zzqxalice wood tips"}),
+        ):
+            with self.subTest(query=query):
+                self.assertEqual(self.found_topics(query), topics)
+
+    def test_username_with_punctuation(self):
+        self.topic_by(User.objects.create_user(username="zzqx.bob"), "Help")
+
+        self.assertEqual(self.found_topics("zzqx.bob"), {"Help"})
+
+    def test_deleted_users_are_not_found(self):
+        self.alice.wlprofile.deleted = True
+        self.alice.wlprofile.save()
+
+        self.assertEqual(self.found_topics("zzqxalice wood"), {"zzqxalice wood tips"})
+
+    def test_hidden_topics_are_not_found(self):
+        self.topic_by(self.alice, "Spam", hidden=True)
+
+        self.assertNotIn("Spam", self.found_topics("zzqxalice"))
+
 class TestDeletedWikiArticles(_SearchTestBase):
     def test_deleted_article_is_not_found(self):
         Article.objects.create(title="Kept", creator=self.user, content="zzqxwiki")

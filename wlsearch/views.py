@@ -2,7 +2,8 @@ from collections.abc import Callable
 from typing import NamedTuple
 
 from django.core.paginator import InvalidPage, Paginator
-from django.db.models import QuerySet
+from django.contrib.auth.models import User
+from django.db.models import Q, QuerySet
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -32,12 +33,14 @@ class ResultList(NamedTuple):
     fields: list[str]  # For fulltext_search() exactly the FULLTEXT index
     order_by: tuple[str, ...]
     date_field: str | None = None  # Filtered by the start date, if any
+    also_matches: Callable | None = None  # See fulltext_search()
 
     def results(self, query, start_date):
         objects = self.objects()
         if self.date_field and start_date:
             objects = objects.filter(**{f"{self.date_field}__gte": start_date})
-        return self.search(objects, self.fields, query).order_by(*self.order_by)
+        results = self.search(objects, self.fields, query, self.also_matches)
+        return results.order_by(*self.order_by)
 
 
 def _forum_topics():
@@ -59,6 +62,17 @@ def _forum_posts():
     )
 
 
+def _topic_starter(term):
+    """A term also matches the topics started by the user with exactly this
+    name (ignoring case), unless the user deleted their account."""
+    starters = list(
+        User.objects.filter(username__iexact=term.text)
+        .exclude(wlprofile__deleted=True)
+        .values_list("pk", flat=True)
+    )
+    return Q(user__in=starters) if starters else None
+
+
 def _encyclopedia(model):
     # The encyclopedia is small and its search also matches the tribe name,
     # so it has no FULLTEXT index.
@@ -75,7 +89,12 @@ def _encyclopedia(model):
 sections = {
     "incl_forum": {
         "topics": ResultList(
-            _forum_topics, fulltext_search, ["name"], ("-created",), "created"
+            _forum_topics,
+            fulltext_search,
+            ["name"],
+            ("-created",),
+            "created",
+            _topic_starter,
         ),
         "posts": ResultList(
             _forum_posts, fulltext_search, ["body_text"], ("-created",), "created"

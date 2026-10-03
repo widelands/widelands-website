@@ -28,6 +28,8 @@ class Term(NamedTuple):
     is_phrase: bool
     # For a single word: the beginnings of the words it matches
     prefixes: tuple[str, ...] = ()
+    # The term as typed, without '-' and quotes
+    text: str = ""
 
 
 class SearchQuery:
@@ -49,7 +51,7 @@ class SearchQuery:
             if not words:
                 continue
             if phrase or len(words) > 1:
-                term = Term(words, True)
+                term = Term(words, True, text=phrase or word)
             else:
                 word = words[0].lower()
                 stem = stemmer.stemWord(word)
@@ -59,7 +61,7 @@ class SearchQuery:
                     prefixes = (stem,)
                 else:
                     prefixes = (word, stem)
-                term = Term(words, False, prefixes)
+                term = Term(words, False, prefixes, word)
             (self.excluded if minus else self.required).append(term)
 
     @property
@@ -70,9 +72,10 @@ class SearchQuery:
             for word in (term.words if term.is_phrase else term.prefixes)
         }
 
-    def boolean_mode(self, ignored):
+    def boolean_mode(self, ignored, required=None, excluded=None):
         """Return the query for MATCH() ... AGAINST(... IN BOOLEAN MODE).
 
+        By default all terms are used, required and excluded give subsets.
         Words that are not in the index (see _ignored_words) are left out:
         MariaDB finds nothing if a required word is not in the index.
         """
@@ -88,10 +91,12 @@ class SearchQuery:
                         prefixes = f"({prefixes})"
                     yield f"{operator}{prefixes}"
 
-        required = list(terms("+", self.required))
+        required = self.required if required is None else required
+        excluded = self.excluded if excluded is None else excluded
+        required = list(terms("+", required))
         if not required:
             return ""
-        return " ".join(required + list(terms("-", self.excluded)))
+        return " ".join(required + list(terms("-", excluded)))
 
 
 @cache
@@ -131,18 +136,23 @@ class Match(Lookup):
         )
 
 
-def substring_search(queryset, fields, query):
+def substring_search(queryset, fields, query, also_matches=None):
     """Return the rows of queryset in which every required term is a substring
     of one of the fields, and no excluded term is. For a word, any of its
     prefixes is enough.
+
+    also_matches(term) may return a Q of further rows that match the term,
+    see fulltext_search().
     """
 
     def matches(term):
         texts = [" ".join(term.words)] if term.is_phrase else term.prefixes
-        return reduce(
+        condition = reduce(
             or_,
             (Q(**{f"{field}__icontains": text}) for field in fields for text in texts),
         )
+        alternative = also_matches and also_matches(term)
+        return condition | alternative if alternative else condition
 
     if not query.required:
         return queryset.none()
@@ -152,14 +162,49 @@ def substring_search(queryset, fields, query):
     return queryset
 
 
-def fulltext_search(queryset, fields, query):
+def fulltext_search(queryset, fields, query, also_matches=None):
     """Return the rows of queryset whose fields match the query.
 
     The fields must be exactly the columns of one FULLTEXT index.
+
+    also_matches(term) may return a Q of further rows that match the term, or
+    None. Such a term matches a row if the fields match it or the Q does:
+    for a required term the row is found, for an excluded term it is left
+    out. The other terms stay in one MATCH(), which uses the index.
     """
     if connections[queryset.db].vendor != "mysql":
-        return substring_search(queryset, fields, query)
-    against = query.boolean_mode(_ignored_words(queryset.db))
-    if not against:
+        return substring_search(queryset, fields, query, also_matches)
+    ignored = _ignored_words(queryset.db)
+    alternatives = {}
+    if also_matches:
+        for term in query.required + query.excluded:
+            alternatives[term] = also_matches(term)
+
+    def match(required, excluded=()):
+        against = query.boolean_mode(ignored, required, excluded)
+        return Q(Match(*fields, against=against)) if against else None
+
+    def text_only(terms):
+        return [term for term in terms if alternatives.get(term) is None]
+
+    conditions = []
+    against = match(text_only(query.required), text_only(query.excluded))
+    if against:
+        conditions.append(against)
+    for term in query.required:
+        if alternatives.get(term) is not None and (term_match := match([term])):
+            # A word missing from the index is left out, like in the MATCH()
+            conditions.append(term_match | alternatives[term])
+    if not conditions:
         return queryset.none()
-    return queryset.filter(Match(*fields, against=against))
+    queryset = queryset.filter(*conditions)
+    for term in query.excluded:
+        alternative = alternatives.get(term)
+        if alternative is not None:
+            term_match = match([term])
+            queryset = queryset.exclude(term_match | alternative if term_match else alternative)
+        elif not against:
+            # The MATCH() above has no required words to exclude this from
+            if term_match := match([term]):
+                queryset = queryset.exclude(term_match)
+    return queryset
