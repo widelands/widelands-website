@@ -1,0 +1,24 @@
+{% extends 'pybb/base.html' %}
+{% load pybb_extras %}
+
+{% block title %}
+{{ topic.name }} - {{ topic.forum.name }} - {{ block.super }}
+{% endblock title %}
+
+{% block content_header %}
+    <h1>Topic: {{ topic }}</h1>
+{% endblock %}
+
+{% block content_section %}
+<section class="blogEntry">
+    <div class="breadCrumb">
+        <a href="{% url 'pybb_index' %}">Forums</a> &#187;
+        {% pybb_link topic.forum.category %} &#187;
+        <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a> &#187;
+        {{ topic }}
+    </div>
+
+    <p>This topic is hidden. It is either waiting for a review or was hidden by a
+        moderator.</p>
+</section>
+{% endblock %}

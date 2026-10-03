@@ -7,12 +7,13 @@ from collections import OrderedDict
 from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.db.models import F
 from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from mainpage.templatetags.wl_markdown import do_wl_markdown
 from pybb import settings as pybb_settings
@@ -132,6 +133,13 @@ def show_topic_ctx(request, topic_id):
     if topic.forum.category.internal and not allowed_for(request.user):
         raise Http404()
 
+    if topic.is_hidden and not pybb_moderated_by(topic, request.user):
+        # Only moderators may read a hidden topic. Its author only learns that
+        # the topic awaits review.
+        if topic.user == request.user:
+            return render(request, "pybb/topic_pending.html", {"topic": topic})
+        raise Http404()
+
     Topic.objects.filter(pk=topic.pk).update(views=F("views") + 1)
     topic.views += 1
 
@@ -212,6 +220,9 @@ def add_post_ctx(request, forum_id, topic_id):
     if (forum or topic.forum).category.internal and not allowed_for(request.user):
         raise Http404()
 
+    if topic and topic.is_hidden and not pybb_moderated_by(topic, request.user):
+        raise Http404()
+
     if topic and topic.closed:
         return HttpResponseRedirect(topic.get_absolute_url())
 
@@ -279,10 +290,19 @@ add_post = render_to("pybb/add_post.html")(add_post_ctx)
 
 
 def show_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    post = get_object_or_404(
+        Post.objects.select_related("topic__forum__category"), pk=post_id
+    )
+    topic = post.topic
+    if topic.forum.category.internal and not allowed_for(request.user):
+        raise Http404()
+    if (post.hidden or topic.is_hidden) and not pybb_moderated_by(topic, request.user):
+        raise Http404()
 
     # Reaction on a post
-    if request.POST:
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
         form = ReactionForm(request.POST)
         if form.is_valid():
             try:

@@ -52,11 +52,12 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
         return Post
 
     def index_queryset(self, using=None):
-        """Do not index hidden posts."""
+        """Do not index hidden posts and posts of hidden topics."""
         return (
             self.get_model()
             .objects.filter(topic__forum__category__internal=False)
             .exclude(hidden=True)
+            .exclude(topic__in=Topic.objects.hidden())
         )
 
     def get_updated_field(self):
