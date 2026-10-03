@@ -70,6 +70,22 @@ class TestPasswordChange(TestCase):
         self.assertTrue(self.user.check_password("another long passphrase"))
 
 
+class TestPasswordReset(TestCase):
+    def test_reset_link_uses_https_behind_proxy(self):
+        User.objects.create_user("user", "user@example.com", STRONG_PASSWORD)
+
+        response = self.client.post(
+            reverse("password_reset"),
+            {"email": "user@example.com"},
+            headers={"x-forwarded-proto": "https"},
+        )
+
+        self.assertRedirects(response, reverse("password_reset_done"))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("https://", mail.outbox[0].body)
+        self.assertNotIn("http://", mail.outbox[0].body)
+
+
 class TestActivation(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(

@@ -148,6 +148,9 @@ production systemd units need the same flag and must start
 .venv/bin/gunicorn from the uv environment, since wlwebsite_wsgi.py does not
 activate a virtualenv itself.
 
+The headers and the login throttling nginx has to provide in production are
+described in _ops/nginx.md.
+
 Dependencies between website and widelands source code
 ======================================================
 
@@ -232,12 +235,6 @@ The following dependencies require attention for long-term maintenance:
 **whoosh (2.7.4)** - Unmaintained since 2016 and emits SyntaxWarnings on python
 3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
 MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
-
-**bleach (6.4.0)** - Unmaintained; the repository was archived in June 2026.
-Migrate to nh3; the allowed tags and attributes live in mainpage/settings.py.
-
-**django-star-ratings, django-tagging, django-messages (fork)** - Archived or
-dormant upstream. Vendor them or replace them (e.g. django-taggit).
 
 Contact
 =======

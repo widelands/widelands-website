@@ -1,0 +1,27 @@
+Vendored django-tagging
+=======================
+
+This app is a trimmed copy of django-tagging 0.5.1
+(https://github.com/jazzband/django-tagging, release wheel
+django_tagging-0.5.1-py3-none-any.whl), originally written by Jonathan
+Buchanan and later maintained by Julien Fache (Fantomas42) and Jazzband.
+Upstream is archived, so the website carries the code it needs. It is
+distributed under the license in LICENSE.
+
+The app label, the models, their database tables and the migrations are
+unchanged, so existing databases keep working.
+
+Local modifications:
+
+- Removed everything the website does not use: tag clouds, usage and
+  related-tag queries, model registration (registry.py, managers.py),
+  generic.py, the tagged object intersection/union/related queries and
+  the template tags other than tags_for_object, as well as the upstream
+  test suite.
+- TaggedObjectList takes the tag name from the URL, builds its queryset
+  with the ORM instead of QuerySet.extra() and raw SQL, and no longer
+  offers related tags.
+- Accessing TagField on the model class returns the field instead of
+  running a tag usage query.
+- Dropped default_app_config and Python 2 leftovers; reformatted with
+  black.

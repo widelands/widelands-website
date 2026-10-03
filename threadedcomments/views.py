@@ -14,6 +14,13 @@ from threadedcomments.models import (
 )
 from threadedcomments.utils import JSONResponse, XMLResponse
 
+# Models whose pages render a comment section, as (app_label, model).
+COMMENTABLE_MODELS = {
+    ("news", "post"),
+    ("wlmaps", "map"),
+    ("wlpoll", "poll"),
+}
+
 
 def _adjust_max_comment_length(form, field_name="comment"):
     """Sets the maximum comment length to that default specified in the
@@ -118,6 +125,8 @@ def comment(
     else:
         instance = None
         ct = get_object_or_404(ContentType, id=int(content_type))
+        if (ct.app_label, ct.model) not in COMMENTABLE_MODELS:
+            raise Http404
         target_model = ct.model_class()
         if target_model is None or not (
             target_model._default_manager.filter(pk=int(object_id)).exists()

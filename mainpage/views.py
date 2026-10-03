@@ -198,7 +198,7 @@ def developers(request):
         txt = txt + "Couldn't find developer file!"
 
     # The translator credits come from Transifex, so sanitize the result
-    txt = do_wl_markdown(txt, "bleachit", beautify=False)
+    txt = do_wl_markdown(txt, sanitize=True, beautify=False)
 
     return render(request, "mainpage/developers.html", {"developers": txt})
 

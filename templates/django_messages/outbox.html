@@ -32,9 +32,13 @@ Outbox - {{ block.super }}
                     {% endwith %}
                 </td>
 				<td>
-					<a href="{% url 'messages_delete' message.id %}?next={{ request.path|iriencode }}">
-						<img src="{% static 'img/delete.png' %}" alt="delete" title="delete" />
-					</a>
+					<form action="{% url 'messages_delete' message.id %}" method="post">
+						{% csrf_token %}
+						<input type="hidden" name="next" value="{{ request.path }}" />
+						<button class="iconButton" type="submit" title="delete">
+							<img src="{% static 'img/delete.png' %}" alt="delete" />
+						</button>
+					</form>
 				</td>
 			</tr>
 		{% endfor %}

@@ -79,6 +79,12 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
+# gunicorn only listens on a unix socket behind nginx, and nginx overwrites
+# X-Forwarded-Proto with the real scheme (see _ops/nginx.md), so the header
+# can be trusted. Without it request.is_secure() is False and e.g. password
+# reset mails link to http://.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 ROOT_URLCONF = "mainpage.urls"
 
 # List of finder classes that know how to find static files in
@@ -385,11 +391,11 @@ INQUIRY_RECIPIENTS = [
     ("peter", "peter@example.com"),
 ]
 
-##########################################
-## Allowed tags/attributes for 'bleach' ##
-## Used for sanitizing user input.      ##
-##########################################
-BLEACH_ALLOWED_TAGS = [
+#############################################
+## Allowed tags/attributes/URL schemes for ##
+## sanitizing user input with nh3.         ##
+#############################################
+SANITIZER_ALLOWED_TAGS = [
     "a",
     "abbr",
     "acronym",
@@ -430,12 +436,13 @@ BLEACH_ALLOWED_TAGS = [
 ]
 # Note: DO NOT allow style here. See
 # https://github.com/advisories/GHSA-vqhp-cxgc-6wmm
-BLEACH_ALLOWED_ATTRIBUTES = {
+SANITIZER_ALLOWED_ATTRIBUTES = {
     "img": ["src", "alt"],
     "a": ["href"],
     "td": ["align"],
     "*": ["class", "id", "title"],
 }
+SANITIZER_ALLOWED_URL_SCHEMES = ["http", "https", "mailto"]
 
 ###########################
 # Settings for displaying #
