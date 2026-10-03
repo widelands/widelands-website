@@ -79,6 +79,12 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
+# gunicorn only listens on a unix socket behind nginx, and nginx overwrites
+# X-Forwarded-Proto with the real scheme (see _ops/nginx.md), so the header
+# can be trusted. Without it request.is_secure() is False and e.g. password
+# reset mails link to http://.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 ROOT_URLCONF = "mainpage.urls"
 
 # List of finder classes that know how to find static files in
