@@ -1,0 +1,11 @@
+{% autoescape off %}Hi {{ user.username }},
+
+the email address of your account "{{ user.username }}" on widelands.org was
+changed to {{ new_email }}.
+
+If you did not do this, please contact an administrator via our contact form:
+https://www.widelands.org/legal_notice/
+
+Greetings,
+The Widelands Development Team
+{% endautoescape %}

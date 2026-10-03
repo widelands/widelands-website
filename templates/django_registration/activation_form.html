@@ -31,7 +31,14 @@ Activation - {{ block.super }}
             <a href="/legal_notice/">contact form</a>.
         </p>
         {% endfor %}
-        {% if activation_error %}
+        {% if activation_error.code == "account_disabled" %}
+        <!-- User was banned or deleted the account -->
+        <p>
+            <span class="errormessage">{{ activation_error.message }}</span> If you
+            think this is a mistake, contact an administrator via our
+            <a href="/legal_notice/">contact form</a>.
+        </p>
+        {% elif activation_error %}
         <!-- User already registered -->
         <p>
             <span class="errormessage">{{ activation_error.message }}</span> Please try

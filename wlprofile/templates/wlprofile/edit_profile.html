@@ -44,6 +44,9 @@
                         alt="Info" title="Examples: IRC/NickName, Facebook/NickName,
                             Youtube/NickName, ...">
                     {% endif %}
+                    {% if field.name == "current_password" %}
+                    Only needed to change your email address
+                    {% endif %}
                     {% if field.name == "time_zone" %}
                     Your local time zone offset from <a
                         href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>
