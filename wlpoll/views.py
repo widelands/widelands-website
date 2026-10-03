@@ -1,3 +1,5 @@
+from django.db import IntegrityError, transaction
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import (
@@ -31,13 +33,20 @@ def vote(request, object_id, next=None):
     if user.poll_votes.filter(poll=p):
         return HttpResponseForbidden("Can't vote more than once")
 
-    if not p.is_closed() and "choice_id" in request.POST:
-        c = get_object_or_404(Choice, pk=int(request.POST["choice_id"]), poll=p)
+    try:
+        choice_id = int(request.POST["choice_id"])
+    except KeyError, ValueError:
+        choice_id = None
 
-        c.votes += 1
-        c.save()
+    if not p.is_closed() and choice_id is not None:
+        c = get_object_or_404(Choice, pk=choice_id, poll=p)
 
-        v = Vote.objects.create(user=user, poll=p, choice=c)
-        v.save()
+        try:
+            with transaction.atomic():
+                Vote.objects.create(user=user, poll=p, choice=c)
+                Choice.objects.filter(pk=c.pk).update(votes=F("votes") + 1)
+        except IntegrityError:
+            # A parallel request of this user has voted already
+            return HttpResponseForbidden("Can't vote more than once")
 
     return HttpResponseRedirect(reverse("wlpoll_detail", args=(p.id,)))
