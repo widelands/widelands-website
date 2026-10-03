@@ -92,6 +92,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.topics %}
         {% endif %}
         {% if result.posts %}
         <h3>Posts:</h3>
@@ -102,6 +103,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.posts %}
         {% endif %}
         {% endif%}
         {% if result.wiki %}
@@ -113,6 +115,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.wiki %}
         {% endif %}
         {% if result.news %}
         <h2>News:</h2>
@@ -123,6 +126,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.news %}
         {% endif %}
         {% if result.maps %}
         <h2>Maps:</h2>
@@ -133,6 +137,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.maps %}
         {% endif %}
         {% if result.workers or result.buildings or result.wares %}
         <h2>Encylopedia:</h2>
@@ -145,6 +150,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.workers %}
         {% endif %}
         {% if result.wares %}
         <h3>Wares:</h3>
@@ -155,6 +161,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.wares %}
         {% endif %}
         {% if result.buildings %}
         <h3>Buildings:</h3>
@@ -165,6 +172,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% include "search/includes/pagination.html" with page_obj=result.buildings %}
         {% endif %}
         {% endif %} {# Encyclopedia #}
         {% else %}

@@ -1,3 +1,4 @@
+from django.core.paginator import InvalidPage, Page, Paginator
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -16,6 +17,33 @@ choices = {
     "News": "incl_news",
     "Maps": "incl_maps",
 }
+
+RESULTS_PER_PAGE = 50
+
+# The result lists shown for each section checkbox of the search form
+sections = {
+    "incl_forum": {"topics": Topic, "posts": ForumPost},
+    "incl_wiki": {"wiki": Article},
+    "incl_news": {"news": NewsPost},
+    "incl_maps": {"maps": Map},
+    "incl_help": {"workers": Worker, "wares": Ware, "buildings": Building},
+}
+
+
+def _results_page(search_query_set, number):
+    """Return the requested page of search results, or None if it does not
+    exist.
+
+    Paginator.page() shortens the slice of the last page, which the Whoosh
+    backend maps to the wrong offset, so always slice whole pages.
+    """
+    paginator = Paginator(search_query_set, RESULTS_PER_PAGE)
+    try:
+        number = paginator.validate_number(number)
+    except InvalidPage:
+        return None
+    bottom = (number - 1) * RESULTS_PER_PAGE
+    return Page(search_query_set[bottom : bottom + RESULTS_PER_PAGE], number, paginator)
 
 
 def search(request):
@@ -56,41 +84,16 @@ def search(request):
         form = WlSearchForm(request.GET)
         if form.is_valid() and form.cleaned_data["q"] != "":
             context = {"form": form, "query": form.cleaned_data["q"], "result": {}}
-            # Search the models depending on the given section
-            # Add search results, if any is found, to the context
-            if form.cleaned_data["incl_forum"]:
-                topic_results = [x for x in form.search(Topic)]
-                post_results = [x for x in form.search(ForumPost)]
-                if len(topic_results):
-                    context["result"].update({"topics": topic_results})
-                if len(post_results):
-                    context["result"].update({"posts": post_results})
-
-            if form.cleaned_data["incl_wiki"]:
-                wiki_results = [x for x in form.search(Article)]
-                if len(wiki_results):
-                    context["result"].update({"wiki": wiki_results})
-
-            if form.cleaned_data["incl_news"]:
-                news_results = [x for x in form.search(NewsPost)]
-                if len(news_results):
-                    context["result"].update({"news": news_results})
-
-            if form.cleaned_data["incl_maps"]:
-                map_results = [x for x in form.search(Map)]
-                if len(map_results):
-                    context["result"].update({"maps": map_results})
-
-            if form.cleaned_data["incl_help"]:
-                worker_results = [x for x in form.search(Worker)]
-                ware_results = [x for x in form.search(Ware)]
-                building_results = [x for x in form.search(Building)]
-                if len(worker_results):
-                    context["result"].update({"workers": worker_results})
-                if len(ware_results):
-                    context["result"].update({"wares": ware_results})
-                if len(building_results):
-                    context["result"].update({"buildings": building_results})
+            # Search the models depending on the given sections and add one
+            # page of results of each model, if any is found, to the context
+            page = request.GET.get("page", 1)
+            for section, result_lists in sections.items():
+                if not form.cleaned_data[section]:
+                    continue
+                for name, model in result_lists.items():
+                    results = _results_page(form.search(model), page)
+                    if results:
+                        context["result"][name] = results
 
             return render(request, "search/search.html", context)
 

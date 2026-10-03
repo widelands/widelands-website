@@ -342,6 +342,8 @@ HAYSTACK_CONNECTIONS = {
         "PATH": os.path.join(os.path.dirname(__file__), "whoosh_index"),
     },
 }
+# Escapes the snippets of the {% highlight %} template tag
+HAYSTACK_CUSTOM_HIGHLIGHTER = "wlsearch.highlighting.EscapingHighlighter"
 
 ###########################
 # Widelands SVN directory #

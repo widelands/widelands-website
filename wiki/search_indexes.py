@@ -29,5 +29,9 @@ class ArticleIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Article
 
+    def index_queryset(self, using=None):
+        """Do not index deleted articles."""
+        return self.get_model().objects.filter(deleted=False)
+
     def get_updated_field(self):
         return "last_update"

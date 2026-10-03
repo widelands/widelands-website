@@ -1,0 +1,17 @@
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    <span class="summary">
+        <strong>{{ page_obj.start_index }}</strong> &mdash;
+        <strong>{{ page_obj.end_index }}</strong> of
+        <strong>{{ page_obj.paginator.count }}</strong> results
+    </span>
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% querystring page=page_obj.previous_page_number %}">&laquo; previous</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="{% querystring page=page_obj.next_page_number %}">next &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
