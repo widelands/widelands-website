@@ -236,14 +236,6 @@ The following dependencies require attention for long-term maintenance:
 3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
 MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
 
-django-tagging 0.5.1 is vendored as the tagging app; see tagging/README.
-
-django-star-ratings 0.9.2 is vendored as the star_ratings app; see
-star_ratings/README.
-
-The django-messages fork is vendored as the django_messages app; see
-django_messages/README.md.
-
 Contact
 =======
 
