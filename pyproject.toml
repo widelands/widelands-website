@@ -8,7 +8,6 @@ dependencies = [
     # Django LTS policy (README.txt): stay on the 5.2.x series.
     "django>=5.2.17,<5.3",
     "beautifulsoup4>=4.14.3",
-    "bleach>=6.4.0",
     "django-filter>=26.1",
     "django-haystack>=3.4.0",
     "django-recaptcha>=4.1.0",
@@ -20,6 +19,7 @@ dependencies = [
     "markdown>=3.11",
     "mdx-wikilink-plus>=1.4.1",
     "mysqlclient>=2.3.0",
+    "nh3>=0.3.7",
     "pillow>=12.3.0",
     "pydot>=4.0.1",
     "python-magic>=0.4.27",

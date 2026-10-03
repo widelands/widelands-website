@@ -391,11 +391,11 @@ INQUIRY_RECIPIENTS = [
     ("peter", "peter@example.com"),
 ]
 
-##########################################
-## Allowed tags/attributes for 'bleach' ##
-## Used for sanitizing user input.      ##
-##########################################
-BLEACH_ALLOWED_TAGS = [
+#############################################
+## Allowed tags/attributes/URL schemes for ##
+## sanitizing user input with nh3.         ##
+#############################################
+SANITIZER_ALLOWED_TAGS = [
     "a",
     "abbr",
     "acronym",
@@ -436,12 +436,13 @@ BLEACH_ALLOWED_TAGS = [
 ]
 # Note: DO NOT allow style here. See
 # https://github.com/advisories/GHSA-vqhp-cxgc-6wmm
-BLEACH_ALLOWED_ATTRIBUTES = {
+SANITIZER_ALLOWED_ATTRIBUTES = {
     "img": ["src", "alt"],
     "a": ["href"],
     "td": ["align"],
     "*": ["class", "id", "title"],
 }
+SANITIZER_ALLOWED_URL_SCHEMES = ["http", "https", "mailto"]
 
 ###########################
 # Settings for displaying #

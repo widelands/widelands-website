@@ -89,8 +89,7 @@ def auto_transform_markup(comment):
 
     """
 
-    # Franku: bleach the comment
-    return do_wl_markdown(comment.comment, "bleachit")
+    return do_wl_markdown(comment.comment, sanitize=True)
 
 
 def do_auto_transform_markup(parser, token):

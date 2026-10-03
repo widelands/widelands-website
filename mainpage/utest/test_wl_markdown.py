@@ -19,7 +19,7 @@ import unittest
 from wiki.models import Article
 from django.test import TestCase as DBTestCase
 
-from ..templatetags.wl_markdown import do_wl_markdown
+from ..templatetags.wl_markdown import do_wl_markdown, wl_markdown
 
 
 class TestWlMarkdown(DBTestCase):
@@ -237,14 +237,22 @@ Value 3 | Value 4
         self._check(input, wanted)
 
 
-class TestWlMarkdownBleached(DBTestCase):
+class TestWlMarkdownSanitized(DBTestCase):
+    def assertSanitized(self, cases):
+        for value, wanted in cases:
+            with self.subTest(value=value):
+                res = do_wl_markdown(value, sanitize=True, beautify=False)
+                self.assertEqual(res, wanted)
+
     def test_raw_script_block_stays_escaped(self):
-        res = do_wl_markdown("Before\n\n<script>alert(1)</script>\n\nAfter", "bleachit")
+        res = do_wl_markdown(
+            "Before\n\n<script>alert(1)</script>\n\nAfter", sanitize=True
+        )
         self.assertNotIn("<script", res)
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", res)
 
     def test_smiley_and_entities_next_to_escaped_text(self):
-        res = do_wl_markdown("<iframe src=x></iframe>\n\na < b & c :)", "bleachit")
+        res = do_wl_markdown("<iframe src=x></iframe>\n\na < b & c :)", sanitize=True)
         self.assertEqual(
             res,
             '&lt;iframe src=x&gt;&lt;/iframe&gt;\n\n<p>a &lt; b &amp; c <img alt=":)" '
@@ -255,10 +263,132 @@ class TestWlMarkdownBleached(DBTestCase):
         res = do_wl_markdown(
             "<details><summary>Spoiler</summary>hidden</details>\n\n"
             "<dl><dt>Term</dt><dd>Definition</dd></dl>",
-            "bleachit",
+            sanitize=True,
         )
         self.assertIn("<details><summary>Spoiler</summary>hidden</details>", res)
         self.assertIn("<dl><dt>Term</dt><dd>Definition</dd></dl>", res)
+
+    def test_unsafe_attributes_and_url_schemes_are_removed(self):
+        self.assertSanitized(
+            [
+                ("<img src=x onerror=alert(1)>", '<p><img src="x"/></p>'),
+                (
+                    "[x](javascript:alert(1)) "
+                    '<a href="JaVaScRiPt:alert(1)">y</a> '
+                    '<a href="&#106;avascript:alert(1)">z</a>',
+                    '<p><a rel="nofollow ugc">x</a> <a rel="nofollow ugc">y</a> '
+                    '<a rel="nofollow ugc">z</a></p>',
+                ),
+                (
+                    '<img src="data:image/svg+xml;base64,PHN2Zz4=" alt="d">',
+                    '<p><img alt="d"/></p>',
+                ),
+                (
+                    '<p style="background:url(x)" class="c" id="i" title="t">s</p>',
+                    '<p class="c" id="i" title="t">s</p>',
+                ),
+                (
+                    '<a href="/wiki/Foo" onclick="alert(1)">wiki</a> '
+                    '<a href="mailto:a@b.c">mail</a> <a href="ftp://x/y">ftp</a>',
+                    '<p><a href="/wiki/Foo" rel="nofollow ugc">wiki</a> '
+                    '<a href="mailto:a@b.c" rel="nofollow ugc">mail</a> '
+                    '<a rel="nofollow ugc">ftp</a></p>',
+                ),
+            ]
+        )
+
+    def test_disallowed_tags_are_shown_as_text(self):
+        self.assertSanitized(
+            [
+                (
+                    "Saves are in C:/Documents and Settings/<Username>/.widelands",
+                    "<p>Saves are in C:/Documents and Settings/&lt;Username&gt;"
+                    "/.widelands</p>",
+                ),
+                (
+                    "clear(boost::shared_ptr<Widelands::Pathfields> const&) <grin>",
+                    "<p>clear(boost::shared_ptr&lt;Widelands::Pathfields&gt; "
+                    "const&amp;) &lt;grin&gt;</p>",
+                ),
+                (
+                    "<SCRIPT>alert(1)</SCRIPT> <script/x>alert(1)</script>",
+                    "&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;\n"
+                    "<p>&lt;script/x&gt;alert(1)&lt;/script&gt;\n</p>",
+                ),
+                (
+                    "<scr<script>ipt>alert(1)</script>",
+                    "<p>&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/script&gt;</p>",
+                ),
+                (
+                    "```\n<b>not bold</b>\n```",
+                    "<pre><code>&lt;b&gt;not bold&lt;/b&gt;\n</code></pre>",
+                ),
+            ]
+        )
+
+    def test_markup_cannot_be_smuggled_through_parser_quirks(self):
+        self.assertSanitized(
+            [
+                (
+                    "<svg><script>alert(1)</script></svg>",
+                    "<p>&lt;svg&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;/svg&gt;</p>",
+                ),
+                (
+                    "<math><mi><mglyph><style><img src=x onerror=alert(1)>"
+                    "</style></mglyph></mi></math>",
+                    "&lt;math&gt;&lt;mi&gt;&lt;mglyph&gt;&lt;style&gt;"
+                    '<img src="x"/>&lt;/style&gt;&lt;/mglyph&gt;&lt;/mi&gt;&lt;/math&gt;',
+                ),
+                (
+                    '<noscript><p title="</noscript><img src=x onerror=alert(1)>">',
+                    '&lt;noscript&gt;<p title="&lt;/noscript&gt;&lt;img src=x '
+                    'onerror=alert(1)&gt;"></p>',
+                ),
+                ("<!--<script>alert(1)</script>-->", ""),
+            ]
+        )
+
+    def test_table_alignment_is_kept(self):
+        self.assertSanitized(
+            [
+                (
+                    "| a | b |\n|:-:|--:|\n| 1 | 2 |",
+                    "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n"
+                    '<tbody>\n<tr>\n<td align="center">1</td>\n'
+                    '<td align="right">2</td>\n</tr>\n</tbody>\n</table>',
+                ),
+            ]
+        )
+
+    def test_user_content_links_are_nofollow_ugc(self):
+        self.assertSanitized(
+            [
+                (
+                    "[a](https://example.org/) "
+                    '<a href="https://example.org/" rel="follow">b</a>',
+                    '<p><a href="https://example.org/" rel="nofollow ugc">a</a> '
+                    '<a href="https://example.org/" rel="nofollow ugc">b</a></p>',
+                ),
+            ]
+        )
+        # External images become links after sanitizing; they are user
+        # content too.
+        res = do_wl_markdown("![i](https://example.org/i.png)", sanitize=True)
+        self.assertEqual(
+            res,
+            '<p><a href="https://example.org/i.png" rel="nofollow ugc">'
+            '<img alt="i" src="https://example.org/i.png"/></a></p>',
+        )
+
+    def test_trusted_content_links_have_no_rel(self):
+        res = do_wl_markdown("[a](/wiki/list) ![i](https://example.org/i.png)")
+        self.assertNotIn("rel=", res)
+
+    def test_filter_rejects_unknown_argument(self):
+        # A typo must not render untrusted content unsanitized.
+        with self.assertRaises(ValueError):
+            wl_markdown("<script>x</script>", "bleachit")
+        self.assertNotIn("<script", wl_markdown("<script>x</script>", "sanitize"))
 
 
 if __name__ == "__main__":
