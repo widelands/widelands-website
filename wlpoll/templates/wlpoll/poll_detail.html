@@ -38,7 +38,9 @@
 
 {% block content_section %}
 <section class="blogEntry">
-    <div id="chartContainer" style="width: 100%; height: 400px"></div>
+    <div id="chartContainer" style="position: relative; width: 100%; height: 450px; background: #fff">
+        <canvas id="pollChart" role="img" aria-label="Poll results: {{ object.name }}"></canvas>
+    </div>
     {% display_poll object %}
     <hr/>
     {% get_comment_count for object as ccount %}
