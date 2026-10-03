@@ -350,19 +350,22 @@ class Post(RenderableItem):
 
     def unhide_post(self):
         """Unhide post(s) and inform subscribers."""
+        # pybb.notifications imports this module
+        from pybb.notifications import new_topic_subscribers, topic_subscribers
+
         self.hidden = False
         self.save()
         if self.topic.post_count == 1:
             # The topic is new
             send(
-                User.objects.all(),
+                new_topic_subscribers(self),
                 "forum_new_topic",
                 {"topic": self.topic, "post": self, "user": self.topic.user},
             )
         else:
             # Inform topic subscribers
             send(
-                self.topic.subscribers.all(),
+                topic_subscribers(self),
                 "forum_new_post",
                 {"post": self, "topic": self.topic, "user": self.user},
             )

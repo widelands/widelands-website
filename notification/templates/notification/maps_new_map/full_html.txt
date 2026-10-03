@@ -1,4 +1,3 @@
-{% autoescape off %}
 {% load i18n %}<p>A new map has been uploaded to the Website by {{ user }}:</p>
 {% blocktrans %}
 <p>Mapname: {{ mapname }}</p>
@@ -6,4 +5,4 @@
 
 <hr>
 <p><a href="https://{{ current_site }}{{ url }}">Link to map "{{ mapname }}"</a></p>
-{% endblocktrans %}{% endautoescape %}
+{% endblocktrans %}
