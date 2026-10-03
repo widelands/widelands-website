@@ -236,12 +236,13 @@ MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
 **bleach (6.4.0)** - Unmaintained; the repository was archived in June 2026.
 Migrate to nh3; the allowed tags and attributes live in mainpage/settings.py.
 
-**django-messages (fork)** - Dormant upstream. Vendor it or replace it.
-
 django-tagging 0.5.1 is vendored as the tagging app; see tagging/README.
 
 django-star-ratings 0.9.2 is vendored as the star_ratings app; see
 star_ratings/README.
+
+The django-messages fork is vendored as the django_messages app; see
+django_messages/README.md.
 
 Contact
 =======

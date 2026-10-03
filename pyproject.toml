@@ -11,7 +11,6 @@ dependencies = [
     "bleach>=6.4.0",
     "django-filter>=26.1",
     "django-haystack>=3.4.0",
-    "django-messages",
     "django-recaptcha>=4.1.0",
     "django-registration>=5.2.1",
     # Sphinx 9.1 caps docutils below 0.23.
@@ -45,6 +44,3 @@ constraint-dependencies = [
     "sqlparse>=0.6.0",
     "urllib3>=2.8.0",
 ]
-
-[tool.uv.sources]
-django-messages = { git = "https://github.com/frankystone/django-messages.git", rev = "8f6605be2e4f4c05817ed9922c0011aaedf18f57" }
