@@ -13,18 +13,18 @@
             <span class="posRight">
 				<a href="/wiki/WikiSyntax" title="Opens new Tab/Window" target="_blank">
 					<img src="{% static 'img/menu_help.png' %}" alt="Help on Syntax"
-                         class="middle">
+                         class="middle" />
 					Help on Syntax
 				</a>
 			</span>
             {{ form.uploader_comment }}
         </div>
         {% if form.uploader_comment.errors %}
-            <span class="errormessage">{{ form.uploader_comment.errors }}</span><br/>
+            <span class="errormessage">{{ form.uploader_comment.errors }}</span><br />
         {% endif %}
         {% csrf_token %}
         <button type="submit">
-            <img src="{% static 'forum/img/send.png' %}" alt="Submit" class="middle"/>
+            <img src="{% static 'forum/img/send.png' %}" alt="Submit" class="middle" />
             <span class="middle">Submit</span>
         </button>
     </form>
