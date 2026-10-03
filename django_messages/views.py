@@ -5,11 +5,24 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 
 from django_messages.forms import ComposeForm
 from django_messages.models import Message
 from django_messages.utils import format_quote
+
+
+def _redirect_url(request, next_url, default):
+    """Return ``next_url`` if it points to this site, else ``default``."""
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return next_url
+    return default
 
 
 @login_required
@@ -98,8 +111,7 @@ def compose(
             messages.info(request, _("Message successfully sent."))
             if success_url is None:
                 success_url = reverse("messages_inbox")
-            if "next" in request.GET:
-                success_url = request.GET["next"]
+            success_url = _redirect_url(request, request.GET.get("next"), success_url)
             return HttpResponseRedirect(success_url)
     else:
         form = form_class(initial={"subject": request.GET.get("subject", "")})
@@ -175,6 +187,7 @@ def reply(
 
 
 @login_required
+@require_POST
 def delete(request, message_id, success_url=None):
     """
     Marks a message as deleted by sender or recipient. The message is not
@@ -184,8 +197,9 @@ def delete(request, message_id, success_url=None):
     deleted by both users.
     As a side effect, this makes it easy to implement a trash with undelete.
 
-    You can pass ?next=/foo/bar/ via the url to redirect the user to a different
-    page (e.g. `/foo/bar/`) than ``success_url`` after deletion of the message.
+    You can POST next=/foo/bar/ to redirect the user to a different page on
+    this site (e.g. `/foo/bar/`) than ``success_url`` after deletion of the
+    message.
     """
     user = request.user
     now = timezone.now()
@@ -193,8 +207,7 @@ def delete(request, message_id, success_url=None):
     deleted = False
     if success_url is None:
         success_url = reverse("messages_inbox")
-    if "next" in request.GET:
-        success_url = request.GET["next"]
+    success_url = _redirect_url(request, request.POST.get("next"), success_url)
     if message.sender == user:
         message.sender_deleted_at = now
         deleted = True
@@ -209,18 +222,19 @@ def delete(request, message_id, success_url=None):
 
 
 @login_required
+@require_POST
 def undelete(request, message_id, success_url=None):
     """
     Recovers a message from trash. This is achieved by removing the
-    ``(sender|recipient)_deleted_at`` from the model.
+    ``(sender|recipient)_deleted_at`` from the model. Accepts the same
+    ``next`` POST parameter as ``delete``.
     """
     user = request.user
     message = get_object_or_404(Message, id=message_id)
     undeleted = False
     if success_url is None:
         success_url = reverse("messages_inbox")
-    if "next" in request.GET:
-        success_url = request.GET["next"]
+    success_url = _redirect_url(request, request.POST.get("next"), success_url)
     if message.sender == user:
         message.sender_deleted_at = None
         undeleted = True
