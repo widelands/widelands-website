@@ -1,4 +1,0 @@
-{{ object.name }}
-{{ object.author }}
-{{ object.descr }}
-{{ object.uploader_comment }}

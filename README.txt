@@ -229,10 +229,6 @@ Known Dependency Issues
 
 The following dependencies require attention for long-term maintenance:
 
-**whoosh (2.7.4)** - Unmaintained since 2016 and emits SyntaxWarnings on python
-3.14. The whoosh-reloaded fork is unmaintained as well. Consider migrating to
-MariaDB FULLTEXT search, Meilisearch or Typesense when resources allow.
-
 **bleach (6.4.0)** - Unmaintained; the repository was archived in June 2026.
 Migrate to nh3; the allowed tags and attributes live in mainpage/settings.py.
 

@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from news.models import Category, Post
-from news.search_indexes import PostIndex
+from wlsearch.views import sections
 
 
 class UnpublishedNewsTest(TestCase):
@@ -70,5 +70,6 @@ class UnpublishedNewsTest(TestCase):
                 response = self.client.get(post.get_absolute_url())
                 self.assertContains(response, f"{post.title} body")
 
-    def test_search_index_only_contains_published_posts(self):
-        self.assertQuerySetEqual(PostIndex().index_queryset(), [self.public])
+    def test_search_only_contains_published_posts(self):
+        searchable = sections["incl_news"]["news"].objects()
+        self.assertQuerySetEqual(searchable, [self.public])
