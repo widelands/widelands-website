@@ -49,5 +49,6 @@
     {% else %}
         <p><a href="{% url 'wiki_edit' " NewArticle" %}">{% trans "Create a new article" %}</a>.</p>
     {% endif %}
+    {% include 'wiki/inlines/licensing.html' %}
 </section>
 {% endblock %}
