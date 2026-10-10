@@ -73,6 +73,20 @@ class CommentViewTestCase(TestCase):
         self.assertEqual(reply.parent, self.comment)
         self.assertEqual(reply.user, self.other)
 
+    def test_four_byte_character_rejected_with_form_error(self):
+        # The production tables are utf8mb3; a 4-byte character must become a
+        # form error instead of a database error on save.
+        self.client.login(username="other", password="pass")
+        response = self.client.post(
+            self._reply_url(self.post),
+            {"comment": "Thanks 👍", "markup": 1, "next": "/news/"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("comment", response.context["form"].errors)
+        self.assertFalse(
+            ThreadedComment.objects.filter(comment__startswith="Thanks").exists()
+        )
+
     def test_parent_of_other_object_rejected(self):
         self.client.login(username="other", password="pass")
         response = self.client.post(
