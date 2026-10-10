@@ -79,7 +79,7 @@ def _preview(
     return render(
         request,
         "threadedcomments/preview_comment.html",
-        extra_context,
+        {**context, **extra_context},
     )
 
 
