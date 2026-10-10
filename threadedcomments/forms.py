@@ -1,4 +1,5 @@
 from django import forms
+from mainpage.validators import check_utf8mb3
 from threadedcomments.models import DEFAULT_MAX_COMMENT_LENGTH
 from threadedcomments.models import ThreadedComment
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +14,10 @@ class ThreadedCommentForm(forms.ModelForm):
     """
 
     comment = forms.CharField(
-        label=_("comment"), max_length=DEFAULT_MAX_COMMENT_LENGTH, widget=forms.Textarea
+        label=_("comment"),
+        max_length=DEFAULT_MAX_COMMENT_LENGTH,
+        widget=forms.Textarea,
+        validators=[check_utf8mb3],
     )
 
     class Meta:
